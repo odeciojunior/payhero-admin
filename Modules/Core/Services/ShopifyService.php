@@ -281,23 +281,13 @@ class ShopifyService
         }
     }
 
-    /**
-     * @param string $templateKeyName
-     * @param string $value
-     * @param null $domain
-     * @param bool $ajax
-     * @param bool $skipToCart
-     * @return bool
-     * @throws ChildNotFoundException
-     * @throws CircularException
-     * @throws CurlException
-     * @throws NotLoadedException
-     * @throws StrictException
-     * @throws UnknownChildTypeException
-     */
-    public function updateTemplateHtml(string $templateKeyName, string $value, $domain = null, $ajax = false)
+    public function updateTemplateHtml(string $templateKeyName, string $value, $domain = null, $ajax = false): bool
     {
-        if (!empty($this->theme)) {
+        try {
+            if (empty($this->theme)) {
+                return false;
+            }
+
             if ($ajax) {
                 $asset = $this->client->getAssetManager()->update(
                     $this->theme->getId(),
@@ -318,21 +308,14 @@ class ShopifyService
 
             if ($asset) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
-            return false; //throwl
+
+            return false;
+        } catch (Exception $e) {
+            return false;
         }
     }
 
-    /**
-     * @param string $templateKeyName
-     * @param string $value
-     * @param bool $ajax
-     * @return bool
-     * @throws CircularException
-     */
     public function insertUtmTracking(string $templateKeyName, string $value)
     {
         if (!empty($this->theme)) {
@@ -354,11 +337,6 @@ class ShopifyService
         }
     }
 
-    /**
-     * @param $html
-     * @return string
-     * @throws CircularException
-     */
     public function updateThemeTemplate($html)
     {
         $startScriptPos = strpos($html, "<!-- start cloudfox utm script -->");
@@ -405,18 +383,6 @@ class ShopifyService
         return $html;
     }
 
-    /**
-     * @param $htmlCart
-     * @param $domain
-     * @return string|string[]|null
-     * @throws ChildNotFoundException
-     * @throws CircularException
-     * @throws CurlException
-     * @throws NotLoadedException
-     * @throws StrictException
-     * @throws UnknownChildTypeException
-     * @throws LogicalException
-     */
     public function updateCartTemplateAjax($htmlCart, $domain)
     {
         preg_match_all("/({%)[\s\S]+?(%})/", $htmlCart, $tokens, PREG_OFFSET_CAPTURE);
