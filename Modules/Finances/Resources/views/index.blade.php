@@ -129,14 +129,17 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-3 pt-1">
-                                                <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20" data-toggle="modal"
-                                                style="border-radius: 8px;" disabled>
+                                                <button id="bt-withdrawal"
+                                                        class="btn btn-success disabled btn-sacar mt-20"
+                                                        data-toggle="modal"
+                                                        style="border-radius: 8px;" disabled>
                                                     Sacar dinheiro
                                                 </button>
                                             </div>
                                         </div>
 
-                                        <div class='row align-items-center justify-content-center my-20 py-20 bg-white d-md-none' style="position: relative; height: 255px">
+                                        <div class='row align-items-center justify-content-center my-20 py-20 bg-white d-md-none'
+                                             style="position: relative; height: 255px">
                                             <div class="col-md-12">
                                                 <div id="div-available-money_m" class="price-holder pointer pl-10">
                                                     <h6 class="label-price mb-10"><b> Saldo Disponível </b></h6>
@@ -211,9 +214,9 @@
                                             <div class="price-holder">
                                                 <h5 class="font-size-14 gray-600"> Débitos pendentes </h5>
                                                 <h4 class="number saldoDebito" id="debit-value">
-{{--                                                    <span class="currency font-size-30 bold debit-balance" style="color: #E61A1A;">- R$</span>--}}
-{{--                                                    <span style="color:#959595">R$ </span>--}}
-{{--                                                    <a href="javascript:;" id="go-to-pending-debt" class="currency debit-balance font-size-30 bold debit-balanc" style="color: #E61A1A;">0,00</a>--}}
+                                                    {{--                                                    <span class="currency font-size-30 bold debit-balance" style="color: #E61A1A;">- R$</span>--}}
+                                                    {{--                                                    <span style="color:#959595">R$ </span>--}}
+                                                    {{--                                                    <a href="javascript:;" id="go-to-pending-debt" class="currency debit-balance font-size-30 bold debit-balanc" style="color: #E61A1A;">0,00</a>--}}
                                                 </h4>
                                             </div>
                                         </div>
@@ -241,29 +244,32 @@
                                             <td class="table-title" scope="col">Liberação</td>
                                             <td class="table-title text-center" scope="col">Status</td>
                                             <td class="table-title" scope="col">Valor</td>
-                                            <td class="table-title" style="display: none" id="col_transferred_value" scope="col">Valor
+                                            <td class="table-title" style="display: none" id="col_transferred_value"
+                                                scope="col">Valor
                                                 transferido
                                             </td>
                                             <td scope="col" class="d-none d-md-block table-title"> &nbsp;</td>
                                         </tr>
                                         </thead>
-                                        <tbody id="withdrawals-table-data" class="custom-t-body" img-empty="{!! asset('modules/global/img/extrato.svg')!!}">
+                                        <tbody id="withdrawals-table-data" class="custom-t-body"
+                                               img-empty="{!! asset('modules/global/img/extrato.svg')!!}">
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                             <div class="row justify-content-center justify-content-md-end pr-md-15">
-                                <ul id="pagination-withdrawals" class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10">
+                                <ul id="pagination-withdrawals"
+                                    class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10">
                                     {{--js carrega...--}}
                                 </ul>
                             </div>
                         </div>
                         {{--EXTRATO--}}
                         <div
-                            class="tab-pane"
-                            id="nav-statement"
-                            role="tabpanel"
-                            aria-labelledby="nav-statement-tab">
+                                class="tab-pane"
+                                id="nav-statement"
+                                role="tabpanel"
+                                aria-labelledby="nav-statement-tab">
                             <div class="card shadow card-tabs py-15 px-0 px-md-15 mb-50">
                                 <div class="row justify-content-start align-items-center">
                                     <div class="col-md-8 fix-5 px-sm-15">
@@ -370,20 +376,24 @@
                                                                 <option value="WAITING_FOR_VALID_POST">
                                                                     Aguardando postagem válida
                                                                 </option>
-                                                                <option value="WAITING_LIQUIDATION">Aguardando liquidação
+                                                                <option value="WAITING_LIQUIDATION">Aguardando
+                                                                    liquidação
                                                                 </option>
-                                                                <option value="WAITING_WITHDRAWAL">Aguardando saque</option>
+                                                                <option value="WAITING_WITHDRAWAL">Aguardando saque
+                                                                </option>
                                                                 <option value="WAITING_RELEASE">Aguardando liberação
                                                                 </option>
                                                                 <option value="PAID">Liquidado</option>
                                                                 <option value="REVERSED">Estornado</option>
-                                                                <option value="ADJUSTMENT_CREDIT">Ajuste de crédito</option>
-                                                                <option value="ADJUSTMENT_DEBIT">Ajuste de débito</option>
+                                                                <option value="ADJUSTMENT_CREDIT">Ajuste de crédito
+                                                                </option>
+                                                                <option value="ADJUSTMENT_DEBIT">Ajuste de débito
+                                                                </option>
                                                                 <option value="PENDING_DEBIT">Débitos pendentes</option>
                                                             </select>
                                                         </div>
                                                         <input name="withdrawal_id" id="withdrawal_id" type="hidden"
-                                                            class="select-pad" placeholder="Id do Saque">
+                                                               class="select-pad" placeholder="Id do Saque">
                                                     </div>
                                                 </div>
                                             </div>
@@ -392,11 +402,11 @@
                                                     <div class="row" style="height: 0">
                                                         <div class="col-6 col-xl-3 offset-xl-6 pr-0 mt-20">
                                                             <div
-                                                                class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
-                                                                data-toggle="collapse"
-                                                                data-target="#bt_collapse"
-                                                                aria-expanded="false"
-                                                                aria-controls="bt_collapse">
+                                                                    class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#bt_collapse"
+                                                                    aria-expanded="false"
+                                                                    aria-controls="bt_collapse">
                                                                 <img id="icon-filtro"
                                                                      src="{{ asset('/modules/global/img/svg/filter-2-line.svg') }}"/>
                                                                 <span id="text-filtro">Filtros avançados</span>
@@ -404,8 +414,10 @@
                                                         </div>
 
                                                         <div class="col-6 col-xl-3 mt-20">
-                                                            <div id="bt_filtro_statement" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                                                <img style="height: 12px; margin-right: 4px" src="{{ asset('/modules/global/img/svg/check-all.svg') }}">
+                                                            <div id="bt_filtro_statement"
+                                                                 class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                                                <img style="height: 12px; margin-right: 4px"
+                                                                     src="{{ asset('/modules/global/img/svg/check-all.svg') }}">
                                                                 Aplicar filtros
                                                             </div>
                                                         </div>
@@ -439,25 +451,27 @@
                             <h4 class="d-md-none text-center mt-50 mb-30 bold font-size-20"> Acompanhe a agenda </h4>
                             <div class="card">
                                 <table id="statementTable"
-                                    class="table table-condensed unify table-striped">
-                                <thead>
-                                <tr>
-                                    <td scope="col" class="headCenter table-title">Razão</td>
-                                    <td scope="col" class="headCenter table-title">Data prevista
-                                        <i style="font-weight: normal"
-                                        class="o-question-help-1 ml-5 font-size-14"
-                                        data-toggle="tooltip"
-                                        title=""
-                                        data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
-                                    </td>
-                                    <td scope="col" class="headCenter table-title text-center">Status</td>
-                                    <td scope="col" class="headCenter table-title">Valor</td>
-                                </tr>
-                                </thead>
-                                <tbody id="table-statement-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}" class="custom-t-body table-statement-body-class">
-                                </tbody>
-                            </table>
-                            </div>  
+                                       class="table table-condensed unify table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td scope="col" class="headCenter table-title">Razão</td>
+                                        <td scope="col" class="headCenter table-title">Data prevista
+                                            <i style="font-weight: normal"
+                                               class="o-question-help-1 ml-5 font-size-14"
+                                               data-toggle="tooltip"
+                                               title=""
+                                               data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos"></i>
+                                        </td>
+                                        <td scope="col" class="headCenter table-title text-center">Status</td>
+                                        <td scope="col" class="headCenter table-title">Valor</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table-statement-body"
+                                           img-empty="{!! asset('modules/global/img/geral-1.svg')!!}"
+                                           class="custom-t-body table-statement-body-class">
+                                    </tbody>
+                                </table>
+                            </div>
                             <div id="pagination-statement"
                                  class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right"
                                  style="margin-top: 10px; position:relative;">
@@ -505,7 +519,7 @@
                                                         <br/>
                                                         <p class="mb-0">Frequência</p>
                                                         <div
-                                                            class="frequency-container py-10 d-flex flex-wrap flex-md-nowrap justify-content-between align-items-center">
+                                                                class="frequency-container py-10 d-flex flex-wrap flex-md-nowrap justify-content-between align-items-center">
                                                             <button type="button" data-frequency="daily"
                                                                     class="btn btn-block m-0 mr-5 py-10">
                                                                 Diário
@@ -523,7 +537,7 @@
                                                         </div>
 
                                                         <div
-                                                            class="weekdays-container d-flex flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">
+                                                                class="weekdays-container d-flex flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">
                                                             <button type="button" class="btn py-15" data-weekday="1">
                                                                 SEG
                                                             </button>
@@ -547,7 +561,7 @@
                                                             </button>
                                                         </div>
                                                         <div
-                                                            class="day-container d-none flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">
+                                                                class="day-container d-none flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">
                                                             @foreach (['01', '05', '10', '15', '20', '25', '30'] as $day)
                                                                 <button type="button" class="btn py-15"
                                                                         data-day="{{$day}}">
@@ -694,8 +708,8 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v=65') }}"></script>
-            <script src="{{ asset('modules/finances/js/settings.js?v=63') }}"></script>
+            <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/settings.js?v='. uniqid()) }}"></script>
         @endpush
     </div>
 

@@ -17,8 +17,6 @@ class MelhorenvioStoreRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'client_id' => 'required',
-            'client_secret' => 'required',
         ];
     }
 
@@ -29,8 +27,6 @@ class MelhorenvioStoreRequest extends FormRequest
     {
         return [
             'name.required' => 'O campo nome é obrigatório',
-            'client_id.required' => 'O campo Client ID é obrigatório',
-            'client_secret.required' => 'O campo Client Secret é obrigatório',
         ];
     }
 }
