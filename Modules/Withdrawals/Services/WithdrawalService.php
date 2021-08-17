@@ -2,6 +2,7 @@
 
 namespace Modules\Withdrawals\Services;
 
+use App\Jobs\ProcessWithdrawals;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
@@ -114,7 +115,7 @@ class WithdrawalService
         return true;
     }
 
-    public function createWithdrawal($withdrawalValue, Company $company): bool
+    public function createWithdrawalOld($withdrawalValue, Company $company): bool
     {
         $withdrawalModel = new Withdrawal();
         $isFirstUserWithdrawal = $this->isFirstUserWithdrawal(auth()->user());
@@ -165,6 +166,118 @@ class WithdrawalService
                         $currentValue += $transaction->value;
 
                         if ($currentValue <= $withdrawalValue) {
+                            $transaction->update(
+                                [
+                                    'withdrawal_id' => $withdrawal->id,
+                                    'is_waiting_withdrawal' => false
+                                ]
+                            );
+                        }
+                    }
+                }
+            );
+
+            $pendingDebts = PendingDebt::doesntHave('withdrawals')
+                ->where('company_id', $company->id)
+                ->whereNull('confirm_date')
+                ->get(['id', 'value']);
+
+            $pendingDebtsSum = 0;
+            foreach ($pendingDebts as $pendingDebt) {
+                $pendingDebtsSum += $pendingDebt->value;
+                PendingDebtWithdrawal::create(
+                    [
+                        'pending_debt_id' => $pendingDebt->id,
+                        'withdrawal_id' => $withdrawal->id
+                    ]
+                );
+            }
+
+            $withdrawal->update(
+                [
+                    'debt_pending_value' => $pendingDebtsSum
+                ]
+            );
+
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            report($e);
+
+            return false;
+        }
+    }
+
+    public function createWithdrawal($withdrawalValue, Company $company): bool
+    {
+        $withdrawalModel = new Withdrawal();
+        $isFirstUserWithdrawal = $this->isFirstUserWithdrawal(auth()->user());
+
+        try {
+            DB::beginTransaction();
+            $withdrawal = $withdrawalModel->create(
+                [
+                    'value' => $withdrawalValue,
+                    'company_id' => $company->id,
+                    'bank' => $company->bank,
+                    'agency' => $company->agency,
+                    'agency_digit' => $company->agency_digit,
+                    'account' => $company->account,
+                    'account_digit' => $company->account_digit,
+                    'status' => Withdrawal::STATUS_PROCESSING,
+                    'tax' => 0,
+                    'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
+                    'automatic_liquidation' => true,
+                ]
+            );
+
+            //job
+            dispatch((new ProcessWithdrawal($withdrawal->id)));
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            report($e);
+
+            return false;
+        }
+    }
+
+    public function processWithdrawal(Withdrawal $withdrawal ): bool
+    {
+        try {
+            $company = $withdrawal->company;
+
+            DB::beginTransaction();
+
+            $transactionsSum = $company->transactions()
+                ->whereIn(
+                    'gateway_id',
+                    [
+                        Gateway::GETNET_SANDBOX_ID,
+                        Gateway::GETNET_PRODUCTION_ID,
+                        Gateway::GERENCIANET_PRODUCTION_ID
+                    ]
+                )
+                ->where('is_waiting_withdrawal', 1)
+                ->whereNull('withdrawal_id')
+                ->orderBy('id');
+
+            $currentValue = 0;
+
+            $transactionsSum->chunkById(
+                2000,
+                function ($transactions) use (
+                    $currentValue,
+                    $withdrawal
+                ) {
+                    foreach ($transactions as $transaction) {
+                        $currentValue += $transaction->value;
+
+                        if ($currentValue <= $withdrawal->value) {
                             $transaction->update(
                                 [
                                     'withdrawal_id' => $withdrawal->id,
