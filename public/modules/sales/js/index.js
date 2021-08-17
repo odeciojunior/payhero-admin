@@ -409,6 +409,7 @@ $(document).ready(function () {
                     2: "pendente",
                     12: "success",
                     20: "antifraude",
+                    21: "danger",
                     22: "danger",
                     23: "warning",
                     24: "antifraude",
