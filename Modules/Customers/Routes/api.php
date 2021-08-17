@@ -8,5 +8,6 @@ Route::group(
     ],
     function() {
         Route::apiResource('/customers', 'CustomersApiController')->only('show', 'update')->names('api.customer');
+        Route::get('/customers/{id}/{sale_id}', 'CustomersApiController@show');
     }
 );

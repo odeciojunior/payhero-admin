@@ -245,7 +245,7 @@
                         </div>
                     </div>
                 </div>
-                
+
 
                 <div class="nav-tabs-horizontal">
                     <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
@@ -286,8 +286,8 @@
                                 <i class="material-icons font-size-18">close</i></a>
                         </div>
                         <span id="client-document" class="table-title gray"></span>
-                        <div class="mt-15 mb-5">
-                            <a class="pointer label d-inline-flex align-items-center pl-3" id="client-whatsapp"
+                        <div class="mt-15 mb-5" id="client-whatsapp-container">
+                            <a class="pointer label d-inline-flex align-items-center pl-3 d-block" id="client-whatsapp"
                                target='_blank'>
                                 <span class="o-whatsapp-1"></span>
                                 <b class="ml-2">Mensagem no Whatsapp</b>
