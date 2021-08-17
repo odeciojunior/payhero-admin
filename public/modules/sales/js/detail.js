@@ -713,9 +713,7 @@ $(() => {
 
         $("#checkout-attempts").hide();
         if (sale.payment_method === 1) {
-            $("#checkout-attempts")
-                .text("Quantidade de tentativas: " + sale.attempts)
-                .show();
+            $("#checkout-attempts").text("Quantidade de tentativas: " + sale.attempts).show();
         }
 
         if (
@@ -754,6 +752,12 @@ $(() => {
             }
         } else {
             $("#saleReSendEmail").hide();
+        }
+
+        if ( !sale.api_flag ) {
+            $("#details-api").hide();
+        } else {
+            $("#details-api").show();
         }
 
         if (
