@@ -113,8 +113,7 @@
 {{--SIDE BAR--}}
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">        
-        <!-- hasanyrole('account_owner|admin|finantial') -->
-        
+        <!-- hasanyrole('account_owner|admin|finantial') -->        
         @can('dashboard')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('dashboard.index') }}">

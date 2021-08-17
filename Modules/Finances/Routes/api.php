@@ -5,15 +5,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin'],
+        'middleware' => ['auth:api', 'scopes:admin','permission:finances'],
     ],
     function () {
         /**
          * News routes after GETNET
          */
         Route::get('/finances/getbalances', 'FinancesApiController@getBalances')
-            ->name('api.finances.balances')
-            ->middleware('permission:finances');
+            ->name('api.finances.balances');
 
         Route::post('/finances/export', 'FinancesApiController@export')
             ->name('api.finances.export')
@@ -23,11 +22,9 @@ Route::group(
          * Old routes before getnet
          */
         Route::get('/old_finances/getbalances', 'OldFinancesApiController@getBalances')
-            ->name('api.finances.balances')
-            ->middleware('role:account_owner|admin|finantial');
+            ->name('api.finances.balances');
 
         Route::post('/old_finances/export', 'OldFinancesApiController@export')
-            ->name('api.finances.export')
-            ->middleware('role:account_owner|admin|finantial');
+            ->name('api.finances.export');
     }
 );

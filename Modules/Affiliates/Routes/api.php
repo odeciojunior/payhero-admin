@@ -45,17 +45,8 @@ Route::group(
           Route::get('/affiliatelinks/{id}/edit', 'AffiliateLinksApiController@edit');
 
           Route::apiResource('/affiliatelinks', 'AffiliateLinksApiController')
-          ->only('store', 'update', 'destroy')->names('api.affiliatelinks')
-          ->middleware('permission:affiliates_manage');
-
-          //        Route::get('/affiliates/getaffiliates/{projectId}', 'AffiliatesApiController@getAffiliates')
-          //             ->middleware('role:account_owner|admin');
-          //
-          //        Route::get('/affiliates/getaffiliaterequests/{projectId}', 'AffiliatesApiController@getAffiliateRequests')
-          //             ->middleware('role:account_owner|admin');
+               ->only('store', 'update', 'destroy')->names('api.affiliatelinks')
+               ->middleware('permission:affiliates_manage');
 
      }
 );
-//Route::middleware('auth:api')->get('/affiliates', function (Request $request) {
-//    return $request->user();
-//});
