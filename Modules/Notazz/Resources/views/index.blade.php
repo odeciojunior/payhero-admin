@@ -10,7 +10,7 @@
 @endpush
 @section('content')
     <div class='page'>
-        <div style="" class="page-header container">
+        <div class="page-header container" style="display:none !important;">
             <div class="row justify-content-between">
                 <div class="col-lg-8">
                     <h1 class="page-title my-10" style="min-height: 28px">

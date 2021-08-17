@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    index();
+
     //checkbox
     $(".check").on("click", function () {
         if ($(this).is(":checked")) {
@@ -7,7 +9,6 @@ $(document).ready(function () {
             $(this).val(0);
         }
     });
-    index();
 
     function index() {
 
