@@ -2,7 +2,7 @@
 
 namespace Modules\Withdrawals\Services;
 
-use App\Jobs\ProcessWithdrawals;
+use App\Jobs\ProcessWithdrawal;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;

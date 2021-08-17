@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Withdrawals\Services\WithdrawalService;
 
-class ProcessWithdrawals implements ShouldQueue
+class ProcessWithdrawal implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
