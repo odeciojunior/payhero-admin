@@ -202,6 +202,8 @@ $(() => {
                 $("#refundBilletAmount").text(response.data.total);
                 $(".btn_refund_transaction").unbind("click");
                 $(".btn_refund_transaction").on("click", function () {
+                    $('#refund_observation').val('');
+
                     let sale = $(this).attr("sale");
                     $("#modal_detalhes").modal("hide");
                     $("#modal-refund-transaction").modal("show");
