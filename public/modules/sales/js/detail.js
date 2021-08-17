@@ -179,6 +179,16 @@ $(() => {
         let sale = $(this).attr("venda");
         loadOnAny("#modal-saleDetails");
 
+        $("#nav-home-tab").addClass("active");
+        $("#nav-home-tab").addClass("show");
+        $("#nav-home").addClass("active");
+        $("#nav-home").addClass("show");
+        
+        $("#nav-profile-tab").removeClass("active");
+        $("#nav-profile-tab").removeClass("show");
+        $("#nav-profile").removeClass("active");
+        $("#nav-profile").removeClass("show");
+
         $("#modal_detalhes").modal("show");
         $("#refundAmount").mask("##.###,#0", {reverse: true});
         $("#refundBilletAmount").mask("##.###,#0", {reverse: true});
