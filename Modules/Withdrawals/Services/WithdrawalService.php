@@ -234,7 +234,7 @@ class WithdrawalService
             );
 
             //job
-            dispatch((new ProcessWithdrawal($withdrawal->id)));
+            dispatch((new ProcessWithdrawal($withdrawal)));
 
             DB::commit();
             return true;
