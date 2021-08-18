@@ -5,6 +5,7 @@ $(document).ready(function () {
         3: "success",
         4: "danger",
         5: "in_review",
+        6: "process",
         8: "primary",
         9: "partially-liquidating",
     };

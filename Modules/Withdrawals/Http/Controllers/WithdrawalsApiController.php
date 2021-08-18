@@ -129,7 +129,7 @@ class WithdrawalsApiController
             $responseCreateWithdrawal = $withdrawalService->createWithdrawal($withdrawalValue, $company);
 
             if ($responseCreateWithdrawal) {
-                return response()->json(['message' => 'Saque pendente'], 200);
+                return response()->json(['message' => 'Saque processando.'], 200);
             }
 
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
