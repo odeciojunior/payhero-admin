@@ -5,7 +5,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: "/api/apps/whatsapp2/",
+            url: "/api/apps/whatsapp2",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
