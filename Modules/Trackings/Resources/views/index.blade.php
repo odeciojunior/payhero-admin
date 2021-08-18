@@ -10,7 +10,7 @@
 @endpush
 
 <!-- Page -->
-<div class="page mb-0">
+<div class="page pb-0 " style="margin-bottom: 0px !important;">
     <div style="display: none" class="page-header container">
         <div class="row align-items-center justify-content-between" style="min-height:50px">
             <div class="col-lg-4">
