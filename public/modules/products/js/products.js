@@ -1,14 +1,11 @@
+loadingOnScreen();
 $(document).ready(function () {
-    
-    loadingOnScreen();
-
     let code = window.location.href.split('/')[4];
     let typeEnum;
 
     getDataProducts();
 
     function getDataProducts() {
-        loadingOnScreen();
 
         dropifyOptions = {
             messages: {

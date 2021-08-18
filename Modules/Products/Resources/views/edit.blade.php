@@ -8,7 +8,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div style="display: none !important;" class="page-header container">
+        <div style="display:none !important;" class="page-header container">
             <h1 class="page-title">Editar produto</h1>
             <p class="desc mt-10"> Preencha os dados sobre seu produto atentamente. </p>
             <div class="page-header-actions">
