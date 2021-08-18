@@ -287,9 +287,9 @@ $(() => {
     function getSale(sale) {
         renderSale(sale);
 
-        getClient(sale.client_id, sale.id);
-
         getProducts(sale);
+
+        getClient(sale.client_id, sale.id);
 
         if (sale.delivery_id != "") {
             getDelivery(sale.delivery_id);
@@ -301,8 +301,6 @@ $(() => {
             getCheckout(sale.checkout_id);
         } else {
             $(".dados-checkout").css("display", "none");
-
-            loadOnAny("#modal-saleDetails", true);
         }
 
         getNotazz(sale.invoices);
@@ -1077,9 +1075,11 @@ $(() => {
                     div += '<p class="sm-text text-muted">' + value.amount + 'x</p>';
                 div += '</div>';
             div += '</div>';
+
+            $("#table-product").html(div);
         });
 
-        $("#table-product").html(div);
+        loadOnAny("#modal-saleDetails", true);
     }
 
     function renderProducts(products, sale) {
@@ -1217,6 +1217,8 @@ $(() => {
                 $("#div_tracking_code").css("display", "none");
             }
         });
+
+        loadOnAny("#modal-saleDetails", true);
     }
 
     function getDelivery(deliveryId) {

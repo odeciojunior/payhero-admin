@@ -1,8 +1,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
 @endpush
-<div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle"
-     role="dialog" tabindex="-1">
+<div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-simple modal-sidebar modal-lg">
         <div id='modal-saleDetails' class="modal-content p-20 " style="width: 500px;">
             <div class="header-modal">
@@ -25,17 +24,13 @@
                     <div id="status" class="status d-inline">
                     </div>
                     <div class="status d-inline">
-                        <img id='chargeback-recovered' class="orange-gradient"
-                             src="{{ asset('modules/global/img/svg/chargeback.svg') }}"
-                             title="Chargeback recuperado" style='width:20px; display:none;'>
+                        <img id='chargeback-recovered' class="orange-gradient" src="{{ asset('modules/global/img/svg/chargeback.svg') }}" title="Chargeback recuperado" style='width:20px; display:none;'>
                     </div>
                 </div>
                 <div class='div-refund-observation mt-20' style='display:none;'>
                     <label for="refund-observation" class="table-title gray mb-0">Causa do estorno:</label>&nbsp;
                     <div class="d-flex align-items-center">
-                        <input id="refund-observation" type="email" name="refund_observation"
-                               class="detail-input mr-2 table-title gray fake-label"
-                               readonly>
+                        <input id="refund-observation" type="email" name="refund_observation" class="detail-input mr-2 table-title gray fake-label" readonly>
                         <a class="pointer btn-edit-observation"><span class="o-edit-1"></span></a>
                         <a class="pointer btn-save-observation" style="display:none;">
                             <i class="material-icons font-size-18">save</i></a>
@@ -51,8 +46,11 @@
                         <div class="col-lg-3"><p class="table-title"> Produto </p></div>
                         <div class="col-lg-9 text-right"><p class="text-muted"> Qtde </p></div>
                     </div>
+                    
                     <div id="table-product">
+                        {{-- js carrega... --}}
                     </div>
+                    
                     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
                         <div class="col-sm-6 col-6 align-items-center">
                             <span class="text-muted ft-12"> Subtotal </span>
@@ -122,8 +120,7 @@
                         <div class='col-sm-4 col-4 text-right'>
                             <span id="taxareal-value" class='text-muted ft-12'></span>
                         </div>
-                        <div style="color: #2E85EC" class='col-sm-12 pointer mt-5'
-                             data-toggle="collapse" data-target="#taxas-detail" aria-expanded="false" aria-controls="taxas-detail">
+                        <div style="color: #2E85EC" class='col-sm-12 pointer mt-5' data-toggle="collapse" data-target="#taxas-detail" aria-expanded="false" aria-controls="taxas-detail">
                             <small data-toggle="tooltip" data-placement="top" title="Clique para obter mais detalhes">Taxa detalhada</small>
                         </div>
 
@@ -132,44 +129,37 @@
                                 <tbody>
                                     <tr>
                                         <td><div id="tax-subtotal" class="ft-12"></div></td>
-                                        <td><div id="tax-subtotal-value" style="color: black !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-subtotal-value" style="color: black !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-cashback" class="ft-12"></div></td>
-                                        <td><div id="tax-cashback-value" style="color: #5EE2A1 !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-cashback-value" style="color: #5EE2A1 !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-value-total" class="ft-12"></div></td>
-                                        <td><div id="tax-value-total-value" style="color: #5EE2A1 !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-value-total-value" style="color: #5EE2A1 !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-percentage" class="ft-12"></div></td>
-                                        <td><div id="tax-percentage-value" style="color: #F41C1C !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-percentage-value" style="color: #F41C1C !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-fixed" class="ft-12"></div></td>
-                                        <td><div id="tax-fixed-value" style="color: #F41C1C !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-fixed-value" style="color: #F41C1C !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-total" class="ft-12"></div></td>
-                                        <td><div id="tax-total-value" style="color: #F41C1C !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-total-value" style="color: #F41C1C !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-comission" class="ft-12"></div></td>
-                                        <td><div id="tax-comission-value" style="color: black !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-comission-value" style="color: black !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
                                 </tbody>
 

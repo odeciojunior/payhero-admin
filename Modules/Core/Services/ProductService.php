@@ -69,7 +69,22 @@ class ProductService
         $productsSale = collect();
 
         if (!empty($sale)) {
-            if ( !$sale->api_flag ) {
+            if ( $sale->api_flag ) {
+                foreach ($sale->productsSaleApi as $productsApi) {
+                    $product = $productsApi->toArray();
+
+                    $product['tracking_id'] = '';
+                    $product['tracking_code'] = '';
+                    $product['tracking_status_enum'] = 'Não Informado';
+                    $product['tracking_created_at'] = '';
+
+                    $product['sale_status'] = $sale->status;
+                    $product['amount'] = $productsApi->quantity;
+                    $product['sale_id'] = $productsApi->sale_id;
+
+                    $productsSale->add((object) $product);
+                }
+            } else {
                 foreach ($sale->productsPlansSale as $productsPlanSale) {
                     $product = $productsPlanSale->product->toArray();
                     $tracking = $productsPlanSale->tracking;
@@ -96,21 +111,6 @@ class ProductService
                     ->where('sale_id',$productsPlanSale->sale_id)->where('plan_id',$productsPlanSale->plan_id)
                     ->where('product_id',$productsPlanSale->product_id)->orderBy('line','asc')->orderBy('order','asc')->get();
                     $product['sale_id'] = $productsPlanSale->sale_id;
-                    $productsSale->add((object) $product);
-                }
-            } else {
-                foreach ($sale->productsSaleApi as $productsApi) {
-                    $product = $productsApi->toArray();
-
-                    $product['tracking_id'] = '';
-                    $product['tracking_code'] = '';
-                    $product['tracking_status_enum'] = 'Não Informado';
-                    $product['tracking_created_at'] = '';
-
-                    $product['sale_status'] = $sale->status;
-                    $product['amount'] = $productsApi->quantity;
-                    $product['sale_id'] = $productsApi->sale_id;
-
                     $productsSale->add((object) $product);
                 }
             }      
