@@ -1,18 +1,18 @@
 /* Trackings Table */
 
-.fake-label{
+.fake-label {
     border-color: transparent !important;
     background-color: transparent !important;
 }
 
 @media (max-width: 768px) {
-    .input-tracking-code{
+    .input-tracking-code {
         width: auto;
         margin: 0 auto;
     }
 }
 
-.td-odd{
+.td-odd {
     background-color: rgba(51, 51, 51, 0.06) !important;
 }
 
@@ -42,21 +42,28 @@
     white-space: nowrap;
     display: block;
     max-width: 94px;
-    animation: typing 3.5s steps(40, end),
-    blink-caret .75s step-end infinite;
+    animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
 }
 
 @keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
+    from {
+        width: 0
+    }
+    to {
+        width: 100%
+    }
 }
 
 @keyframes blink-caret {
-    from, to { border-color: transparent }
-    50% { border-color: #000; }
+    from, to {
+        border-color: transparent
+    }
+    50% {
+        border-color: #000;
+    }
 }
 
-.cell-fade{
+.cell-fade {
     background: linear-gradient(90deg, transparent, #fff);
     width: 100px;
     height: 161px;
@@ -66,23 +73,289 @@
 }
 
 @media (max-width: 569px) {
-    .cell-fade{
+    .cell-fade {
         right: 0;
         left: 379px
     }
 }
-@media only screen and (min-width: 851px){
+
+@media only screen and (min-width: 851px) {
     .col-md-3.card {
         margin-right: 10px;
         max-width: calc(25% - 10px);
     }
 }
-@media only screen and (min-width: 530px) and (max-width : 850px){
+
+@media only screen and (min-width: 530px) and (max-width: 850px) {
     .col-sm-6.card {
         margin-right: 10px;
         max-width: calc(50% - 10px);
     }
 }
-h4.number{
-    color:#57617c;
+
+h4.number {
+    color: #57617c;
+}
+
+.cardNumbers {
+    height: 100%;
+}
+
+#btn-export-xls {
+    border-radius: .5em 0 0 .5em !important;
+}
+
+#btn-export-csv {
+    border-radius: .0em .5em .5em 0 !important;
+}
+
+/*INPUT PESQUISAR POR DATA */
+input#date_updated{
+    padding: 11px 16px 11px 16px !important;
+}
+
+/* ALERTA DE PROBLEMA COM O CODIGO */
+.alert-tracking {
+	background-color: #F6FAFF;
+}
+i.material-icons.mr-10{
+    margin: auto;
+}
+i.material-icons.pointer{
+    margin: auto;
+}
+
+/* CARDS SETTINGS*/
+.cards-settings{
+    padding: 18px 0px 18px 18px;
+}
+
+/*CORES DA LEGENDA DO GRACIFO */
+.posted {
+    color: #33638F;
+}
+
+.onDelivery {
+    color: #00B1FF;
+}
+
+.delivered {
+    color: #1BE4A8;
+}
+
+.inTransit {
+    color: #FFCD1B;
+}
+
+.withProblem {
+    color: #FF2F2F;
+}
+
+.withoutInfo {
+    color: #B9B9B9;
+    ;
+}
+
+/*CORES DO STATUS NA TABELA */
+.statusPosted {
+    background-color: #33638F;
+    color: white;
+}
+
+.statusOnDelivery {
+    background-color: #00B1FF;
+    color: white;
+}
+
+.statusDelivered {
+    background-color: #1BE4A8;
+    color: white;
+}
+
+.statusInTransit {
+    background-color: #FFCD1B;
+    color: white;
+}
+
+.statusProblem {
+    background-color: #FF2F2F;
+    color: white;
+}
+
+.statusWithoutInfo {
+    background-color: #B9B9B9;
+    color: white;
+}
+
+/* ARRENDONDA FINAL DA TABELA */
+.no-final-space{
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+/*BOTAO DE ADICIONAR CODIGO */
+span.o-add-1.text-primary.border.border-primary {
+    font-size: 25px;
+    border-radius: 5px !important;
+    border-width: 1px !important;
+    padding: 0px 10px 0px 10px !important;
+}
+
+
+/* INPUT CODIGO DE RASTREIO */
+input.form-control.font-weight-bold.input-tracking-code[readonly]{
+    border: 1px solid ;
+    border-radius: 8px;
+    border-color: #CECECE;
+    background: #F1F1F1;
+}
+
+input[type="text"]::placeholder{
+    text-align: center;
+}
+.col-sm-7.form-control.font-weight-bold.input-tracking-code.fake-label{
+    padding-bottom: 1px !important;
+}
+
+
+div.buttons.d-flex.mr-15{
+    min-width: 328px !important;
+    max-height: 38px !important;
+}
+
+
+/*BOTAO CHECKED SALVAR */
+a.tracking-save.pointer.ml-5.mr-5.text-center {
+    text-align: center;
+    background: #2E85EC;
+    border-radius: 5px;
+    border-width: 1px !important;
+    padding: 7px 9px 0px 9px !important;
+    transition: 0.5s;
+
+}
+a.tracking-save.pointer.ml-5.mr-5.text-center:hover {
+    background: #206ECA;
+}
+i#pencil{
+    font-size: 20px !important;
+    -webkit-text-stroke: 2.0px rgb(255, 255, 255);
+}
+
+
+/* BOTAO FECHAR/CANCELAR */
+a.tracking-close.pointer.text-dark{
+    min-height: 39px;
+    text-align: center;
+    background: #EDEDED;
+    border-radius: 5px;
+    padding: 0px 10px 0px 10px !important;
+    font-size: 30px !important;
+    -webkit-text-stroke: 2.0px rgb(255, 255, 255);
+    transition: 0.5s;
+}
+a.tracking-close.pointer.text-dark:hover {
+    background: #D1D1D1;
+    font-size: 30px !important;
+
+}
+
+
+/* CONFIG ICONE X */
+.set-rotate{
+    transform: rotate(-45deg);
+    margin: -2px 0px 0px 0px;
+}
+i.set-close{
+    font-size: 35px !important;
+    color: #000 !important;
+}
+
+
+/*BOTAO DE EDITAR CODIGO*/
+a.tracking-edit.pointer.ml-5.mr-50 {
+    color: #F1F1F1;
+    border: 1px solid !important;
+    border-color: #CECECE !important;
+    border-radius: 5px !important;
+    padding-top: 5px;
+}
+span.text-right.o-edit-1 {
+    border-radius: 5px !important;
+    border-width: 2px !important;
+    padding: 0px 8px 0px 8px !important;
+}
+
+/* BOTAO DE VISUALIZAR */
+a.tracking-detail.pointer{
+    color: #F1F1F1;
+}
+span.o-eye-1{
+    padding: 6px 5px 0px 5px !important;
+}
+
+
+/*TRATAMENTO DE IMAGEM QUANDO NAO TEM DADOS*/
+div#dataCharts{
+    height: 257px;
+    position: relative;
+    justify-content: flex-end;
+}
+
+#noData{
+    z-index: 1;
+    position: relative;
+    height: 105px;
+    margin-top: 75px;
+}
+
+/*GRAFICO DE RESULTADO EM CANVAS*/
+#myChart{
+    max-width: 180px !important;
+    max-height: 180px !important;
+    margin: auto;
+    z-index: 1;
+}
+
+/*DIV APRESENTAÇÂO DE TOTAL NO CENTRO DO GRAFICO */
+.total-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    z-index: 1;
+    flex-direction: column;
+}
+
+span#total-products{
+    font-size: 24px;
+    font-weight: bold;
+    color: #0D2C54;
+}
+
+td.table-title{
+    color: #0D2C54 !important;
+}
+
+.resume-number {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#graphic-loading {
+    height: 240px;
+    width: 100%;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+}
+
+#alert-tracking-issues{
+    border-radius: 10px;
 }
