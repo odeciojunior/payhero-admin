@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Withdrawals\Services\WithdrawalService;
 
-class ProcessWithdrawals implements ShouldQueue
+class ProcessWithdrawal implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -19,15 +19,17 @@ class ProcessWithdrawals implements ShouldQueue
     use SerializesModels;
 
     public Withdrawal $withdrawal;
+    public  $isFirstUserWithdrawal;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct( Withdrawal $withdrawal)
+    public function __construct( Withdrawal $withdrawal, $isFirstUserWithdrawal)
     {
         $this->withdrawal = $withdrawal;
+        $this->isFirstUserWithdrawal = $isFirstUserWithdrawal;
 
     }
 
@@ -42,7 +44,7 @@ class ProcessWithdrawals implements ShouldQueue
 
             $withdrawalService = new WithdrawalService();
 
-            $responseCreateWithdrawal = $withdrawalService->processWithdrawal($this->withdrawal);
+            $responseCreateWithdrawal = $withdrawalService->processWithdrawal($this->withdrawal, $this->isFirstUserWithdrawal);
 
 
         } catch (Exception $e) {

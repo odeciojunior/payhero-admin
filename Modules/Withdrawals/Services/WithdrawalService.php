@@ -2,7 +2,7 @@
 
 namespace Modules\Withdrawals\Services;
 
-use App\Jobs\ProcessWithdrawals;
+use App\Jobs\ProcessWithdrawal;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
@@ -234,7 +234,7 @@ class WithdrawalService
             );
 
             //job
-            dispatch((new ProcessWithdrawals($withdrawal->id)));
+            dispatch((new ProcessWithdrawal($withdrawal, $isFirstUserWithdrawal)));
 
             DB::commit();
             return true;
@@ -246,7 +246,7 @@ class WithdrawalService
         }
     }
 
-    public function processWithdrawal(Withdrawal $withdrawal ): bool
+    public function processWithdrawal(Withdrawal $withdrawal, $isFirstUserWithdrawal ): bool
     {
         try {
             $company = $withdrawal->company;
@@ -307,7 +307,10 @@ class WithdrawalService
 
             $withdrawal->update(
                 [
-                    'debt_pending_value' => $pendingDebtsSum
+                    'debt_pending_value' => $pendingDebtsSum,
+                    'status' => $withdrawal->present()->getStatus(
+                        $isFirstUserWithdrawal ? 'in_review' : 'pending'
+                    ),
                 ]
             );
 
