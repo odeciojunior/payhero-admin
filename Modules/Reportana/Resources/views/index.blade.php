@@ -52,7 +52,7 @@
                             </button>
                             <h4 class="modal-title" style="font-weight: 700;"></h4>
                         </div>
-                        <div class="pt-10 pr-20 pl-20 modal_integracao_body">
+                        <div class="pr-20 pl-20 modal_integracao_body">
                             @include('reportana::create')
                             @include('reportana::edit')
                         </div>
@@ -82,8 +82,8 @@
         </div>
         @include('projects::empty')
         <div id="no-integration-found" class='justify-content-center' style="display:none;
-                                                                        height: 100%; 
-                                                                        width: 100%; 
+                                                                        height: 100%;
+                                                                        width: 100%;
                                                                         position: absolute;
                                                                         display: -webkit-flex;
                                                                         display: flex;

@@ -107,6 +107,12 @@ class ReportanaApiController extends Controller
                 if (empty($data['credit_card_refused'])) {
                     $data['credit_card_refused'] = 0;
                 }
+                if (empty($data['pix_generated'])) {
+                    $data['pix_generated'] = 0;
+                }
+                if (empty($data['pix_paid'])) {
+                    $data['pix_paid'] = 0;
+                }
                 if (empty($data['abandoned_cart'])) {
                     $data['abandoned_cart'] = 0;
                 }
@@ -117,6 +123,8 @@ class ReportanaApiController extends Controller
                     'billet_paid'         => $data['boleto_paid'],
                     'credit_card_refused' => $data['credit_card_refused'],
                     'credit_card_paid'    => $data['credit_card_paid'],
+                    'pix_generated'       => $data['pix_generated'],
+                    'pix_paid'            => $data['pix_paid'],
                     'abandoned_cart'      => $data['abandoned_cart'],
                     'project_id'          => $projectId,
                     'user_id'             => auth()->user()->account_owner_id,
@@ -225,8 +233,11 @@ class ReportanaApiController extends Controller
             if (empty($data['credit_card_refused'])) {
                 $data['credit_card_refused'] = 0;
             }
-            if (empty($data['abandoned_cart'])) {
-                $data['abandoned_cart'] = 0;
+            if (empty($data['pix_generated'])) {
+                $data['pix_generated'] = 0;
+            }
+            if (empty($data['pix_paid'])) {
+                $data['pix_paid'] = 0;
             }
             if (empty($data['abandoned_cart'])) {
                 $data['abandoned_cart'] = 0;
@@ -238,6 +249,8 @@ class ReportanaApiController extends Controller
                                                                     'billet_paid'         => $data['boleto_paid'],
                                                                     'credit_card_refused' => $data['credit_card_refused'],
                                                                     'credit_card_paid'    => $data['credit_card_paid'],
+                                                                    'pix_generated'       => $data['pix_generated'],
+                                                                    'pix_paid'            => $data['pix_paid'],
                                                                     'abandoned_cart'      => $data['abandoned_cart'],
                                                                 ]);
             if ($integrationUpdated) {
