@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=08'.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=09'.uniqid()) }}">
 @endpush
 
 @section('content')
@@ -702,7 +702,7 @@
         {{-- Modal Detalhes --}}
         @include('sales::details')
         {{-- End Modal --}}
-        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css?v=2123')}}">
+        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css?v=2125')}}">
 
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
