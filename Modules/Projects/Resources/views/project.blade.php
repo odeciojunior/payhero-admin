@@ -253,14 +253,11 @@
                         </div>
                     </div>
                     <!-- Modal para fazer-desfazer integração com shopify -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical"
-                         id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle"
-                         role="dialog" tabindex="-1">
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog  modal-dialog-centered  modal-simple">
                             <div class="modal-content p-10 s-border-radius">
                                 <div class="modal-header text-center">
-                                    <a class="pointer close" role="button" data-dismiss="modal"
-                                       aria-label="Close" id="bt-close-modal-change-shopify-integration">
+                                    <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="bt-close-modal-change-shopify-integration">
                                         <i class="material-icons md-16">close</i>
                                     </a>
                                 </div>
