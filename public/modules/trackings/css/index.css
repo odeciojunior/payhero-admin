@@ -225,7 +225,7 @@ div.buttons.d-flex.mr-15{
 
 
 /*BOTAO CHECKED SALVAR */
-a.tracking-save.pointer.ml-5.mr-5.text-center {
+a.tracking-save.pointer.ml-10.mr-10.text-center {
     text-align: center;
     background: #2E85EC;
     border-radius: 5px;
@@ -234,7 +234,7 @@ a.tracking-save.pointer.ml-5.mr-5.text-center {
     transition: 0.5s;
 
 }
-a.tracking-save.pointer.ml-5.mr-5.text-center:hover {
+a.tracking-save.pointer.ml-10.mr-10.text-center:hover {
     background: #206ECA;
 }
 i#pencil{
@@ -273,7 +273,7 @@ i.set-close{
 
 
 /*BOTAO DE EDITAR CODIGO*/
-a.tracking-edit.pointer.ml-5.mr-50 {
+a.tracking-edit.pointer.ml-10.mr-80 {
     color: #F1F1F1;
     border: 1px solid !important;
     border-color: #CECECE !important;

@@ -400,7 +400,7 @@ $(() => {
                     ;
 
                     let htmlButtonEdit = `
-                    <a class='tracking-edit pointer ml-5 mr-50' title="Editar">
+                    <a class='tracking-edit pointer ml-10 mr-80' title="Editar">
                       <span class="text-right o-edit-1"></span>
                     </a>
                     
@@ -427,7 +427,7 @@ $(() => {
 
                             <td>${tracking.approved_date}</td>
 
-                            <td class="text-center col-sm-2">
+                            <td class="text-center col-sm-2 text-nowrap">
                                 <span class="badge ${statusEnum[tracking.tracking_status_enum]}">
                                     ${tracking.tracking_status}
                                 </span>
@@ -439,12 +439,12 @@ $(() => {
 
                             <td class="text-left">
 
-                                <div class="buttons d-flex mr-15">
+                                <div class="buttons d-flex" style="max-height: 38px;">
                                     ${tracking.tracking_status_enum ? `
                                     <input maxlength="18" minlength="10" class="col-sm-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">` + htmlButtonEdit
                                     :htmlButtonAdd}
 
-                                    <a class='tracking-save pointer ml-5 mr-5 text-center' title="Salvar" pps='${tracking.pps_id}'style="display:none">
+                                    <a class='tracking-save pointer ml-10 mr-10 text-center' title="Salvar" pps='${tracking.pps_id}'style="display:none">
                                         <i id='pencil' class='o-checkmark-1 text-white'></i>
                                     </a>
 
@@ -571,7 +571,7 @@ $(() => {
                         .trigger('click');
 
                     let buttons = `
-                        <a class='tracking-edit pointer ml-5 mr-50' title="Editar">
+                        <a class='tracking-edit pointer ml-10 mr-80' title="Editar">
                             <span class="text-right o-edit-1"></span>
                         </a>
                         <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><span class="o-eye-1"></span></a>`
