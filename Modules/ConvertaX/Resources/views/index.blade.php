@@ -13,7 +13,7 @@
 
 @section('content')
     <div class='page'>
-        <div style="display: none" class="page-header container">
+        <div style="display: none !important;" class="page-header container">
             <div class="row jusitfy-content-between">
                 <div class="col-lg-8">
                     <h1 class="page-title my-10" style="min-height: 28px">
@@ -23,7 +23,7 @@
                         </a>
                     </h1>
                 </div>
-                <div class="col text-right" id="integration-actions" style="display:none">
+                <div class="col text-right" id="integration-actions" style="display:none !important;">
                     <a data-toggle="modal" id='btn-add-integration' class="btn btn-floating btn-primary" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="o-add-1" aria-hidden="true"></i>
                     </a>
@@ -95,6 +95,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/convertax/js/index.js?v=s0')}}"></script>
+        <script src="{{asset('modules/convertax/js/index.js?v='.uniqid() )}}"></script>
     @endpush
 @endsection

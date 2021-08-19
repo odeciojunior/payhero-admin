@@ -275,7 +275,7 @@ $(() => {
     function getSale(sale) {
         renderSale(sale);
 
-        getClient(sale.client_id);
+        getClient(sale.client_id, sale.id);
 
         getProducts(sale);
 
@@ -383,6 +383,11 @@ $(() => {
             case 20:
                 status.append(
                     "<span class='ml-2 badge badge-antifraude'>Revisão Antifraude</span>"
+                );
+                break;
+            case 21:
+                status.append(
+                    "<span class='ml-2 badge badge-danger'>Cancelado Antifraude</span>"
                 );
                 break;
             case 22:
@@ -970,10 +975,10 @@ $(() => {
         }
     }
 
-    function getClient(client) {
+    function getClient(client, sale) {
         $.ajax({
             method: "GET",
-            url: "/api/customers/" + client,
+            url: "/api/customers/" + client + '/' + sale,
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -997,7 +1002,14 @@ $(() => {
             .mask('+00 (00) 00000-0000');
         $("#client-email").val(client.email).attr("client", client.code);
         $("#client-document").text("CPF: " + client.document);
-        $("#client-whatsapp").attr("href", client.whatsapp_link);
+        if(client.fraudster) {
+            $("#client-whatsapp-container").hide();
+            $('.btn-edit-client').hide();
+        }else{
+            $('.btn-edit-client').show();
+            $("#client-whatsapp-container").show();
+            $("#client-whatsapp").attr("href", client.whatsapp_link);
+        }
     }
 
     function getProducts(sale) {
@@ -1023,7 +1035,6 @@ $(() => {
         $("#data-tracking-products").html("");
         let div = "";
         let photo = "/modules/global/img/produto.png";
-        console.log(products);
         $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;

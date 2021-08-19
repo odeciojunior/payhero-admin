@@ -4,7 +4,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: "/api/apps/hotzapp/",
+            url: "/api/apps/hotzapp",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),

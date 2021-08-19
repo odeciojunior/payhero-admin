@@ -7,31 +7,37 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Customer;
+use Modules\Core\Entities\Sale;
 use Modules\Customers\Transformers\CustomerResource;
+use Modules\Customers\Transformers\FraudsterCustomerResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CustomersApiController extends Controller
 {
 
-    public function show($id)
+    public function show($id, $saleId = null)
     {
+        $sale = Sale::find(current(hashids()->connection('sale_id')->decode($saleId)));
+
         try {
             if (empty($id)) {
                 return response()->json([
                     'message' => 'Ocorreu um erro, cliente não encontrado',
                 ], 400);
             }
-
             $customer = Customer::find(hashids_decode($id));
 
-            if (!empty($customer)) {
-                return new CustomerResource($customer);
+            if (empty($customer)) {
+                return response()->json([
+                    'message' => 'Ocorreu um erro, cliente não encontrado',
+                ], 400);
             }
-
-            return response()->json([
-                'message' => 'Ocorreu um erro, cliente não encontrado',
-            ], 400);
+            if ($sale && $sale->status === Sale::STATUS_CANCELED_ANTIFRAUD) {
+                return new FraudsterCustomerResource($customer);
+            }
+            return new CustomerResource($customer);
         } catch (Exception $e) {
+            Log::warning('Erro ao buscar cliente, (CustomersApiController - show)');
             report($e);
 
             return response()->json([
@@ -76,7 +82,7 @@ class CustomersApiController extends Controller
                 return response()->json(['message' => 'Os dados informados são inválidos!'], 400);
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao atualizar cliente, (ClientApiController - update)');
+            Log::warning('Erro ao atualizar cliente, (CustomersApiController - update)');
             report($e);
 
             return response()->json(['message' => 'Erro ao alterar dados do cliente!'], 400);

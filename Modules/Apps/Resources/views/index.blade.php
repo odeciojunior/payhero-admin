@@ -6,10 +6,10 @@
     @endpush
 
     <div class="page">
-        <div style="display: none" class="page-header container">
+        <div style="display: none !important;" class="page-header container">
             <h1 class="page-title">Aplicativos</h1>
         </div>
-        <div id="project-not-empty" style="display: none">
+        <div id="project-not-empty" style="display: none !important;">
             <div class="page-content container">
                 <div class="row">
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch div-notazz-integration">
