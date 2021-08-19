@@ -22,9 +22,9 @@
                         <div class="d-flex align-items-center">
                             <span class="o-download-cloud-1 mr-2"></span>
                             <div class="btn-group" role="group">
-                                <button id="btn-export-xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS
+                                <button id="btn-export-xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left border-right-0">.xls
                                 </button>
-                                <button id="btn-export-csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV
+                                <button id="btn-export-csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.csv
                                 </button>
                             </div>
                         </div>
@@ -371,7 +371,7 @@
 
                                     <div id="data-labels" class="card-body pl-10" style="height: 236px;">
 
-                                        <div class="labels mt-40 row">
+                                        <div class="labels row">
                                             <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 posted"></i> Postados</h2>
                                             <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 delivered"></i> Entregues</h2>
                                             <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 inTransit"></i> Em trânsito</h2>

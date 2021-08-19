@@ -278,7 +278,7 @@ a.tracking-edit.pointer.ml-5.mr-50 {
     border: 1px solid !important;
     border-color: #CECECE !important;
     border-radius: 5px !important;
-    padding-top: 5px;
+    padding-top: 3px;
 }
 span.text-right.o-edit-1 {
     border-radius: 5px !important;
@@ -358,4 +358,8 @@ td.table-title{
 
 #alert-tracking-issues{
     border-radius: 10px;
+}
+.labels{
+    margin-top: 33px;
+    margin-bottom: 33px;
 }
