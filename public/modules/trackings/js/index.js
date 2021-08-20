@@ -180,7 +180,8 @@ $(() => {
             },
             success: response => {
                 if (!isEmpty(response.data)) {
-                    $("#project-not-empty").removeClass("d-none");
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
                     $("#export-excel").show()
 
                     $.each(response.data, function (i, project) {
@@ -194,7 +195,8 @@ $(() => {
                     getResume();
                 } else {
                     $("#export-excel").hide()
-                    $("#project-empty").removeClass("d-none");
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
                 }
 
                 loadingOnScreenRemove();
@@ -396,7 +398,7 @@ $(() => {
                     <a class='tracking-add pointer mr-10' title="Adicionar">
                         <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
                     </a>
-                    <input maxlength="18" minlength="10" class="col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;">`
+                    <input maxlength="18" minlength="10" class="col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;border-radius: 8px;">`
                     ;
 
                     let htmlButtonEdit = `
@@ -441,7 +443,7 @@ $(() => {
 
                                 <div class="buttons d-flex" style="max-height: 38px;">
                                     ${tracking.tracking_status_enum ? `
-                                    <input maxlength="18" minlength="10" class="col-sm-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" value="${tracking.tracking_code}">` + htmlButtonEdit
+                                    <input maxlength="18" minlength="10" class="col-sm-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
                                     :htmlButtonAdd}
 
                                     <a class='tracking-save pointer ml-10 mr-10 text-center' title="Salvar" pps='${tracking.pps_id}'style="display:none">

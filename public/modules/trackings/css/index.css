@@ -97,9 +97,6 @@ h4.number {
     color: #57617c;
 }
 
-.cardNumbers {
-    height: 100%;
-}
 
 #btn-export-xls {
     border-radius: .5em 0 0 .5em !important;
@@ -109,91 +106,95 @@ h4.number {
     border-radius: .0em .5em .5em 0 !important;
 }
 
-/*INPUT PESQUISAR POR DATA */
+/* ======== INPUT PESQUISAR POR DATA ======== */
 input#date_updated{
     padding: 11px 16px 11px 16px !important;
 }
 
-/* ALERTA DE PROBLEMA COM O CODIGO */
+
+/* ======== ALERTA DE PROBLEMA COM O CODIGO ======== */
 .alert-tracking {
 	background-color: #F6FAFF;
 }
-i.material-icons.mr-10{
-    margin: auto;
+.alert-tracking span.alert-text {
+	vertical-align: middle;
+	padding-left: 5px;
 }
-i.material-icons.pointer{
-    margin: auto;
+.alert-tracking img {
+	width: 24px;
+}
+.text-muted {
+	color: #959595 !important;
 }
 
-/* CARDS SETTINGS*/
+
+/* ======== CARDS SETTINGS ======== */
 .cards-settings{
     padding: 18px 0px 18px 18px;
+    height: 114px;
+}
+.card-height{
+    max-height: 115px;
 }
 
-/*CORES DA LEGENDA DO GRACIFO */
+
+/* ======== CORES DA LEGENDA DO GRACIFO ======== */
 .posted {
     color: #33638F;
 }
-
 .onDelivery {
     color: #00B1FF;
 }
-
 .delivered {
     color: #1BE4A8;
 }
-
 .inTransit {
     color: #FFCD1B;
 }
-
 .withProblem {
     color: #FF2F2F;
 }
-
 .withoutInfo {
     color: #B9B9B9;
     ;
 }
 
-/*CORES DO STATUS NA TABELA */
+
+/* ======== CORES DO STATUS NA TABELA ======== */
 .statusPosted {
     background-color: #33638F;
     color: white;
 }
-
 .statusOnDelivery {
     background-color: #00B1FF;
     color: white;
 }
-
 .statusDelivered {
     background-color: #1BE4A8;
     color: white;
 }
-
 .statusInTransit {
     background-color: #FFCD1B;
     color: white;
 }
-
 .statusProblem {
     background-color: #FF2F2F;
     color: white;
 }
-
 .statusWithoutInfo {
     background-color: #B9B9B9;
     color: white;
 }
 
-/* ARRENDONDA FINAL DA TABELA */
+
+/* ======== ARRENDONDA FINAL DA TABELA ======== */
 .no-final-space{
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
 }
 
-/*BOTAO DE ADICIONAR CODIGO */
+
+/* ======== BOTAO DE ADICIONAR CODIGO ======== */
 span.o-add-1.text-primary.border.border-primary {
     font-size: 25px;
     border-radius: 5px !important;
@@ -202,29 +203,26 @@ span.o-add-1.text-primary.border.border-primary {
 }
 
 
-/* INPUT CODIGO DE RASTREIO */
+/* ======== INPUT CODIGO DE RASTREIO ======== */
 input.form-control.font-weight-bold.input-tracking-code[readonly]{
     border: 1px solid ;
     border-radius: 8px;
     border-color: #CECECE;
     background: #F1F1F1;
 }
-
 input[type="text"]::placeholder{
     text-align: center;
 }
 .col-sm-7.form-control.font-weight-bold.input-tracking-code.fake-label{
     padding-bottom: 1px !important;
 }
-
-
 div.buttons.d-flex.mr-15{
     min-width: 328px !important;
     max-height: 38px !important;
 }
 
 
-/*BOTAO CHECKED SALVAR */
+/* ======== BOTAO CHECKED SALVAR ======== */
 a.tracking-save.pointer.ml-10.mr-10.text-center {
     text-align: center;
     background: #2E85EC;
@@ -243,7 +241,7 @@ i#pencil{
 }
 
 
-/* BOTAO FECHAR/CANCELAR */
+/* ======== BOTAO FECHAR/CANCELAR ======== */
 a.tracking-close.pointer.text-dark{
     min-height: 39px;
     text-align: center;
@@ -261,7 +259,7 @@ a.tracking-close.pointer.text-dark:hover {
 }
 
 
-/* CONFIG ICONE X */
+/* ======== CONFIG ICONE X ======== */
 .set-rotate{
     transform: rotate(-45deg);
     margin: -2px 0px 0px 0px;
@@ -272,7 +270,7 @@ i.set-close{
 }
 
 
-/*BOTAO DE EDITAR CODIGO*/
+/* ======== BOTAO DE EDITAR CODIGO ======== */
 a.tracking-edit.pointer.ml-10.mr-80 {
     color: #F1F1F1;
     border: 1px solid !important;
@@ -286,7 +284,8 @@ span.text-right.o-edit-1 {
     padding: 0px 8px 0px 8px !important;
 }
 
-/* BOTAO DE VISUALIZAR */
+
+/*  ======== BOTAO DE VISUALIZAR ======== */
 a.tracking-detail.pointer{
     color: #F1F1F1;
 }
@@ -295,13 +294,12 @@ span.o-eye-1{
 }
 
 
-/*TRATAMENTO DE IMAGEM QUANDO NAO TEM DADOS*/
+/* ======== TRATAMENTO DE IMAGEM QUANDO NAO TEM DADOS ======== */
 div#dataCharts{
-    height: 257px;
+    height: 229px;
     position: relative;
     justify-content: flex-end;
 }
-
 #noData{
     z-index: 1;
     position: relative;
@@ -309,7 +307,8 @@ div#dataCharts{
     margin-top: 75px;
 }
 
-/*GRAFICO DE RESULTADO EM CANVAS*/
+
+/* ======== GRAFICO DE RESULTADO EM CANVAS ======== */
 #myChart{
     max-width: 180px !important;
     max-height: 180px !important;
@@ -317,7 +316,8 @@ div#dataCharts{
     z-index: 1;
 }
 
-/*DIV APRESENTAÇÂO DE TOTAL NO CENTRO DO GRAFICO */
+
+/* ======== DIV APRESENTAÇÂO DE TOTAL NO CENTRO DO GRAFICO ======== */
 .total-container {
     position: absolute;
     width: 100%;
@@ -330,22 +330,18 @@ div#dataCharts{
     z-index: 1;
     flex-direction: column;
 }
-
 span#total-products{
     font-size: 24px;
     font-weight: bold;
     color: #0D2C54;
 }
-
 td.table-title{
     color: #0D2C54 !important;
 }
-
 .resume-number {
     font-size: 30px;
     font-weight: bold;
 }
-
 #graphic-loading {
     height: 240px;
     width: 100%;
@@ -355,11 +351,10 @@ td.table-title{
     align-items: center;
     background-color: rgb(255, 255, 255);
 }
-
 #alert-tracking-issues{
     border-radius: 10px;
 }
 .labels{
-    margin-top: 33px;
-    margin-bottom: 33px;
+    margin-top: 23px;
+    margin-bottom: 20px;
 }

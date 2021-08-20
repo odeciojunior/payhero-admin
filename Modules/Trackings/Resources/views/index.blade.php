@@ -39,7 +39,7 @@
                     </div>
                     <div class="col mt-lg-0 mt-20 p-0" style="flex-grow: 0">
                         <div class="d-flex align-items-center mr-15">
-                            <a class="rounded-info btn mt-3 mr-3 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-detalhes-importar">
+                            <a class="rounded-info btn mr-3 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-detalhes-importar" style="min-height:38px;">
                                 <span class="o-info-1" style="font-size: 24px;"></span>
                             </a>
                             <span data-toggle="modal" data-target="#modal-detalhes-importar" class="ml-10 pointer" style="min-width: 112px; font-size: 12px">Como importar códigos de rastreio?</span>
@@ -147,7 +147,7 @@
         </div>
     </div>
     <!-- Fim - Modal de Instruções -->
-    <div id="project-not-empty" class="d-none">
+    <div id="project-not-empty" style="display:none !important;">
         <div class="page-content container">
             <!-- Filtro -->
             <div class="fixhalf"></div>
@@ -223,17 +223,15 @@
             </div>
             <div class="fixhalf"></div>
             <!-- Aviso Problemas com os Códigos -->
-            <div id="alert-tracking-issues" class="alert alert-light alert-dismissible fade show text-primary border border-primary card py-10 pl-20 pr-10">
-                <div class="d-flex">
-                    <i class="material-icons mr-10">help</i>
-                    <div class="w-full m-auto">
-                        <p class="font-size-14 pr-md-100 m-auto">
-                            <strong class="font-size-16">Problemas com os códigos?</strong>
-                            Caso você tenha algum código de rastreio com divergência de status, entre em contato com o nosso suporte.
-                        </p>
-                    </div>
-                    <i class="material-icons pointer" data-dismiss="alert">close</i>
-                </div>
+            <div id="alert-tracking-issues" class="alert alert-light alert-dismissible fade show text-primary border border-primary alert-tracking" role="alert" style="border-radius: 12px">
+                <img src="{{ asset('modules/trackings/svg/info-tracking.svg') }}">
+                <span class="alert-text">
+                    <span class="bold">Problemas com os códigos?</span>
+                    Caso você tenha algum código de rastreio com divergência de status, entre em contato com o nosso suporte.
+                </span>
+                <button type="button" class="close text-primary" data-dismiss="alert" aria-label="Close" style="opacity: 1">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <!-- Aviso de Saldo Bloqueado -->
             <div id="alert-blockedbalance" class="alert alert-danger alert-dismissible fade show card py-10 pl-20 pr-10" style="display:none;">
@@ -272,69 +270,69 @@
             <div class="container">
                 <div id="viewer-data-general" class="row no-gutters">
 
-                    <div class="col-12 col-md-6">
-                        <div class="row pr-30 pb-0 cardNumbers">
+                    <div class="col-12 col-md-6" style="max-height: 211px;">
+                        <div class="row pr-30 pb-0">
 
-                            <div id="posted" class="col-md-4 col-sm-6 col-xs-12 border-right border-bottom px-0">
-                                <div class="card rounded-right rounded-bottom mb-1 cardNumbers">
+                            <div id="posted" class="col-md-4 col-sm-6 col-xs-12 card-height border-right border-bottom px-0">
+                                <div class="card rounded-right rounded-bottom mb-1">
                                     <div class="card-body cards-settings">
-                                        <h6 class="font-size-14 gray-600 m-0"> Postados </h6>
-                                        <h4 id="percentual-posted" class="mt-30 mb-0 text-nowrap resume-number">
+                                        <h6 class="font-size-16 gray-600 m-0"> Postados </h6>
+                                        <h4 id="percentual-posted" class="mt-25 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-4 col-sm-6 col-xs-12 border-right border-bottom px-0 ">
-                                <div class="card rounded-top rounded-bottom mb-1 cardNumbers">
+                            <div class="col-md-4 col-sm-6 col-xs-12 card-height border-right border-bottom px-0 ">
+                                <div class="card rounded-top rounded-bottom mb-1">
                                     <div class="card-body cards-settings">
-                                        <h6 class="font-size-14 gray-600 m-0"> Em trânsito</h6>
-                                        <h4 id="percentual-dispatched" class="mt-30 mb-0 text-nowrap resume-number">
+                                        <h6 class="font-size-16 gray-600 m-0"> Em trânsito</h6>
+                                        <h4 id="percentual-dispatched" class="mt-25 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-4 col-sm-6 col-xs-12 border-bottom pl-0 pr-0">
-                                <div class="card rounded-top rounded-bottom mb-1 cardNumbers">
+                            <div class="col-md-4 col-sm-6 col-xs-12 card-height border-bottom pl-0 pr-0">
+                                <div class="card rounded-top rounded-bottom mb-1">
                                     <div class="card-body cards-settings">
-                                        <h6 class="font-size-14 gray-600 m-0"> Saiu para entrega</h6>
-                                        <h4 id="percentual-out" class="mt-30 mb-0 text-nowrap resume-number">
+                                        <h6 class="font-size-16 gray-600 m-0"> Saiu para entrega</h6>
+                                        <h4 id="percentual-out" class="mt-25 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-4 col-sm-6 col-xs-12 border-right px-0">
-                                <div class="card rounded-top rounded-right mb-1 cardNumbers">
+                            <div class="col-md-4 col-sm-6 col-xs-12 card-height border-right px-0">
+                                <div class="card rounded-top rounded-right mb-1">
                                     <div class="card-body cards-settings">
-                                        <h6 class="font-size-14 gray-600 m-0"> Problema na entrega</h6>
-                                        <h4 id="percentual-exception" class="mt-30 mb-0 text-nowrap resume-number">
+                                        <h6 class="font-size-16 gray-600 m-0"> Problema na entrega</h6>
+                                        <h4 id="percentual-exception" class="mt-25 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-4 col-sm-6 col-xs-12 border-right px-0">
-                                <div class="card rounded-top rounded-bottom mb-1 cardNumbers">
+                            <div class="col-md-4 col-sm-6 col-xs-12 card-height border-right px-0">
+                                <div class="card rounded-top rounded-bottom mb-1">
                                     <div class="card-body cards-settings">
-                                        <h6 class="font-size-14 gray-600 m-0"> Não informado</h6>
-                                        <h4 id="percentual-unknown" class="mt-30 mb-0 text-nowrap resume-number">
+                                        <h6 class="font-size-16 gray-600 m-0"> Não informado</h6>
+                                        <h4 id="percentual-unknown" class="mt-25 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-4 col-sm-6 col-xs-12 pl-0 pr-0">
-                                <div class="card rounded-top rounded-bottom mb-1 cardNumbers">
+                            <div class="col-md-4 col-sm-6 col-xs-12 card-height pl-0 pr-0">
+                                <div class="card rounded-top rounded-bottom mb-1">
                                     <div class="card-body cards-settings">
-                                        <h6 class="font-size-14 gray-600 m-0"> Entregues</h6>
-                                        <h4 id="percentual-delivered" class="mt-30 mb-0 text-nowrap resume-number">
+                                        <h6 class="font-size-16 gray-600 m-0"> Entregues</h6>
+                                        <h4 id="percentual-delivered" class="mt-25 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -347,10 +345,10 @@
                     <div class="col-12 col-md-6">
                         <div id="graphic-loading"></div>
 
-                        <div class="row cardNumbers"> 
+                        <div class="row"> 
 
-                            <div class="col-md-5 p-0 ">
-                                <div class="card rounded-right mb-0 border-left rounded-left cardNumbers">
+                            <div class="col-md-5 p-0 " style="max-height: 246px;">
+                                <div class="card rounded-right mb-0 border-left rounded-left">
 
                                     <div id="dataCharts" class="d-flex card-body p-0" style="position: relative;">
 
@@ -367,9 +365,9 @@
 
                             <!-- LEGENDAS -->
                             <div class="col-md-7 px-0 ">
-                                <div class="card rounded-left m-0 cardNumbers">
+                                <div class="card rounded-left m-0">
 
-                                    <div id="data-labels" class="card-body pl-10" style="height: 236px;">
+                                    <div id="data-labels" class="card-body pl-10" style="height: 229px;">
 
                                         <div class="labels row">
                                             <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 posted"></i> Postados</h2>
