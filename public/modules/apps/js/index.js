@@ -24,13 +24,12 @@ $(document).ready(function () {
                 if (verifyAccountFrozen()) {
                     $('.add-btn').removeAttr('href');
                 }
+                $("#project-not-empty").show();
+
                 if (response.data.length) {
-                    $("#project-not-empty").show();
                     $("#project-empty").hide();
                     updateUsedApps();
                 } else {
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
                     loadingOnScreenRemove();
                 }
             }
