@@ -739,6 +739,11 @@ img.border-icon{
     padding-bottom: 11px !important;
 }
 
+.dropdown-item.disabled,
+.dropdown-item:disabled {
+    color: inherit !important;
+}
+
 #form-update-plan .nav-tabs .nav-link:not(.active) {border-bottom-color: #c3c3c3;}
 #form-update-plan .nav-tabs .nav-link {background-color: #ffffff;}
 #form-update-plan .nav-tabs .nav-link:not(.active) {margin: 0 !important;}
