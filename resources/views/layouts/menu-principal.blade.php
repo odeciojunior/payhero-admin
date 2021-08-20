@@ -74,8 +74,8 @@
 
                     </a>
                     <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
-                        @if(str_contains(request()->getHost(), 'homolog'))
-                            <div data-toggle="tooltip" title="Desabilitado na versão de testes">
+                        @if(!str_contains(request()->getHost(), 'homolog'))
+                            <div data-toggle="tooltip" data-placement="left" title="Desabilitado na versão de testes">
                                 <a class="dropdown-item disabled" disabled>
                                     <img height="24" width="24" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
                                     Configurações
