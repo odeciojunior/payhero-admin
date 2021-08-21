@@ -922,3 +922,111 @@ img.border-icon{
 .modal-new-layout select.form-control {
     padding: .429rem 1rem !important;
 }
+
+.modal-new-layout .modal-header {
+    padding: 20px 30px;
+}
+.modal-new-layout .modal-body {
+    padding: 30px !important;
+}
+.modal-new-layout .modal-footer {
+    padding: 0px 30px 30px !important;
+}
+
+.modal-plans .modal-dialog {
+    max-width: 690px;
+}
+.modal-plans .box-stage {
+    -ms-flex: 1 1 auto!important;
+    flex: 1 1 auto!important;
+}
+.modal-plans .box-stage div {
+    width: auto;
+}
+.modal-plans .box-stage .icon {
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    line-height: 32px;
+    background: #EDEDED;
+    border-radius: 50%;
+}
+.modal-plans .box-stage.products .icon {
+    background: #D2E7FF;
+}
+.modal-plans .box-stage .title {
+    font-size: 16px;
+    line-height: 20px;
+    color: #636363;
+    letter-spacing: 0;
+    margin: 0;
+}
+.modal-plans .box-stage .line hr {
+    width: 65px;
+    border-color: #c4c4c4;
+}
+
+.modal-plans label {
+    font-weight: bold;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 12px;
+    color: #636363;
+}
+
+.modal-plans .box-product {
+    border: 1px solid #E1E1E1;
+    box-sizing: border-box;
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+}
+.modal-plans .box-product.selected {
+    background: #EFF6FF;
+    border: 1px solid #2E85EC;
+}
+.modal-plans .box-product.review {
+    background: #F4F4F4;
+    border: 1px solid #F4F4F4;
+}
+
+.modal-plans .box-product img {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+}
+.modal-plans .box-product .title {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 100%;
+    color: #636363;
+    margin: 0 0 5px 0;
+}
+.modal-plans .box-product .description {
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 100%;
+    color: #9B9B9B;
+    margin: 0;
+}
+.modal-plans .box-product .check {
+    width: 19px;
+    height: 19px;
+    border: 1px solid #9B9B9B;
+    box-sizing: border-box;
+    border-radius: 50%;
+}
+
+.modal-plans .modal-footer .btn {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
+    padding: 12px 32px;
+}
+.modal-plans .modal-footer .btn-default {
+    color: #636363;
+}
+.modal-plans .modal-footer .btn-primary {
+    border: 1px solid #2E85EC;
+}
