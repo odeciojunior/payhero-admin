@@ -74,6 +74,51 @@ $(function () {
         }
     }
 
+    function createNew()
+    {
+        var modalID = $('#modal_add_plan');
+        
+        $.ajax({
+            method: "POST",
+            url: "/api/products/userproducts",
+            data: { project: projectId },
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                $("#modal-content").hide();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                modalID.modal('show');
+                
+                var data = '<div class="row">';
+                response.data.forEach(function(product) {
+                    console.log(product.status_enum);
+                    data += '<div class="col-sm-6">';
+                        data += '<div class="box-product ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
+                            data += '<div class="d-flex align-items-center">';
+                                data += '<img class="mr-15" src="' + product.photo + '" alt="Image Product">';
+                                data += '<div>';
+                                    data += '<h1 class="title">' + product.name_substr + '</h1>';
+                                    data += '<p class="description">' + product.description + '</p>';
+                                data += '</div>';
+                            data += '</div>';
+                            if (product.status_enum == 2) {
+                                data += '<div class="check"></div>';
+                            }
+                        data += '</div>';
+                    data += '</div>';
+                });
+                data + '</div>';
+
+                modalID.find('#load-products').html(data);
+            }
+        });
+    }
+
     function create() {
         switch_modal = 'Create';
         $.ajax({
@@ -220,7 +265,7 @@ $(function () {
      */
     $("#add-plan").on('click', function () {
         $('#modal_add_plan').attr('data-backdrop', 'static');
-        create();
+        createNew();
         $('.btn-close-add-plan').on('click', function () {
             clearFields();
             $('#modal_add_plan').removeAttr('data-backdrop');
