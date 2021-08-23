@@ -236,12 +236,19 @@
                         <span class="site-menu-arrow"></span>
                     </a>
                     <ul class="site-menu-sub">
-                        <li class="site-menu-item has-sub">
-                            <a href="{!! route('finances') !!}">
+                        @if(foxutils()->isHomolog())
+                            <li class="site-menu-item disabled">
                                 <span class="bg-menu"></span>
-                                <span class="site-menu-title">Extrato</span>
-                            </a>
-                        </li>
+                                <span class="site-menu-title pointer disabled">Extrato</span>
+                            </li>
+                        @else
+                            <li class="site-menu-item has-sub">
+                                <a href="{!! route('finances') !!}">
+                                    <span class="bg-menu"></span>
+                                    <span class="site-menu-title">Extrato</span>
+                                </a>
+                            </li>
+                        @endif
                         <li class="site-menu-item">
                             <a href="{{ route('old-finances') }}">
                                 <span class="bg-menu"></span>
