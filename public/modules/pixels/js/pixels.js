@@ -659,6 +659,7 @@ $(function () {
             },
             success: function success(response) {
                 alertCustom("success", response.message);
+                $("#modal-config-pixel").modal('hide');
             }
         });
     });

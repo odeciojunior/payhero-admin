@@ -3,9 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\Tracking;
-use Modules\Core\Services\TrackingService;
+use Modules\Core\Entities\Withdrawal;
+use Modules\Withdrawals\Services\WithdrawalService;
 
 class GenericCommand extends Command
 {
@@ -15,26 +14,14 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $service = new TrackingService();
+        $withdrawalService = new WithdrawalService();
+        $withdrawals = Withdrawal::with('company.user')
+            ->whereIn('id', [14054, 14036])
+            ->get();
 
-        $trackings = DB::select("select tracking_code, product_plan_sale_id
-                                          from trackings
-                                          where tracking_code in (
-                                              select tracking_code
-                                              from trackings
-                                              where system_status_enum = 5
-                                          )");
-
-        $bar = $this->output->createProgressBar(count($trackings));
-        $bar->start();
-
-        foreach ($trackings as $t) {
-            $service->createOrUpdateTracking($t->tracking_code, $t->product_plan_sale_id, false, false);
-            $bar->advance();
+        foreach ($withdrawals as $withdrawal) {
+            $isFirstUserWithdrawal = $withdrawalService->isFirstUserWithdrawal($withdrawal->company->user);
+            $withdrawalService->processWithdrawal($withdrawal, $isFirstUserWithdrawal);
         }
-
-        $bar->finish();
     }
 }
-
-

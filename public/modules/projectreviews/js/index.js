@@ -481,12 +481,8 @@ $(document).ready(function () {
 
     $(document).on('click', '.bt-review-config-update', function (event) {
         event.preventDefault();
-        // if ($('#countdown_flag').is(':checked') && $('#countdown_time').val() == '') {
-        //     alertCustom('error', 'Preencha o campo Contagem');
-        //     return false;
-        // }
 
-        var form_data = new FormData(document.getElementById('form_config_review'));
+        let form_data = new FormData(document.getElementById('form_config_review'));
 
         $.ajax({
             method: "POST",
@@ -509,6 +505,7 @@ $(document).ready(function () {
                 loadReviews();
 
                 alertCustom('success', response.message);
+                $("#modal_config_review").modal('hide');
             }
         });
     });
