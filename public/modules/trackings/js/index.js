@@ -224,8 +224,8 @@ $(() => {
                 labels: ['Postados: ', 'Em trânsito: ', 'Saiu para entrega: ', 'Problema na entrega: ', 'Não informado: ', 'Entregues: '],
                 datasets: [{
                     data: dataValues,
-                    backgroundColor: chartDefaultColorsLabel,
-                    borderColor: chartDefaultColorsLabel,
+                    backgroundColor: colors,
+                    borderColor: colors,
                     borderWidth: 1,
                     cutout: "83%",
                 }]
@@ -238,7 +238,7 @@ $(() => {
                         enabled: true,
                         callbacks: {
                             title: (tooltipItem) => `${tooltipItem[0].label}`,
-                            label: (tooltipItem) => `  ${numberWithDecimal(tooltipItem.dataset.data[tooltipItem.dataIndex])}`
+                            label: (tooltipItem) => tooltipItem.dataset.data[tooltipItem.dataIndex] > 10000 ? Math.round(tooltipItem.dataset.data[tooltipItem.dataIndex]/1000, 1)+'K' : numberWithDecimal(tooltipItem.dataset.data[tooltipItem.dataIndex])
                         }
                     },
                 },
@@ -312,23 +312,6 @@ $(() => {
         let {total, posted, dispatched, out_for_delivery, delivered, exception, unknown} = data;
         let thousand = 10000;
 
-        $('#total-products').text(total > thousand ? `${parseFloat(numberWithDecimal(total)).toFixed(1)}K` : numberWithDecimal(total));
-
-        $('#percentual-posted .resume-number').html(posted <= 0 ? posted = 0 : posted = numberWithDecimal(posted));
-
-        $('#percentual-dispatched .resume-number').html(dispatched <= 0 ? dispatched = 0 : dispatched = numberWithDecimal(dispatched));
-        
-        $('#percentual-out .resume-number').html(out_for_delivery <= 0 ? out_for_delivery = 0 : out_for_delivery = numberWithDecimal(out_for_delivery));
-
-        $('#percentual-exception .resume-number').html(exception <= 0 ? exception = 0 : exception = numberWithDecimal(exception));
-        
-        $('#percentual-unknown .resume-number').html(unknown <= 0 ? unknown = 0 : unknown = numberWithDecimal(unknown));
-
-        $('#percentual-delivered .resume-number').html(delivered <= 0 ? delivered = 0 : delivered = numberWithDecimal(delivered));
-
-        //add this line here for all $('#percentual-delivered .resume-percentual').html('(' + (delivered ? (delivered * total / 100).toFixed(2) : '0.00') + '%)');
-        //add in html <span class="resume-percentual">(0.00%)</span> to show per cent
-
         if (verifyValueIsZero(data.total)) {
             if ($('#noData').length > 0) {
                 return;
@@ -345,6 +328,22 @@ $(() => {
             $('#myChart, .labels, .total-container').show();
             inicializeChart(chartDefaultColorsLabel, [posted, dispatched, out_for_delivery, exception, unknown, delivered]);
         }
+        $('#total-products').text(total > thousand ? `${parseFloat(numberWithDecimal(total)).toFixed(1)}K` : numberWithDecimal(total));
+
+        $('#percentual-posted .resume-number').html(posted <= 0 ? posted = 0 : posted = numberWithDecimal(posted));
+
+        $('#percentual-dispatched .resume-number').html(dispatched <= 0 ? dispatched = 0 : dispatched = numberWithDecimal(dispatched));
+        
+        $('#percentual-out .resume-number').html(out_for_delivery <= 0 ? out_for_delivery = 0 : out_for_delivery = numberWithDecimal(out_for_delivery));
+
+        $('#percentual-exception .resume-number').html(exception <= 0 ? exception = 0 : exception = numberWithDecimal(exception));
+        
+        $('#percentual-unknown .resume-number').html(unknown <= 0 ? unknown = 0 : unknown = numberWithDecimal(unknown));
+
+        $('#percentual-delivered .resume-number').html(delivered <= 0 ? delivered = 0 : delivered = numberWithDecimal(delivered));
+
+        //add this line here for all $('#percentual-delivered .resume-percentual').html('(' + (delivered ? (delivered * total / 100).toFixed(2) : '0.00') + '%)');
+        //add in html <span class="resume-percentual">(0.00%)</span> to show per cent
     }
 
     function index(link = null) {
