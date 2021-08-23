@@ -205,6 +205,18 @@
             text-decoration: none;
             color: #FF6D00;
         }
+
+        @media (max-width: 768px) {
+            .img-container {
+                display:none;
+            }
+
+            .form-container {
+                width: 100%;
+                padding: 20px;
+            }
+        }
+
     </style>
 
 </head>
