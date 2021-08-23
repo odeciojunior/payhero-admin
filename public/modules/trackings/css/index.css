@@ -213,7 +213,7 @@ input.form-control.font-weight-bold.input-tracking-code[readonly]{
 input[type="text"]::placeholder{
     text-align: center;
 }
-.col-sm-7.form-control.font-weight-bold.input-tracking-code.fake-label{
+.mr-10.col-sm-7.form-control.font-weight-bold.input-tracking-code.fake-label{
     padding-bottom: 1px !important;
 }
 div.buttons.d-flex.mr-15{
@@ -223,7 +223,7 @@ div.buttons.d-flex.mr-15{
 
 
 /* ======== BOTAO CHECKED SALVAR ======== */
-a.tracking-save.pointer.ml-10.mr-10.text-center {
+a.tracking-save.pointer.mr-10.text-center {
     text-align: center;
     background: #2E85EC;
     border-radius: 5px;
@@ -232,7 +232,7 @@ a.tracking-save.pointer.ml-10.mr-10.text-center {
     transition: 0.5s;
 
 }
-a.tracking-save.pointer.ml-10.mr-10.text-center:hover {
+a.tracking-save.pointer.mr-10.text-center:hover {
     background: #206ECA;
 }
 i#pencil{
@@ -271,23 +271,26 @@ i.set-close{
 
 
 /* ======== BOTAO DE EDITAR CODIGO ======== */
-a.tracking-edit.pointer.ml-10.mr-80 {
+a.tracking-edit.pointer {
     color: #F1F1F1;
     border: 1px solid !important;
     border-color: #CECECE !important;
     border-radius: 5px !important;
     padding-top: 3px;
+    min-width: 37px;
+    margin-right: 72px;
 }
 span.text-right.o-edit-1 {
     border-radius: 5px !important;
     border-width: 2px !important;
-    padding: 0px 8px 0px 8px !important;
+    padding: 0px 7px 0px 7px !important;
 }
 
 
 /*  ======== BOTAO DE VISUALIZAR ======== */
 a.tracking-detail.pointer{
     color: #F1F1F1;
+    margin-right: 22px;
 }
 span.o-eye-1{
     padding: 6px 5px 0px 5px !important;

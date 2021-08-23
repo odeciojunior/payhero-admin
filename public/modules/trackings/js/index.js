@@ -397,11 +397,11 @@ $(() => {
                     <a class='tracking-add pointer mr-10' title="Adicionar">
                         <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
                     </a>
-                    <input maxlength="18" minlength="10" class="col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;border-radius: 8px;">`
+                    <input maxlength="18" minlength="10" class="mr-10 col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;border-radius: 8px;">`
                     ;
 
                     let htmlButtonEdit = `
-                    <a class='tracking-edit pointer ml-10 mr-80' title="Editar">
+                    <a class='tracking-edit pointer' title="Editar">
                       <span class="text-right o-edit-1"></span>
                     </a>
                     
@@ -412,7 +412,7 @@ $(() => {
                         <tr ${grayRow ? 'class="td-odd"' : ''}>
 
                             ${lastSale !== tracking.sale ? `
-                                <td class="detalhes_venda pointer table-title" venda="${tracking.sale}">
+                                <td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}">
                                     #${tracking.sale}
                                 </td>`
                                 :
@@ -420,32 +420,34 @@ $(() => {
                                 </td>`
                             }
 
-                            <td>
+                            <td class="col-sm-4">
                                 <span style="max-width: 330px; display:block; margin: 0px 0px 0px 0px;">
                                     ${tracking.product.amount}x ${tracking.product.name} ${tracking.product.description ? '(' + tracking.product.description + ')' : ''}
                                 </span>
                             </td>
 
-                            <td>${tracking.approved_date}</td>
+                            <td class="col-sm-1">${tracking.approved_date}</td>
 
-                            <td class="text-center col-sm-2 text-nowrap">
+                            <td class="text-center col-sm-2">
                                 <span class="badge ${statusEnum[tracking.tracking_status_enum]}">
                                     ${tracking.tracking_status}
                                 </span>
                                 
-                                ${systemStatus[tracking.system_status_enum]}
-
                                 ${tracking.is_chargeback_recovered ? '<img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">' : ''}
                             </td>
 
-                            <td class="text-left">
+                            <td style="width: 2%;padding: 0px !important;">
+                                ${systemStatus[tracking.system_status_enum]}
+                            </td>
+
+                            <td class="text-left col-sm-4">
 
                                 <div class="buttons d-flex" style="max-height: 38px;">
                                     ${tracking.tracking_status_enum ? `
-                                    <input maxlength="18" minlength="10" class="col-sm-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
+                                    <input maxlength="18" minlength="10" class="mr-10 col-sm-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
                                     :htmlButtonAdd}
 
-                                    <a class='tracking-save pointer ml-10 mr-10 text-center' title="Salvar" pps='${tracking.pps_id}'style="display:none">
+                                    <a class='tracking-save pointer mr-10 text-center' title="Salvar" pps='${tracking.pps_id}'style="display:none">
                                         <i id='pencil' class='o-checkmark-1 text-white'></i>
                                     </a>
 
@@ -572,7 +574,7 @@ $(() => {
                         .trigger('click');
 
                     let buttons = `
-                        <a class='tracking-edit pointer ml-10 mr-80' title="Editar">
+                        <a class='tracking-edit pointer' title="Editar">
                             <span class="text-right o-edit-1"></span>
                         </a>
                         <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><span class="o-eye-1"></span></a>`

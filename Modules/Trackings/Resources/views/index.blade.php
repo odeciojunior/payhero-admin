@@ -398,6 +398,7 @@
                                 <td class="table-title">Produto</td>
                                 <td class="table-title">Aprovação em</td>
                                 <td class="table-title text-center">Status</td>
+                                <td class="table-title text-center"></td>
                                 <td class="table-title">Código de Rastreio</td>
                             </tr>
                         </thead>
