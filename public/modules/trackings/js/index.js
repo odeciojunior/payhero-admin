@@ -317,7 +317,7 @@ $(() => {
                 return;
             }
             $('#dataCharts').append('<img id="noData" src="/modules/global/img/sem-dados.svg" />')
-            $('#data-labels').append('<span id="warning-text" class="d-flex" style="margin-top: 28%;"> Nenhum rastreamento encontrado </span>')
+            $('#data-labels').append('<span id="warning-text" class="d-flex" style="margin-top: 20%;"> Nenhum rastreamento encontrado </span>')
             $('#myChart, .labels, .total-container').hide();
 
         } else {

@@ -270,14 +270,14 @@
             <div class="container">
                 <div id="viewer-data-general" class="row no-gutters">
 
-                    <div class="col-12 col-md-6" style="max-height: 211px;">
+                    <div class="col-12 col-md-6" style="max-height: 200px;">
                         <div class="row pr-30 pb-0">
 
                             <div id="posted" class="col-md-4 col-sm-6 col-xs-12 card-height border-right border-bottom px-0">
-                                <div class="card rounded-right rounded-bottom mb-1">
+                                <div class="card rounded-right rounded-bottom mb-0">
                                     <div class="card-body cards-settings">
                                         <h6 class="font-size-16 gray-600 m-0"> Postados </h6>
-                                        <h4 id="percentual-posted" class="mt-25 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-posted" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -285,10 +285,10 @@
                             </div>
 
                             <div class="col-md-4 col-sm-6 col-xs-12 card-height border-right border-bottom px-0 ">
-                                <div class="card rounded-top rounded-bottom mb-1">
+                                <div class="card rounded-top rounded-bottom mb-0">
                                     <div class="card-body cards-settings">
                                         <h6 class="font-size-16 gray-600 m-0"> Em trânsito</h6>
-                                        <h4 id="percentual-dispatched" class="mt-25 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-dispatched" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -296,10 +296,10 @@
                             </div>
 
                             <div class="col-md-4 col-sm-6 col-xs-12 card-height border-bottom pl-0 pr-0">
-                                <div class="card rounded-top rounded-bottom mb-1">
+                                <div class="card rounded-top rounded-bottom mb-0">
                                     <div class="card-body cards-settings">
                                         <h6 class="font-size-16 gray-600 m-0"> Saiu para entrega</h6>
-                                        <h4 id="percentual-out" class="mt-25 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-out" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -307,10 +307,10 @@
                             </div>
 
                             <div class="col-md-4 col-sm-6 col-xs-12 card-height border-right px-0">
-                                <div class="card rounded-top rounded-right mb-1">
+                                <div class="card rounded-top rounded-right mb-0">
                                     <div class="card-body cards-settings">
                                         <h6 class="font-size-16 gray-600 m-0"> Problema na entrega</h6>
-                                        <h4 id="percentual-exception" class="mt-25 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-exception" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -318,10 +318,10 @@
                             </div>
 
                             <div class="col-md-4 col-sm-6 col-xs-12 card-height border-right px-0">
-                                <div class="card rounded-top rounded-bottom mb-1">
+                                <div class="card rounded-top rounded-bottom mb-0">
                                     <div class="card-body cards-settings">
                                         <h6 class="font-size-16 gray-600 m-0"> Não informado</h6>
-                                        <h4 id="percentual-unknown" class="mt-25 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-unknown" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -329,10 +329,10 @@
                             </div>
 
                             <div class="col-md-4 col-sm-6 col-xs-12 card-height pl-0 pr-0">
-                                <div class="card rounded-top rounded-bottom mb-1">
+                                <div class="card rounded-top rounded-bottom mb-0">
                                     <div class="card-body cards-settings">
                                         <h6 class="font-size-16 gray-600 m-0"> Entregues</h6>
-                                        <h4 id="percentual-delivered" class="mt-25 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-delivered" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -342,12 +342,12 @@
                     </div>
 
                     <!--GRAFICO E LEGENDA -->
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-6" style="max-height: 200px;">
                         <div id="graphic-loading"></div>
 
-                        <div class="row"> 
+                        <div class="row">
 
-                            <div class="col-md-5 p-0 " style="max-height: 246px;">
+                            <div class="col-md-5 p-0 ">
                                 <div class="card rounded-right mb-0 border-left rounded-left">
 
                                     <div id="dataCharts" class="d-flex card-body p-0" style="position: relative;">
@@ -367,7 +367,7 @@
                             <div class="col-md-7 px-0 ">
                                 <div class="card rounded-left m-0">
 
-                                    <div id="data-labels" class="card-body pl-10" style="height: 229px;">
+                                    <div id="data-labels" class="card-body pl-10" style="height: 201px;">
 
                                         <div class="labels row">
                                             <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 posted"></i> Postados</h2>

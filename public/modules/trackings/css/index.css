@@ -133,10 +133,10 @@ input#date_updated{
 /* ======== CARDS SETTINGS ======== */
 .cards-settings{
     padding: 18px 0px 18px 18px;
-    height: 114px;
+    height: 100px;
 }
 .card-height{
-    max-height: 115px;
+    max-height: 101px;
 }
 
 
@@ -301,7 +301,7 @@ span.o-eye-1{
 
 /* ======== TRATAMENTO DE IMAGEM QUANDO NAO TEM DADOS ======== */
 div#dataCharts{
-    height: 229px;
+    height: 201px;
     position: relative;
     justify-content: flex-end;
 }
@@ -309,7 +309,7 @@ div#dataCharts{
     z-index: 1;
     position: relative;
     height: 105px;
-    margin-top: 75px;
+    margin-top: 45px;
 }
 
 
@@ -327,7 +327,7 @@ div#dataCharts{
     position: absolute;
     width: 40%;
     height: 40%;
-    top: 30%;
+    top: 32%;
     left: 30%;
     align-items: center;
     justify-content: center;
@@ -339,6 +339,7 @@ span#total-products{
     font-size: 24px;
     font-weight: bold;
     color: #0D2C54;
+    margin-top: -7px;
 }
 td.table-title{
     color: #0D2C54 !important;
@@ -348,7 +349,7 @@ td.table-title{
     font-weight: bold;
 }
 #graphic-loading {
-    height: 229px;
+    height: 200px;
     width: 100%;
     position: absolute;
     display: flex;
@@ -360,6 +361,6 @@ td.table-title{
     border-radius: 10px;
 }
 .labels{
-    margin-top: 23px;
-    margin-bottom: 20px;
+    margin-top: 9px;
+    margin-bottom: 9px;
 }
