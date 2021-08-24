@@ -92,9 +92,9 @@ $(document).ready(function () {
 
                 dados += '<td style="vertical-align: middle;">';
                     dados += '<div class="input-group input-group-lg">';
-                        dados += '<input type="text" class="form-control font-sm brr inptToken" id="inputToken' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
+                        dados += '<input type="text" class="form-control font-sm brr inptToken" id="inputToken-' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
                         dados += '<div class="input-group-append">';
-                            dados += '<button class="btn btn-primary bg-white btnCopiarLink" type="button" data-placement="top" data-toggle="tooltip" title="Copiar token">';
+                            dados += '<button class="btn btn-primary bg-white btnCopiarLink" data-code="' + value.id_code + '" type="button" data-placement="top" data-toggle="tooltip" title="Copiar token">';
                                 dados += '<span class="icon-copy-2"></span>';
                             dados += '</button>';
                         dados += '</div>';
@@ -321,7 +321,9 @@ $(document).ready(function () {
     $(document).on("click", '.btnCopiarLink', function () {
         var tmpInput = $("<input>");
         $("body").append(tmpInput);
-        var copyText = $('.inptToken').val();
+
+        var btn_code = $(this).data('code');
+        var copyText = $('#inputToken-' + btn_code).val();
         tmpInput.val(copyText).select();
         document.execCommand("copy");
         tmpInput.remove();
