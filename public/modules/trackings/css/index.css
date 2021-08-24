@@ -105,7 +105,9 @@ h4.number {
 #btn-export-csv {
     border-radius: .0em .5em .5em 0 !important;
 }
-
+.disableFields{
+    background-color: #f3f7f9;
+}
 /* ======== INPUT PESQUISAR POR DATA ======== */
 input#date_updated{
     padding: 11px 16px 11px 16px !important;
