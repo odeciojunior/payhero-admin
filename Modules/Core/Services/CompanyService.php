@@ -503,7 +503,11 @@ class CompanyService
         $transaction = Transaction::where('sale_id', $sale->id)
             ->where('user_id', auth()->user()->account_owner_id)
             ->first();
-        if($sale->gateway_id == Gateway::GETNET_PRODUCTION_ID) {
+        if(in_array($sale->gateway_id, [ 
+            Gateway::GETNET_PRODUCTION_ID,
+            Gateway::ASAAS_SANDBOX_ID,
+            Gateway::ASAAS_PRODUCTION_ID
+        ])) {
             $pendingBalance = $this->getPendingBalance(
                 $transaction->company,
                 CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
