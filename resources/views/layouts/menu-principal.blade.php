@@ -308,6 +308,8 @@
                 </a>
             </li>
         @endif
+        
+        {{--
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('integrations.index') }}" id='api-sirius-link'>
@@ -318,6 +320,8 @@
                 </a>
             </li>
         @endif
+        --}}
+
         @if(auth()->user()->hasRole('account_owner'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('invitations.index') }}">
