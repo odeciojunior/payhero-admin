@@ -21,10 +21,10 @@
   }
 }
 
-  [data-icon]::before { content: attr(data-icon); }
+[data-icon]::before { content: attr(data-icon); }
 
-  [data-icon]::before,
-  .o-add-1::before,
+[data-icon]::before,
+.o-add-1::before,
 .o-add-circle-1::before,
 .o-add-to-cart-1::before,
 .o-add-user-1::before,
@@ -97,7 +97,7 @@
 .o-upload-to-cloud-1::before,
 .o-upload-to-cloud-2::before,
 .o-whatsapp-1::before {
-    display: inline-block;
+  display: inline-block;
   font-family: "sirius-font";
   font-style: normal;
   font-weight: normal;
@@ -109,9 +109,9 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   font-smoothing: antialiased;
-  }
+}
 
-  .o-add-1::before { content: "\f9f5"; }
+.o-add-1::before { content: "\f9f5"; }
 .o-add-circle-1::before { content: "\f9f6"; }
 .o-add-to-cart-1::before { content: "\fa14"; }
 .o-add-user-1::before { content: "\f9dc"; }
@@ -184,4 +184,3 @@
 .o-upload-to-cloud-1::before { content: "\f9fc"; }
 .o-upload-to-cloud-2::before { content: "\fa13"; }
 .o-whatsapp-1::before { content: "\f9db"; }
-
