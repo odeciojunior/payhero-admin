@@ -310,7 +310,7 @@ $(() => {
 
     function setDataView(data) {
         let {total, posted, dispatched, out_for_delivery, delivered, exception, unknown} = data;
-        let thousand = 10000;
+        const thousand = 10000;
 
         if (verifyValueIsZero(data.total)) {
             if ($('#noData').length > 0) {
@@ -328,7 +328,9 @@ $(() => {
             $('#myChart, .labels, .total-container').show();
             inicializeChart(chartDefaultColorsLabel, [posted, dispatched, out_for_delivery, exception, unknown, delivered]);
         }
-        $('#total-products').text(total > thousand ? `${parseFloat(numberWithDecimal(total)).toFixed(1)}K` : numberWithDecimal(total));
+        const formatTotal = '<div>Total:<br> <b>'+numberWithDecimal(total)+'</b> </div>';
+        
+        $('#total-products').text(total > thousand ? `${parseFloat(numberWithDecimal(total)).toFixed(1)}K` : numberWithDecimal(total)).attr('data-original-title', formatTotal);
 
         $('#percentual-posted .resume-number').html(posted <= 0 ? posted = 0 : posted = numberWithDecimal(posted));
 

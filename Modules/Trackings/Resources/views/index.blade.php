@@ -3,7 +3,7 @@
 @section('content')
 
 @push('css')
-<link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=11') !!}">
+<link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v='.uniqid()) }">
 <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
 <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v='.uniqid()) }}">
 <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v='.uniqid()) }}">
@@ -351,13 +351,13 @@
                                 <div class="card rounded-right mb-0 border-left rounded-left">
 
                                     <div id="dataCharts" class="d-flex card-body p-0" style="position: relative;">
+                                        <canvas id="myChart"></canvas>
 
                                         <div id="total-values" class="total-container">
                                             <span class="title font-size-16">Total</span>
-                                            <span id="total-products"></span>
+                                            <span id="total-products" data-toggle="tooltip" data-html="true" data-placement="top" title="abc"></span>
                                         </div>
 
-                                        <canvas id="myChart"></canvas>
                                     </div>
 
                                 </div>
