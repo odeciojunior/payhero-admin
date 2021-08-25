@@ -52,7 +52,7 @@ class IntegrationsApiController extends Controller
         try {
             $description = $request->get('description');
             if (empty($description)) {
-                return response()->json(['message' => 'O campo Descrição é obrigatório!'], Response::HTTP_BAD_REQUEST);
+                return response()->json(['message' => 'O campo Nome da Integração é obrigatório!'], Response::HTTP_BAD_REQUEST);
             }
 
             $tokenTypeEnum = $request->get('token_type_enum');

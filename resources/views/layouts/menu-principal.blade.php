@@ -61,7 +61,8 @@
                         </span>
                     </a>
                     <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
-                        @if(str_contains(request()->getHost(), 'homolog'))
+                        @if(foxutils()->isHomolog())
+>>>>>>> master
                             <div data-toggle="tooltip" data-placement="left" title="Desabilitado na versão de testes">
                                 <a class="dropdown-item disabled" disabled>
                                     <img height="24" width="24" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
@@ -69,7 +70,7 @@
                                 </a>
                             </div>
                         @else
-                            <a id="accounts-service" class="dropdown-item redirect-to-accounts" href="" data-url-value="" role="menuitem">
+                            <a id="accounts-service" class="dropdown-item redirect-to-accounts" href="" data-url-value=""role="menuitem">
                                 <img height="24" width="24" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
                                 Configurações
                             </a>
@@ -308,6 +309,8 @@
                 </a>
             </li>
         @endif
+        
+        {{--
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('integrations.index') }}" id='api-sirius-link'>
@@ -318,6 +321,8 @@
                 </a>
             </li>
         @endif
+        --}}
+
         @if(auth()->user()->hasRole('account_owner'))
             <li class="site-menu-item has-sub">
                 <a href="{{ route('invitations.index') }}">

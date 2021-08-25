@@ -80,7 +80,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3 text-right px-0">
-                        <a href="" class="font-weight-bold d-flex justify-content-end align-items-center" style="line-height: 46px;">
+                        <a href="https://documenter.getpostman.com/view/15800813/Tzz7PdVU" class="font-weight-bold d-flex justify-content-end align-items-center" style="line-height: 46px;">
                             <span>Acesse a documentação da API</span>
                             <span class="o-arrow-right-1 ml-15" style="color: #2E85EC;" aria-hidden="true"></span>
                         </a>
@@ -142,7 +142,7 @@
                                 <div class="form-group col-sm-12 col-md">
                                     <label for="empresa">Empresa</label>
                                     <select name="company_id" id="companies" class="form-control form-control-lg">
-                                        <option value="">Todas empresas</option>
+                                        <option value="">Selecione a empresa</option>
                                     </select>
                                 </div>
                             </div>

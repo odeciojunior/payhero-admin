@@ -825,11 +825,36 @@ img.border-icon{
     color: inherit;
 }
 
+.new-layout .table-striped tbody tr:nth-of-type(2n+1) {
+    background-color: transparent !important;
+}
+
 .new-layout .table td {
     padding: 18px 25px !important;
 }
 .new-layout .table thead > tr > td {
     padding: 25px !important;
+}
+
+.new-layout .table tbody > tr > td:first-child {
+    border-radius: 0 0 0 12px !important;
+    -webkit-border-radius: 0 0 0 12px !important;
+    -moz-border-radius: 0 0 0 12px !important;
+}
+.new-layout .table tbody > tr > td:last-child {
+    border-radius: 0 0 12px 0 !important;
+    -webkit-border-radius: 0 0 12px 0 !important;
+    -moz-border-radius: 0 0 12px 0 !important;
+}
+.new-layout .table thead > tr > td:first-child, .new-layout .table thead > tr > th:first-child {
+    border-radius: 12px 0 0 0 !important;
+    -webkit-border-radius: 12px 0 0 0 !important;
+    -moz-border-radius: 12px 0 0 0 !important;
+}
+.new-layout .table thead > tr > td:last-child, .new-layout .table thead > tr > th:last-child {
+    border-radius: 0 12px 0 0 !important;
+    -webkit-border-radius: 0 12px 0 0 !important;
+    -moz-border-radius: 0 12px 0 0 !important;
 }
 
 .new-layout .table td .description {
@@ -956,6 +981,22 @@ img.border-icon{
     background: #EDEDED;
     border-radius: 50%;
 }
+.modal-plans .box-stage.products .icon img {
+    width: 12px;
+    height: auto;
+}
+.modal-plans .box-stage.costs .icon img {
+    width: 8px;
+    height: auto;
+}
+.modal-plans .box-stage.informations .icon img {
+    width: 17px;
+    height: auto;
+}
+.modal-plans .box-stage .icon img {
+    max-width: 100%;
+}
+
 .modal-plans .box-stage.products .icon {
     background: #D2E7FF;
 }

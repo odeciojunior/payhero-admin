@@ -87,17 +87,17 @@ class SalesResource extends JsonResource
             'userPermissionRefunded' => $userPermissionRefunded,
             'refund_observation' => $this->details->refund_observation,
             'user_changed_observation' => $this->details->user_changed_observation,
-            'is_chargeback_recovered'  => $this->is_chargeback_recovered,
-            'observation'              => $this->observation,
-            'thank_page_url'           => $thankPageUrl,
-            'thank_label_text'         => $thankLabelText,
-            'company_name'             => $this->details->company_name,
-            'has_order_bump'           => $this->has_order_bump,
-            'has_contestation'         => $this->contestations->count() ? true : false,
-            'cashback_value'           => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
-            'has_cashback'             => $this->cashback->value ?? false,
-            'api_flag'                 => $this->api_flag,
-            'has_withdrawal'           => !empty($this->details->has_withdrawal)
+            'is_chargeback_recovered' => $this->is_chargeback_recovered,
+            'observation' => $this->observation,
+            'thank_page_url' => $thankPageUrl,
+            'thank_label_text' => $thankLabelText,
+            'company_name' => $this->details->company_name,
+            'has_order_bump' => $this->has_order_bump,
+            'has_contestation' => $this->contestations->count() ? true : false,
+            'cashback_value' => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
+            'has_cashback' => $this->cashback->value ?? false,
+            'api_flag' => $this->api_flag,
+            'has_withdrawal' => !empty($this->details->has_withdrawal)
         ];
 
         $shopifyIntegrations = $this->project ? $this->project->shopifyIntegrations->where('status', 2) : [];

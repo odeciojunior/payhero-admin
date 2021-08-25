@@ -1,8 +1,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
 @endpush
-<div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle"
-     role="dialog" tabindex="-1">
+<div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-simple modal-sidebar modal-lg">
         <div id='modal-saleDetails' class="modal-content p-20 " style="width: 500px;">
             <div class="header-modal">
@@ -25,17 +24,13 @@
                     <div id="status" class="status d-inline">
                     </div>
                     <div class="status d-inline">
-                        <img id='chargeback-recovered' class="orange-gradient"
-                             src="{{ asset('modules/global/img/svg/chargeback.svg') }}"
-                             title="Chargeback recuperado" style='width:20px; display:none;'>
+                        <img id='chargeback-recovered' class="orange-gradient" src="{{ asset('modules/global/img/svg/chargeback.svg') }}" title="Chargeback recuperado" style='width:20px; display:none;'>
                     </div>
                 </div>
                 <div class='div-refund-observation mt-20' style='display:none;'>
                     <label for="refund-observation" class="table-title gray mb-0">Causa do estorno:</label>&nbsp;
                     <div class="d-flex align-items-center">
-                        <input id="refund-observation" type="email" name="refund_observation"
-                               class="detail-input mr-2 table-title gray fake-label"
-                               readonly>
+                        <input id="refund-observation" type="email" name="refund_observation" class="detail-input mr-2 table-title gray fake-label" readonly>
                         <a class="pointer btn-edit-observation"><span class="o-edit-1"></span></a>
                         <a class="pointer btn-save-observation" style="display:none;">
                             <i class="material-icons font-size-18">save</i></a>
@@ -51,8 +46,11 @@
                         <div class="col-lg-3"><p class="table-title"> Produto </p></div>
                         <div class="col-lg-9 text-right"><p class="text-muted"> Qtde </p></div>
                     </div>
+                    
                     <div id="table-product">
+                        {{-- js carrega... --}}
                     </div>
+                    
                     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
                         <div class="col-sm-6 col-6 align-items-center">
                             <span class="text-muted ft-12"> Subtotal </span>
@@ -122,8 +120,7 @@
                         <div class='col-sm-4 col-4 text-right'>
                             <span id="taxareal-value" class='text-muted ft-12'></span>
                         </div>
-                        <div style="color: #2E85EC" class='col-sm-12 pointer mt-5'
-                             data-toggle="collapse" data-target="#taxas-detail" aria-expanded="false" aria-controls="taxas-detail">
+                        <div style="color: #2E85EC" class='col-sm-12 pointer mt-5' data-toggle="collapse" data-target="#taxas-detail" aria-expanded="false" aria-controls="taxas-detail">
                             <small data-toggle="tooltip" data-placement="top" title="Clique para obter mais detalhes">Taxa detalhada</small>
                         </div>
 
@@ -132,44 +129,37 @@
                                 <tbody>
                                     <tr>
                                         <td><div id="tax-subtotal" class="ft-12"></div></td>
-                                        <td><div id="tax-subtotal-value" style="color: black !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-subtotal-value" style="color: black !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-cashback" class="ft-12"></div></td>
-                                        <td><div id="tax-cashback-value" style="color: #5EE2A1 !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-cashback-value" style="color: #5EE2A1 !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-value-total" class="ft-12"></div></td>
-                                        <td><div id="tax-value-total-value" style="color: #5EE2A1 !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-value-total-value" style="color: #5EE2A1 !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-percentage" class="ft-12"></div></td>
-                                        <td><div id="tax-percentage-value" style="color: #F41C1C !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-percentage-value" style="color: #F41C1C !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-fixed" class="ft-12"></div></td>
-                                        <td><div id="tax-fixed-value" style="color: #F41C1C !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-fixed-value" style="color: #F41C1C !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-total" class="ft-12"></div></td>
-                                        <td><div id="tax-total-value" style="color: #F41C1C !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-total-value" style="color: #F41C1C !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
 
                                     <tr>
                                         <td><div id="tax-comission" class="ft-12"></div></td>
-                                        <td><div id="tax-comission-value" style="color: black !important;"
-                                                 class="text-right text-muted ft-12"></div></td>
+                                        <td><div id="tax-comission-value" style="color: black !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
                                 </tbody>
 
@@ -295,7 +285,8 @@
                         </div>
                         <div id="saleReSendEmail" class="mb-20">
                             <a class="pointer d-inline-flex align-items-center" id="btnSaleReSendEmail">
-                                <i class="material-icons">email</i><b class="ml-2">Reenviar e-mail</b></a>
+                                <i class="material-icons">email</i><b class="ml-2">Reenviar e-mail</b>
+                            </a>
                         </div>
                         <div id='div_delivery' style='display:none;'>
                             <h4 class='delivery-title'> Entrega </h4>
@@ -327,6 +318,9 @@
                     <!-- DETALHES  -->
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                         <h4> Dados Gerais </h4>
+                        <div id="details-api" style="display: none; margin-bottom: 11px;">
+                            Venda realizada por integração API Sirius
+                        </div>
                         <div id="details-card" style="display:none">
                             <span id="card-flag" class="table-title gray text-capitalize"></span>
                             <br>
@@ -334,49 +328,54 @@
                             <br>
                         </div>
                         <div id="details-boleto" style="display:none">
-                        <span id="boleto-link" class="table-title gray">Link para o boleto:
-                            <a role='button' class='copy_link' style='cursor:pointer;' link='' title='Copiar link'>
-                                <span class="material-icons icon-copy-1"> content_copy </span>
-                            </a>
-                        </span>
+                            <span id="boleto-link" class="table-title gray">Link para o boleto:
+                                <a role='button' class='copy_link' style='cursor:pointer;' link='' title='Copiar link'>
+                                    <span class="material-icons icon-copy-1"> content_copy </span>
+                                </a>
+                            </span>
                             <br>
                             <span id="boleto-digitable-line" class="table-title gray">Linha Digitável:
-                            <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''
-                               title='Copiar link'>
+                            <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''title='Copiar link'>
                                 <span class="material-icons icon-copy-1"> content_copy </span>
                             </a>
-                        </span>
+                            </span>
                             <br>
                             <span id="boleto-due" class="table-title gray"></span>
                             <br>
                         </div>
-                        <span id="checkout-ip" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-operational-system" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-browser" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-attempts" class="table-title gray" style="display:none"></span>
-                        <br>
-                        <span id="thank-page-url" class="table-title gray" style="display:none"></span>
-                        <a role="button" class="copy_link btn-copy-thank-page-url" style="cursor:pointer;display:none;"
-                           link="" title="Copiar link">
-                            <span class="material-icons icon-copy-1"> content_copy </span>
-                        </a>
-                        <br>
-                        <h4> Conversão </h4>
-                        <span id="checkout-src" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-source" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-medium" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-campaign" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-term" class="table-title gray"></span>
-                        <br>
-                        <span id="checkout-content" class="table-title gray"></span>
-                        <br>
+
+                        <div class="dados-checkout">
+                            <span id="checkout-ip" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-operational-system" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-browser" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-attempts" class="table-title gray" style="display:none"></span>
+                            <br>
+                            <span id="thank-page-url" class="table-title gray" style="display:none"></span>
+                            <a role="button" class="copy_link btn-copy-thank-page-url" style="cursor:pointer;display:none;" link="" title="Copiar link">
+                                <span class="material-icons icon-copy-1"> content_copy </span>
+                            </a>
+                            <br>
+                        </div>
+
+                        <div class="dados-checkout">
+                            <h4> Conversão </h4>
+                            <span id="checkout-src" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-source" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-medium" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-campaign" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-term" class="table-title gray"></span>
+                            <br>
+                            <span id="checkout-content" class="table-title gray"></span>
+                            <br>
+                        </div>
+
                         <div id='div_notazz_invoice' style='display:none;'>
                             <br>
                             <h4> Integração Notazz </h4>

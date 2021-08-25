@@ -5,7 +5,10 @@
     </div>
 </div>
 
-<div class="products">
+<div class="products" id="load-products">
+    {{-- JS carrega --}}
+    
+    {{-- 
     <div class="row">
         <div class="col-sm-6">
             <div class="box-product selected d-flex justify-content-between align-items-center">
@@ -73,4 +76,5 @@
             </div>
         </div>
     </div>
+    --}}
 </div>

@@ -14,19 +14,19 @@
                     <div class="col-sm-12">
                         <div class="d-flex">
                             <div class="box-stage products d-flex align-items-center flex-fill">
-                                <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-products-plans.png') }}" alt="Icon Products"></div>
+                                <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-products-plans.svg') }}" alt="Icon Products"></div>
                                 <div class="title mr-15">Produtos</div>
                                 <div class="line"><hr></div>
                             </div>
                 
                             <div class="box-stage costs d-flex align-items-center flex-fill">
-                                <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-costs-plans.png') }}" alt="Icon Costs"></div>
+                                <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-costs-plans.svg') }}" alt="Icon Costs"></div>
                                 <div class="title mr-15">Custos</div>
                                 <div class="line"><hr></div>
                             </div>
                 
                             <div class="box-stage informations d-flex align-items-center flex-fill">
-                                <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-info-plans.png') }}" alt="Icon Informations"></div>
+                                <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-info-plans.svg') }}" alt="Icon Informations"></div>
                                 <div class="title">Informações</div>
                             </div>
                         </div>

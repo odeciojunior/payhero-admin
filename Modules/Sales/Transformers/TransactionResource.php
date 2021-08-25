@@ -39,9 +39,6 @@ class TransactionResource extends JsonResource
             'upsell'                  => Hashids::connection('sale_id')->encode($this->sale->upsell_id),
             'project'                 => $project,
             'product'                 => $product,
-            'client'                  => $sale->customer->name,
-            'project'                 => !empty($sale->project)?$sale->project->name:'',
-            'product'                 => (count($sale->getRelation('plansSales')) > 1) ? 'Carrinho' : (!empty($sale->plansSales->first()->plan->name) ? $sale->plansSales->first()->plan->name : ''),
             'client'                  => $customerName,
             'method'                  => $sale->payment_method,
             'status'                  => $sale->status,
@@ -65,7 +62,7 @@ class TransactionResource extends JsonResource
         ];
 
         $shopifyIntegrations = [];
-        if(!empty($sale->project)){
+        if(!empty($sale->project)) {
             $shopifyIntegrations = $sale->project->shopifyIntegrations->where('status', 2);
         }
 

@@ -46,6 +46,7 @@ class SalesApiController extends Controller
             $saleService = new SaleService();
             $data = $request->all();
             $sales = $saleService->getPaginatedSales($data);
+
             return TransactionResource::collection($sales);
         } catch (Exception $e) {
             report($e);
@@ -176,7 +177,10 @@ class SalesApiController extends Controller
                     $service->cancelOrder($sale, 'Estorno');
                 }
             }
-            event(new SaleRefundedEvent($sale));
+            if ( !$sale->api_flag ) {
+                event(new SaleRefundedEvent($sale));
+            }
+
             return response()->json(['message' => $result['message']], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
@@ -265,11 +269,7 @@ class SalesApiController extends Controller
                     $activity->subject_id = $saleId;
                 }
             )->log('Reenviou email para a venda: #' . $request->input('sale'));
-            EmailService::clientSale(
-                $sale->customer,
-                $sale,
-                $sale->project
-            );
+            EmailService::clientSale( $sale->customer, $sale, $sale->project );
             return response()->json(['message' => 'Email enviado'], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
