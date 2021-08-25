@@ -265,7 +265,7 @@ $(function () {
      */
     $("#add-plan").on('click', function () {
         $('#modal_add_plan').attr('data-backdrop', 'static');
-        createNew();
+        create();
         $('.btn-close-add-plan').on('click', function () {
             clearFields();
             $('#modal_add_plan').removeAttr('data-backdrop');
