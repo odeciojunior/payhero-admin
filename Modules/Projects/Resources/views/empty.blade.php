@@ -1,5 +1,5 @@
 {{--<div id="project-empty" class="content-error text-center d-none">--}}
-<div id="project-empty" class="content-error text-center" style="display:none;
+<div id="project-empty" class="content-error text-center" style="display:none !important;
                                                                 height: 100%;
                                                                 width: 100%;
                                                                 position: absolute;

@@ -4,7 +4,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: "/api/apps/hotbillet/",
+            url: "/api/apps/hotbillet",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),

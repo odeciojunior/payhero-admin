@@ -131,7 +131,7 @@ $(document).ready(function () {
         if (link == null) {
             link = '/api/tickets?' + getFilters(true).substr(1);
         } else {
-            link = '/api/tickets/' + link + getFilters(true);
+            link = '/api/tickets' + link + getFilters(true);
         }
 
         $.ajax({

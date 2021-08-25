@@ -1,4 +1,5 @@
-<div id="no-integration-found" class='justify-content-center' style="height: 100%;
+<div id="no-integration-found" class="justify-content-center" style="display:none !important;
+                                                                height: 100%;
                                                                 width: 100%;
                                                                 position: absolute;
                                                                 display: -webkit-flex;

@@ -10,6 +10,5 @@ Route::group(
         Route::apiResource('apps', 'AppsApiController')
             ->only('index');
     }
-
 );
 

@@ -16,6 +16,14 @@ class TransactionResource extends JsonResource
     {
         $sale = $this->sale;
 
+        if (!$sale->api_flag) {
+            $project = !empty($sale->project) ? $sale->project->name : '';
+            $product = (count($sale->getRelation('plansSales')) > 1) ? 'Carrinho' : (!empty($sale->plansSales->first()->plan->name) ? $sale->plansSales->first()->plan->name : '');
+        } else {
+            $project = 'Integração';
+            $product = 'Checkout api';
+        }
+
         $customerName = $sale->customer->name;
         if($sale->status == Sale::STATUS_CANCELED_ANTIFRAUD){
             $name = explode(' ',$customerName);
@@ -52,8 +60,9 @@ class TransactionResource extends JsonResource
             'has_order_bump'          => $sale->has_order_bump,
             'has_contestation'        => $sale->contestations->count() ? true : false,
         ];
+
         $shopifyIntegrations = [];
-        if(!empty($sale->project)){
+        if(!empty($sale->project)) {
             $shopifyIntegrations = $sale->project->shopifyIntegrations->where('status', 2);
         }
 
@@ -92,5 +101,3 @@ class TransactionResource extends JsonResource
         return $data;
     }
 }
-
-

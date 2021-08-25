@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    index();
+
     //checkbox
     $(".check").on("click", function () {
         if ($(this).is(":checked")) {
@@ -7,19 +9,21 @@ $(document).ready(function () {
             $(this).val(0);
         }
     });
-    index();
 
     function index() {
+
+        loadingOnScreen();
+
         $.ajax({
             method: "GET",
-            url: "/api/apps/notazz/",
+            url: "/api/apps/notazz",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
             dataType: "json",
             error: function error(response) {
-                // loadingOnScreenRemove();
+                loadingOnScreenRemove();
                 alertCustom("error", "Ocorreu algum erro");
             },
             success: function success(response) {
@@ -353,6 +357,7 @@ $(document).ready(function () {
                         });
                     });
                 }
+                loadingOnScreenRemove();
             },
         });
     }

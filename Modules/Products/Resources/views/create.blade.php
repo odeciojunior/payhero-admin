@@ -7,8 +7,8 @@
     @endpush
 
     <!-- Page -->
-    <div class="page" style="display: none">
-        <div style="display: none" class="page-header container">
+    <div class="page" style="display:none !important;">
+        <div style="display: none !important;" class="page-header container">
             <h1 class="page-title">Cadastrar novo produto</h1>
             <p class="desc mt-10"> Preencha os dados sobre seu produto atentamente. </p>
             <div class="page-header-actions">
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="d-flex flex-column" id="div_img" style="position: relative">
-                                        <input name="product_photo" type="file" class="form-control" id="photo" style="display:none">
+                                        <input name="product_photo" type="file" class="form-control" id="photo" style="display:none !important;">
                                         <label for="name">Selecione uma imagem</label>
                                         <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="{{ asset('modules/global/img/produto.svg') }}" style="max-height: 300px; max-width: 300px;">
                                         <input type="hidden" name="photo_x1" value=''>

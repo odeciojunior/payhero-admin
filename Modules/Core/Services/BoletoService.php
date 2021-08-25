@@ -46,6 +46,7 @@ class BoletoService
                 [
                     ['payment_method', '=', '2'],
                     ['status', '=', '2'],
+                    ['api_flag', '=', '0'],
                     [
                         DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"),
                         now()->toDateString(),
@@ -244,6 +245,7 @@ class BoletoService
                     [
                         ['payment_method', '=', '2'],
                         ['status', '=', '2'],
+                        ['api_flag', '=', '0'],
                         [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '!=', now()->toDateString()],
                     ]
                 )
@@ -415,6 +417,7 @@ class BoletoService
                     [
                         ['payment_method', '=', '2'],
                         ['status', '=', '2'],
+                        ['api_flag', '=', '0'],
                         [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '!=', now()->toDateString()],
                     ]
                 )
@@ -583,6 +586,7 @@ class BoletoService
                             WHERE 1 = 1
                             AND s.payment_method = 2
                             AND s.status = 1
+                            AND s.api_flag = 0
                             AND date(s.end_date) = CURRENT_DATE
                             AND t.deleted_at IS NULL
                             GROUP BY u.id
@@ -665,7 +669,9 @@ class BoletoService
                     );
                 }
 
-                event(new BilletExpiredEvent($boleto));
+                if ( !$boleto->api_flag ) {
+                    event(new BilletExpiredEvent($boleto));
+                }
             }
         } catch (Exception $e) {
             report($e);

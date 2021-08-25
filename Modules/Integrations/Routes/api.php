@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth:api', 'scopes:admin','permission:apps']], function() {
      Route::get('integrations', 'IntegrationsApiController@index');
-     Route::apiResource('integrations', 'IntegrationsApiController')->only('store', 'destroy')
+     Route::get('integrations/{id}', 'IntegrationsApiController@show');     
+     Route::apiResource('integrations', 'IntegrationsApiController')->only('store', 'destroy','update')
      ->names('api.integrations')->middleware('permission:apps_manage');
 
     Route::post('/integrations/{integration}/refreshtoken', 'IntegrationsApiController@refreshToken')
