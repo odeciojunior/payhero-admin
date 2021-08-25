@@ -394,6 +394,18 @@ class ProjectsApiController extends Controller
                 $requestValidated['checkout_notification_configs'] = null;
             }
 
+            if (!empty($requestValidated['custom_message_switch'])) {
+                $requestValidated['custom_message_configs'] = [
+                    'active'=>true,
+                    'title'=>$requestValidated['custom_message_title'],
+                    'message'=>$requestValidated['custom_message_content']
+                ];
+            }else{
+                $requestValidated['custom_message_configs'] = [
+                    'active'=>false
+                ];
+            }
+
             $projectUpdate = $project->fill($requestValidated)->save();
             $projectChanges = $project->getChanges();
             if (isset($projectChanges["support_phone"])) {
