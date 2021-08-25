@@ -244,31 +244,20 @@ i#pencil{
 
 
 /* ======== BOTAO FECHAR/CANCELAR ======== */
-a.tracking-close.pointer.text-dark{
-    min-height: 39px;
-    text-align: center;
+div.tracking-close.pointer{
+    color: black;
     background: #EDEDED;
     border-radius: 5px;
-    padding: 0px 10px 0px 10px !important;
-    font-size: 30px !important;
-    -webkit-text-stroke: 2.0px rgb(255, 255, 255);
-    transition: 0.5s;
+    font-size: 25px;
+    width: 36px;
+    height: 38px;
+    padding: 2px 0px 0px 8px;
+    transition: 1s;
 }
-a.tracking-close.pointer.text-dark:hover {
+div.tracking-close.pointer:hover {
     background: #D1D1D1;
-    font-size: 30px !important;
+    font-size: 25px !important;
 
-}
-
-
-/* ======== CONFIG ICONE X ======== */
-.set-rotate{
-    transform: rotate(-45deg);
-    margin: -2px 0px 0px 0px;
-}
-i.set-close{
-    font-size: 35px !important;
-    color: #000 !important;
 }
 
 
@@ -280,7 +269,6 @@ a.tracking-edit.pointer {
     border-radius: 5px !important;
     padding-top: 3px;
     min-width: 37px;
-    margin-right: 72px;
 }
 span.text-right.o-edit-1 {
     border-radius: 5px !important;
@@ -292,7 +280,6 @@ span.text-right.o-edit-1 {
 /*  ======== BOTAO DE VISUALIZAR ======== */
 a.tracking-detail.pointer{
     color: #F1F1F1;
-    margin-right: 22px;
 }
 span.o-eye-1{
     padding: 6px 5px 0px 5px !important;

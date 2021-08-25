@@ -54,42 +54,30 @@ $(() => {
         alertCustom('success', 'Código copiado!');
     });
 
-    $(document).on('click', '.tracking-add, .tracking-edit', function () {
+    $(document).on('click', '.tracking-add, .tracking-edit', function (event) {
+        $(event.target).closest('.edit-detail').removeClass('col-6');
 
         let row = $(this).parent().parent();
-
-        row.find('.input-tracking-code')
-            .removeClass('fake-label')
-            .prop('readonly', false)
-            .focus();
-
-        row.find('.tracking-save, .tracking-close')
-            .show();
-
-        row.find('.tracking-detail')
-            .hide();
-
+        row.find('.input-tracking-code').removeClass('fake-label').prop('readonly', false).focus();
+        row.find('.tracking-save, .tracking-close').show();
+        row.find('.tracking-detail').hide();
         $(this).hide();
-
     });
 
-    $(document).on('click', '.tracking-close', function () {
-        let row = $(this).parent().parent();
+    
 
-        row.find('.input-tracking-code')
-            .prop('readonly', true)
-            .blur();
+    $(document).on('click', '.tracking-close', function (event) {
+        $(event.target).parent().prev().addClass('col-6');
+        
+        let row = $(this).parent().parent();
+        row.find('.input-tracking-code').prop('readonly', true).blur();
 
         if($(this).data('code').length < 1){
             row.find('.input-tracking-code').addClass('fake-label');
         }
 
-        row.find('.tracking-add, .tracking-detail, .tracking-edit')
-            .show();
-
-        row.find('.tracking-save, .tracking-close')
-            .hide();
-
+        row.find('.tracking-add, .tracking-detail, .tracking-edit').show();
+        row.find('.tracking-save, .tracking-close').hide();
         $(this).hide();
     });
 
@@ -403,11 +391,16 @@ $(() => {
                     ;
 
                     let htmlButtonEdit = `
-                    <a class='tracking-edit pointer' title="Editar">
-                      <span class="text-right o-edit-1"></span>
-                    </a>
-                    
-                    <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><span class="o-eye-1"></span></a>`
+                    <div class="edit-detail col-6 d-flex justify-content-between px-0">
+
+                        <a class='tracking-edit pointer' title="Editar">
+                            <span class="text-right o-edit-1"></span>
+                        </a>
+                        
+                        <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
+                            <span class="o-eye-1"></span>
+                        </a>
+                    </div>`
                     ;
 
                     let dados = `
@@ -435,27 +428,29 @@ $(() => {
                                     ${tracking.tracking_status}
                                 </span>
                                 
-                                ${tracking.is_chargeback_recovered ? '<img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">' : ''}
+                                
                             </td>
 
                             <td style="width: 2%;padding: 0px !important;">
                                 ${systemStatus[tracking.system_status_enum]}
+                                ${tracking.is_chargeback_recovered ? '<img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">' : ''}
                             </td>
 
-                            <td class="text-left col-sm-4">
+                            <td class="text-left d-flex mb-0">
+                            
+                                ${tracking.tracking_status_enum ? `
+                                <input maxlength="18" minlength="10" class="mr-10 col-6 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
+                                :htmlButtonAdd}
 
-                                <div class="buttons d-flex" style="max-height: 38px;">
-                                    ${tracking.tracking_status_enum ? `
-                                    <input maxlength="18" minlength="10" class="mr-10 col-sm-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
-                                    :htmlButtonAdd}
+                                <div class="buttons d-flex col-6 px-0" style="max-height: 38px;">
 
                                     <a class='tracking-save pointer mr-10 text-center' title="Salvar" pps='${tracking.pps_id}'style="display:none">
                                         <i id='pencil' class='o-checkmark-1 text-white'></i>
                                     </a>
 
-                                    <a class='tracking-close pointer text-dark' data-code='${tracking.tracking_code}' title="Fechar" style="display:none">
-                                        <div class="set-rotate"> <i class='o-add-1 set-close'></i> </div>
-                                    </a>
+                                    <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none">
+                                        &#x2715
+                                    </div>
 
                                 </div>
 
@@ -586,14 +581,13 @@ $(() => {
 
                     let statusBadge = btnSave.parent().parent().parent().find('.badge');
 
-                        statusBadge.removeClass('statusWithoutInfo')
-                            .addClass(statusEnum[tracking.tracking_status_enum])
-                            .html(tracking.tracking_status);
+                    statusBadge.removeClass('statusPosted statusOnDelivery statusDelivered statusInTransit statusProblem statusWithoutInfo')
+                    .addClass(statusEnum[tracking.tracking_status_enum])
+                    .html(tracking.tracking_status);
 
                     alertCustom('success', 'Código de rastreio salvo com sucesso')
                 }
-                btnSave.prop('disabled', false)
-                    .hide();
+                btnSave.prop('disabled', false).hide();
             }
         });
     });
