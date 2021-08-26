@@ -44,7 +44,7 @@ class ProcessWooCommerceSaveProductSku implements ShouldQueue
             $integration = WooCommerceIntegration::where('project_id',$this->projectId)->first();
             $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
             
-            $service->woocommerce->put('products/'.$this->productId.'/variations/'.$this->variationId.'/', $this->data);
+            $service->woocommerce->post('products/'.$this->productId.'/variations/'.$this->variationId.'/', $this->data);
             
 
         }catch(Exception $e){
