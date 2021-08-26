@@ -129,7 +129,14 @@ class SalesApiController extends Controller
         try {
             $saleIdDecoded = hashids_decode($saleId, 'sale_id');
             $sale = Sale::find($saleIdDecoded);
-            if (!in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID])) {
+            if (!in_array($sale->gateway_id, [
+                Gateway::GETNET_SANDBOX_ID, 
+                Gateway::GETNET_PRODUCTION_ID, 
+                Gateway::GERENCIANET_PRODUCTION_ID, 
+                Gateway::GERENCIANET_SANDBOX_ID,
+                Gateway::ASAAS_PRODUCTION_ID,
+                Gateway::ASAAS_SANDBOX_ID
+            ])) {
                 return response()->json(
                     ['status' => 'error', 'message' => 'Esta venda não pode mais ser estornada.'],
                     Response::HTTP_BAD_REQUEST

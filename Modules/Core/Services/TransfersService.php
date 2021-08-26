@@ -59,6 +59,8 @@ class TransfersService
             $transactions->where('sale_id', $saleId);
         }
 
+        dd($transactions->count());
+
         try {
             DB::beginTransaction();
             foreach ($transactions->cursor() as $transaction) {
