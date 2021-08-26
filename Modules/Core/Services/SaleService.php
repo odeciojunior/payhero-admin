@@ -881,7 +881,9 @@ class SaleService
             }
         }
 
-        event(new BilletRefundedEvent($sale));
+        if ( !$sale->api_flag ) {
+            event(new BilletRefundedEvent($sale));
+        }
     }
 
     public function refundBilletNewFinances(Sale $sale)

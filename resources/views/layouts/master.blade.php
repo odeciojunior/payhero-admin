@@ -26,9 +26,8 @@
         </style>
     @endif
 
-<!-- access token used for api ajax requests -->
-    <meta name="access-token"
-          content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
+    <!-- access token used for api ajax requests -->
+    <meta name="access-token" content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/logos/2021/favicon/apple-touch-icon.png') }}">
@@ -46,7 +45,7 @@
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
 
-{{--    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">--}}
+    {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">--}}
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/daterangepicker.css') }}">
@@ -60,6 +59,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=21') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=22') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=36') }}">

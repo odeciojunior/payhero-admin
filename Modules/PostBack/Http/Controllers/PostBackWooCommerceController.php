@@ -101,10 +101,10 @@ class PostBackWooCommerceController extends Controller
             $productId = explode('-',$tmpSku);
             if(empty($product->parent_id)){
 
-                $wooCommerceService->woocommerce->put('products/' . $productId[0], $data);
+                $wooCommerceService->woocommerce->post('products/' . $productId[0], $data);
             }else{
                 
-                $wooCommerceService->woocommerce->put('products/'.$product->id.'/variations/'.$productId[0].'/', $data);
+                $wooCommerceService->woocommerce->post('products/'.$product->id.'/variations/'.$productId[0].'/', $data);
 
             }
             
