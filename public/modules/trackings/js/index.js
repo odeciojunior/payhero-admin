@@ -62,15 +62,14 @@ $(() => {
         row.find('.tracking-save, .tracking-close').show();
         row.find('.tracking-detail').hide();
         $(this).hide();
-    });
-
-    
+    });   
 
     $(document).on('click', '.tracking-close', function (event) {
         $(event.target).parent().prev().addClass('col-5');
         
         let row = $(this).parent().parent();
         row.find('.input-tracking-code').prop('readonly', true).blur();
+
 
         if($(this).data('code').length < 1){
             row.find('.input-tracking-code').addClass('fake-label');
@@ -391,16 +390,16 @@ $(() => {
                     ;
 
                     let htmlButtonEdit = `
-                    <div class="edit-detail d-flex justify-content-between px-0 col-5">
+                        <div class="edit-detail d-flex justify-content-between px-0 col-5">
 
-                        <a class='tracking-edit pointer' title="Editar">
-                            <span class="text-right o-edit-1"></span>
-                        </a>
-                        
-                        <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
-                            <span class="o-eye-1"></span>
-                        </a>
-                    </div>`
+                            <a class='tracking-edit pointer' title="Editar">
+                                <span class="text-right o-edit-1"></span>
+                            </a>
+                            
+                            <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
+                                <span class="o-eye-1"></span>
+                            </a>
+                        </div>`
                     ;
 
                     let dados = `
@@ -427,8 +426,6 @@ $(() => {
                                 <span class="badge ${statusEnum[tracking.tracking_status_enum]}">
                                     ${tracking.tracking_status}
                                 </span>
-                                
-                                
                             </td>
 
                             <td style="width: 2%;padding: 0px !important;">
@@ -561,14 +558,15 @@ $(() => {
                 if (!isEmpty(response.data.tracking_status)) {
 
                     let tracking = response.data;
-
+                    
                     let td = btnSave.parent().parent();
-
                     let saveClose = td.find('.save-close')
 
                     td.find('.tracking-add, .edit-detail').remove();
 
-                    td.find('.tracking-close').trigger('click');
+                    td.find('.tracking-close').attr('data-code', response.data.tracking_code).trigger('click');
+                    
+                    td.find('.input-tracking-code').removeClass('fake-label');
 
                     let buttons = `
                         <div class="edit-detail d-flex justify-content-between px-0 col-5">
@@ -586,7 +584,6 @@ $(() => {
                     $(buttons).insertBefore(saveClose);
 
                     let statusBadge = btnSave.parent().parent().parent().find('.badge');
-
                     statusBadge.removeClass('statusPosted statusOnDelivery statusDelivered statusInTransit statusProblem statusWithoutInfo')
                     .addClass(statusEnum[tracking.tracking_status_enum])
                     .html(tracking.tracking_status);

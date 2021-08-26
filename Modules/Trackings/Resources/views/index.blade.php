@@ -223,13 +223,13 @@
             </div>
             <div class="fixhalf"></div>
             <!-- Aviso Problemas com os Códigos -->
-            <div id="alert-tracking-issues" class="alert alert-light alert-dismissible fade show text-primary border border-primary alert-tracking" role="alert" style="border-radius: 12px">
+            <div id="alert-tracking-issues" class="d-flex alert alert-light alert-dismissible fade show text-primary border border-primary alert-tracking" role="alert" style="border-radius: 12px">
                 <img src="{{ asset('modules/trackings/svg/info-tracking.svg') }}">
                 <span class="alert-text">
                     <span class="bold">Problemas com os códigos?</span>
                     Caso você tenha algum código de rastreio com divergência de status, entre em contato com o nosso suporte.
                 </span>
-                <button type="button" class="close text-primary" data-dismiss="alert" aria-label="Close" style="opacity: 1">
+                <button type="button" class="close text-primary ml-auto" data-dismiss="alert" aria-label="Close" style="opacity: 1">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
