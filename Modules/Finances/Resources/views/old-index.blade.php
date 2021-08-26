@@ -239,7 +239,7 @@
                                             <th scope="col" class="table-title">Status</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="withdrawals-table-data" class="custom-t-body">
+                                    <tbody id="withdrawals-table-data" class="custom-t-body" img-empty="{!! asset('modules/global/img/extrato.svg')!!}">
                                     </tbody>
                                 </table>
                             </div>
@@ -388,7 +388,7 @@
                                         <th scope="col" class='headCenter' style='width:34%'>Valor</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="table-transfers-body" class="custom-t-body">
+                                    <tbody id="table-transfers-body" class="custom-t-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}">
                                     </tbody>
                                 </table>
                                 <ul id="pagination-transfers" class="pagination-sm margin-chat-pagination"

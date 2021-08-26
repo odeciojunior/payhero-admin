@@ -546,7 +546,11 @@ $(document).ready(function () {
                 success: (response) => {
                     $("#withdrawals-table-data").html('');
                     if (response.data === '' || response.data === undefined || response.data.length === 0) {
-                        $("#withdrawals-table-data").html("<tr><td colspan='5' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
+                        $("#withdrawals-table-data").html(
+                            "<tr style='border-radius: 16px;'><td colspan='6' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                                $("#withdrawals-table-data").attr("img-empty") +
+                                "'> Nenhum saque realizado até o momento</td></tr>"
+                        );
                         $("#withdrawals-pagination").html("");
                     } else {
                         $.each(response.data, function (index, data) {
@@ -648,8 +652,11 @@ $(document).ready(function () {
                 loadOnAny('#available-in-period', true);
 
                 if (response.data == '') {
-
-                    $("#table-transfers-body").html("<tr><td colspan='3' class='text-center'>Nenhuma movimentação até o momento</td></tr>");
+                    $("#table-transfers-body").html(
+                        "<tr class='text-center'><td colspan='11' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                            $("#table-transfers-body").attr("img-empty") +
+                            "'>Nenhum dado encontrado</td></tr>"
+                    );
                     $("#pagination-transfers").html("");
                 } else {
                     data = '';
