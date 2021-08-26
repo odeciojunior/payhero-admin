@@ -70,8 +70,7 @@ $(() => {
         let row = $(this).parent().parent();
         row.find('.input-tracking-code').prop('readonly', true).blur();
 
-
-        if($(this).data('code').length < 1){
+        if($(this).attr('data-code').length < 1){
             row.find('.input-tracking-code').addClass('fake-label');
         }
 
