@@ -55,7 +55,7 @@ $(() => {
     });
 
     $(document).on('click', '.tracking-add, .tracking-edit', function (event) {
-        $(event.target).closest('.edit-detail').removeClass('col-6');
+        $(event.target).closest('.edit-detail').removeClass('col-5');
 
         let row = $(this).parent().parent();
         row.find('.input-tracking-code').removeClass('fake-label').prop('readonly', false).focus();
@@ -67,7 +67,7 @@ $(() => {
     
 
     $(document).on('click', '.tracking-close', function (event) {
-        $(event.target).parent().prev().addClass('col-6');
+        $(event.target).parent().prev().addClass('col-5');
         
         let row = $(this).parent().parent();
         row.find('.input-tracking-code').prop('readonly', true).blur();
@@ -391,7 +391,7 @@ $(() => {
                     ;
 
                     let htmlButtonEdit = `
-                    <div class="edit-detail col-6 d-flex justify-content-between px-0">
+                    <div class="edit-detail d-flex justify-content-between px-0 col-5">
 
                         <a class='tracking-edit pointer' title="Editar">
                             <span class="text-right o-edit-1"></span>
@@ -439,10 +439,10 @@ $(() => {
                             <td class="text-left d-flex mb-0">
                             
                                 ${tracking.tracking_status_enum ? `
-                                <input maxlength="18" minlength="10" class="mr-10 col-6 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
+                                <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
                                 :htmlButtonAdd}
 
-                                <div class="buttons d-flex col-6 px-0" style="max-height: 38px;">
+                                <div class="save-close buttons d-flex px-0 col-5" style="max-height: 38px;">
 
                                     <a class='tracking-save pointer mr-10 text-center' title="Salvar" pps='${tracking.pps_id}'style="display:none">
                                         <i id='pencil' class='o-checkmark-1 text-white'></i>
@@ -562,22 +562,28 @@ $(() => {
 
                     let tracking = response.data;
 
-                    let td = btnSave.parent();
+                    let td = btnSave.parent().parent();
 
-                    td.find('.tracking-add, .tracking-edit, .tracking-detail')
-                        .remove();
+                    let saveClose = td.find('.save-close')
 
-                    td.find('.tracking-close')
-                        .trigger('click');
+                    td.find('.tracking-add, .edit-detail').remove();
+
+                    td.find('.tracking-close').trigger('click');
 
                     let buttons = `
-                        <a class='tracking-edit pointer' title="Editar">
-                            <span class="text-right o-edit-1"></span>
-                        </a>
-                        <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'><span class="o-eye-1"></span></a>`
+                        <div class="edit-detail d-flex justify-content-between px-0 col-5">
+
+                            <a class='tracking-edit pointer' title="Editar">
+                                <span class="text-right o-edit-1"></span>
+                            </a>
+                            
+                            <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
+                                <span class="o-eye-1"></span>
+                            </a>
+                        </div>`
                     ;
 
-                    td.append(buttons);
+                    $(buttons).insertBefore(saveClose);
 
                     let statusBadge = btnSave.parent().parent().parent().find('.badge');
 
