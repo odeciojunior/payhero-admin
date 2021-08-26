@@ -2,7 +2,8 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=11') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=11') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=21'.uniqid()) }}">
     <style>
         .popover {
             left: -50px !important;
@@ -58,7 +59,7 @@
                 </div>
             </div>
             {{-- TABS --}}
-            <nav class="pt-20" id="menu-tabs-view" style="display:none;">
+            <nav id="menu-tabs-view" style="display:none;">
                 <div class="nav-tabs-horizontal">
                     <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active nav-link-finances-hide-export"
@@ -85,9 +86,9 @@
                     </div>
                 </div>
             </nav>
-            <div class="card shadow">
+            <div>
                 {{-- TABS --}}
-                <div class="p-30 pt-20" id="tabs-view" style="display:none">
+                <div id="tabs-view" style="display:none">
                     <div class="tab-content" id="nav-tabContent">
                         {{-- TRANSFERENCIAS --}}
                         <div class="tab-pane fade show active"
@@ -95,117 +96,158 @@
                              role="tabpanel"
                              aria-labelledby="nav-home-tab"
                         >
-                            <div class="row justify-content-start align-items-center">
-                                <div class="col-8 mb-3">
-                                    <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal'
-                                         role="alert" style='display:none;'>
-                                        <strong>Saque bloqueado!</strong> Entre em contato com o suporte para mais
-                                        informações.
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <h5 class="title-pad"> Nova transferência </h5>
-                                    <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
-                                    </p>
-                                </div>
-                                <div class='container'>
-                                    <div class='row align-items-center my-20'>
-                                        <div class="col-sm-3">
-                                            <div id="div-available-money" class="price-holder pointer">
-                                                <h6 class="label-price mb-10"> Saldo Disponível </h6>
-                                                <h4 class="price saldoDisponivel">
-                                                </h4>
-                                                <div class="grad-border green"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="input-holder">
-                                                <label for="transfers_company_select"> Empresa</label>
-                                                <select style='border-radius:10px' class="form-control select-pad"
-                                                        name="company"
-                                                        id="transfers_company_select"> </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label for="custom-input-addon"> Valor a transferir</label>
-                                            <div class="input-group mb-3"
-                                                 style='padding:0'>
-                                                <div class='input-group-prepend'>
-                                                        <span class="input-group-text custom-addon" id="basic-addon1"
-                                                              style="border-radius:10px 0 0 10px;background-color: white;height: auto; border: 1px solid #ddd;"><span
-                                                                    class="currency">$</span></span>
-                                                </div>
-                                                <input id="custom-input-addon" type="text"
-                                                       class="form-control input-pad withdrawal-value"
-                                                       placeholder="Digite o valor" aria-label="Digite o valor"
-                                                       aria-describedby="basic-addon1"
-                                                       style='border-radius: 0 10px 10px 0'>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 pt-1">
-                                            <button id="bt-withdrawal" class="btn btn-success disabled btn-sacar mt-20"
-                                                    data-toggle="modal" disabled>
-                                                <span style="-webkit-text-stroke: 1.45px #FFF;" class="o-checkmark-1 white font-size-16"></span>
-                                                Sacar dinheiro
+                            <div class="card shadow card-tabs py-15 px-0 px-md-15 mb-50">
+                                <div class="flex-row justify-content-start align-items-center">
+                                    <div class="col-12 mb-3 text-xs-center text-lg-left">
+                                        <div class="alert alert-danger alert-dismissible fade show" id='blocked-withdrawal'
+                                            role="alert" style='display:none;'>
+                                            <strong>Saque bloqueado!</strong> Entre em contato com o suporte para mais
+                                            informações.
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
                                             </button>
                                         </div>
+                                        <h5 class="title-pad"> Nova transferência </h5>
+                                        <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
+                                        </p>
+                                    </div>
+                                    <div class='container bg-gray sirius-radius'>
+                                        <div class='row align-items-center my-20 py-20 d-none d-md-flex'
+                                             style="position: relative">
+                                            <div class="col-sm-3">
+                                                <div id="div-available-money" class="price-holder pointer pl-10">
+                                                    <h6 class="label-price mb-10"><b> Saldo Disponível </b></h6>
+                                                    <h4 class="number saldoDisponivel"></h4>
+                                                </div>
+                                                <div class="s-border-left green"></div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="input-holder">
+                                                    <label for="transfers_company_select"> Empresa</label>
+                                                    <select style='border-radius:10px' class="form-control select-pad"
+                                                            name="company"
+                                                            id="transfers_company_select"> </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label for="custom-input-addon"> Valor a transferir</label>
+                                                <div class="input-group mb-3 align-items-center input-custom-transfer">
+                                                    <div class="input-moeda">R$</div>
+                                                    <input id="custom-input-addon" type="text"
+                                                           class="form-control input-pad withdrawal-value"
+                                                           placeholder="Digite o valor" aria-label="Digite o valor"
+                                                           aria-describedby="basic-addon1"
+                                                           style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 pt-1">
+                                                <button id="bt-withdrawal"
+                                                        class="btn btn-success disabled btn-sacar mt-20"
+                                                        data-toggle="modal"
+                                                        style="border-radius: 8px;" disabled>
+                                                    Sacar dinheiro
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class='row align-items-center justify-content-center my-20 py-20 bg-white d-md-none'
+                                             style="position: relative; height: 255px">
+                                            <div class="col-md-12">
+                                                <div id="div-available-money_m" class="price-holder pointer pl-10">
+                                                    <h6 class="label-price mb-10"><b> Saldo Disponível </b></h6>
+                                                    <h4 class="price saldoDisponivel"></h4>
+                                                </div>
+                                                <div class="s-border-left green"></div>
+                                            </div>
+                                            <div class="px-10 mt-10">
+                                                <div class="col-md-12">
+                                                    <div class="input-holder">
+                                                        <label for="transfers_company_select_mobile"> Empresa</label>
+                                                        <select style='border-radius:10px'
+                                                                class="form-control select-pad"
+                                                                name="company"
+                                                                id="transfers_company_select_mobile"> </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mt-10">
+                                                    <label for="custom-input-addon"> Valor a transferir</label>
+                                                    <div class="input-group mb-3 align-items-center input-custom-transfer">
+                                                        <div class="input-moeda">R$</div>
+                                                        <input id="custom-input-addon" type="text"
+                                                               class="form-control input-pad withdrawal-value"
+                                                               placeholder="Digite o valor" aria-label="Digite o valor"
+                                                               aria-describedby="basic-addon1"
+                                                               style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <button id="bt-withdrawal_m"
+                                                        class="btn btn-success btn-sacar"
+                                                        data-toggle="modal">
+                                                    Sacar dinheiro
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class='container col-sm-12 mb-40'>
-                                    <div class='row'>
-                                        <div class="col-sm-3 ">
+                            </div>
+                            <div class='container col-sm-12 mt-20 d-lg-block'>
+                                <div class='row'>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
                                             <div class="price-holder">
-                                                <h6 class="label-price mb-15"> Saldo Pendente </h6>
-                                                <h4 class="price saldoPendente">
-                                                </h4>
-                                                <div class="grad-border red"></div>
+                                                <h5 class="font-size-14 gray-600"> Saldo Pendente </h5>
+                                                <h4 class="number saldoPendente"></h4>
                                             </div>
                                         </div>
-                                        <div class="col-sm-3 ">
+                                        <div class="s-border-right yellow"></div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
                                             <div class="price-holder">
-                                                <h6 class="label-price mb-15"> Saldo Bloqueado </h6>
-                                                <h4 class="price saldoBloqueado">
-                                                </h4>
-                                                <div class="grad-border red"></div>
+                                                <h5 class="font-size-14 gray-600"> Saldo Bloqueado </h5>
+                                                <h4 class="number saldoBloqueado"></h4>
                                             </div>
                                         </div>
-                                        <div class="col-sm-3 ">
+                                        <div class="s-border-right red"></div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 card">
+                                        <div class="card-body">
                                             <div class="price-holder">
-                                                <h6 class="label-price mb-15"> Saldo Total </h6>
-                                                <h4 class="price saltoTotal">
-                                                </h4>
-                                                <div class="grad-border blue"></div>
+                                                <h5 class="font-size-14 gray-600"> Saldo Total </h5>
+                                                <h4 class="number saltoTotal"></h4>
                                             </div>
                                         </div>
+                                        <div class="s-border-right blue"></div>
                                     </div>
                                 </div>
-                                <br>
-                                <div class="col-12 mb-3 mt-3">
-                                    <h5 class="card-title"> Histórico de transferências </h5>
-                                </div>
-                                <div class="col-12">
-                                    <table id='withdrawalsTable' class="table table-striped table-condensed unify">
-                                        <thead>
+                            </div>
+                            <div class="col-12 mb-3 mt-3">
+                                <h5 class="card-title"> Histórico de saques </h5>
+                            </div>
+                            <div style="min-height: 300px" class="card">
+                                <table id='withdrawalsTable' class="table table-striped table-condensed unify">
+                                    <thead>
                                         <tr>
-                                            <th scope="col">Conta</th>
-                                            <th scope="col">Solicitação</th>
-                                            <th scope="col">Liberação</th>
-                                            <th scope="col">Valor</th>
+                                            <th scope="col" class="table-title">Conta</th>
+                                            <th scope="col" class="table-title">Solicitação</th>
+                                            <th scope="col" class="table-title">Liberação</th>
+                                            <th scope="col" class="table-title">Valor</th>
                                             <th style="display: none" id="col_transferred_value" scope="col">Valor
                                                 transferido
                                             </th>
-                                            <th scope="col">Status</th>
+                                            <th scope="col" class="table-title">Status</th>
                                         </tr>
-                                        </thead>
-                                        <tbody id="withdrawals-table-data" class="custom-t-body">
-                                        </tbody>
-                                    </table>
-                                    <ul id="pagination-withdrawals" class="pagination-sm margin-chat-pagination"
-                                        style="margin-top:10px;position:relative;float:right">
-                                        {{--js carrega...--}}
-                                    </ul>
-                                </div>
+                                    </thead>
+                                    <tbody id="withdrawals-table-data" class="custom-t-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row justify-content-center justify-content-md-end pr-md-15">
+                                <ul id="pagination-withdrawals"
+                                    class="d-inline-flex flex-wrap justify-content-center pl-10 mt-10">
+                                    {{--js carrega...--}}
+                                </ul>
                             </div>
                         </div>
                         {{--EXTRATO--}}
@@ -213,101 +255,146 @@
                              id="nav-extract"
                              role="tabpanel"
                              aria-labelledby="nav-profile-tab">
-                            <div class="row justify-content-start align-items-center">
-                                <div class="col-12 fix-5">
-                                    <div class="d-flex align-items-center">
-                                        <div class="p-2" style="flex:1">
-                                            <h5 class="title-pad"> Extrato </h5>
-                                            <p class="sub-pad"> Pra você controlar tudo que entra e sai da sua conta.
-                                            </p>
+                            <div class="card shadow card-tabs py-15 px-0 px-md-15 mb-50">
+                                <div class="row justify-content-start align-items-center">
+                                    <div class="col-md-8 fix-5 px-sm-15">
+                                        <div class="d-flex align-items-center">
+                                            <div class="p-2" style="flex:1">
+                                                <h5 class="title-pad"> Extrato </h5>
+                                                <p class="sub-pad"> Pra você controlar tudo que entra e sai da sua conta.
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div class="p-2">
-                                            <div class="price-holder">
-                                                <h6 class="label-price"> Saldo no período</h6>
-                                                <h4 id="available-in-period"
-                                                    style="font-weight: 700;font-size: 25px;display: inline;">
-                                                </h4>
-                                                <div class="grad-border green"></div>
+                                    </div>
+                                    <div class="col-md-4 d-flex justify-content-start justify-content-lg-end">
+                                        <div class="price-holder px-20 p-md-0" style="position: relative">
+                                            <h6 class="label-price bold"> Saldo no período</h6>
+                                            <h4 id="available-in-period"
+                                                style="font-weight: 700;font-size: 25px;display: inline;">
+                                            </h4>
+                                            <div style="height: 16px;"
+                                                 class="d-none d-md-block s-border-top green mb-15"></div>
+                                            <div class="d-md-none s-border-left green mb-15"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-start align-items-center">
+                                    <div class="col-12 p-20 pb-0">
+                                        <div class="col-lg-12 mb-15">
+                                            <div class="row align-items-center">
+                                                <div class="col-sm-6 col-md-3 col-lg-3">
+                                                    <div class="input-holder form-group">
+                                                        <label for="extract_company_select">Empresa</label>
+                                                        <select class="form-control select-pad" name="company"
+                                                                id="extract_company_select"> </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3">
+                                                    <div class="form-group">
+                                                        <label for="reason">Razão</label>
+                                                        <input type="text" id="reason" class="form-control select-pad"
+                                                            placeholder="Digite a razão. Ex.: Saque">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3">
+                                                    <div class="form-group">
+                                                        <label for="transaction">Transação/Antecipação</label>
+                                                        <input type="text" id="transaction" class="form-control select-pad"
+                                                            placeholder="Digite o código">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-3 col-lg-3">
+                                                    <div class="input-holder form-group">
+                                                        <label for="type">Tipo</label>
+                                                        <select class="form-control select-pad" id="type">
+                                                            <option value="">Todos</option>
+                                                            <option value="in">Entrada</option>
+                                                            <option value="out">Saída</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="collapse" id="bt_collapse">
+                                                <div class="row">
+                                                    <div class="col-sm-6 col-md-3 col-lg-3">
+                                                        <div class="form-group">
+                                                            <label for="transaction-value">Valor</label>
+                                                            <input type="text" id="transaction-value"
+                                                                class="form-control select-pad withdrawal-value"
+                                                                placeholder="Digite o valor">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 col-md-3 col-lg-3">
+                                                        <div class="input-holder form-group">
+                                                            <label for="date_type">Data</label>
+                                                            <select class="form-control select-pad" id="date_type">
+                                                                <option value="transfer_date">Data da transferência</option>
+                                                                {{--                                                    <option value="transaction_date">Data da transação</option>--}}
+                                                                <option value="sale_start_date">Data da venda</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 col-md-3 col-lg-3">
+                                                        <div class="form-group">
+                                                            <input name="date_range" id="date_range" class="select-pad mt-30"
+                                                            placeholder="Clique para editar..." readonly>
+                                                        </div>
+                                                    </div>
+                                                    {{-- <div class="col-sm-6 col-md-3 col-lg-3 mt-30">
+                                                        <button id="bt_filtro" class="btn btn-primary w-full">
+                                                            <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
+                                                        </button>
+                                                    </div> --}}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="row" style="height: 0">
+                                                        <div class="col-6 col-xl-3 offset-xl-6 pr-0 mt-20">
+                                                            <div
+                                                                    class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#bt_collapse"
+                                                                    aria-expanded="false"
+                                                                    aria-controls="bt_collapse">
+                                                                <img id="icon-filtro"
+                                                                        src="{{ asset('/modules/global/img/svg/filter-2-line.svg') }}"/>
+                                                                <span id="text-filtro">Filtros avançados</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-6 col-xl-3 mt-20">
+                                                            <div id="bt_filtro"
+                                                                    class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                                                <img style="height: 12px; margin-right: 4px"
+                                                                        src="{{ asset('/modules/global/img/svg/check-all.svg') }}">
+                                                                Aplicar filtros
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-12 mb-15">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <div class="input-holder">
-                                                <label for="extract_company_select">Empresa</label>
-                                                <select class="form-control select-pad" name="company"
-                                                        id="extract_company_select"> </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <label for="reason">Razão</label>
-                                            <input type="text" id="reason" class="form-control select-pad"
-                                                   placeholder="Digite a razão. Ex.: Saque">
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <label for="transaction">Transação/Antecipação</label>
-                                            <input type="text" id="transaction" class="form-control select-pad"
-                                                   placeholder="Digite o código">
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <div class="input-holder">
-                                                <label for="type">Tipo</label>
-                                                <select class="form-control select-pad" id="type">
-                                                    <option value="">Todos</option>
-                                                    <option value="in">Entrada</option>
-                                                    <option value="out">Saída</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-20">
-                                        <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <label for="transaction-value">Valor</label>
-                                            <input type="text" id="transaction-value"
-                                                   class="form-control select-pad withdrawal-value"
-                                                   placeholder="Digite o valor">
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <div class="input-holder">
-                                                <label for="date_type">Data</label>
-                                                <select class="form-control select-pad" id="date_type">
-                                                    <option value="transfer_date">Data da transferência</option>
-                                                    {{--                                                    <option value="transaction_date">Data da transação</option>--}}
-                                                    <option value="sale_start_date">Data da venda</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3">
-                                            <input name="date_range" id="date_range" class="select-pad mt-30"
-                                                   placeholder="Clique para editar..." readonly>
-                                        </div>
-                                        <div class="col-sm-6 col-md-3 col-lg-3 mt-30">
-                                            <button id="bt_filtro" class="btn btn-primary w-full">
-                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 mt-3">
-                                    <table id='transfersTable' class="table table-striped table-condensed unify">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col" class='headCenter' style='width:33%'>Razão</th>
-                                            <th scope="col" class='headCenter' style='width:33%'>Data da transferência
-                                            </th>
-                                            <th scope="col" class='headCenter' style='width:34%'>Valor</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="table-transfers-body" class="custom-t-body">
-                                        </tbody>
-                                    </table>
-                                    <ul id="pagination-transfers" class="pagination-sm margin-chat-pagination"
-                                        style="margin-top:10px;position:relative;float:right">
-                                        {{--js carrega...--}}
-                                    </ul>
-                                </div>
+                            </div>
+                            <div style="min-height: 300px" class="card">
+                                <table id='transfersTable' class="table table-striped table-condensed unify">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" class='headCenter' style='width:33%'>Razão</th>
+                                        <th scope="col" class='headCenter' style='width:33%'>Data da transferência
+                                        </th>
+                                        <th scope="col" class='headCenter' style='width:34%'>Valor</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table-transfers-body" class="custom-t-body">
+                                    </tbody>
+                                </table>
+                                <ul id="pagination-transfers" class="pagination-sm margin-chat-pagination"
+                                    style="margin-top:10px;position:relative;float:right">
+                                    {{--js carrega...--}}
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -341,9 +428,9 @@
         {{-- Modal confirmar saque --}}
         <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
             <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple ">
-                <div id="conteudo_modal_add" class="modal-content p-10">
-                    <div class="header-modal simple-border-bottom">
-                        <h2 id="modal-withdrawal-title" class="modal-title">Confirmar Saque</h2>
+                <div id="conteudo_modal_add" class="modal-content modal-content-style">
+                    <div class="modal-header header-modal simple-border-bottom modal-title-withdrawal" style="height: 60px;">
+                        <h2 id="modal-withdrawal-title" class="modal-title" style="color: #FFFFFF;">Confirmar Saque</h2>
                     </div>
                     <div id="modal_body" class="modal-body simple-border-bottom"
                          style='padding-bottom:1%;padding-top:1%;'>
@@ -364,13 +451,33 @@
                                 <span id="modal-withdrawal-document"></span>
                             </h4>
                             <hr>
-                            <h4>Valor do saque:
+                            <div class="row">
+                                <div class="col-md-8 mt-10">
+                                    <p style="color: #5A5A5A;" class="text-uppercase">Valor do saque:</p>
+                                </div>
+                                <div class="col-md-4 mt-10 text-right">
+                                    <span id="modal-withdrawal-value" class='greenGradientText'></span>
+                                    <span id="taxValue" class="" style="font-size: 6px">- R$3,80</span>
+                                </div>
+                            </div>
+                            {{-- <h4>Valor do saque:
                                 <span id="modal-withdrawal-value" class='greenGradientText'></span>
                                 <span id="taxValue" class="" style="font-size: 6px">- R$3,80</span>
-                            </h4>
+                            </h4> --}}
                         </div>
                     </div>
-                    <div id='modal-withdraw-footer' class="modal-footer">
+                    <div id="modal-withdraw-footer" class="modal-footer mt-20">
+                        <div class="col-md-12 text-center">
+                            <button id="bt-cancel-withdrawal" class="btn col-5 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:200px; border-radius: 12px; color:#818181;">
+                                Cancelar
+                            </button>
+
+                            <button id="bt-confirm-withdrawal" class="btn btn-success col-5 btn-confirmation s-btn-border" style="background-color: #41DC8F;font-size:20px; width:200px;">
+                                <strong>Confirmar</strong>
+                            </button>
+                        </div>
+                    </div>
+                    {{-- <div id='modal-withdraw-footer' class="modal-footer">
                         <button id="bt-confirm-withdrawal" class="btn btn-success"
                                 style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">
                             <strong>Confirmar</strong></button>
@@ -378,7 +485,7 @@
                                 aria-label="Close"
                                 style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">
                             <strong>Cancelar</strong></button>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

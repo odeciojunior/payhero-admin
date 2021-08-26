@@ -9,7 +9,7 @@ Route::group(
     ],
     function () {
         /**
-         * News routes after GETNET
+         *  Old routes before ASAAS
          */
         Route::get('/finances/getbalances', 'FinancesApiController@getBalances')
             ->name('api.finances.balances')
@@ -20,7 +20,7 @@ Route::group(
             ->middleware('role:account_owner|admin');
 
         /**
-         * Old routes before getnet
+         * News routes after getnet
          */
         Route::get('/old_finances/getbalances', 'OldFinancesApiController@getBalances')
             ->name('api.finances.balances')

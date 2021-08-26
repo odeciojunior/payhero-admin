@@ -155,7 +155,19 @@ $(document).ready(function () {
     });
 
     function updateBalances() {
-        loadOnAny('.price', false, balanceLoader);
+        loadOnAny(".number", false, {
+            styles: {
+                container: {
+                    minHeight: "32px",
+                    height: "auto",
+                },
+                loader: {
+                    width: "20px",
+                    height: "20px",
+                    borderWidth: "4px",
+                },
+            },
+        });
         loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
         $.ajax({
             url: "api/old_finances/getbalances",
@@ -167,34 +179,52 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadOnAny('.price', true);
+                loadOnAny(".number", true);
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                $('.saldoPendente').html('<span class="currency">R$</span><span class="pending-balance">0,00</span>');
+                loadOnAny(".number", true);
+                $(".saldoPendente").html(
+                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold pending-balance">0,00</span>'
+                );
                 $('.saldoAntifraude').html('<span class="currency">R$</span><span class="pending-antifraud-balance">0,00</span>');
                 $('.removeSpan').remove();
                 $('.disponivelAntecipar').append('<span class="currency removeSpan">R$</span><span class="antecipable-balance removeSpan">0,00</span>');
-                $('.saldoDisponivel').html('<span class="currency">R$</span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>');
-                $('.saltoTotal').html('<span class="currency" style="color:#687089">R$</span><span class="total-balance" style="color:#57617c">0,00</span>');
-                $('.saldoBloqueado').html('<span class="currency">R$</span><span class="blocked-balance">0,00</span>');
+                $(".saldoDisponivel").html(
+                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold available-balance">0,00</span>'
+                );
+                $(".saltoTotal").html(
+                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold total-balance">0,00</span>'
+                );
+                $(".saldoBloqueado").html(
+                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold blocked-balance">0,00</span>'
+                );
 
                 //Saldo antecipavel
                 $('.saldoAntecipavel').html('<span class="currency">R$</span><span class="antecipable-balance">' + response.anticipable_balance + '</span>');
 
                 // Saldo bloqueado
-                $('.saldoBloqueado').html('<span class="currency">R$</span><span class="blocked-balance">' + response.blocked_balance + '</span>');
+                $(".saldoBloqueado").html(
+                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold blocked-balance">' +
+                        response.blocked_balance +
+                        "</span>"
+                );
 
-                $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
-                $('.total_available').html('<span class="currency">R$</span>' + isEmpty(response.available_balance));
+                $(".totalConta").html(
+                    '<span style="color:#959595">R$ </span><span class="total-balance">0,00</span>'
+                );
+                $(".total_available").html(
+                    '<span style="color:#959595">R$ </span>' +
+                        isEmpty(response.available_balance)
+                );
                 $(".currency").html('R$ ');
                 $(".available-balance").html(isEmpty(response.available_balance));
                 $(".pending-balance").html(isEmpty(response.pending_balance));
                 $(".pending-antifraud-balance").html(response.pending_antifraud_balance);
                 $(".total-balance").html(isEmpty(response.total_balance));
                 $(".loading").remove();
-                $("#div-available-money").unbind('click');
-                $("#div-available-money").on("click", function () {
+                $("#div-available-money, #div-available-money_m").unbind('click');
+                $("#div-available-money, #div-available-money_m").on("click", function () {
                     $(".withdrawal-value").val(isEmpty(response.available_balance));
                 });
 
@@ -208,7 +238,7 @@ $(document).ready(function () {
                 $("#label_quotation").text("Cotação do " + response.currency);
 
                 updateWithdrawalsTable();
-                loadOnAny('.price', true);
+                // loadOnAny('.price', true);
             }
         });
 
@@ -401,7 +431,25 @@ $(document).ready(function () {
 
                                 $('#modal_body').html(confirmationData);
 
-                                $('#modal-withdraw-footer').html('<button id="bt-confirm-withdrawal" class="btn btn-success" style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">' + '<strong>Confirmar</strong></button>' + '<button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal" aria-label="Close" style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">' + '<strong>Cancelar</strong></button>');
+                                $("#modal-withdraw-footer").html(`
+                                    <div class="col-md-12 text-center">
+                                        <button
+                                            id="bt-cancel-withdrawal"
+                                            class="btn col-5 s-btn-border"
+                                            data-dismiss="modal"
+                                            aria-label="Close"
+                                            style="font-size:20px; width:200px; border-radius: 12px; color:#818181;">
+                                            Cancelar
+                                        </button>
+
+                                        <button
+                                            id="bt-confirm-withdrawal"
+                                            class="btn btn-success col-5 btn-confirmation s-btn-border"
+                                            style="background-color: #41DC8F;font-size:20px; width:200px;">
+                                            <strong>Confirmar</strong>
+                                        </button>
+                                    </div>
+                                `);
 
                                 $("#modal-withdrawal-value").html(' R$ ' + $('#custom-input-addon').val() + ' ');
                                 $("#modal-withdrawal-bank").html('  ' + response.data.bank);
@@ -797,6 +845,23 @@ $(document).ready(function () {
             } else {
                 $("#transferred_value").hide();
             }
+        }
+    });
+
+    $(".btn-light-1").click(function () {
+        var collapse = $("#icon-filtro");
+        var text = $("#text-filtro");
+
+        text.fadeOut(10);
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
+            collapse.css("transform", "rotate(180deg)");
+            text.text("Minimizar filtros").fadeIn();
+        } else {
+            collapse.css("transform", "rotate(0deg)");
+            text.text("Filtros avançados").fadeIn();
         }
     });
 });
