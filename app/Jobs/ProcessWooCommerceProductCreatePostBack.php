@@ -61,9 +61,9 @@ class ProcessWooCommerceProductCreatePostBack implements ShouldQueue
                     'sku' => $sku
                 ];
                 if (empty($this->request->parent_id) && empty($this->request->variations)) {
-                    $wooCommerceService->woocommerce->put('products/' . $this->request->id, $data);
+                    $wooCommerceService->woocommerce->post('products/' . $this->request->id, $data);
                 } else {
-                    $wooCommerceService->woocommerce->put(
+                    $wooCommerceService->woocommerce->post(
                         'products/' . $this->request->parent_id . '/variations/' . $this->request->id,
                         $data
                     );
