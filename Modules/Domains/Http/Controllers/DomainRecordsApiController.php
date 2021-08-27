@@ -276,7 +276,7 @@ class DomainRecordsApiController extends Controller
             }
 
             $proxy = true;
-            if ($domainRecord->type == 'A' || $domainRecord->type == 'MX' || $domainRecord->type == 'TXT' || $request->input('proxy') != '1') {
+            if (($domainRecord->type == 'A' || $domainRecord->type == 'MX' || $domainRecord->type == 'TXT') && $request->input('proxy') != '1') {
                 $proxy = false;
             }
 
