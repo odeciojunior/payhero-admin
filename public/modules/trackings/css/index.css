@@ -216,7 +216,7 @@ input[type="text"]::placeholder{
     text-align: center;
 }
 .mr-10.col-sm-7.form-control.font-weight-bold.input-tracking-code.fake-label{
-    padding-bottom: 1px !important;
+    padding-bottom: 3px !important;
 }
 div.buttons.d-flex.mr-15{
     min-width: 328px !important;

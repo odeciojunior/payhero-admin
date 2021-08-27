@@ -385,7 +385,7 @@ $(() => {
                     <a class='tracking-add pointer mr-10' title="Adicionar">
                         <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
                     </a>
-                    <input maxlength="18" minlength="10" class="mr-10 col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;border-radius: 8px;">`
+                    <input maxlength="18" minlength="10" class="mr-10 col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="  Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;border-radius: 8px;">`
                     ;
 
                     let htmlButtonEdit = `
@@ -432,7 +432,7 @@ $(() => {
                                 ${tracking.is_chargeback_recovered ? '<img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">' : ''}
                             </td>
 
-                            <td class="text-left d-flex mb-0">
+                            <td class="text-left d-flex mb-0" style="min-height:74px!important;">
                             
                                 ${tracking.tracking_status_enum ? `
                                 <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
