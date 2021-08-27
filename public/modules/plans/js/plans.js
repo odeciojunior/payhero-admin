@@ -76,6 +76,8 @@ $(function () {
 
     function createNew()
     {
+        $('#search-product').val('');
+        
         var modalID = $('#modal_add_plan');
         
         $.ajax({
@@ -94,29 +96,80 @@ $(function () {
             success: function success(response) {
                 modalID.modal('show');
                 
-                var data = '<div class="row">';
-                response.data.forEach(function(product) {
-                    console.log(product.status_enum);
-                    data += '<div class="col-sm-6">';
-                        data += '<div class="box-product ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
-                            data += '<div class="d-flex align-items-center">';
-                                data += '<img class="mr-15" src="' + product.photo + '" alt="Image Product">';
-                                data += '<div>';
-                                    data += '<h1 class="title">' + product.name_substr + '</h1>';
-                                    data += '<p class="description">' + product.description + '</p>';
-                                data += '</div>';
-                            data += '</div>';
-                            if (product.status_enum == 2) {
-                                data += '<div class="check"></div>';
-                            }
-                        data += '</div>';
-                    data += '</div>';
-                });
-                data + '</div>';
-
-                modalID.find('#load-products').html(data);
+                appendProducts(response.data, modalID);
             }
         });
+    }
+
+    function appendProducts(products, modalID)
+    {
+        var data = '<div class="row">';
+        products.forEach(function(product) {
+            data += '<div class="col-sm-6">';
+                data += '<div data-code="' + product.id + '" class="box-product ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
+                    data += '<div class="d-flex align-items-center">';
+                        data += '<img class="product-photo" src="' + product.photo + '" alt="Image Product">';
+                        data += '<div>';
+                            data += '<h1 class="title">' + product.name + '</h1>';
+                            data += '<p class="description">' + product.description + '</p>';
+                        data += '</div>';
+                    data += '</div>';
+                    data += '<div class="check"></div>';
+                data += '</div>';
+            data += '</div>';
+        });
+        data + '</div>';
+
+        modalID.find('#load-products').html(data);
+
+        $(".product-photo").on("error", function () {
+            $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+        });
+    }
+
+    // search products input
+    $('#search-product').on('keyup', function() {
+        var search_product = $(this).val();        
+        searchProducts(search_product);
+    });
+
+    function searchProducts(product)
+    {
+        var modalID = $('#modal_add_plan');
+        modalID.find('#load-products').html('');
+        
+        $.ajax({
+            method: "POST",
+            url: "/api/products/search",
+            data: {
+                project: projectId,
+                product: product
+            },
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                $("#modal-content").hide();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                appendProducts(response.data, modalID);
+            }
+        });
+    }
+
+    // select products button
+    $('.products').on('click', '.box-product', function() {
+        var productId = $(this).data('code');
+        selectProducts(productId);
+    });
+    
+    // select products function
+    function selectProducts(productId)
+    {
+        alert(productId);
     }
 
     function create() {
@@ -265,7 +318,7 @@ $(function () {
      */
     $("#add-plan").on('click', function () {
         $('#modal_add_plan').attr('data-backdrop', 'static');
-        create();
+        createNew();
         $('.btn-close-add-plan').on('click', function () {
             clearFields();
             $('#modal_add_plan').removeAttr('data-backdrop');

@@ -963,13 +963,6 @@ img.border-icon{
     padding: 0px 30px 30px !important;
 }
 
-.modal-plans .modal-dialog {
-    max-width: 690px;
-}
-.modal-plans .box-stage {
-    -ms-flex: 1 1 auto!important;
-    flex: 1 1 auto!important;
-}
 .modal-plans .box-stage div {
     width: auto;
 }
@@ -1007,8 +1000,8 @@ img.border-icon{
     letter-spacing: 0;
     margin: 0;
 }
-.modal-plans .box-stage .line hr {
-    width: 65px;
+.modal-plans .line hr {
+    width: 50px;
     border-color: #c4c4c4;
 }
 
@@ -1017,18 +1010,30 @@ img.border-icon{
     font-weight: bold;
     font-size: 16px;
     line-height: 20px;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     color: #636363;
 }
 
+.modal-plans .products {
+    max-height: 306px;
+    overflow: hidden;
+}
+.modal-plans .products .col-sm-6:nth-child(odd) {
+    padding-right: 8px;
+}
+.modal-plans .products .col-sm-6:nth-child(even) {
+    padding-left: 8px;
+}
 .modal-plans .box-product {
     border: 1px solid #E1E1E1;
     box-sizing: border-box;
     border-radius: 8px;
-    padding: 14px;
+    padding: 16px;
     margin-bottom: 12px;
+    cursor: pointer;
 }
-.modal-plans .box-product.selected {
+.modal-plans .box-product.selected,
+.modal-plans .box-product:hover {
     background: #EFF6FF;
     border: 1px solid #2E85EC;
 }
@@ -1041,6 +1046,7 @@ img.border-icon{
     width: 56px;
     height: 56px;
     border-radius: 8px;
+    margin-right: 12px;
 }
 .modal-plans .box-product .title {
     font-weight: bold;
@@ -1062,6 +1068,10 @@ img.border-icon{
     border: 1px solid #9B9B9B;
     box-sizing: border-box;
     border-radius: 50%;
+}
+.modal-plans .box-product.selected .check {
+    background-color: #2E85EC;
+    border-color: #2E85EC;
 }
 
 .modal-plans .modal-footer .btn {

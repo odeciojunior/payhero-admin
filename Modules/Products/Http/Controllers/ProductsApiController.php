@@ -396,7 +396,6 @@ class ProductsApiController extends Controller
             }
 
             $productService = new ProductService();
-
             $products = $productService->getProductsBySale($saleId);
 
             return ProductsSaleResource::collection($products);
@@ -444,6 +443,24 @@ class ProductsApiController extends Controller
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao verificar produto'], 400);
+        }
+    }
+
+    public function getProductFilter(Request $request)
+    {
+        try {
+            $project = $request->input('project');
+            $product = $request->input('product');
+
+            $projectId = current(Hashids::decode($project));
+            
+            $productService = new ProductService();            
+            $products = $productService->getProductsFilter($projectId, $product);
+            return ProductsSelectResource::collection($products);
+        } catch (Exception $e) {
+            report($e);
+            //return response()->json(['message' => 'Erro ao tentar buscar produto'], 400);
+            return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 }

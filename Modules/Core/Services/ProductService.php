@@ -28,9 +28,50 @@ class ProductService
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
         if (!empty($projectId) && ( !empty($project->shopify_id) || !empty($project->woocommerce_id) ) ) {
-            return $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id)->where('project_id', $projectId)->get();
+            return $productModel
+            ->with('productsPlans')
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->where('project_id', $projectId)
+            ->take(12)
+            ->get();
         } else {
-            return $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id)->whereNull('shopify_variant_id')->get();
+            return $productModel
+            ->with('productsPlans')
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->whereNull('shopify_variant_id')
+            ->take(12)
+            ->get();
+        }
+    }
+
+    public function getProductsFilter(int $projectId, string $product)
+    {
+        $productModel = new Product();
+        $projectModel = new Project();
+        $project = $projectModel->find($projectId);
+        if (!empty($projectId) && ( !empty($project->shopify_id) || !empty($project->woocommerce_id) ) ) {
+            if (!empty($product)) {
+                return $productModel
+                ->with('productsPlans')
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->where('project_id', $projectId)
+                ->where('name', 'like', '%'. $product .'%')
+                ->get();
+            } else {
+                return $productModel
+                ->with('productsPlans')
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->where('project_id', $projectId)
+                ->take(12)
+                ->get();
+            }
+        } else {
+            return $productModel
+            ->with('productsPlans')
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->whereNull('shopify_variant_id')
+            ->take(12)
+            ->get();
         }
     }
 
