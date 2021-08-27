@@ -52,8 +52,9 @@ class CheckoutService
                 },
                 'checkoutPlans.plan',
             ]
-        )
-            ->whereIn('status_enum', $abandonedCartsStatus)
+        )->whereHas('checkoutPlans', function ($query) {
+            $query->whereHas('plan');
+        })->whereIn('status_enum', $abandonedCartsStatus)
             ->whereIn('project_id', $projectIds)
             ->whereBetween('created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
             ->when(

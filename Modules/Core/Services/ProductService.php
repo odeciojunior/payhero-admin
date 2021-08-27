@@ -18,7 +18,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class ProductService
 {
     /**
-     * @param  int  $projectId
+     * @param int $projectId
      * @return mixed
      * Retorna produtos
      */
@@ -27,7 +27,7 @@ class ProductService
         $productModel = new Product();
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
-        if (!empty($projectId) && ( !empty($project->shopify_id) || !empty($project->woocommerce_id) ) ) {
+        if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
             return $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id)->where('project_id', $projectId)->get();
         } else {
             return $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id)->whereNull('shopify_variant_id')->get();
@@ -67,7 +67,7 @@ class ProductService
         $productsSale = collect();
 
         if (!empty($sale)) {
-            if ( $sale->api_flag ) {
+            if ($sale->api_flag) {
                 foreach ($sale->productsSaleApi as $productsApi) {
                     $product = $productsApi->toArray();
 
@@ -80,12 +80,16 @@ class ProductService
                     $product['amount'] = $productsApi->quantity;
                     $product['sale_id'] = $productsApi->sale_id;
 
-                    $productsSale->add((object) $product);
+                    $productsSale->add((object)$product);
                 }
             } else {
                 foreach ($sale->productsPlansSale as $productsPlanSale) {
-                    $product = $productsPlanSale->product->toArray();
+                    $product = $productsPlanSale->product()->withTrashed()->first()->toArray();
                     $tracking = $productsPlanSale->tracking;
+
+                    if(!is_null($product['deleted_at'])) {
+                        $product['name'] .= ' (Excluído)';
+                    }
 
                     $product['product_plan_sale_id'] = $productsPlanSale->id;
                     $product['sale_status'] = $sale->status;
@@ -95,7 +99,7 @@ class ProductService
                         $trackingCode = $tracking->tracking_code == "CLOUDFOX000XX" ? '' : $tracking->tracking_code;
                         $product['tracking_id'] = Hashids::encode($tracking->id);
                         $product['tracking_code'] = $trackingCode;
-                        $product['tracking_status_enum'] = $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.'.$tracking->present()->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não Informado';
+                        $product['tracking_status_enum'] = $tracking->tracking_status_enum ? __('definitions.enum.tracking.tracking_status_enum.' . $tracking->present()->getTrackingStatusEnum($tracking->tracking_status_enum)) : 'Não Informado';
                         $product['tracking_created_at'] = Carbon::parse($tracking->created_at)->format('d/m/Y H:i:s');
                     } else {
                         $product['tracking_id'] = '';
@@ -103,15 +107,15 @@ class ProductService
                         $product['tracking_status_enum'] = 'Não Informado';
                         $product['tracking_created_at'] = '';
                     }
-                    
-                    $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';                
-                    $product['custom_products'] = SaleAdditionalCustomerInformation::select('id','type_enum','value','file_name','line')
-                    ->where('sale_id',$productsPlanSale->sale_id)->where('plan_id',$productsPlanSale->plan_id)
-                    ->where('product_id',$productsPlanSale->product_id)->orderBy('line','asc')->orderBy('order','asc')->get();
+
+                    $product['photo'] = FoxUtils::checkFileExistUrl($product['photo']) ? $product['photo'] : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
+                    $product['custom_products'] = SaleAdditionalCustomerInformation::select('id', 'type_enum', 'value', 'file_name', 'line')
+                        ->where('sale_id', $productsPlanSale->sale_id)->where('plan_id', $productsPlanSale->plan_id)
+                        ->where('product_id', $productsPlanSale->product_id)->orderBy('line', 'asc')->orderBy('order', 'asc')->get();
                     $product['sale_id'] = $productsPlanSale->sale_id;
-                    $productsSale->add((object) $product);
+                    $productsSale->add((object)$product);
                 }
-            }      
+            }
         }
 
         return $productsSale;
@@ -126,7 +130,7 @@ class ProductService
             foreach ($sale->plansSales as $planSale) {
                 foreach ($planSale->plan->productsPlans as $productPlan) {
                     $products[] = [
-                        'name' => $productPlan->amount * $planSale->amount.'x '.$planSale->plan->name,
+                        'name' => $productPlan->amount * $planSale->amount . 'x ' . $planSale->plan->name,
                     ];
                 }
             }
