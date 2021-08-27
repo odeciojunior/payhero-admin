@@ -111,6 +111,8 @@ class Kernel extends ConsoleKernel
         //check invites expired
         $schedule->command('verify:inviteexpired')->dailyAt('01:00');
 
+        $schedule->command('check:menv-tracking')->dailyAt('17:00');
+
         //Remove temporary files in regiter
         $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
 

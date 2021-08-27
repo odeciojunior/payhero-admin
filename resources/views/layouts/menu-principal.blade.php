@@ -62,7 +62,6 @@
                     </a>
                     <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
                         @if(foxutils()->isHomolog())
->>>>>>> master
                             <div data-toggle="tooltip" data-placement="left" title="Desabilitado na versão de testes">
                                 <a class="dropdown-item disabled" disabled>
                                     <img height="24" width="24" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
@@ -309,7 +308,7 @@
                 </a>
             </li>
         @endif
-        
+
         {{--
         @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
             <li class="site-menu-item has-sub">

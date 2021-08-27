@@ -98,7 +98,7 @@ class WooCommerceService
                         'name' => $product[0]->name
                     ];
     
-                    $this->woocommerce->put('products/'.$product[0]->id, $data);
+                    $this->woocommerce->post('products/'.$product[0]->id, $data);
     
                     return true;
     
@@ -160,7 +160,7 @@ class WooCommerceService
                 $data = [
                         'sku' => $_product->id.'-'.$hashedProjectId.'-'
                     ];
-                    $this->woocommerce->put('products/'.$_product->id, $data);
+                    $this->woocommerce->post('products/'.$_product->id, $data);
                     
                 
 
@@ -369,7 +369,7 @@ class WooCommerceService
                 'status' => 'cancelled'
             ];
 
-            $this->woocommerce->put('orders/'.$sale->woocommerce_order, $data);
+            $this->woocommerce->post('orders/'.$sale->woocommerce_order, $data);
 
             if(!empty($note)){
                 $data = [
