@@ -369,6 +369,7 @@ class CloudFlareService
                         'name' => $newZone->name,
                         'content' => $ipAddress,
                         'system_flag' => 1,
+                        'proxy' => 0,
                     ]
                 );
             }
@@ -447,6 +448,7 @@ class CloudFlareService
                             'name' => $responseDns->host,
                             'content' => $responseDns->data,
                             'system_flag' => 1,
+                            'proxy' => 0,
                         ]
                     );
                 } else {
@@ -465,6 +467,7 @@ class CloudFlareService
                             'name' => $responseDns->host,
                             'content' => $responseDns->data,
                             'system_flag' => 1,
+                            'proxy' => 0,
                         ]
                     );
                 }
@@ -530,6 +533,7 @@ class CloudFlareService
                     'name' => $newZone->name,
                     'content' => self::shopifyIp,
                     'system_flag' => 1,
+                    'proxy' => 0,
                 ]
             );
 
@@ -542,6 +546,7 @@ class CloudFlareService
                     'name' => 'www',
                     'content' => 'shops.myshopify.com',
                     'system_flag' => 1,
+                    'proxy' => 0,
                 ]
             );
 
@@ -607,6 +612,7 @@ class CloudFlareService
                             'name' => $responseDns->host,
                             'content' => $responseDns->data,
                             'system_flag' => 1,
+                            'proxy' => 0,
                         ]
                     );
                 } else {
@@ -625,6 +631,7 @@ class CloudFlareService
                             'name' => $responseDns->host,
                             'content' => $responseDns->data,
                             'system_flag' => 1,
+                            'proxy' => 0,
                         ]
                     );
                 }
@@ -650,6 +657,7 @@ class CloudFlareService
                             'name' => $responseDns->host,
                             'content' => $responseDns->data,
                             'system_flag' => 1,
+                            'proxy' => 0,
                         ]
                     );
                 }
