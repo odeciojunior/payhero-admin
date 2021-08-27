@@ -73,9 +73,12 @@ class ProcessWooCommerceProductCreatePostBack implements ShouldQueue
             
 
         }catch(Exception $e){
+            if(stristr('JSON ERROR: Syntax error', $e) || stristr('SKU', $e)){
+                //loja retornou json inválido OU variação repetida
+            }else{
+                report($e);
+            }
             
-            report($e);
-            //
         }
 
 
