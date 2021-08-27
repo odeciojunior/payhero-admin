@@ -360,7 +360,7 @@ class CloudFlareService
             $this->setZone($newZone->name);
 
             if (!empty($ipAddress)) {
-                $recordId = $this->addRecord("A", $newZone->name, $ipAddress);
+                $recordId = $this->addRecord("A", $newZone->name, $ipAddress, 0, false);
                 $this->getDomainRecordModel()->create(
                     [
                         'domain_id' => $domainModelId,
