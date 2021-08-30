@@ -345,7 +345,7 @@
                     <div class="col-12 col-md-6 card-graphic-labels bg-white">
                         <div id="graphic-loading"></div>
 
-                        <div class="row">
+                        <div class="row" style="height:100%;">
 
                             <div class="col-md-5 p-0 m-auto">
                                 <div class="card mb-0 rounded-0 card-graphic-labels">
@@ -364,9 +364,9 @@
 
                             <!-- LEGENDAS -->
                             <div class="col-md-7 px-0 ">
-                                <div class="card m-0 card-graphic-labels">
+                                <div class="card m-0 card-graphic-labels" style="height: 100%;">
 
-                                    <div id="data-labels" class="card-body pl-10">
+                                    <div id="data-labels" class="d-flex card-body pl-10 justify-content-center align-items-center">
 
                                         <div class="labels row">
                                             <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 posted"></i> Postados</h2>
