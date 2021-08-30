@@ -3,7 +3,7 @@
 @section('content')
 
 @push('css')
-<link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=146') !!}">
+<link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=147') !!}">
 <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
 <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v='.uniqid()) }}">
 <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v='.uniqid()) }}">
@@ -268,14 +268,14 @@
 
             <!-- Resumo -->
             <div class="container">
-                <div id="viewer-data-general" class="row no-gutters">
+                <div id="viewer-data-general" class="row">
 
-                    <div class="col-12 col-md-6" style="max-height: 200px;">
+                    <div class="col-12 col-md-6">
                         <div class="row pr-30 pb-0">
 
-                            <div id="posted" class="col-md-4 col-sm-6 col-xs-12 card-height border-right border-bottom px-0">
-                                <div class="card rounded-right rounded-bottom mb-0">
-                                    <div class="card-body cards-settings">
+                            <div id="posted" class="col-md-4 col-sm-6 col-xs-12 border-right border-bottom px-0 bg-white card-posted">
+                                <div class="card mb-0 rounded-0 card-posted">
+                                    <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Postados </h6>
                                         <h4 id="percentual-posted" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
@@ -284,9 +284,9 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4 col-sm-6 col-xs-12 card-height border-right border-bottom px-0 ">
-                                <div class="card rounded-top rounded-bottom mb-0">
-                                    <div class="card-body cards-settings">
+                            <div class="col-md-4 col-sm-6 col-xs-12 border-right border-bottom px-0 bg-white">
+                                <div class="card mb-0 rounded-0">
+                                    <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Em trânsito</h6>
                                         <h4 id="percentual-dispatched" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
@@ -295,9 +295,9 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4 col-sm-6 col-xs-12 card-height border-bottom pl-0 pr-0">
-                                <div class="card rounded-top rounded-bottom mb-0">
-                                    <div class="card-body cards-settings">
+                            <div class="col-md-4 col-sm-6 col-xs-12 border-bottom pl-0 pr-0 bg-white card-to-delivery">
+                                <div class="card mb-0 rounded-0 card-to-delivery">
+                                    <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Saiu para entrega</h6>
                                         <h4 id="percentual-out" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
@@ -306,9 +306,9 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4 col-sm-6 col-xs-12 card-height border-right px-0">
-                                <div class="card rounded-top rounded-right mb-0">
-                                    <div class="card-body cards-settings">
+                            <div class="col-md-4 col-sm-6 col-xs-12 border-right px-0 bg-white card-delivery-problem">
+                                <div class="card mb-0 rounded-0 card-delivery-problem">
+                                    <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Problema na entrega</h6>
                                         <h4 id="percentual-exception" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
@@ -317,9 +317,9 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4 col-sm-6 col-xs-12 card-height border-right px-0">
-                                <div class="card rounded-top rounded-bottom mb-0">
-                                    <div class="card-body cards-settings">
+                            <div class="col-md-4 col-sm-6 col-xs-12 border-right px-0 bg-white">
+                                <div class="card mb-0 rounded-0">
+                                    <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Não informado</h6>
                                         <h4 id="percentual-unknown" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
@@ -328,9 +328,9 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4 col-sm-6 col-xs-12 card-height pl-0 pr-0">
-                                <div class="card rounded-top rounded-bottom mb-0">
-                                    <div class="card-body cards-settings">
+                            <div class="col-md-4 col-sm-6 col-xs-12 pl-0 pr-0 bg-white card-delivered">
+                                <div class="card mb-0 rounded-0 card-delivered">
+                                    <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Entregues</h6>
                                         <h4 id="percentual-delivered" class="mt-10 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
@@ -342,15 +342,15 @@
                     </div>
 
                     <!--GRAFICO E LEGENDA -->
-                    <div class="col-12 col-md-6" style="max-height: 200px;">
+                    <div class="col-12 col-md-6 card-graphic-labels bg-white">
                         <div id="graphic-loading"></div>
 
                         <div class="row">
 
-                            <div class="col-md-5 p-0 ">
-                                <div class="card rounded-right mb-0 border-left rounded-left">
-
+                            <div class="col-md-5 p-0 m-auto">
+                                <div class="card mb-0 rounded-0 card-graphic-labels">
                                     <div id="dataCharts" class="d-flex card-body p-0" style="position: relative;">
+
                                         <canvas id="myChart"></canvas>
 
                                         <div id="total-values" class="total-container">
@@ -359,15 +359,14 @@
                                         </div>
 
                                     </div>
-
                                 </div>
                             </div>
 
                             <!-- LEGENDAS -->
                             <div class="col-md-7 px-0 ">
-                                <div class="card rounded-left m-0">
+                                <div class="card m-0 card-graphic-labels">
 
-                                    <div id="data-labels" class="card-body pl-10" style="height: 201px;">
+                                    <div id="data-labels" class="card-body pl-10">
 
                                         <div class="labels row">
                                             <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 posted"></i> Postados</h2>
@@ -396,7 +395,7 @@
                             <tr>
                                 <td class="table-title">Venda</td>
                                 <td class="table-title">Produto</td>
-                                <td class="table-title">Aprovação em</td>
+                                <td class="table-title">Aprovação</td>
                                 <td class="table-title text-center">Status</td>
                                 <td class="table-title text-center"></td>
                                 <td class="table-title">Código de Rastreio</td>

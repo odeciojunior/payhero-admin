@@ -8,7 +8,7 @@ const chartDefaultColorsLabel = [
     'rgba(27, 228, 168, 1)', // ENTREGUES (LIGHT GREEN)
 ];
 
-//CORES DA LEGENDA DO GRAFICO
+//CORES DA LEGENDA DO GRAFICO //
 let tracking_id = 'undefined';
 const statusEnum = {
     1: 'statusPosted',
@@ -19,7 +19,7 @@ const statusEnum = {
     '': 'statusWithoutInfo',
 };
 
-//ICONES DO STATUS
+//ICONES DO STATUS //
 const systemStatus = {
     1: '',
     2: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias">report_problem</i>`,
@@ -303,7 +303,7 @@ $(() => {
                 return;
             }
             $('#dataCharts').append('<img id="noData" src="/modules/global/img/sem-dados.svg" />')
-            $('#data-labels').append('<span id="warning-text" class="d-flex" style="margin-top: 20%;"> Nenhum rastreamento encontrado </span>')
+            $('#data-labels').append('<span id="warning-text" class="d-flex" style="margin-top: 18%;"> Nenhum rastreamento encontrado </span>')
             $('#myChart, .labels, .total-container').hide();
 
         } else {
@@ -382,7 +382,7 @@ $(() => {
                     }
 
                     let htmlButtonAdd = `
-                    <a class='tracking-add pointer mr-10' title="Adicionar">
+                    <a class='tracking-add pointer mr-10 mt-1' title="Adicionar">
                         <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
                     </a>
                     <input maxlength="18" minlength="10" class="mr-10 col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="  Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;border-radius: 8px;">`
