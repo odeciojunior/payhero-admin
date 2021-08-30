@@ -102,7 +102,7 @@ class ReportsApiController extends Controller
                                                         SUM(CASE WHEN sales.payment_method = 2 AND sales.status = 1 THEN 1 ELSE 0 END) AS contBoletoAproved,
                                                         SUM(CASE WHEN sales.payment_method = 4 AND sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) ELSE 0 END) AS totalValuePix,
                                                         SUM(CASE WHEN sales.payment_method = 4 AND sales.status = 1 THEN 1 ELSE 0 END) AS contPixAproved,
-                                                        SUM(CASE WHEN sales.payment_method = 1 AND sales.status != 99 THEN 1 ELSE 0 END) AS contCreditCard,
+                                                        SUM(CASE WHEN sales.payment_method = 1 AND sales.status IN (1, 2, 3, 4, 5, 7, 24) THEN 1 ELSE 0 END) AS contCreditCard,
                                                         SUM(CASE WHEN sales.payment_method = 2 AND sales.status != 99 THEN 1 ELSE 0 END) AS contBoleto,
                                                         SUM(CASE WHEN sales.payment_method = 4 AND sales.status != 99 THEN 1 ELSE 0 END) AS contPix,
                                                         SUM(CASE WHEN sales.status = 1 THEN ((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) ELSE 0 END) AS totalPaidValueAproved,
