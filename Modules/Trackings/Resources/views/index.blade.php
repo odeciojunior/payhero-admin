@@ -366,7 +366,7 @@
                             <div class="col-md-7 px-0 ">
                                 <div class="card m-0 card-graphic-labels" style="height: 100%;">
 
-                                    <div id="data-labels" class="d-flex card-body pl-10 justify-content-center align-items-center">
+                                    <div id="data-labels" class="d-flex card-body pl-10 justify-content-start align-items-center">
 
                                         <div class="labels row">
                                             <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 posted"></i> Postados</h2>
