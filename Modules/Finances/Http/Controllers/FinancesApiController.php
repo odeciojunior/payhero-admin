@@ -1,12 +1,11 @@
 <?php
 
-
 namespace Modules\Finances\Http\Controllers;
-
 
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\CompanyService;
@@ -16,16 +15,15 @@ use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
-class FinancesApiController
+/**
+ * Class FinancesApiController
+ * @package Modules\Finances\Http\Controllers
+ */
+class FinancesApiController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function getBalances(Request $request): JsonResponse
     {
         try {
-
             if (empty($request->input('company'))) {
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
@@ -42,17 +40,19 @@ class FinancesApiController
 
             $companyService = new CompanyService();
 
-            $pendingBalance = $companyService->getPendingBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
+            $blockedBalance = $companyService->getBlockedBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
 
-            $availableBalance = $companyService->getAvailableBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
+            $blockedBalancePending = $companyService->getBlockedBalancePending($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
+
+            $pendingBalance = $companyService->getPendingBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE) - $blockedBalancePending;
+
+            $availableBalance = $companyService->getAvailableBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
 
             $totalBalance = $availableBalance + $pendingBalance;
 
-            $blockedBalance = $companyService->getBlockedBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
-            $blockedBalancePending = $companyService->getBlockedBalancePending($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
-            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
+            $availableBalance -= $blockedBalance;
 
-            $pendingDebtBalance = $companyService->getPendingDebtBalance($company);
+            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
 
             return response()->json(
                 [
@@ -60,7 +60,6 @@ class FinancesApiController
                     'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
                     'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
                     'blocked_balance' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
-                    'pending_debt_balance' => number_format(intval($pendingDebtBalance) / 100, 2, ',', '.'),
                 ]
             );
         } catch (Exception $e) {
@@ -70,10 +69,6 @@ class FinancesApiController
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function export(Request $request): JsonResponse
     {
         try {
@@ -91,7 +86,9 @@ class FinancesApiController
 
             (new ExtractReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
 
-            return response()->json(['message' => 'A exportação começou', 'email' => $user->email]);
+            $email = !empty($dataRequest['email']) ? $dataRequest['email'] : $user->email;
+
+            return response()->json(['message' => 'A exportação começou', 'email' => $email]);
         } catch (Exception $e) {
             report($e);
 
