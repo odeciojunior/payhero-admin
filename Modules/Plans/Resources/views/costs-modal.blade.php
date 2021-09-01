@@ -128,54 +128,7 @@
         line-height: 20px;
     }
 
-    .stage-costs table {
-        table-layout: fixed;
-        width: 100%;
-    }
-    .stage-costs table thead td {
-        font-weight: normal;
-        font-size: 14px;
-        line-height: 18px;
-        letter-spacing: 0;
-        padding-bottom: 18px;
-    }
-    .stage-costs table td {
-        padding-right: 24px;
-    }
-    .stage-costs table thead td:nth-child(1) {
-        width: calc(272px - 24px);
-    }
-    .stage-costs table thead td:nth-child(2) {
-        width: 126px;
-    }
-    .stage-costs table thead td:nth-child(4) {
-        width: calc(128px - 24px);
-    }
-    .stage-costs table thead td:nth-child(3) {
-        width: calc(134px - 24px);
-    }
-    .stage-costs table td:nth-child(4) {
-        padding-right: 0;
-    }
-    .stage-costs table tbody td {
-        padding-bottom: 18px;
-    }
-    .stage-costs .table-striped > tbody > tr:nth-child(2n+2) > td,
-    .stage-costs .table-striped > tbody > tr:nth-child(2n+2) > th {
-        background-color: #fff !important;
-    }
-    .stage-costs table tbody td img {
-        width: 46px;
-        height: 46px;
-        border-radius: 8px;
-        margin-right: 14px;
-    }
-    .stage-costs table tbody td .title {
-        font-weight: bold;
-        font-size: 16px;
-        line-height: 18px;
-        margin: 0;
-    }
+    
 
     .stage-costs .footer {
         margin-top: 24px;

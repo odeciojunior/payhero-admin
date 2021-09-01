@@ -17,8 +17,8 @@ class ProductsSelectResource extends JsonResource
     {
         return [
             'id'            => Hashids::encode($this->id),
-            'name'          => Str::limit($this->name, 14),
-            'description'   => Str::limit($this->description, 28),
+            'name'          => Str::limit($this->name, 10),
+            'description'   => Str::limit($this->description, 24),
             'type_enum'     => $this->type_enum,
             'status_enum'   => $this->status_enum,
             'cost'          => 'R$ '.number_format(($this->productsPlans->first()->cost ?? 0) / 100, 2, '.', ','),

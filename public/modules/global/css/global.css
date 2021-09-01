@@ -963,10 +963,19 @@ img.border-icon{
     padding: 0px 30px 30px !important;
 }
 
-.modal-plans .box-stage div {
+/* MODAL PLANS - new layout */
+.modal-plans .box-breadcrumbs {
+    margin-bottom: 24px;
+}
+.modal-plans .box-description {
+    margin-bottom: 16px;
+}
+
+/* MODAL PLANS - breadcrumbs */
+.modal-plans .box-breadcrumbs .box-stage div {
     width: auto;
 }
-.modal-plans .box-stage .icon {
+.modal-plans .box-breadcrumbs .box-stage .icon {
     width: 36px;
     height: 36px;
     text-align: center;
@@ -974,38 +983,42 @@ img.border-icon{
     background: #EDEDED;
     border-radius: 50%;
 }
-.modal-plans .box-stage.products .icon img {
+.modal-plans .box-breadcrumbs .box-stage.products .icon img {
     width: 12px;
     height: auto;
 }
-.modal-plans .box-stage.costs .icon img {
+.modal-plans .box-breadcrumbs .box-stage.costs .icon img {
     width: 8px;
     height: auto;
 }
-.modal-plans .box-stage.informations .icon img {
+.modal-plans .box-breadcrumbs .box-stage.informations .icon img {
     width: 17px;
     height: auto;
 }
-.modal-plans .box-stage .icon img {
+.modal-plans .box-breadcrumbs .box-stage .icon img {
     max-width: 100%;
 }
 
-.modal-plans .box-stage.products .icon {
+.modal-plans .box-breadcrumbs .box-stage.active .icon {
     background: #D2E7FF;
 }
-.modal-plans .box-stage .title {
+.modal-plans .box-breadcrumbs .box-stage.finalized .icon {
+    background: #2E85EC;
+}
+.modal-plans .box-breadcrumbs .box-stage .title {
     font-size: 16px;
     line-height: 20px;
     color: #636363;
     letter-spacing: 0;
     margin: 0;
 }
-.modal-plans .line hr {
+.modal-plans .box-breadcrumbs .line hr {
     width: 50px;
     border-color: #c4c4c4;
 }
 
-.modal-plans label {
+.modal-plans label,
+.modal-plans .box-description p {
     font-weight: bold;
     font-weight: bold;
     font-size: 16px;
@@ -1014,21 +1027,80 @@ img.border-icon{
     color: #636363;
 }
 
-.modal-plans .products {
+.modal-plans .box-description small {
+    font-size: 12px;
+    line-height: 15px;
+    color: #989898;
+}
+
+.modal-plans .box-products {
     max-height: 306px;
     overflow: hidden;
 }
-.modal-plans .products .col-sm-6:nth-child(odd) {
+.modal-plans .box-products .col-sm-6:nth-child(odd) {
     padding-right: 8px;
 }
-.modal-plans .products .col-sm-6:nth-child(even) {
+.modal-plans .box-products .col-sm-6:nth-child(even) {
     padding-left: 8px;
 }
+
+/* MODAL PLANS - details */
+.modal-plans .box-products .box-details {
+    table-layout: fixed;
+    width: 100%;
+}
+.modal-plans .box-products .box-details .body .product {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0;
+}
+.modal-plans .box-products .box-details .head div,
+.modal-plans .box-products .box-details .body .product div {
+    margin-right: 13px;
+}
+.modal-plans .box-products .box-details .head div:nth-child(1),
+.modal-plans .box-products .box-details .body .product div:nth-child(1) {
+    width: 46%;
+}
+.modal-plans .box-products .box-details .head div:nth-child(2),
+.modal-plans .box-products .box-details .body .product div:nth-child(2) {
+    width: 15%;
+}
+.modal-plans .box-products .box-details .head div:nth-child(3),
+.modal-plans .box-products .box-details .body .product div:nth-child(3) {
+    width: 21%;
+}
+.modal-plans .box-products .box-details .head div:nth-child(4),
+.modal-plans .box-products .box-details .body .product div:nth-child(4) {
+    width: 20%;
+    margin-right: 0;
+}
+.modal-plans .box-products .box-details .head,
+.modal-plans .box-products .box-details .body .product {
+    margin-bottom: 18px;
+}
+
+.modal-plans .box-products .box-details .body .product img {
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    margin-right: 14px;
+}
+.modal-plans .box-products .box-details .body .product .title {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 18px;
+    margin: 0;
+    color: #636363;
+}
+
+/* MODAL PLANS - select products */
 .modal-plans .box-product {
     border: 1px solid #E1E1E1;
     box-sizing: border-box;
     border-radius: 8px;
-    padding: 16px;
+    padding: 13px;
     margin-bottom: 12px;
     cursor: pointer;
 }
@@ -1072,6 +1144,13 @@ img.border-icon{
 .modal-plans .box-product.selected .check {
     background-color: #2E85EC;
     border-color: #2E85EC;
+    text-align: center;
+    line-height: 14px;
+}
+.modal-plans .box-product.selected .check img {
+    width: 8.44px;
+    height: 6.86px;
+    margin: 0;
 }
 
 .modal-plans .modal-footer .btn {

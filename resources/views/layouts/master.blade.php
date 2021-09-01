@@ -62,7 +62,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=22') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=59') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=74') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
@@ -126,7 +126,6 @@
     verifyDocumentPending();
 </script>
 
-
 <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js?v=2') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js?v=2') }}"></script>
 
@@ -134,11 +133,8 @@
 @stack('scripts')
 
 @if(env('APP_ENV', 'production') == 'production')
-
     <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=13') }}"></script>
     <script src="{{ asset('modules/global/js/notifications.js?v=13') }}"></script>
-
-
     <style>
         .margin-chat-pagination {
             display:block !important; height:20px  !important;
@@ -146,7 +142,6 @@
     </style>
 
     <script>
-
         @if(\Auth::user())
             (function(m,a,i,s,_i,_m){
                 m.addEventListener('load',function(){m.top.maisim||(function(){_m=a.createElement(i);

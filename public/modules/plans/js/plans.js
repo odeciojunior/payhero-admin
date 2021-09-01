@@ -13,6 +13,9 @@ $(function () {
     var pageCurrent;
     // var card_div_create = $("#form-register-plan").find('.card-products').first().clone();
 
+    var selected_products = [];
+    var stage_add_plan = 1;
+
     $('.tab_plans').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
         index();
@@ -90,7 +93,7 @@ $(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                $("#modal-content").hide();
+                loadingOnScreenRemove();                
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -103,10 +106,14 @@ $(function () {
 
     function appendProducts(products, modalID)
     {
+        /*if (products.length > 5) {
+            modalID.find('#load-products').asScrollable();
+        }*/
+        
         var data = '<div class="row">';
         products.forEach(function(product) {
             data += '<div class="col-sm-6">';
-                data += '<div data-code="' + product.id + '" class="box-product ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
+                data += '<div data-code="' + product.id + '" class="box-product ' + (selected_products.indexOf(product.id) != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
                     data += '<div class="d-flex align-items-center">';
                         data += '<img class="product-photo" src="' + product.photo + '" alt="Image Product">';
                         data += '<div>';
@@ -114,7 +121,11 @@ $(function () {
                             data += '<p class="description">' + product.description + '</p>';
                         data += '</div>';
                     data += '</div>';
-                    data += '<div class="check"></div>';
+                    data += '<div class="check">';
+                    if (selected_products.indexOf(product.id) != -1) {    
+                        data += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                    }
+                    data += '</div>';
                 data += '</div>';
             data += '</div>';
         });
@@ -129,8 +140,10 @@ $(function () {
 
     // search products input
     $('#search-product').on('keyup', function() {
-        var search_product = $(this).val();        
-        searchProducts(search_product);
+        var search_product = $(this).val();
+        if (search_product != '') {
+            searchProducts(search_product);
+        }
     });
 
     function searchProducts(product)
@@ -161,23 +174,105 @@ $(function () {
     }
 
     // select products button
-    $('.products').on('click', '.box-product', function() {
-        var productId = $(this).data('code');
-        selectProducts(productId);
+    $('.box-products').on('click', '.box-product', function() {
+        var product_id = $(this).data('code');
+
+        if (!$(this).hasClass('selected')) {
+            $(this).addClass('selected');
+            $(this).find('.check').append('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
+            selected_products.push(product_id);
+        } else {
+            $(this).removeClass('selected');
+            $(this).find('.check img').remove();
+            var index_selected_products = selected_products.indexOf(product_id);
+            selected_products.splice(index_selected_products, 1);
+        }
     });
-    
-    // select products function
-    function selectProducts(productId)
-    {
-        alert(productId);
-    }
+
+    // continue button
+    $('#btn-modal-plan-prosseguir').on('click', function() {
+
+        if (selected_products.length > 0) {
+            var modalID = $('#modal_add_plan');
+
+            var stage_products = modalID.find('.box-breadcrumbs .products');
+            var stage_details = modalID.find('.box-breadcrumbs .details');
+            var stage_informations = modalID.find('.box-breadcrumbs .informations');
+
+            if (stage_add_plan == 1) {
+                stage_products.removeClass('active');
+                stage_products.addClass('finalized');
+                stage_details.addClass('active');
+
+                stage_add_plan++;
+
+                modalID.find('.box-description').html('<p style="margin: 0; font-weight: bold;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
+                modalID.find('.box-products').html('');
+
+                var append = '';
+                append += '<div class="box-details">';
+                    append += '<div class="head d-flex">';
+                        append += '<div>Produto</div>';
+                        append += '<div>Quantidade</div>';
+                        append += '<div>Custo (un)</div>';
+                        append += '<div>Moeda</div>';
+                    append += '</div>';
+                    append += '<div class="body">';
+                        selected_products.forEach(function(productID) {
+                            var product = '';
+                            $.ajax({
+                                method: "GET",
+                                url: "/api/product/" + productID,
+                                dataType: "json",
+                                headers: {
+                                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                                    'Accept': 'application/json',
+                                },
+                                error: function error(response) {
+                                    alert('erro');
+                                },
+                                success: function success(response) {
+                                    product = response.data;        
+                                }
+                            });
+                            console.log(product);
+                            append += '<div class="product d-flex">';
+                                append += '<div class="d-flex align-items-center">';
+                                    append += '<img class="product-photo" src="' + product.photo + '" alt="Image Product">';
+                                    append += '<h1 class="title">' + product.name + '</h1>';
+                                append += '</div>';
+                                append += '<div><input class="form-control form-control-lg" type="text" placeholder="Qtd."></div>';
+                                append += '<div><input class="form-control form-control-lg" type="text" placeholder="Valor un."></div>';
+                                append += '<div>';
+                                    append += '<select class="form-control form-control-lg" type="text" placeholder="Valor un.">';
+                                        append += '<option>BRL (R$)</option>';
+                                    append += '</select>';
+                                append += '</div>';
+                            append += '</div>';
+                        });
+                    append += '</div>';
+                append += '</div>';
+
+                modalID.find('.box-products').html(append);
+            } else if (stage_add_plan == 2) {
+                stage_details.removeClass('active');
+                stage_details.addClass('finalized');
+
+                stage_add_plan++;
+            } else if (stage_add_plan == 3) {
+                
+            }
+        } else {
+            alertCustom('error', 'Selecione um produto para prosseguir');
+        }
+    });
 
     function create() {
         switch_modal = 'Create';
         $.ajax({
             method: "POST",
             url: "/api/products/userproducts",
-            data: {project: projectId},
+            data: { project: projectId },
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

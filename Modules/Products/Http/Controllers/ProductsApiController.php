@@ -463,4 +463,18 @@ class ProductsApiController extends Controller
             return response()->json(['message' => $e->getMessage()], 400);
         }
     }
+
+    public function getProductById($id)
+    {
+        try {
+            $productModel = new Product();
+            $product = $productModel->with('productsPlans')->find(current(Hashids::decode($id)));
+
+            return new ProductsSelectResource($product);
+        } catch (Exception $e) {
+            report($e);
+            //return response()->json(['message' => 'Erro ao tentar buscar produto'], 400);
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
 }

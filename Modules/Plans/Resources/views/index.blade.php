@@ -5,7 +5,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" id='plan-name' name="plan" placeholder="Nome">
                     <span class="input-group-append" id='btn-search-plan'>
-                      <button type="submit" class="btn btn-primary btn-sm"><i class="icon wb-search" aria-hidden="true"></i></button>
+                        <button type="submit" class="btn btn-primary btn-sm"><i class="icon wb-search" aria-hidden="true"></i></button>
                     </span>
                 </div>
             </div>
@@ -147,13 +147,13 @@
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
                             <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
                                 <li class="nav-item" role="presentation">
-                                    <a id="tab_configuration" class="nav-link active" data-toggle="tab" href="#tab_configuration_cost-panel"
-                                       aria-controls="tab_configuration_cost" role="tab">Configurações de Custo
+                                    <a id="tab_configuration" class="nav-link active" data-toggle="tab" href="#tab_configuration_cost-panel" aria-controls="tab_configuration_cost" role="tab">
+                                        Configurações de Custo
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a id="tab_update_cost_block" class="nav-link" data-toggle="tab" href="#tab_update_cost_block-panel" aria-controls="tab_update_cost_block" role="tab">
-                                         Alterar Custo em bloco
+                                        Alterar Custo em bloco
                                     </a>
                                 </li>
                             </ul>
@@ -201,7 +201,7 @@
                                 </div>
                                 <!--- Painel de custo em bloco-->
                                 <div class="tab-pane" id="tab_update_cost_block-panel" role="tabpanel">
-                                     <div class="row">
+                                    <div class="row">
                                         <div class='col-md-12'>
                                             <label>Plano</label><br>
                                             <select id="add_cost_on_plans" class="form-control" style='width:100%; height: 60px;' data-plugin="select2"> </select>
@@ -213,7 +213,7 @@
                                         <div class='col-md-12 mt-10 text-right'>
                                             <button type="button" class="btn btn-success bt-update-cost-block">Atualizar</button>
                                         </div>
-                                     </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

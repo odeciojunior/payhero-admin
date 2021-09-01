@@ -20,6 +20,7 @@ Route::group(
                ->name('api.products.saleproducts')->middleware('role:account_owner|admin|attendance');
 
           Route::post('/products/search', 'ProductsApiController@getProductFilter')->name('api.products.filterproducts')->middleware('role:account_owner|admin');
+          Route::get('/product/{id}', 'ProductsApiController@getProductById')->name('api.products.getproduct')->middleware('role:account_owner|admin');
      }
 );
 

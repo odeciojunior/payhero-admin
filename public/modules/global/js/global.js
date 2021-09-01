@@ -198,9 +198,8 @@ function loadOnNotification(whereToLoad) {
 }
 
 function loadOnModal(whereToLoad) {
-
     $(whereToLoad).children().hide('fast');
-    $('#modal-title').html('Carregando ...')
+    $('#modal-title').html('Carregando...')
     $(whereToLoad).append("<div id='loaderModal' class='loadinModal'>" +
         "<div class='loaderModal'>" +
         "</div>" +
