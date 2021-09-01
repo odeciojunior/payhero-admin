@@ -224,9 +224,12 @@ input.form-control.font-weight-bold.input-tracking-code[readonly]{
 input[type="text"]::placeholder{
     text-align: center;
 }
-div.buttons.d-flex.mr-15{
-    min-width: 328px !important;
-    max-height: 38px !important;
+
+
+/* ======== ALTURA E LARGURA PADRAO BOTAO ======== */
+.default-buttons{
+    height: 38px;
+    width: 38px;
 }
 
 
@@ -243,7 +246,7 @@ a.tracking-save.pointer.mr-10.text-center {
 a.tracking-save.pointer.mr-10.text-center:hover {
     background: #206ECA;
 }
-i#pencil{
+#pencil{
     font-size: 20px !important;
     -webkit-text-stroke: 2.0px rgb(255, 255, 255);
 }

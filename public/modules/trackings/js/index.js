@@ -58,9 +58,9 @@ $(() => {
         $(event.target).closest('.edit-detail').removeClass('col-5');
 
         let row = $(this).parent().parent();
-        row.find('.input-tracking-code').removeClass('fake-label').prop('readonly', false).focus();
+        row.find('.input-tracking-code').removeClass('fake-label').prop('readonly', false).focus().removeAttr('placeholder');
         row.find('.tracking-save, .tracking-close').show();
-        row.find('.tracking-detail').hide();
+        row.find('.tracking-detail, .tracking-add').hide();
         $(this).hide();
     });   
 
@@ -68,10 +68,14 @@ $(() => {
         $(event.target).parent().prev().addClass('col-5');
         
         let row = $(this).parent().parent();
-        row.find('.input-tracking-code').prop('readonly', true).blur();
+        row.find('.input-tracking-code')
+        .prop('readonly', true).blur()
+        .removeClass('border-danger')
+        .attr('placeholder', 'Clique para adicionar');
 
         if($(this).attr('data-code').length < 1){
-            row.find('.input-tracking-code').addClass('fake-label');
+            row.find('.input-tracking-code').addClass('fake-label').val('');
+
         }
 
         row.find('.tracking-add, .tracking-detail, .tracking-edit').show();
@@ -382,16 +386,16 @@ $(() => {
                     }
 
                     let htmlButtonAdd = `
-                    <a class='tracking-add pointer mr-10 mt-1' title="Adicionar">
-                        <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
-                    </a>
-                    <input maxlength="18" minlength="10" class="mr-10 col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="  Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;border-radius: 8px;">`
+                        <input maxlength="18" minlength="10" class="mr-10 col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;border-radius: 8px;max-height:38px;">
+                        <a class='tracking-add pointer mt-1 ml-10 px-0 default-buttons' title="Adicionar">
+                            <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
+                        </a>`
                     ;
 
                     let htmlButtonEdit = `
                         <div class="edit-detail d-flex justify-content-between px-0 col-5">
 
-                            <a class='tracking-edit pointer' title="Editar">
+                            <a class='tracking-edit pointer default-buttons' title="Editar">
                                 <span class="text-right o-edit-1"></span>
                             </a>
                             
@@ -432,17 +436,16 @@ $(() => {
                                 ${tracking.is_chargeback_recovered ? '<img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">' : ''}
                             </td>
 
-                            <td class="text-left d-flex mb-0" style="min-height:74px!important;">
+                            <td class="text-left d-flex mb-0" style="max-height:74px!important;">
                             
                                 ${tracking.tracking_status_enum ? `
                                 <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
                                 :htmlButtonAdd}
 
-                                <div class="save-close buttons d-flex px-0 col-5" style="max-height: 38px;">
 
-                                    <a class='tracking-save pointer mr-10 text-center' title="Salvar" pps='${tracking.pps_id}'style="display:none">
-                                        <i id='pencil' class='o-checkmark-1 text-white'></i>
-                                    </a>
+
+                                <div class="save-close buttons d-flex px-0 col-5" style="max-height: 38px;">
+                                    <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none"></a>
 
                                     <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none">
                                         &#x2715
@@ -551,6 +554,14 @@ $(() => {
             error: (response) => {
                 btnSave.prop('disabled', false);
                 errorAjaxResponse(response);
+
+                btnSave.parent().parent().find('.input-tracking-code').addClass('border-danger');
+                setTimeout(()=>{
+                    btnSave.parent().parent()
+                    .find('.input-tracking-code')
+                    .val('').removeClass('border-danger')
+                    .attr('placeholder', 'Clique para adicionar')
+                },1000);
             },
             success: (response) => {
 
@@ -565,7 +576,7 @@ $(() => {
 
                     td.find('.tracking-close').attr('data-code', response.data.tracking_code).trigger('click');
                     
-                    td.find('.input-tracking-code').removeClass('fake-label');
+                    td.find('.input-tracking-code').removeClass('fake-label, border-danger');
 
                     let buttons = `
                         <div class="edit-detail d-flex justify-content-between px-0 col-5">
