@@ -632,3 +632,9 @@ select, .select-pad {
         max-width: calc(50% - 10px);
     }
 }
+@media only screen and (min-width: 768px){
+    .col-md-4.card {
+        margin-right: 10px;
+        max-width: calc(33.3% - 10px);
+    }
+}

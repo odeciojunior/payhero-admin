@@ -263,7 +263,6 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                //loadOnAnyEllipsis(".price", true);
                 loadOnAny(".number", true);
                 $(".saldoPendente").html(
                     '<span style="color:#959595">R$ </span><span class="font-size-30 bold pending-balance">0,00</span>'

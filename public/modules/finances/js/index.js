@@ -225,7 +225,7 @@ $(document).ready(function () {
                 $(".loading").remove();
                 $("#div-available-money, #div-available-money_m").unbind('click');
                 $("#div-available-money, #div-available-money_m").on("click", function () {
-                    $(".withdrawal-value").val(isEmpty(response.available_balance));
+                    $("#custom-input-addon").val(isEmpty(response.available_balance));
                 });
 
                 if (response.currency != 'real') {
