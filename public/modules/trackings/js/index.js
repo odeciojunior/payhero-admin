@@ -387,6 +387,7 @@ $(() => {
 
                     let htmlButtonAdd = `
                         <input maxlength="18" minlength="10" class="mr-10 col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;border-radius: 8px;max-height:38px;">
+                        
                         <a class='tracking-add pointer mt-1 ml-10 px-0 default-buttons' title="Adicionar">
                             <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
                         </a>`
@@ -442,9 +443,8 @@ $(() => {
                                 <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
                                 :htmlButtonAdd}
 
-
-
                                 <div class="save-close buttons d-flex px-0 col-5" style="max-height: 38px;">
+                                
                                     <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none"></a>
 
                                     <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none">
