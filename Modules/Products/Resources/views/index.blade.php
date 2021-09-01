@@ -35,23 +35,22 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6" id='is-projects'>
-                            <div class="mb-10">
-                                <label id="select-projects-label" for="select-projects">Projeto</label>
-                                <select id='select-projects' class="form-control select-pad disabled" disabled>
-                                    <option>Carregando...</option>
-                                </select>
-                            </div>
-                        </div>
                         <div class="col-lg-3 col-md-6">
                             <div class="mb-10">
                                 <label for="name">Nome do produto</label>
                                 <input id="name" class="form-control input-pad" placeholder="Digite o nome" maxlength="100">
                             </div>
                         </div>
-
+                        <div class="col-lg-3 col-md-6">
+                            <div id="projects-list" class="mb-10 d-none">
+                                <label id="select-projects-label" for="select-projects">Projeto</label>
+                                <select id='select-projects' class="form-control select-pad disabled" disabled>
+                                    <option>Carregando...</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-lg-3 col-md-6 mt-auto">
-                            <button id="btn-filtro" class="btn btn-primary w-full mb-10">
+                            <button type=submit id="btn-filtro" class="btn btn-primary w-full mb-10">
                                 <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                             </button>
                         </div>

@@ -1,4 +1,12 @@
 $(document).ready(function () {
+
+    let regexp = /http(s?):\/\/[\w.-]+\/products\/\w{15}\/edit/;
+    let lastPage = document.referrer;
+    if (!lastPage.match(regexp)) {
+        localStorage.clear();
+    }
+    getProjects();
+
     var pageCurrent;
     let badgeList = {
         1: "#2E85EC",
@@ -13,32 +21,45 @@ $(document).ready(function () {
     // Comportamentos da tela
     $("#type-products").on("change", function () {
         if ($(this).val() === "1") {
-            $("#is-projects select")
-                .prop("disabled", false)
-                .removeClass("disabled");
+            $('#projects-list').removeClass('d-none');
+            $("#projects-list select").prop("disabled", false).removeClass("disabled");
             $("#opcao-vazia").remove();
+
         } else {
-            $("#is-projects select")
-                .prop("disabled", true)
-                .addClass("disabled")
-                .prepend(
-                    '<option value="0" id="opcao-vazia" selected></option>'
-                );
+            $("#projects-list select").prop("disabled", true).addClass("disabled");
+            $("#projects-list").addClass("d-none");
         }
     });
 
     $("#btn-filtro").on("click", function () {
         deleteCookie("filterProduct");
+        let filters = {
+            getTypeProducts: $("#type-products option:selected").val(),
+            getProject: $("#select-projects option:selected").val(),
+            getName: $("#name").val()
+        };
+        localStorage.setItem('filters', JSON.stringify(filters));
         updateProducts();
     });
 
     $("#pagination-products").on("click", function () {
         deleteCookie("filterProduct");
     });
-
     getTypeProducts();
-
     updateProducts();
+    
+    // SETTING VALUES OF FILTERS IN INPUTS SEARCH
+    function handleLocalStorage() {
+        if (localStorage.getItem('filters') !== null) {
+            let checkLocalStorage = localStorage.getItem('filters');
+            let parseLocalStorage = JSON.parse(checkLocalStorage);
+
+            $("#type-products").val(parseLocalStorage.getTypeProducts).trigger("change");
+            $("#select-projects").val(parseLocalStorage.getProject);
+            $("#name").val(parseLocalStorage.getName);
+            $("#btn-filtro").trigger("click")
+        }
+    }
 
     function getTypeProducts() {
         $.ajax({
@@ -72,11 +93,10 @@ $(document).ready(function () {
                         '<option value="0" id="opcao-vazia" selected></option>'
                     );
                 }
+                handleLocalStorage();
             },
         });
     }
-
-    getProjects();
 
     function getProjects() {
         loadingOnScreen();
@@ -114,6 +134,17 @@ $(document).ready(function () {
     }
 
     function updateProducts(link = null) {
+
+        let page = { currentPage: link }
+        
+        if(localStorage.getItem("page")){
+            recoveryPage = localStorage.getItem("page")
+            parsePage = localStorage.JSON.parse(recoveryPage);
+            pageCurrent = page.currentPage;
+        }else{
+            localStorage.setItem("page", JSON.stringify(page));
+        }
+
         if (link !== null) {
             pageCurrent = link;
             deleteCookie("filterProduct");
@@ -128,7 +159,7 @@ $(document).ready(function () {
         var cookie = getCookie("filterProduct");
         if (cookie == "") {
             type = $("#type-products").val();
-            project = $("#select-projects").val();
+            project = $("#select-projects").val(); 
             name = $("#name").val();
         } else {
             cookie = JSON.parse(cookie);
@@ -141,23 +172,10 @@ $(document).ready(function () {
         }
 
         if (link == null) {
-            link =
-                "/api/products?shopify=" +
-                type +
-                "&project=" +
-                project +
-                "&name=" +
-                name;
+            link ="/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
+            
         } else {
-            link =
-                "/api/products" +
-                link +
-                "&shopify=" +
-                type +
-                "&project=" +
-                project +
-                "&name=" +
-                name;
+            link ="/api/products" + link + "&shopify=" + type + "&project=" + project + "&name=" + name;
         }
 
         $.ajax({
@@ -188,7 +206,7 @@ $(document).ready(function () {
                                 </div>
                                 <img class="card-img-top product-image" src="${value.image}" alt="Imagem do produto" data-link="/products/${value.id}/edit">
                                 ${value.type_enum == 2
-                            ? `<span class="ribbon-inner ribbon-primary" style="background-color:${badgeList[value.status_enum]};border-radius: 0px 10px 10px 0px;"> ${statusList[value.status_enum]}
+                                ? `<span class="ribbon-inner ribbon-primary" style="background-color:${badgeList[value.status_enum]};border-radius: 0px 10px 10px 0px;"> ${statusList[value.status_enum]}
                                         </span>`
                                 : ""
                             }
