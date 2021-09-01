@@ -225,7 +225,7 @@
             <!-- Aviso Problemas com os Códigos -->
             <div id="alert-tracking-issues" class="d-flex alert alert-light alert-dismissible fade show text-primary border border-primary alert-tracking" role="alert" style="border-radius: 12px">
                 <img src="{{ asset('modules/trackings/svg/info-tracking.svg') }}">
-                <span class="alert-text">
+                <span class="alert-text ml-2">
                     <span class="bold">Problemas com os códigos?</span>
                     Caso você tenha algum código de rastreio com divergência de status, entre em contato com o nosso suporte.
                 </span>
@@ -270,7 +270,7 @@
             <div class="container">
                 <div id="viewer-data-general" class="row">
 
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-6 adjust">
                         <div class="row pr-30 pb-0">
 
                             <div id="posted" class="col-md-4 col-sm-6 col-xs-12 border-right border-bottom px-0 bg-white card-posted">

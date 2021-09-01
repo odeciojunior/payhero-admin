@@ -148,6 +148,9 @@ input#date_updated{
 .card-graphic-labels{
     border-radius: 8px !important;
 }
+.adjust .card-body{
+    padding: 18px;
+}
 
 
 /* ======== CORES DA LEGENDA DO GRACIFO ======== */
@@ -312,8 +315,8 @@ div#dataCharts{
 
 /* ======== GRAFICO DE RESULTADO EM CANVAS ======== */
 #myChart{
-    max-width: 180px !important;
-    max-height: 180px !important;
+    max-width: 160px !important;
+    max-height: 160px !important;
     margin: auto;
     z-index: 1;
 }
