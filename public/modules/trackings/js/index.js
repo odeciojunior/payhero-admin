@@ -441,22 +441,23 @@ $(() => {
                                 ${tracking.is_chargeback_recovered ? '<img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">' : ''}
                             </td>
 
-                            <td class="text-left d-flex mb-0" style="max-height:74px!important;">
+                            <td class="text-left mb-0" style="max-height:74px!important;">
+                                <div class="d-flex">
                             
-                                ${tracking.tracking_status_enum ? `
-                                <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
-                                :htmlButtonAdd}
+                                    ${tracking.tracking_status_enum ? `
+                                    <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
+                                    :htmlButtonAdd}
 
-                                <div class="save-close buttons d-flex px-0 col-5" style="max-height: 38px;">
-                                
-                                    <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none"></a>
+                                    <div class="save-close buttons d-flex px-0 col-5" style="max-height: 38px;">
+                                    
+                                        <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none"></a>
 
-                                    <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none">
-                                        &#x2715
+                                        <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none">
+                                            &#x2715
+                                        </div>
+
                                     </div>
-
                                 </div>
-
                             </td>
 
                         </tr>`
@@ -565,6 +566,7 @@ $(() => {
                     .find('.input-tracking-code')
                     .val('').removeClass('border-danger')
                     .attr('placeholder', 'Clique para adicionar')
+                    btnSave.parent().parent().find('.tracking-close').trigger('click')
                 },1000);
             },
             success: (response) => {

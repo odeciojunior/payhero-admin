@@ -277,7 +277,7 @@
                                 <div class="card mb-0 rounded-0 card-posted">
                                     <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Postados </h6>
-                                        <h4 id="percentual-posted" class="mt-10 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-posted" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -288,7 +288,7 @@
                                 <div class="card mb-0 rounded-0">
                                     <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Em trânsito</h6>
-                                        <h4 id="percentual-dispatched" class="mt-10 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-dispatched" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -299,7 +299,7 @@
                                 <div class="card mb-0 rounded-0 card-to-delivery">
                                     <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Saiu para entrega</h6>
-                                        <h4 id="percentual-out" class="mt-10 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-out" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -310,7 +310,7 @@
                                 <div class="card mb-0 rounded-0 card-delivery-problem">
                                     <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Problema na entrega</h6>
-                                        <h4 id="percentual-exception" class="mt-10 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-exception" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -321,7 +321,7 @@
                                 <div class="card mb-0 rounded-0">
                                     <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Não informado</h6>
-                                        <h4 id="percentual-unknown" class="mt-10 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-unknown" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
@@ -332,7 +332,7 @@
                                 <div class="card mb-0 rounded-0 card-delivered">
                                     <div class="card-body">
                                         <h6 class="font-size-16 gray-600 m-0"> Entregues</h6>
-                                        <h4 id="percentual-delivered" class="mt-10 mb-0 text-nowrap resume-number">
+                                        <h4 id="percentual-delivered" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
                                     </div>
