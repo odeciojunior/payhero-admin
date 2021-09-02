@@ -270,8 +270,8 @@
             <div class="container">
                 <div id="viewer-data-general" class="row">
 
-                    <div class="col-12 col-md-6 adjust">
-                        <div class="row pr-30 pb-0">
+                    <div class="col-12 col-lg-6 adjust">
+                        <div id="panel-cards" class="row pr-lg-30 pb-0">
 
                             <div id="posted" class="col-md-4 col-sm-6 col-xs-12 border-right border-bottom px-0 bg-white card-posted">
                                 <div class="card mb-0 rounded-0 card-posted">
@@ -342,10 +342,10 @@
                     </div>
 
                     <!--GRAFICO E LEGENDA -->
-                    <div class="col-12 col-md-6 card-graphic-labels bg-white">
+                    <div class="col-12 col-lg-6 card-graphic-labels bg-white d-flex align-items-center justify-content-center mt-20 mt-lg-0">
                         <div id="graphic-loading"></div>
 
-                        <div class="row" style="height:100%;">
+                        <div id="panel-graph" class="row">
 
                             <div class="col-md-5 p-0 m-auto">
                                 <div class="card mb-0 rounded-0 card-graphic-labels">
@@ -368,12 +368,12 @@
 
                                     <div id="data-labels" class="d-flex card-body pl-10 justify-content-start align-items-center">
                                         <div class="labels row">
-                                            <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 posted"></i> Postados</h2>
-                                            <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 delivered"></i> Entregues</h2>
-                                            <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 inTransit"></i> Em trânsito</h2>
-                                            <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 withoutInfo"></i> Não informado</h2>
-                                            <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 onDelivery"></i> Saiu para entrega</h2>
-                                            <h2 class="font-size-14 gray-600 col-6 mt-15"> <i class="fas fa-circle mr-5 withProblem"></i> Problema na entrega</h2>
+                                            <h2 class="font-size-14 gray-600 col-6 mt-10 "> <i class="fas fa-circle mr-5 posted"></i> Postados</h2>
+                                            <h2 class="font-size-14 gray-600 col-6 mt-10"> <i class="fas fa-circle mr-5 delivered"></i> Entregues</h2>
+                                            <h2 class="font-size-14 gray-600 col-6 mt-10"> <i class="fas fa-circle mr-5 inTransit"></i> Em trânsito</h2>
+                                            <h2 class="font-size-14 gray-600 col-6 mt-10 "> <i class="fas fa-circle mr-5 withoutInfo"></i> Não informado</h2>
+                                            <h2 class="font-size-14 gray-600 col-6 mt-10 "> <i class="fas fa-circle mr-5 onDelivery"></i> Saiu para entrega</h2>
+                                            <h2 class="font-size-14 gray-600 col-6 mt-10 "> <i class="fas fa-circle mr-5 withProblem"></i> Problema na entrega</h2>
                                         </div>
                                     </div>
 
