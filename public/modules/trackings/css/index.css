@@ -1,3 +1,4 @@
+/* COMPORTAMENTO TELA */
 @media only screen and (min-width : 768px) and (max-width : 1024px) {
     #panel-graph, #panel-cards {
     min-height: 225px !important;
