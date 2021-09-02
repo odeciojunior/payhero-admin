@@ -75,7 +75,11 @@ $(() => {
 
         if($(this).attr('data-code').length < 1){
             row.find('.input-tracking-code').addClass('fake-label').val('');
+        }
 
+        let compare = $(this).attr('data-code');
+        if(row.find('.input-tracking-code').val() !== compare){
+            row.find('.input-tracking-code').val(compare);
         }
 
         row.find('.tracking-add, .tracking-detail, .tracking-edit').show();
