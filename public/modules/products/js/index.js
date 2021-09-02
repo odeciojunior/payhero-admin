@@ -135,23 +135,18 @@ $(document).ready(function () {
 
     function updateProducts(link = null) {
 
-        let page = { currentPage: link }
-        
-        if(localStorage.getItem("page")){
-            recoveryPage = localStorage.getItem("page")
-            parsePage = localStorage.JSON.parse(recoveryPage);
-            pageCurrent = page.currentPage;
-        }else{
-            localStorage.setItem("page", JSON.stringify(page));
+        if(link !== null){
+            pageCurrent = link
+            let pagination = {pageCurrent: link}
+            localStorage.setItem("page", JSON.stringify(pagination));
         }
-
-        if (link !== null) {
-            pageCurrent = link;
-            deleteCookie("filterProduct");
+        if(localStorage.getItem("page") !== null){
+            recoveryPage = localStorage.getItem("page");
+            parsePage = JSON.parse(recoveryPage);
+            pageCurrent = parsePage.pageCurrent;
         }
-
+        deleteCookie("filterProduct");
         loadOnAny(".page-content");
-
         let type = "";
         let project = "";
         let name = "";
