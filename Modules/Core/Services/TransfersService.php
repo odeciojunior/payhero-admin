@@ -21,14 +21,9 @@ class TransfersService
 
     /**
      * @param null $saleId
-     * @throws PresenterException
      */
     public function verifyTransactions($saleId = null)
     {
-        $companyModel = new Company();
-        $transferModel = new Transfer();
-        $transactionModel = new Transaction();
-
         try {
             // seta false para desabilitar o pedido saque dos usuarios enquanto a rotina esta sendo executada
             settings()->group('withdrawal_request')->set('withdrawal_request', false);
@@ -41,10 +36,10 @@ class TransfersService
             ->pluck('id')
             ->toArray();
 
-        $transactions = $transactionModel->with('sale')
+        $transactions = Transaction::with('company')
             ->where([
                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
-                ['status_enum', $transactionModel->present()->getStatusEnum('paid')],
+                ['status_enum', Transaction::STATUS_PAID],
             ])->where(function ($where) use ($gatewayIds) {
                 $where->where('tracking_required', false)
                     ->orWhereHas('sale', function ($query) use ($gatewayIds) {
@@ -66,38 +61,28 @@ class TransfersService
             foreach ($transactions->cursor() as $transaction) {
                 try {
                     if (!empty($transaction->company_id)) {
-                        $company = $companyModel->find($transaction->company_id);
+                        $company = $transaction->company;
 
                         if (!in_array($transaction->sale->gateway_id, $gatewayIds)) {
-                            $transferModel->create(
+                            Transfer::create(
                                 [
                                     'transaction_id' => $transaction->id,
                                     'user_id' => $company->user_id,
                                     'company_id' => $company->id,
-                                    'type_enum' => $transferModel->present()->getTypeEnum('in'),
+                                    'type_enum' => (new Transfer)->present()->getTypeEnum('in'),
                                     'value' => $transaction->value,
                                     'type' => 'in',
                                 ]
                             );
 
-                            $company->update(
-                                [
-                                    'balance' => intval($company->balance) + intval(
-                                            preg_replace(
-                                                "/[^0-9]/",
-                                                "",
-                                                $transaction->value
-                                            )
-                                        ),
-                                ]
-                            );
+                            $company->update([
+                                'balance' => $company->balance +  $transaction->value
+                            ]);
 
-                            $transaction->update(
-                                [
+                            $transaction->update([
                                     'status' => 'transfered',
-                                    'status_enum' => $transactionModel->present()->getStatusEnum('transfered'),
-                                ]
-                            );
+                                    'status_enum' => (new Transaction)->present()->getStatusEnum('transfered'),
+                            ]);
                         }
                     }
                 } catch (Exception $e) {
