@@ -183,7 +183,7 @@ $(() => {
         $("#nav-home-tab").addClass("show");
         $("#nav-home").addClass("active");
         $("#nav-home").addClass("show");
-        
+
         $("#nav-profile-tab").removeClass("active");
         $("#nav-profile-tab").removeClass("show");
         $("#nav-profile").removeClass("active");
@@ -297,7 +297,7 @@ $(() => {
 
         if (!sale.api_flag) {
             $(".dados-checkout").css("display", "block");
-            
+
             getCheckout(sale.checkout_id);
         } else {
             $(".dados-checkout").css("display", "none");
@@ -758,7 +758,7 @@ $(() => {
             if ( !sale.api_flag ) {
                 $("#saleReSendEmail").show();
             } else {
-                $("#saleReSendEmail").hide();    
+                $("#saleReSendEmail").hide();
             }
         } else {
             $("#saleReSendEmail").hide();
@@ -775,11 +775,11 @@ $(() => {
             sale.status == 1 &&
             sale.userPermissionRefunded
         ) {
-            /*$("#div_refund_billet").html(
+            $("#div_refund_billet").html(
                 '<button class="btn btn-secondary btn-sm btn_refund_billet float-right" sale=' +
                     sale.id +
                     ">Estornar boleto</button>"
-            );*/
+            );
         } else {
             $("#div_refund_billet").html("");
         }
@@ -1038,7 +1038,7 @@ $(() => {
     function getProducts(sale) {
         $("#table-product").html("");
         $("#data-tracking-products").html("");
-        
+
         $.ajax({
             method: "GET",
             url: "/api/products/saleproducts/" + sale.id,
@@ -1060,8 +1060,8 @@ $(() => {
         });
     }
 
-    function renderProductsApi(products) {        
-        let div = "";        
+    function renderProductsApi(products) {
+        let div = "";
         $.each(products, function (index, value) {
             div += '<div class="row align-items-baseline justify-content-between mb-15">';
                 div += '<div class="col-lg-2">';

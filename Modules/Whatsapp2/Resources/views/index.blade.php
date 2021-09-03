@@ -23,7 +23,7 @@
                     <h1 class="page-title my-10" style="min-height: 28px">
                         <a class="gray" href="/apps">
                             <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
-                            Integrações Whatsapp 2.0
+                            Integrações SAK
                         </a>
                     </h1>
                 </div>
@@ -56,7 +56,7 @@
                             <div class='row'>
                                 <div class='col-12'>
                                     <label for='email'>Token
-                                        <i class="fa-question-circle-o text-info" data-content="Copie o token e adicione uma integração com a CloudFox na sua conta do Whatsapp 2.0 para gerar as urls de pedidos e checkouts. Depois cole as urls abaixo para finalizar sua integração" data-toggle="popover" data-trigger="click"></i>
+                                        <i class="fa-question-circle-o text-info" data-content="Copie o token e adicione uma integração com a CloudFox na sua conta do SAK para gerar as urls de pedidos e checkouts. Depois cole as urls abaixo para finalizar sua integração" data-toggle="popover" data-trigger="click"></i>
                                     </label>
                                 </div>
                                 <div id='invite-link-select' class='input-group col-12'>
@@ -101,7 +101,7 @@
             <div class="content-error text-center">
                 <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                <p class="desc gray">Integre seus projetos com Whatsapp 2.0 de forma totalmente automatizada!</p>
+                <p class="desc gray">Integre seus projetos com SAK de forma totalmente automatizada!</p>
             </div>
         </div>
     </div>
@@ -134,6 +134,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="/modules/whatsapp2/js/index.js?v=s0"></script>
+        <script src="/modules/whatsapp2/js/index.js?v=s1"></script>
     @endpush
 @endsection
