@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=11') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=21'.uniqid()) }}">
     <style>
         .popover {
@@ -229,14 +229,15 @@
                                 <table id='withdrawalsTable' class="table table-striped table-condensed unify">
                                     <thead>
                                         <tr>
-                                            <th scope="col" class="table-title">Conta</th>
-                                            <th scope="col" class="table-title">Solicitação</th>
-                                            <th scope="col" class="table-title">Liberação</th>
-                                            <th scope="col" class="table-title">Valor</th>
-                                            <th style="display: none" id="col_transferred_value" scope="col">Valor
+                                            <td class="table-title" scope="col">Código Saque</td>
+                                            <td scope="col" class="table-title">Conta</td>
+                                            <td scope="col" class="table-title">Solicitação</td>
+                                            <td scope="col" class="table-title">Liberação</td>
+                                            <td scope="col" class="table-title">Valor</td>
+                                            <td style="display: none" id="col_transferred_value" scope="col">Valor
                                                 transferido
-                                            </th>
-                                            <th scope="col" class="table-title">Status</th>
+                                            </td>
+                                            <td scope="col" class="table-title">Status</td>
                                         </tr>
                                     </thead>
                                     <tbody id="withdrawals-table-data" class="custom-t-body" img-empty="{!! asset('modules/global/img/extrato.svg')!!}">
@@ -382,10 +383,10 @@
                                 <table id='transfersTable' class="table table-striped table-condensed unify">
                                     <thead>
                                     <tr>
-                                        <th scope="col" class='headCenter' style='width:33%'>Razão</th>
-                                        <th scope="col" class='headCenter' style='width:33%'>Data da transferência
-                                        </th>
-                                        <th scope="col" class='headCenter' style='width:34%'>Valor</th>
+                                        <td scope="col" class='headCenter' style='width:33%'>Razão</td>
+                                        <td scope="col" class='headCenter' style='width:33%'>Data da transferência
+                                        </td>
+                                        <td scope="col" class='headCenter' style='width:34%'>Valor</td>
                                     </tr>
                                     </thead>
                                     <tbody id="table-transfers-body" class="custom-t-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}">
@@ -496,11 +497,13 @@
         {{-- Modal Detalhes --}}
         @include('sales::details')
         {{-- End Modal --}}
-
+        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css?v=2125')}}">
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
+            <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
             <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/settings.js?v='. uniqid()) }}"></script>
         @endpush
     </div>
 

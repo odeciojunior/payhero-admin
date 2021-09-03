@@ -178,6 +178,7 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
+
             error: (response) => {
                 loadOnAny(".number", true);
                 errorAjaxResponse(response);
@@ -238,7 +239,6 @@ $(document).ready(function () {
                 $("#label_quotation").text("Cotação do " + response.currency);
 
                 updateWithdrawalsTable();
-                // loadOnAny('.price', true);
             }
         });
 
@@ -557,13 +557,15 @@ $(document).ready(function () {
 
                             let tableData = '';
                             tableData += '<tr>';
-                            tableData += "<td>" + data.account_information + "</td>";
-                            tableData += "<td>" + data.date_request + "</td>";
-                            tableData += "<td>" + data.date_release + "</td>";
+                            tableData += "<td>#" + data.id + "</td>";
+                            tableData += '<td class="text-left font-size-14" style="grid-area: sale"> <strong>' + data.account_information + '</small> </td>';
+                            tableData += '<td class="text-left font-size-14" style="grid-area: date-start"> <strong class="bold-mobile">    ' + data.date_request + '</strong> <br> <small class="gray font-size-12">'+data.date_request_time+' </small></td>';
+                            tableData += '<td class="text-left font-size-14" style="grid-area: date-start"> <strong class="bold-mobile">    ' + data.date_release + '</strong> <br> <small class="gray font-size-12">'+data.date_release_time+' </small></td>';
+                            // tableData += "<td>" + data.date_release + "</td>";
                             if (data.tax_value < 50000) {
-                                tableData += "<td>" + data.value + '<br><small>(taxa de R$10,00)</small>' + "</td>";
+                                tableData += ' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + '</strong><br><small>(taxa de R$10,00)</small>' + "</td>";
                             } else {
-                                tableData += "<td>" + data.value + "</td>";
+                                tableData +=' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + "</strong></td>";
                             }
                             if ($("#transfers_company_select").children("option:selected").attr('country') != 'brazil') {
                                 tableData += "<td class='text-center'>" + data.value_transferred + "</td>";
@@ -649,7 +651,7 @@ $(document).ready(function () {
                         .addClass('green');
                 }
 
-                loadOnAny('#available-in-period', true);
+                // loadOnAny('#available-in-period', true);
 
                 if (response.data == '') {
                     $("#table-transfers-body").html(
@@ -871,4 +873,9 @@ $(document).ready(function () {
             text.text("Filtros avançados").fadeIn();
         }
     });
+    //abaixo função para apagar numero zerado no botão de valor na aba extrato
+    document.getElementById("transaction-value").addEventListener("focusout", inputOutOfFocus);
+    function inputOutOfFocus() {
+        document.getElementById("transaction-value").value = null;
+    }
 });
