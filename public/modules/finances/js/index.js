@@ -876,6 +876,8 @@ $(document).ready(function () {
     //abaixo função para apagar numero zerado no botão de valor na aba extrato
     document.getElementById("transaction-value").addEventListener("focusout", inputOutOfFocus);
     function inputOutOfFocus() {
-        document.getElementById("transaction-value").value = null;
+        if($('#transaction-value').val()=='0,00'){
+            document.getElementById("transaction-value").value = null;
+        }
     }
 });
