@@ -61,19 +61,10 @@
                         </span>
                     </a>
                     <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
-                        @if(foxutils()->isHomolog())
-                            <div data-toggle="tooltip" data-placement="left" title="Desabilitado na versão de testes">
-                                <a class="dropdown-item disabled" disabled>
-                                    <img height="24" width="24" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
-                                    Configurações
-                                </a>
-                            </div>
-                        @else
-                            <a id="accounts-service" class="dropdown-item redirect-to-accounts" href="" data-url-value=""role="menuitem">
-                                <img height="24" width="24" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
-                                Configurações
-                            </a>
-                        @endif
+                        <a id="accounts-service" class="dropdown-item redirect-to-accounts" href="" data-url-value=""role="menuitem">
+                            <img height="24" width="24" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
+                            Configurações
+                        </a>
                         <div class="dropdown-divider" role="presentation"></div>
                         <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <img height="24" width="24" src="{{ asset('modules/global/img/svg/power_settings_new.svg') }}"/>

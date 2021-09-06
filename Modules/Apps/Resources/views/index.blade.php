@@ -71,10 +71,10 @@
                         <div class="card app-integration" data-url="/apps/whatsapp2" style='width: 270px;'>
                             <a id="whatsapp2-bt" href="/apps/whatsapp2" class="add-btn">
                                 <i id="whatsapp2-icon" class="o-add-1" aria-hidden="true"></i></a>
-                            <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/whatsapp2.png') !!}" alt="" align="middle">
+                            <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/sak.png') !!}" alt="" align="middle">
                             <div class="card-body">
-                                <h5 class="card-title">Whatsapp 2.0</h5>
-                                <p class="card-text sm">Integre seus projetos com Whatsapp 2.0 </p>
+                                <h5 class="card-title">SAK (Whatsapp 2.0)</h5>
+                                <p class="card-text sm">Integre seus projetos com Sak </p>
                             </div>
                         </div>
                     </div>

@@ -166,10 +166,15 @@ class Project extends Model
         'product_amount_selector',
         'finalizing_purchase_configs',
         'checkout_notification_configs',
+        'custom_message_configs',
         'notazz_configs',
         'created_at',
         'updated_at',
         'deleted_at',
+    ];
+
+    protected $casts= [
+        'custom_message_configs'=>'array'
     ];
 
     public function tapActivity(Activity $activity, string $eventName)
