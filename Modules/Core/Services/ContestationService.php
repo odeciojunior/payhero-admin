@@ -34,7 +34,7 @@ class ContestationService
             $total -= $shopify_discount;
         }
 
-        $total -= $automatic_discount;
+        $total -= $automatic_discount/100;
 
         return trim(str_replace("R$", "", FoxUtils::formatMoney($total)));// transactions.value/100
     }
