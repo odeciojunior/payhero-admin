@@ -175,7 +175,9 @@ class Company extends Model
         'updated_at',
         'id_wall_result',
         'block_checkout',
-    ];
+        'asaas_id',
+        'asaas_homolog_id',
+];
     /**
      * @var bool
      */
