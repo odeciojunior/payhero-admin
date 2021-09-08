@@ -42,7 +42,7 @@ class ProcessShopifyPostbackJob implements ShouldQueue
 
                 $integration = ShopifyIntegration::where('project_id', $project->id)->first();
 
-                if (!empty($integration)) {
+                if (!empty($user) && !empty($project) && !empty($integration)) {
                     $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
 
                     if (!empty($postback['variants']) && count($postback['variants']) > 0) {
