@@ -142,7 +142,7 @@
     </div>
 
     @push('scripts')
-        <script src='{{ asset('/modules/products/js/index.js?v=08') }}'></script>
+        <script src="{{ asset('/modules/products/js/index.js?v='. uniqid()) }}></script>
     @endpush
 
 @endsection

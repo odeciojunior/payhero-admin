@@ -5,7 +5,7 @@ $(document).ready(function () {
     if (!lastPage.match(regexp)) {
         localStorage.clear();
     }
-    getProjects();
+    getProjects();  //---->updateProducts1x
 
     var pageCurrent;
     let badgeList = {
@@ -33,12 +33,12 @@ $(document).ready(function () {
 
     $("#btn-filtro").on("click", function () {
         deleteCookie("filterProduct");
-        let filters = {
+        let filtersApp = {
             getTypeProducts: $("#type-products option:selected").val(),
             getProject: $("#select-projects option:selected").val(),
             getName: $("#name").val()
         };
-        localStorage.setItem('filters', JSON.stringify(filters));
+        localStorage.setItem('filtersApp', JSON.stringify(filtersApp));
         updateProducts();
     });
 
@@ -46,18 +46,19 @@ $(document).ready(function () {
         deleteCookie("filterProduct");
     });
     getTypeProducts();
-    updateProducts();
+    //updateProducts(); //---->//updateProducts2x
     
     // SETTING VALUES OF FILTERS IN INPUTS SEARCH
     function handleLocalStorage() {
-        if (localStorage.getItem('filters') !== null) {
-            let checkLocalStorage = localStorage.getItem('filters');
-            let parseLocalStorage = JSON.parse(checkLocalStorage);
+        if (localStorage.getItem('filtersApp') !== null) {
+            let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApp'));
 
             $("#type-products").val(parseLocalStorage.getTypeProducts).trigger("change");
-            $("#select-projects").val(parseLocalStorage.getProject);
-            $("#name").val(parseLocalStorage.getName);
-            $("#btn-filtro").trigger("click")
+            setTimeout(()=>{
+                $("#select-projects").val(parseLocalStorage.getProject);
+                $("#name").val(parseLocalStorage.getName);
+                $("#btn-filtro").trigger("click")
+            },1000);
         }
     }
 
@@ -134,17 +135,34 @@ $(document).ready(function () {
     }
 
     function updateProducts(link = null) {
+        pageCurrent = link
+        let existFilters = ()=>{
+            if(JSON.parse(localStorage.getItem('filtersApp')) != null){
+                showFiltersApp = [];
+                let getFilters = JSON.parse(localStorage.getItem('filtersApp'))
+                showFiltersApp.push(getFilters.getTypeProducts, getFilters.getName);
+                return showFiltersApp;
+            };
+        };
+        
+        if(link != null){
+            let getPage = {atualPage: pageCurrent}
+            localStorage.setItem("page", JSON.stringify(getPage));
+        }
+        
+        if(JSON.parse(localStorage.getItem("page")) != null){
+            parsePage = JSON.parse(localStorage.getItem("page"));
+        
+            if(existFilters() != null && existFilters()[1] != ""){
+                pageCurrent = null;
+        
+            }else{
+                pageCurrent = parsePage.atualPage;
+            }
+        }
+        
+        link = pageCurrent
 
-        if(link !== null){
-            pageCurrent = link
-            let pagination = {pageCurrent: link}
-            localStorage.setItem("page", JSON.stringify(pagination));
-        }
-        if(localStorage.getItem("page") !== null){
-            recoveryPage = localStorage.getItem("page");
-            parsePage = JSON.parse(recoveryPage);
-            pageCurrent = parsePage.pageCurrent;
-        }
         deleteCookie("filterProduct");
         loadOnAny(".page-content");
         let type = "";
@@ -332,6 +350,4 @@ $(document).ready(function () {
 
         $('#new-product-modal').show();
     });
-
-
 });
