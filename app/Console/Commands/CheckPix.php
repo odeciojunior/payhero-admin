@@ -3,17 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
-use Modules\Core\Entities\Gateway;
+use Exception;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\SaleLog;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\WooCommerceIntegration;
-use Modules\Core\Events\PixExpiredEvent;
 use Modules\Core\Services\CheckoutService;
-use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\ShopifyService;
-use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CheckPix extends Command
