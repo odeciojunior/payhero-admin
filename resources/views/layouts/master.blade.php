@@ -145,16 +145,12 @@
         }
     </style>
 
-    <script>
+
 
         @if(\Auth::user())
-            (function(m,a,i,s,_i,_m){
-                m.addEventListener('load',function(){m.top.maisim||(function(){_m=a.createElement(i);
-                    i=a.getElementsByTagName(i)[0];_m.async=!0;_m.src=s;_m.id='maisim';_m.charset='utf-8';
-                    _m.setAttribute('data-token',_i);i.parentNode.insertBefore(_m,i)})()})
-            })(window,document,'script','https://app.mais.im/support/assets/js/core/embed.js','273c7ff74192d8dac2ef370dc930d643');
+        <script>function initFreshChat(){window.fcWidget.init({token:"1d0b79d1-3275-4984-9ce1-9c8da217d609",host:"https://wchat.freshchat.com"})}function initialize(t,i){var e;t.getElementById(i)?initFreshChat():((e=t.createElement("script")).id=i,e.async=!0,e.src="https://wchat.freshchat.com/js/widget.js",e.onload=initFreshChat,t.head.appendChild(e))}function initiateCall(){initialize(document,"freshchat-js-sdk")}window.addEventListener?window.addEventListener("load",initiateCall,!1):window.attachEvent("load",initiateCall,!1);</script>
         @endif
-    </script>
+
 
 @endif
 
