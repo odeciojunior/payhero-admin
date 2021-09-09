@@ -36,8 +36,6 @@ $(function () {
         $('#name').val('');
         $('#price').val('');
         $('#description').val('');
-        $("#form-register-plan").html('');
-        $("#form-register-plan").html(form_register_plan);
     }
 
     function getIconTypeCustomProduct(proType) {
@@ -104,40 +102,6 @@ $(function () {
         });
     }
 
-    function appendProducts(products, modalID)
-    {
-        /*if (products.length > 5) {
-            modalID.find('#load-products').asScrollable();
-        }*/
-        
-        var data = '<div class="row">';
-        products.forEach(function(product) {
-            data += '<div class="col-sm-6">';
-                data += '<div data-code="' + product.id + '" class="box-product ' + (selected_products.indexOf(product.id) != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
-                    data += '<div class="d-flex align-items-center">';
-                        data += '<img class="product-photo" src="' + product.photo + '" alt="Image Product">';
-                        data += '<div>';
-                            data += '<h1 class="title">' + product.name + '</h1>';
-                            data += '<p class="description">' + product.description + '</p>';
-                        data += '</div>';
-                    data += '</div>';
-                    data += '<div class="check">';
-                    if (selected_products.indexOf(product.id) != -1) {    
-                        data += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
-                    }
-                    data += '</div>';
-                data += '</div>';
-            data += '</div>';
-        });
-        data + '</div>';
-
-        modalID.find('#load-products').html(data);
-
-        $(".product-photo").on("error", function () {
-            $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
-        });
-    }
-
     // search products input
     $('#search-product').on('keyup', function() {
         var search_product = $(this).val();
@@ -173,25 +137,136 @@ $(function () {
         });
     }
 
-    // select products button
+    function appendProducts(products, modalID)
+    {
+        var data = '<div class="row">';
+        products.forEach(function(product) {
+            var index_product = selected_products.map(function(e) { return e.id; }).indexOf(product.id);
+            data += '<div class="col-sm-6">';
+                data += '<div data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
+                    data += '<div class="d-flex align-items-center">';
+                        data += '<img class="product-photo" src="' + product.photo + '" alt="Image Product">';
+                        data += '<div>';
+                            data += '<h1 class="title">' + product.name + '</h1>';
+                            data += '<p class="description">' + product.description + '</p>';
+                        data += '</div>';
+                    data += '</div>';
+                    data += '<div class="check">';
+                    if (index_product != -1) {    
+                        data += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                    }
+                    data += '</div>';
+                data += '</div>';
+            data += '</div>';
+        });
+        data + '</div>';
+
+        modalID.find('#load-products').html(data);
+
+        $(".product-photo").on("error", function () {
+            $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+        });
+    }
+    
+    function appendProductsDetails(modalID)
+    {
+        modalID.find('.box-products').html('');
+        
+        var append = '';
+        append += '<div class="box-details">';
+            append += '<div class="head d-flex">';
+                append += '<div>Produto</div>';
+                append += '<div>Quantidade<span style="color: #FF0000;">*</span></div>';
+                append += '<div>Custo (un)</div>';
+                append += '<div>Moeda</div>';
+            append += '</div>';
+            append += '<div class="body">';
+                selected_products.forEach(function(product) {
+                    $.ajax({
+                        async: false,
+                        method: "GET",
+                        url: "/api/product/" + product.id,
+                        dataType: "json",
+                        headers: {
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
+                        },
+                        error: function error(response) {
+                            alertCustom('error', 'Ocorreu um erro, por favor, refaça a operação');
+                        },
+                        success: function success(response) {
+                            append += '<div class="product d-flex" data-code="' + response.data.id + '">';
+                                append += '<div class="d-flex align-items-center">';
+                                    append += '<img class="product-photo" src="' + response.data.photo + '" alt="Image Product">';
+                                    append += '<h1 class="title">' + response.data.name + '</h1>';
+                                append += '</div>';
+                                append += '<div><input class="form-control form-control-lg" type="number" min="1" value="1" name="amount" placeholder="Qtd."></div>';
+                                append += '<div><input class="form-control form-control-lg" type="text" name="value" placeholder="Valor un."></div>';
+                                append += '<div>';
+                                    append += '<select class="form-control form-control-lg" type="text" name="currency_type_enum">';
+                                        append += '<option value="BRL">BRL (R$)</option>';
+                                        append += '<option value="USD">USD ($)</option>';
+                                    append += '</select>';
+                                append += '</div>';
+                            append += '</div>';
+                        }
+                    });
+                });
+            append += '</div>';
+        append += '</div>';
+
+        modalID.find('.box-products').html(append);
+
+        $(".product-photo").on("error", function () {
+            $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+        });
+    }
+
+    function appendProductsInformations(modalID)
+    {
+        modalID.find('.box-products').html('');
+        
+        append = '';
+        append += '<div class="row">';
+            append += '<div class="col-sm-6 form-group">';
+                append += '<label for="name">Nome</label>';
+                append += '<input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="Digite o nome do plano">';
+            append += '</div>';
+
+            append += '<div class="col-sm-6 form-group">';
+                append += '<label for="price">Preço de venda</label>';
+                append += '<input type="text" class="form-control form-control-lg" id="price" name="price" placeholder="R$ 99,90">';
+            append += '</div>';
+        append += '</div>';
+        
+        append += '<div class="row">';
+            append += '<div class="col-sm-12 form-group">';
+                append += '<label for="description">Descrição</label>';
+                append += '<textarea class="form-control form-control-lg" id="description" name="description" placeholder="Adicione uma descrição curta ao seu plano" rows="3"></textarea>';
+            append += '</div>';
+        append += '</div>';
+
+        modalID.find('.box-products').html(append);
+    }
+
+    // botão selecionar produtos
     $('.box-products').on('click', '.box-product', function() {
         var product_id = $(this).data('code');
 
         if (!$(this).hasClass('selected')) {
             $(this).addClass('selected');
             $(this).find('.check').append('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
-            selected_products.push(product_id);
+            selected_products.push({'id': product_id});
         } else {
             $(this).removeClass('selected');
             $(this).find('.check img').remove();
-            var index_selected_products = selected_products.indexOf(product_id);
+            var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
             selected_products.splice(index_selected_products, 1);
         }
     });
 
-    // continue button
+    // botão prosseguir
     $('#btn-modal-plan-prosseguir').on('click', function() {
-
         if (selected_products.length > 0) {
             var modalID = $('#modal_add_plan');
 
@@ -200,71 +275,118 @@ $(function () {
             var stage_informations = modalID.find('.box-breadcrumbs .informations');
 
             if (stage_add_plan == 1) {
+                stage_products.find('img').attr('src', '/modules/global/img/icon-check.svg');
+
                 stage_products.removeClass('active');
                 stage_products.addClass('finalized');
                 stage_details.addClass('active');
 
-                stage_add_plan++;
-
                 modalID.find('.box-description').html('<p style="margin: 0; font-weight: bold;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
-                modalID.find('.box-products').html('');
-
-                var append = '';
-                append += '<div class="box-details">';
-                    append += '<div class="head d-flex">';
-                        append += '<div>Produto</div>';
-                        append += '<div>Quantidade</div>';
-                        append += '<div>Custo (un)</div>';
-                        append += '<div>Moeda</div>';
-                    append += '</div>';
-                    append += '<div class="body">';
-                        selected_products.forEach(function(productID) {
-                            var product = '';
-                            $.ajax({
-                                method: "GET",
-                                url: "/api/product/" + productID,
-                                dataType: "json",
-                                headers: {
-                                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                                    'Accept': 'application/json',
-                                },
-                                error: function error(response) {
-                                    alert('erro');
-                                },
-                                success: function success(response) {
-                                    product = response.data;        
-                                }
-                            });
-                            console.log(product);
-                            append += '<div class="product d-flex">';
-                                append += '<div class="d-flex align-items-center">';
-                                    append += '<img class="product-photo" src="' + product.photo + '" alt="Image Product">';
-                                    append += '<h1 class="title">' + product.name + '</h1>';
-                                append += '</div>';
-                                append += '<div><input class="form-control form-control-lg" type="text" placeholder="Qtd."></div>';
-                                append += '<div><input class="form-control form-control-lg" type="text" placeholder="Valor un."></div>';
-                                append += '<div>';
-                                    append += '<select class="form-control form-control-lg" type="text" placeholder="Valor un.">';
-                                        append += '<option>BRL (R$)</option>';
-                                    append += '</select>';
-                                append += '</div>';
-                            append += '</div>';
-                        });
-                    append += '</div>';
-                append += '</div>';
-
-                modalID.find('.box-products').html(append);
+                appendProductsDetails(modalID);
+                modalID.find('.box-review').html('<div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="check-values"><label class="form-check-label" for="check-values">Todos os produtos têm o mesmo custo</label></div>');
             } else if (stage_add_plan == 2) {
+                $('.box-products .form-control').each(function() {
+                    var product_ID = $(this).parent().parent().data('code');
+
+                    var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
+                    
+                    var name_input = $(this).attr('name');
+                    if (name_input == 'amount') selected_products[product_selected_index].amount = $(this).val();
+                    if (name_input == 'value') selected_products[product_selected_index].value = $(this).val();
+                    if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
+                });
+                
+                stage_details.find('img').attr('src', '/modules/global/img/icon-check.svg');
+                
                 stage_details.removeClass('active');
                 stage_details.addClass('finalized');
+                stage_informations.addClass('active');
 
-                stage_add_plan++;
+                modalID.find('.box-description').html('<p style="margin: 0; font-weight: bold;">Insira os dados do plano</small>');
+                appendProductsInformations(modalID);
+                modalID.find('.box-review').html('');
+
+                modalID.find('#btn-modal-plan-prosseguir').html('Finalizar');
             } else if (stage_add_plan == 3) {
-                
+                storePlan(modalID);
             }
+
+            stage_add_plan++;
         } else {
             alertCustom('error', 'Selecione um produto para prosseguir');
         }
+    });
+
+    function storePlan(modalID)
+    {
+        $.ajax({
+            method: 'POST',
+            url: '/api/project/' + projectId + '/plans',
+            dataType: 'JSON',
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content')
+            },
+            data: {
+                'project_id': projectId,
+                'products': selected_products,
+                'name': modalID.find('input[name="name"]').val(),
+                'price': modalID.find('input[name="price"]').val(),
+                'description': modalID.find('textarea[name="description"]').val()
+            },
+            error: function error(response) {
+                clearFields();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                var stage_informations = modalID.find('.box-breadcrumbs .informations');
+                stage_informations.find('img').attr('src', '/modules/global/img/icon-check.svg');
+                stage_informations.removeClass('active');
+                stage_informations.addClass('finalized');
+                
+                index();
+                clearFields();
+                bindModalKeys();
+                alertCustom('success', 'Plano Adicionado!');
+
+                $('#modal_add_plan').modal('hide');
+            }
+        });
+    }
+
+    // botão voltar
+    $('#btn-modal-plan-voltar').on('click', function() {
+        var modalID = $('#modal_add_plan');
+
+        modalID.find('#btn-modal-plan-prosseguir').html('Prosseguir');
+        
+        var stage_products = modalID.find('.box-breadcrumbs .products');
+        var stage_details = modalID.find('.box-breadcrumbs .details');
+        var stage_informations = modalID.find('.box-breadcrumbs .informations');
+
+        if (stage_add_plan == 1) {
+
+        } else if (stage_add_plan == 2) {
+            stage_products.find('img').attr('src', '/modules/global/img/icon-products-plans.svg');
+
+            stage_details.removeClass('active');
+            stage_products.removeClass('finalized');
+            stage_products.addClass('active');
+            
+            modalID.find('.box-description').html('<label for="search-product">Selecione os produtos do novo plano</label><input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">');
+            createNew();
+            modalID.find('.box-review').html('');
+        } else if (stage_add_plan == 3) {
+            stage_details.find('img').attr('src', '/modules/global/img/icon-costs-plans.svg');
+
+            stage_informations.removeClass('active');
+            stage_details.removeClass('finalized');
+            stage_details.addClass('active');
+
+            modalID.find('.box-description').html('<p style="margin: 0; font-weight: bold;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
+            appendProductsDetails(modalID);
+        }
+
+        stage_add_plan--;
     });
 
     function create() {

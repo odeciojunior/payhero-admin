@@ -41,6 +41,8 @@
                 <div class="box-products" id="load-products">
                     {{-- JS carrega --}}
                 </div>
+
+                <div class="box-review"></div>
             </div>
 
             <div class="modal-footer">

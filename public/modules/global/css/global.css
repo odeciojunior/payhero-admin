@@ -928,11 +928,14 @@ img.border-icon{
 .modal-new-layout .modal-content {
     border-radius: 12px;
 }
-.modal-new-layout .form-control-lg {
+.modal-new-layout .form-control {
     font-size: 16px;
     border-radius: 8px;
     border-color: #c4c4c4;
     height: 3.2876666667rem !important;
+}
+.modal-new-layout textarea.form-control {
+    height: auto !important;
 }
 .modal-new-layout .modal-header {
     text-align: center;
@@ -983,18 +986,7 @@ img.border-icon{
     background: #EDEDED;
     border-radius: 50%;
 }
-.modal-plans .box-breadcrumbs .box-stage.products .icon img {
-    width: 12px;
-    height: auto;
-}
-.modal-plans .box-breadcrumbs .box-stage.costs .icon img {
-    width: 8px;
-    height: auto;
-}
-.modal-plans .box-breadcrumbs .box-stage.informations .icon img {
-    width: 17px;
-    height: auto;
-}
+
 .modal-plans .box-breadcrumbs .box-stage .icon img {
     max-width: 100%;
 }
@@ -1017,9 +1009,8 @@ img.border-icon{
     border-color: #c4c4c4;
 }
 
-.modal-plans label,
+.modal-plans .form-check label,
 .modal-plans .box-description p {
-    font-weight: bold;
     font-weight: bold;
     font-size: 16px;
     line-height: 20px;
@@ -1034,7 +1025,7 @@ img.border-icon{
 }
 
 .modal-plans .box-products {
-    max-height: 306px;
+    max-height: 288px;
     overflow: hidden;
 }
 .modal-plans .box-products .col-sm-6:nth-child(odd) {
@@ -1061,11 +1052,11 @@ img.border-icon{
 }
 .modal-plans .box-products .box-details .head div:nth-child(1),
 .modal-plans .box-products .box-details .body .product div:nth-child(1) {
-    width: 46%;
+    width: 42%;
 }
 .modal-plans .box-products .box-details .head div:nth-child(2),
 .modal-plans .box-products .box-details .body .product div:nth-child(2) {
-    width: 15%;
+    width: 16%;
 }
 .modal-plans .box-products .box-details .head div:nth-child(3),
 .modal-plans .box-products .box-details .body .product div:nth-child(3) {
@@ -1073,7 +1064,7 @@ img.border-icon{
 }
 .modal-plans .box-products .box-details .head div:nth-child(4),
 .modal-plans .box-products .box-details .body .product div:nth-child(4) {
-    width: 20%;
+    width: 21%;
     margin-right: 0;
 }
 .modal-plans .box-products .box-details .head,
@@ -1164,4 +1155,12 @@ img.border-icon{
 }
 .modal-plans .modal-footer .btn-primary {
     border: 1px solid #2E85EC;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    width: auto;
+}
+.flex-fill {
+    -ms-flex: 1 1 auto!important;
+    flex: 1 1 auto!important;
 }
