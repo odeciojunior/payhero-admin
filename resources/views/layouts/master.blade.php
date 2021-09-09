@@ -141,17 +141,8 @@
     @if(\Auth::user())
         <script>
             function initFreshChat() {
-                window.fcWidget.init({
-                    token: "1d0b79d1-3275-4984-9ce1-9c8da217d609",
-                    host: "https://wchat.freshchat.com"
-                });
-                window.fcWidget.setExternalId("{{hashids_encode(auth()->id())}}");
-                window.fcWidget.user.setFirstName("{{strtok(auth()->user()->name, ' ')}}");
-                window.fcWidget.user.setEmail("{{auth()->user()->email}}");
-                window.fcWidget.user.setProperties({
-                    plan: "Pro",
-                    status: "Active"
-                });
+                window.fcWidget.init(@json(\Modules\Core\Services\ChatService::getData()));
+                window.fcWidget.user.setProperties(@json(\Modules\Core\Services\ChatService::getExtraData()));
             }
 
             function initialize(i, t) {
