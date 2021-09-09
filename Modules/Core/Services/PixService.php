@@ -10,6 +10,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\PixExpiredEvent;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class PixService
@@ -22,7 +23,7 @@ class PixService
      *  Pix Pending
      * @return void
      */
-    public function changePixPending()
+    public function changePixToCanceled()
     {
         try {
             $sales = Sale::where(
@@ -44,6 +45,21 @@ class PixService
                 ->get();
 
             foreach ($sales as $sale) {
+
+                //consultar na Gerencianet para ver se não foi pago
+                $data = [
+                    'sale_id' => Hashids::encode($sale->id)
+                ];
+
+                $responseCheckout = (new CheckoutService())->checkPaymentPix($data);
+
+
+
+                if ($responseCheckout->status == 'success' and $responseCheckout->payment == true) {
+                    report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
+                    continue;
+                }
+
                 $sale->update(['status' => Sale::STATUS_CANCELED]);
 
                 foreach ($sale->transactions as $transaction) {
@@ -83,9 +99,9 @@ class PixService
                     try {
                         $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
                         if (!empty($integration)) {
-                            
+
                             $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
-                            
+
                             $service->cancelOrder($sale, 'Pix');
                         }
                     } catch (Exception $e) {
@@ -96,6 +112,7 @@ class PixService
                 $pix = $sale->pixCharges->where('status', 'ATIVA')->first();
 
                 if (!FoxUtils::isEmpty($pix)) {
+                    //Atualizar o e2id
                     $pix->update(['status' => 'EXPIRED']);
                 }
                 event(new PixExpiredEvent($sale));
