@@ -298,6 +298,9 @@ class ShippingApiController extends Controller
                     }
 
                     if (Str::contains($requestValidated['type'], 'melhorenvio')) {
+                        $hashid = str_replace('melhorenvio-', '', $requestValidated['type']);
+                        $melhorenvioId = hashids_decode($hashid);
+                        $requestValidated['melhorenvio_integration_id'] = $melhorenvioId;
                         $requestValidated['type'] = 'melhorenvio';
                     }
 
