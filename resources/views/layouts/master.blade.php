@@ -139,7 +139,32 @@
     <script src="{{ asset('modules/global/js/notifications.js?v=13') }}"></script>
 
     @if(\Auth::user())
-    <script>function initFreshChat(){window.fcWidget.init({token:"1d0b79d1-3275-4984-9ce1-9c8da217d609",host:"https://wchat.freshchat.com"})}function initialize(t,i){var e;t.getElementById(i)?initFreshChat():((e=t.createElement("script")).id=i,e.async=!0,e.src="https://wchat.freshchat.com/js/widget.js",e.onload=initFreshChat,t.head.appendChild(e))}function initiateCall(){initialize(document,"freshchat-js-sdk")}window.addEventListener?window.addEventListener("load",initiateCall,!1):window.attachEvent("load",initiateCall,!1);</script>
+        <script>
+            function initFreshChat() {
+                window.fcWidget.init({
+                    token: "1d0b79d1-3275-4984-9ce1-9c8da217d609",
+                    host: "https://wchat.freshchat.com"
+                });
+                window.fcWidget.setExternalId("{{hashids_encode(auth()->id())}}");
+                window.fcWidget.user.setFirstName("{{strtok(auth()->user()->name, ' ')}}");
+                window.fcWidget.user.setEmail("{{auth()->user()->email}}");
+                window.fcWidget.user.setProperties({
+                    plan: "Pro",
+                    status: "Active"
+                });
+            }
+
+            function initialize(i, t) {
+                var e;
+                i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e))
+            }
+
+            function initiateCall() {
+                initialize(document, "freshchat-js-sdk")
+            }
+
+            window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
+        </script>
     @endif
 
 @endif
