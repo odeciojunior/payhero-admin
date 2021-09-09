@@ -19,8 +19,19 @@ $(document).ready(function () {
         3: "Recusado",
     };
     // Comportamentos da tela
+    let storeTypeProduct = () => {
+        if(localStorage.getItem("filtersApp")){
+            let getProductValue = JSON.parse(localStorage.getItem("filtersApp"));
+            product = getProductValue.getTypeProducts;
+            return product;
+        }else{
+            return 0
+        }
+    }
+
     $("#type-products").on("change", function () {
-        if ($(this).val() === "1") {
+        const type = $(this).val();
+        if (type === "1") {
             $('#projects-list').removeClass('d-none');
             $("#projects-list select").prop("disabled", false).removeClass("disabled");
             $("#opcao-vazia").remove();
@@ -33,6 +44,15 @@ $(document).ready(function () {
 
     $("#btn-filtro").on("click", function () {
         deleteCookie("filterProduct");
+
+        if(storeTypeProduct() != $("#type-products").val()){
+            if(localStorage.getItem("page") != null){
+                let getPageStored = JSON.parse(localStorage.getItem("page"));
+                getPageStored.atualPage = null;
+                localStorage.setItem("page", JSON.stringify(getPageStored));
+            }
+        }
+
         let filtersApp = {
             getTypeProducts: $("#type-products option:selected").val(),
             getProject: $("#select-projects option:selected").val(),
@@ -136,23 +156,27 @@ $(document).ready(function () {
 
     function updateProducts(link = null) {
         pageCurrent = link
-        let existFilters = ()=>{
-            if(JSON.parse(localStorage.getItem('filtersApp')) != null){
+        //VERIFICAR SE FOI APLICADO ALGUM TIPO DE FILTRO 
+        let existFilters = () => {
+            if(localStorage.getItem('filtersApp') != null){
                 showFiltersApp = [];
                 let getFilters = JSON.parse(localStorage.getItem('filtersApp'))
-                showFiltersApp.push(getFilters.getTypeProducts, getFilters.getName);
+                showFiltersApp.push(getFilters.getTypeProducts, getFilters.getName, getFilters.getTypeProducts);
                 return showFiltersApp;
             };
         };
+
         
+        //VERIFICA SE FOI SELECIONADO ALGUMA PAGINA E GUARDA A PAGINA
         if(link != null){
             let getPage = {atualPage: pageCurrent}
             localStorage.setItem("page", JSON.stringify(getPage));
         }
         
-        if(JSON.parse(localStorage.getItem("page")) != null){
+        //VERIFICA SE EXISTE ALGUMA PAGINA GUARDADA PARA SER SETADA APOS EDITAR ALGUM PRODUTO
+        if(localStorage.getItem("page") != null){
             parsePage = JSON.parse(localStorage.getItem("page"));
-        
+
             if(existFilters() != null && existFilters()[1] != ""){
                 pageCurrent = null;
         
@@ -160,7 +184,7 @@ $(document).ready(function () {
                 pageCurrent = parsePage.atualPage;
             }
         }
-        
+
         link = pageCurrent
 
         deleteCookie("filterProduct");
