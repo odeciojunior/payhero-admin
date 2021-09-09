@@ -58,6 +58,10 @@ class CheckPix extends Command
                 ]
             )->get();
 
+            $total = count($sales);
+            $bar = $this->output->createProgressBar($total);
+            $bar->start();
+
             foreach ($sales as $sale) {
 
                 //consultar na Gerencianet para ver se não foi pago
@@ -70,7 +74,9 @@ class CheckPix extends Command
                 if ($responseCheckout->status == 'success' and $responseCheckout->payment == true) {
                     report(new Exception('Command para checar as venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
                 }
+                $bar->advance();
             }
+            $bar->finish();
         } catch (Exception $e) {
             report($e);
         }

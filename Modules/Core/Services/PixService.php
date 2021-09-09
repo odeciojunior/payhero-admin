@@ -59,6 +59,7 @@ class PixService
                     report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
                     continue;
                 }
+
                 $sale->update(['status' => Sale::STATUS_CANCELED]);
 
                 foreach ($sale->transactions as $transaction) {
