@@ -159,7 +159,8 @@ $(document).ready(function () {
 
     function updateProducts(link = null) {
         pageCurrent = link
-        //VERIFICAR SE FOI APLICADO ALGUM FILTRO 
+
+        //verifica se algum filtro foi aplicado
         let existFilters = () => {
             if(localStorage.getItem('filtersApp') != null){
                 let getFilters = JSON.parse(localStorage.getItem('filtersApp'))
@@ -167,7 +168,6 @@ $(document).ready(function () {
             };
         };
 
-        
         //verificar se seleciounou uma pagina e a guarda
         if(link != null){
             let getPage = {atualPage: pageCurrent}
