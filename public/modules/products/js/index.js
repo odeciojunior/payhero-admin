@@ -5,7 +5,7 @@ $(document).ready(function () {
     if (!lastPage.match(regexp)) {
         localStorage.clear();
     }
-    getProjects();  //---->updateProducts1x
+    getProjects();
 
     var pageCurrent;
     let badgeList = {
@@ -19,6 +19,8 @@ $(document).ready(function () {
         3: "Recusado",
     };
     // Comportamentos da tela
+
+    //arrow function anonima,verifica se existe algum filtro e pega o valor do projeto
     let storeTypeProduct = () => {
         if(localStorage.getItem("filtersApp")){
             let getProductValue = JSON.parse(localStorage.getItem("filtersApp"));
@@ -45,6 +47,7 @@ $(document).ready(function () {
     $("#btn-filtro").on("click", function () {
         deleteCookie("filterProduct");
 
+        //compara o id do produto anterior com o novo e limpa a pagina
         if(storeTypeProduct() != $("#type-products").val()){
             if(localStorage.getItem("page") != null){
                 let getPageStored = JSON.parse(localStorage.getItem("page"));
@@ -66,7 +69,7 @@ $(document).ready(function () {
         deleteCookie("filterProduct");
     });
     getTypeProducts();
-    //updateProducts(); //---->//updateProducts2x
+    //updateProducts(); //Funcao de update chamda pela 2x porque ?
     
     // SETTING VALUES OF FILTERS IN INPUTS SEARCH
     function handleLocalStorage() {
@@ -156,28 +159,27 @@ $(document).ready(function () {
 
     function updateProducts(link = null) {
         pageCurrent = link
-        //VERIFICAR SE FOI APLICADO ALGUM TIPO DE FILTRO 
+        //VERIFICAR SE FOI APLICADO ALGUM FILTRO 
         let existFilters = () => {
             if(localStorage.getItem('filtersApp') != null){
-                showFiltersApp = [];
                 let getFilters = JSON.parse(localStorage.getItem('filtersApp'))
-                showFiltersApp.push(getFilters.getTypeProducts, getFilters.getName, getFilters.getTypeProducts);
-                return showFiltersApp;
+                return getFilters;
             };
         };
 
         
-        //VERIFICA SE FOI SELECIONADO ALGUMA PAGINA E GUARDA A PAGINA
+        //verificar se seleciounou uma pagina e a guarda
         if(link != null){
             let getPage = {atualPage: pageCurrent}
             localStorage.setItem("page", JSON.stringify(getPage));
         }
         
-        //VERIFICA SE EXISTE ALGUMA PAGINA GUARDADA PARA SER SETADA APOS EDITAR ALGUM PRODUTO
+        //verificar se houve pagina selecionada e resgata
+        //se houver filtro e nome aplicado a pagina deve =null
         if(localStorage.getItem("page") != null){
             parsePage = JSON.parse(localStorage.getItem("page"));
 
-            if(existFilters() != null && existFilters()[1] != ""){
+            if(existFilters() != null && existFilters().getName != ""){
                 pageCurrent = null;
         
             }else{
