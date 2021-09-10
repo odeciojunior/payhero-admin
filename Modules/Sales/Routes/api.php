@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 //'role:account_owner|admin|attendance|finantial'
 Route::group(
     [
-        'middleware' => ['auth:api', 'permission:sales', 'scopes:admin'],
+        'middleware' => ['auth:api', 'permission:sales|trackings', 'scopes:admin'],
         'prefix'     => 'sales',
     ],
     function() {
@@ -26,9 +26,10 @@ Route::group(
         Route::post('/refund/billet/{transaction_id}', 'SalesApiController@refundBillet')->middleware('permission:sales_manage');
         Route::post('/newordershopify/{transaction_id}', 'SalesApiController@newOrderShopify')->middleware('permission:sales_manage');
         Route::post('/updaterefundobservation/{transaction_id}', 'SalesApiController@updateRefundObservation')->middleware('permission:sales_manage');
-        Route::post('/saleresendemail', 'SalesApiController@saleReSendEmail');
+        Route::post('/saleresendemail', 'SalesApiController@saleReSendEmail')->middleware('permission:trackings_manage');
         Route::get('/user-plans', 'SalesApiController@getPlans');
-        Route::post('/set-observation/{transaction_id}', 'SalesApiController@setValueObservation')->middleware('permission:sales_manage');
+        Route::post('/set-observation/{transaction_id}', 'SalesApiController@setValueObservation')
+        ->middleware('permission:sales_manage|trackings_manage');
     }
 );
 
