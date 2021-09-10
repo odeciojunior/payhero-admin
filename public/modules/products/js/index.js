@@ -69,7 +69,7 @@ $(document).ready(function () {
         deleteCookie("filterProduct");
     });
     getTypeProducts();
-    //updateProducts(); //Funcao de update chamda pela 2x porque ?
+    //updateProducts(); //Funcao de update chamda pela 2x
     
     // SETTING VALUES OF FILTERS IN INPUTS SEARCH
     function handleLocalStorage() {
