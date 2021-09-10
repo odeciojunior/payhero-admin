@@ -29,7 +29,7 @@
                             </div>
                         </div>
                     </div>
-                    @can('sales_trackings_manager')
+                    @can('trackings_manage')
                     <div class="col mt-lg-0 mt-20 p-0 mr-25" style="flex-grow: 0">
                         <div class="d-flex align-items-center">
                             <button id="btn-import-xls" type="button" class="btn btn-round btn-default btn-outline font-weight-bold" style="min-width: 118px; font-size: 14px;">Importar
