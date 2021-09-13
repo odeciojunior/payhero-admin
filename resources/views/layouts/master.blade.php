@@ -62,8 +62,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=22') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=74') }}"> --}}
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=' . uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=49') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
@@ -136,6 +135,7 @@
 @if(env('APP_ENV', 'production') == 'production')
     <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=13') }}"></script>
     <script src="{{ asset('modules/global/js/notifications.js?v=13') }}"></script>
+<<<<<<< HEAD
     <style>
         .margin-chat-pagination {
             display:block !important; height:20px  !important;
@@ -151,6 +151,28 @@
             })(window,document,'script','https://app.mais.im/support/assets/js/core/embed.js','273c7ff74192d8dac2ef370dc930d643');
         @endif
     </script>
+=======
+
+    @if(\Auth::user())
+        <script>
+            function initFreshChat() {
+                window.fcWidget.init(@json(\Modules\Core\Services\ChatService::getData()));
+                window.fcWidget.user.setProperties(@json(\Modules\Core\Services\ChatService::getExtraData()));
+            }
+
+            function initialize(i, t) {
+                var e;
+                i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e))
+            }
+
+            function initiateCall() {
+                initialize(document, "freshchat-js-sdk")
+            }
+
+            window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
+        </script>
+    @endif
+>>>>>>> master
 
 @endif
 

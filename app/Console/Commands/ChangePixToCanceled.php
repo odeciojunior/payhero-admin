@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Services\PixService;
 
-class ChangePixPending extends Command
+class ChangePixToCanceled extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'change:pixpending';
+    protected $signature = 'change:pix-to-canceled';
 
     /**
      * The console command description.
@@ -34,7 +34,7 @@ class ChangePixPending extends Command
     public function handle()
     {
         $pixService = new PixService();
-        $pixService->changePixPending();
+        $pixService->changePixToCanceled();
     }
 
 }

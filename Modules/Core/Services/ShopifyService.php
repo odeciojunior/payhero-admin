@@ -776,6 +776,10 @@ class ShopifyService
         $notazzConfig = Project::select('notazz_configs')->find($projectId)->notazz_configs ?? null;
         $updateCostShopify = (!is_null($notazzConfig)) ? json_decode($notazzConfig) : null;
 
+        $products = Product::with('productsPlans.plan')
+            ->where('project_id', $projectId)
+            ->get();
+
         $productsArray = [];
         foreach ($storeProduct->getVariants() as $variant) {
             $title = '';
@@ -800,48 +804,49 @@ class ShopifyService
             } catch (Exception $e) {
                 //
             }
-            $product = Product::with('productsPlans')
-                ->where('shopify_id', $storeProduct->getId())
+            $product = $products->where('shopify_id', $storeProduct->getId())
                 ->where('shopify_variant_id', $variant->getId())
                 ->where('project_id', $projectId)
                 ->first();
             if ($product) {
                 $productsArray[] = $product->id;
-                $product->update(
-                    [
-                        'name' => $title,
-                        'description' => mb_substr($description, 0, 100),
-                        'weight' => $variant->getWeight(),
-                        'shopify_id' => $storeProduct->getId(),
-                        'shopify_variant_id' => $variant->getId(),
-                        'sku' => $variant->getSku(),
-                        'project_id' => $projectId,
-                    ]
-                );
+                $product->fill([
+                    'name' => $title,
+                    'description' => mb_substr($description, 0, 100),
+                    'weight' => $variant->getWeight(),
+                    'shopify_id' => $storeProduct->getId(),
+                    'shopify_variant_id' => $variant->getId(),
+                    'sku' => $variant->getSku(),
+                    'project_id' => $projectId,
+                ]);
 
-                $productPlan = ProductPlan::where('product_id', $product->id)
+                $productPlan = $product->productsPlans
                     ->where('amount', 1)
-                    ->orderBy('id', 'ASC')
+                    ->sortBy('id')
                     ->first();
                 if (!empty($productPlan)) {
-                    $plan = Plan::find($productPlan->plan_id);
                     if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
                         $costProduct = $this->getCostShopify($variant);
                         sleep(1);
                         if ($costProduct !== '') {
-                            $productPlan->update(['cost' => $costProduct * 100]);
+                            $productPlan->fill(['cost' => $costProduct * 100]);
+                            if ($productPlan->isDirty()) {
+                                $productPlan->save();
+                            }
                         }
                     }
 
-                    $plan->update(
-                        [
-                            'name' => $title,
-                            'description' => mb_substr($description, 0, 100),
-                            'price' => $variant->getPrice(),
-                            'status' => '1',
-                            'project_id' => $projectId,
-                        ]
-                    );
+                    $plan = $productPlan->plan;
+                    $plan->fill([
+                        'name' => $title,
+                        'description' => mb_substr($description, 0, 100),
+                        'price' => $variant->getPrice(),
+                        'status' => '1',
+                        'project_id' => $projectId,
+                    ]);
+                    if ($plan->isDirty()) {
+                        $plan->save();
+                    }
 
                     $photo = '';
                     if (count($storeProduct->getVariants()) > 1) {
@@ -868,7 +873,11 @@ class ShopifyService
                             }
                         }
                     }
-                    $product->update(['photo' => $photo]);
+                    $product->fill(['photo' => $photo]);
+
+                    if ($product->isDirty()) {
+                        $product->save();
+                    }
                 } else {
                     $plan = Plan::create(
                         [
@@ -982,29 +991,23 @@ class ShopifyService
             ->whereNotIn('id', collect($productsArray))
             ->get();
 
-        if (count($products) > 0) {
+        if ($products->count()) {
             $productIds = $products->pluck('id');
 
             $plans = Plan::with(['productsPlans', 'plansSales', 'affiliateLinks'])
-                ->whereHas(
-                    'productsPlans',
-                    function ($query) use ($productIds) {
+                ->whereHas('productsPlans', function ($query) use ($productIds) {
                         $query->whereIn('product_id', $productIds);
-                    }
-                )
-                ->get();
+                    })->get();
             $arrayDelete = [];
             foreach ($plans as $plan) {
                 if (count($plan->plansSales) == 0) {
                     $productPlans = $plan->productsPlans;
                     $othersProducts = $productPlans->whereNotIn('product_id', $productIds);
-
                     if (count($othersProducts) == 0) {
                         foreach ($plan->productsPlans as $productPlan) {
                             $arrayDelete[] = $productPlan->product_id;
                             $productPlan->delete();
                         }
-
                         if (count($plan->affiliateLinks) > 0) {
                             foreach ($plan->affiliateLinks as $affiliateLink) {
                                 $affiliateLink->delete();
@@ -1014,14 +1017,9 @@ class ShopifyService
                     }
                 }
             }
-
-            $productsDelete = Product::whereIn('id', collect($arrayDelete))
+            Product::whereIn('id', collect($arrayDelete))
                 ->doesntHave('productsPlans')
-                ->get();
-
-            foreach ($productsDelete as $productDelete) {
-                $productDelete->delete();
-            }
+                ->delete();
         }
 
         return true;

@@ -387,5 +387,18 @@ class CheckoutService
         return $this->runCurl($url, 'POST', $data);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function checkPaymentPix($data)
+    {
+        if (foxutils()->isProduction()) {
+            $url = 'https://checkout.cloudfox.net/api/payment/check-payment-pix';
+        } else {
+            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/check-payment-pix';
+        }
+
+        return $this->runCurl($url, 'POST', $data);
+    }
 
 }
