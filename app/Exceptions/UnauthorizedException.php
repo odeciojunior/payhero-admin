@@ -12,7 +12,7 @@ class UnauthorizedException extends HttpException
 
     public static function forRoles(array $roles): self
     {
-        $message = 'Sem permissão para sua função.';
+        $message = 'A função do Usuário não tem permissão para realizar esta ação.';
 
         if (config('permission.display_permission_in_exception')) {
             $permStr = implode(', ', $roles);
@@ -27,7 +27,7 @@ class UnauthorizedException extends HttpException
 
     public static function forPermissions(array $permissions): self
     {
-        $message = 'Sem permissão para continuar.';
+        $message = 'O Usuário não tem permissão necessária para realizar esta ação.';
 
         if (config('permission.display_permission_in_exception')) {
             $permStr = implode(', ', $permissions);
@@ -42,7 +42,7 @@ class UnauthorizedException extends HttpException
 
     public static function forRolesOrPermissions(array $rolesOrPermissions): self
     {
-        $message = 'Sem permissão para continuar.';
+        $message = 'O Usuário não tem permissão necessária para realizar esta ação.';
 
         if (config('permission.display_permission_in_exception') && config('permission.display_role_in_exception')) {
             $permStr = implode(', ', $rolesOrPermissions);

@@ -66,7 +66,7 @@ class RegisterController extends Controller
                     $redirect = $route['0'];
                     if(count($route) > 1){
                         if($route['0']=='report'){
-                            $redirect= $route['0'].'/'.$route['1'];
+                            $redirect= $route['0'].'s/'.$route['1'];
                         }
                     }
                     return response()->redirectTo("/{$redirect}");
