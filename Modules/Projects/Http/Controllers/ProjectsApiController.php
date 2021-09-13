@@ -108,9 +108,10 @@ class ProjectsApiController extends Controller
                 }
             )->log('Visualizou tela criar projeto');
 
-            $user = auth()->user()->load('companies');
+            $user = auth()->user();
+            $companies = Company::where('user_id',$user->account_owner_id)->get();
 
-            return response()->json(CompaniesSelectResource::collection($user->companies));
+            return response()->json(CompaniesSelectResource::collection($companies));
         } catch (Exception $e) {
             report($e);
 

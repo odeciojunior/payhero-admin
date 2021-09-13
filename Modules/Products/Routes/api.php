@@ -17,11 +17,11 @@ Route::group(
                ->names('api.products')->middleware('permission:products_manage');
 
           Route::post('/products/userproducts', 'ProductsApiController@getProducts')->name('api.products.getproducts')
-               ->middleware('role:account_owner|admin');
+               ->middleware('permission:projects_manage|sales_manage');
           Route::post('/products/getsignedurl', 'ProductsApiController@getSignedUrl')->name('api.products.getsignedurl')
-               ->middleware('role:account_owner|admin|attendance|finantial');
+               ->middleware('permission:projects_manage|sales_manage');
           Route::post('/products/verifyproductinplan', 'ProductsApiController@verifyProductInPlan')->name('api.products.verifyproductinplan')
-               ->middleware('role:account_owner|admin');
+               ->middleware('permission:projects_manage|sales_manage');
 
           //role:account_owner|admin|attendance|finantial
           Route::get('/products/saleproducts/{saleId}', 'ProductsApiController@getProductBySale')->name('api.products.saleproducts')
