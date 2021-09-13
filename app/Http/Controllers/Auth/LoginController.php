@@ -195,8 +195,6 @@ class LoginController extends Controller
 
             auth()->loginUsingId($user->id);
 
-            //auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('finantial')            
-
             if (auth()->user()->can('dashboard')) {
                 return response()->redirectTo('/dashboard');
             }elseif (auth()->user()->can('sales')) {
@@ -228,10 +226,22 @@ class LoginController extends Controller
      */
     protected function redirectTo()
     {
-        if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('finantial')) {
+        if (auth()->user()->can('dashboard')) {
             return '/dashboard';
-        } else {
+        }elseif (auth()->user()->can('sales')) {
             return '/sales';
+        }else{
+            $permissions =  auth()->user()->permissions->pluck('name');
+            foreach($permissions as $permission){
+                $route = explode('_',$permission);
+                $redirect = $route['0'];
+                if(count($route) > 1){
+                    if($route['0']=='report'){
+                        $redirect= $route['0'].'/'.$route['1'];
+                    }
+                }
+                return "/{$redirect}";
+            }
         }
     }
 }
