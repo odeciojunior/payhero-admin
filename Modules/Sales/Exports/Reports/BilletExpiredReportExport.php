@@ -194,8 +194,6 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             'Código da Venda',
             'Pedido do Shopify',
             'Forma de Pagamento',
-            'Número de Parcelas',
-            'Bandeira do Cartão',
             'Link do Boleto',
             'Linha Digitavel do Boleto',
             'Data de Vencimento do Boleto',
