@@ -12,6 +12,7 @@ public/storage
 public/docs
 public/hot
 storage/*
+storage
 .env.*.php
 .env.php
 .env
