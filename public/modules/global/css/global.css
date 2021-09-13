@@ -1087,8 +1087,11 @@ img.border-icon{
 }
 
 /* MODAL PLANS - select products */
+.modal-plans .form-control {
+    border-color: #C1C1C1;
+}
 .modal-plans .box-product {
-    border: 1px solid #E1E1E1;
+    border: 1px solid #C1C1C1;
     box-sizing: border-box;
     border-radius: 8px;
     padding: 13px;

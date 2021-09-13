@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="box-description">
-                    <label for="search-product">Selecione os produtos do novo plano</label>
+                    <p class="font-weight-bold" style="margin-bottom: 21px;">Selecione os produtos do novo plano</p>
                     <input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">
                 </div>
 

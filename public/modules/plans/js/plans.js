@@ -33,6 +33,26 @@ $(function () {
     }
 
     function clearFields() {
+        selected_products = [];
+        stage_add_plan = 1;
+
+        var modalID = $('#modal_add_plan');
+
+        var stage_products = modalID.find('.box-breadcrumbs .products');
+        var stage_details = modalID.find('.box-breadcrumbs .details');
+        var stage_informations = modalID.find('.box-breadcrumbs .informations');
+
+        stage_products.find('img').attr('src', '/modules/global/img/icon-products-plans.svg');
+        stage_details.find('img').attr('src', '/modules/global/img/icon-costs-plans.svg');
+        stage_informations.find('img').attr('src', '/modules/global/img/icon-info-plans.svg');
+
+        stage_products.removeClass('finalized').addClass('active');
+        stage_details.removeClass('finalized');
+        stage_informations.removeClass('finalized');
+        
+        modalID.find('.box-description').html('<p class="font-weight-bold" style="margin-bottom: 21px;">Selecione os produtos do novo plano</p><input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">');
+        $('.box-review').html('');
+
         $('#name').val('');
         $('#price').val('');
         $('#description').val('');
@@ -101,14 +121,6 @@ $(function () {
             }
         });
     }
-
-    // search products input
-    $('#search-product').on('keyup', function() {
-        var search_product = $(this).val();
-        if (search_product != '') {
-            searchProducts(search_product);
-        }
-    });
 
     function searchProducts(product)
     {
@@ -201,7 +213,7 @@ $(function () {
                                     append += '<h1 class="title">' + response.data.name + '</h1>';
                                 append += '</div>';
                                 append += '<div><input class="form-control form-control-lg" type="number" min="1" value="1" name="amount" placeholder="Qtd."></div>';
-                                append += '<div><input class="form-control form-control-lg" type="text" name="value" placeholder="Valor un."></div>';
+                                append += '<div><input class="form-control form-control-lg" autocomplete="off" type="text" name="value" placeholder="Valor un."></div>';
                                 append += '<div>';
                                     append += '<select class="form-control form-control-lg" type="text" name="currency_type_enum">';
                                         append += '<option value="BRL">BRL (R$)</option>';
@@ -217,6 +229,8 @@ $(function () {
 
         modalID.find('.box-products').html(append);
 
+        $('input[name="value"]').mask('#.##0,00', {reverse: true});
+
         $(".product-photo").on("error", function () {
             $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
         });
@@ -230,92 +244,26 @@ $(function () {
         append += '<div class="row">';
             append += '<div class="col-sm-6 form-group">';
                 append += '<label for="name">Nome</label>';
-                append += '<input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="Digite o nome do plano">';
+                append += '<input type="text" class="form-control form-control-lg" autocomplete="off" id="name" name="name" placeholder="Digite o nome do plano">';
             append += '</div>';
 
             append += '<div class="col-sm-6 form-group">';
                 append += '<label for="price">Preço de venda</label>';
-                append += '<input type="text" class="form-control form-control-lg" id="price" name="price" placeholder="R$ 99,90">';
+                append += '<input type="text" class="form-control form-control-lg" id="price" autocomplete="off" name="price" placeholder="R$ 99,90">';
             append += '</div>';
         append += '</div>';
         
         append += '<div class="row">';
             append += '<div class="col-sm-12 form-group">';
                 append += '<label for="description">Descrição</label>';
-                append += '<textarea class="form-control form-control-lg" id="description" name="description" placeholder="Adicione uma descrição curta ao seu plano" rows="3"></textarea>';
+                append += '<textarea class="form-control form-control-lg" id="description" autocomplete="off" name="description" placeholder="Adicione uma descrição curta ao seu plano" rows="3"></textarea>';
             append += '</div>';
         append += '</div>';
 
         modalID.find('.box-products').html(append);
+
+        $('input[name="price"]').mask('#.##0,00', {reverse: true});
     }
-
-    // botão selecionar produtos
-    $('.box-products').on('click', '.box-product', function() {
-        var product_id = $(this).data('code');
-
-        if (!$(this).hasClass('selected')) {
-            $(this).addClass('selected');
-            $(this).find('.check').append('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
-            selected_products.push({'id': product_id});
-        } else {
-            $(this).removeClass('selected');
-            $(this).find('.check img').remove();
-            var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
-            selected_products.splice(index_selected_products, 1);
-        }
-    });
-
-    // botão prosseguir
-    $('#btn-modal-plan-prosseguir').on('click', function() {
-        if (selected_products.length > 0) {
-            var modalID = $('#modal_add_plan');
-
-            var stage_products = modalID.find('.box-breadcrumbs .products');
-            var stage_details = modalID.find('.box-breadcrumbs .details');
-            var stage_informations = modalID.find('.box-breadcrumbs .informations');
-
-            if (stage_add_plan == 1) {
-                stage_products.find('img').attr('src', '/modules/global/img/icon-check.svg');
-
-                stage_products.removeClass('active');
-                stage_products.addClass('finalized');
-                stage_details.addClass('active');
-
-                modalID.find('.box-description').html('<p style="margin: 0; font-weight: bold;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
-                appendProductsDetails(modalID);
-                modalID.find('.box-review').html('<div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="check-values"><label class="form-check-label" for="check-values">Todos os produtos têm o mesmo custo</label></div>');
-            } else if (stage_add_plan == 2) {
-                $('.box-products .form-control').each(function() {
-                    var product_ID = $(this).parent().parent().data('code');
-
-                    var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
-                    
-                    var name_input = $(this).attr('name');
-                    if (name_input == 'amount') selected_products[product_selected_index].amount = $(this).val();
-                    if (name_input == 'value') selected_products[product_selected_index].value = $(this).val();
-                    if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
-                });
-                
-                stage_details.find('img').attr('src', '/modules/global/img/icon-check.svg');
-                
-                stage_details.removeClass('active');
-                stage_details.addClass('finalized');
-                stage_informations.addClass('active');
-
-                modalID.find('.box-description').html('<p style="margin: 0; font-weight: bold;">Insira os dados do plano</small>');
-                appendProductsInformations(modalID);
-                modalID.find('.box-review').html('');
-
-                modalID.find('#btn-modal-plan-prosseguir').html('Finalizar');
-            } else if (stage_add_plan == 3) {
-                storePlan(modalID);
-            }
-
-            stage_add_plan++;
-        } else {
-            alertCustom('error', 'Selecione um produto para prosseguir');
-        }
-    });
 
     function storePlan(modalID)
     {
@@ -353,6 +301,126 @@ $(function () {
         });
     }
 
+    // buscar produtos
+    $('#search-product').on('keyup', function() {
+        var search_product = $(this).val();
+        if (search_product != '') {
+            searchProducts(search_product);
+        }
+    });
+
+    // preço de venda
+    $('.box-products').on('change', '#price', function() {
+        var price = parseFloat($(this).val()).toFixed(2);
+
+        var tax = (price * 5.9 / 100).toFixed(2);
+        var comission = (price - tax).toFixed(2);
+        var return_value = comission;
+
+        $('.price-plan').find('p').html('R$'+price);
+        $('.tax-plan').find('p').html('R$'+tax);
+        $('.comission-plan').find('p').html('R$'+comission);
+        $('.profit-plan').find('p').html('R$'+return_value);
+    });
+    
+    // selecionar produtos
+    $('.box-products').on('click', '.box-product', function() {
+        var product_id = $(this).data('code');
+
+        if (!$(this).hasClass('selected')) {
+            $(this).addClass('selected');
+            $(this).find('.check').append('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
+            selected_products.push({'id': product_id});
+        } else {
+            $(this).removeClass('selected');
+            $(this).find('.check img').remove();
+            var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
+            selected_products.splice(index_selected_products, 1);
+        }
+    });
+
+    // botão prosseguir
+    $('#btn-modal-plan-prosseguir').on('click', function() {
+        if (selected_products.length > 0) {
+            var modalID = $('#modal_add_plan');
+
+            var stage_products = modalID.find('.box-breadcrumbs .products');
+            var stage_details = modalID.find('.box-breadcrumbs .details');
+            var stage_informations = modalID.find('.box-breadcrumbs .informations');
+
+            if (stage_add_plan == 1) {
+                stage_products.find('img').attr('src', '/modules/global/img/icon-check.svg');
+
+                stage_products.removeClass('active');
+                stage_products.addClass('finalized');
+                stage_details.addClass('active');
+
+                modalID.find('.box-description').html('<p class="font-weight-bold" style="margin-bottom: 4px;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
+                appendProductsDetails(modalID);
+                modalID.find('.box-review').html('<div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="check-values"><label class="form-check-label" for="check-values">Todos os produtos têm o mesmo custo</label></div>');
+            } else if (stage_add_plan == 2) {
+                $('.box-products .form-control').each(function() {
+                    var product_ID = $(this).parent().parent().data('code');
+
+                    var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
+                    
+                    var name_input = $(this).attr('name');
+                    if (name_input == 'amount') selected_products[product_selected_index].amount = $(this).val();
+                    if (name_input == 'value') selected_products[product_selected_index].value = $(this).val();
+                    if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
+                });
+                
+                stage_details.find('img').attr('src', '/modules/global/img/icon-check.svg');
+                
+                stage_details.removeClass('active');
+                stage_details.addClass('finalized');
+                stage_informations.addClass('active');
+
+                modalID.find('.box-description').html('<p class="font-weight-bold" style="margin: 0;">Insira os dados do plano</p>');
+                appendProductsInformations(modalID);
+                modalID.find('.box-review').css('margin-top', '10px');
+                modalID.find('.box-review').html(
+                    '<div style="margin-right: -30px; margin-left: -30px; border-top: 1px solid #EBEBEB;"></div>' +
+                    '<p class="font-weight-bold" style="margin-top: 25px;">Revisão geral</p>' +
+                    '<div class="d-flex justify-content-between" style="margin-bottom: 24px;">' +
+                        '<div class="price-plan">' +
+                            '<small>Preço de venda</small>' +
+                            '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
+                        '</div>' +
+                        '<div class="costs-plan">' +
+                            '<small>Seu custo</small>' +
+                            '<p class="font-weight-bold m-0" style="line-height: 100%;">R$0,00</p>' +
+                        '</div>' +
+                        '<div class="tax-plan">' +
+                            '<small>Taxas est.</small>' +
+                            '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
+                        '</div>' +
+                        '<div class="comission-plan">' +
+                            '<small>Comissão aprox.</small>' +
+                            '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
+                        '</div>' +
+                        '<div class="profit-plan">' +
+                            '<small>Lucro aprox.</small>' +
+                            '<p class="font-weight-bold m-0" style="line-height: 100%; color: #41DC8F;">-</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="text-center">' +
+                        '<p class="m-0" style="line-height: 14px; font-size: 11px;">Simulação considerando compras à vista com taxa de 5,9% (30D).</p>' +
+                        '<p class="font-weight-bold m-0" style="line-height: 14px; font-size: 11px;">Valor estimado sujeito à mudanças de acordo com as condições de pagamento.</p>' +
+                    '</div>'
+                );
+
+                modalID.find('#btn-modal-plan-prosseguir').html('Finalizar');
+            } else if (stage_add_plan == 3) {
+                storePlan(modalID);
+            }
+
+            stage_add_plan++;
+        } else {
+            alertCustom('error', 'Selecione um produto para prosseguir');
+        }
+    });
+
     // botão voltar
     $('#btn-modal-plan-voltar').on('click', function() {
         var modalID = $('#modal_add_plan');
@@ -372,7 +440,7 @@ $(function () {
             stage_products.removeClass('finalized');
             stage_products.addClass('active');
             
-            modalID.find('.box-description').html('<label for="search-product">Selecione os produtos do novo plano</label><input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">');
+            modalID.find('.box-description').html('<p style="margin-bottom: 21px; font-weight: bold;">Selecione os produtos do novo plano</p><input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">');
             createNew();
             modalID.find('.box-review').html('');
         } else if (stage_add_plan == 3) {
@@ -382,7 +450,7 @@ $(function () {
             stage_details.removeClass('finalized');
             stage_details.addClass('active');
 
-            modalID.find('.box-description').html('<p style="margin: 0; font-weight: bold;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
+            modalID.find('.box-description').html('<p style="margin-bottom: 4px; font-weight: bold;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
             appendProductsDetails(modalID);
         }
 
