@@ -31,7 +31,7 @@ class CheckoutApiController extends Controller
             $request->validate(
                 [
                     'project' => 'nullable|string',
-                    'status' => 'required',
+                    'recovery_type' => 'required',
                     'date_range' => 'required',
                     'client' => 'nullable|string',
                     'client_document' => 'nullable|string',
