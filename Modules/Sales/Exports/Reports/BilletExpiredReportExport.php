@@ -60,7 +60,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             })->leftJoin('customers as customer', function($join) {
                 $join->on('sales.customer_id', '=', 'customer.id');
             })->whereIn('sales.status', [5])->where([
-                                                        ['sales.payment_method', 2],
+                                                        ['sales.payment_method', Sale::BOLETO_PAYMENT],
                                                     ])->with([
                                                                  'project',
                                                                  'customer',
@@ -137,15 +137,11 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 'sale_code'                  => '#' . Hashids::connection('sale_id')->encode($sale->id),
                 'shopify_order'              => strval($sale->shopify_order),
                 'payment_form'               => $sale->present()->getPaymentForm(),
-                'installments_amount'        => $sale->installments_amount ?? '',
                 'flag'                       => $sale->flag ?? '',
                 'boleto_link'                => $sale->boleto_link ?? '',
                 'boleto_digitable_line'      => $sale->boleto_digitable_line ?? '',
                 'boleto_due_date'            => $sale->boleto_due_date,
                 'start_date'                 => $sale->start_date . ' ' . $sale->hours,
-                'end_date'                   => $sale->end_date ? Carbon::parse($sale->end_date)
-                                                                        ->format('d/m/Y H:i:s') : '',
-                'status'                     => $sale->present()->getStatus(),
                 'total_paid'                 => $sale->total_paid_value ?? '',
                 'subtotal'                   => $sale->sub_total,
                 'shipping'                   => $sale->shipping->name ?? '',
