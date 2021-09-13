@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Exception;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\CheckoutService;
+use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CheckPix extends Command
@@ -43,12 +45,13 @@ class CheckPix extends Command
     {
 
         try {
+
             $sales = Sale::where(
-                [
-                    ['payment_method', '=', Sale::PIX_PAYMENT],
-                    ['status', '=', Sale::STATUS_CANCELED]
-                ]
-            )->get();
+                    [
+                        ['payment_method', '=', Sale::PIX_PAYMENT],
+                        ['status', '=', Sale::STATUS_CANCELED]
+                    ]
+                )->get();
 
             $total = count($sales);
             $bar = $this->output->createProgressBar($total);
@@ -64,11 +67,26 @@ class CheckPix extends Command
                 $responseCheckout = (new CheckoutService())->checkPaymentPix($data);
 
                 if ($responseCheckout->status == 'success' and $responseCheckout->payment == true) {
-                    report(new Exception('Command para checar as venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
+
+                    $saleModel = Sale::where(
+                        [
+                            ['payment_method', '=', Sale::PIX_PAYMENT],
+                            ['status', '=', Sale::STATUS_APPROVED],
+                            ['customer_id', $sale->customer->id]
+                        ]
+                    )
+                    ->whereDate('start_date', Carbon::parse($sale->start_date)->format("Y-m-d"))->first();
+
+
+                    if(empty($saleModel)) {
+                        report(new Exception('Command para checar as venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
+                    }
+
                 }
                 $bar->advance();
             }
             $bar->finish();
+            dd('Fim');
         } catch (Exception $e) {
             report($e);
         }
