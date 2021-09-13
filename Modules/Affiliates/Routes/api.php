@@ -27,7 +27,7 @@ Route::group(
                ->middleware('permission:affiliates');
 
           Route::post('/affiliates/evaluateaffiliaterequest', 'AffiliatesApiController@evaluateAffiliateRequest')
-               ->middleware('permission:affiliates');
+               ->middleware('permission:affiliates_manage');
 
           Route::post('/affiliates/updateconfigaffiliate/{affiliateId}', 'AffiliatesApiController@updateConfigAffiliate')
                ->middleware('permission:affiliates_manage');

@@ -313,11 +313,8 @@ $(document).ready(function () {
                                                         };
 
                                                         return error;
-                                                    })(function (response) {
-                                                        if (
-                                                            response.status ===
-                                                            422
-                                                        ) {
+                                                    })(function (response) {console.log(response);
+                                                        if (response.status === 422) {
                                                             for (error in response
                                                                 .responseJSON
                                                                 .errors) {
@@ -332,11 +329,12 @@ $(document).ready(function () {
                                                                     )
                                                                 );
                                                             }
-                                                        } else {
-                                                            alertCustom(
-                                                                "error",
-                                                                response.message
-                                                            );
+                                                        }else{
+                                                            if (response.status === 403) {
+                                                                alertCustom("error",response.responseJSON.message);
+                                                            } else {
+                                                                alertCustom("error",response.message);
+                                                            }
                                                         }
                                                     }),
                                                     success: function success(
