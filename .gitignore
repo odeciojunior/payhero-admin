@@ -11,8 +11,7 @@ app/storage/
 public/storage
 public/docs
 public/hot
-storage/*
-storage
+#storage/*
 .env.*.php
 .env.php
 .env
