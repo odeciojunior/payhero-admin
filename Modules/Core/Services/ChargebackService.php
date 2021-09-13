@@ -14,6 +14,7 @@ class ChargebackService
     function getQuery($filters)
     {
 
+        $user = \Auth::user();
         $getnetChargebacks = GetnetChargeback::with(
             [
                 'sale',
@@ -26,7 +27,7 @@ class ChargebackService
                 'sale.contestations',
                 'company',
             ]
-        )->where('user_id', \Auth::id());
+        )->where('user_id', $user->account_owner_id);
 
         if(request()->has('from_contestation') || request('date_type') == 'expiration_date') {
 
