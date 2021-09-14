@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="align-self-end mr-auto mb-5" id="btn_exports">                    
-                    @hasanyrole('account_owner|admin')
+                    @can('finances_manage')
                         <div class="col-12 text-right">
                             <div class="justify-content-end align-items-center">
                                 <div class="p-2 d-flex justify-content-end align-items-center" id="">
@@ -77,7 +77,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endhasanyrole
+                    @endcan
                 </div>
 
                 <div id="loading-ajax-transfer">
