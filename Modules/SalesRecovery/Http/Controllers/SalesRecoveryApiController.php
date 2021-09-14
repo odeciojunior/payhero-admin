@@ -22,6 +22,7 @@ use Modules\Core\Services\SalesRecoveryService;
 use Modules\Sales\Exports\Reports\AbandonedCartReportExport;
 use Modules\Sales\Exports\Reports\BilletExpiredReportExport;
 use Modules\Sales\Exports\Reports\CardRefusedReportExport;
+use Modules\Sales\Exports\Reports\PixExpiredReportExport;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCartAbandonedDetailsResourceTransformer;
 use Modules\SalesRecovery\Transformers\SalesRecoverydetailsResourceTransformer;
@@ -337,14 +338,18 @@ class SalesRecoveryApiController extends Controller
             $dataRequest = $request->all();
             $user        = auth()->user();
 
-            if ($dataRequest['status'] == 1) {
+            if ($dataRequest['recovery_type'] == 1) {
                 $filename = 'report_abandoned_cart' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
 
                 (new AbandonedCartReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
-            } else if ($dataRequest['status'] == 3) {
+            } else if ($dataRequest['recovery_type'] == 3) {
                 $filename = 'report_card_refused' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
 
                 (new CardRefusedReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+            } else if ($dataRequest['recovery_type'] == 4) {
+                $filename = 'report_pix_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+
+                (new PixExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
             } else {
                 $filename = 'report_billet_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
 

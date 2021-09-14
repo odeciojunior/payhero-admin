@@ -61,7 +61,7 @@
                     <div class="row align-items-baseline">
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="type_recovery">Tipo de Recuperação</label>
-                            <select name='select_type_recovery' id="type_recovery" class="form-control select-pad">
+                            <select name='select_type_recovery' id="recovery_type" class="form-control select-pad">
                                 <option value="1" selected>Carrinho Abandonado</option>
                                 <option value="5">Boleto Vencido</option>
                                 <option value="4">PIX Vencido</option>

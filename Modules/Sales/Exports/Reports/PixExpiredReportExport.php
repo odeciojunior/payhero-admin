@@ -12,13 +12,14 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Entities\Customer;
+use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
 use Vinkla\Hashids\Facades\Hashids;
 
-class CardRefusedReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithEvents, WithMapping
+class PixExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithEvents, WithMapping
 {
     use Exportable;
 
@@ -59,8 +60,8 @@ class CardRefusedReportExport implements FromQuery, WithHeadings, ShouldAutoSize
                 $join->on('sales.checkout_id', '=', 'checkout.id');
             })->leftJoin('customers as customer', function($join) {
                 $join->on('sales.customer_id', '=', 'customer.id');
-            })->whereIn('sales.status', [3])->where([
-                                                        ['sales.payment_method', Sale::CREDIT_CARD_PAYMENT],
+            })->whereIn('sales.status', [5])->where([
+                                                        ['sales.payment_method', Sale::PIX_PAYMENT],
                                                     ])->with([
                                                                  'project',
                                                                  'customer',
@@ -131,15 +132,25 @@ class CardRefusedReportExport implements FromQuery, WithHeadings, ShouldAutoSize
         foreach ($sale->products as $product) {
 
             $productName = $product->name . ($product->description ? ' (' . $product->description . ')' : '');
+            $link = "";
+            $domain = Domain::where('project_id', $sale->project_id)
+                ->where('status', Domain::STATUS_APPROVED )->first();
+
+            if(FoxUtils::isProduction()) {
+                $link = !empty($domain) ? 'https://checkout.' . $domain->name . '/pix/' . Hashids::connection('sale_id')->encode($sale->id) : 'Domínio não configurado';
+            } else {
+                $link = env('CHECKOUT_URL', 'http://dev.checkout.com') . '/pix/' . Hashids::connection('sale_id')->encode($sale->id);
+            }
+
 
             $data = [
                 //sale
                 'sale_code'                  => '#' . Hashids::connection('sale_id')->encode($sale->id),
+                'link_pix'                   => $link,
                 'shopify_order'              => strval($sale->shopify_order),
                 'payment_form'               => $sale->present()->getPaymentForm(),
-                'installments_amount'        => $sale->installments_amount ?? '',
-                'flag'                       => $sale->flag ?? '',
                 'start_date'                 => $sale->start_date . ' ' . $sale->hours,
+                'status'                     => $sale->present()->getStatus(),
                 'total_paid'                 => $sale->total_paid_value ?? '',
                 'subtotal'                   => $sale->sub_total,
                 'shipping'                   => $sale->shipping->name ?? '',
@@ -190,11 +201,11 @@ class CardRefusedReportExport implements FromQuery, WithHeadings, ShouldAutoSize
         return [
             //sale
             'Código da Venda',
+            'Link Pix',
             'Pedido do Shopify',
             'Forma de Pagamento',
-            'Número de Parcelas',
-            'Bandeira do Cartão',
             'Data Inicial do Pagamento',
+            'Status',
             'Valor Total Venda',
             'Subtotal',
             'Frete',
@@ -266,7 +277,6 @@ class CardRefusedReportExport implements FromQuery, WithHeadings, ShouldAutoSize
                     }
                     $lastSale = $currentSale;
                 }
-
                 $sendGridService = new SendgridService();
                 $userName        = $this->user->name;
                 $userEmail       = $this->email;
