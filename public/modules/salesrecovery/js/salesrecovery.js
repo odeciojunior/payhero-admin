@@ -222,7 +222,7 @@ $(document).ready(function () {
                     );
                 } else if (
                     response.data == "" &&
-                    typeRecovery
+                    recoveryType
                 ) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
@@ -232,7 +232,7 @@ $(document).ready(function () {
                     );
                 } else if (
                     response.data == "" &&
-                    typeRecovery
+                    recoveryType
                 ) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
@@ -254,7 +254,7 @@ $(document).ready(function () {
                         alertCustom("success", "Link copiado!");
                     });
 
-                    if (typeRecovery == '5') {
+                    if (recoveryType == '5') {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
