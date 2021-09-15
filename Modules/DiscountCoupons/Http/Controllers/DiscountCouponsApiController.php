@@ -208,6 +208,9 @@ class DiscountCouponsApiController extends Controller
                 if (Gate::allows('edit', [$project])) {
                     if ($coupon) {
                         $coupon->makeHidden(['id', 'project_id']);
+                        if($coupon->type==1){
+                            $coupon->value = number_format($coupon->value / 100, 2, ',', '.');
+                        }
                         $coupon->rule_value = number_format($coupon->rule_value / 100, 2, ',', '.');
 
                         return response()->json($coupon, 200);
