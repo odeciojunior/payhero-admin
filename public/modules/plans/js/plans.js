@@ -310,6 +310,16 @@ $(function () {
         });
     }
 
+    function  calculateCostsPlan() {
+        var costs_plan = 0;
+
+        for (var i = 0; i < selected_products.length; i++) {
+            costs_plan += (parseFloat(selected_products[i]['value']) * parseFloat(selected_products[i]['amount']));
+        }
+
+        return costs_plan.toFixed(2);
+    }
+
     // Search products
     $('#search-product').on('keyup', function() {
         var search_product = $(this).val();
@@ -323,13 +333,14 @@ $(function () {
         var price = parseFloat($(this).val()).toFixed(2);
 
         var tax = (price * 5.9 / 100).toFixed(2);
+        var costs = calculateCostsPlan();
         var comission = (price - tax).toFixed(2);
-        var return_value = comission;
+        var return_value = (comission - costs).toFixed(2);
 
         $('.price-plan').find('p').html('R$'+price);
         $('.tax-plan').find('p').html('R$'+tax);
         $('.comission-plan').find('p').html('R$'+comission);
-        $('.profit-plan').find('p').html('R$'+return_value);
+        $('.profit-plan').find('p').html('R$'+ return_value);
     });
     
     // Select products
@@ -358,6 +369,16 @@ $(function () {
         appendProductsDetails(modalID);
     });
 
+    // All values
+    $('.box-review').on('click', '#check-values', function() {
+        var checkbox_value = $(this).val();
+        if (checkbox_value == 0) {
+            $(this).val(1)
+        } else if (checkbox_value == 1) {
+            $(this).val(0);
+        }
+    });
+
     // Button next
     $('#btn-modal-plan-prosseguir').on('click', function() {
         if (selected_products.length > 0) {
@@ -376,7 +397,9 @@ $(function () {
 
                 modalID.find('.box-description').html('<p class="font-weight-bold" style="margin-bottom: 4px;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
                 appendProductsDetails(modalID);
-                modalID.find('.box-review').html('<div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="check-values"><label class="form-check-label" for="check-values">Todos os produtos têm o mesmo custo</label></div>');
+                if (selected_products.length > 1) {
+                    modalID.find('.box-review').html('<div class="form-check"><input class="form-check-input" type="checkbox" value="0" id="check-values"><label class="form-check-label" for="check-values">Todos os produtos têm o mesmo custo</label></div>');
+                }
             } else if (stage_add_plan == 2) {
                 $('.box-products .form-control').each(function() {
                     var product_ID = $(this).parent().parent().data('code');
@@ -408,7 +431,7 @@ $(function () {
                         '</div>' +
                         '<div class="costs-plan">' +
                             '<small>Seu custo</small>' +
-                            '<p class="font-weight-bold m-0" style="line-height: 100%;">R$0,00</p>' +
+                            '<p class="font-weight-bold m-0" style="line-height: 100%;">R$'+calculateCostsPlan()+'</p>' +
                         '</div>' +
                         '<div class="tax-plan">' +
                             '<small>Taxas est.</small>' +
@@ -468,6 +491,11 @@ $(function () {
             stage_details.addClass('active');
 
             modalID.find('.box-description').html('<p style="margin-bottom: 4px; font-weight: bold;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
+            if (selected_products.length > 1) {
+                modalID.find('.box-review').html('<div class="form-check"><input class="form-check-input" type="checkbox" value="0" id="check-values"><label class="form-check-label" for="check-values">Todos os produtos têm o mesmo custo</label></div>');
+            } else {
+                modalID.find('.box-review').html('');
+            }
             appendProductsDetails(modalID);
         }
 

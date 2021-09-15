@@ -970,6 +970,13 @@ img.border-icon{
     padding: 20px 30px !important;
     border-top: 1px solid #e4eaec;
 }
+.modal-new-layout .input-group > .form-control:not(:last-child) {
+    border-right: none;
+}
+.modal-new-layout .input-group-lg > .input-group-append > .input-group-text {
+    border-radius: 0 8px 8px 0;
+    border-color: #C1C1C1;
+}
 
 /* MODAL PLANS - new layout */
 .modal-plans .box-breadcrumbs {
@@ -1185,6 +1192,63 @@ img.border-icon{
 }
 .modal-plans .modal-footer .btn-primary {
     border: 1px solid #2E85EC;
+}
+
+/* checkbox new */
+.modal-plans .form-check {
+    padding: 0;
+    margin-top: 6px;
+}
+.modal-plans [type="checkbox"]:not(:checked),
+.modal-plans [type="checkbox"]:checked {
+    position: absolute;
+    left: 0;
+    opacity: 0.01;
+}
+.modal-plans [type="checkbox"]:not(:checked) + label,
+.modal-plans [type="checkbox"]:checked + label {
+    position: relative;
+    padding-left: 41px;
+    font-size: 14px;
+    line-height: 31px;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* checkbox aspect */
+.modal-plans [type="checkbox"]:not(:checked) + label:before,
+.modal-plans [type="checkbox"]:checked + label:before {
+    content: url('../img/icon-check.svg');
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 31px;
+    height: 31px;
+    border: 1px solid #B3B3B3;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: none;
+    text-align: center;
+    -webkit-transition: all .275s;
+    transition: all .275s;
+}
+.modal-plans [type="checkbox"]:checked + label:before {
+    content: url('../img/icon-check.svg');
+    border: 1px solid #2E85EC;
+    background: #2E85EC;
+}
+
+/* checked mark aspect changes */
+.modal-plans [type="checkbox"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0) rotate(45deg);
+    transform: scale(0) rotate(45deg);
+}
+
+.modal-plans [type="checkbox"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1) rotate(0);
+    transform: scale(1) rotate(0);
 }
 
 input[type="checkbox"], input[type="radio"] {
