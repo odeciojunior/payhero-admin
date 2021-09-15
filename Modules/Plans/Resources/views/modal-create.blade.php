@@ -1,4 +1,4 @@
-<!-- Modal padrão para adicionar Adicionar e Editar -->
+<!-- Modal para Adicionar Planos -->
 <div class="modal fade modal-3d-flip-vertical modal-new-layout modal-plans" id="modal_add_plan" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" id="conteudo_modal_add">
@@ -9,7 +9,7 @@
                 </button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body" id="modal_add_body">
                 <div class="box-breadcrumbs">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="box-stage products active d-flex align-items-center">

@@ -59,10 +59,10 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=21') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=22') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=49') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=49') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v='.uniqid()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
