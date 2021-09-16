@@ -40,7 +40,7 @@
                 <div class="col-6">
                     <h1 class="page-title">Recuperação de vendas</h1>
                 </div>
-                @hasanyrole('account_owner|admin')                
+                @can('recovery')                
                     <div class="col-6 text-right">
                         <div class="justify-content-end align-items-center" id="export-excel">
                             <div class="p-2 d-flex justify-content-end align-items-center">
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                     </div>
-                @endhasanyrole
+                @endcan
             </div>
         </div>
         <div id='project-not-empty' style='display:none'>
