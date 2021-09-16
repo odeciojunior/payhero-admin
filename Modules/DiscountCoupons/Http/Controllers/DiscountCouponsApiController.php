@@ -82,7 +82,16 @@ class DiscountCouponsApiController extends Controller
                 $requestData['rule_value'] = preg_replace("/[^0-9]/", "", $requestData['rule_value']);
 
                 if (empty($requestData['rule_value'])) {
-                    $requestData['rule_value'] = 0;
+                    $requestData['rule_value'] = 0;                    
+                }
+
+                if($requestData['value']==0){
+                    return response()->json(
+                        [
+                            'message' => 'O valor do cupom deve ser maior do que zero.',
+                        ],
+                        \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+                    );
                 }
 
                 $project = Project::find($requestData["project_id"]);
@@ -199,6 +208,9 @@ class DiscountCouponsApiController extends Controller
                 if (Gate::allows('edit', [$project])) {
                     if ($coupon) {
                         $coupon->makeHidden(['id', 'project_id']);
+                        if($coupon->type==1){
+                            $coupon->value = number_format($coupon->value / 100, 2, ',', '.');
+                        }
                         $coupon->rule_value = number_format($coupon->rule_value / 100, 2, ',', '.');
 
                         return response()->json($coupon, 200);
@@ -250,6 +262,15 @@ class DiscountCouponsApiController extends Controller
 
                 if (empty($requestValidated['rule_value'])) {
                     $requestValidated['rule_value'] = 0;
+                }
+
+                if($requestValidated['value']==0){
+                    return response()->json(
+                        [
+                            'message' => 'O valor do cupom deve ser maior do que zero.',
+                        ],
+                        \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+                    );
                 }
 
                 $couponExists = DiscountCoupon::where(
