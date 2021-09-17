@@ -18,11 +18,11 @@ Route::group(
         Route::post('/send-files', 'ContestationsApiController@sendContestationFiles')
             ->name('contestations.sendContestationFiles')->middleware('permission:contestations_manage');
         Route::get('/{contestationfile}/removefile', 'ContestationsApiController@removeContestationFiles')
-            ->name('contestations.removeContestationFiles');
+            ->name('contestations.removeContestationFiles')->middleware('permission:contestations_manage');
         Route::post('/update-is-file-completed', 'ContestationsApiController@updateIsFileCompleted')
-            ->name('users.updateIsFileCompleted');
+            ->name('users.updateIsFileCompleted')->middleware('permission:contestations_manage');
 
         Route::get('/{contestation_id}/contestation', 'ContestationsApiController@show')
-            ->name('contestations.show');
+            ->name('contestations.show')->middleware('permission:contestations_manage');
 
     });
