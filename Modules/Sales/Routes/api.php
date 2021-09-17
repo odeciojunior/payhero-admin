@@ -31,7 +31,7 @@ Route::group(
         Route::post('/updaterefundobservation/{transaction_id}', 'SalesApiController@updateRefundObservation')
         ->middleware('permission:sales_manage|trackings_manage|finances_manage|contestations_manage');
         Route::post('/saleresendemail', 'SalesApiController@saleReSendEmail')
-        ->middleware('permission:sales_manage|trackings_manage|finances_manage');
+        ->middleware('permission:sales_manage|trackings_manage|contestations_manage|finances_manage');
         Route::get('/user-plans', 'SalesApiController@getPlans');
         Route::post('/set-observation/{transaction_id}', 'SalesApiController@setValueObservation')
         ->middleware('permission:sales_manage|trackings_manage|finances_manage|contestations_manage');
