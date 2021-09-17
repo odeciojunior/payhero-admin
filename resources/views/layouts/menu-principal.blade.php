@@ -210,7 +210,15 @@
         @endcan        
         <!-- unlessrole('attendance') -->
         @can('finances')
-            @if(!auth()->user()->show_old_finances)
+        @php
+            $user = auth()->user();
+            $showOldFinances = $user->show_old_finances??false;
+            if(!$showOldFinances){
+                $userMaster = \Modules\Core\Entities\User::find($user->account_owner_id);
+                $showOldFinances = $userMaster->show_old_finances??false;
+            }
+        @endphp
+            @if(!$showOldFinances)
                 <li class="site-menu-item has-sub">
                     <a href="{!! route('finances') !!}">
                         <span class="bg-menu">
