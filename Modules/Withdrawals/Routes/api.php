@@ -10,7 +10,7 @@ Route::group(
         /**
          * Old routes before getnet
          */
-        Route::get('/old_withdrawals', 'OldWithdrawalsApiController@index')->names('api.withdrawals');
+        Route::get('/old_withdrawals', 'OldWithdrawalsApiController@index');
         Route::post('/old_withdrawals', 'OldWithdrawalsApiController@store')
             ->middleware('permission:finances_manage');
 
