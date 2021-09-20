@@ -10,7 +10,7 @@ Route::group(
         
         Route::get('/customers/{id}','CustomersApiController@show');
         Route::put('/customers/update','CustomersApiController@update')
-            ->middleware('permission:sales_manage|trackings_manage|contestations_manage|finances_manage');
+            ->middleware('permission:sales_manage');
         Route::get('/customers/{id}/{sale_id}', 'CustomersApiController@show');
     }
 );
