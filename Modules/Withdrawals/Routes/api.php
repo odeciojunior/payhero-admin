@@ -10,9 +10,9 @@ Route::group(
         /**
          * Old routes before getnet
          */
-        Route::apiResource('/old_withdrawals', 'OldWithdrawalsApiController')
-            ->only('index', 'store')
-            ->names('api.withdrawals');
+        Route::get('/old_withdrawals', 'OldWithdrawalsApiController@index')->names('api.withdrawals');
+        Route::post('/old_withdrawals', 'OldWithdrawalsApiController@store')
+            ->middleware('permission:finances_manage');
 
         Route::post('/old_withdrawals/getaccountinformation', 'OldWithdrawalsApiController@getAccountInformation');
 
@@ -24,9 +24,11 @@ Route::group(
         Route::get('/withdrawals', 'WithdrawalsApiController@index');
         Route::post('/withdrawals', 'WithdrawalsApiController@store')->middleware('permission:finances_manage');
 
+        //getAccountInformation não existe no controller
         Route::post('/withdrawals/getaccountinformation', 'WithdrawalsApiController@getAccountInformation');
 
-        Route::post('/withdrawals/getWithdrawalValues', 'WithdrawalsApiController@getWithdrawalValues');
+        Route::post('/withdrawals/getWithdrawalValues', 'WithdrawalsApiController@getWithdrawalValues')
+        ->middleware('permission:finances_manage');
 
         Route::get('/withdrawals/checkallowed', 'WithdrawalsApiController@checkAllowed');
 
