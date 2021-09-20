@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Spatie\Permission\Models\Permission;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UnauthorizedException extends HttpException
@@ -27,7 +28,8 @@ class UnauthorizedException extends HttpException
 
     public static function forPermissions(array $permissions): self
     {
-        $message = 'O Usuário não tem permissão necessária para realizar esta ação.';
+        $labels = self::getLabelPermission($permissions);
+        $message = "Para realizar esta ação você precisa permissão: {$labels}";
 
         if (config('permission.display_permission_in_exception')) {
             $permStr = implode(', ', $permissions);
@@ -68,5 +70,16 @@ class UnauthorizedException extends HttpException
     public function getRequiredPermissions(): array
     {
         return $this->requiredPermissions;
+    }
+
+    public static function getLabelPermission(Array $permissions)
+    {
+        $labels = [];
+        foreach($permissions as $permission){
+            $modelPermission = Permission::select('title')->where('name',$permission)->first();
+            $labels[] = $modelPermission->title??'';
+        }
+        
+        return implode(' ou ', $labels);
     }
 }
