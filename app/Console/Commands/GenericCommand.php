@@ -34,11 +34,11 @@ class GenericCommand extends Command
                 case 'admin': //cloudfox
                     $permissions['admin'] = $permissionsList;
                     unset($permissions['admin']['invitations_manage']);
-                    // $role->syncPermissions($permissions['admin']); 
+                    $role->syncPermissions($permissions['admin']); 
                 break;
                 case 'account_owner': //customer
                     $permissions['account_owner'] = $permissionsList;
-                    // $role->syncPermissions($permissions['account_owner']); 
+                    $role->syncPermissions($permissions['account_owner']); 
                 break;
                 case 'attendance': //customer
                     $permissions['attendance'] = [
@@ -52,15 +52,15 @@ class GenericCommand extends Command
                         'attendance_manage',
                         'report_coupons'
                     ];
-                    // $role->syncPermissions($permissions['attendance']); 
+                    $role->syncPermissions($permissions['attendance']); 
                 break;
                 case 'document_evaluation'://cloudfox
                     $permissions['document_evaluation'] = ['finances','finances_manage'];
-                    // $role->syncPermissions($permissions['document_evaluation']); 
+                    $role->syncPermissions($permissions['document_evaluation']); 
                 break;
                 case 'antifraud_analysis'://cloudfox
                     $permissions['antifraud_analysis'] = ['finances','finances_manage'];
-                    // $role->syncPermissions($permissions['antifraud_analysis']); 
+                    $role->syncPermissions($permissions['antifraud_analysis']); 
                 break;
                 case 'finantial': //customer
                     $permissions['finantial'] = [
@@ -72,17 +72,20 @@ class GenericCommand extends Command
                         'report_pending',
                         'report_blockedbalance'
                     ];
-                    // $role->syncPermissions($permissions['finantial']); 
+                    $role->syncPermissions($permissions['finantial']); 
                 break;
                 case 'custom': //customer                    
-                    // $role->syncPermissions([]); 
+                    $role->syncPermissions([]); 
                 break;
             }                                       
         }
 
-
-        $user = User::find(4990);        
-        $user->syncPermissions(collect($permissions['attendance']));
+        // foreach($roles as $role){            
+        //     $users = User::role($role->name)->get();
+        //     foreach($users as $user){
+        //         $user->syncPermissions(collect($permissions[$role->name]));
+        //     }
+        // }
         
     }
 }
