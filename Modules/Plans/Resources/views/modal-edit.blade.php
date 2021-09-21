@@ -1,16 +1,84 @@
 !-- Modal para Adicionar Planos -->
 <div class="modal fade modal-3d-flip-vertical modal-new-layout modal-plans" id="modal_edit_plan" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" id="conteudo_modal_add">
+        <div class="modal-content conteudo_modal_edit">
             <div class="modal-header simple-border-bottom">
-                <h4 class="modal-title bold">Detalhes de Kit Xiaomi Smart Bands</h4>
+                <h4 class="modal-title bold"></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-22">close</i>
                 </button>
             </div>
 
             <div class="modal-body">
+                <div class="informations-edit">
+                    <div class="d-flex" style="justify-content: space-between !important;">
+                        <div class="d-flex align-items-center">
+                            <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-info-plans-c.svg') }}" alt="Icon Informations"></div>
+                            <div class="title">Informações do plano</div>
+                        </div>
+                        <button class="btn btn-edit">
+                            <img src="{{ asset('modules/global/img/icon-edit.svg') }}" alt="Icon Edit">
+                        </button>
+                    </div>
 
+                    <div class="informations-data">
+                        <div class="row mb-20">
+                            <div class="col-sm-6">
+                                <label for="name">Nome</label>
+                                <input type="text" class="form-control" id="name">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="price">Preço de venda</label>
+                                <input type="text" class="form-control" id="price">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="description">Descrição</label>
+                                <input type="text" class="form-control" id="description">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="line"></div>
+
+                <div class="products-edit">
+                    <div class="d-flex" style="justify-content: space-between !important;">
+                        <div class="d-flex align-items-center">
+                            <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-products-plans.svg') }}" alt="Icon Informations"></div>
+                            <div class="title">Produtos do plano</div>
+                        </div>
+                        <button class="btn btn-edit">
+                            <img src="{{ asset('modules/global/img/icon-edit.svg') }}" alt="Icon Edit">
+                        </button>
+                    </div>
+
+                    <div class="products-data" id="load-products">
+                        {{-- js carrega --}}
+                    </div>
+                    <a type="button" id="all-products">Ver todos os produtos</a>
+                </div>
+
+                <div class="line"></div>
+
+                <div class="review-edit">
+                    <div class="d-flex" style="justify-content: space-between !important;">
+                        <div class="d-flex align-items-center">
+                            <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-review-plans-c.svg') }}" alt="Icon Informations"></div>
+                            <div class="title">Revisão geral</div>
+                        </div>
+                        <button class="btn btn-edit">
+                            <img src="{{ asset('modules/global/img/icon-edit.svg') }}" alt="Icon Edit">
+                        </button>
+                    </div>
+
+                    <div class="review-data">
+                        <div class="d-flex">
+
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="modal-footer border-on" style="justify-content: space-between !important;">
@@ -18,7 +86,7 @@
                     <img class="mr-10" src="{{ asset('modules/global/img/icon-trash.svg') }}" alt="Icon Trash" />
                     <span>Excluir plano</span>
                 </button>
-                <button id="btn-modal-plan-close" type="button" data-stage="1" class="btn btn-primary btn-lg">Fechar</button>
+                <button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>
             </div>
         </div>
     </div>

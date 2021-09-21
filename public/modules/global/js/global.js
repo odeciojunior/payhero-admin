@@ -200,11 +200,29 @@ function loadOnNotification(whereToLoad) {
 function loadOnModal(whereToLoad) {
     $(whereToLoad).children().hide('fast');
     $('#modal-title').html('Carregando...')
-    $(whereToLoad).append("<div id='loaderModal' class='loadinModal'>" +
-        "<div class='loaderModal'>" +
-        "</div>" +
-        "</div>");
+    $(whereToLoad).append("<div id='loaderModal' class='loadinModal'><div class='loaderModal'></div></div>");
     $('#loadingOnScreen').append("<div class='blockScreen'></div>");
+}
+
+function loadOnModalNewLayout(modal, whereToLoad) {
+    if (whereToLoad) {
+        $(modal).find('.modal-body').find(whereToLoad).children().fadeOut('fast');
+        $(modal).find('.modal-footer').children().fadeOut('fast');
+        $(modal).find('.modal-body').find(whereToLoad).append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
+        $(modal).modal('show');
+    } else {
+        $(modal).find('.modal-title').html('Carregando...');
+        $(modal).find('.modal-body').children().fadeOut('fast');
+        $(modal).find('.modal-footer').children().fadeOut('fast');
+        $(modal).find('.modal-body').append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
+        $(modal).modal('show');
+    }
+}
+
+function loadOnModalNewLayoutRemove(modal) {
+    $(modal).find('.modal-body').find('.loadingModal').remove();
+    $(modal).find('.modal-body').children().fadeIn('fast');
+    $(modal).find('.modal-footer').children().fadeIn('fast');
 }
 
 function loadOnTable(whereToLoad, tableReference) {

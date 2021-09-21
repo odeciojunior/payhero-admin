@@ -958,10 +958,10 @@ img.border-icon{
 }
 
 .modal-new-layout .modal-header {
-    padding: 20px 30px;
+    padding: 20px 30px !important;
 }
 .modal-new-layout .modal-body {
-    padding: 30px !important;
+    padding: 20px 30px !important;
 }
 .modal-new-layout .modal-footer {
     padding: 0px 30px 20px !important;
@@ -987,10 +987,11 @@ img.border-icon{
 }
 
 /* MODAL PLANS - breadcrumbs */
-.modal-plans .box-breadcrumbs .box-stage div {
+.modal-plans .box-stage div {
     width: auto;
 }
-.modal-plans .box-breadcrumbs .box-stage .icon {
+.modal-plans .box-stage .icon,
+.modal-plans .conteudo_modal_edit .icon {
     width: 36px;
     height: 36px;
     text-align: center;
@@ -1003,18 +1004,21 @@ img.border-icon{
     max-width: 100%;
 }
 
-.modal-plans .box-breadcrumbs .box-stage.active .icon {
+.modal-plans .box-stage.active .icon,
+.modal-plans .conteudo_modal_edit .icon {
     background: #D2E7FF;
 }
-.modal-plans .box-breadcrumbs .box-stage.finalized .icon {
+.modal-plans .box-stage.finalized .icon {
     background: #2E85EC;
 }
-.modal-plans .box-breadcrumbs .box-stage .title {
+.modal-plans .box-stage .title,
+.modal-plans .conteudo_modal_edit .title {
     font-size: 16px;
     line-height: 20px;
     color: #636363;
     letter-spacing: 0;
     margin: 0;
+    width: auto;
 }
 .modal-plans .box-breadcrumbs .line hr {
     width: 50px;
@@ -1157,7 +1161,7 @@ img.border-icon{
 }
 .modal-plans .box-product .description {
     font-weight: normal;
-    font-size: 10px;
+    font-size: 12px;
     line-height: 100%;
     color: #9B9B9B;
     margin: 0;
@@ -1236,6 +1240,60 @@ img.border-icon{
     content: url('../img/icon-check.svg');
     border: 1px solid #2E85EC;
     background: #2E85EC;
+}
+
+/* MODAL PLANS - edit */
+.modal-plans .btn-edit {
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border: 1px solid #2E85EC;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+.modal-plans .btn.btn-edit:not(:disabled):not(.disabled):active:focus {
+    box-shadow: none;
+}
+.modal-plans .conteudo_modal_edit .line {
+    height: 1px;
+    background: #e4eaec;
+    margin: 20px -30px;
+}
+.modal-plans .informations-data,
+.modal-plans .products-data {
+    margin-top: 20px;
+}
+.modal-plans .informations-data label {
+    margin: 0;
+}
+.modal-plans .informations-data .form-control {
+    border: none;
+    padding: 0;
+    height: auto !important;
+    color: #454545;
+}
+.modal-plans .products-data .box-product {
+    border: none;
+    box-sizing: border-box;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: 300ms;
+}
+.modal-plans .products-edit #all-products {
+    font-size: 14px;
+    line-height: 18px;
+    color: #2E85EC;
+    margin: 0;
+}
+.modal-plans .products-data {
+    height: 68px;
+}
+.modal-plans .products-data .box-product:hover {
+    background: none;
+    border: none;
 }
 
 /* checked mark aspect changes */

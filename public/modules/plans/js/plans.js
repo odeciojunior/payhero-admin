@@ -89,11 +89,13 @@ $(function () {
         }
     }
 
-    function create() {
-        var modalID = $('#modal_add_plan');
+    function getProdutcts(modal) {
+        var modalID = $(modal);
         modalID.attr('data-backdrop', 'static');
         
         $('#search-product').val('');
+        
+        loadOnModalNewLayout(modal, '#load-products');        
         $.ajax({
             method: "POST",
             url: "/api/products/userproducts",
@@ -104,14 +106,14 @@ $(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadingOnScreenRemove();
+                loadOnModalNewLayoutRemove(modal);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 modalID.modal('show');
                 
                 appendProducts(response.data, modalID);
-                loadingOnScreenRemove();
+                loadOnModalNewLayoutRemove(modal);
             }
         });
     }
@@ -142,26 +144,40 @@ $(function () {
         });
     }
 
-    function appendProducts(products, modalID) {
+    function appendProducts(products, modalID, flag = 'add') {
         var data = '<div class="row">';
         products.forEach(function(product) {
-            var index_product = selected_products.map(function(e) { return e.id; }).indexOf(product.id);
-            data += '<div class="col-sm-6">';
-                data += '<div data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
-                    data += '<div class="d-flex align-items-center">';
-                        data += '<img class="product-photo" src="' + product.photo + '" alt="Image Product">';
-                        data += '<div>';
-                            data += '<h1 class="title">' + product.name + '</h1>';
-                            data += '<p class="description">' + product.description + '</p>';
+            if (flag == 'add') {
+                var index_product = selected_products.map(function(e) { return e.id; }).indexOf(product.id);
+                data += '<div class="col-sm-6">';
+                    data += '<div data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
+                        data += '<div class="d-flex align-items-center">';
+                            data += '<img class="product-photo" src="' + product.photo + '" alt="Image Product">';
+                            data += '<div>';
+                                data += '<h1 class="title">' + product.name + '</h1>';
+                                data += '<p class="description">' + product.description + '</p>';
+                            data += '</div>';
+                        data += '</div>';
+                        data += '<div class="check">';
+                        if (index_product != -1) {    
+                            data += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                        }
                         data += '</div>';
                     data += '</div>';
-                    data += '<div class="check">';
-                    if (index_product != -1) {    
-                        data += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
-                    }
+                data += '</div>';
+            } else {
+                data += '<div class="col-sm-6">';
+                    data += '<div class="box-product d-flex justify-content-between align-items-center">';
+                        data += '<div class="d-flex align-items-center">';
+                            data += '<img class="product-photo" src="' + product.photo + '" alt="Image Product">';
+                            data += '<div>';
+                                data += '<h1 class="title">' + product.product_name_short + '</h1>';
+                                data += '<p class="description">Qtd: ' + product.amount + '</p>';
+                            data += '</div>';
+                        data += '</div>';
                     data += '</div>';
                 data += '</div>';
-            data += '</div>';
+            }
         });
         data + '</div>';
 
@@ -240,7 +256,7 @@ $(function () {
             stage_products.addClass('active');
             
             modalID.find('.box-description').html('<p style="margin-bottom: 21px; font-weight: bold;">Selecione os produtos do novo plano</p><input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">');
-            create();
+            getProdutcts('#modal_add_plan');
             modalID.find('.box-review').html('');
 
             stage_add_plan--;
@@ -302,10 +318,9 @@ $(function () {
                 
                 index();
                 clearFields();
-                bindModalKeys();
                 alertCustom('success', 'Plano Adicionado!');
 
-                $('#modal_add_plan').modal('hide');
+                modalID.modal('hide');
             }
         });
     }
@@ -314,7 +329,9 @@ $(function () {
         var costs_plan = 0;
 
         for (var i = 0; i < selected_products.length; i++) {
-            costs_plan += (parseFloat(selected_products[i]['value']) * parseFloat(selected_products[i]['amount']));
+            if (selected_products[i]['value']) {
+                costs_plan += (parseFloat(selected_products[i]['value']) * parseFloat(selected_products[i]['amount']));
+            }
         }
 
         return costs_plan.toFixed(2);
@@ -325,6 +342,8 @@ $(function () {
         var search_product = $(this).val();
         if (search_product != '') {
             searchProducts(search_product);
+        } else {
+            getProdutcts('#modal_add_plan');
         }
     });
 
@@ -480,8 +499,8 @@ $(function () {
             stage_products.removeClass('finalized');
             stage_products.addClass('active');
             
-            modalID.find('.box-description').html('<p style="margin-bottom: 21px; font-weight: bold;">Selecione os produtos do novo plano</p><input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">');
-            create();
+            modalID.find('.box-description').html('<p style="margin-bottom: 21px; font-weight: bold;">Selecione os produtos do novo plano</p><div class="input-group input-group-lg"><input class="form-control" type="text" id="search-product" placeholder="Pesquisa por nome"><div class="input-group-append"><span class="input-group-text"><img src="../global/img/icon-search.svg" alt="Icon Search"></span></div></div>');
+            getProdutcts('#modal_add_plan');
             modalID.find('.box-review').html('');
         } else if (stage_add_plan == 3) {
             stage_details.find('img').attr('src', '/modules/global/img/icon-costs-plans.svg');
@@ -504,12 +523,11 @@ $(function () {
 
     // Add new Plan
     $("#add-plan").on('click', function () {
-        create();
+        getProdutcts('#modal_add_plan');
         $('.btn-close-add-plan').on('click', function () {
             clearFields();
             $('#modal_add_plan').removeAttr('data-backdrop');
         });
-        bindModalKeys();
     });
 
     // Copy link plan
@@ -524,6 +542,7 @@ $(function () {
 
     // Details Plan
     $('#table-plans').on('click', '.details-plan', function () {
+        var planID = $(this).attr('plan');
         var modalID = $('#modal_details_plan');
         
         modalID.attr('data-backdrop', 'static');
@@ -532,10 +551,32 @@ $(function () {
 
     // Edit Plan
     $('#table-plans').on('click', '.edit-plan', function () {
+        var planID = $(this).attr('plan');
         var modalID = $('#modal_edit_plan');
-        
-        modalID.attr('data-backdrop', 'static');
-        modalID.modal('show');
+
+        loadOnModalNewLayout('#modal_edit_plan');
+        $.ajax({
+            method: "GET",
+            url: '/api/project/' + projectId + '/plans/' + planID,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function (response) {
+                loadOnModalNewLayoutRemove('#modal_edit_plan');
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                modalID.find('.modal-title').html('Detalhes de ' + response.data.name);
+                modalID.find('#name').val(response.data.name);
+                modalID.find('#price').val(response.data.price);
+                modalID.find('#description').val(response.data.description);
+                appendProducts(response.data.products, modalID, 'edit');
+
+                loadOnModalNewLayoutRemove('#modal_edit_plan');
+            }
+        });
     });
 
     // Delete Plan
@@ -574,7 +615,6 @@ $(function () {
                     alertCustom('success', response.message);
                     index();
                 }
-
             });
         });
     });
@@ -642,7 +682,7 @@ $(function () {
                                 data += '<td id="" class="" style="vertical-align: middle;">' + value.price + '</td>';
                                 data += '<td id="" class=""><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
                                 data += "<td style='text-align:center' class='mg-responsive'>"
-                                    data += "<a title='Visualizar' class='mg-responsive pointer details-plan' lan='" + value.id + "' role='button'><span class='o-eye-1'></span></a>"
+                                    data += "<a title='Visualizar' class='mg-responsive pointer details-plan' plan='" + value.id + "' role='button'><span class='o-eye-1'></span></a>"
                                     data += "<a title='Editar' class='mg-responsive pointer edit-plan' plan='" + value.id + "' role='button'><span class='o-edit-1'></span></a>"
                                     data += "<a title='Excluir' class='mg-responsive pointer delete-plan' plan='" + value.id + "' role='button'><span class='o-bin-1'></span></a>";
                                 data += "</td>";
@@ -662,126 +702,6 @@ $(function () {
                 }                
             }
         });
-    }
-
-    function getElementsEdit(element) {
-        let custoUnitario = $(element).parent().parent().find('.products_cost_edit')
-        let custoTotal = $(element).parent().parent().find('.products_total_edit')
-        let moeda = $(element).parent().parent().find('.select_currency_edit')
-        let quantidade = $(element).parent().parent().find('.products_amount_edit')
-
-        calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
-    }
-
-    function getElementsCreate(element) {
-        let custoUnitario = $(element).parent().parent().find('.products_cost_create')
-        let custoTotal = $(element).parent().parent().find('.products_total_create')
-        let moeda = $(element).parent().parent().find('.select_currency_create')
-        let quantidade = $(element).parent().parent().find('.products_amount_create')
-
-        calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
-    }
-
-    function clickElementEdit(element) {
-        $(element).parent().parent().find('.products_cost_edit').focus();
-    }
-
-    function clickElementCreate(element) {
-        $(element).parent().parent().find('.products_cost_create').focus();
-    }
-
-    function calculateTotal(custoUnitario, custoTotal, moeda, quantidade) {
-        let valorCusto = custoUnitario.maskMoney('unmasked')[0];
-        let valorQuantidade = $(quantidade).val();
-        let valorTotal = valorCusto * valorQuantidade
-
-        setCurrency(custoUnitario, custoTotal, moeda, valorTotal)
-    }
-
-    function setCurrency(custoUnitario, custoTotal, moeda, valorTotal) {
-        let formatedValue;
-        let unitaryValue = custoUnitario.val();
-
-        switch (moeda.val()) {
-            case 'USD':
-                formatedValue = valorTotal.toLocaleString('pt-BR', {style: 'currency', currency: 'USD'});
-                unitaryValue = unitaryValue.toLocaleString('pt-BR', {style: 'currency', currency: 'USD'});
-                custoUnitario.maskMoney({prefix: 'US$'});
-                break;
-            case 'BRL':
-                formatedValue = valorTotal.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-                unitaryValue = unitaryValue.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-                custoUnitario.maskMoney({prefix: 'R$'});
-                break;
-            default:
-                formatedValue = valorTotal.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-                unitaryValue = unitaryValue.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-                custoUnitario.maskMoney({prefix: 'R$'});
-                break;
-        }
-
-        custoUnitario.val(unitaryValue)
-        custoTotal.val(formatedValue)
-
-    }
-
-    function findElementsEdit(element) {
-        let custoUnitario = $(element).find('.products_cost_edit')
-        let custoTotal = $(element).find('.products_total_edit')
-        let moeda = $(element).find('.select_currency_edit')
-        let quantidade = $(element).find('.products_amount_edit')
-
-        calculateTotal(custoUnitario, custoTotal, moeda, quantidade);
-    }
-
-    function bindModalKeys() {
-
-        $(document).on('change', '.select_currency_create', function () {
-            getElementsCreate(this)
-            clickElementCreate(this)
-        })
-        $(document).on('keyup', '.products_cost_create, .products_total_create', function () {
-            getElementsCreate(this)
-        })
-        $(document).on('change', '.select_currency_edit', function () {
-            getElementsEdit(this)
-            clickElementEdit(this)
-        })
-
-        $(document).on('keyup', '.products_cost_edit, .products_total_edit', function () {
-            getElementsEdit(this)
-        })
-
-        //o fluxo do product amount deve começar diferente ... algo no html faz com que o seletor o trate um pouco diferente dos outros inputs
-        $(document).on('change', '.products_amount_create', function () {
-            getElementsCreate($(this).parent())
-        })
-        $(document).on('change', '.products_amount_edit', function () {
-            getElementsEdit($(this).parent())
-        })
-
-        //quando um novo registro for inserido na tela e for necessario a edição, esta funçao sera necessaria para vincular o bindModalkeys() aos campos da modal
-        $(document).on('click', '.edit-plan', function () {
-            bindModalKeys();
-        })
-
-        $(document).on('change', '.plan_product_create', function () {
-            inputCost = $(this).parent().parent().parent().find('.products_cost');
-            inputCost.val($(this).find(':selected').data('cost'));
-            getElementsCreate($(this).parent())
-        })
-
-        $(document).on('change', '.products_edit', function () {
-            inputCost = $(this).parent().parent().parent().find('.products_cost');
-            inputCost.val($(this).find(':selected').data('cost'));
-            getElementsEdit($(this).parent())
-        })
-
-        $('.products_cost_create, .products_cost_edit').maskMoney({thousands: ',', decimal: '.', allowZero: true});
-        $('#plan-price_edit, #price').maskMoney({thousands: ',', decimal: '.', allowZero: true, prefix: 'R$'});
-        if ($('.products_cost_create, .products_cost_edit').val() == undefined || $('.products_cost_create, .products_cost_edit').val() == null) {
-            $('.products_cost_create, .products_cost_edit').maskMoney('mask', 0.00);
-        }
     }
 
     $(document).on('keypress', function (e) {
@@ -867,7 +787,6 @@ $(function () {
     });
 
     $(document).on('click', '.bt-update-cost-block', function (event) {
-
         $.ajax({
             method: "POST",
             url: '/api/plans/update-bulk-cost',
