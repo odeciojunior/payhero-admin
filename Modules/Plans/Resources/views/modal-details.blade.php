@@ -1,4 +1,3 @@
-<!-- Modal detalhes do plano -->
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_details_plan" role="dialog" tabindex="-1">
     <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content p-10" id="conteudo_modal_add">

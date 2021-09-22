@@ -21,6 +21,7 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\PlanService;
 use Modules\Plans\Http\Requests\PlanStoreRequest;
+use Modules\Plans\Http\Requests\PlanUpdateInformationsRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansDetailsResource;
 use Modules\Plans\Transformers\PlansResource;
@@ -284,8 +285,8 @@ class PlansApiController extends Controller
 
                     unset($requestData['project_id']);
                     $planId               = Hashids::decode($id)[0];
-                    $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
-                    $requestData['price'] = $this->getValue($requestData['price']);
+                    $price = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
+                    $price = $this->getValue($price);
 
                     $plan = $planModel->with('plansSales')->where('id', $planId)->first();
 
@@ -293,7 +294,7 @@ class PlansApiController extends Controller
                         'name'        => FoxUtils::removeSpecialChars($requestData['name']),
                         'description' => FoxUtils::removeSpecialChars($requestData['description']),
                         'code'        => $id,
-                        'price'       => $requestData["price"],
+                        'price'       => $price,
                         'status'      => $planModel->present()->getStatus('active'),
                     ]);
 
@@ -306,13 +307,6 @@ class PlansApiController extends Controller
                     if (count($plan->plansSales) > 0 && (!empty($resultId) || !empty($resultAmount)) || (count($requestData['products']) > count($productPlanId))) {
                         return response()->json(['message' => 'Impossível editar os produtos do plano pois possui vendas associadas.'], 400);
                     }
-
-                    // if (count($productPlans) > 0) {
-                    //     foreach ($productPlans as $productPlan) {
-
-                    //         $productPlan->forceDelete();
-                    //     }
-                    // }
 
                     $idsProductPlan = [];
                     $objProductPlan = new ProductPlan();
@@ -369,6 +363,38 @@ class PlansApiController extends Controller
 
             return response()->json([
                 'message' => 'Erro ao atualizar plano',
+            ], 400);
+        }
+    }
+
+    public function updateInformations(PlanUpdateInformationsRequest $request, $id)
+    {
+        try {
+            $planModel    = new Plan();
+            
+            $requestData = $request->validated();
+            $price = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
+            $price = $this->getValue($price);
+            
+            $planId   = current(Hashids::decode($id));
+            $plan = $planModel->with('plansSales')->where('id', $planId)->first();
+            $plan->update([
+                'name'        => FoxUtils::removeSpecialChars($requestData['name']),
+                'description' => FoxUtils::removeSpecialChars($requestData['description']),
+                'code'        => $id,
+                'price'       => $price,
+                'status'      => $planModel->present()->getStatus('active'),
+            ]);
+
+            return response()->json([
+                'message' => 'Informações do plano atualizadas com sucesso',
+            ], 200);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar fazer update dos dados do plano (PlansController - updateInformations)');
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao atualizar informações do plano',
             ], 400);
         }
     }

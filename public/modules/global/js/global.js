@@ -207,22 +207,27 @@ function loadOnModal(whereToLoad) {
 function loadOnModalNewLayout(modal, whereToLoad) {
     if (whereToLoad) {
         $(modal).find('.modal-body').find(whereToLoad).children().fadeOut('fast');
-        $(modal).find('.modal-footer').children().fadeOut('fast');
+        $(modal).find('.modal-footer').fadeOut('fast');
         $(modal).find('.modal-body').find(whereToLoad).append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
         $(modal).modal('show');
     } else {
         $(modal).find('.modal-title').html('Carregando...');
         $(modal).find('.modal-body').children().fadeOut('fast');
-        $(modal).find('.modal-footer').children().fadeOut('fast');
+        $(modal).find('.modal-footer').fadeOut('fast');
         $(modal).find('.modal-body').append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
         $(modal).modal('show');
     }
 }
 
-function loadOnModalNewLayoutRemove(modal) {
-    $(modal).find('.modal-body').find('.loadingModal').remove();
-    $(modal).find('.modal-body').children().fadeIn('fast');
-    $(modal).find('.modal-footer').children().fadeIn('fast');
+function loadOnModalNewLayoutRemove(modal, whereToLoad) {
+    if (whereToLoad) {
+        $(modal).find('.loadingModal').remove();
+        $(modal).find(whereToLoad).children().fadeIn('fast');
+    } else {
+        $(modal).find('.modal-body').find('.loadingModal').remove();
+        $(modal).find('.modal-body').children().fadeIn('fast');
+        $(modal).find('.modal-footer').fadeIn('fast');
+    }
 }
 
 function loadOnTable(whereToLoad, tableReference) {
@@ -299,10 +304,8 @@ function messageSwalSuccess(swalType, swalTitle, swalHtml, swalCloseButton, swal
 }
 
 $(document).ajaxComplete(function (jqXHR, textStatus) {
-
     switch (textStatus.status) {
         case 200:
-
             break;
         case 401:
             window.location.href = "/";

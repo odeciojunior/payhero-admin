@@ -95,7 +95,7 @@ $(function () {
         
         $('#search-product').val('');
         
-        loadOnModalNewLayout(modal, '#load-products');        
+        loadOnModalNewLayout(modal, '#load-products');
         $.ajax({
             method: "POST",
             url: "/api/products/userproducts",
@@ -110,8 +110,6 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                modalID.modal('show');
-                
                 appendProducts(response.data, modalID);
                 loadOnModalNewLayoutRemove(modal);
             }
@@ -122,6 +120,7 @@ $(function () {
         var modalID = $('#modal_add_plan');
         modalID.find('#load-products').html('');
         
+        loadOnModalNewLayout('#modal_add_plan', '#load-products');
         $.ajax({
             method: "POST",
             url: "/api/products/search",
@@ -140,6 +139,7 @@ $(function () {
             },
             success: function success(response) {
                 appendProducts(response.data, modalID);
+                loadOnModalNewLayoutRemove('#modal_add_plan');
             }
         });
     }
@@ -182,6 +182,12 @@ $(function () {
         data + '</div>';
 
         modalID.find('#load-products').html(data);
+        
+        if (flag == 'edit' && products.length > 2) {
+            modalID.find('.products-edit').append('<a type="button" id="all-products" data-open="0">Ver todos os produtos <span class="fas fa-chevron-down"></span></a>');
+        } else {
+            modalID.find('.products-edit').find('#all-products').remove();
+        }
 
         $(".product-photo").on("error", function () {
             $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
@@ -302,9 +308,9 @@ $(function () {
             data: {
                 'project_id': projectId,
                 'products': selected_products,
-                'name': modalID.find('input[name="name"]').val(),
-                'price': modalID.find('input[name="price"]').val(),
-                'description': modalID.find('textarea[name="description"]').val()
+                'name': modalID.find('#name]').val(),
+                'price': modalID.find('#price').val(),
+                'description': modalID.find('#description').val()
             },
             error: function error(response) {
                 clearFields();
@@ -553,6 +559,11 @@ $(function () {
     $('#table-plans').on('click', '.edit-plan', function () {
         var planID = $(this).attr('plan');
         var modalID = $('#modal_edit_plan');
+        
+        modalID.attr('data-backdrop', 'static');
+        modalID.find('.informations-data').removeClass('edit');
+        modalID.find('.form-control').attr('readonly', true);
+        modalID.find('.buttons-update').remove();
 
         loadOnModalNewLayout('#modal_edit_plan');
         $.ajax({
@@ -569,10 +580,16 @@ $(function () {
             },
             success: function success(response) {
                 modalID.find('.modal-title').html('Detalhes de ' + response.data.name);
+                modalID.find('#btn-edit-informations-plan').attr('data-code', response.data.id);
                 modalID.find('#name').val(response.data.name);
                 modalID.find('#price').val(response.data.price);
                 modalID.find('#description').val(response.data.description);
-                appendProducts(response.data.products, modalID, 'edit');
+                if (response.data.products.length > 0) {
+                    appendProducts(response.data.products, modalID, 'edit');
+                    modalID.find('.products-edit').find('.title').find('span').html(' ' + response.data.products.length + (response.data.products.length > 1 ? ' produtos' : ' produto'));
+                } else {
+                    modalID.find('.products-data').css('height', 'auto');
+                }
 
                 loadOnModalNewLayoutRemove('#modal_edit_plan');
             }
@@ -617,6 +634,119 @@ $(function () {
                 }
             });
         });
+    });
+
+    // Show all products
+    $("body").on('click', '#all-products', function () {
+        var open = $(this).attr('data-open');
+        if (open == 1) {
+            $(this).parent().find('.products-data').animate({height: '74px'}, 500);
+            $(this).removeClass('open');
+            $(this).html('Ver todos os produtos <span class="fas fa-chevron-down"></span>')
+
+            $(this).attr('data-open', '0');
+        } else {
+            autoHeight = $(this).parent().find('.products-data').find('.row').height();
+            $(this).parent().find('.products-data').animate({height: autoHeight}, 500);
+            $(this).addClass('open');
+            $(this).html('Ver menos <span class="fas fa-chevron-up"></span>');
+
+            $(this).attr('data-open', '1');
+        }
+    });
+
+    // Edit informations plan
+    $("body").on('click', '#btn-edit-informations-plan', function () {
+        var parent = $(this).parent().parent().parent();
+        parent.find('.informations-data').addClass('edit');
+        parent.find('.informations-data').find('.form-control').attr('readonly', false);
+        parent.find('#price').val(function(index, value) {
+            return value.replace('R$', '');
+        });
+        parent.find('#price').mask('#.##0,00', {reverse: true});
+        parent.find('.informations-data').append(
+            '<div class="buttons-update">' +
+                '<div class="d-flex mt-20" style="justify-content: flex-end !important;">' +
+                    '<button type="button" class="btn btn-default btn-lg mr-10" id="btn-cancel-update-informations-plan">Cancelar</button>' +
+                    '<button type="button" class="btn btn-primary btn-lg" id="btn-update-informations-plan">Atualizar</button>' +
+                '</div>' +
+            '</div>'
+        );
+
+        var name = parent.find('#name').val();
+        parent.find('#name').attr('data-value', name);
+
+        var price = parent.find('#price').val();
+        parent.find('#price').attr('data-value', price);
+
+        var description = parent.find('#description').val();
+        parent.find('#description').attr('data-value', description);
+    });
+
+    // Cancel update informations plan
+    $("body").on('click', '#btn-cancel-update-informations-plan', function () {
+        var parents = $(this).parents('.informations-edit');
+        parents.removeClass('edit');
+        parents.find('.form-control').attr('readonly', true);
+
+        parents.find('#name').val(parents.find('#name').attr('data-value'));
+        parents.find('#price').val('R$' + parents.find('#price').attr('data-value'));
+        parents.find('#description').val(parents.find('#description').attr('data-value'));
+
+        $(this).parents('.buttons-update').remove();
+    });
+
+    // Update informations plan
+    $("body").on('click', '#btn-update-informations-plan', function () {
+        var modalID = $('#modal_edit_plan');
+        var planID = $(this).parents('.informations-edit').find('#btn-edit-informations-plan').attr('data-code');
+        
+        loadOnModalNewLayout('#modal_edit_plan', '.informations-data');
+        $.ajax({
+            method: "PUT",
+            url: '/api/plans/' + planID + '/informations',
+            dataType: "json",
+            data: {
+                'name': modalID.find('#name').val(),
+                'price': modalID.find('#price').val(),
+                'description': modalID.find('#description').val()
+            },
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function (response) {
+                loadOnModalNewLayoutRemove('#modal_edit_plan', '.informations-data');
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                modalID.find('.modal-title').html('Detalhes de ' + modalID.find('#name').val());
+                modalID.find('#name').val(modalID.find('#name').val());
+                modalID.find('#name').attr('data-value', modalID.find('#name').val());
+
+                modalID.find('#price').val(modalID.find('#price').val());
+                modalID.find('#price').attr('data-value', modalID.find('#price').val());
+
+                modalID.find('#description').val(modalID.find('#description').val());
+                modalID.find('#description').attr('data-value', modalID.find('#description').val());
+                
+                modalID.find('.informations-data').removeClass('edit');
+                modalID.find('.informations-edit').find('.form-control').attr('readonly', true);
+                modalID.find('.informations-edit').find('#name').val(modalID.find('.informations-edit').find('#name').attr('data-value'));
+                modalID.find('.informations-edit').find('#price').val('R$' + modalID.find('.informations-edit').find('#price').attr('data-value'));
+                modalID.find('.informations-edit').find('#description').val(modalID.find('.informations-edit').find('#description').attr('data-value'));
+                modalID.find('.buttons-update').remove();
+                
+                index();
+                alertCustom('success', response.message)
+                loadOnModalNewLayoutRemove('#modal_edit_plan', '.informations-data');
+            }
+        });
+    });
+    
+    // Edit products plan
+    $("body").on('click', '#btn-edit-products-plan', function () {
+        alert('edit products plan');
     });
 
     $("#btn-search-plan").on('click', function () {

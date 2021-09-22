@@ -1,4 +1,3 @@
-<!-- Modal para Adicionar Planos -->
 <div class="modal fade modal-3d-flip-vertical modal-new-layout modal-plans" id="modal_add_plan" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" id="conteudo_modal_add">
