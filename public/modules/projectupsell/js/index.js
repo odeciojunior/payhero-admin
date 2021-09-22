@@ -188,6 +188,7 @@ $(document).ready(function () {
                 },
                 error: function (response) {
                     loadingOnScreenRemove()
+                    errorAjaxResponse(response);
                 },
                 success: function (response) {
                     loadUpsell();

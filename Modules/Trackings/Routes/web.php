@@ -1,8 +1,8 @@
 <?php
-
+// role:account_owner|admin|attendance
 Route::group(
     [
-        'middleware' => ['web', 'auth', 'role:account_owner|admin|attendance']
+        'middleware' => ['web', 'auth', 'permission:trackings']
     ],
     function() {
         Route::get('/trackings/download/{filename}', 'TrackingsController@download');

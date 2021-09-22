@@ -23,7 +23,7 @@ class SalesResource extends JsonResource
     {
         $user = auth()->user();
         $userPermissionRefunded = false;
-        if ($user->hasRole('admin') || $user->hasRole('account_owner') || $user->hasPermissionTo('refund')) {
+        if ($user->hasAnyPermission(['sales_manage','finances_manage'])) {
             $userPermissionRefunded = true;
         }
 
@@ -100,7 +100,11 @@ class SalesResource extends JsonResource
             'has_withdrawal' => !empty($this->details->has_withdrawal)
         ];
 
-        $shopifyIntegrations = $this->project ? $this->project->shopifyIntegrations->where('status', 2) : [];
+        $shopifyIntegrations = [];
+        if(!empty($this->project)){
+            $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
+        }
+        
         if (count($shopifyIntegrations) > 0) {
             $data['has_shopify_integration'] = true;
         } else {

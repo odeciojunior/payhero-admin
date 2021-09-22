@@ -92,6 +92,9 @@ class OldWithdrawalsApiController extends Controller
 
             $userPresent = (new User())->present();
             $user = auth()->user();
+            if($user->id <> $user->account_owner_id){
+                $user = User::find($user->account_owner_id);
+            }
 
             if ($user->status == $userPresent->getStatus('withdrawal blocked')) {
                 return response()->json(['message' => 'Sem permissão para realizar saques'], 403);
@@ -111,6 +114,7 @@ class OldWithdrawalsApiController extends Controller
             $companyService = new CompanyService();
             $userService = new UserService();
 
+            
             if ($companyService->verifyFieldsEmpty($company) || $userService->verifyFieldsEmpty($user)) {
                 return response()->json(
                     ['message' => 'Para efetuar o saque favor preencher os documentos pendentes'],

@@ -55,10 +55,22 @@ class RegisterController extends Controller
                 );
             }
 
-            if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
+            if (auth()->user()->can('dashboard')) {
                 return response()->redirectTo('/dashboard');
-            } else {
+            }elseif (auth()->user()->can('sales')) {
                 return response()->redirectTo('/sales');
+            }else{
+                $permissions =  auth()->user()->permissions->pluck('name');
+                foreach($permissions as $permission){
+                    $route = explode('_',$permission);
+                    $redirect = $route['0'];
+                    if(count($route) > 1){
+                        if($route['0']=='report'){
+                            $redirect= $route['0'].'s/'.$route['1'];
+                        }
+                    }
+                    return response()->redirectTo("/{$redirect}");
+                }
             }
 
         }
