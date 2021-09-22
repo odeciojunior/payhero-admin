@@ -36,7 +36,7 @@
                 </li>
             </ul>
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-                @hasanyrole('attendance|finantial')                
+                @hasanyrole('account_owner|admin')                
                     <li id="notifications_button" class="nav-item dropdown" disabled='true'>
                         <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
                             <img class="svg-menu" src="{{ asset('modules/global/img/svg/notificacao.svg') }}" alt="Notificacao">
