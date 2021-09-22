@@ -8,14 +8,20 @@ Route::group(
 
     ],
     function() {
-        Route::apiResource('project/{projectId}/domains', 'DomainsApiController')
-             ->names('api.domains');
+        // Route::apiResource('project/{projectId}/domains', 'DomainsApiController')->names('api.domains');
+        Route::get('project/{projectId}/domains', 'DomainsApiController@index');        
+        Route::get('project/{projectId}/domains/{domainId}', 'DomainsApiController@show');
+        Route::get('project/{projectId}/domains/{domainId}/edit', 'DomainsApiController@edit');
+        Route::post('project/{projectId}/domains', 'DomainsApiController@store')->middleware('permission:projects_manage');
+        Route::delete('project/{projectId}/domains/{domainId}', 'DomainsApiController@destroy')->middleware('permission:projects_manage');
 
+
+        Route::get('project/{projectId}/domain/{domainId}/records', 'DomainRecordsApiController@index');        
         Route::apiResource('project/{projectId}/domain/{domainId}/records', 'DomainRecordsApiController')
-             ->names('api.domainrecords');
+        ->except(['index'])->names('api.domainrecords')->middleware('permission:projects_manage');
 
         Route::get('project/{projectId}/domain/{domainId}/recheck', 'DomainsApiController@recheckOnly')
-             ->name('api.domain.recheck');
+             ->name('api.domain.recheck')->middleware('permission:projects_manage');
 
         // Route::get('project/{projectId}/domain/{domainId}', 'DomainsApiController@show')
         //      ->name('api.domain.show');

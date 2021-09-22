@@ -55,20 +55,22 @@
                 <div class="row align-items-center justify-content-between" style="min-height:50px">
                     <div class="col-6">
                         <h1 class="page-title">Vendas</h1>
-                    </div>
-                    @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
-                        <div class="col-6 text-right">
-                            <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
-                                <div class="p-2 d-flex justify-content-end align-items-center">
-                                    <span class="o-download-cloud-1 mr-2"></span>
-                                    <div class="btn-group" role="group">
-                                        <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
-                                        <button id="bt_get_csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
-                                    </div>
+                    </div>                    
+                    <!-- hasanyrole('account_owner|admin|finantial') -->
+                    @can('sales_manage')
+                    <div class="col-6 text-right">
+                        <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
+                            <div class="p-2 d-flex justify-content-end align-items-center">
+                                <span class="o-download-cloud-1 mr-2"></span>
+                                <div class="btn-group" role="group">
+                                    <button id="bt_get_xls" type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
+                                    <button id="bt_get_csv" type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    </div>
+                    @endcan
+                    <!-- endhasanyrole -->
                 </div>
             </div>
 
@@ -240,7 +242,8 @@
                     </div>
                     <!-- Resumo -->
                     <div class="fixhalf"></div>
-                    @if(!auth()->user()->hasRole('attendance'))
+                    <!-- unlessrole('attendance|finantial')                     -->
+                    @can('sales_manage')
                         <div class="row justify-content-center">
                             <div class="col-md-3">
                                 <div class="card shadow" style='display:block;'>
@@ -291,7 +294,7 @@
                             </div>
 
                         </div>
-                    @endif
+                    @endcan
                 <!-- Tabela -->
                     <div class="fixhalf"></div>
                     <div class="col-lg-12 p-0 pb-10">

@@ -15,8 +15,8 @@
             </select>
         </div>
         <div class="form-group col-xl-6">
-            <label for="value">Valor</label>
-            <input name="value" type="text" class="form-control coupon-value" placeholder="Valor" data-mask="0#">
+            <label for="value">Valor</label>            
+            <input name="value" type="text" class="form-control coupon-value" placeholder="Valor" data-mask="0#">            
         </div>
     </div>
     <div class="row">

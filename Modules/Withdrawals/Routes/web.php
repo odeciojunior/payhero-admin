@@ -12,6 +12,6 @@
 */
 
 Route::middleware(['web', 'auth'])->prefix('withdrawals')->group(function() {
-    Route::get('/download/{filename}', 'WithdrawalsController@download')->middleware('role:account_owner|admin');
+    Route::get('/download/{filename}', 'WithdrawalsController@download')->middleware('permission:finances_manage');
 });
 

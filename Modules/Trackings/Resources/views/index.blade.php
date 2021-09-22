@@ -29,7 +29,7 @@
                             </div>
                         </div>
                     </div>
-
+                    @can('trackings_manage')
                     <div class="col mt-lg-0 mt-20 p-0 mr-25" style="flex-grow: 0">
                         <div class="d-flex align-items-center">
                             <button id="btn-import-xls" type="button" class="btn btn-round btn-default btn-outline font-weight-bold" style="min-width: 118px; font-size: 14px;">Importar
@@ -45,6 +45,7 @@
                             <span data-toggle="modal" data-target="#modal-detalhes-importar" class="ml-10 pointer" style="min-width: 112px; font-size: 12px">Como importar códigos de rastreio?</span>
                         </div>
                     </div>
+                    @endcan
                 </div>
             </div>
         </div>

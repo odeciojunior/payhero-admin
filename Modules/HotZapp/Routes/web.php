@@ -3,7 +3,7 @@
 
 Route::group(
     [
-        'middleware' => ['web', 'auth'],
+        'middleware' => ['web', 'auth','permission:apps'],
         'as' => 'hotzapp.'
     ],
     function() {
@@ -14,13 +14,10 @@ Route::group(
 
 Route::group(
     [
-        'middleware' => ['web'],
+        'middleware' => ['web','permission:apps'],
         'prefix'     => 'apps/hotzapp',
     ],
     function() {
         Route::get('/newboleto/{boleto_id}', 'HotZappApiController@regenerateBoleto');
     }
 );
-
-
-

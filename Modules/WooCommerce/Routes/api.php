@@ -4,12 +4,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin'],
+        'middleware' => ['auth:api', 'scopes:admin','permission:apps|projects'],
     ],
     function() {
-        Route::apiResource('/apps/woocommerce/', 'WooCommerceApiController')
-             ->only('index', 'store')
-            ->names('woocommmerce');
+        Route::get('/apps/woocommerce', 'WooCommerceApiController@index');
+        Route::post('/apps/woocommerce', 'WooCommerceApiController@store')->middleware('permission:apps_manage');
 
         Route::get('/apps/woocommerce/user-companies', [
             'uses' => 'WooCommerceApiController@getCompanies',

@@ -7,12 +7,15 @@ Route::group(
         'middleware' => ['auth:api', 'scopes:admin'],
     ],
     function() {
-        Route::apiResource('/apps/shopify/', 'ShopifyApiController')
-             ->only('index', 'store');
+        
+        Route::get('/apps/shopify', 'ShopifyApiController@index');
+        Route::post('/apps/shopify', 'ShopifyApiController@store')->middleware('permission:apps_manage');
+
         Route::get('/apps/shopify/user-companies', [
             'uses' => 'ShopifyApiController@getCompanies',
             'as'   => 'shopify.getcompanies',
         ]);
+
         Route::post('/apps/shopify/undointegration', [
             'uses' => 'ShopifyApiController@undoIntegration',
             'as'   => 'shopify.undointegration',
