@@ -19,7 +19,6 @@ $(document).ready(function () {
         3: "Recusado",
     };
     // Comportamentos da tela
-
     //arrow function anonima,verifica se existe algum filtro e pega o valor do projeto
     let storeTypeProduct = () => {
         if(localStorage.getItem("filtersApp")){
