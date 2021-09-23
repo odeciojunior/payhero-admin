@@ -14,16 +14,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $users = User::role('account_owner')->get();
-        foreach($users as $us){
-            $us->syncRoles(['account_owner','admin']);
-        }
-    }
-
-    public function rollback(){
-        $users = User::role('account_owner')->get();
-        foreach($users as $us){
-            $us->syncRoles(['account_owner']);
-        }
+       
     }
 }
