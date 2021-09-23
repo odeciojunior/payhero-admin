@@ -13,7 +13,7 @@
 
 Route::group(
     [
-        'middleware' => ['web', 'auth'],
+        'middleware' => ['web', 'auth','permission:apps'],
         'as' => 'hotbillet'
     ],
     function() {

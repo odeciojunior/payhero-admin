@@ -148,8 +148,8 @@ $(document).ready(function () {
     function urlDataFormatted(link) {
         let url = "";
         if (link == null) {
-            url = `?project=${$("#project option:selected").val()}&status=${$(
-                "#type_recovery option:selected"
+            url = `?project=${$("#project option:selected").val()}&recovery_type=${$(
+                "#recovery_type option:selected"
             ).val()}&date_range=${$(
                 "#date-range-sales-recovery"
             ).val()}&client=${$(
@@ -160,8 +160,8 @@ $(document).ready(function () {
         } else {
             url = `${link}&project=${$(
                 "#project option:selected"
-            ).val()}&status=${$(
-                "#type_recovery option:selected"
+            ).val()}&recovery_type=${$(
+                "#recovery_type option:selected"
             ).val()}&date_range=${$(
                 "#date-range-sales-recovery"
             ).val()}&client=${$(
@@ -171,14 +171,14 @@ $(document).ready(function () {
             ).val()}&plan=${$("#plan").val()}`;
         }
 
-        let typeRecoverySelected = $("#type_recovery option:selected").val();
-        if (typeRecoverySelected == 1) {
+        let recoveryTypeSelected = $("#recovery_type option:selected").val();
+        if (recoveryTypeSelected == 1) {
             return `/api/checkout${url}`;
-        } else if (typeRecoverySelected == 3) {
+        } else if (recoveryTypeSelected == 3) {
             return `/api/recovery/getrefusedcart${url}`;
-        } else if (typeRecoverySelected == 4) {
+        } else if (recoveryTypeSelected == 4) {
             return `/api/recovery/get-pix${url}`;
-        } else if (typeRecoverySelected == 5) {
+        } else if (recoveryTypeSelected == 5) {
             return `/api/recovery/getboleto${url}`;
         } else {
             return `/api/sales${url}`;
@@ -212,8 +212,8 @@ $(document).ready(function () {
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
 
-                let typeRecovery = $('#type_recovery').val();
-                if (response.data == "" && typeRecovery) {
+                let recoveryType = $('#recovery_type').val();
+                if (response.data == "" && recoveryType) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
                         "<tr><td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
@@ -222,7 +222,7 @@ $(document).ready(function () {
                     );
                 } else if (
                     response.data == "" &&
-                    typeRecovery
+                    recoveryType
                 ) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
@@ -232,7 +232,7 @@ $(document).ready(function () {
                     );
                 } else if (
                     response.data == "" &&
-                    typeRecovery
+                    recoveryType
                 ) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
@@ -254,7 +254,7 @@ $(document).ready(function () {
                         alertCustom("success", "Link copiado!");
                     });
 
-                    if (typeRecovery == '5') {
+                    if (recoveryType == '5') {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
@@ -688,7 +688,7 @@ $(document).ready(function () {
     function getFilters(urlParams = false) {
         let data = {
             project: $("#project option:selected").val(),
-            status: $("#type_recovery option:selected").val(),
+            recovery_type: $("#recovery_type option:selected").val(),
             date_range: $("#date-range-sales-recovery").val(),
             client: $("#client-name").val(),
             client_document: $("#client-cpf").val(),

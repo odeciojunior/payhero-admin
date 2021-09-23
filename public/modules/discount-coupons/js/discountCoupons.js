@@ -8,25 +8,38 @@ $(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
     //comportamento da tela
-    $('.coupon-value').mask('00%', {reverse: true});
+    var cuponType = 0; 
+    $('.coupon-value').mask('00%', {reverse: true});    
     $(document).on('change', '.coupon-type', function () {
         if ($(this).val() == 1) {
-            $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
+            cuponType = 1;            
+            $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');            
         } else {
-            $('.coupon-value').mask('00%', {reverse: true});
+            cuponType = 0;            
+            $('.coupon-value').mask('00%', {reverse: true});                       
         }
     });
     $(".rule-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
 
     $('.rule-value').on('blur', function () {
-        if ($(this).val().length == 1) {
-            let val = '0,0' + $(this).val();
-            $('.rule-value').val(val);
-        } else if ($(this).val().length == 2) {
-            let val = '0,' + $(this).val();
-            $('.rule-value').val(val);
+        applyMaskManually(this); 
+    });
+
+    $('.coupon-value').on('blur', function () {            
+        if(cuponType==1){
+            applyMaskManually(this);            
         }
     });
+
+    function applyMaskManually(classValue){        
+        if ($(classValue).val().length == 1) {
+            let val = '0,0' + $(classValue).val();
+            $(classValue).val(val);
+        } else if ($(classValue).val().length == 2) {
+            let val = '0,' + $(classValue).val();
+            $(classValue).val(val);
+        }
+    }
 
     $('.tab_coupons').on('click', function () {
         atualizarCoupon();

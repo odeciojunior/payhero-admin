@@ -54,7 +54,6 @@ class PixService
                 $responseCheckout = (new CheckoutService())->checkPaymentPix($data);
 
 
-
                 if ($responseCheckout->status == 'success' and $responseCheckout->payment == true) {
                     $saleModel = Sale::where(
                         [

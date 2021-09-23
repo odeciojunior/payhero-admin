@@ -80,6 +80,7 @@ result
 .command
 .dados
 
-### Deploy script ###
-aws-cloudfox.sh
 
+logs/
+result
+result_migrations

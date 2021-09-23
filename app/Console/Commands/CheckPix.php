@@ -51,7 +51,8 @@ class CheckPix extends Command
                         ['payment_method', '=', Sale::PIX_PAYMENT],
                         ['status', '=', Sale::STATUS_CANCELED]
                     ]
-                )->get();
+                )
+                ->get();
 
             $total = count($sales);
             $bar = $this->output->createProgressBar($total);
@@ -71,15 +72,15 @@ class CheckPix extends Command
                     $saleModel = Sale::where(
                         [
                             ['payment_method', '=', Sale::PIX_PAYMENT],
-                            ['status', '=', Sale::STATUS_APPROVED],
                             ['customer_id', $sale->customer->id]
                         ]
                     )
+                    ->whereIn("status", [Sale::STATUS_APPROVED, Sale::STATUS_REFUNDED])
                     ->whereDate('start_date', Carbon::parse($sale->start_date)->format("Y-m-d"))->first();
 
 
                     if(empty($saleModel)) {
-                        report(new Exception('Command para checar as venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
+                        report(new Exception('Local command para checar as venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
                     }
 
                 }

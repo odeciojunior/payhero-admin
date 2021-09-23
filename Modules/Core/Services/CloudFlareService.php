@@ -29,7 +29,7 @@ class CloudFlareService
 {
     const shopifyIp = '23.227.38.65';
     const checkoutIp = 'alb-production-1620949233.us-east-2.elb.amazonaws.com';
-    const sacIp = 'cloudfoxsuit-sac-balance-1972915763.us-east-1.elb.amazonaws.com';
+    const sacIp = 'alb-production-1620949233.us-east-2.elb.amazonaws.com';
     const affiliateIp = 'alb-production-1620949233.us-east-2.elb.amazonaws.com';
     const adminIp = 'alb-production-1620949233.us-east-2.elb.amazonaws.com';
 
