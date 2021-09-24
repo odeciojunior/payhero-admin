@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\ImportShopifyTrackingCodesJob;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Project;
-
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\User;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 class GenericCommand extends Command
 {
     protected $signature = 'generic';
@@ -14,7 +15,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $project = Project::find(3722);
-        ImportShopifyTrackingCodesJob::dispatch($project, false);
+
     }
 }
