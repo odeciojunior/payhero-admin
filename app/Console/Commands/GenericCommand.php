@@ -15,7 +15,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
-       $company = Company::find(471);
-       dd($company->present()->gatewayCredentials(8));
+
     }
 }
