@@ -23,8 +23,7 @@ $(document).ready(function () {
     let storeTypeProduct = () => {
         if(localStorage.getItem("filtersApp")){
             let getProductValue = JSON.parse(localStorage.getItem("filtersApp"));
-            product = getProductValue.getTypeProducts;
-            return product;
+            return getProductValue;
         }else{
             return 0
         }
@@ -47,7 +46,7 @@ $(document).ready(function () {
         deleteCookie("filterProduct");
 
         //compara o id do produto anterior com o novo e limpa a pagina
-        if(storeTypeProduct() != $("#type-products").val()){
+        if(storeTypeProduct().getTypeProducts != $("#type-products").val() || storeTypeProduct().getProject != $("#select-projects").val()){
             if(localStorage.getItem("page") != null){
                 let getPageStored = JSON.parse(localStorage.getItem("page"));
                 getPageStored.atualPage = null;
