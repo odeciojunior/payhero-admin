@@ -266,15 +266,15 @@ class Company extends Model
     }
 
     public function gatewayCredential($gateway_id){
-        return $this->entity->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()??null;
+        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()??null;
     }
 
     public function getGatewayStatus($gateway_id){
-        return $this->entity->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_status??null;
+        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_status??null;
     }
 
     public function getGatewaySubsellerId($gateway_id){
-        return $this->entity->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_subseller_id??null;
+        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_subseller_id??null;
     }
     
 }
