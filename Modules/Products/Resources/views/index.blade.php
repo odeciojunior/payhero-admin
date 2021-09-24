@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=09') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=110') }}">
 @endpush
 
 @section('content')
