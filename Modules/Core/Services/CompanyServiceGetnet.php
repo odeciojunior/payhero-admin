@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Modules\Core\Services\Gateways\Getnet;
+namespace Modules\Core\Services;
 
 
 use Exception;

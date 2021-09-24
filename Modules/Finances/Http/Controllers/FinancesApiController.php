@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\RemessaOnlineService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
@@ -38,15 +39,15 @@ class FinancesApiController extends Controller
                 return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
             }
 
-            $companyService = new CompanyService();
+            $companyService = new CompanyBalanceService($company);
 
-            $blockedBalance = $companyService->getBlockedBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
+            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
 
-            $blockedBalancePending = $companyService->getBlockedBalancePending($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
+            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
 
-            $pendingBalance = $companyService->getPendingBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE) - $blockedBalancePending;
+            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE) - $blockedBalancePending;
 
-            $availableBalance = $companyService->getAvailableBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
+            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
 
             $totalBalance = $availableBalance + $pendingBalance;
 

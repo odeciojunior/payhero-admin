@@ -9,7 +9,7 @@ use Modules\Core\Entities\GetnetBackofficeRequests;
  * Class GetnetService
  * @package Modules\Core\Services
  */
-class GetnetService
+class GetnetBaseService
 {
 
     public $accessToken;

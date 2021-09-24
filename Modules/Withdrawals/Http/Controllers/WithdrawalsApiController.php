@@ -12,6 +12,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
@@ -109,13 +110,10 @@ class WithdrawalsApiController
 
             $withdrawalValue = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
 
-            $companyService = new CompanyService();
-            $availableBalance = $companyService->getAvailableBalance(
-                $company,
-                CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
-            );
+            $companyService = new CompanyBalanceService($company);
+            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
 
-            $pendingDebtsSum = $companyService->getPendingDebtBalance($company);
+            $pendingDebtsSum = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
 
             if (!$withdrawalService->valueWithdrawalIsValid($withdrawalValue, $availableBalance, $pendingDebtsSum)) {
                 return response()->json(

@@ -14,6 +14,7 @@ use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Services\BankService;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\RemessaOnlineService;
 use Modules\Core\Services\UserService;
@@ -112,6 +113,7 @@ class OldWithdrawalsApiController extends Controller
             }
 
             $companyService = new CompanyService();
+            $companyBalanceService = new CompanyBalanceService($company);
             $userService = new UserService();
 
             
@@ -159,7 +161,7 @@ class OldWithdrawalsApiController extends Controller
             }
 
             // verify blocked balance
-            $blockedValue = $companyService->getBlockedBalance($company);
+            $blockedValue = $companyBalanceService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
 
             $availableBalance = $company->balance - $blockedValue;
 

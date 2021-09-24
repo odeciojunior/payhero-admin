@@ -33,8 +33,14 @@ class Gateway extends Model
     use PresentableTrait;
     use SoftDeletes;
 
-    public const GETNET_SANDBOX_ID = 14;
+    public const PAGARME_PRODUCTION_ID = 1;
+    public const PAGARME_SANDBOX_ID = 2;
+    public const ZOOP_PRODUCTION_ID = 3;
+    public const ZOOP_SANDBOX_ID = 4;
+    public const CIELO_PRODUCTION_ID = 5;
+    public const CIELO_SANDBOX_ID = 6;
     public const GETNET_PRODUCTION_ID = 15;
+    public const GETNET_SANDBOX_ID = 14;
     public const GERENCIANET_PRODUCTION_ID = 18;
     public const GERENCIANET_SANDBOX_ID = 19;
     public const ASAAS_PRODUCTION_ID = 8;
