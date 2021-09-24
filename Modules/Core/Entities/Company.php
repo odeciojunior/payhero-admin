@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CompanyPresenter;
@@ -258,4 +259,22 @@ class Company extends Model
     {
         return $this->hasMany('Modules\Core\Entities\Withdrawal');
     }
+
+    public function gatewayCompanyCredential(): HasMany
+    {
+        return $this->hasMany('Modules\Core\Entities\GatewaysCompaniesCredential');
+    }
+
+    public function gatewayCredential($gateway_id){
+        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()??null;
+    }
+
+    public function getGatewayStatus($gateway_id){
+        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_status??null;
+    }
+
+    public function getGatewaySubsellerId($gateway_id){
+        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_subseller_id??null;
+    }
+    
 }
