@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ImportShopifyTrackingCodesJob;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\User;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Modules\Core\Entities\Project;
+
 class GenericCommand extends Command
 {
     protected $signature = 'generic';
@@ -14,16 +14,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $users = User::role('account_owner')->get();
-        foreach($users as $us){
-            $us->syncRoles(['account_owner','admin']);
-        }
-    }
-
-    public function rollback(){
-        $users = User::role('account_owner')->get();
-        foreach($users as $us){
-            $us->syncRoles(['account_owner']);
-        }
+        $project = Project::find(3722);
+        ImportShopifyTrackingCodesJob::dispatch($project, false);
     }
 }
