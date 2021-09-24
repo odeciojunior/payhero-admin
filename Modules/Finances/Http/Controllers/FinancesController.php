@@ -18,6 +18,10 @@ class FinancesController extends Controller
     public function index()
     {
 
+    }
+
+    public function show()
+    {
         return view('finances::index');
     }
 
