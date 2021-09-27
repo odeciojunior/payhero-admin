@@ -41,7 +41,7 @@ class CopyCompanyCredentialsToGatewaysCompaniesCredentials extends Migration
             }
 
             if(!empty($company->asaas_homolog_id)){
-                $this->createCredentials($company->id,Gateway::ASAAS_PRODUCTION_ID,null,$company->asaas_homolog_id);
+                $this->createCredentials($company->id,Gateway::ASAAS_SANDBOX_ID,null,$company->asaas_homolog_id);
             }
             $progress->advance();
         }

@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
@@ -680,20 +682,15 @@ class GetNetStatementService
 
     public function getFiltersAndStatement()
     {
+        $credential = GatewaysCompaniesCredential::where('company_id',current(Hashids::decode('6q510ZOjpX3E9D4')))
+        ->where('gateway_id',FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID:Gateway::GETNET_SANDBOX_ID)
+        ->where('gateway_status',GatewaysCompaniesCredential::GETNET_STATUS_APPROVED)        
+        ->with('company',function($qr){            
+            $qr->where('user_id', auth()->user()->account_owner_id);
+        })->first();
 
-        $companyGetNet = Company::whereNotNull('subseller_getnet_id')
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->whereGetNetStatus(1)
-            ->whereId(current(Hashids::decode(request()->get('company'))))
-            ->first();
-
-        if (empty($companyGetNet)) {
+        if (empty($credential)) {
             return response()->json([]);
-        }
-
-        $subseller = $companyGetNet->subseller_getnet_homolog_id;
-        if (FoxUtils::isProduction()) {
-            $subseller = $companyGetNet->subseller_getnet_id;
         }
 
         try {
@@ -719,7 +716,7 @@ class GetNetStatementService
         }
 
         $getNetBackOfficeService = new GetnetBackOfficeService();
-        $getNetBackOfficeService->setStatementSubSellerId($subseller)
+        $getNetBackOfficeService->setStatementSubSellerId($credential->gateway_subseller_id)
             ->setStatementStartDate($startDate)
             ->setStatementEndDate($endDate)
             ->setStatementDateField($statementDateField);
@@ -740,7 +737,7 @@ class GetNetStatementService
 
         $filters['start_date'] = $startDate;
         $filters['end_date'] = $endDate;
-        $filters['company_id'] = $companyGetNet->id;
+        $filters['company_id'] = $credential->company_id;
         $filters['status'] = request()->get('status');
         $filters['payment_method'] = request()->get('payment_method');
         $filters['withdrawal_id'] = current(Hashids::decode(request()->get('withdrawal_id')));;

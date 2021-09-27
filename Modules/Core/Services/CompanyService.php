@@ -10,6 +10,7 @@ use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
@@ -27,9 +28,9 @@ class CompanyService
     public static function getSubsellerId(Company $company): string
     {
         if (FoxUtils::isProduction()) {
-            return $company->subseller_getnet_id;
+            return $company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID);
         }
-        return $company->subseller_getnet_homolog_id;
+        return $company->getGatewaySubsellerId(Gateway::GETNET_SANDBOX_ID);
     }
 
     public function getCompaniesUser($paginate = false)
@@ -288,14 +289,12 @@ class CompanyService
     public function createCompanyPjGetnet(Company $company)
     {
         try {
-            if (empty($company->user->cellphone) || empty($company->user->email)) {
-                $company->update(
-                    [
-                        'get_net_status' => Company::GETNET_STATUS_PENDING,
-                    ]
-                );
+            if (empty($company->user->cellphone) || empty($company->user->email)) 
+            {
+                $this->createRowCredential($company->id);
                 return;
             }
+            
             $result = (new GetnetBackOfficeService())->createPjCompany($company);
             $this->updateToReviewStatusGetnet($company, $result);
         } catch (Exception $e) {
@@ -305,18 +304,20 @@ class CompanyService
 
     private function updateToReviewStatusGetnet($company, $result)
     {
+        $credential = GatewaysCompaniesCredential::where('company_id',$company->id)->first();
+        
         if (empty($result) || empty(json_decode($result)->subseller_id)) {
-            $company->update(
+            $credential->update(
                 [
-                    'get_net_status' => Company::GETNET_STATUS_ERROR,
+                    'gateway_status' => GatewaysCompaniesCredential::GETNET_STATUS_ERROR,
                 ]
             );
             return;
         }
-        $company->update(
+        $credential->update(
             [
-                'subseller_getnet_id' => json_decode($result)->subseller_id,
-                'get_net_status' => Company::GETNET_STATUS_REVIEW,
+                'gateway_subseller_id' => json_decode($result)->subseller_id,
+                'gateway_status' => GatewaysCompaniesCredential::GETNET_STATUS_REVIEW,
             ]
         );
     }
@@ -324,14 +325,12 @@ class CompanyService
     public function createCompanyPfGetnet(Company $company)
     {
         try {
-            if ((new UserService())->verifyFieldsEmpty($company->user)) {
-                $company->update(
-                    [
-                        'get_net_status' => Company::GETNET_STATUS_PENDING,
-                    ]
-                );
+            if ((new UserService())->verifyFieldsEmpty($company->user))
+            {                
+                $this->createRowCredential($company->id);                
                 return;
             }
+
             $result = (new GetnetBackOfficeService())->createPfCompany($company);
             $this->updateToReviewStatusGetnet($company, $result);
         } catch (Exception $e) {
@@ -355,6 +354,14 @@ class CompanyService
             'message' => 'success',
             'data' => '',
         ];
+    }
+
+    public function createRowCredential($companyId){
+        return GatewaysCompaniesCredential::create([
+            'company_id'=>$companyId,
+            'gateway_id'=>Gateway::GETNET_PRODUCTION_ID,
+            'gateway_status'=>GatewaysCompaniesCredential::GETNET_STATUS_PENDING                        
+        ]);
     }
 
     public function getBlockedBalance(Company $company, $liquidationType = null)
@@ -454,7 +461,7 @@ class CompanyService
     public function updateCaptureTransactionEnabled(Company $company): void
     {
         try {
-            if ($company->get_net_status == Company::GETNET_STATUS_APPROVED) {
+            if ($company->getGatewayStatus(Gateway::GERENCIANET_PRODUCTION_ID) == Company::GETNET_STATUS_APPROVED) {
                 $company->update(
                     [
                         'capture_transaction_enabled' => true
