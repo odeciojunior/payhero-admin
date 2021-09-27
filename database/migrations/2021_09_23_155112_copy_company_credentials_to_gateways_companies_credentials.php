@@ -45,7 +45,7 @@ class CopyCompanyCredentialsToGatewaysCompaniesCredentials extends Migration
             }
             $progress->advance();
         }
-        $progress->finish();    
+        $progress->finish();
         $output->writeln('');
     }
 
