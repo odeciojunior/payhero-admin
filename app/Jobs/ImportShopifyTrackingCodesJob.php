@@ -50,7 +50,6 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
             ->where('status', Sale::STATUS_APPROVED)
             ->whereNotNull('shopify_order')
             ->whereNotNull('delivery_id')
-            ->where('id', 1033156)
             ->whereHas('productsPlansSale', function ($query) {
                 $query->whereDoesntHave('tracking');
             })->whereHas('transactions', function ($query) {
