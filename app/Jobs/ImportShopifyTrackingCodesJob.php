@@ -50,6 +50,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
             ->where('status', Sale::STATUS_APPROVED)
             ->whereNotNull('shopify_order')
             ->whereNotNull('delivery_id')
+            ->where('id', 1033156)
             ->whereHas('productsPlansSale', function ($query) {
                 $query->whereDoesntHave('tracking');
             })->whereHas('transactions', function ($query) {
@@ -60,11 +61,6 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                         $fulfillments = $this->shopifyService->findFulfillments($sale->shopify_order);
                         if (!empty($fulfillments)) {
                             $this->checkFulfillment($sale, $fulfillments);
-
-                            // Camila Monteiro
-                            foreach ($sale->upsells as $upsell) {
-                                $this->checkFulfillment($upsell, $fulfillments);
-                            }
                         }
                     } catch (\Exception $e) {
                         report($e);
@@ -104,6 +100,12 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
         $trackingService = new TrackingService();
 
         $saleProducts = $productService->getProductsBySale($sale);
+
+        // Camila Monteiro
+        foreach ($sale->upsells as $upsell) {
+            $saleProducts = $saleProducts->merge($productService->getProductsBySale($upsell));
+        }
+
         foreach ($fulfillments as $fulfillment) {
             $trackingCodes = $fulfillment->getTrackingNumbers();
             if (!empty($trackingCodes)) {
