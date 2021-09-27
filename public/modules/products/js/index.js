@@ -67,7 +67,7 @@ $(document).ready(function () {
         deleteCookie("filterProduct");
     });
     getTypeProducts();
-    //updateProducts(); //Funcao de update chamda pela 2x
+    updateProducts(); //Funcao de update chamda pela 2x
     
     // SETTING VALUES OF FILTERS IN INPUTS SEARCH
     function handleLocalStorage() {
@@ -78,7 +78,7 @@ $(document).ready(function () {
             setTimeout(()=>{
                 $("#select-projects").val(parseLocalStorage.getProject);
                 $("#name").val(parseLocalStorage.getName);
-                $("#btn-filtro").trigger("click")
+                //$("#btn-filtro").trigger("click")
             },1000);
         }
     }
