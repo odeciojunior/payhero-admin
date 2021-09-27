@@ -19,35 +19,35 @@
                     <div class="col-md-3 col-6 pr-20">
                         <div class="card border orange">
                             <span class="title">Em aberto</span>
-                            <div>
-                                <span class="number">22</span>
-                                <span>(22% de 100)</span>
+                            <div id="ticket-open">
+                                <span class="number"></span>
+                                <span class="detail"></span>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6 px-20">
                         <div class="card border purple">
                             <span class="title">Em mediação</span>
-                            <div>
-                                <span class="number">02</span>
-                                <span>(2%)</span>
+                            <div id="ticket-mediation">
+                                <span class="number"></span>
+                                <span class="detail"></span>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6 px-20">
                         <div class="card border green">
                             <span class="title">Resolvidos</span>
-                            <div>
-                                <span class="number">76</span>
-                                <span>(76%)</span>
+                            <div id="ticket-closed">
+                                <span class="number"></span>
+                                <span class="detail"></span>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6 pl-20">
                         <div class="card border blue">
                             <span class="title">Total</span>
-                            <div>
-                                <span class="number">100</span>
+                            <div id="ticket-total">
+                                <span class="number"></span>
                             </div>
                         </div>
                     </div>
@@ -59,34 +59,16 @@
                             <span>Filtros</span>
                         </div>
                         <div class="filter-container">
-                            <span class="filter-badge active">
-                                    Reclamação
-                                </span>
-                            <span class="filter-badge">
-                                    Dúvida
-                                </span>
-                            <span class="filter-badge">
-                                    Sugestão
-                                </span>
-                            <span class="filter-badge">
-                                    7 dias
-                                </span>
-                            <span class="filter-badge">
-                                    15 dias
-                                </span>
-                            <span class="filter-badge">
-                                    30 dias
-                                </span>
+                            <span id="category-complaint" class="filter-badge">Reclamação</span>
+                            <span id="category-doubt" class="filter-badge">Dúvida</span>
+                            <span id="category-suggestion" class="filter-badge">Sugestão</span>
+                            <span id="period-7" class="filter-badge">7 dias</span>
+                            <span id="period-15" class="filter-badge">15 dias</span>
+                            <span id="period-30" class="filter-badge">30 dias</span>
                             <span class="vertical-line"></span>
-                            <span class="filter-badge editable" data-target="#input-code">
-                                    Código
-                                </span>
-                            <span class="filter-badge editable" data-target="#input-cpf">
-                                    CPF
-                                </span>
-                            <span class="filter-badge editable" data-target="#input-name">
-                                    Nome
-                            </span>
+                            <span id="filter-code" class="filter-badge editable" data-target="#input-code">Código</span>
+                            <span id="filter-document" class="filter-badge editable" data-target="#input-document">CPF/CNPJ</span>
+                            <span id="filter-name" class="filter-badge editable" data-target="#input-name">Nome</span>
                         </div>
                         <div class="filter-badge-input" id="input-code">
                             <input class="input-pad" placeholder="Código do ticket">
@@ -94,8 +76,8 @@
                                 <i class="material-icons">check</i>
                             </button>
                         </div>
-                        <div class="filter-badge-input" id="input-cpf">
-                            <input class="input-pad" placeholder="CPF do cliente">
+                        <div class="filter-badge-input" id="input-document">
+                            <input class="input-pad" placeholder="CPF/CNPJ do cliente">
                             <button class="btn btn-primary">
                                 <i class="material-icons">check</i>
                             </button>
@@ -111,96 +93,67 @@
                 <div class="row mt-10">
                     <div class="col">
                         <div class="card p-0">
-                            <div class="tickets-grid">
-                                <div class="search-container">
-                                    <span>Tickets</span>
-                                    <select class="input-select">
-                                        <option value="" selected>abertos</option>
-                                        <option value="">resolvidos</option>
-                                        <option value="">em mediação</option>
-                                        <option value="">todos</option>
-                                    </select>
-                                    <button class="btn-search">
-                                        <i class="material-icons">search</i>
-                                    </button>
-                                    <div class="search-box">
-                                        <input class="input-pad" placeholder="Digite o nome ou o CPF">
-                                        <button class="btn btn-primary">
-                                            <i class="material-icons">check</i>
+                            <div class="tickets-grid empty">
+                                <div class="tickets-grid-left">
+                                    <div class="search-container">
+                                        <span>Tickets</span>
+                                        <select id="filter-status" class="input-select">
+                                            <option value="" selected>todos</option>
+                                            <option value="1">abertos</option>
+                                            <option value="2">resolvidos</option>
+                                            <option value="3">em mediação</option>
+                                        </select>
+                                        <button class="btn-search">
+                                            <i class="material-icons">search</i>
                                         </button>
-                                    </div>
-                                </div>
-                                <div class="ticket-header">
-                                    <button class="ticket-back">
-                                        <span class="material-icons ml-10">arrow_back_ios</span>
-                                    </button>
-                                    <div class="ticket-customer">
-                                        Nelson C Lima
-                                    </div>
-                                    <div class="ticket-status">
-                                        <span class="ticket-status-icon open small"></span>
-                                        <span class="ticket-status-text">Finalizado</span>
-                                    </div>
-                                    <div class="ticket-category">
-                                        <span class="ticket-category-text">Reclamação</span> aberta em <span
-                                            class="ticket-start-date">02/03/2021</span> para <span
-                                            class="ticket-project">4FunStore</span>
-                                    </div>
-                                </div>
-                                <div class="tickets-container">
-                                    @for($i = 0; $i < 5; $i++)
-                                        <div class="ticket-item {{$i==0?'active': ''}}">
-                                            <div class="px-30 pt-1">
-                                                @php($a = random_int(1, 4))
-                                                <span
-                                                    class="ticket-status-icon {{$a == 1 ? 'open' : ($a == 2 ? 'closed' : ($a == 3 ? 'mediation' : ($a == 4 ? 'answered' : ''))) }}"></span>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <div class="customer-name">Adriano Pontes</div>
-                                                <small class="ticket-subject">Problema com código de
-                                                    rastreio</small>
-                                                <div class="ticket-last-message">Não consigo acessar a página de
-                                                    rastreio do meu pedido, acredito que tenha ocorrido algum engano
-                                                    no...
-                                                </div>
-                                            </div>
+                                        <div class="search-box">
+                                            <input id="name-or-document" class="input-pad" placeholder="Digite o nome ou o CPF/CNPJ">
+                                            <button class="btn btn-primary">
+                                                <i class="material-icons">check</i>
+                                            </button>
                                         </div>
-                                    @endfor
-                                </div>
-                                <div class="messages-container">
-                                    <div class="ticket-date">Atendimento aberto em <b class="date">21/04/2021</b> às <b class="time">15h32</b></div>
-                                    @for($i = 0; $i < 10; $i++)
-                                        @php($a = rand(1, 3))
-                                        <div
-                                            class="ticket-message {{$a == 2 ? 'admin' : ($a == 3 ? 'cloudfox' : '') }}">
-                                            Não consigo acessar a página de
-                                            rastreio do meu pedido, acredito que tenha ocorrido algum engano na
-                                            hora do envio.
-                                            <div class="ticket-message-date">21/04 às 15h32</div>
+                                    </div>
+                                    <div class="tickets-container">
+                                        {{-- loaded via js --}}
+                                    </div>
+                                    <div class="pagination-container">
+                                        <div class="current-page-text" style="display:none">
+                                            visualizando <span class="per-page">5</span> de
+                                            <span class="total">40</span>
                                         </div>
-                                    @endfor
-                                </div>
-                                <div class="pagination-container">
-                                    <div class="current-page-text">visualizando <span class="per-page">5</span> de
-                                        <span class="total">40</span></div>
-                                    <div class="pagination">
-                                        <a class="active" href="" >1</a>
-                                        <a href="" >1</a>
-                                        <a href="" >1</a>
-                                        <a href="" >1</a>
-                                        <a href="" >1</a>
-                                        <a href="" >1</a>
-                                        <a href="" >1</a>
+                                        <div class="pagination" id="tickets-pagination">
+                                            {{-- loaded via js --}}
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="write-container">
-                                    <div class="write-inputs">
+                                <div class="tickets-grid-right">
+                                    <div class="ticket-header">
+                                        <button class="ticket-back">
+                                            <span class="material-icons ml-10">arrow_back_ios</span>
+                                        </button>
+                                        <div class="ticket-customer"></div>
+                                        <div class="ticket-status">
+                                            <span class="ticket-status-icon small"></span>
+                                            <span class="ticket-status-text"></span>
+                                        </div>
+                                        <div class="ticket-category">
+                                            <span class="ticket-category-text"></span> aberta em
+                                            <span class="ticket-start-date"></span> para
+                                            <span class="ticket-project"></span>
+                                        </div>
+                                    </div>
+                                    <div class="messages-container">
+                                        {{-- loaded via js --}}
+                                    </div>
+                                    <div class="write-container">
                                         <div class="inputs-container">
-                                        <textarea class="input-pad write-area" rows="1"
-                                                  placeholder="Digite sua mensagem..."></textarea>
-                                            <div class="attachments-container" style="display:none !important;"></div>
+                                            <input type="hidden" id="ticket-id">
+                                            <div class="attachments-container" style="display:none"></div>
+                                            <textarea id="write-area" class="input-pad" rows="1"
+                                                      placeholder="Digite sua mensagem..."></textarea>
                                             <div class="write-buttons">
-                                                <input type="file" accept="image/*,.txt,.pdf,.doc,.docx" id="input-file" class="d-none">
+                                                <input type="file" accept="image/*,.txt,.pdf,.doc,.docx" id="input-file"
+                                                       class="d-none">
                                                 <input type="file" accept="image/*" id="input-image" class="d-none">
                                                 <button id="btn-emoji">
                                                     <i class="material-icons">sentiment_satisfied_alt</i>
@@ -213,7 +166,7 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <button class="btn-send">
+                                        <button id="btn-send">
                                             <i class="material-icons">send</i>
                                         </button>
                                     </div>

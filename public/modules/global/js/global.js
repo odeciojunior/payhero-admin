@@ -221,8 +221,9 @@ function loadOnTable(whereToLoad, tableReference) {
 function loadOnAny(target, remove = false, options = {}) {
     //cleanup
     target = $(target);
-    $('.loader-any-container').fadeOut();
-    target.parent().find('.loader-any-container').remove();
+    target.parent()
+        .find('.loader-any-container')
+        .remove();
 
     if (!remove) {
 

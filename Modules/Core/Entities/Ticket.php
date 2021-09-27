@@ -24,7 +24,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $last_message_date
  * @property boolean $mediation_notified
  * @property boolean $ignore_balance_block
- * @property tinyInteger $classification_enum
+ * @property integer $classification_enum
  * @property integer $average_response_time
  * @property string $created_at
  * @property string $updated_at

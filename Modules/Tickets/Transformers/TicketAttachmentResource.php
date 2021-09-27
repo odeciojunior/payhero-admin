@@ -10,11 +10,13 @@ class TicketAttachmentResource extends JsonResource
 {
     public function toArray($request)
     {
-        $id = Hashids::encode($this->id);
         return [
-            'id' => $id,
-            'file' => route('api.tickets.getfile', ['id' => $id], false),
-            'created_at' => Carbon::parse($this->created_at)->format('d/m/Y H:i:s'),
+            'id' => Hashids::encode($this->id),
+            'content' => basename($this->file),
+            'type' => 'file',
+            'created_at' => Carbon::parse($this->created_at)->format('d/m \à\s H\hi'),
+            'link' => $this->file,
+            'from' => $this->type_enum,
         ];
     }
 }
