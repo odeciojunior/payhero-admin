@@ -1,5 +1,20 @@
 $(document).ready(function () {
 
+    let gatewayCode = window.location.href.split('/')[4];
+
+    if(gatewayCode == 'NzJqoR32egVj5D6') {
+        $(".page-title").text('Finanças - Asaas');
+    }
+    else if(gatewayCode == 'w7YL9jZD6gp4qmv') {
+        $(".page-title").text('Finanças - Getnet');
+    }
+    else if(gatewayCode == 'oXlqv13043xbj4y') {
+        $(".page-title").text('Finanças - Gerencianet');
+    }
+    else if(gatewayCode == 'pM521rZJrZeaXoQ') {
+        $(".page-title").text('Finanças - Cielo');
+    }
+
     //Comportamentos da tela
     $('#date_range').daterangepicker({
         startDate: moment().startOf('week'),
@@ -170,9 +185,12 @@ $(document).ready(function () {
         });
         loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
         $.ajax({
-            url: "api/finances/getbalances",
+            url: "/api/finances/getbalances",
             type: "GET",
-            data: {company: $("#transfers_company_select option:selected").val()},
+            data: {
+                   company: $("#transfers_company_select option:selected").val(), 
+                   gateway_id: gatewayCode
+            },
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

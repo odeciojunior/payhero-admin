@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\RemessaOnlineService;
@@ -39,20 +40,17 @@ class FinancesApiController extends Controller
                 return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
             }
 
-            $companyService = new CompanyBalanceService($company);
+            $gateway = Gateway::find(hashids_decode($request->input('gateway_id')));
+
+            $companyService = new CompanyBalanceService($company, $gateway->getService());
+            // $companyService = new CompanyBalanceService($company);
 
             $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
-
             $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
-
             $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE) - $blockedBalancePending;
-
             $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
-
             $totalBalance = $availableBalance + $pendingBalance;
-
             $availableBalance -= $blockedBalance;
-
             $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
 
             return response()->json(
@@ -65,7 +63,6 @@ class FinancesApiController extends Controller
             );
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Ocorreu algum erro, tente novamente!',], 400);
         }
     }
