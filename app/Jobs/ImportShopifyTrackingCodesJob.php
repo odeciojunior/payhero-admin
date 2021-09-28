@@ -106,11 +106,9 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                 $lineItems = $fulfillment->getLineItems();
                 $fulfillmentWithMultipleTracking = count($trackingCodes) === count($lineItems);
                 foreach ($lineItems as $key => $lineItem) {
-                    if ($fulfillmentWithMultipleTracking) {
-                        $trackingCode = $trackingCodes[$key];
-                    } else {
-                        $trackingCode = $trackingCodes[0];
-                    }
+
+                    $trackingCode = $fulfillmentWithMultipleTracking ? $trackingCodes[$key] :$trackingCodes[0];
+
                     $products = $saleProducts
                         ->where('shopify_variant_id', $lineItem->getVariantId())
                         ->where('amount', $lineItem->getQuantity());
@@ -122,10 +120,8 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                     }
 
                     // Camila Monteiro
-                    if(!$fulfillmentWithMultipleTracking) {
-                        foreach ($sale->upsells as $upsell) {
-                            $products = $products->merge($productService->getProductsBySale($upsell));
-                        }
+                    if (!$products->count() && $sale->owner_id === 3933) {
+                        $products = $saleProducts;
                     }
 
                     if ($products->count()) {
