@@ -121,15 +121,14 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                             ->where('amount', $lineItem->getQuantity());
                     }
 
-                    if ($products->count()) {
-
-                        // Camila Monteiro
-                        if(!$fulfillmentWithMultipleTracking) {
-                            foreach ($sale->upsells as $upsell) {
-                                $products = $products->merge($productService->getProductsBySale($upsell));
-                            }
+                    // Camila Monteiro
+                    if(!$fulfillmentWithMultipleTracking) {
+                        foreach ($sale->upsells as $upsell) {
+                            $products = $products->merge($productService->getProductsBySale($upsell));
                         }
+                    }
 
+                    if ($products->count()) {
                         foreach ($products as $product) {
                             $trackingService->createOrUpdateTracking($trackingCode, $product->product_plan_sale_id);
                         }
