@@ -17,6 +17,7 @@ $(document).ready(function () {
         2: "Aprovado",
         3: "Recusado",
     };
+    
     // Comportamentos da tela
     //VERIFICA SE HA FILTRO E PEGA O TIPO
     let storeTypeProduct = () => {
