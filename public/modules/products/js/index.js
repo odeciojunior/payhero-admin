@@ -1,13 +1,11 @@
 $(document).ready(function () {
-
     let regexp = /http(s?):\/\/[\w.-]+\/products\/\w{15}\/edit/;
     let lastPage = document.referrer;
-    
     if (!lastPage.match(regexp)) {
         localStorage.clear();
     }
-    getProjects();
 
+    getProjects();
     var pageCurrent;
     let badgeList = {
         1: "#2E85EC",
@@ -20,13 +18,15 @@ $(document).ready(function () {
         3: "Recusado",
     };
     // Comportamentos da tela
-    //arrow function anonima,verifica se existe algum filtro e pega o valor do projeto
+    //VERIFICA SE HA FILTRO E PEGA O TIPO
     let storeTypeProduct = () => {
         if(localStorage.getItem("filtersApp")){
             let getProductValue = JSON.parse(localStorage.getItem("filtersApp"));
             return getProductValue;
+
         }else{
-            return 0
+            return 0;
+
         }
     }
 
@@ -46,8 +46,9 @@ $(document).ready(function () {
     $("#btn-filtro").on("click", function () {
         deleteCookie("filterProduct");
 
-        //compara o id do produto anterior com o novo e limpa a pagina
-        if(storeTypeProduct().getTypeProducts != $("#type-products").val() || storeTypeProduct().getProject != $("#select-projects").val()){
+        //SE O TIPO FOR DIFERENTE ZERA A PAGINA
+        if(storeTypeProduct().getTypeProducts != $("#type-products").val() || storeTypeProduct().getName != $('#name').val() || storeTypeProduct().getProject != $('#select-projects').val()){
+
             if(localStorage.getItem("page") != null){
                 let getPageStored = JSON.parse(localStorage.getItem("page"));
                 getPageStored.atualPage = null;
@@ -55,6 +56,7 @@ $(document).ready(function () {
             }
         }
 
+        //GUARDA O NOVO FILTRO
         let filtersApp = {
             getTypeProducts: $("#type-products option:selected").val(),
             getProject: $("#select-projects option:selected").val(),
@@ -68,9 +70,9 @@ $(document).ready(function () {
         deleteCookie("filterProduct");
     });
     getTypeProducts();
-    updateProducts(); //Funcao de update chamda pela 2x
+    //updateProducts(); //Funcao de update chamda pela 2x
     
-    // SETTING VALUES OF FILTERS IN INPUTS SEARCH
+    //
     function handleLocalStorage() {
         if (localStorage.getItem('filtersApp') !== null) {
             let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApp'));
@@ -79,7 +81,7 @@ $(document).ready(function () {
             setTimeout(()=>{
                 $("#select-projects").val(parseLocalStorage.getProject);
                 $("#name").val(parseLocalStorage.getName);
-                //$("#btn-filtro").trigger("click")
+                $("#btn-filtro").trigger("click")
             },1000);
         }
     }
@@ -159,31 +161,36 @@ $(document).ready(function () {
     function updateProducts(link = null) {
         pageCurrent = link
 
-        //verifica se algum filtro foi aplicado
+        //RETONA O FILTRO SE HOUVER SENAO RETORNA NULL
         let existFilters = () => {
             if(localStorage.getItem('filtersApp') != null){
                 let getFilters = JSON.parse(localStorage.getItem('filtersApp'))
                 return getFilters;
+            }else {
+                return null;
             };
         };
 
-        //verificar se seleciounou uma pagina e a guarda
+        //GUARDA QUALQUER PAGINA DEPOIS DA 1
         if(link != null){
             let getPage = {atualPage: pageCurrent}
             localStorage.setItem("page", JSON.stringify(getPage));
         }
         
-        //verificar se houve pagina selecionada e resgata
-        //se houver filtro e nome aplicado a pagina deve =null
+        //RESGATA PAGINA, SE HOUVER FILTRO SET PAGINA PARA NULL
         if(localStorage.getItem("page") != null){
-            parsePage = JSON.parse(localStorage.getItem("page"));
+            let parsePage = JSON.parse(localStorage.getItem("page"));
 
             if(existFilters() != null && existFilters().getName != ""){
-                pageCurrent = null;
-        
+                if(localStorage.getItem("page") != null){
+                    localStorage.setItem("page", JSON.stringify(parsePage));
+                }
             }else{
                 pageCurrent = parsePage.atualPage;
+
             }
+            parsePage = JSON.parse(localStorage.getItem("page"));
+            pageCurrent = parsePage.atualPage;
         }
 
         link = pageCurrent
