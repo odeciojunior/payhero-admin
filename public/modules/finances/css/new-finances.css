@@ -638,3 +638,11 @@ select, .select-pad {
         max-width: calc(33.3% - 10px);
     }
 }
+.popover {
+    left: -50px !important;
+}
+
+.disableFields {
+    background-color: #f3f7f9;
+    opacity: 1;
+}

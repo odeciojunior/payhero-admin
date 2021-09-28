@@ -281,8 +281,6 @@ class WithdrawalsApiController
             $filename = 'withdrawals_report_' . Hashids::encode($user->id) . '.xls';
             $email = !empty($dataRequest['email']) ? $dataRequest['email'] : $user->email;
 
-            //Excel::store(new WithdrawalsReportExport($withdrawalId, $user, $email, $filename), $filename);
-
             (new WithdrawalsReportExport($withdrawalId, $user, $email, $filename))
                 ->queue($filename)->allOnQueue('high');
 

@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services\Gateways;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
@@ -67,6 +68,21 @@ class GerencianetService implements Statement
                                     $query->where('status', BlockReasonSale::STATUS_BLOCKED);
                             })
                             ->sum('value');
+    }
+
+    public function getPendingDebtBalance() : int
+    {
+        return 0;    
+    }
+
+    public function getWithdrawals(): JsonResource
+    {
+        return new JsonResource('null');
+    }
+
+    public function createWithdrawal(): bool
+    {
+        return false;
     }
 
     public function hasEnoughBalanceToRefund(Sale $sale): bool

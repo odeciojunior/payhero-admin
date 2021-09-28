@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Interfaces;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Sale;
 
@@ -17,7 +18,11 @@ interface Statement
 
     public function getBlockedBalancePending() : int;
 
-    //public function getPendingDebtBalance() : int;
+    public function getPendingDebtBalance() : int;
 
     public function hasEnoughBalanceToRefund(Sale $sale): bool;
+
+    public function getWithdrawals(): JsonResource;
+
+    public function createWithdrawal(): bool;
 }

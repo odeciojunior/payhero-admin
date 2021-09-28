@@ -30,17 +30,16 @@ class FinancesApiController extends Controller
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
-            $company = Company::find(current(Hashids::decode($request->input('company'))));
+            $company = Company::find(hashids_decode($request->input('company')));
+            $gateway = Gateway::find(hashids_decode($request->input('gateway_id')));
 
-            if (empty($company)) {
+            if (empty($company) || empty($gateway)) {
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
             if (Gate::denies('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
             }
-
-            $gateway = Gateway::find(hashids_decode($request->input('gateway_id')));
 
             $companyService = new CompanyBalanceService($company, $gateway->getService());
             // $companyService = new CompanyBalanceService($company);
@@ -52,13 +51,15 @@ class FinancesApiController extends Controller
             $totalBalance = $availableBalance + $pendingBalance;
             $availableBalance -= $blockedBalance;
             $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
+            $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
 
             return response()->json(
                 [
-                    'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                    'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                    'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                    'blocked_balance' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
+                    'available_balance' => foxutils()->formatMoney($availableBalance / 100),
+                    'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+                    'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
+                    'blocked_balance' => foxutils()->formatMoney($blockedBalanceTotal / 100),
+                    'pending_debt_balance' => foxutils()->formatMoney($pendingDebtBalance / 100)
                 ]
             );
         } catch (Exception $e) {
