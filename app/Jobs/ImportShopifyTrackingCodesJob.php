@@ -41,8 +41,6 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
         $this->restartWebhooks();
 
         Sale::with([
-            'upsells.productsPlansSale.tracking',
-            'upsells.productsPlansSale.product',
             'productsPlansSale.tracking',
             'productsPlansSale.product',
             'productsSaleApi',
@@ -54,7 +52,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                 $query->whereDoesntHave('tracking');
             })->whereHas('transactions', function ($query) {
                 $query->where('tracking_required', true);
-            })->chunk(100, function ($sales) {
+            })->chunk(1000, function ($sales) {
                 foreach ($sales as $sale) {
                     try {
                         $fulfillments = $this->shopifyService->findFulfillments($sale->shopify_order);
