@@ -113,16 +113,13 @@ $(document).ready(function () {
                     $("#extract_company_select").append(data);
                 });
 
-
-                $("#tabs-view, #menu-tabs-view, #nav-home-tab, #nav-profile-tab, #nav-transfers, #nav-extract").show();
-
                 checkAllowed();
                 updateBalances();
                 updateTransfersTable();
-                $("#nav-extract").css('display', '');
+                $("#nav-statement").css('display', '');
                 $("#nav-statement").css('display', '');
                 $("#nav-statement-tab").on('click', function () {
-                    $("#nav-extract").css('display', '');
+                    $("#nav-statement").css('display', '');
                 });
 
                 loadingOnScreenRemove();
@@ -859,7 +856,7 @@ $(document).ready(function () {
         $("#export-excel").addClass('d-none');
     });
 
-    $("#nav-home-tab").on("click", function () {
+    $("#nav-transfers-tab").on("click", function () {
         $('#export-excel').hide();
     });
 

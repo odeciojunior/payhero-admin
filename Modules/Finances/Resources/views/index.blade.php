@@ -10,7 +10,7 @@
 
     <div class="page">
 
-        <div style="display: none" class="page-header container">
+        <div class="page-header container">
             <div class="row">
                 <div class="col-lg-6 mb-30">
                     <h1 class="page-title">Finanças</h1>
@@ -20,14 +20,14 @@
             </div>
         </div>
 
-        <div class="page-content container" style="display:none">
+        <div class="page-content container">
 
             @include('finances::components.export-alert')
 
             @include('finances::components.tabs')
 
             <div>
-                <div id="tabs-view" style="display:none">
+                <div id="tabs-view">
                     <div class="tab-content" id="nav-tabContent">
 
                         <div class="tab-pane fade show active" id="nav-transfers" role="tabpanel" aria-labelledby="nav-home-tab">
@@ -40,23 +40,19 @@
 
                         </div>
 
-                        <div class="tab-pane fade" id="nav-extract" role="tabpanel"  aria-labelledby="nav-profile-tab">
+                        <div class="tab-pane fade hide" id="nav-statement" role="tabpanel"  aria-labelledby="nav-profile-tab">
 
                             @include('finances::components.statement-filters')
 
                             @include('finances::components.statement')                            
 
                         </div>
-
-                        <div class="tab-pane" id="nav-settings" role="tabpanel" aria-labelledby="nav-statement-tab">
-
-                            @include('finances::components.automatic-withdrawal')
-
-                        </div>
                     </div>
                 </div>
             </div>
+
             @include('companies::empty')
+
         </div>
 
         @include('finances::components.export-modal')
