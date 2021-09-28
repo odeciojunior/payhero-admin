@@ -21,6 +21,9 @@ class AlterTableGatewaysCompaniesCredentials extends Migration
 
         DB::statement("ALTER TABLE `gateways_companies_credentials`
         CHANGE COLUMN `gateway_subseller_id` `gateway_subseller_id` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci' AFTER `gateway_status`;");
+
+        DB::statement("ALTER TABLE `gateways_companies_credentials`
+        ADD COLUMN `capture_transaction_enabled` TINYINT NULL DEFAULT NULL AFTER `gateway_api_key`;");
     }
 
     /**

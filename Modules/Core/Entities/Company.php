@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CompanyPresenter;
@@ -113,13 +112,6 @@ class Company extends Model
     public const DOCUMENT_STATUS_ANALYZING = 2;
     public const DOCUMENT_STATUS_APPROVED = 3;
     public const DOCUMENT_STATUS_REFUSED = 4;
-
-    public const GETNET_STATUS_APPROVED = 1;
-    public const GETNET_STATUS_REVIEW = 2;
-    public const GETNET_STATUS_REPROVED = 3;
-    public const GETNET_STATUS_APPROVED_GETNET = 4;
-    public const GETNET_STATUS_ERROR = 5;
-    public const GETNET_STATUS_PENDING = 6;
 
     public const GATEWAY_TAX = 6.9;
 

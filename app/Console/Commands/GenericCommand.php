@@ -19,13 +19,11 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $transactions = Transaction::with('sale')
-            ->whereNotNull('withdrawal_id')
-            ->whereNull('gateway_transferred_at')
-            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
-            ->orderBy('id', 'desc');
+        $this->updateCaptureTransactionEnabled();
+    }
 
-            dd($transactions->count());
-        
+    public function updateCaptureTransactionEnabled(): void
+    {
+        return;
     }
 }

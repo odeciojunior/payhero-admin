@@ -544,7 +544,7 @@ class CompaniesApiController extends Controller
             $user = auth()->user();
 
             $hasSubsellerId = GatewaysCompaniesCredential::where('gateway_id',Gateway::GETNET_PRODUCTION_ID)
-            ->where('gateway_status',GatewaysCompaniesCredential::GETNET_STATUS_APPROVED)
+            ->where('gateway_status',GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED)
             ->with('company',function($query)use($user){
                 $query->where('user_id', $user);
             })->first()->exists();

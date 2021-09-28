@@ -5,7 +5,6 @@ namespace Modules\Transfers\Services;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Redis;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\PendingDebt;
@@ -684,7 +683,7 @@ class GetNetStatementService
     {
         $credential = GatewaysCompaniesCredential::where('company_id',current(Hashids::decode('6q510ZOjpX3E9D4')))
         ->where('gateway_id',FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID:Gateway::GETNET_SANDBOX_ID)
-        ->where('gateway_status',GatewaysCompaniesCredential::GETNET_STATUS_APPROVED)        
+        ->where('gateway_status',GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED)        
         ->with('company',function($qr){            
             $qr->where('user_id', auth()->user()->account_owner_id);
         })->first();

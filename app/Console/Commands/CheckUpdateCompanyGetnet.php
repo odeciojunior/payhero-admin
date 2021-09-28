@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Exceptions\CommandMonitorTimeException;
 use Exception;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Services\CompanyService;
@@ -46,6 +45,7 @@ class CheckUpdateCompanyGetnet extends Command
 
             foreach ($companiesCredencial as $credential) {
                 $company = $credential->company;
+
                 if ($company->company_type == 1) { // physical person
                     $result = $getnet->checkPfCompanyRegister($company->document, $company->id);
                 } else { // 'juridical person'
@@ -54,18 +54,27 @@ class CheckUpdateCompanyGetnet extends Command
 
                 $result = json_decode($result);
 
-                if (!empty($result) && !empty($result->subseller_id) && $credential->gateway_subseller_id == $result->subseller_id) {
-                    if (($result->status == 'Aprovado Transacionar' || $result->status == 'Aprovado Transacionar e Antecipar') && $result->capture_payments_enabled == 'S') {
-                        $credential->update([
-                            'gateway_status' => GatewaysCompaniesCredential::GETNET_STATUS_APPROVED // approved
-                        ]);
-
-                        $companyService->updateCaptureTransactionEnabled($company);
-                    } elseif (($result->status == 'Reprovado' || $result->status == 'Rejeitado') && $result->capture_payments_enabled == 'N') {
-                        $credential->update([
-                            'gateway_status' => GatewaysCompaniesCredential::GETNET_STATUS_REPROVED // reproved
-                        ]);
-                    }
+                if (!empty($result->subseller_id) && $credential->gateway_subseller_id == $result->subseller_id) {
+                    switch($result->status){
+                        case 'Aprovado Transacionar':
+                            case 'Aprovado Transacionar e Antecipar':
+                                if ($result->capture_payments_enabled == 'S') {
+                                    $credential->update([
+                                        'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED // approved
+                                    ]);
+            
+                                    $companyService->updateCaptureTransactionEnabled($company);
+                                }
+                        break;
+                        case 'Reprovado':
+                            case 'Rejeitado':
+                                if ($result->capture_payments_enabled == 'N') {
+                                    $credential->update([
+                                        'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_REPROVED // reproved
+                                    ]);
+                                }
+                        break;
+                    }                   
                 }
             }
         } catch (Exception $e) {

@@ -21,19 +21,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GatewaysCompaniesCredential extends Model
 {
-    public const GETNET_STATUS_APPROVED = 1;
-    public const GETNET_STATUS_REVIEW = 2;
-    public const GETNET_STATUS_REPROVED = 3;
-    public const GETNET_STATUS_APPROVED_GETNET = 4;
-    public const GETNET_STATUS_ERROR = 5;
-    public const GETNET_STATUS_PENDING = 6;
+    public const GATEWAY_STATUS_APPROVED = 1;
+    public const GATEWAY_STATUS_REVIEW = 2;
+    public const GATEWAY_STATUS_REPROVED = 3;
+    public const GATEWAY_STATUS_APPROVED_GETNET = 4;
+    public const GATEWAY_STATUS_ERROR = 5;
+    public const GATEWAY_STATUS_PENDING = 6;
 
     protected $fillable = [
         'company_id',
         'gateway_id',
         'gateway_status',
         'gateway_subseller_id',
-        'gateway_api_key'
+        'gateway_api_key',
+        'capture_transaction_enabled'
     ];
     
     public function company(): BelongsTo
