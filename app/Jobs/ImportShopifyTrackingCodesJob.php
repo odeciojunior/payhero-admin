@@ -60,11 +60,6 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                         $fulfillments = $this->shopifyService->findFulfillments($sale->shopify_order);
                         if (!empty($fulfillments)) {
                             $this->checkFulfillment($sale, $fulfillments);
-
-                            // Camila Monteiro
-                            foreach ($sale->upsells as $upsell) {
-                                $this->checkFulfillment($upsell, $fulfillments);
-                            }
                         }
                     } catch (\Exception $e) {
                         report($e);
@@ -104,6 +99,12 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
         $trackingService = new TrackingService();
 
         $saleProducts = $productService->getProductsBySale($sale);
+
+        // Camila Monteiro
+        foreach ($sale->upsells as $upsell) {
+            $saleProducts = $saleProducts->merge($productService->getProductsBySale($upsell));
+        }
+
         foreach ($fulfillments as $fulfillment) {
             $trackingCodes = $fulfillment->getTrackingNumbers();
             if (!empty($trackingCodes)) {
