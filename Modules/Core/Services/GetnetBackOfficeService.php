@@ -11,10 +11,10 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
 
 /**
- * Class GetnetService
+ * Class GetnetBackOfficeService
  * @package Modules\Core\Services
  */
-class GetnetBackOfficeService extends GetnetService
+class GetnetBackOfficeService extends GetnetBaseService
 {
     use GetnetPrepareCompanyData;
 

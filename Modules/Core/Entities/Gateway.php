@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\GatewayPresenter;
 use App\Traits\LogsActivity;
+use LogicException;
+use Modules\Core\Services\Gateways\AsaasService;
+use Modules\Core\Services\Gateways\CieloService;
+use Modules\Core\Services\Gateways\GerencianetService;
+use Modules\Core\Services\Gateways\GetnetService;
 
 /**
  * Class Gateway
@@ -33,8 +38,14 @@ class Gateway extends Model
     use PresentableTrait;
     use SoftDeletes;
 
-    public const GETNET_SANDBOX_ID = 14;
+    public const PAGARME_PRODUCTION_ID = 1;
+    public const PAGARME_SANDBOX_ID = 2;
+    public const ZOOP_PRODUCTION_ID = 3;
+    public const ZOOP_SANDBOX_ID = 4;
+    public const CIELO_PRODUCTION_ID = 5;
+    public const CIELO_SANDBOX_ID = 6;
     public const GETNET_PRODUCTION_ID = 15;
+    public const GETNET_SANDBOX_ID = 14;
     public const GERENCIANET_PRODUCTION_ID = 18;
     public const GERENCIANET_SANDBOX_ID = 19;
     public const ASAAS_PRODUCTION_ID = 8;
@@ -83,6 +94,25 @@ class Gateway extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    public function getService()
+    {
+        if(str_contains($this->name, 'getnet')) {
+            return new GetnetService();
+        }
+        elseif(str_contains($this->name, 'gerencianet')) {
+            return new GerencianetService();
+        }
+        elseif(str_contains($this->name, 'asaas')) {
+            return new AsaasService();
+        }
+        elseif(str_contains($this->name, 'cielo')) {
+            return new CieloService();
+        }
+        else {
+            throw new LogicException("Gateway {$this->name} não encontrado");
+        }
+    }
 
     /**
      * @return HasMany

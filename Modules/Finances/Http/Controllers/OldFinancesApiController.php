@@ -9,6 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyBalanceLog;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\RemessaOnlineService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
@@ -40,19 +42,19 @@ class OldFinancesApiController
                 return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
             }
 
-            $companyService = new CompanyService();
+            $companyService = new CompanyBalanceService($company);
 
-            $pendingBalance = $companyService->getPendingBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
+            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
 
-            $availableBalance = $companyService->getAvailableBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
+            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
 
             $totalBalance = $availableBalance + $pendingBalance;
 
-            $blockedBalance = $companyService->getBlockedBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
-            $blockedBalancePending = $companyService->getBlockedBalancePending($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
+            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
+            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
             $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
 
-            $pendingDebtBalance = $companyService->getPendingDebtBalance($company);
+            $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
 
             return response()->json(
                 [

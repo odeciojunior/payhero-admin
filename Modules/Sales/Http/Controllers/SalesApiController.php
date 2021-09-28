@@ -31,6 +31,7 @@ use Modules\Sales\Transformers\TransactionResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\WooCommerceService;
 
 class SalesApiController extends Controller
@@ -152,9 +153,13 @@ class SalesApiController extends Controller
                     $activity->subject_id = $saleIdDecoded;
                 }
             )->log('Tentativa estorno transação: #' . $saleId);
-            if (!(new CompanyService())->hasBalanceToRefund($sale)) {
+
+            $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
+
+            if (!(new CompanyBalanceService($producerCompany))->hasEnoughBalanceToRefund($sale)) {
                 return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], 400);
             }
+
             $refundObservation = $request->input('refund_observation') ?? null;
             $result = (new CheckoutService())->cancelPaymentCheckout($sale);
             if ($result['status'] != 'success') {
@@ -202,7 +207,8 @@ class SalesApiController extends Controller
     {
         try {
             $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
-            if (!(new CompanyService())->hasBalanceToRefund($sale)) {
+            $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
+            if (!(new CompanyBalanceService($producerCompany))->hasEnoughBalanceToRefund($sale)) {
                 return response()->json(
                     [
                         'message' => 'Saldo insuficiente para realizar o estorno'
