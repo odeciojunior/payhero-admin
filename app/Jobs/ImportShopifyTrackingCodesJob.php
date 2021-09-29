@@ -41,8 +41,6 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
         $this->restartWebhooks();
 
         Sale::with([
-            'upsells.productsPlansSale.tracking',
-            'upsells.productsPlansSale.product',
             'productsPlansSale.tracking',
             'productsPlansSale.product',
             'productsSaleApi',
@@ -54,7 +52,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                 $query->whereDoesntHave('tracking');
             })->whereHas('transactions', function ($query) {
                 $query->where('tracking_required', true);
-            })->chunk(100, function ($sales) {
+            })->chunk(1000, function ($sales) {
                 foreach ($sales as $sale) {
                     try {
                         $fulfillments = $this->shopifyService->findFulfillments($sale->shopify_order);
@@ -100,22 +98,15 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
 
         $saleProducts = $productService->getProductsBySale($sale);
 
-        // Camila Monteiro
-        foreach ($sale->upsells as $upsell) {
-            $saleProducts = $saleProducts->merge($productService->getProductsBySale($upsell));
-        }
-
         foreach ($fulfillments as $fulfillment) {
             $trackingCodes = $fulfillment->getTrackingNumbers();
             if (!empty($trackingCodes)) {
                 $lineItems = $fulfillment->getLineItems();
-                $fulfillmentWithMultipleTracking = count($trackingCodes) == count($lineItems);
+                $fulfillmentWithMultipleTracking = count($trackingCodes) === count($lineItems);
                 foreach ($lineItems as $key => $lineItem) {
-                    if ($fulfillmentWithMultipleTracking) {
-                        $trackingCode = $trackingCodes[$key];
-                    } else {
-                        $trackingCode = $trackingCodes[0];
-                    }
+
+                    $trackingCode = $fulfillmentWithMultipleTracking ? $trackingCodes[$key] :$trackingCodes[0];
+
                     $products = $saleProducts
                         ->where('shopify_variant_id', $lineItem->getVariantId())
                         ->where('amount', $lineItem->getQuantity());
@@ -125,6 +116,12 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                             ->where('description', $lineItem->getVariantTitle())
                             ->where('amount', $lineItem->getQuantity());
                     }
+
+                    // Camila Monteiro
+                    if (!$products->count() && $sale->owner_id === 3933) {
+                        $products = $saleProducts;
+                    }
+
                     if ($products->count()) {
                         foreach ($products as $product) {
                             $trackingService->createOrUpdateTracking($trackingCode, $product->product_plan_sale_id);
