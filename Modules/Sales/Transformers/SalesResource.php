@@ -23,7 +23,7 @@ class SalesResource extends JsonResource
     {
         $user = auth()->user();
         $userPermissionRefunded = false;
-        if ($user->hasRole('admin') || $user->hasRole('account_owner') || $user->hasPermissionTo('refund')) {
+        if ($user->hasAnyPermission(['sales_manage','finances_manage'])) {
             $userPermissionRefunded = true;
         }
 
@@ -94,11 +94,17 @@ class SalesResource extends JsonResource
             'company_name' => $this->details->company_name,
             'has_order_bump' => $this->has_order_bump,
             'has_contestation' => $this->contestations->count() ? true : false,
-            'cashback_value' => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0) : 0,
+            'cashback_value' => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
             'has_cashback' => $this->cashback->value ?? false,
+            'api_flag' => $this->api_flag,
             'has_withdrawal' => !empty($this->details->has_withdrawal)
         ];
-        $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
+
+        $shopifyIntegrations = [];
+        if(!empty($this->project)){
+            $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
+        }
+        
         if (count($shopifyIntegrations) > 0) {
             $data['has_shopify_integration'] = true;
         } else {

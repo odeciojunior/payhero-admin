@@ -61,9 +61,9 @@ class ProcessWooCommerceProductCreatePostBack implements ShouldQueue
                     'sku' => $sku
                 ];
                 if (empty($this->request->parent_id) && empty($this->request->variations)) {
-                    $wooCommerceService->woocommerce->put('products/' . $this->request->id, $data);
+                    $wooCommerceService->woocommerce->post('products/' . $this->request->id, $data);
                 } else {
-                    $wooCommerceService->woocommerce->put(
+                    $wooCommerceService->woocommerce->post(
                         'products/' . $this->request->parent_id . '/variations/' . $this->request->id,
                         $data
                     );
@@ -73,9 +73,12 @@ class ProcessWooCommerceProductCreatePostBack implements ShouldQueue
             
 
         }catch(Exception $e){
+            // if(stristr('JSON ERROR: Syntax error', $e) || stristr('SKU', $e)){
+            //     //loja retornou json inválido OU variação repetida
+            // }else{
+            //     report($e);
+            // }
             
-            report($e);
-            //
         }
 
 

@@ -25,6 +25,8 @@ class ReportanaResource extends JsonResource
             'boleto_paid'         => $this->billet_paid,
             'credit_card_refused' => $this->credit_card_refused,
             'credit_card_paid'    => $this->credit_card_paid,
+            'pix_generated'       => $this->pix_generated,
+            'pix_paid'            => $this->pix_paid,
             'abandoned_cart'      => $this->abandoned_cart,
             'created_at'          => $this->created_at->format('d/m/Y'),
         ];

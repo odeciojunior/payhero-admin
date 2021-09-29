@@ -188,6 +188,7 @@ $(document).ready(function () {
                 },
                 error: function (response) {
                     loadingOnScreenRemove()
+                    errorAjaxResponse(response);
                 },
                 success: function (response) {
                     loadUpsell();
@@ -361,7 +362,7 @@ $(document).ready(function () {
             return false;
         }
 
-        var form_data = new FormData(document.getElementById('form_config_upsell'));
+        let form_data = new FormData(document.getElementById('form_config_upsell'));
         let description = descriptionconfig.getData();
         form_data.set('description', description);
 
@@ -377,13 +378,11 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
-
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                // $('#modal_config_upsell').modal('hide');
-
                 alertCustom('success', response.message);
+                $("#modal_config_upsell").modal('hide');
             }
         });
     });

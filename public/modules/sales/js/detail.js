@@ -179,6 +179,16 @@ $(() => {
         let sale = $(this).attr("venda");
         loadOnAny("#modal-saleDetails");
 
+        $("#nav-home-tab").addClass("active");
+        $("#nav-home-tab").addClass("show");
+        $("#nav-home").addClass("active");
+        $("#nav-home").addClass("show");
+
+        $("#nav-profile-tab").removeClass("active");
+        $("#nav-profile-tab").removeClass("show");
+        $("#nav-profile").removeClass("active");
+        $("#nav-profile").removeClass("show");
+
         $("#modal_detalhes").modal("show");
         $("#refundAmount").mask("##.###,#0", {reverse: true});
         $("#refundBilletAmount").mask("##.###,#0", {reverse: true});
@@ -202,6 +212,8 @@ $(() => {
                 $("#refundBilletAmount").text(response.data.total);
                 $(".btn_refund_transaction").unbind("click");
                 $(".btn_refund_transaction").on("click", function () {
+                    $('#refund_observation').val('');
+
                     let sale = $(this).attr("sale");
                     $("#modal_detalhes").modal("hide");
                     $("#modal-refund-transaction").modal("show");
@@ -275,15 +287,21 @@ $(() => {
     function getSale(sale) {
         renderSale(sale);
 
-        getClient(sale.client_id);
-
         getProducts(sale);
+
+        getClient(sale.client_id, sale.id);
 
         if (sale.delivery_id != "") {
             getDelivery(sale.delivery_id);
         }
 
-        getCheckout(sale.checkout_id);
+        if (!sale.api_flag) {
+            $(".dados-checkout").css("display", "block");
+
+            getCheckout(sale.checkout_id);
+        } else {
+            $(".dados-checkout").css("display", "none");
+        }
 
         getNotazz(sale.invoices);
     }
@@ -379,6 +397,11 @@ $(() => {
             case 20:
                 status.append(
                     "<span class='ml-2 badge badge-antifraude'>Revisão Antifraude</span>"
+                );
+                break;
+            case 21:
+                status.append(
+                    "<span class='ml-2 badge badge-danger'>Cancelado Antifraude</span>"
                 );
                 break;
             case 22:
@@ -700,9 +723,7 @@ $(() => {
 
         $("#checkout-attempts").hide();
         if (sale.payment_method === 1) {
-            $("#checkout-attempts")
-                .text("Quantidade de tentativas: " + sale.attempts)
-                .show();
+            $("#checkout-attempts").text("Quantidade de tentativas: " + sale.attempts).show();
         }
 
         if (
@@ -734,20 +755,31 @@ $(() => {
         }
 
         if (sale.status == 2 || sale.status == 1) {
-            $("#saleReSendEmail").show();
+            if ( !sale.api_flag ) {
+                $("#saleReSendEmail").show();
+            } else {
+                $("#saleReSendEmail").hide();
+            }
         } else {
             $("#saleReSendEmail").hide();
         }
+
+        if ( !sale.api_flag ) {
+            $("#details-api").hide();
+        } else {
+            $("#details-api").show();
+        }
+
         if (
             sale.payment_method == 2 &&
             sale.status == 1 &&
             sale.userPermissionRefunded
         ) {
-            /*$("#div_refund_billet").html(
-                '<button class="btn btn-secondary btn-sm btn_refund_billet float-right" sale=' +
+            $("#div_refund_billet").html(
+                '<button class="btn btn-danger btn-sm btn_refund_billet" sale=' +
                     sale.id +
                     ">Estornar boleto</button>"
-            );*/
+            );
         } else {
             $("#div_refund_billet").html("");
         }
@@ -966,10 +998,10 @@ $(() => {
         }
     }
 
-    function getClient(client) {
+    function getClient(client, sale) {
         $.ajax({
             method: "GET",
-            url: "/api/customers/" + client,
+            url: "/api/customers/" + client + '/' + sale,
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -993,10 +1025,20 @@ $(() => {
             .mask('+00 (00) 00000-0000');
         $("#client-email").val(client.email).attr("client", client.code);
         $("#client-document").text("CPF: " + client.document);
-        $("#client-whatsapp").attr("href", client.whatsapp_link);
+        if(client.fraudster) {
+            $("#client-whatsapp-container").hide();
+            $('.btn-edit-client').hide();
+        }else{
+            $('.btn-edit-client').show();
+            $("#client-whatsapp-container").show();
+            $("#client-whatsapp").attr("href", client.whatsapp_link);
+        }
     }
 
     function getProducts(sale) {
+        $("#table-product").html("");
+        $("#data-tracking-products").html("");
+
         $.ajax({
             method: "GET",
             url: "/api/products/saleproducts/" + sale.id,
@@ -1009,17 +1051,40 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                renderProducts(response.data, sale);
+                if (!sale.api_flag) {
+                    renderProducts(response.data, sale);
+                } else {
+                    renderProductsApi(response.data);
+                }
             },
         });
     }
 
-    function renderProducts(products, sale) {
-        $("#table-product").html("");
-        $("#data-tracking-products").html("");
+    function renderProductsApi(products) {
         let div = "";
-        let photo = "/modules/global/img/produto.png";
-        console.log(products);
+        $.each(products, function (index, value) {
+            div += '<div class="row align-items-baseline justify-content-between mb-15">';
+                div += '<div class="col-lg-2">';
+                    div += '<img src="/modules/global/img/produto.svg" width="50px" style="border-radius: 6px;">';
+                div += '</div>';
+                div += '<div class="col-md-5 col-lg-6">';
+                    div += '<h4 class="table-title mb-0">' + value.name + '</h4>';
+                    div += '<small>' + value.description + '</small>';
+                div += '</div>';
+                div += '<div class="col-md-3 col-lg-2 text-right">';
+                    div += '<p class="sm-text text-muted">' + value.amount + 'x</p>';
+                div += '</div>';
+            div += '</div>';
+
+            $("#table-product").html(div);
+        });
+
+        loadOnAny("#modal-saleDetails", true);
+    }
+
+    function renderProducts(products, sale) {
+        let div = "";
+        let photo = "/modules/global/img/produto.svg";
         $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;
@@ -1036,6 +1101,7 @@ $(() => {
                             <p class="sm-text text-muted">${value.amount}x</p>
                         </div>
                     </div>`;
+
             if (typeof value.custom_products != 'undefined' && value.custom_products.length > 0) {
                 div += `<!-- Customer additional information -->
                     <div class="panel-group my-30" aria-multiselectable="true" role="tablist">
@@ -1151,6 +1217,8 @@ $(() => {
                 $("#div_tracking_code").css("display", "none");
             }
         });
+
+        loadOnAny("#modal-saleDetails", true);
     }
 
     function getDelivery(deliveryId) {
@@ -1348,8 +1416,8 @@ $(() => {
 
     /* $('#').on('submit', function (e) {
          // validation code here
-         if (!valid) {
-             e.preventDefault();
-         }
-     });*/
+        if (!valid) {
+            e.preventDefault();
+        }
+    });*/
 });

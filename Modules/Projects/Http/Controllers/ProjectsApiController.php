@@ -108,9 +108,10 @@ class ProjectsApiController extends Controller
                 }
             )->log('Visualizou tela criar projeto');
 
-            $user = auth()->user()->load('companies');
+            $user = auth()->user();
+            $companies = Company::where('user_id',$user->account_owner_id)->get();
 
-            return response()->json(CompaniesSelectResource::collection($user->companies));
+            return response()->json(CompaniesSelectResource::collection($companies));
         } catch (Exception $e) {
             report($e);
 
@@ -392,6 +393,18 @@ class ProjectsApiController extends Controller
                 $requestValidated['checkout_notification_configs'] = json_encode($array);
             } else {
                 $requestValidated['checkout_notification_configs'] = null;
+            }
+
+            if (!empty($requestValidated['custom_message_switch'])) {
+                $requestValidated['custom_message_configs'] = [
+                    'active'=>true,
+                    'title'=>$requestValidated['custom_message_title'],
+                    'message'=>$requestValidated['custom_message_content']
+                ];
+            }else{
+                $requestValidated['custom_message_configs'] = [
+                    'active'=>false
+                ];
             }
 
             $projectUpdate = $project->fill($requestValidated)->save();

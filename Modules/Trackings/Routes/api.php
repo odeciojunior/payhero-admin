@@ -15,10 +15,14 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['auth:api', 'scopes:admin']], function() {
     Route::get('/tracking/resume', 'TrackingsApiController@resume');
     Route::get('/tracking/blockedbalance', 'TrackingsApiController@getBlockedBalance');
-    Route::post('/tracking/notify/{trackingId}', 'TrackingsApiController@notifyClient');
+    Route::post('/tracking/notify/{trackingId}', 'TrackingsApiController@notifyClient')->middleware('permission:trackings_manage');
     Route::post('/tracking/export', 'TrackingsApiController@export');
     Route::post('/tracking/import', 'TrackingsApiController@import');
-    Route::apiResource('tracking', 'TrackingsApiController')->only( 'index', 'show', 'store')->names('api.trackings');
+    
+    //Route::apiResource('tracking', 'TrackingsApiController')->only( 'index', 'show', 'store')->names('api.trackings');
+    Route::get('/tracking', 'TrackingsApiController@index');
+    Route::get('/tracking/{id}', 'TrackingsApiController@show');
+    Route::post('/tracking', 'TrackingsApiController@store')->middleware('permission:trackings_manage');
 });
 
 Route::get('/tracking/detail/{trackingCode}', 'TrackingsApiController@detail');

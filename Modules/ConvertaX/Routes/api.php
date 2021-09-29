@@ -18,8 +18,10 @@ Route::group(
         'middleware' => ['auth:api', 'scopes:admin'],
     ],
     function() {
+        Route::get('/apps/convertax', 'ConvertaXApiController@index');
+        Route::get('/apps/convertax/{id}', 'ConvertaXApiController@show');
         Route::apiResource('/apps/convertax', 'ConvertaXApiController')
-            ->only('index', 'show', 'store', 'update', 'destroy');
+            ->only('store', 'update', 'destroy')->middleware('permission:apps_manage');
 
         Route::get('/getconvertaxintegrations', 'ConvertaXController@getIntegrations');
     }

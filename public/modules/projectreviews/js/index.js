@@ -291,9 +291,19 @@ $(document).ready(function () {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
                     'Accept': 'application/json',
                 },
-                error: function (response) {
-                    loadingOnScreenRemove()
-                },
+                error: function (_error3) {
+                    function error() {
+                        return _error3.apply(this, arguments);
+                    }
+    
+                    error.toString = function () {
+                        return _error3.toString();
+                    };
+    
+                    return error;
+                }(function (response) {
+                    errorAjaxResponse(response);
+                }),
                 success: function (response) {
 
                     loadReviews();
@@ -481,12 +491,8 @@ $(document).ready(function () {
 
     $(document).on('click', '.bt-review-config-update', function (event) {
         event.preventDefault();
-        // if ($('#countdown_flag').is(':checked') && $('#countdown_time').val() == '') {
-        //     alertCustom('error', 'Preencha o campo Contagem');
-        //     return false;
-        // }
 
-        var form_data = new FormData(document.getElementById('form_config_review'));
+        let form_data = new FormData(document.getElementById('form_config_review'));
 
         $.ajax({
             method: "POST",
@@ -509,6 +515,7 @@ $(document).ready(function () {
                 loadReviews();
 
                 alertCustom('success', response.message);
+                $("#modal_config_review").modal('hide');
             }
         });
     });

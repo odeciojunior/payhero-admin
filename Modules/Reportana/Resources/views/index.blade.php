@@ -17,7 +17,7 @@
 @endpush
 @section('content')
     <div class='page'>
-        <div style="display: none" class="page-header container">
+        <div style="display: none !important;" class="page-header container">
             <div class="row jusitfy-content-between">
                 <div class="col-lg-8">
                     <h1 class="page-title my-10" style="min-height: 28px">
@@ -52,7 +52,7 @@
                             </button>
                             <h4 class="modal-title" style="font-weight: 700;"></h4>
                         </div>
-                        <div class="pt-10 pr-20 pl-20 modal_integracao_body">
+                        <div class="pr-20 pl-20 modal_integracao_body">
                             @include('reportana::create')
                             @include('reportana::edit')
                         </div>
@@ -81,7 +81,7 @@
             </div>
         </div>
         @include('projects::empty')
-        <div id="no-integration-found" class='justify-content-center' style="display:none;
+        <div id="no-integration-found" class='justify-content-center' style="display:none !important;
                                                                         height: 100%; 
                                                                         width: 100%; 
                                                                         position: absolute;

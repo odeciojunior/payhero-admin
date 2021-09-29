@@ -52,8 +52,9 @@ class CheckoutService
                 },
                 'checkoutPlans.plan',
             ]
-        )
-            ->whereIn('status_enum', $abandonedCartsStatus)
+        )->whereHas('checkoutPlans', function ($query) {
+            $query->whereHas('plan');
+        })->whereIn('status_enum', $abandonedCartsStatus)
             ->whereIn('project_id', $projectIds)
             ->whereBetween('created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
             ->when(
@@ -386,5 +387,18 @@ class CheckoutService
         return $this->runCurl($url, 'POST', $data);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function checkPaymentPix($data)
+    {
+        if (foxutils()->isProduction()) {
+            $url = 'https://checkout.cloudfox.net/api/payment/check-payment-pix';
+        } else {
+            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/check-payment-pix';
+        }
+
+        return $this->runCurl($url, 'POST', $data);
+    }
 
 }

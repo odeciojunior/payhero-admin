@@ -1,15 +1,16 @@
 <?php
-
+//role:account_owner|admin
 Route::group(
     [
-        'middleware' => ['web', 'auth']
+        'middleware' => ['web', 'auth','permission:projects']
     ],
     function () {
 
-        Route::Resource('/projects', 'ProjectsController')
-            ->only('index', 'create', 'show')->middleware('role:account_owner|admin');
+        Route::get('/projects/create', 'ProjectsController@create')->middleware('permission:projects_manage');
+        
+        Route::Resource('/projects', 'ProjectsController')->only('index', 'show');
 
         Route::get('/projects/{projectId}/{affiliateId}', 'ProjectsController@showAffiliate')
-            ->name('showaffiliate')->middleware('role:account_owner|admin');
+            ->name('showaffiliate');
     }
 );

@@ -3,7 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web', 'auth']], function () {
+Route::group(['middleware' => ['web', 'auth','permission:apps']], function () {
     Route::resource('apps/melhorenvio', 'MelhorenvioController')
         ->only('index')
         ->names('melhorenvio');

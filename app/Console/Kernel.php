@@ -111,6 +111,8 @@ class Kernel extends ConsoleKernel
         //check invites expired
         $schedule->command('verify:inviteexpired')->dailyAt('01:00');
 
+        $schedule->command('check:menv-tracking')->dailyAt('17:00');
+
         //Remove temporary files in regiter
         $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
 
@@ -142,8 +144,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('achievements:update')->dailyAt('09:00');
         $schedule->command('achievements:update')->dailyAt('21:00');
 
-        /** Pix Expired */
-        $schedule->command('change:pixpending')->everyMinute();
+        /** Pix Canceled */
+        $schedule->command('change:pix-to-canceled')->everyMinute();
 
         /** Check GatewayTax invitations Diogo */
         $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
@@ -151,7 +153,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('check:sales-refunded')->dailyAt('16:00');
 
         /** Libera o dinheiro da azx */
-        $schedule->command('check:liquidation-transaction-cloudfox')->dailyAt('22:00');
+        $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00');
         /** Confirma a transferencia do dinheiro da azx */
         $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30');
     }

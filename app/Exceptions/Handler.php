@@ -2,61 +2,46 @@
 
 namespace App\Exceptions;
 
-use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
 use Laravel\Passport\Exceptions\MissingScopeException;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * A list of the exception types that are not reported.
-     * @var array
-     */
     protected $dontReport = [
         //
     ];
-    /**
-     * A list of the inputs that are never flashed for validation exceptions.
-     * @var array
-     */
+
     protected $dontFlash = [
         'password',
         'password_confirmation',
     ];
 
-    /**
-     * Report or log an exception.
-     * @param \Throwable $exception
-     * @return void
-     * @throws Exception
-     */
-    public function report(Throwable $exception)
+    public function report(Throwable $e)
     {
-        if (app()->bound('sentry') && $this->shouldReport($exception)) {
-            app('sentry')->captureException($exception);
+        if ($e instanceof OAuthServerException && $e->getCode() == 9) {
+            return;
         }
 
-        parent::report($exception);
+        if (app()->bound('sentry') && $this->shouldReport($e)) {
+            app('sentry')->captureException($e);
+        }
+
+        parent::report($e);
     }
 
-    /**
-     * Render an exception into an HTTP response.
-     * @param \Illuminate\Http\Request $request
-     * @param \Throwable $exception
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
-     */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
-        if ($exception instanceof MaintenanceModeException) {
+        if ($e instanceof HttpException && $e->getStatusCode() === 503) {
             return response()->view('errors.maintenance');
         }
 
-        if ($exception instanceof MissingScopeException) {
+        if ($e instanceof MissingScopeException) {
             return response()->json(['message' => 'Acesso não autorizado'], 403);
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 }

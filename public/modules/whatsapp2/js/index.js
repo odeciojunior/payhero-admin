@@ -5,7 +5,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: "/api/apps/whatsapp2/",
+            url: "/api/apps/whatsapp2",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -110,7 +110,7 @@ $(document).ready(function () {
 
     //create
     $("#btn-add-integration").on("click", function () {
-        $(".modal-title").html("Adicionar nova Integração com Whatsap 2.0");
+        $(".modal-title").html("Adicionar nova Integração com SAK");
         $("#bt_integration").addClass("btn-save");
         $("#bt_integration").removeClass("btn-update");
         $("#bt_integration").text("Adicionar integração");
@@ -122,7 +122,7 @@ $(document).ready(function () {
 
     //edit
     $(document).on("click", ".card-edit", function () {
-        $(".modal-title").html("Editar Integração com Whatsap 2.0");
+        $(".modal-title").html("Editar Integração com SAK");
         $("#bt_integration").addClass("btn-update");
         $("#bt_integration").removeClass("btn-save");
         $("#bt_integration").text("Atualizar");

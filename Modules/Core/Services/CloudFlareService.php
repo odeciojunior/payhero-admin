@@ -29,7 +29,7 @@ class CloudFlareService
 {
     const shopifyIp = '23.227.38.65';
     const checkoutIp = 'alb-production-1620949233.us-east-2.elb.amazonaws.com';
-    const sacIp = 'cloudfoxsuit-sac-balance-1972915763.us-east-1.elb.amazonaws.com';
+    const sacIp = 'alb-production-1620949233.us-east-2.elb.amazonaws.com';
     const affiliateIp = 'alb-production-1620949233.us-east-2.elb.amazonaws.com';
     const adminIp = 'alb-production-1620949233.us-east-2.elb.amazonaws.com';
 
@@ -360,7 +360,7 @@ class CloudFlareService
             $this->setZone($newZone->name);
 
             if (!empty($ipAddress)) {
-                $recordId = $this->addRecord("A", $newZone->name, $ipAddress);
+                $recordId = $this->addRecord("A", $newZone->name, $ipAddress, 0, false);
                 $this->getDomainRecordModel()->create(
                     [
                         'domain_id' => $domainModelId,
@@ -369,6 +369,7 @@ class CloudFlareService
                         'name' => $newZone->name,
                         'content' => $ipAddress,
                         'system_flag' => 1,
+                        'proxy' => 0,
                     ]
                 );
             }
@@ -447,6 +448,7 @@ class CloudFlareService
                             'name' => $responseDns->host,
                             'content' => $responseDns->data,
                             'system_flag' => 1,
+                            'proxy' => 0,
                         ]
                     );
                 } else {
@@ -465,6 +467,7 @@ class CloudFlareService
                             'name' => $responseDns->host,
                             'content' => $responseDns->data,
                             'system_flag' => 1,
+                            'proxy' => 0,
                         ]
                     );
                 }
@@ -530,6 +533,7 @@ class CloudFlareService
                     'name' => $newZone->name,
                     'content' => self::shopifyIp,
                     'system_flag' => 1,
+                    'proxy' => 0,
                 ]
             );
 
@@ -542,6 +546,7 @@ class CloudFlareService
                     'name' => 'www',
                     'content' => 'shops.myshopify.com',
                     'system_flag' => 1,
+                    'proxy' => 0,
                 ]
             );
 
@@ -607,6 +612,7 @@ class CloudFlareService
                             'name' => $responseDns->host,
                             'content' => $responseDns->data,
                             'system_flag' => 1,
+                            'proxy' => 0,
                         ]
                     );
                 } else {
@@ -625,6 +631,7 @@ class CloudFlareService
                             'name' => $responseDns->host,
                             'content' => $responseDns->data,
                             'system_flag' => 1,
+                            'proxy' => 0,
                         ]
                     );
                 }
@@ -650,6 +657,7 @@ class CloudFlareService
                             'name' => $responseDns->host,
                             'content' => $responseDns->data,
                             'system_flag' => 1,
+                            'proxy' => 0,
                         ]
                     );
                 }

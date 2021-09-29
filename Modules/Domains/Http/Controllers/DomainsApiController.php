@@ -66,11 +66,7 @@ class DomainsApiController extends Controller
         }
     }
 
-    /**
-     * @param DomainStoreRequest $request
-     * @return JsonResponse
-     */
-    public function store(DomainStoreRequest $request)
+    public function store(DomainStoreRequest $request): JsonResponse
     {
         try {
             $domainModel = new Domain();
@@ -114,7 +110,7 @@ class DomainsApiController extends Controller
             $requestData['name'] = 'http://' . $requestData['name'];
             $requestData['name'] = parse_url($requestData['name'], PHP_URL_HOST);
 
-            if ($domainModel->where('name', 'like', '%' . $requestData['name'] . '%')->count() > 0) {
+            if ($domainModel->where('name', $requestData['name'])->count() > 0) {
                 DB::rollBack();
 
                 return response()->json(['message' => 'Domínio já está sendo utilizado'], 400);
@@ -403,12 +399,9 @@ class DomainsApiController extends Controller
             }
 
             if (!Gate::allows('edit', [$domain->project])) {
-                return response()->json(
-                    [
-                        'message' => 'Sem permissão para validar domínio',
-                    ],
-                    403
-                );
+                return response()->json([
+                    'message' => 'Sem permissão para validar domínio',
+                ], 403);
             }
 
             activity()->on((new Domain()))->tap(
@@ -418,19 +411,12 @@ class DomainsApiController extends Controller
                 }
             )->log('Verificação domínio: ' . $domain->name);
 
-            if (!$cloudFlareService->checkHtmlMetadata(
-                'https://checkout.' . $domain->name,
-                'checkout-cloudfox',
-                '1'
-            )) {
+            if (!$cloudFlareService->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
                 $domain->update(['status' => Domain::STATUS_PENDING]);
 
-                return response()->json(
-                    [
-                        'message' => 'A verificação falhou, atualização de nameservers pendentes',
-                    ],
-                    400
-                );
+                return response()->json([
+                    'message' => 'A verificação falhou, atualização de nameservers pendentes',
+                ], 400);
             }
 
 
@@ -535,33 +521,26 @@ class DomainsApiController extends Controller
                 //template ajax
                 $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
 
-                $shopifyIntegration->update(
-                    [
-                        'theme_type' => ShopifyIntegration::SHOPIFY_AJAX_THEME,
-                        'theme_name' => $shopify->getThemeName(),
-                        'theme_file' => $shopify::templateAjaxKeyName,
-                        'theme_html' => $htmlCart,
-                    ]
-                );
+                $shopifyIntegration->update([
+                    'theme_type' => ShopifyIntegration::SHOPIFY_AJAX_THEME,
+                    'theme_name' => $shopify->getThemeName(),
+                    'theme_file' => $shopify::templateAjaxKeyName,
+                    'theme_html' => $htmlCart,
+                ]);
 
-                $shopify->updateTemplateHtml(
-                    $templateKeyName,
-                    $htmlCart,
-                    $domain->name,
-                    true
-                );
+                if (!empty($htmlCart)) {
+                    $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domain->name, true);
+                }
+
                 return response()->json(['message' => 'Domínio validado com sucesso'], 200);
             } catch (Exception $e) {
                 report($e);
 
                 $domain->update(['status' => Domain::STATUS_PENDING]);
 
-                return response()->json(
-                    [
-                        'message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'
-                    ],
-                    400
-                );
+                return response()->json([
+                    'message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'
+                ], 400);
             }
         } catch (Exception $e) {
             $message = CloudflareErrorsService::formatErrorException($e);
@@ -570,7 +549,7 @@ class DomainsApiController extends Controller
         }
     }
 
-    public function show($project, $domain)
+    public function show($project, $domain): JsonResponse
     {
         try {
             $domainModel = new Domain();

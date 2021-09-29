@@ -18,7 +18,7 @@
              alt="Sirius Logo">
         <ol>
             <li>
-                <a href="#section-1">Adicionando o token no Sirius</a>
+                <a href="#section-1">Integração</a>
             </li>
             <li>
                 <a href="#section-2">Autorizando o Sirius</a>
@@ -49,13 +49,16 @@
             <li id="section-2">
                 <h4>Autorizando o Sirius</h4>
                 <div>
-                    Você será redirecionado para a tela de autorização Melhor Envio (certifique-se que está logado em sua conta). Nessa etapa você pode configurar
-                    alguns detalhes da sua integração. É muito importante que preencha os campos Inscrição estadual
-                    padrão e Agência de postagem (caso use Jadlog) para que a integração funcione corretamente. Clique
-                    em <span class="btn blue">Autorizar</span> e você será redirecionado de volta ao Sirius.
+                    Você será redirecionado para a tela de autorização Melhor Envio (certifique-se que está logado em
+                    sua conta). Nessa etapa você pode configurar alguns detalhes da sua integração.
+                    <p> É muito importante que preencha os campos <b>Inscrição Estadual Padrão</b> e <b>Agência de
+                            postagem (caso use Jadlog)</b> para que a integração funcione corretamente. Clique em <span
+                            class="btn blue">Autorizar</span> e você será redirecionado de volta ao Sirius.</p>
                     <div class="img-container">
-                        <img src="{{ asset('modules/melhorenvio/img/step-2a.jpg?v='.uniqid()) }}" alt="Imagem 1 do passo 2">
-                        <img src="{{ asset('modules/melhorenvio/img/step-2b.jpg?v='.uniqid()) }}" alt="Imagem 2 do passo 2">
+                        <img src="{{ asset('modules/melhorenvio/img/step-2a.jpg?v='.uniqid()) }}"
+                             alt="Imagem 1 do passo 2">
+                        <img src="{{ asset('modules/melhorenvio/img/step-2b.jpg?v='.uniqid()) }}"
+                             alt="Imagem 2 do passo 2">
                     </div>
                 </div>
             </li>

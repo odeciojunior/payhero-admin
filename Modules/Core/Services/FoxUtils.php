@@ -279,6 +279,11 @@ class FoxUtils
         return false;
     }
 
+    public static function isHomolog(): bool
+    {
+        return str_contains(request()->getHost(), 'homolog');
+    }
+
     /**
      * @return bool
      */

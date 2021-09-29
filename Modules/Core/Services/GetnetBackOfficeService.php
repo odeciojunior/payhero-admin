@@ -232,7 +232,7 @@ class GetnetBackOfficeService extends GetnetService
 
     public function checkPfCompanyRegister(string $cpf, $companyId)
     {
-        $url = 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . $cpf;
+        $url = 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . FoxUtils::onlyNumbers($cpf);
 
         return $this->sendCurl($url, 'GET', null, $companyId);
     }
@@ -292,14 +292,14 @@ class GetnetBackOfficeService extends GetnetService
 
     public function checkComplementPjCompanyRegister($cnpj)
     {
-        $url = 'v1/mgm/pj/consult/' . $this->getMerchantId() . '/' . $cnpj;
+        $url = 'v1/mgm/pj/consult/' . $this->getMerchantId() . '/' . FoxUtils::onlyNumbers($cnpj);
 
         return $this->sendCurl($url, 'GET');
     }
 
     public function checkPjCompanyRegister($cnpj, $companyId)
     {
-        $url = 'v1/mgm/pj/callback/' . $this->getMerchantId() . '/' . $cnpj;
+        $url = 'v1/mgm/pj/callback/' . $this->getMerchantId() . '/' . FoxUtils::onlyNumbers($cnpj);
 
         return $this->sendCurl($url, 'GET', null, $companyId);
     }

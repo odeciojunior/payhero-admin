@@ -13,7 +13,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['web', 'auth','permission:apps']], function() {
     Route::resource('/integrations', 'IntegrationsController')->only('index')->names('integrations');
 });
 
