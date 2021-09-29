@@ -45,26 +45,37 @@ class TicketsApiController extends Controller
             ])->join('sales', 'tickets.sale_id', '=', 'sales.id')
                 ->join('customers', 'sales.customer_id', '=', 'customers.id');
 
+            if ($data->project) {
+                $ticketsQuery->where('sales.project_id', hashids_decode($data->project));
+            }
+
             if ($data->category) {
                 $categories = explode(',', $data->category);
                 $ticketsQuery->whereIn('tickets.ticket_category_enum', $categories);
             }
 
-            if ($data->period) {
-                $ticketsQuery->where('tickets.created_at', '>=', now()->subDays($data->period));
-            }
-
-            if ($data->code) {
-                $ticketsQuery->where('tickets.id', hashids_decode($data->code));
+            if ($data->document) {
+                $document = preg_replace('/[^0-9]/', '', $data->document);
+                $ticketsQuery->where('customers.document', $document);
             }
 
             if ($data->name) {
                 $ticketsQuery->where('customers.name', 'like', "%$data->name%");
             }
 
-            if ($data->document) {
-                $document = preg_replace('/[^0-9]/', '', $data->document);
-                $ticketsQuery->where('customers.document', $document);
+            if ($data->answered) {
+                if ($data->answered === 'last-answer-admin') {
+                    $ticketsQuery->where('last_message_type_enum', TicketMessage::TYPE_FROM_ADMIN);
+                } else if ($data->answered === 'last-answer-customer') {
+                    $ticketsQuery->whereHas('messages')
+                        ->where('last_message_type_enum', TicketMessage::TYPE_FROM_CUSTOMER);
+                } else {
+                    $ticketsQuery->doesntHave('messages');
+                }
+            }
+
+            if ($data->period) {
+                $ticketsQuery->where('tickets.created_at', '>=', now()->subDays($data->period));
             }
 
             if ($data->status) {

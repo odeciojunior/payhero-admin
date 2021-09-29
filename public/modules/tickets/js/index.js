@@ -62,7 +62,7 @@ $(() => {
     $("#project-empty").hide();
     $("#project-not-empty").show();
 
-    // loadingOnScreen();
+    loadingOnScreen();
 
     getProjects();
 
@@ -81,6 +81,9 @@ $(() => {
             },
             success: function success(response) {
                 if (response.data.length) {
+                    for (let project of response.data) {
+                        $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
+                    }
                     index();
                     getResume();
                     $("#project-empty").hide();
@@ -96,6 +99,8 @@ $(() => {
 
     window.getFilters = function (page = 1) {
 
+        let project = $('#project-select').val();
+
         let category = [];
         if ($('#category-complaint.active').length) {
             category.push(1);
@@ -107,6 +112,10 @@ $(() => {
             category.push(3);
         }
 
+        let document = $('#filter-document').data('value') || '';
+        let name = $('#filter-name').data('value') || '';
+        let answered = $("#filter-answer").data('value') || '';
+
         let period = $('#period-30.active').length
             ? 30
             : $('#period-15.active').length
@@ -115,20 +124,17 @@ $(() => {
                     ? 7
                     : '';
 
-        let code = $('#filter-code').data('value') || '';
-        let document = $('#filter-document').data('value') || '';
-        let name = $('#filter-name').data('value') || '';
-
         let status = $('#filter-status').val();
 
         let nameOrDocument = $('#name-or-document').val();
 
         let filters = {
+            project,
             category,
-            period,
-            code,
             document,
             name,
+            answered,
+            period,
             status,
             nameOrDocument,
             page,
@@ -256,25 +262,6 @@ $(() => {
             });
     }
 
-    $(document).on('click', '.file-download', function () {
-        let id = $(this).data('id');
-        $.ajax({
-            method: "GET",
-            url: '/api/tickets/file/' + id,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: resp => {
-                errorAjaxResponse(resp);
-            },
-            success: resp => {
-                window.open(resp.url, '_blank');
-            }
-        });
-    });
-
     function getResume() {
 
         loadOnAny('.number', false, resumeLoader);
@@ -314,50 +301,12 @@ $(() => {
         });
     }
 
-    $('#btn-send').on('click', function () {
-        let writeArea = $('#write-area');
-        if (writeArea.val().length || attachments2send.length) {
-            let data = new FormData();
-            data.append('ticket_id', $('#ticket-id').val())
-            data.append('message', writeArea.val());
+    // Comportamentos da tela
 
-            attachments2send.forEach((file, i) => {
-                data.append(`attachments[${i}]`, file);
-            });
-
-            $.ajax({
-                method: "POST",
-                url: '/api/tickets/sendmessage',
-                data: data,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                error: resp => {
-                    errorAjaxResponse(resp);
-                },
-                success: resp => {
-                    writeArea.val('');
-                    cleanAttachments();
-                    let container = $('.messages-container');
-                    for (let message of resp) {
-                        container.append(renderMessage(message))
-                    }
-                    container.scrollTop(function () {
-                        return this.scrollHeight;
-                    });
-                }
-            });
-        }
-    });
-
-    $('#filter-status').on('change', function () {
+    // Filters
+    $('#project-select, #filter-status').on('change', function () {
         index();
     });
-
-    // Comportamentos da tela
 
     // Filter Badge
     $('.filter-badge').on('click', function () {
@@ -365,6 +314,9 @@ $(() => {
         if (btn.hasClass('editable')) {
             if (btn.data('value')) {
                 btn.data('value', '').removeClass('active');
+                if (btn.data('original-text')) {
+                    btn.text(btn.data('original-text'));
+                }
                 index();
             } else {
                 let target = $(btn.data('target'));
@@ -373,12 +325,15 @@ $(() => {
                     if (target.hasClass('show')) {
                         target.removeClass('show');
                     } else {
-                        let clientLeft = this.getBoundingClientRect().left
-                        let offsetLeft = this.offsetLeft;
-                        let left = clientLeft < offsetLeft ? clientLeft : offsetLeft;
-                        target.css('left', (left - 145) + 'px');
-                        target.css('top', '42px');
-                        target.addClass('show');
+                        const inputWidth = 250;
+                        const colPadding = 15;
+                        let parent = target[0].parentNode;
+                        let {left: parentLeft, width: parentWidth} = parent.getBoundingClientRect();
+                        let maxLeft = parentWidth - inputWidth - (colPadding * 2);
+                        let left = this.getBoundingClientRect().left - parentLeft - colPadding;
+                        left = left > maxLeft ? maxLeft : left;
+                        target.css('margin-left', left + 'px')
+                            .addClass('show');
                         target.find('input').val('').focus();
                     }
                 }
@@ -392,14 +347,21 @@ $(() => {
     $('.filter-badge-input button').on('click', function () {
         let parent = $(this).parent();
         let parentId = parent.attr('id');
-        let value = parent.find('input').val();
+        let input = parent.find('input, select');
+        let value = input.val();
         if (value) {
-            $(`[data-target='#${parentId}']`).data('value', value)
+            let badge = $(`[data-target='#${parentId}']`);
+            if (input.prop('tagName') === 'SELECT') {
+                badge.data('original-text', badge.text());
+                badge.text(input.find('option:selected').text());
+            }
+            badge.data('value', value)
                 .addClass('active');
+
             index();
         }
         parent.removeClass('show');
-    })
+    });
 
     $(document).on('click', function (e) {
         let container = $(".filter-badge.editable, .filter-badge-input");
@@ -489,6 +451,65 @@ $(() => {
         }
     })
 
+    $(document).on('click', '.file-download', function () {
+        let id = $(this).data('id');
+        $.ajax({
+            method: "GET",
+            url: '/api/tickets/file/' + id,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: resp => {
+                errorAjaxResponse(resp);
+            },
+            success: resp => {
+                window.open(resp.url, '_blank');
+            }
+        });
+    });
+
+    // Send Message
+    $('#btn-send').on('click', function () {
+        let writeArea = $('#write-area');
+        if (writeArea.val().length || attachments2send.length) {
+            let data = new FormData();
+            data.append('ticket_id', $('#ticket-id').val())
+            data.append('message', writeArea.val());
+
+            attachments2send.forEach((file, i) => {
+                data.append(`attachments[${i}]`, file);
+            });
+
+            $.ajax({
+                method: "POST",
+                url: '/api/tickets/sendmessage',
+                data: data,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: resp => {
+                    errorAjaxResponse(resp);
+                },
+                success: resp => {
+                    writeArea.val('');
+                    cleanAttachments();
+                    let container = $('.messages-container');
+                    for (let message of resp) {
+                        container.append(renderMessage(message))
+                    }
+                    container.scrollTop(function () {
+                        return this.scrollHeight;
+                    });
+                }
+            });
+        }
+    });
+
     // pagination
     function paginate(target, meta) {
         const {current_page: currentPage, last_page: lastPage, per_page: perPage, total} = meta;
@@ -530,6 +551,33 @@ $(() => {
 
     // third party
 
+    $('#input-date').daterangepicker({
+        startDate: moment().subtract(30, "days"),
+        endDate: moment(),
+        maxDate: moment().endOf("day"),
+        alwaysShowCalendar: true,
+        autoUpdateInput: true,
+        locale: {
+            locale: "pt-br",
+            format: "DD/MM/YYYY",
+            applyLabel: "Aplicar",
+            cancelLabel: "Limpar",
+            fromLabel: "De",
+            toLabel: "Até",
+            customRangeLabel: "Customizado",
+            weekLabel: "W",
+            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+            monthNames: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+        },
+        ranges: {
+            'Hoje': [moment(), moment()],
+            '7 dias': [moment().subtract(6, "days"), moment()],
+            '15 dias': [moment().subtract(29, "days"), moment()],
+            'Último mês': [moment().startOf("month"), moment().endOf("month")],
+            'Desde o início': [moment("2018-01-01 00:00:00"), moment()],
+        },
+    });
+
     const picker = new EmojiButton();
     picker.on('emoji', emoji => {
         let writeArea = document.querySelector('#write-area');
@@ -551,26 +599,33 @@ $(() => {
         prevArrow: false,
         responsive: [
             {
-                breakpoint: 1272,
+                breakpoint: 1200,
                 settings: {
-                    slidesToShow: 6,
+                    slidesToShow: 9,
+                    slidesToScroll: 9,
+                }
+            },
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 5,
+                    slidesToScroll: 5,
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 5,
                     slidesToScroll: 4,
                 }
             },
             {
-                breakpoint: 546,
+                breakpoint: 480,
                 settings: {
-                    slidesToShow: 4,
-                    slidesToScroll: 6,
+                    slidesToShow: 3,
+                    slidesToScroll: 2,
                 }
             },
-            {
-                breakpoint: 360,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 8,
-                }
-            }
         ]
     });
 })

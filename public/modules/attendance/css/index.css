@@ -21,6 +21,24 @@ button:active {
     background-color: #ECECEC;
 }
 
+select.header-select {
+    width: auto;
+    padding: 5px 20px 5px 5px !important;
+    margin-right: 5px;
+    border: none;
+    text-align: right;
+    font-weight: bold;
+    background-color: transparent;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iOSIgdmlld0JveD0iMCAwIDE2IDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+Cgk8cGF0aCBmaWxsPSIjNjM2MzYzIiBkPSJNMTUuMDcxNCAyLjM0MzA5TDguNzA3NCA4LjcwNzA2QzguMzE2ODggOS4wOTc1OCA3LjY4MzcyIDkuMDk3NTggNy4yOTMxOSA4LjcwNzA2TDAuOTI5MjI5IDIuMzQzMUMwLjUzODcwNCAxLjk1MjU3IDAuNTM4NzA0IDEuMzE5NDEgMC45MjkyMjkgMC45Mjg4ODJDMS4zMTk3NSAwLjUzODM1NyAxLjk1MjkyIDAuNTM4MzU3IDIuMzQzNDQgMC45Mjg4ODFMOC4wMDAzIDYuNTg1NzNMMTMuNjU3MiAwLjkyODg4QzE0LjA0NzcgMC41MzgzNTUgMTQuNjgwOCAwLjUzODM1NSAxNS4wNzE0IDAuOTI4ODhDMTUuNDYxOSAxLjMxOTQgMTUuNDYxOSAxLjk1MjU3IDE1LjA3MTQgMi4zNDMwOVoiLz4KPC9zdmc+Cg==);
+    background-repeat: no-repeat;
+    background-position: center right;
+    appearance: none;
+}
+
+select.header-select:active {
+    text-align: left;
+}
+
 .card {
     padding: 16px 20px;
     font-size: 16px;
@@ -103,39 +121,29 @@ button:active {
 }
 
 .filter-badge {
-    position: relative;
-    margin: 0 5px;
-    padding: 5px 15px;
-    border: 1px solid #676767;
-    border-radius: 8px;
+    margin: 0 4px;
+    padding: 12px 20px;
+    border-radius: 60px;
     white-space: nowrap;
     font-weight: bold;
-    color: #676767;
+    background-color: #ffffff;
+    color: #454545;
     user-select: none
 }
 
 .filter-badge.active {
-    padding-right: 30px;
-    border-color: #E6E6E6;
-    background-color: #FFFFFF;
-}
-
-.filter-badge.active::after {
-    content: '\00d7';
-    position: absolute;
-    right: 12px;
-}
-
-.filter-badge.editable.active {
-    border-color: #2E85EC;
-    background-color: #F8FCFF;
+    background: #2E85EC;
+    color: #ffffff;
 }
 
 .filter-badge-input {
-    position: absolute;
-    z-index: 1;
+    position:absolute;
     display: none;
+    min-width: 250px;
+    max-width: 250px;
+    margin-top: 5px;
     padding: 10px 12px;
+    z-index: 1;
     border-radius: 8px;
     box-shadow: 0 8px 10px #00000012;
     background-color: #FFFFFF;
@@ -145,7 +153,8 @@ button:active {
     display: flex;
 }
 
-.filter-badge-input input {
+.filter-badge-input input,
+.filter-badge-input select {
     margin-right: 5px;
     font-size: 14px;
 }
@@ -160,9 +169,9 @@ button:active {
 
 .vertical-line {
     width: 1px;
-    height: 32px !important;
-    margin: 0 8px;
-    background: #676767;
+    height: 44px !important;
+    margin: 0 20px;
+    background-color: #DFDFDF;
 }
 
 /* Grid */
@@ -240,6 +249,7 @@ button:active {
     top: 52px;
     right: 0;
     display: none;
+    min-width: 290px;
     padding: 10px 12px;
     border-radius: 8px;
     box-shadow: 0 8px 10px #00000012;
@@ -392,6 +402,7 @@ button:active {
 .ticket-status {
     display: flex;
     align-items: center;
+    justify-content: center;
     height: 50px;
     width: 146px;
     padding: 10px 26px;

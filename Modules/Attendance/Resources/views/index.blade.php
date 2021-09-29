@@ -10,8 +10,17 @@
     @endpush
 
     <div class="page mb-0">
-        <div class="page-header container pb-10" style="display: none; !important;">
+        <div class="page-header container pb-0">
             <h1 class="page-title">Atendimento</h1>
+            <div class="d-flex align-items-center flex-wrap  mt-15">
+                <div class="d-flex align-items-start">
+                    <span class="badge badge-primary mr-10">NOVO!</span>
+                    <span>Uma nova central para você responder as solicitações de seus clientes.</span>
+                </div>
+                <select class="header-select ml-auto" id="project-select">
+                    <option value="">Todos os projetos</option>
+                </select>
+            </div>
         </div>
         <div id="project-not-empty" style="display: none; !important;">
             <div class="page-content container">
@@ -62,33 +71,47 @@
                             <span id="category-complaint" class="filter-badge">Reclamação</span>
                             <span id="category-doubt" class="filter-badge">Dúvida</span>
                             <span id="category-suggestion" class="filter-badge">Sugestão</span>
-                            <span id="period-7" class="filter-badge">7 dias</span>
-                            <span id="period-15" class="filter-badge">15 dias</span>
-                            <span id="period-30" class="filter-badge">30 dias</span>
                             <span class="vertical-line"></span>
-                            <span id="filter-code" class="filter-badge editable" data-target="#input-code">Código</span>
-                            <span id="filter-document" class="filter-badge editable" data-target="#input-document">CPF/CNPJ</span>
                             <span id="filter-name" class="filter-badge editable" data-target="#input-name">Nome</span>
-                        </div>
-                        <div class="filter-badge-input" id="input-code">
-                            <input class="input-pad" placeholder="Código do ticket">
-                            <button class="btn btn-primary">
-                                <i class="material-icons">check</i>
-                            </button>
-                        </div>
-                        <div class="filter-badge-input" id="input-document">
-                            <input class="input-pad" placeholder="CPF/CNPJ do cliente">
-                            <button class="btn btn-primary">
-                                <i class="material-icons">check</i>
-                            </button>
-                        </div>
-                        <div class="filter-badge-input" id="input-name">
-                            <input class="input-pad" placeholder="Nome do cliente">
-                            <button class="btn btn-primary">
-                                <i class="material-icons">check</i>
-                            </button>
+                            <span id="filter-document" class="filter-badge editable" data-target="#input-document">CPF/CNPJ</span>
+                            <span class="vertical-line"></span>
+                            <span id="filter-answer" class="filter-badge editable" data-target="#input-answer">Respostas</span>
+                            <span class="vertical-line"></span>
+                            <span id="filter-date" class="filter-badge editable" data-target="#input-date">Selecionar</span>
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                <div class="col">
+                    <div class="filter-badge-input" id="input-document">
+                        <input class="input-pad" placeholder="CPF/CNPJ do cliente">
+                        <button class="btn btn-primary">
+                            <i class="material-icons">check</i>
+                        </button>
+                    </div>
+                    <div class="filter-badge-input" id="input-name">
+                        <input class="input-pad" placeholder="Nome do cliente">
+                        <button class="btn btn-primary">
+                            <i class="material-icons">check</i>
+                        </button>
+                    </div>
+                    <div class="filter-badge-input" id="input-answer">
+                        <select id="answered" class="select-pad">
+                            <option value="not-answered">Não respondidos</option>
+                            <option value="last-answer-customer">Última resposta do cliente</option>
+                            <option value="last-answer-admin">Última resposta minha</option>
+                        </select>
+                        <button class="btn btn-primary">
+                            <i class="material-icons">check</i>
+                        </button>
+                    </div>
+                    <div class="filter-badge-input" id="input-date">
+                        <input class="input-pad" placeholder="Nome do cliente">
+                        <button class="btn btn-primary">
+                            <i class="material-icons">check</i>
+                        </button>
+                    </div>
+                </div>
                 </div>
                 <div class="row mt-10">
                     <div class="col">
@@ -183,6 +206,8 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/adminremark/global/vendor/slick-carousel/slick.min.js')}}"></script>
+        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
+        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
         <script src="{{asset('/modules/tickets/js/emoji-button.min.js')}}"></script>
         <script src="{{asset('/modules/tickets/js/index.js?v=' . uniqid())}}"></script>
     @endpush
