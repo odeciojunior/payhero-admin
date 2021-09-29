@@ -28,52 +28,31 @@ class WithdrawalsApiController
     public function index(Request $request)
     {
         try {
-            $withdrawalModel = new Withdrawal();
-            $companyModel = new Company();
-            $companyId = current(Hashids::decode($request->company));
-
-            if (empty($request->input('page')) || $request->input('page') == '1') {
-                activity()->on($withdrawalModel)->tap(
-                    function (Activity $activity) {
-                        $activity->log_name = 'visualization';
-                    }
-                )->log('Visualizou tela todas as transferências');
+            $company = Company::find(hashids_decode($request->company_id));
+            $gateway = Gateway::find(hashids_decode($request->gateway_id));
+    
+            if(empty($company) || empty($gateway)) {
+                return response()->json([
+                    'message' => 'Empresa não encontrada',
+                ],403);
             }
-
-            if (empty($companyId)) {
-                return response()->json(
-                    [
-                        'message' => 'Empresa não encontrada',
-                    ],
-                    400
-                );
-            }
-
-            $company = $companyModel->find($companyId);
 
             if (!Gate::allows('edit', [$company])) {
-                return response()->json(
-                    [
+                return response()->json([
                         'message' => 'Sem permissão para visualizar saques',
-                    ],
-                    403
-                );
+                    ],403);
             }
 
-            $withdrawals = $withdrawalModel->where('company_id', $companyId)
-                ->where('automatic_liquidation', 1)
-                ->orderBy('id', 'DESC');
+            return $gateway->getService()
+                            ->setCompany($company)
+                            ->getWithdrawals();
 
-            return WithdrawalResource::collection($withdrawals->paginate(10));
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(
-                [
+            return response()->json([
                     'message' => 'Erro ao visualizar saques',
-                ],
-                400
-            );
+                ],400);
         }
     }
 

@@ -1,4 +1,4 @@
-$(document).on("load", function(){
+$(window).on("load", function(){
 
     $('#bt-withdrawal').off("click");
     $('#bt-withdrawal').on('click', function () {
@@ -187,6 +187,10 @@ $(document).on("load", function(){
         }
     });
 
+    if(window.gatewayCode == 'w7YL9jZD6gp4qmv') {
+        $('#withdrawalsTable >thead tr').append('<td scope="col" class="table-title"></td>');
+    }
+
 });
 
 window.updateWithdrawalsTable = function(link = null) {
@@ -204,14 +208,18 @@ window.updateWithdrawalsTable = function(link = null) {
     $("#withdrawals-table-data").html("");
     loadOnTable('#withdrawals-table-data', '#transfersTable');
     if (link == null) {
-        link = '/api/old_withdrawals';
+        link = '/api/withdrawals';
     } else {
-        link = '/api/old_withdrawals' + link;
+        link = '/api/withdrawals' + link;
     }
+
     $.ajax({
         method: "GET",
         url: link,
-        data: {company: $("#transfers_company_select option:selected").val()},
+        data: {
+            company_id: $("#transfers_company_select option:selected").val(),
+            gateway_id: window.gatewayCode
+        },
         dataType: "json",
         headers: {
             'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -238,18 +246,20 @@ window.updateWithdrawalsTable = function(link = null) {
                     tableData += '<td class="text-left font-size-14" style="grid-area: sale"> <strong>' + data.account_information + '</small> </td>';
                     tableData += '<td class="text-left font-size-14" style="grid-area: date-start"> <strong class="bold-mobile">    ' + data.date_request + '</strong> <br> <small class="gray font-size-12">'+data.date_request_time+' </small></td>';
                     tableData += '<td class="text-left font-size-14" style="grid-area: date-start"> <strong class="bold-mobile">    ' + data.date_release + '</strong> <br> <small class="gray font-size-12">'+data.date_release_time+' </small></td>';
-                    // tableData += "<td>" + data.date_release + "</td>";
+                    tableData += '<td class="shipping-status"><span class="badge badge-' + statusWithdrawals[data.status] + '">' + data.status_translated + '</span></td>';
                     if (data.tax_value < 50000) {
-                        tableData += ' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + '</strong><br><small>(taxa de R$10,00)</small>' + "</td>";
+                        tableData += ' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + '</strong><br><small>(taxa de R$10,00)</small>';
                     } else {
-                        tableData +=' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + "</strong></td>";
+                        tableData +=' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + "</strong>";
                     }
-                    if ($("#transfers_company_select").children("option:selected").attr('country') != 'brazil') {
-                        tableData += "<td class='text-center'>" + data.value_transferred + "</td>";
+
+                    if (window.gatewayCode == 'w7YL9jZD6gp4qmv' && data.debt_pending_value != null && data.debt_pending_value != "R$ 0,00") {
+                        tableData += `<br> <a role='button' class='pending_debit_withdrawal_id pointer' withdrawal_id='${data.id}'><small class="gray" style="color: #F41C1C;">- ${data.debt_pending_value}</small></a>`;
                     }
-                    tableData += '<td class="shipping-status">';
-                    tableData += '<span class="badge badge-' + statusWithdrawals[data.status] + '">' + data.status_translated + '</span>';
                     tableData += '</td>';
+                    if(window.gatewayCode == 'w7YL9jZD6gp4qmv') {
+                        tableData += `</td><td class="d-none d-lg-block"><a role='button' class='details_transaction pointer' withdrawal='${data.id}'><span class='o-eye-1'></span></a></td></tr>`;
+                    }
                     tableData += '</tr>';
                     $("#withdrawals-table-data").append(tableData);
                     $('#withdrawalsTable').addClass('table-striped')

@@ -8,7 +8,9 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Withdrawals\Transformers\WithdrawalResource;
 
 class CieloService implements Statement
 {
@@ -32,6 +34,7 @@ class CieloService implements Statement
     public function setCompany(Company $company)
     {
         $this->company = $company;
+        return $this;
     }
 
     public function getAvailableBalance() : int
@@ -104,7 +107,11 @@ class CieloService implements Statement
 
     public function getWithdrawals(): JsonResource
     {
-        return new JsonResource('null');
+        $withdrawals = Withdrawal::where('company_id', $this->company->id)
+                                    ->whereIn('gateway_id', $this->gatewayIds)
+                                    ->orderBy('id', 'DESC');
+
+        return WithdrawalResource::collection($withdrawals->paginate(10));
     }
 
     public function createWithdrawal(): bool
