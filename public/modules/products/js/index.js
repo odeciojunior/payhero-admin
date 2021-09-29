@@ -79,11 +79,10 @@ $(document).ready(function () {
             let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApp'));
 
             $("#type-products").val(parseLocalStorage.getTypeProducts).trigger("change");
-            setTimeout(()=>{
-                $("#select-projects").val(parseLocalStorage.getProject);
-                $("#name").val(parseLocalStorage.getName);
-                $("#btn-filtro").trigger("click")
-            },1000);
+            $("#select-projects").val(parseLocalStorage.getProject);
+            $("#name").val(parseLocalStorage.getName);
+            $("#btn-filtro").trigger("click")
+
         }
     }
 
