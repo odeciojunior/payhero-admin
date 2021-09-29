@@ -706,12 +706,16 @@ class GetNetStatementService
             $endDate = $today;
         }
 
-        if (request('statement_data_type') == 'schedule_date') {
-            $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_SCHEDULE;
-        } elseif (request('statement_data_type') == 'liquidation_date') {
-            $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_LIQUIDATION;
-        } else {
-            $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_TRANSACTION;
+        switch(request('statement_data_type')){
+            case 'schedule_date':
+                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_SCHEDULE;
+            break;
+            case 'liquidation_date':
+                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_LIQUIDATION;
+            break;
+            default:
+                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_TRANSACTION;
+            break;
         }
 
         $getNetBackOfficeService = new GetnetBackOfficeService();

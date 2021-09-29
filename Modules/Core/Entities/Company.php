@@ -42,8 +42,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $bank_document_status
  * @property int $address_document_status
  * @property int $contract_document_status
- * @property string $subseller_getnet_id
- * @property string $subseller_getnet_homolog_id
  * @property int $get_net_status
  * @property int $boleto_release_money
  * @property int $credit_card_release_money

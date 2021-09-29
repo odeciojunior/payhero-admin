@@ -18,6 +18,9 @@ class CopyCompanyCredentialsToGatewaysCompaniesCredentials extends Migration
      */
     public function up()
     {
+
+        DB::statement("TRUNCATE gateways_companies_credentials;");
+
         $companies = Company::get();
         $total = count($companies);
 
