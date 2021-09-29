@@ -19,7 +19,9 @@
                 <div class="col-sm-3">
                     <div id="div-available-money" class="price-holder pointer pl-10">
                         <h6 class="label-price mb-10"><b> Saldo Disponível </b></h6>
-                        <h4 class="number saldoDisponivel"></h4>
+                        <h4 class="number saldoDisponivel">
+                            <span style="color:#959595">R$ </span><span class="font-size-30 bold available-balance">0,00</span>
+                        </h4>
                     </div>
                     <div class="s-border-left green"></div>
                 </div>

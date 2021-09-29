@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(window).on('load', function () {
 
     let gatewayCode = window.location.href.split('/')[4];
 
@@ -180,7 +180,9 @@ $(document).ready(function () {
                 },
             },
         });
+
         loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
+
         $.ajax({
             url: "/api/finances/getbalances",
             type: "GET",
@@ -200,136 +202,28 @@ $(document).ready(function () {
             },
             success: (response) => {
                 loadOnAny(".number", true);
-                $(".saldoPendente").html(
-                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold pending-balance">0,00</span>'
-                );
-                $('.saldoAntifraude').html('<span class="currency">R$</span><span class="pending-antifraud-balance">0,00</span>');
                 $('.removeSpan').remove();
-                $('.disponivelAntecipar').append('<span class="currency removeSpan">R$</span><span class="antecipable-balance removeSpan">0,00</span>');
-                $(".saldoDisponivel").html(
-                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold available-balance">0,00</span>'
-                );
-                $(".saltoTotal").html(
-                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold total-balance">0,00</span>'
-                );
-                $(".saldoBloqueado").html(
-                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold blocked-balance">0,00</span>'
-                );
 
-                //Saldo antecipavel
-                $('.saldoAntecipavel').html('<span class="currency">R$</span><span class="antecipable-balance">' + response.anticipable_balance + '</span>');
+                $(".available-balance").html(removeMoneyCurrency(response.available_balance));
+                $(".pending-balance").html(removeMoneyCurrency(response.pending_balance));
+                $(".total-balance").html(removeMoneyCurrency(response.total_balance));
+                $(".blocked-balance").html(removeMoneyCurrency(response.blocked_balance));
+                $(".debt-balance").html(removeMoneyCurrency(response.pending_debt_balance));
 
-                // Saldo bloqueado
-                $(".saldoBloqueado").html(
-                    '<span style="color:#959595">R$ </span><span class="font-size-30 bold blocked-balance">' +
-                        response.blocked_balance +
-                        "</span>"
-                );
-
-                $(".totalConta").html(
-                    '<span style="color:#959595">R$ </span><span class="total-balance">0,00</span>'
-                );
-                $(".total_available").html(
-                    '<span style="color:#959595">R$ </span>' +
-                        isEmpty(response.available_balance)
-                );
-                $(".currency").html('R$ ');
-                $(".available-balance").html(isEmpty(response.available_balance));
-                $(".pending-balance").html(isEmpty(response.pending_balance));
-                $(".pending-antifraud-balance").html(response.pending_antifraud_balance);
-                $(".total-balance").html(isEmpty(response.total_balance));
+                if(onlyNumbers(response.pending_debt_balance) != "000"){
+                    $("#balance-resumes > .col-md-4").removeClass('col-md-4').addClass('col-md-3');
+                    $("#card-debt-balance").show();
+                }
+                    
                 $(".loading").remove();
+
                 $("#div-available-money, #div-available-money_m").unbind('click');
                 $("#div-available-money, #div-available-money_m").on("click", function () {
-                    $("#custom-input-addon").val(isEmpty(response.available_balance));
+                    $("#custom-input-addon").val(removeMoneyCurrency(response.available_balance));
                 });
-
-                if (response.currency != 'real') {
-                    $("#quotation_information").show();
-                } else {
-                    $("#quotation_information").hide();
-                }
-
-                $("#current_quotation").text("R$ " + response.currencyQuotation);
-                $("#label_quotation").text("Cotação do " + response.currency);
 
                 updateWithdrawalsTable();
             }
-        });
-
-        $('.div-antecipable-balance').popover({
-            animation: true,
-            placement: 'top',
-            title: 'Antecipação de saldo pendente',
-            content: '',
-            html: true,
-            template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header">Teste</h3><div class="popover-body"></div></div>'
-        });
-
-        // se clicar fora do popover ele fecha
-        $('html').on('click', function (e) {
-            if (typeof $(e.target).data('original-title') == 'undefined') {
-                $('.div-antecipable-balance').popover('hide');
-            }
-        });
-
-        $('.div-antecipable-balance').on('click', function () {
-
-            loadingOnScreen();
-
-            $.ajax({
-                url: "api/anticipations/" + $("#transfers_company_select option:selected").val(),
-                type: "GET",
-                dataType: "json",
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                error: (response) => {
-                    loadingOnScreenRemove();
-                    errorAjaxResponse(response);
-                },
-                success: (response) => {
-                    loadingOnScreenRemove();
-                    let tooltipData = `
-                        Disponível para antecipação: R$ ${response.data.antecipable_value} <br>
-                        Taxa de antecipação: R$ ${response.data.tax_value} <br>
-                        Saldo final antecipável: <b>R$ ${response.data.value_minus_tax}</b> <br>
-                        <button id='confirm-anticipation' class='btn btn-success text-center mt-20 mb-20'>Confirmar antecipação</button>
-                    `;
-                    $('.div-antecipable-balance').attr('data-content', tooltipData);
-                    $('.div-antecipable-balance').popover('show');
-
-                    $("#confirm-anticipation").unbind("click");
-                    $("#confirm-anticipation").on("click", function () {
-
-                        loadingOnScreen();
-
-                        $.ajax({
-                            url: "api/anticipations",
-                            type: "POST",
-                            data: {company_id: $("#transfers_company_select option:selected").val()},
-                            dataType: "json",
-                            headers: {
-                                'Authorization': $('meta[name="access-token"]').attr('content'),
-                                'Accept': 'application/json',
-                            },
-                            error: (response) => {
-                                loadingOnScreenRemove();
-                                alertCustom('error', 'Ocorreu algum erro');
-                            },
-                            success: (response) => {
-                                loadingOnScreenRemove();
-                                alertCustom('success', response.data.message);
-                                updateBalances();
-                                updateTransfersTable();
-                            }
-                        });
-
-                    });
-                }
-            });
-
         });
 
         function isEmpty(value) {
