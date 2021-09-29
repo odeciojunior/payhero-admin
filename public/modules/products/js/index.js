@@ -73,7 +73,7 @@ $(document).ready(function () {
     getTypeProducts();
     //updateProducts(); //Funcao de update chamda pela 2x
     
-    //
+    //REGASTA O FILTRO E O APLICA
     function handleLocalStorage() {
         if (localStorage.getItem('filtersApp') !== null) {
             let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApp'));
