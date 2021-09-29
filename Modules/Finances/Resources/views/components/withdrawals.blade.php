@@ -10,9 +10,6 @@
                 <td scope="col" class="table-title">Solicitação</td>
                 <td scope="col" class="table-title">Liberação</td>
                 <td scope="col" class="table-title">Valor</td>
-                <td style="display: none" id="col_transferred_value" scope="col">Valor
-                    transferido
-                </td>
                 <td scope="col" class="table-title">Status</td>
             </tr>
         </thead>

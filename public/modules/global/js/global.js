@@ -722,3 +722,4 @@ function onlyNumbers(string) {
 function removeMoneyCurrency(string) {
     return string.substring(3);
 }
+

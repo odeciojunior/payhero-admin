@@ -1,80 +1,5 @@
-$(window).on('load', function () {
+$(document).on("load", function(){
 
-    $(document).on("change", "#transfers_company_select", function () {
-        $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]").prop("selected", true);
-        $('#custom-input-addon').val('');
-        updateBalances();
-        if ($(this).children("option:selected").attr('country') != 'brazil') {
-            $("#col_transferred_value").show();
-        } else {
-            $("#col_transferred_value").hide();
-        }
-    });
-
-});
-
-window.updateBalances = function() {
-
-    loadOnAny(".number", false, {
-        styles: {
-            container: {
-                minHeight: "32px",
-                height: "auto",
-            },
-            loader: {
-                width: "20px",
-                height: "20px",
-                borderWidth: "4px",
-            },
-        },
-    });
-
-    loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
-
-    $.ajax({
-        url: "/api/finances/getbalances",
-        type: "GET",
-        data: {
-               company: $("#transfers_company_select option:selected").val(), 
-               gateway_id: gatewayCode
-        },
-        dataType: "json",
-        headers: {
-            'Authorization': $('meta[name="access-token"]').attr('content'),
-            'Accept': 'application/json',
-        },
-
-        error: (response) => {
-            loadOnAny(".number", true);
-            errorAjaxResponse(response);
-        },
-        success: (response) => {
-            loadOnAny(".number", true);
-            $('.removeSpan').remove();
-
-            $(".available-balance").html(removeMoneyCurrency(response.available_balance));
-            $(".pending-balance").html(removeMoneyCurrency(response.pending_balance));
-            $(".total-balance").html(removeMoneyCurrency(response.total_balance));
-            $(".blocked-balance").html(removeMoneyCurrency(response.blocked_balance));
-            $(".debt-balance").html(removeMoneyCurrency(response.pending_debt_balance));
-
-            if(onlyNumbers(response.pending_debt_balance) != "000"){
-                $("#balance-resumes > .col-md-4").removeClass('col-md-4').addClass('col-md-3');
-                $("#card-debt-balance").show();
-            }
-
-            $(".loading").remove();
-
-            $("#div-available-money, #div-available-money_m").unbind('click');
-            $("#div-available-money, #div-available-money_m").on("click", function () {
-                $("#custom-input-addon").val(removeMoneyCurrency(response.available_balance));
-            });
-
-            updateWithdrawalsTable();
-        }
-    });
-
-    // Fazer saque
     $('#bt-withdrawal').off("click");
     $('#bt-withdrawal').on('click', function () {
         let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
@@ -146,7 +71,7 @@ window.updateBalances = function() {
                                                             <div><b>Agência:</b><span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></div>
                                                             <div><b>Conta:</b><span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></div>
                                                             <div><b>Documento:</b><span id="modal-withdrawal-document"></span></div>
-                                                         </div>`;
+                                                            </div>`;
 
                             if (response.data.currency !== 'real') {
                                 confirmationData += `<div class="col">
@@ -156,16 +81,16 @@ window.updateBalances = function() {
                                                         <div><b>Taxa de IOF:</b> R$ ${response.data.iof.value} ( ${response.data.iof.tax}%)</div>
                                                         <div><b>Custo:</b> R$ ${response.data.cost.value} (${response.data.cost.tax}%)</div>
                                                         <div><b>Total:</b> R$ ${response.data.abroad_transfer.value} (${response.data.abroad_transfer.tax}%)</div>
-                                                     </div>`;
+                                                        </div>`;
                             }
 
                             confirmationData += `</div>
-                                                 <hr>
-                                                 <h4>Valor do saque: <span id="modal-withdrawal-value" class='greenGradientText'></span>`;
+                                                    <hr>
+                                                    <h4>Valor do saque: <span id="modal-withdrawal-value" class='greenGradientText'></span>`;
 
                             if (response.data.currency !== 'real') {
                                 confirmationData += `</h4>
-                                                     <h4>Valor convertido:
+                                                        <h4>Valor convertido:
                                                         <span class='greenGradientText'>${response.data.abroad_transfer.converted_money}</span>
                                                         <span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque"> ( em ${response.data.currency} )</span>`;
                             }
@@ -176,7 +101,7 @@ window.updateBalances = function() {
                                                     <p><b>Atenção! A taxa para saques é gratuita para saques com o valor igual ou superior a R$500,00. Caso contrário a taxa cobrada será de R$10,00.</b></p>
                                                     <p><b>Os saques solicitados poderão ser liquidados em até um dia útil!</b></p>
                                                 </div>
-                                          </div>`;
+                                            </div>`;
 
                             $('#modal_body').html(confirmationData);
 
@@ -261,4 +186,78 @@ window.updateBalances = function() {
             );
         }
     });
+
+});
+
+window.updateWithdrawalsTable = function(link = null) {
+
+    let statusWithdrawals = {
+        1: 'warning',
+        2: 'primary',
+        3: 'success',
+        4: 'danger',
+        5: 'primary',
+        6: 'primary',
+        7: 'danger',
+    };
+
+    $("#withdrawals-table-data").html("");
+    loadOnTable('#withdrawals-table-data', '#transfersTable');
+    if (link == null) {
+        link = '/api/old_withdrawals';
+    } else {
+        link = '/api/old_withdrawals' + link;
+    }
+    $.ajax({
+        method: "GET",
+        url: link,
+        data: {company: $("#transfers_company_select option:selected").val()},
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: (response) => {
+            errorAjaxResponse(response);
+        },
+        success: (response) => {
+            $("#withdrawals-table-data").html('');
+            if (response.data === '' || response.data === undefined || response.data.length === 0) {
+                $("#withdrawals-table-data").html(
+                    "<tr style='border-radius: 16px;'><td colspan='6' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                        $("#withdrawals-table-data").attr("img-empty") +
+                        "'> Nenhum saque realizado até o momento</td></tr>"
+                );
+                $("#withdrawals-pagination").html("");
+            } else {
+                $.each(response.data, function (index, data) {
+
+                    let tableData = '';
+                    tableData += '<tr>';
+                    tableData += "<td>#" + data.id + "</td>";
+                    tableData += '<td class="text-left font-size-14" style="grid-area: sale"> <strong>' + data.account_information + '</small> </td>';
+                    tableData += '<td class="text-left font-size-14" style="grid-area: date-start"> <strong class="bold-mobile">    ' + data.date_request + '</strong> <br> <small class="gray font-size-12">'+data.date_request_time+' </small></td>';
+                    tableData += '<td class="text-left font-size-14" style="grid-area: date-start"> <strong class="bold-mobile">    ' + data.date_release + '</strong> <br> <small class="gray font-size-12">'+data.date_release_time+' </small></td>';
+                    // tableData += "<td>" + data.date_release + "</td>";
+                    if (data.tax_value < 50000) {
+                        tableData += ' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + '</strong><br><small>(taxa de R$10,00)</small>' + "</td>";
+                    } else {
+                        tableData +=' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + "</strong></td>";
+                    }
+                    if ($("#transfers_company_select").children("option:selected").attr('country') != 'brazil') {
+                        tableData += "<td class='text-center'>" + data.value_transferred + "</td>";
+                    }
+                    tableData += '<td class="shipping-status">';
+                    tableData += '<span class="badge badge-' + statusWithdrawals[data.status] + '">' + data.status_translated + '</span>';
+                    tableData += '</td>';
+                    tableData += '</tr>';
+                    $("#withdrawals-table-data").append(tableData);
+                    $('#withdrawalsTable').addClass('table-striped')
+                });
+                pagination(response, 'withdrawals', updateWithdrawalsTable);
+            }
+
+        }
+    });
 }
+
