@@ -55,7 +55,7 @@
                 <div class="row align-items-center justify-content-between" style="min-height:50px">
                     <div class="col-6">
                         <h1 class="page-title">Vendas</h1>
-                    </div>                    
+                    </div>
                     <!-- hasanyrole('account_owner|admin|finantial') -->
                     @can('sales_manage')
                     <div class="col-6 text-right">
@@ -98,6 +98,7 @@
                                         {{--<option value="8">Parcialmente estornado</option>--}}
                                         <option value="chargeback_recovered">Chargeback recuperado</option>
                                         <option value="20">Revisão Antifraude</option>
+                                        <option value="21">Cancelado Antifraude</option>
                                         <option value="24">Em disputa</option>
                                     </select>
                                 </div>

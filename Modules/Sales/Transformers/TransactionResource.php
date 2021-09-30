@@ -25,8 +25,8 @@ class TransactionResource extends JsonResource
         }
 
         $customerName = $sale->customer->name;
-        if($sale->status == Sale::STATUS_CANCELED_ANTIFRAUD){
-            $name = explode(' ',$customerName);
+        if (in_array($sale->status, [Sale::STATUS_IN_REVIEW, Sale::STATUS_CANCELED_ANTIFRAUD])) {
+            $name = explode(' ', $customerName);
             $customerName = $name[0];
             array_shift($name);
             $customerName .= ' ' . preg_replace('/\S/', '*', implode(' ', $name));
