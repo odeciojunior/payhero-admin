@@ -72,7 +72,7 @@ $(document).ready(function () {
     });
     getTypeProducts();
     //updateProducts(); //Funcao de update chamda pela 2x
-    
+
     //REGASTA O FILTRO E O APLICA
     function handleLocalStorage() {
         if (localStorage.getItem('filtersApp') !== null) {
@@ -360,8 +360,14 @@ $(document).ready(function () {
 
                     $(".products-is-empty").hide();
                 } else {
-                    $("#data-table-products, #pagination-products").html("");
-                    $(".products-is-empty").show();
+                    if(localStorage.getItem('filtersApp') != null && localStorage.getItem('page')!= null){
+                        localStorage.removeItem('page');
+                        $("#btn-filtro").trigger("click")
+
+                    }else {
+                        $("#data-table-products, #pagination-products").html("");
+                        $(".products-is-empty").show();
+                    }
                 }
                 setTimeout(() => {
                     loadOnAny(".page-content", true);
