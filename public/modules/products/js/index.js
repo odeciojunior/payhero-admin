@@ -360,6 +360,7 @@ $(document).ready(function () {
 
                     $(".products-is-empty").hide();
                 } else {
+                    
                     if(localStorage.getItem('filtersApp') != null && localStorage.getItem('page')!= null){
                         localStorage.removeItem('page');
                         $("#btn-filtro").trigger("click")
