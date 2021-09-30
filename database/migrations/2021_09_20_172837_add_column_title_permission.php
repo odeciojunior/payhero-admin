@@ -42,7 +42,7 @@ class AddColumnTitlePermission extends Migration
         DB::statement("UPDATE `permissions` SET title = 'Apps' WHERE id = 24");
         DB::statement("UPDATE `permissions` SET title = 'Apps - Gerenciar' WHERE id = 25");
         DB::statement("UPDATE `permissions` SET title = 'Convites' WHERE id = 26");
-        DB::statement("UPDATE `permissions` SET title = 'Convites - Gerenciar' WHERE id = 27");        
+        DB::statement("UPDATE `permissions` SET title = 'Convites - Gerenciar' WHERE id = 27");
     }
 
     /**
