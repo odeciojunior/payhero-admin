@@ -73,6 +73,10 @@ return [
             'connection' => 'redis-queries',
         ],
 
+        'redis-cache' => [
+            'driver' => 'redis',
+            'connection' => 'redis-cache',
+        ],
     ],
 
     /*

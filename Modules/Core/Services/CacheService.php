@@ -34,7 +34,7 @@ class CacheService
     public static function remember(\Closure $callback, string $key, string $uniqueKey)
     {
         try {
-            return cache()->driver('redis')
+            return cache()->driver('redis-cache')
                 ->remember($key . ':' . $uniqueKey, 1800, $callback);
         } catch (\Exception $e) {
             report($e);
@@ -45,7 +45,7 @@ class CacheService
     public static function forget(string $key, string $uniqueKey): bool
     {
         try {
-            return cache()->driver('redis')
+            return cache()->driver('redis-cache')
                 ->forget($key . ':' . $uniqueKey);
         } catch (\Exception $e) {
             report($e);
@@ -57,7 +57,7 @@ class CacheService
     {
         try {
             $prefix = config('cache.prefix');
-            $keys = Redis::connection('redis-queries')
+            $keys = Redis::connection('redis-cache')
                 ->keys($prefix . ':' . $key . ':*' . $uniqueKey . '*');
             foreach ($keys as $key) {
                 $cacheKey = preg_replace("/{$prefix}:/", '', $key);
