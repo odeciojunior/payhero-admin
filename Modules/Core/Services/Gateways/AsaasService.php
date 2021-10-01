@@ -38,12 +38,7 @@ class AsaasService implements Statement
 
     public function getAvailableBalance() : int
     {
-        return Transaction::whereIn('gateway_id', $this->gatewayIds)
-                            ->where('company_id', $this->company->id)
-                            ->where('is_waiting_withdrawal', 1)
-                            ->whereNull('withdrawal_id')
-                            ->where('created_at', '>', '2021-09-20')
-                            ->sum('value');
+        return $this->company->asaas_balance;
     }
 
     public function getPendingBalance() : int
