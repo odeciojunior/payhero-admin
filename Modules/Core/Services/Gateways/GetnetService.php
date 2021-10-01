@@ -3,6 +3,7 @@
 namespace Modules\Core\Services\Gateways;
 
 use App\Jobs\ProcessWithdrawal;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
@@ -15,8 +16,10 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class GetnetService implements Statement
 {
@@ -207,17 +210,14 @@ class GetnetService implements Statement
 
     public function getLowerAndBiggerAvailableValues(int $withdrawalValueRequested): array
     {
+
+        $availableBalance = $this->getAvailableBalance() - $this->getBlockedBalance();
+
         $transactionsSum = $this->company->transactions()
             ->whereIn('gateway_id', $this->gatewayIds)
             ->where('is_waiting_withdrawal', 1)
             ->whereNull('withdrawal_id')
             ->orderBy('id');
-
-            $transactions = Transaction::whereIn('gateway_id', $this->gatewayIds)
-            ->where('company_id', $this->company->id)
-            ->where('is_waiting_withdrawal', 1)
-            ->whereNull('withdrawal_id')
-            ->sum('value');
 
         $currentValue = 0;
         $lowerValue = 0;
@@ -225,15 +225,23 @@ class GetnetService implements Statement
 
         $transactionsSum->chunk(
             2000,
-            function ($transactions) use ($withdrawalValueRequested, &$currentValue, &$lowerValue, &$biggerValue) {
+            function ($transactions) use ($withdrawalValueRequested, &$currentValue, &$lowerValue, &$biggerValue, &$availableBalance) {
                 foreach ($transactions as $transaction) {
                     $currentValue += $transaction->value;
+
+                    if($currentValue > $availableBalance) {
+                        $biggerValue = $lowerValue;
+                        $lowerValue = 0;
+                        return;
+                    }
+
                     if ($currentValue >= $withdrawalValueRequested) {
                         $lowerValue = $currentValue - $transaction->value;
                         $biggerValue = $currentValue;
 
                         return;
                     }
+                    $lowerValue = $currentValue;
                 }
             }
         );
@@ -241,7 +249,7 @@ class GetnetService implements Statement
         return [
             'data' => [
                 'lower_value' => $lowerValue,
-                'bigger_value' => $transactionsSum->sum('value') // $biggerValue,
+                'bigger_value' => $biggerValue,
             ]
         ];
     }
@@ -249,6 +257,98 @@ class GetnetService implements Statement
     public function hasEnoughBalanceToRefund(Sale $sale): bool
     {
         return false;
+    }
+
+    public function updateAvailableBalance($saleId = null)
+    {
+        try {
+            // seta false para desabilitar o pedido saque dos usuarios enquanto a rotina esta sendo executada
+            settings()->group('withdrawal_request')->set('withdrawal_request', false);
+        } catch (Exception $e) {
+            report($e);
+        }
+
+        $transactionModel = new Transaction();
+        $getnetService = new GetnetBackOfficeService();
+
+        $transactions = $transactionModel->with('sale')
+            ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
+            ->where('status_enum', (new Transaction())->present()->getStatusEnum('paid'))
+            ->where('is_waiting_withdrawal', 0)
+            ->whereNull('withdrawal_id')
+            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
+            ->where(function ($where) {
+                $where->where('tracking_required', false)
+                    ->orWhereHas('sale', function ($query) {
+                        $query->where(function ($q) {
+                            $q->where('has_valid_tracking', true)
+                                ->orWhereNull('delivery_id');
+                        });
+                    });
+            });
+
+        if ($saleId) {
+            $transactions->where('sale_id', $saleId);
+        }
+
+        $transactions->chunkById(100, function ($transactions) use ($getnetService) {
+            foreach ($transactions as $transaction) {
+                try {
+
+                    if (empty($transaction->company_id)) {
+                        continue;
+                    }
+                    $sale = $transaction->sale;
+                    $saleIdEncoded = Hashids::connection('sale_id')->encode($sale->id);
+
+                    if ($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID) {
+
+                        $transaction->update(
+                            [
+                                'is_waiting_withdrawal' => 1,
+                            ]
+                        );
+
+                    } else {
+
+                        if (foxutils()->isProduction()) {
+                            $subsellerId = $transaction->company->subseller_getnet_id;
+                        } else {
+                            $subsellerId = $transaction->company->subseller_getnet_homolog_id;
+                        }
+
+                        $getnetService->setStatementSubSellerId($subsellerId)
+                            ->setStatementSaleHashId($saleIdEncoded);
+
+                        $result = json_decode($getnetService->getStatement());
+
+                        if (!empty($result->list_transactions) &&
+                            !is_null($result->list_transactions[0]) &&
+                            !is_null($result->list_transactions[0]->details[0]) &&
+                            !is_null($result->list_transactions[0]->details[0]->release_status)
+                            && $result->list_transactions[0]->details[0]->release_status == 'N'
+                        ) {
+                            $transaction->update(
+                                [
+                                    'is_waiting_withdrawal' => 1,
+                                ]
+                            );
+                        } elseif (empty($result->list_transactions)) {
+                            throw new Exception("TransactionsService: A venda {$sale->id} não foi encontrada na getnet!");
+                        }
+                    }
+
+                } catch (Exception $e) {
+                    report($e);
+                }
+            }
+        });
+
+        try {
+            settings()->group('withdrawal_request')->set('withdrawal_request', true);
+        } catch (Exception $e) {
+            report($e);
+        }
     }
 
     public function getStatement()

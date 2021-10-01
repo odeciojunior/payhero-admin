@@ -3,17 +3,15 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\UserProject;
 
-class AddCompanyIdInSales extends Command
+class UpdateAvailableBalance extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'sale:add_company';
+    protected $signature = 'available-balance:update';
 
     /**
      * The console command description.
@@ -21,6 +19,13 @@ class AddCompanyIdInSales extends Command
      * @var string
      */
     protected $description = 'Command description';
+
+    private $defaultGateways = [
+        AsaasService::class,
+        CieloService::class,
+        GetnetService::class,
+        GerencianetService::class
+    ];
 
     /**
      * Create a new command instance.
@@ -39,12 +44,11 @@ class AddCompanyIdInSales extends Command
      */
     public function handle()
     {
-        foreach(Sale::all() as $sale) {
-            $userProject = UserProject::where('project_id', $sale->project_id)->first();
-
-            $sale->update(['company_id' => $userProject->company_id]);
-
-            $this->line('id: '.$sale->id);
+        foreach($this->defaultGateways as $gatewayClass) {
+            $gatewayService = app()->make($gatewayClass);
+            $gatewayService->updateAvailableBalance();
         }
+
     }
+
 }
