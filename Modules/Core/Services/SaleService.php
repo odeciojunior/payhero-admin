@@ -719,7 +719,7 @@ class SaleService
                 );
                 $transaction->company->update(
                     [
-                        'balance' => $transaction->company->balance -= 100,
+                        'cielo_balance' => $transaction->company->cielo_balance -= 100,
                     ]
                 );
 
@@ -737,7 +737,7 @@ class SaleService
 
                 $transaction->company->update(
                     [
-                        'balance' => $transaction->company->balance -= $transaction->value,
+                        'cielo_balance' => $transaction->company->cielo_balance -= $transaction->value,
                     ]
                 );
 
@@ -849,7 +849,7 @@ class SaleService
 
         $sale->customer->update(
             [
-                'balance' => $sale->customer->balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
+                'cielo_balance' => $sale->customer->cielo_balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
             ]
         );
 
@@ -1006,7 +1006,7 @@ class SaleService
 
                 $transaction->company->update(
                     [
-                        'balance' => $transaction->company->balance -= $refundValue,
+                        'cielo_balance' => $transaction->company->cielo_balance -= $refundValue,
                     ]
                 );
             }

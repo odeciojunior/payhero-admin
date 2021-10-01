@@ -262,54 +262,38 @@ class GetnetService implements Statement
     public function updateAvailableBalance($saleId = null)
     {
         try {
-            // seta false para desabilitar o pedido saque dos usuarios enquanto a rotina esta sendo executada
             settings()->group('withdrawal_request')->set('withdrawal_request', false);
-        } catch (Exception $e) {
-            report($e);
-        }
 
-        $transactionModel = new Transaction();
-        $getnetService = new GetnetBackOfficeService();
+            $transactionModel = new Transaction();
+            $getnetService = new GetnetBackOfficeService();
 
-        $transactions = $transactionModel->with('sale')
-            ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
-            ->where('status_enum', (new Transaction())->present()->getStatusEnum('paid'))
-            ->where('is_waiting_withdrawal', 0)
-            ->whereNull('withdrawal_id')
-            ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
-            ->where(function ($where) {
-                $where->where('tracking_required', false)
-                    ->orWhereHas('sale', function ($query) {
-                        $query->where(function ($q) {
-                            $q->where('has_valid_tracking', true)
-                                ->orWhereNull('delivery_id');
+            $transactions = $transactionModel->with('sale')
+                ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
+                ->where('status_enum', (new Transaction())->present()->getStatusEnum('paid'))
+                ->where('is_waiting_withdrawal', 0)
+                ->whereNull('withdrawal_id')
+                ->whereNotNull('company_id')
+                ->whereIn('gateway_id', $this->gatewayIds)
+                ->where(function ($where) {
+                    $where->where('tracking_required', false)
+                        ->orWhereHas('sale', function ($query) {
+                            $query->where(function ($q) {
+                                $q->where('has_valid_tracking', true)
+                                    ->orWhereNull('delivery_id');
+                            });
                         });
-                    });
-            });
+                });
 
-        if ($saleId) {
-            $transactions->where('sale_id', $saleId);
-        }
+            if ($saleId) {
+                $transactions->where('sale_id', $saleId);
+            }
 
-        $transactions->chunkById(100, function ($transactions) use ($getnetService) {
-            foreach ($transactions as $transaction) {
-                try {
+            $transactions->chunkById(100, function ($transactions) use ($getnetService) {
+                foreach ($transactions as $transaction) {
+                    try {
 
-                    if (empty($transaction->company_id)) {
-                        continue;
-                    }
-                    $sale = $transaction->sale;
-                    $saleIdEncoded = Hashids::connection('sale_id')->encode($sale->id);
-
-                    if ($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID) {
-
-                        $transaction->update(
-                            [
-                                'is_waiting_withdrawal' => 1,
-                            ]
-                        );
-
-                    } else {
+                        $sale = $transaction->sale;
+                        $saleIdEncoded = Hashids::connection('sale_id')->encode($sale->id);
 
                         if (foxutils()->isProduction()) {
                             $subsellerId = $transaction->company->subseller_getnet_id;
@@ -318,7 +302,7 @@ class GetnetService implements Statement
                         }
 
                         $getnetService->setStatementSubSellerId($subsellerId)
-                            ->setStatementSaleHashId($saleIdEncoded);
+                                        ->setStatementSaleHashId($saleIdEncoded);
 
                         $result = json_decode($getnetService->getStatement());
 
@@ -328,24 +312,20 @@ class GetnetService implements Statement
                             !is_null($result->list_transactions[0]->details[0]->release_status)
                             && $result->list_transactions[0]->details[0]->release_status == 'N'
                         ) {
-                            $transaction->update(
-                                [
+                            $transaction->update([
                                     'is_waiting_withdrawal' => 1,
-                                ]
-                            );
+                            ]);
+
                         } elseif (empty($result->list_transactions)) {
                             throw new Exception("TransactionsService: A venda {$sale->id} não foi encontrada na getnet!");
                         }
+
+                    } catch (Exception $e) {
+                        report($e);
                     }
-
-                } catch (Exception $e) {
-                    report($e);
                 }
-            }
-        });
+            });
 
-        try {
-            settings()->group('withdrawal_request')->set('withdrawal_request', true);
         } catch (Exception $e) {
             report($e);
         }
