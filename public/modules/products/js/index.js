@@ -5,7 +5,6 @@ $(document).ready(function () {
         localStorage.clear();
     }
 
-    getProjects();
     var pageCurrent;
     let badgeList = {
         1: "#2E85EC",
@@ -17,12 +16,12 @@ $(document).ready(function () {
         2: "Aprovado",
         3: "Recusado",
     };
-    
+
     // Comportamentos da tela
     //VERIFICA SE HA FILTRO E PEGA O TIPO
     let storeTypeProduct = () => {
-        if(localStorage.getItem("filtersApp")){
-            let getProductValue = JSON.parse(localStorage.getItem("filtersApp"));
+        if(localStorage.getItem("filtersApplied")){
+            let getProductValue = JSON.parse(localStorage.getItem("filtersApplied"));
             return getProductValue;
 
         }else{
@@ -31,57 +30,20 @@ $(document).ready(function () {
         }
     }
 
-    $("#type-products").on("change", function () {
-        const type = $(this).val();
-        if (type === "1") {
-            $('#projects-list').removeClass('d-none');
-            $("#projects-list select").prop("disabled", false).removeClass("disabled");
-            $("#opcao-vazia").remove();
-
-        } else {
-            $("#projects-list select").prop("disabled", true).addClass("disabled");
-            $("#projects-list").addClass("d-none");
-        }
-    });
-
-    $("#btn-filtro").on("click", function () {
-        deleteCookie("filterProduct");
-
-        //SE O TIPO FOR DIFERENTE ZERA A PAGINA
-        if(storeTypeProduct().getTypeProducts != $("#type-products").val() || storeTypeProduct().getName != $('#name').val() || storeTypeProduct().getProject != $('#select-projects').val()){
-
-            if(localStorage.getItem("page") != null){
-                let getPageStored = JSON.parse(localStorage.getItem("page"));
-                getPageStored.atualPage = null;
-                localStorage.setItem("page", JSON.stringify(getPageStored));
-            }
-        }
-
-        //GUARDA O NOVO FILTRO
-        let filtersApp = {
-            getTypeProducts: $("#type-products option:selected").val(),
-            getProject: $("#select-projects option:selected").val(),
-            getName: $("#name").val()
-        };
-        localStorage.setItem('filtersApp', JSON.stringify(filtersApp));
-        updateProducts();
-    });
-
-    $("#pagination-products").on("click", function () {
-        deleteCookie("filterProduct");
-    });
+    getProjects();
     getTypeProducts();
     //updateProducts(); //Funcao de update chamda pela 2x
 
     //REGASTA O FILTRO E O APLICA
     function handleLocalStorage() {
-        if (localStorage.getItem('filtersApp') !== null) {
-            let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApp'));
+        if (localStorage.getItem('filtersApplied') != null) {
+            let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApplied'));
 
             $("#type-products").val(parseLocalStorage.getTypeProducts).trigger("change");
+
             $("#select-projects").val(parseLocalStorage.getProject);
             $("#name").val(parseLocalStorage.getName);
-            $("#btn-filtro").trigger("click")
+            $("#btn-filtro").trigger("click");
 
         }
     }
@@ -163,8 +125,8 @@ $(document).ready(function () {
 
         //RETONA O FILTRO SE HOUVER SENAO RETORNA NULL
         let existFilters = () => {
-            if(localStorage.getItem('filtersApp') != null){
-                let getFilters = JSON.parse(localStorage.getItem('filtersApp'))
+            if(localStorage.getItem('filtersApplied') != null){
+                let getFilters = JSON.parse(localStorage.getItem('filtersApplied'))
                 return getFilters;
             }else {
                 return null;
@@ -194,27 +156,12 @@ $(document).ready(function () {
         }
 
         link = pageCurrent
-
-        deleteCookie("filterProduct");
+        
         loadOnAny(".page-content");
-        let type = "";
-        let project = "";
-        let name = "";
 
-        var cookie = getCookie("filterProduct");
-        if (cookie == "") {
-            type = $("#type-products").val();
-            project = $("#select-projects").val(); 
-            name = $("#name").val();
-        } else {
-            cookie = JSON.parse(cookie);
-            type = cookie.type;
-            project = cookie.project;
-            name = cookie.nameProduct;
-            link = cookie.page;
-
-            $("#type-products").val(type);
-        }
+        let type = $("#type-products").val();
+        let project = $("#select-projects").val(); 
+        let name = $("#name").val();
 
         if (link == null) {
             link ="/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
@@ -360,10 +307,10 @@ $(document).ready(function () {
 
                     $(".products-is-empty").hide();
                 } else {
-                    
-                    if(localStorage.getItem('filtersApp') != null && localStorage.getItem('page')!= null){
+
+                    if(localStorage.getItem('filtersApplied') != null && localStorage.getItem('page')!= null){
                         localStorage.removeItem('page');
-                        $("#btn-filtro").trigger("click")
+                        $("#btn-filtro").trigger("click");
 
                     }else {
                         $("#data-table-products, #pagination-products").html("");
@@ -378,10 +325,46 @@ $(document).ready(function () {
     }
 
     $(document).on("keypress", function (e) {
-        if (e.keyCode == 13) {
-            deleteCookie("filterProduct");
-            updateProducts();
+        if (e.key == "Enter") {
+            
+            $("#btn-filtro").trigger("click");
         }
+    });
+
+    $("#type-products").on("change", function () {
+        const type = $(this).val();
+        if (type === "1") {
+            $('#projects-list').removeClass('d-none');
+            $("#projects-list select").prop("disabled", false).removeClass("disabled");
+            $("#opcao-vazia").remove();
+
+        } else {
+            $("#projects-list select").prop("disabled", true).addClass("disabled");
+            $("#projects-list").addClass("d-none");
+        }
+    });
+
+    $("#btn-filtro").on("click", function () {
+        
+
+        //SE O TIPO FOR DIFERENTE ZERA A PAGINA
+        if(storeTypeProduct().getTypeProducts != $("#type-products").val() || storeTypeProduct().getName != $('#name').val() || storeTypeProduct().getProject != $('#select-projects').val()){
+
+            if(localStorage.getItem("page") != null){
+                let getPageStored = JSON.parse(localStorage.getItem("page"));
+                getPageStored.atualPage = null;
+                localStorage.setItem("page", JSON.stringify(getPageStored));
+            }
+        }
+
+        //GUARDA O NOVO FILTRO
+        let filtersApplied = {
+            getTypeProducts: $("#type-products option:selected").val(),
+            getProject: $("#select-projects option:selected").val(),
+            getName: $("#name").val()
+        };
+        localStorage.setItem('filtersApplied', JSON.stringify(filtersApplied));
+        updateProducts();
     });
 
     $('#new-product-button').on('click', function (event) {
