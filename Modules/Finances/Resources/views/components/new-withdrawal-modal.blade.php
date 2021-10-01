@@ -48,3 +48,31 @@
         </div>
     </div>
 </div>
+
+<div id="modal-withdrawal-custom" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
+    <div id="" class="modal-dialog modal-dialog-centered modal-simple">
+        <div id="" class="modal-content modal-content-style">
+            <div class="modal-header header-modal simple-border-bottom modal-title-withdrawal"
+                 style="height: 60px;">
+                <h3 id="modal-withdrawal-title" class="modal-title" style="color: #FFFFFF;"></h3>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-12">
+                        <div id="modal-body-withdrawal" class="col-12 mt-30">
+
+                        </div>
+                    </div>
+                    <div id="debit-pending-informations" class="col-12 mt-20"
+                         style="display:none;background:  0 0 no-repeat padding-box;">
+
+                    </div>
+                </div>
+            </div>
+            <div id='modal-withdraw-footer' class="modal-footer mt-20">
+
+            </div>
+        </div>
+    </div>
+</div>

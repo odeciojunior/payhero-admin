@@ -2,17 +2,21 @@
 
 namespace Modules\Core\Services\Gateways;
 
+use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Withdrawals\Services\WithdrawalService;
+use Modules\Withdrawals\Transformers\WithdrawalResource;
 
 class AsaasService implements Statement
 {
-
     public Company $company;
     public $gatewayIds = [];
 
@@ -27,6 +31,7 @@ class AsaasService implements Statement
     public function setCompany(Company $company)
     {
         $this->company = $company;
+        return $this;
     }
 
     public function getAvailableBalance() : int
@@ -84,12 +89,81 @@ class AsaasService implements Statement
 
     public function getWithdrawals(): JsonResource
     {
-        return new JsonResource('null');
+        $withdrawals = Withdrawal::where('company_id', $this->company->id)
+                                    ->whereIn('gateway_id', $this->gatewayIds)
+                                    ->orderBy('id', 'DESC');
+
+        return WithdrawalResource::collection($withdrawals->paginate(10));
     }
 
-    public function createWithdrawal(): bool
+    public function withdrawalValueIsValid($withdrawalValue): bool
     {
-        return false;
+        $availableBalance = $this->getAvailableBalance();
+
+        if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function createWithdrawal($withdrawalValue): bool
+    {
+        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+
+        try {
+            DB::beginTransaction();
+            $withdrawal = Withdrawal::create(
+                [
+                    'value' => $withdrawalValue,
+                    'company_id' => $this->company->id,
+                    'bank' => $this->company->bank,
+                    'agency' => $this->company->agency,
+                    'agency_digit' => $this->company->agency_digit,
+                    'account' => $this->company->account,
+                    'account_digit' => $this->company->account_digit,
+                    'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
+                    'tax' => 0,
+                    'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
+                    'automatic_liquidation' => true,
+                    'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
+                ]
+            );
+
+            $transactionsSum = $this->company->transactions()
+                                        ->where('is_waiting_withdrawal', 1)
+                                        ->whereIn('gateway_id', $this->gatewayIds)
+                                        ->whereNull('withdrawal_id')
+                                        ->orderBy('id');
+
+            $currentValue = 0;
+
+            $transactionsSum->chunkById(
+                2000,
+                function ($transactions) use ($currentValue, $withdrawal) {
+                    foreach ($transactions as $transaction) {
+                        $currentValue += $transaction->value;
+
+                        if ($currentValue <= $withdrawal->value) {
+                            $transaction->update(
+                                [
+                                    'withdrawal_id' => $withdrawal->id,
+                                    'is_waiting_withdrawal' => false
+                                ]
+                            );
+                        }
+                    }
+                }
+            );
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            report($e);
+
+            return false;
+        }
     }
 
     public function getStatement()

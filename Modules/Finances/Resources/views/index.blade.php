@@ -69,8 +69,13 @@
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-            <script src="{{ asset('modules/finances/js/index.js?v='. uniqid()) }}"></script>
-            <script src="{{ asset('modules/finances/js/settings.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/statement-index.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/balances.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/withdrawals-table.js?v='. uniqid()) }}"></script>
+            {{-- <script src="{{ asset('modules/finances/js/withdrawal-custom.js?v='. uniqid()) }}"></script> --}}
+            {{-- <script src="{{ asset('modules/finances/js/withdrawal-default.js?v='. uniqid()) }}"></script> --}}
+            <script src="{{ asset('modules/finances/js/withdrawal-handler.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/finances/js/statement.js?v='. uniqid()) }}"></script>
         @endpush
     </div>
 

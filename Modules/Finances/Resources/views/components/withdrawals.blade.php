@@ -9,11 +9,8 @@
                 <td scope="col" class="table-title">Conta</td>
                 <td scope="col" class="table-title">Solicitação</td>
                 <td scope="col" class="table-title">Liberação</td>
-                <td scope="col" class="table-title">Valor</td>
-                <td style="display: none" id="col_transferred_value" scope="col">Valor
-                    transferido
-                </td>
                 <td scope="col" class="table-title">Status</td>
+                <td scope="col" class="table-title">Valor</td>
             </tr>
         </thead>
         <tbody id="withdrawals-table-data" class="custom-t-body" img-empty="{!! asset('modules/global/img/extrato.svg')!!}">

@@ -56,6 +56,8 @@ class Withdrawal extends Model
 
     protected $fillable = [
         'company_id',
+        'gateway_id',
+        'gateway_transfer_id',
         'value',
         'release_date',
         'status',

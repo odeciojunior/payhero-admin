@@ -325,7 +325,7 @@ $(document).ready(function () {
                     $("#bt_filtro_statement").click();
                 });
 
-                updateWithdrawalsTable();
+                loadWithdrawalsTable();
             },
         });
 
@@ -920,7 +920,7 @@ $(document).ready(function () {
             $("#modal-withdrawal").modal("show");
         }
 
-        function updateWithdrawalsTable(link = null) {
+        function loadWithdrawalsTable(link = null) {
             $("#pagination-withdrawals, #withdrawals-table-data").html("");
             loadOnTable("#withdrawals-table-data", "#transfersTable");
 
@@ -1022,7 +1022,7 @@ $(document).ready(function () {
                         $('[data-toggle="tooltip"]').tooltip();
                     });
 
-                    pagination(response, "withdrawals", updateWithdrawalsTable);
+                    pagination(response, "withdrawals", loadWithdrawalsTable);
                 },
             });
         }

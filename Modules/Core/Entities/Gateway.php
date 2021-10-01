@@ -9,6 +9,7 @@ use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\GatewayPresenter;
 use App\Traits\LogsActivity;
 use LogicException;
+use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
@@ -95,7 +96,7 @@ class Gateway extends Model
      */
     protected static $submitEmptyLogs = false;
 
-    public function getService()
+    public function getService() : Statement
     {
         if(str_contains($this->name, 'getnet')) {
             return new GetnetService();
