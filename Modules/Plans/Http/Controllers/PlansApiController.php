@@ -22,6 +22,7 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\PlanService;
 use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateInformationsRequest;
+use Modules\Plans\Http\Requests\PlanUpdateProductsRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansDetailsResource;
 use Modules\Plans\Transformers\PlansResource;
@@ -395,6 +396,52 @@ class PlansApiController extends Controller
 
             return response()->json([
                 'message' => 'Erro ao atualizar informações do plano',
+            ], 400);
+        }
+    }
+
+    public function updateProducts(PlanUpdateProductsRequest $request, $id)
+    {
+        try {
+            $planModel    = new Plan();
+            $productPlan  = new ProductPlan();
+            
+            $requestData = $request->validated();
+            
+            $planId   = current(Hashids::decode($id));
+            $plan = $planModel->with(['productsPlans'])->where('id', $planId)->first();
+            if (!empty($plan)) {
+                if (count($plan->productsPlans) > 0) {
+                    foreach ($plan->productsPlans as $productPlan) {
+                        $productPlan->forceDelete();
+                    }
+                }
+
+                foreach ($requestData['products'] as $product) {
+                    $productPlan->create([
+                        'product_id'         => current(Hashids::decode($product['id'])),
+                        'plan_id'            => $plan->id,
+                        'amount'             => $product['amount'] ?? 1,
+                        'cost'               => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
+                        'currency_type_enum' => $productPlan->present()->getCurrency($product['currency_type_enum']),
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'message' => 'Ocorreu um erro, plano não encontrado',
+                ], 400);
+            }
+
+            return response()->json([
+                'message' => 'Produtos do plano atualizados com sucesso',
+            ], 200);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar fazer update dos produtos do plano (PlansController - updateInformations)');
+            Log::warning($e->getMessage());
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao atualizar produtos do plano',
             ], 400);
         }
     }

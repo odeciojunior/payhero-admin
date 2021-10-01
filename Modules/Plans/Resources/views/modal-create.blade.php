@@ -1,4 +1,4 @@
-<div class="modal fade modal-3d-flip-vertical modal-new-layout modal-plans" id="modal_add_plan" role="dialog" tabindex="-1">
+<div class="modal fade modal-new-layout modal-plans" id="modal_add_plan" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" id="conteudo_modal_add">
             <div class="modal-header simple-border-bottom">
@@ -52,8 +52,8 @@
             </div>
 
             <div class="modal-footer">
-                <button id="btn-modal-plan-voltar" type="button" class="btn btn-default btn-lg" role="button">Voltar</button>
-                <button id="btn-modal-plan-prosseguir" type="button" data-stage="1" class="btn btn-primary btn-lg">Prosseguir</button>
+                <button id="btn-modal-plan-voltar" type="button" data-type="create" class="btn btn-default btn-lg" role="button">Voltar</button>
+                <button id="btn-modal-plan-prosseguir" type="button" data-type="create" data-stage="1" class="btn btn-primary btn-lg">Prosseguir</button>
             </div>
         </div>
     </div>

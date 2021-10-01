@@ -8,7 +8,8 @@ $(function () {
     var pageCurrent;
 
     var selected_products = [];
-    var stage_add_plan = 1;
+    var products_plan = [];
+    var stage_plan = 1;
 
     $('.tab_plans').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
@@ -26,30 +27,30 @@ $(function () {
         return Object.keys(obj).length === 0;
     }
 
-    function clearFields() {
+    function clearFields(modal, type) {
         selected_products = [];
-        stage_add_plan = 1;
-
-        var modalID = $('#modal_add_plan');
-
-        var stage_products = modalID.find('.box-breadcrumbs .products');
-        var stage_details = modalID.find('.box-breadcrumbs .details');
-        var stage_informations = modalID.find('.box-breadcrumbs .informations');
-
-        stage_products.find('img').attr('src', '/modules/global/img/icon-products-plans.svg');
-        stage_details.find('img').attr('src', '/modules/global/img/icon-costs-plans.svg');
-        stage_informations.find('img').attr('src', '/modules/global/img/icon-info-plans.svg');
-
-        stage_products.removeClass('finalized').addClass('active');
-        stage_details.removeClass('finalized');
-        stage_informations.removeClass('finalized');
+        stage_plan = 1;
         
-        modalID.find('.box-description').html('<p class="font-weight-bold" style="margin-bottom: 21px;">Selecione os produtos do novo plano</p><input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">');
-        $('.box-review').html('');
+        var modalID = $(modal);
+        
+        if (type == 'create') {
+            modalID.find('.box-breadcrumbs .products').find('img').attr('src', '/modules/global/img/icon-products-plans.svg');
+            modalID.find('.box-breadcrumbs .details').find('img').attr('src', '/modules/global/img/icon-costs-plans.svg');
+            modalID.find('.box-breadcrumbs .informations').find('img').attr('src', '/modules/global/img/icon-info-plans.svg');
 
-        $('#name').val('');
-        $('#price').val('');
-        $('#description').val('');
+            modalID.find('.box-breadcrumbs .products').removeClass('finalized').addClass('active');
+            modalID.find('.box-breadcrumbs .details').removeClass('finalized');
+            modalID.find('.box-breadcrumbs .informations').removeClass('finalized');
+            
+            modalID.find('.box-description').html('<p class="font-weight-bold" style="margin-bottom: 21px;">Selecione os produtos do novo plano</p><input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">');
+            $('.box-review').html('');
+
+            $('#name').val('');
+            $('#price').val('');
+            $('#description').val('');
+        } else {
+            modalID.modal('hide');
+        }
     }
 
     function getIconTypeCustomProduct(proType) {
@@ -89,11 +90,81 @@ $(function () {
         }
     }
 
+    function defaultBreadCrumbs(modal, type) {
+        var modalID = $(modal);
+
+        if (stage_plan == 1) {
+            if (type == 'create') {
+                modalID.find('.box-breadcrumbs .products').find('img').attr('src', '/modules/global/img/icon-products-plans.svg');
+                modalID.find('.box-breadcrumbs .details').find('img').attr('src', '/modules/global/img/icon-costs-plans.svg');
+                modalID.find('.box-breadcrumbs .informations').find('img').attr('src', '/modules/global/img/icon-info-plans.svg');
+
+                modalID.find('.box-breadcrumbs .products').removeClass('finalized');
+                modalID.find('.box-breadcrumbs .products').addClass('active');
+
+                modalID.find('.box-breadcrumbs .details').removeClass('active finalized');
+                modalID.find('.box-breadcrumbs .informations').removeClass('active finalized');
+
+                modalID.find('.box-description').html('<p style="margin-bottom: 21px; font-weight: bold;">Selecione os produtos do novo plano</p><div class="input-group input-group-lg"><input class="form-control" type="text" id="search-product" placeholder="Pesquisa por nome"><div class="input-group-append"><span class="input-group-text"><img src="/modules/global/img/icon-search.svg" alt="Icon Search"></span></div></div>');
+                modalID.find('#search-product').focus();
+            } else {
+                
+            }
+        } else if (stage_plan == 2) {
+            if (type == 'create') {
+                modalID.find('.box-breadcrumbs .products').find('img').attr('src', '/modules/global/img/icon-check.svg');
+                modalID.find('.box-breadcrumbs .details').find('img').attr('src', '/modules/global/img/icon-costs-plans.svg');
+                modalID.find('.box-breadcrumbs .informations').find('img').attr('src', '/modules/global/img/icon-info-plans.svg');
+
+                modalID.find('.box-breadcrumbs .products').removeClass('active');
+                modalID.find('.box-breadcrumbs .products').addClass('finalized');
+
+                modalID.find('.box-breadcrumbs .details').removeClass('active finalized');
+                modalID.find('.box-breadcrumbs .informations').removeClass('active finalized');
+
+                modalID.find('.box-breadcrumbs .details').addClass('active');
+
+                modalID.find('.box-description').html('<p class="font-weight-bold" style="margin-bottom: 4px;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
+
+                modalID.find('#btn-modal-plan-prosseguir').html('Prosseguir');
+            } else {
+                modalID.find('.box-breadcrumbs').find('img').attr('src', '/modules/global/img/icon-costs-plans.svg');
+                modalID.find('.box-breadcrumbs').addClass('active');
+                modalID.find('.box-breadcrumbs').find('.title').html('Custos');
+
+                modalID.find('.box-photos-products').remove();
+
+                modalID.find('.box-description').html('');
+
+                modalID.find('#btn-modal-plan-prosseguir').html('Finalizar');
+            }
+        } else if (stage_plan == 3) {
+            if (type == 'create') {
+                modalID.find('.box-breadcrumbs .products').find('img').attr('src', '/modules/global/img/icon-check.svg');
+                modalID.find('.box-breadcrumbs .details').find('img').attr('src', '/modules/global/img/icon-check.svg');
+                modalID.find('.box-breadcrumbs .informations').find('img').attr('src', '/modules/global/img/icon-info-plans.svg');
+
+                modalID.find('.box-breadcrumbs .details').removeClass('active');
+                modalID.find('.box-breadcrumbs .details').addClass('finalized');
+
+                modalID.find('.box-breadcrumbs .informations').removeClass('active finalized');
+
+                modalID.find('.box-breadcrumbs .informations').addClass('active');
+
+                modalID.find('.box-description').html('<p class="font-weight-bold" style="margin: 0;">Insira os dados do plano</p>');
+            }
+        }
+    }
+
     function getProdutcts(modal) {
         var modalID = $(modal);
         modalID.attr('data-backdrop', 'static');
+        modalID.find('#btn-modal-plan-prosseguir').attr('data-stage', 1);
+
+        defaultBreadCrumbs(modal, 'create');
         
         $('#search-product').val('');
+        modalID.find('.box-review').html('');
         
         loadOnModalNewLayout(modal, '#load-products');
         $.ajax({
@@ -110,15 +181,19 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                appendProducts(response.data, modalID);
+                appendProducts(response.data, modal);
+                
+                $(".product-photo").on("error", function () {
+                    $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                });
+
                 loadOnModalNewLayoutRemove(modal);
             }
         });
     }
 
     function searchProducts(product) {
-        var modalID = $('#modal_add_plan');
-        modalID.find('#load-products').html('');
+        var modalID = '#modal_add_plan';
         
         loadOnModalNewLayout('#modal_add_plan', '#load-products');
         $.ajax({
@@ -139,15 +214,20 @@ $(function () {
             },
             success: function success(response) {
                 appendProducts(response.data, modalID);
+
+                $(".product-photo").on("error", function () {
+                    $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                });
+                
                 loadOnModalNewLayoutRemove('#modal_add_plan');
             }
         });
     }
 
-    function appendProducts(products, modalID, flag = 'add') {
+    function appendProducts(products, modalID, flag = 'all') {
         var data = '<div class="row">';
         products.forEach(function(product) {
-            if (flag == 'add') {
+            if (flag == 'all') {
                 var index_product = selected_products.map(function(e) { return e.id; }).indexOf(product.id);
                 data += '<div class="col-sm-6">';
                     data += '<div data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
@@ -181,23 +261,21 @@ $(function () {
         });
         data + '</div>';
 
-        modalID.find('#load-products').html(data);
+        $(modalID).find('#load-products').html(data);
         
         if (flag == 'edit' && products.length > 2) {
-            modalID.find('.products-edit').append('<a type="button" id="all-products" data-open="0">Ver todos os produtos <span class="fas fa-chevron-down"></span></a>');
+            $(modalID).find('.products-edit').append('<a type="button" id="all-products" data-open="0">Ver todos os produtos <span class="fas fa-chevron-down"></span></a>');
         } else {
-            modalID.find('.products-edit').find('#all-products').remove();
+            $(modalID).find('.products-edit').find('#all-products').remove();
         }
-
-        $(".product-photo").on("error", function () {
-            $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
-        });
     }
     
     function appendProductsDetails(modalID) {
-        modalID.find('.box-products').html('');
-
         if (selected_products.length > 0) {
+            $(modalID).find('#load-products').html('');
+            $(modalID).find('.box-review').html('');
+            loadOnModalNewLayout(modalID, '#load-products');
+
             var append = '';
             append += '<div class="box-details">';
                 append += '<div class="head d-flex">';
@@ -241,7 +319,13 @@ $(function () {
                 append += '</div>';
             append += '</div>';
 
-            modalID.find('.box-products').html(append);
+            $(modalID).find('.box-products').html(append);
+
+            if (selected_products.length > 1) {
+                $(modalID).find('.box-review').html('<div class="form-check"><input class="form-check-input" type="checkbox" value="0" id="check-values"><label class="form-check-label" for="check-values">Todos os produtos têm o mesmo custo</label></div>');
+            } else {
+                $(modalID).find('.box-review').html('');
+            }
 
             $('input[name="value"]').mask('#.##0,00', {reverse: true});
 
@@ -251,27 +335,34 @@ $(function () {
         } else {
             alertCustom('error', 'Selecione um produto para prosseguir');
             
-            modalID.find('.box-description').html('');
+            $(modalID).find('.box-description').html('');
             
-            var stage_products = modalID.find('.box-breadcrumbs .products');
-            var stage_details = modalID.find('.box-breadcrumbs .details');
-
-            stage_products.find('img').attr('src', '/modules/global/img/icon-products-plans.svg');
-            stage_details.removeClass('active');
-            stage_products.removeClass('finalized');
-            stage_products.addClass('active');
+            $(modalID).find('.box-breadcrumbs .products').find('img').attr('src', '/modules/global/img/icon-products-plans.svg');
+            $(modalID).find('.box-breadcrumbs .products').addClass('active');
             
-            modalID.find('.box-description').html('<p style="margin-bottom: 21px; font-weight: bold;">Selecione os produtos do novo plano</p><input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">');
+            $(modalID).find('.box-description').html('<p style="margin-bottom: 21px; font-weight: bold;">Selecione os produtos do novo plano</p><input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">');
             getProdutcts('#modal_add_plan');
-            modalID.find('.box-review').html('');
+            $(modalID).find('.box-review').html('');
 
-            stage_add_plan--;
+            stage_plan--;
         }
     }
 
     function appendProductsInformations(modalID) {
-        modalID.find('.box-products').html('');
+        $('.box-products .form-control').each(function() {
+            var product_ID = $(this).parent().parent().data('code');
+
+            var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
+            
+            var name_input = $(this).attr('name');
+            if (name_input == 'amount') selected_products[product_selected_index].amount = $(this).val();
+            if (name_input == 'value') selected_products[product_selected_index].value = $(this).val();
+            if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
+        });
         
+        $(modalID).find('#load-products').html('');
+        loadOnModalNewLayout('#modal_add_plan', '#load-products');
+
         append = '';
         append += '<div class="row">';
             append += '<div class="col-sm-6 form-group">';
@@ -292,43 +383,170 @@ $(function () {
             append += '</div>';
         append += '</div>';
 
-        modalID.find('.box-products').html(append);
+        $(modalID).find('.box-products').html(append);
 
-        $('input[name="price"]').mask('#.##0,00', {reverse: true});
+        $(modalID).find('.box-review').css('margin-top', '10px');
+        $(modalID).find('.box-review').html(
+            '<div style="margin-right: -30px; margin-left: -30px; border-top: 1px solid #EBEBEB;"></div>' +
+            '<p class="font-weight-bold" style="margin-top: 25px;">Revisão geral</p>' +
+            '<div class="d-flex justify-content-between" style="margin-bottom: 24px;">' +
+                '<div class="price-plan">' +
+                    '<small>Preço de venda</small>' +
+                    '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
+                '</div>' +
+                '<div class="costs-plan">' +
+                    '<small>Seu custo</small>' +
+                    '<p class="font-weight-bold m-0" style="line-height: 100%;">R$'+calculateCostsPlan()+'</p>' +
+                '</div>' +
+                '<div class="tax-plan">' +
+                    '<small>Taxas est.</small>' +
+                    '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
+                '</div>' +
+                '<div class="comission-plan">' +
+                    '<small>Comissão aprox.</small>' +
+                    '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
+                '</div>' +
+                '<div class="profit-plan">' +
+                    '<small>Lucro aprox.</small>' +
+                    '<p class="font-weight-bold m-0" style="line-height: 100%; color: #41DC8F;">-</p>' +
+                '</div>' +
+            '</div>' +
+            '<div class="text-center">' +
+                '<p class="m-0" style="line-height: 14px; font-size: 11px;">Simulação considerando compras à vista com taxa de 5,9% (30D).</p>' +
+                '<p class="font-weight-bold m-0" style="line-height: 14px; font-size: 11px;">Valor estimado sujeito à mudanças de acordo com as condições de pagamento.</p>' +
+            '</div>'
+        );
+
+        $(modalID).find('#btn-modal-plan-prosseguir').html('Finalizar');
+
+        $('input[name="price"]').mask('#.##0,00', { reverse: true });
     }
 
-    function storePlan(modalID) {
-        $.ajax({
-            method: 'POST',
-            url: '/api/project/' + projectId + '/plans',
-            dataType: 'JSON',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content')
-            },
-            data: {
-                'project_id': projectId,
-                'products': selected_products,
-                'name': modalID.find('#name]').val(),
-                'price': modalID.find('#price').val(),
-                'description': modalID.find('#description').val()
-            },
-            error: function error(response) {
-                clearFields();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                var stage_informations = modalID.find('.box-breadcrumbs .informations');
-                stage_informations.find('img').attr('src', '/modules/global/img/icon-check.svg');
-                stage_informations.removeClass('active');
-                stage_informations.addClass('finalized');
+    function storePlan(modalID, type, planID = '') {
+        if (type == 'create') {
+            $.ajax({
+                method: 'POST',
+                url: '/api/project/' + projectId + '/plans',
+                dataType: 'JSON',
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content')
+                },
+                data: {
+                    'project_id': projectId,
+                    'products': selected_products,
+                    'name': $(modalID).find('#name').val(),
+                    'price': $(modalID).find('#price').val(),
+                    'description': $(modalID).find('#description').val()
+                },
+                error: function error(response) {
+                    clearFields();
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    $(modalID).find('.box-breadcrumbs .informations').find('img').attr('src', '/modules/global/img/icon-check.svg');
+                    $(modalID).find('.box-breadcrumbs .informations').removeClass('active');
+                    $(modalID).find('.box-breadcrumbs .informations').addClass('finalized');
+                    
+                    index();
+                    clearFields();
+                    alertCustom('success', 'Plano adicionado com sucesso');
+    
+                    $(modalID).modal('hide');
+                }
+            });
+        } else {
+            $('.box-products .form-control').each(function() {
+                var product_ID = $(this).parent().parent().data('code');
+    
+                var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
                 
-                index();
-                clearFields();
-                alertCustom('success', 'Plano Adicionado!');
+                var name_input = $(this).attr('name');
+                if (name_input == 'amount') selected_products[product_selected_index].amount = $(this).val();
+                if (name_input == 'value') selected_products[product_selected_index].value = $(this).val();
+                if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
+            });
+            
+            $.ajax({
+                method: 'PUT',
+                url: '/api/plans/' + planID + '/products',
+                dataType: 'JSON',
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content')
+                },
+                data: {
+                    'products': selected_products
+                },
+                error: function error(response) {
+                    clearFields();
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    index();
+                    alertCustom('success', 'Produtos do plano atualizados');
+    
+                    $(modalID).modal('hide');
+                }
+            });
+        }
+    }
 
-                modalID.modal('hide');
+    function appendProductsPlanEdit(response, planID) {
+        var modalID = $('#modal_edit_plan');
+        
+        var products = []
+        response.data.map(function(p) {
+            var index = products_plan.findIndex(function(entry) {
+                return entry.product_id == p.id;
+            });
+
+            if (index !== -1) {
+                products.push(p);
             }
         });
+
+        selected_products = products;
+
+        var data = '';
+        data += '<div class="box-breadcrumbs">';
+            data += '<div class="d-flex" style="justify-content: space-between !important;">';
+                data += '<div class="d-flex align-items-center">';
+                    data += '<div class="icon mr-15"><img src="/modules/global/img/icon-products-plans.svg" alt="Icon Informations"></div>';
+                    data += '<div class="title">Produtos no plano <span> ' + products_plan.length + (products_plan.length > 1 ? ' produtos' : ' produto') + '</span></div>';
+                data += '</div>';
+            data += '</div>';
+        data += '</div>';
+
+        data += '<div class="box-photos-products" style="margin-top: 16px;">';
+            data += '<div class="d-flex">';
+            products_plan.forEach(function(product) {
+                data += '<img src="' + product.photo + '" style="width: 56px; height: 56px; border-radius: 8px; margin-right: 12px;" />';
+            });
+            data += '</div>';
+        data += '</div>';
+
+        data += '<div class="box-description mt-20">';
+            data += '<div class="input-group input-group-lg">';
+                data += '<input class="form-control" type="text" id="search-product" placeholder="Pesquisa por nome">';
+                data += '<div class="input-group-append">';
+                    data += '<span class="input-group-text">';
+                        data += '<img src="/modules/global/img/icon-search.svg" alt="Icon Search">';
+                    data += '</span>';
+                data += '</div>';
+            data += '</div>';
+        data += '</div>';
+
+        data += '<div class="box-products" id="load-products"></div>';
+        data += '<div class="box-review"></div>';
+
+        modalID.find('.modal-title').html(modalID.find('.modal-title').attr('data-title'));
+        modalID.find('.modal-body').html(data);
+        modalID.find('.modal-footer').removeAttr('style');
+        modalID.find('.modal-footer').html(
+            '<button id="btn-modal-plan-voltar" type="button" data-type="edit" plan="' + planID + '" class="btn btn-default btn-lg" role="button">Voltar</button>' +
+            '<button id="btn-modal-plan-prosseguir" type="button" data-type="edit" data-stage="1" plan="' + planID + '" class="btn btn-primary btn-lg">Avançar</button>'
+        );
+        
+        modalID.find('#load-products').append(data);
     }
 
     function  calculateCostsPlan() {
@@ -344,7 +562,7 @@ $(function () {
     }
 
     // Search products
-    $('#search-product').on('keyup', function() {
+    $('body').on('keyup', '#search-product', function() {
         var search_product = $(this).val();
         if (search_product != '') {
             searchProducts(search_product);
@@ -369,7 +587,7 @@ $(function () {
     });
     
     // Select products
-    $('.box-products').on('click', '.box-product', function() {
+    $('body').on('click', '.box-product', function() {
         var product_id = $(this).data('code');
 
         if (!$(this).hasClass('selected')) {
@@ -387,11 +605,10 @@ $(function () {
     // Remove products
     $('.box-products').on('click', '.div-photo', function() {
         var product_id = $(this).parent().parent().data('code');
-        var modalID = $('#modal_add_plan');
         var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
 
         selected_products.splice(index_selected_products, 1);
-        appendProductsDetails(modalID);
+        appendProductsDetails('#modal_add_plan');
     });
 
     // All values
@@ -405,130 +622,101 @@ $(function () {
     });
 
     // Button next
-    $('#btn-modal-plan-prosseguir').on('click', function() {
-        if (selected_products.length > 0) {
-            var modalID = $('#modal_add_plan');
+    $('body').on('click', '#btn-modal-plan-prosseguir', function() {
+        stage_plan++;
+        
+        var type = $(this).attr('data-type');
+        if (type == 'create') {
+            if (selected_products.length > 0) {
+                var modalID = '#modal_add_plan';
+                
+                defaultBreadCrumbs(modalID, type);
 
-            var stage_products = modalID.find('.box-breadcrumbs .products');
-            var stage_details = modalID.find('.box-breadcrumbs .details');
-            var stage_informations = modalID.find('.box-breadcrumbs .informations');
-
-            if (stage_add_plan == 1) {
-                stage_products.find('img').attr('src', '/modules/global/img/icon-check.svg');
-
-                stage_products.removeClass('active');
-                stage_products.addClass('finalized');
-                stage_details.addClass('active');
-
-                modalID.find('.box-description').html('<p class="font-weight-bold" style="margin-bottom: 4px;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
-                appendProductsDetails(modalID);
-                if (selected_products.length > 1) {
-                    modalID.find('.box-review').html('<div class="form-check"><input class="form-check-input" type="checkbox" value="0" id="check-values"><label class="form-check-label" for="check-values">Todos os produtos têm o mesmo custo</label></div>');
+                if (stage_plan == 2) {
+                    appendProductsDetails(modalID);
+                } else if (stage_plan == 3) {
+                    appendProductsInformations(modalID);
+                } else if (stage_plan == 4) {
+                    storePlan(modalID, type);
                 }
-            } else if (stage_add_plan == 2) {
-                $('.box-products .form-control').each(function() {
-                    var product_ID = $(this).parent().parent().data('code');
+            } else {
+                stage_plan = 1;
 
-                    var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
-                    
-                    var name_input = $(this).attr('name');
-                    if (name_input == 'amount') selected_products[product_selected_index].amount = $(this).val();
-                    if (name_input == 'value') selected_products[product_selected_index].value = $(this).val();
-                    if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
-                });
-                
-                stage_details.find('img').attr('src', '/modules/global/img/icon-check.svg');
-                
-                stage_details.removeClass('active');
-                stage_details.addClass('finalized');
-                stage_informations.addClass('active');
-
-                modalID.find('.box-description').html('<p class="font-weight-bold" style="margin: 0;">Insira os dados do plano</p>');
-                appendProductsInformations(modalID);
-                modalID.find('.box-review').css('margin-top', '10px');
-                modalID.find('.box-review').html(
-                    '<div style="margin-right: -30px; margin-left: -30px; border-top: 1px solid #EBEBEB;"></div>' +
-                    '<p class="font-weight-bold" style="margin-top: 25px;">Revisão geral</p>' +
-                    '<div class="d-flex justify-content-between" style="margin-bottom: 24px;">' +
-                        '<div class="price-plan">' +
-                            '<small>Preço de venda</small>' +
-                            '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
-                        '</div>' +
-                        '<div class="costs-plan">' +
-                            '<small>Seu custo</small>' +
-                            '<p class="font-weight-bold m-0" style="line-height: 100%;">R$'+calculateCostsPlan()+'</p>' +
-                        '</div>' +
-                        '<div class="tax-plan">' +
-                            '<small>Taxas est.</small>' +
-                            '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
-                        '</div>' +
-                        '<div class="comission-plan">' +
-                            '<small>Comissão aprox.</small>' +
-                            '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
-                        '</div>' +
-                        '<div class="profit-plan">' +
-                            '<small>Lucro aprox.</small>' +
-                            '<p class="font-weight-bold m-0" style="line-height: 100%; color: #41DC8F;">-</p>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="text-center">' +
-                        '<p class="m-0" style="line-height: 14px; font-size: 11px;">Simulação considerando compras à vista com taxa de 5,9% (30D).</p>' +
-                        '<p class="font-weight-bold m-0" style="line-height: 14px; font-size: 11px;">Valor estimado sujeito à mudanças de acordo com as condições de pagamento.</p>' +
-                    '</div>'
-                );
-
-                modalID.find('#btn-modal-plan-prosseguir').html('Finalizar');
-            } else if (stage_add_plan == 3) {
-                storePlan(modalID);
+                alertCustom('error', 'Selecione um produto para prosseguir');
             }
-
-            stage_add_plan++;
         } else {
-            alertCustom('error', 'Selecione um produto para prosseguir');
+            var modalID = '#modal_edit_plan';
+
+            defaultBreadCrumbs(modalID, type);
+
+            if (stage_plan == 2) {
+                appendProductsDetails(modalID);
+            } else if (stage_plan == 3) {
+                var planID = $(this).attr('plan');
+                storePlan(modalID, type, planID);
+            }
         }
     });
 
     // Button return
-    $('#btn-modal-plan-voltar').on('click', function() {
-        var modalID = $('#modal_add_plan');
+    $('body').on('click', '#btn-modal-plan-voltar', function() {
+        stage_plan--;
 
-        modalID.find('#btn-modal-plan-prosseguir').html('Prosseguir');
-        
-        var stage_products = modalID.find('.box-breadcrumbs .products');
-        var stage_details = modalID.find('.box-breadcrumbs .details');
-        var stage_informations = modalID.find('.box-breadcrumbs .informations');
+        var type = $(this).attr('data-type');
+        if (type == 'create') {            
+            var modalID = '#modal_add_plan';
 
-        if (stage_add_plan == 2) {
-            stage_products.find('img').attr('src', '/modules/global/img/icon-products-plans.svg');
-
-            stage_details.removeClass('active');
-            stage_products.removeClass('finalized');
-            stage_products.addClass('active');
-            
-            modalID.find('.box-description').html('<p style="margin-bottom: 21px; font-weight: bold;">Selecione os produtos do novo plano</p><div class="input-group input-group-lg"><input class="form-control" type="text" id="search-product" placeholder="Pesquisa por nome"><div class="input-group-append"><span class="input-group-text"><img src="../global/img/icon-search.svg" alt="Icon Search"></span></div></div>');
-            getProdutcts('#modal_add_plan');
-            modalID.find('.box-review').html('');
-        } else if (stage_add_plan == 3) {
-            stage_details.find('img').attr('src', '/modules/global/img/icon-costs-plans.svg');
-
-            stage_informations.removeClass('active');
-            stage_details.removeClass('finalized');
-            stage_details.addClass('active');
-
-            modalID.find('.box-description').html('<p style="margin-bottom: 4px; font-weight: bold;">Insira a quantidade e custos de cada produto</p><smalll>As configurações de custo e moeda são utilizadas na emissão de notas fiscais</small>');
-            if (selected_products.length > 1) {
-                modalID.find('.box-review').html('<div class="form-check"><input class="form-check-input" type="checkbox" value="0" id="check-values"><label class="form-check-label" for="check-values">Todos os produtos têm o mesmo custo</label></div>');
-            } else {
-                modalID.find('.box-review').html('');
+            if (stage_plan == 0) {
+                $(modalID).modal('hide');
             }
-            appendProductsDetails(modalID);
-        }
+            
+            defaultBreadCrumbs(modalID, type);
 
-        stage_add_plan--;
+            modalID.find('#btn-modal-plan-prosseguir').html('Prosseguir');
+            
+            if (stage_plan == 1) {
+                getProdutcts('#modal_add_plan');
+            } else if (stage_plan == 2) {
+                appendProductsDetails(modalID);
+            }
+        } else {
+            var planID = $(this).attr('plan');
+            var modalID = '#modal_edit_plan';
+            
+            if (stage_plan == 0) {
+                showPlan(planID, modalID);
+            } else if (stage_plan == 1) {
+                loadOnModalNewLayout('#modal_edit_plan');
+                $.ajax({
+                    method: "POST",
+                    url: "/api/products/userproducts",
+                    data: { project: projectId },
+                    dataType: "json",
+                    headers: {
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'application/json',
+                    },
+                    error: function error(response) {
+                        loadOnModalNewLayoutRemove('#modal_edit_plan');
+                        errorAjaxResponse(response);
+                    },
+                    success: function success(response) {
+                        appendProductsPlanEdit(response, planID);
+                        appendProducts(response.data, modalID);
+
+                        loadOnModalNewLayoutRemove('#modal_edit_plan');
+                    }
+                });
+            } else if (stage_plan == 2) {
+                showPlan(planID, modalID);
+            }
+        }
     });
 
     // Add new Plan
     $("#add-plan").on('click', function () {
+        selected_products = [];
+        
         getProdutcts('#modal_add_plan');
         $('.btn-close-add-plan').on('click', function () {
             clearFields();
@@ -555,17 +743,19 @@ $(function () {
         modalID.modal('show');
     });
 
-    // Edit Plan
-    $('#table-plans').on('click', '.edit-plan', function () {
-        var planID = $(this).attr('plan');
-        var modalID = $('#modal_edit_plan');
-        
-        modalID.attr('data-backdrop', 'static');
-        modalID.find('.informations-data').removeClass('edit');
-        modalID.find('.form-control').attr('readonly', true);
-        modalID.find('.buttons-update').remove();
+    function showPlan(planID, modalID) {
+        $(modalID).attr('data-backdrop', 'static');
+        $(modalID).find('.informations-data').removeClass('edit');
+        $(modalID).find('.form-control').attr('readonly', true);
+        $(modalID).find('.buttons-update').remove();
+        $(modalID).find('#btn-edit-products-plan').attr('plan', planID);
 
-        loadOnModalNewLayout('#modal_edit_plan');
+        products_plan = [];
+
+        $(modalID).find('.modal-body').html('');
+        $(modalID).find('.modal-footer').html('');
+
+        loadOnModalNewLayout(modalID);
         $.ajax({
             method: "GET",
             url: '/api/project/' + projectId + '/plans/' + planID,
@@ -575,25 +765,120 @@ $(function () {
                 'Accept': 'application/json',
             },
             error: function (response) {
-                loadOnModalNewLayoutRemove('#modal_edit_plan');
+                loadOnModalNewLayoutRemove(modalID);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                modalID.find('.modal-title').html('Detalhes de ' + response.data.name);
-                modalID.find('#btn-edit-informations-plan').attr('data-code', response.data.id);
-                modalID.find('#name').val(response.data.name);
-                modalID.find('#price').val(response.data.price);
-                modalID.find('#description').val(response.data.description);
+                $(modalID).find('.modal-body').html(`   
+                    <div class="informations-edit">
+                        <div class="box-breadcrumbs">
+                            <div class="d-flex" style="justify-content: space-between !important;">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon mr-15"><img src="/modules/global/img/icon-info-plans-c.svg" alt="Icon Informations"></div>
+                                    <div class="title">Informações do plano</div>
+                                </div>
+                                <button class="btn btn-edit" id="btn-edit-informations-plan">
+                                    <img src="/modules/global/img/icon-edit.svg" alt="Icon Edit">
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="informations-data">
+                            <div class="row mb-20">
+                                <div class="col-sm-6">
+                                    <label for="name">Nome</label>
+                                    <input type="text" class="form-control" id="name" readonly>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="price">Preço de venda</label>
+                                    <input type="text" class="form-control" id="price" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="description">Descrição</label>
+                                    <input type="text" class="form-control" id="description" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="line"></div>
+
+                    <div class="products-edit">
+                        <div>
+                            <div class="d-flex" style="justify-content: space-between !important;">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon mr-15"><img src="/modules/global/img/icon-products-plans.svg" alt="Icon Informations"></div>
+                                    <div class="title">Produtos no plano <span></span></div>
+                                </div>
+                                <button class="btn btn-edit" id="btn-edit-products-plan" plan="${planID}">
+                                    <img src="/modules/global/img/icon-edit.svg" alt="Icon Edit">
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="products-data" id="load-products">
+                            {{-- js carrega --}}
+                        </div>
+                    </div>
+
+                    <div class="line"></div>
+
+                    <div class="review-edit">
+                        <div>
+                            <div class="d-flex" style="justify-content: space-between !important;">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon mr-15"><img src="/modules/global/img/icon-review-plans-c.svg" alt="Icon Informations"></div>
+                                    <div class="title">Revisão geral</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="review-data">
+                            <div class="d-flex">
+
+                            </div>
+                        </div>
+                    </div>
+                `);
+
+                $(modalID).find('.modal-footer').html(`
+                    <button id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">
+                        <img class="mr-10" src="/modules/global/img/icon-trash.svg" alt="Icon Trash" />
+                        <span>Excluir plano</span>
+                    </button>
+                    <button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>
+                `);
+
+                $(modalID).find('.modal-footer').addClass('border-on').css('justify-content', 'space-between');
+
+                $(modalID).find('.modal-title').html('Detalhes de ' + response.data.name);
+                $(modalID).find('.modal-title').attr('data-title', 'Detalhes de ' + response.data.name);
+                $(modalID).find('#btn-edit-informations-plan').attr('data-code', response.data.id);
+                $(modalID).find('#name').val(response.data.name);
+                $(modalID).find('#price').val(response.data.price);
+                $(modalID).find('#description').val(response.data.description);
                 if (response.data.products.length > 0) {
                     appendProducts(response.data.products, modalID, 'edit');
-                    modalID.find('.products-edit').find('.title').find('span').html(' ' + response.data.products.length + (response.data.products.length > 1 ? ' produtos' : ' produto'));
+                    $(modalID).find('.products-edit').find('.title').find('span').html(' ' + response.data.products.length + (response.data.products.length > 1 ? ' produtos' : ' produto'));
                 } else {
-                    modalID.find('.products-data').css('height', 'auto');
+                    $(modalID).find('.products-data').css('height', 'auto');
                 }
+
+                products_plan = response.data.products;
 
                 loadOnModalNewLayoutRemove('#modal_edit_plan');
             }
         });
+    }
+
+    // Edit Plan
+    $('#table-plans').on('click', '.edit-plan', function () {
+        var planID = $(this).attr('plan');
+        var modalID = $('#modal_edit_plan');
+        
+        showPlan(planID, modalID);
     });
 
     // Delete Plan
@@ -686,7 +971,7 @@ $(function () {
     // Cancel update informations plan
     $("body").on('click', '#btn-cancel-update-informations-plan', function () {
         var parents = $(this).parents('.informations-edit');
-        parents.removeClass('edit');
+        parents.find('.informations-data').removeClass('edit');
         parents.find('.form-control').attr('readonly', true);
 
         parents.find('#name').val(parents.find('#name').attr('data-value'));
@@ -746,7 +1031,37 @@ $(function () {
     
     // Edit products plan
     $("body").on('click', '#btn-edit-products-plan', function () {
-        alert('edit products plan');
+        var modalID = '#modal_edit_plan';
+
+        var planID = $(this).attr('plan');
+
+        $(modalID).find('.modal-body').html('');
+        $(modalID).find('.modal-footer').html('');
+
+        stage_plan = 1;
+        
+        loadOnModalNewLayout('#modal_edit_plan');
+        $.ajax({
+            method: "POST",
+            url: "/api/products/userproducts",
+            data: { project: projectId },
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadOnModalNewLayoutRemove('#modal_edit_plan');
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                appendProductsPlanEdit(response, planID);
+                appendProducts(response.data, modalID);
+
+                loadOnModalNewLayoutRemove('#modal_edit_plan');
+            }
+        });
+        
     });
 
     $("#btn-search-plan").on('click', function () {

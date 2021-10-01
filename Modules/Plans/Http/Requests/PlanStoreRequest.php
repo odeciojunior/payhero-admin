@@ -49,7 +49,7 @@ class PlanStoreRequest extends FormRequest
             
             'products.required'             => 'O campo Produto é obrigatório',
             'products.*.amount.required'    => 'O campo Quantidade é obrigatório',
-            'products.*.currency_type_enum' => 'O Moeda permite é obrigatório'
+            'products.*.currency_type_enum' => 'O campo Moeda é obrigatório'
 
         ];
     }

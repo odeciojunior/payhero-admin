@@ -18,8 +18,8 @@ class PlansDetailsResource extends JsonResource
                 }
             }
             $products[] = [
-                'id' => $productsPlan->id,
-                'product_id' => $productsPlan->product_id,
+                'id' => hashids_encode($productsPlan->id),
+                'product_id' => hashids_encode($productsPlan->product_id),
                 'product_name' => $productsPlan->product->name,
                 'product_name_short' => Str::limit($productsPlan->product->name, 24),
                 'shopify_id' => $productsPlan->product->shopify_id,
