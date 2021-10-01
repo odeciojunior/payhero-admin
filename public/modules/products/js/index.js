@@ -34,6 +34,7 @@ $(document).ready(function () {
     getTypeProducts();
     //updateProducts(); //Funcao de update chamda pela 2x
 
+    
     //REGASTA O FILTRO E O APLICA
     function handleLocalStorage() {
         if (localStorage.getItem('filtersApplied') != null) {
@@ -44,7 +45,6 @@ $(document).ready(function () {
             $("#select-projects").val(parseLocalStorage.getProject);
             $("#name").val(parseLocalStorage.getName);
             $("#btn-filtro").trigger("click");
-
         }
     }
 
