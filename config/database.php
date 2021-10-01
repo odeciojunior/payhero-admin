@@ -157,6 +157,12 @@ return [
             'port' => env('REDIS_STATEMENT_PORT', 6379),
             'database' => 0,
         ],
+        'redis-queries' => [
+            'host' => env('REDIS_QUERIES_HOST', '127.0.0.1'),
+            'password' => env('REDIS_QUERIES_PASSWORD', null),
+            'port' => env('REDIS_QUERIES_PORT', 6379),
+            'database' => 1,
+        ],
     ]
 
 ];
