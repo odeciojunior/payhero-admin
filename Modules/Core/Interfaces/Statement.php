@@ -24,5 +24,5 @@ interface Statement
 
     public function getWithdrawals(): JsonResource;
 
-    public function createWithdrawal(): bool;
+    public function createWithdrawal($value): bool;
 }

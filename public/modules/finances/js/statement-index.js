@@ -113,7 +113,7 @@ $(window).on("load", function(){
     //Verifica se o saque está liberado
     function checkBlockedWithdrawal() {
         $.ajax({
-            url: "/api/old_withdrawals/checkallowed",
+            url: "/api/withdrawals/checkallowed",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

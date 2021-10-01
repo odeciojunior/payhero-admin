@@ -2,15 +2,20 @@
 
 namespace Modules\Core\Services\Gateways;
 
+use App\Jobs\ProcessWithdrawal;
+use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
+use Modules\Core\Entities\PendingDebtWithdrawal;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 
 class GetnetService implements Statement
@@ -91,9 +96,154 @@ class GetnetService implements Statement
         return WithdrawalResource::collection($withdrawals->paginate(10));
     }
 
-    public function createWithdrawal(): bool
+    public function withdrawalValueIsValid($withdrawalValue): bool
     {
-        return false;
+        $availableBalance = $this->getAvailableBalance();
+        $pendingDebtsSum = $this->getPendingDebtBalance();
+
+        if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance || $pendingDebtsSum > $withdrawalValue || $pendingDebtsSum > $availableBalance) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function createWithdrawal($withdrawalValue): bool
+    {
+        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+
+        try {
+            DB::beginTransaction();
+            $withdrawal = Withdrawal::create(
+                [
+                    'value' => $withdrawalValue,
+                    'company_id' => $this->company->id,
+                    'bank' => $this->company->bank,
+                    'agency' => $this->company->agency,
+                    'agency_digit' => $this->company->agency_digit,
+                    'account' => $this->company->account,
+                    'account_digit' => $this->company->account_digit,
+                    'status' => Withdrawal::STATUS_PROCESSING,
+                    'tax' => 0,
+                    'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
+                    'automatic_liquidation' => true,
+                    'gateway_id' => foxutils()->isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID
+                ]
+            );
+
+            dispatch(new ProcessWithdrawal($withdrawal, $isFirstUserWithdrawal));
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            report($e);
+
+            return false;
+        }
+    }
+
+    public function processWithdrawal(Withdrawal $withdrawal, $isFirstUserWithdrawal ): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            $transactionsSum = $this->company->transactions()
+                ->whereIn('gateway_id', $this->gatewayIds)
+                ->where('is_waiting_withdrawal', 1)
+                ->whereNull('withdrawal_id')
+                ->orderBy('id');
+
+            $currentValue = 0;
+
+            $transactionsSum->chunkById(
+                2000,
+                function ($transactions) use ($currentValue, $withdrawal) {
+                    foreach ($transactions as $transaction) {
+                        $currentValue += $transaction->value;
+
+                        if ($currentValue <= $withdrawal->value) {
+                            $transaction->update(
+                                [
+                                    'withdrawal_id' => $withdrawal->id,
+                                    'is_waiting_withdrawal' => false
+                                ]
+                            );
+                        }
+                    }
+                }
+            );
+
+            $pendingDebts = PendingDebt::doesntHave('withdrawals')
+                ->where('company_id', $this->company->id)
+                ->whereNull('confirm_date')
+                ->get(['id', 'value']);
+
+            $pendingDebtsSum = 0;
+            foreach ($pendingDebts as $pendingDebt) {
+                $pendingDebtsSum += $pendingDebt->value;
+                PendingDebtWithdrawal::create(
+                    [
+                        'pending_debt_id' => $pendingDebt->id,
+                        'withdrawal_id' => $withdrawal->id
+                    ]
+                );
+            }
+
+            $withdrawal->update([
+                    'debt_pending_value' => $pendingDebtsSum,
+                    'status' => $withdrawal->present()->getStatus($isFirstUserWithdrawal ? 'in_review' : 'pending'),
+                ]);
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            report($e);
+
+            return false;
+        }
+    }
+
+    public function getLowerAndBiggerAvailableValues(int $withdrawalValueRequested): array
+    {
+        $transactionsSum = $this->company->transactions()
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->where('is_waiting_withdrawal', 1)
+            ->whereNull('withdrawal_id')
+            ->orderBy('id');
+
+            $transactions = Transaction::whereIn('gateway_id', $this->gatewayIds)
+            ->where('company_id', $this->company->id)
+            ->where('is_waiting_withdrawal', 1)
+            ->whereNull('withdrawal_id')
+            ->sum('value');
+
+        $currentValue = 0;
+        $lowerValue = 0;
+        $biggerValue = 0;
+
+        $transactionsSum->chunk(
+            2000,
+            function ($transactions) use ($withdrawalValueRequested, &$currentValue, &$lowerValue, &$biggerValue) {
+                foreach ($transactions as $transaction) {
+                    $currentValue += $transaction->value;
+                    if ($currentValue >= $withdrawalValueRequested) {
+                        $lowerValue = $currentValue - $transaction->value;
+                        $biggerValue = $currentValue;
+
+                        return;
+                    }
+                }
+            }
+        );
+
+        return [
+            'data' => [
+                'lower_value' => $lowerValue,
+                'bigger_value' => $transactionsSum->sum('value') // $biggerValue,
+            ]
+        ];
     }
 
     public function hasEnoughBalanceToRefund(Sale $sale): bool

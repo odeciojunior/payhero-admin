@@ -12,9 +12,11 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
+use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\Gateways\GetnetService;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\UserService;
 use Modules\Withdrawals\Exports\Reports\WithdrawalsReportExport;
@@ -62,12 +64,7 @@ class WithdrawalsApiController
             $settingsWithdrawalRequest = settings()->group('withdrawal_request')->get('withdrawal_request', null, true);
 
             if ($settingsWithdrawalRequest != null && $settingsWithdrawalRequest == false) {
-                return response()->json(
-                    [
-                        'message' => 'Tente novamente em alguns minutos',
-                    ],
-                    400
-                );
+                return response()->json(['message' => 'Tente novamente em alguns minutos',],400);
             }
             $withdrawalService = new WithdrawalService();
 
@@ -75,9 +72,7 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Sem permissão para realizar saques'], 403);
             }
 
-            $data = $request->only(['company_id', 'withdrawal_value']);
-
-            $company = (new Company())->find(current(Hashids::decode($data['company_id'])));
+            $company = Company::find(hashids_decode($request->company_id));
 
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
@@ -87,26 +82,20 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Você só pode fazer um pedido de saque por dia.'], 403);
             }
 
-            $withdrawalValue = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
+            $gateway = Gateway::find(hashids_decode($request->gateway_id));
+            $gatewayService = $gateway->getService();
+            $gatewayService->setCompany($company);
 
-            $companyService = new CompanyBalanceService($company);
-            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
+            $withdrawalValue = (int) FoxUtils::onlyNumbers($request->withdrawal_value);
 
-            $pendingDebtsSum = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
-
-            if (!$withdrawalService->valueWithdrawalIsValid($withdrawalValue, $availableBalance, $pendingDebtsSum)) {
-                return response()->json(
-                    [
-                        'message' => 'Valor informado inválido',
-                    ],
-                    400
-                );
+            if (!$gatewayService->withdrawalValueIsValid($withdrawalValue)) {
+                return response()->json(['message' => 'Valor informado inválido',],400);
             }
 
-            $responseCreateWithdrawal = $withdrawalService->createWithdrawal($withdrawalValue, $company);
+            $responseCreateWithdrawal = $gatewayService->createWithdrawal($withdrawalValue);
 
             if ($responseCreateWithdrawal) {
-                return response()->json(['message' => 'Saque processando.'], 200);
+                return response()->json(['message' => 'Saque em processamento.'], 200);
             }
 
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
@@ -120,18 +109,22 @@ class WithdrawalsApiController
     public function getWithdrawalValues(Request $request): JsonResponse
     {
         try {
-
             $data = $request->all();
 
-            $company = Company::find(current(Hashids::decode($data['company_id'])));
+            $company = Company::find(hashids_decode($data['company_id']));
+
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
             }
 
-            $withdrawalValueRequested = (int)FoxUtils::onlyNumbers($data['withdrawal_value']);
+            $withdrawalValueRequested = (int) FoxUtils::onlyNumbers($data['withdrawal_value']);
+            
+            $gateway = Gateway::find(hashids_decode($data['gateway_id']));
 
-            return response()
-                ->json((new WithdrawalService())->getLowerAndBiggerAvailableValues($company,$withdrawalValueRequested));
+            $gatewayService = $gateway->getService();
+            $gatewayService->setCompany($company);
+
+            return response()->json($gatewayService->getLowerAndBiggerAvailableValues($withdrawalValueRequested));
 
         } catch (Exception $e) {
             report($e);
@@ -184,7 +177,6 @@ class WithdrawalsApiController
                 $total_withdrawal += $transaction->value;
 
                 if (!$transaction->sale->flag || empty($transaction->sale->flag)) {
-//                    $transaction->sale->flag = $transaction->sale->present()->getFlagPaymentMethod();
                     $transaction->sale->flag = $transaction->sale->present()->getPaymentFlag();
                 }
 
@@ -268,6 +260,130 @@ class WithdrawalsApiController
             report($e);
 
             return response()->json(['message' => $e->getMessage()]);
+        }
+    }
+
+    public function getAccountInformation(Request $request): JsonResponse
+    {
+        try {
+            $companyModel = new Company();
+
+            $data = $request->all();
+
+            $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+            if (!Gate::allows('edit', [$company])) {
+                return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
+            }
+
+            $bankService = new BankService();
+            $userModel = new User();
+            $companyService = new CompanyService();
+
+            $user = $userModel->where('id', auth()->user()->account_owner_id)->first();
+
+            if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved')
+                || $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')
+            ) {
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data' => [
+                            'user_documents_status' => 'pending',
+                        ],
+                    ],
+                    200
+                );
+            }
+
+            if (!$user->email_verified) {
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data' => [
+                            'email_verified' => 'false',
+                        ],
+                    ],
+                    200
+                );
+            }
+
+            if (!$user->cellphone_verified) {
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data' => [
+                            'cellphone_verified' => 'false',
+                        ],
+                    ],
+                    200
+                );
+            }
+
+            if (!$companyService->isDocumentValidated($company->id)) {
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data' => [
+                            'documents_status' => 'pending',
+                        ],
+                    ],
+                    200
+                );
+            }
+
+            $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
+
+            $convertedMoney = $withdrawalValue;
+
+            $iofValue = 0;
+            $iofTax = 0.38;
+
+            $abroadTransferValue = 0;
+
+            $currency = $companyService->getCurrency($company);
+            $currentQuotation = 0;
+
+            if (!in_array($company->country, ['brazil', 'brasil'])) {
+                $remessaOnlineService = new RemessaOnlineService();
+
+                $currentQuotation = $remessaOnlineService->getCurrentQuotation($currency);
+
+                $iofValue = intval($withdrawalValue / 100 * $iofTax);
+
+                $withdrawalValue -= $abroadTransferValue;
+                $convertedMoney = number_format(
+                    intval($withdrawalValue / $currentQuotation) / 100,
+                    2,
+                    ',',
+                    '.'
+                );
+            }
+
+            return response()->json(
+                [
+                    'message' => 'success',
+                    'data' => [
+                        'documents_status' => 'approved',
+                        'bank' => $bankService->getBankName($company->bank),
+                        'account' => $company->account,
+                        'account_digit' => $company->account_digit,
+                        'agency' => $company->agency,
+                        'agency_digit' => $company->agency_digit,
+                        'document' => $company->document,
+                        'currency' => $currency,
+                        'quotation' => $currentQuotation,
+                        'iof' => [
+                            'tax' => $iofTax,
+                            'value' => number_format(intval($iofValue) / 100, 2, ',', '.'),
+                        ],
+                    ],
+                ],
+                200
+            );
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
         }
     }
 }
