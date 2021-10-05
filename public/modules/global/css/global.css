@@ -1053,6 +1053,15 @@ img.border-icon{
     max-height: 288px;
     overflow: hidden;
 }
+.modal-plans .modal-body {
+    max-height: 275px;
+    transition: max-height 450ms ease-out;
+}
+.modal-plans .modal-body.show {
+    max-height: 1000px;
+    transition: max-height 300ms ease-in;
+    overflow: hidden;
+}
 .modal-plans .box-products .col-sm-6:nth-child(odd) {
     padding-right: 8px;
 }

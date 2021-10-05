@@ -10,11 +10,29 @@ $(function () {
     var selected_products = [];
     var products_plan = [];
     var stage_plan = 1;
+    var gateway_tax = 0;
 
     $('.tab_plans').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
         index();
         $(this).off();
+
+        $.ajax({
+            async: false,
+            method: "GET",
+            url: "/api/projects/" + projectId + "/companie",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                console.log(response);
+            },
+            success: function success(response) {
+                gateway_tax = response.data.gateway_tax;
+            }
+        });
     });
 
     /**
@@ -274,6 +292,7 @@ $(function () {
         if (selected_products.length > 0) {
             $(modalID).find('#load-products').html('');
             $(modalID).find('.box-review').html('');
+            
             loadOnModalNewLayout(modalID, '#load-products');
 
             var append = '';
@@ -319,6 +338,7 @@ $(function () {
                 append += '</div>';
             append += '</div>';
 
+            $(modalID).find('.modal-body').addClass('show');
             $(modalID).find('.box-products').html(append);
 
             if (selected_products.length > 1) {
@@ -326,6 +346,8 @@ $(function () {
             } else {
                 $(modalID).find('.box-review').html('');
             }
+
+            loadOnModalNewLayoutRemove('#modal_add_plan');
 
             $('input[name="value"]').mask('#.##0,00', {reverse: true});
 
@@ -360,62 +382,64 @@ $(function () {
             if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
         });
         
-        $(modalID).find('#load-products').html('');
+        $(modalID).find('#load-products').html('');        
         loadOnModalNewLayout('#modal_add_plan', '#load-products');
 
-        append = '';
-        append += '<div class="row">';
-            append += '<div class="col-sm-6 form-group">';
-                append += '<label for="name">Nome</label>';
-                append += '<input type="text" class="form-control form-control-lg" autocomplete="off" id="name" name="name" placeholder="Digite o nome do plano">';
-            append += '</div>';
+        setTimeout(function() {
+            $(modalID).find('.box-products').html(
+                `<div class="row">
+                    <div class="col-sm-6 form-group">
+                        <label for="name">Nome</label>
+                        <input type="text" class="form-control form-control-lg" autocomplete="off" id="name" name="name" placeholder="Digite o nome do plano">
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label for="price">Preço de venda</label>
+                        <input type="text" class="form-control form-control-lg" id="price" autocomplete="off" name="price" placeholder="R$ 99,90">
+                    </div>
+                </div>            
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <label for="description">Descrição</label>
+                        <textarea class="form-control form-control-lg" id="description" autocomplete="off" name="description" placeholder="Adicione uma descrição curta ao seu plano" rows="3"></textarea>
+                    </div>
+                </div>`
+            );
 
-            append += '<div class="col-sm-6 form-group">';
-                append += '<label for="price">Preço de venda</label>';
-                append += '<input type="text" class="form-control form-control-lg" id="price" autocomplete="off" name="price" placeholder="R$ 99,90">';
-            append += '</div>';
-        append += '</div>';
-        
-        append += '<div class="row">';
-            append += '<div class="col-sm-12 form-group">';
-                append += '<label for="description">Descrição</label>';
-                append += '<textarea class="form-control form-control-lg" id="description" autocomplete="off" name="description" placeholder="Adicione uma descrição curta ao seu plano" rows="3"></textarea>';
-            append += '</div>';
-        append += '</div>';
+            $(modalID).find('.box-review').css('margin-top', '10px');
+            $(modalID).find('.box-review').html(
+                `<div style="margin-right: -30px; margin-left: -30px; border-top: 1px solid #EBEBEB;"></div>
+                <p class="font-weight-bold" style="margin-top: 25px;">Revisão geral</p>
+                <div class="d-flex justify-content-between" style="margin-bottom: 24px;">
+                    <div class="price-plan">
+                        <small>Preço de venda</small>
+                        <p class="font-weight-bold m-0" style="line-height: 100%;">-</p>
+                    </div>
+                    <div class="costs-plan">
+                        <small>Seu custo</small>
+                        <p class="font-weight-bold m-0" style="line-height: 100%;">R$${calculateCostsPlan().replace('.', ',')}</p>
+                    </div>
+                    <div class="tax-plan">
+                        <small>Taxas est.</small>
+                        <p class="font-weight-bold m-0" style="line-height: 100%;">-</p>
+                    </div>
+                    <div class="comission-plan">
+                        <small>Comissão aprox.</small>
+                        <p class="font-weight-bold m-0" style="line-height: 100%;">-</p>
+                    </div>
+                    <div class="profit-plan">
+                        <small>Lucro aprox.</small>
+                        <p class="font-weight-bold m-0" style="line-height: 100%; color: #41DC8F;">-</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <p class="m-0" style="line-height: 14px; font-size: 11px;">Simulação considerando compras à vista com taxa de ${gateway_tax.replace('.', ',')}% (30D).</p>
+                    <p class="font-weight-bold m-0" style="line-height: 14px; font-size: 11px;">Valor estimado sujeito à mudanças de acordo com as condições de pagamento.</p>
+                </div>`
+            );
 
-        $(modalID).find('.box-products').html(append);
+            loadOnModalNewLayoutRemove('#modal_add_plan');
 
-        $(modalID).find('.box-review').css('margin-top', '10px');
-        $(modalID).find('.box-review').html(
-            '<div style="margin-right: -30px; margin-left: -30px; border-top: 1px solid #EBEBEB;"></div>' +
-            '<p class="font-weight-bold" style="margin-top: 25px;">Revisão geral</p>' +
-            '<div class="d-flex justify-content-between" style="margin-bottom: 24px;">' +
-                '<div class="price-plan">' +
-                    '<small>Preço de venda</small>' +
-                    '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
-                '</div>' +
-                '<div class="costs-plan">' +
-                    '<small>Seu custo</small>' +
-                    '<p class="font-weight-bold m-0" style="line-height: 100%;">R$'+calculateCostsPlan()+'</p>' +
-                '</div>' +
-                '<div class="tax-plan">' +
-                    '<small>Taxas est.</small>' +
-                    '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
-                '</div>' +
-                '<div class="comission-plan">' +
-                    '<small>Comissão aprox.</small>' +
-                    '<p class="font-weight-bold m-0" style="line-height: 100%;">-</p>' +
-                '</div>' +
-                '<div class="profit-plan">' +
-                    '<small>Lucro aprox.</small>' +
-                    '<p class="font-weight-bold m-0" style="line-height: 100%; color: #41DC8F;">-</p>' +
-                '</div>' +
-            '</div>' +
-            '<div class="text-center">' +
-                '<p class="m-0" style="line-height: 14px; font-size: 11px;">Simulação considerando compras à vista com taxa de 5,9% (30D).</p>' +
-                '<p class="font-weight-bold m-0" style="line-height: 14px; font-size: 11px;">Valor estimado sujeito à mudanças de acordo com as condições de pagamento.</p>' +
-            '</div>'
-        );
+        }, 450);
 
         $(modalID).find('#btn-modal-plan-prosseguir').html('Finalizar');
 
@@ -575,15 +599,15 @@ $(function () {
     $('.box-products').on('change', '#price', function() {
         var price = parseFloat($(this).val()).toFixed(2);
 
-        var tax = (price * 5.9 / 100).toFixed(2);
+        var tax = (price * gateway_tax / 100).toFixed(2);
         var costs = calculateCostsPlan();
         var comission = (price - tax).toFixed(2);
         var return_value = (comission - costs).toFixed(2);
 
-        $('.price-plan').find('p').html('R$'+price);
-        $('.tax-plan').find('p').html('R$'+tax);
-        $('.comission-plan').find('p').html('R$'+comission);
-        $('.profit-plan').find('p').html('R$'+ return_value);
+        $('.price-plan').find('p').html('R$'+price.replace('.', ','));
+        $('.tax-plan').find('p').html('R$'+tax.replace('.', ','));
+        $('.comission-plan').find('p').html('R$'+comission.replace('.', ','));
+        $('.profit-plan').find('p').html('R$'+ return_value.replace('.', ','));
     });
     
     // Select products
@@ -629,6 +653,8 @@ $(function () {
         if (type == 'create') {
             if (selected_products.length > 0) {
                 var modalID = '#modal_add_plan';
+
+                $(modalID).find('.modal-body').removeClass('show');
                 
                 defaultBreadCrumbs(modalID, type);
 
@@ -649,6 +675,8 @@ $(function () {
 
             defaultBreadCrumbs(modalID, type);
 
+            $(modalID).find('.modal-body').removeClass('show');
+
             if (stage_plan == 2) {
                 appendProductsDetails(modalID);
             } else if (stage_plan == 3) {
@@ -666,13 +694,15 @@ $(function () {
         if (type == 'create') {            
             var modalID = '#modal_add_plan';
 
+            $(modalID).find('.modal-body').removeClass('show');
+
             if (stage_plan == 0) {
                 $(modalID).modal('hide');
             }
             
             defaultBreadCrumbs(modalID, type);
 
-            modalID.find('#btn-modal-plan-prosseguir').html('Prosseguir');
+            $(modalID).find('#btn-modal-plan-prosseguir').html('Prosseguir');
             
             if (stage_plan == 1) {
                 getProdutcts('#modal_add_plan');
@@ -682,6 +712,8 @@ $(function () {
         } else {
             var planID = $(this).attr('plan');
             var modalID = '#modal_edit_plan';
+
+            $(modalID).find('.modal-body').removeClass('show');
             
             if (stage_plan == 0) {
                 showPlan(planID, modalID);
@@ -769,6 +801,13 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                var price = parseFloat(response.data.price.replace('R$', '')).toFixed(2);
+                
+                var tax = (price * gateway_tax / 100).toFixed(2);
+                var costs = calculateCostsPlan();
+                var comission = (price - tax).toFixed(2);
+                var return_value = (comission - costs).toFixed(2);
+
                 $(modalID).find('.modal-body').html(`   
                     <div class="informations-edit">
                         <div class="box-breadcrumbs">
@@ -835,9 +874,32 @@ $(function () {
                             </div>
                         </div>
 
-                        <div class="review-data">
-                            <div class="d-flex">
-
+                        <div class="review-data" style="margin-top: 24px;">
+                            <div class="d-flex justify-content-between" style="margin-bottom: 24px;">
+                                <div class="price-plan">
+                                    <small>Preço de venda</small>
+                                    <p class="font-weight-bold m-0" style="line-height: 100%;">${price.replace('.', ',')}</p>
+                                </div>
+                                <div class="costs-plan">
+                                    <small>Seu custo</small>
+                                    <p class="font-weight-bold m-0" style="line-height: 100%;">R$${calculateCostsPlan().replace('.', ',')}</p>
+                                </div>
+                                <div class="tax-plan">
+                                    <small>Taxas est.</small>
+                                    <p class="font-weight-bold m-0" style="line-height: 100%;">R$${tax.replace('.', ',')}</p>
+                                </div>
+                                <div class="comission-plan">
+                                    <small>Comissão aprox.</small>
+                                    <p class="font-weight-bold m-0" style="line-height: 100%;">R$${comission.replace('.', ',')}</p>
+                                </div>
+                                <div class="profit-plan">
+                                    <small>Lucro aprox.</small>
+                                    <p class="font-weight-bold m-0" style="line-height: 100%; color: #41DC8F;">R$${return_value.replace('.', ',')}</p>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <p class="m-0" style="line-height: 14px; font-size: 11px;">Simulação considerando compras à vista com taxa de ${gateway_tax.replace('.', ',')} % (30D).</p>
+                                <p class="font-weight-bold m-0" style="line-height: 14px; font-size: 11px;">Valor estimado sujeito à mudanças de acordo com as condições de pagamento.</p>
                             </div>
                         </div>
                     </div>
@@ -857,7 +919,7 @@ $(function () {
                 $(modalID).find('.modal-title').attr('data-title', 'Detalhes de ' + response.data.name);
                 $(modalID).find('#btn-edit-informations-plan').attr('data-code', response.data.id);
                 $(modalID).find('#name').val(response.data.name);
-                $(modalID).find('#price').val(response.data.price);
+                $(modalID).find('#price').val('R$' + price.replace('.', ','));
                 $(modalID).find('#description').val(response.data.description);
                 if (response.data.products.length > 0) {
                     appendProducts(response.data.products, modalID, 'edit');

@@ -175,7 +175,7 @@ function loadOnAnyEllipsis(target, remove = false, options = {}) {
     }
 }
 
-function autoHeightAnimate(element, time){
+function heightAnimate(element, height){
   	var curHeight = element.height(); // Get Default Height
     var autoHeight = element.css('height', 'auto').height(); // Get Auto Height
     
@@ -213,9 +213,11 @@ function loadOnModal(whereToLoad) {
 }
 
 function loadOnModalNewLayout(modal, whereToLoad) {
+    $(modal).find('.modal-body').removeClass('show');
+    
     if (whereToLoad) {
-        $(modal).find('.modal-body').find(whereToLoad).children().fadeOut('fast');
-        $(modal).find('.modal-body').find(whereToLoad).append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
+        $(modal).find(whereToLoad).children().fadeOut('fast');
+        $(modal).find(whereToLoad).append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
         $(modal).modal('show');
     } else {
         $(modal).find('.modal-title').html('Carregando...');
@@ -227,6 +229,7 @@ function loadOnModalNewLayout(modal, whereToLoad) {
 }
 
 function loadOnModalNewLayoutRemove(modal, whereToLoad) {
+    $(modal).find('.modal-body').addClass('show');
     $(modal).find('.loadingModal').remove();
     
     if (whereToLoad) {
