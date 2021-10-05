@@ -1,17 +1,21 @@
 $('#bt-withdrawal').on('click', function () {
+
     let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
     let toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
 
     if (toTransfer > availableBalance) {
+
         alertCustom('error', 'O valor requerido ultrapassa o limite disponivel');
         toTransferText = $('#custom-input-addon').val();
         toTransfer = toTransferText.slice(0, -2);
         $('#custom-input-addon').val('');
         $('.withdrawal-value').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+
     } else if ($('#custom-input-addon').val() == '') {
         alertCustom('error', 'Valor do saque inválido!');
+
     } else {
         $.ajax({
                 url: "/api/withdrawals/getaccountinformation",
@@ -135,17 +139,18 @@ $('#bt-withdrawal').on('click', function () {
                         }
                         $("#modal-withdrawal-document").html('  ' + response.data.document);
 
-                        $("#bt-confirm-withdrawal").unbind("click");
+                        $("#bt-confirm-withdrawal").off("click");
                         $("#bt-confirm-withdrawal").on("click", function () {
                             loadOnModal('#modal-body');
 
                             $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
                             $.ajax({
-                                url: "/api/old_withdrawals",
+                                url: "/api/withdrawals",
                                 type: "POST",
                                 data: {
                                     company_id: $('#transfers_company_select').val(),
-                                    withdrawal_value: $('#custom-input-addon').val()
+                                    withdrawal_value: $('#custom-input-addon').val(),
+                                    gateway_id: window.gatewayCode,
                                 },
                                 dataType: "json",
                                 headers: {
@@ -168,7 +173,7 @@ $('#bt-withdrawal').on('click', function () {
 
                                     updateBalances();
 
-                                    $('.btn-return').click(function () {
+                                    $('.btn-return').on(function () {
                                         $('#modal_body').modal('hide');
                                     });
                                 },

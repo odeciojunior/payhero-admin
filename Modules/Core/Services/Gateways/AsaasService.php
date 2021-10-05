@@ -93,80 +93,73 @@ class AsaasService implements Statement
         return WithdrawalResource::collection($withdrawals->paginate(10));
     }
 
-    public function withdrawalValueIsValid($withdrawalValue): bool
+    public function withdrawalValueIsValid($value): bool
     {
         $availableBalance = $this->getAvailableBalance();
 
-        if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance) {
+        if (empty($value) || $value < 1 || $value > $availableBalance) {
             return false;
         }
 
         return true;
     }
 
-    public function createWithdrawal($withdrawalValue): bool
+    public function createWithdrawal($value): bool
     {
-        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
-
         try {
             DB::beginTransaction();
-            $withdrawal = Withdrawal::create(
-                [
-                    'value' => $withdrawalValue,
-                    'company_id' => $this->company->id,
-                    'bank' => $this->company->bank,
-                    'agency' => $this->company->agency,
-                    'agency_digit' => $this->company->agency_digit,
-                    'account' => $this->company->account,
-                    'account_digit' => $this->company->account_digit,
-                    'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
-                    'tax' => 0,
-                    'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                    'automatic_liquidation' => true,
-                    'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
-                ]
-            );
 
-            $transactionsSum = $this->company->transactions()
-                                        ->where('is_waiting_withdrawal', 1)
-                                        ->whereIn('gateway_id', $this->gatewayIds)
-                                        ->whereNull('withdrawal_id')
-                                        ->orderBy('id');
+            $this->company->update([
+                'asaas_balance' => $this->company->asaas_balance -= $value
+            ]);
 
-            $currentValue = 0;
+            $withdrawal = Withdrawal::where([
+                                        ['company_id', $this->company->id],
+                                        ['status', Withdrawal::STATUS_PENDING],
+                                ])
+                                ->whereIn('gateway_id', $this->gatewayIds)
+                                ->first();
 
-            $transactionsSum->chunkById(
-                2000,
-                function ($transactions) use ($currentValue, $withdrawal) {
-                    foreach ($transactions as $transaction) {
-                        $currentValue += $transaction->value;
+            if (empty($withdrawal)) {
 
-                        if ($currentValue <= $withdrawal->value) {
-                            $transaction->update(
-                                [
-                                    'withdrawal_id' => $withdrawal->id,
-                                    'is_waiting_withdrawal' => false
-                                ]
-                            );
-                        }
-                    }
-                }
-            );
+                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
 
+                $withdrawal = Withdrawal::create(
+                    [
+                        'value' => $value,
+                        'company_id' => $this->company->id,
+                        'bank' => $this->company->bank,
+                        'agency' => $this->company->agency,
+                        'agency_digit' => $this->company->agency_digit,
+                        'account' => $this->company->account,
+                        'account_digit' => $this->company->account_digit,
+                        'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
+                        'tax' => 0,
+                        'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
+                        'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
+                    ]
+                );
+            } else {
+                $withdrawalValueSum = $withdrawal->value + $value;
+
+                $withdrawal->update([
+                    'value' => $withdrawalValueSum
+                ]);
+            }
             DB::commit();
-            return true;
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-
-            return false;
+            return false;                
         }
+
+        // event(new WithdrawalRequestEvent($withdrawal));
+
+        return true;
     }
 
     public function updateAvailableBalance($saleId = null)
     {
-        settings()->group('withdrawal_request')->set('withdrawal_request', false);
-
         $transactions = Transaction::with('company')
             ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
             ->where('status_enum', Transaction::STATUS_PAID)
@@ -223,8 +216,6 @@ class AsaasService implements Statement
             DB::rollBack();
             report($e);
         }
-
-        settings()->group('withdrawal_request')->set('withdrawal_request', true);
     }
 
     public function getStatement()

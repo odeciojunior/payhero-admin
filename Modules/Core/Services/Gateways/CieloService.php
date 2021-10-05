@@ -139,7 +139,7 @@ class CieloService implements Statement
             DB::beginTransaction();
 
             $this->company->update([
-                'balance' => $this->company->cielo_balance -= $withdrawalValue
+                'cielo_balance' => $this->company->cielo_balance -= $withdrawalValue
             ]);
 
             $withdrawal = Withdrawal::where([
@@ -151,7 +151,7 @@ class CieloService implements Statement
 
             if (empty($withdrawal)) {
 
-                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user);
+                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
 
                 $withdrawal = Withdrawal::create(
                     [
@@ -182,15 +182,13 @@ class CieloService implements Statement
             return false;                
         }
 
-        event(new WithdrawalRequestEvent($withdrawal));
+        // event(new WithdrawalRequestEvent($withdrawal));
 
         return true;
     }
 
     public function updateAvailableBalance($saleId = null)
     {
-        settings()->group('withdrawal_request')->set('withdrawal_request', false);
-
         $transactions = Transaction::with('company')
             ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
             ->where('status_enum', Transaction::STATUS_PAID)
@@ -247,8 +245,6 @@ class CieloService implements Statement
             DB::rollBack();
             report($e);
         }
-
-        settings()->group('withdrawal_request')->set('withdrawal_request', true);
     }
 
     public function getStatement()

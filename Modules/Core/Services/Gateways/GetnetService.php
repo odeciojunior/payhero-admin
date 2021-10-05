@@ -99,27 +99,26 @@ class GetnetService implements Statement
         return WithdrawalResource::collection($withdrawals->paginate(10));
     }
 
-    public function withdrawalValueIsValid($withdrawalValue): bool
+    public function withdrawalValueIsValid($value): bool
     {
         $availableBalance = $this->getAvailableBalance();
         $pendingDebtsSum = $this->getPendingDebtBalance();
 
-        if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance || $pendingDebtsSum > $withdrawalValue || $pendingDebtsSum > $availableBalance) {
+        if (empty($value) || $value < 1 || $value > $availableBalance || $pendingDebtsSum > $value || $pendingDebtsSum > $availableBalance) {
             return false;
         }
 
         return true;
     }
 
-    public function createWithdrawal($withdrawalValue): bool
+    public function createWithdrawal($value): bool
     {
         $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
 
         try {
-            DB::beginTransaction();
             $withdrawal = Withdrawal::create(
                 [
-                    'value' => $withdrawalValue,
+                    'value' => $value,
                     'company_id' => $this->company->id,
                     'bank' => $this->company->bank,
                     'agency' => $this->company->agency,
@@ -136,10 +135,8 @@ class GetnetService implements Statement
 
             dispatch(new ProcessWithdrawal($withdrawal, $isFirstUserWithdrawal));
 
-            DB::commit();
             return true;
         } catch (Exception $e) {
-            DB::rollBack();
             report($e);
 
             return false;
@@ -262,8 +259,6 @@ class GetnetService implements Statement
     public function updateAvailableBalance($saleId = null)
     {
         try {
-            settings()->group('withdrawal_request')->set('withdrawal_request', false);
-
             $transactionModel = new Transaction();
             $getnetService = new GetnetBackOfficeService();
 

@@ -29,7 +29,7 @@ class GerencianetService implements Statement
     {
         $this->gatewayIds = [ 
             Gateway::GERENCIANET_PRODUCTION_ID, 
-            // Gateway::GERENCIANET_SANDBOX_ID 
+            Gateway::GERENCIANET_SANDBOX_ID 
         ];
     }
 
@@ -164,9 +164,9 @@ class GerencianetService implements Statement
         }
     }
 
-    public function getLowerAndBiggerAvailableValues(Company $company, int $withdrawalValueRequested): array
+    public function getLowerAndBiggerAvailableValues($withdrawalValueRequested): array
     {
-        $transactionsSum = $company->transactions()
+        $transactionsSum = $this->company->transactions()
             ->whereIn('gateway_id', $this->gatewayIds)
             ->where('is_waiting_withdrawal', 1)
             ->whereNull('withdrawal_id')
@@ -207,8 +207,6 @@ class GerencianetService implements Statement
     public function updateAvailableBalance($saleId = null)
     {
         try {
-            settings()->group('withdrawal_request')->set('withdrawal_request', false);
-        
             $transactions = Transaction::with('sale')
                 ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
                 ->where('status_enum', (new Transaction())->present()->getStatusEnum('paid'))
@@ -237,8 +235,6 @@ class GerencianetService implements Statement
                         ]);
                 }
             });
-
-            settings()->group('withdrawal_request')->set('withdrawal_request', true);
         } catch (Exception $e) {
             report($e);
         }

@@ -44,11 +44,14 @@ class UpdateAvailableBalance extends Command
      */
     public function handle()
     {
+        settings()->group('withdrawal_request')->set('withdrawal_request', false);
+
         foreach($this->defaultGateways as $gatewayClass) {
             $gatewayService = app()->make($gatewayClass);
             $gatewayService->updateAvailableBalance();
         }
 
+        settings()->group('withdrawal_request')->set('withdrawal_request', true);
     }
 
 }

@@ -720,6 +720,9 @@ function onlyNumbers(string) {
 }
 
 function removeMoneyCurrency(string) {
+    if(string.charAt(0) == '-') {
+        return '-' + string.substring(4);
+    }
     return string.substring(3);
 }
 

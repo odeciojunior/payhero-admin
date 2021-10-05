@@ -42,7 +42,6 @@ class FinancesApiController extends Controller
             }
 
             $companyService = new CompanyBalanceService($company, $gateway->getService());
-            // $companyService = new CompanyBalanceService($company);
 
             $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
             $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
