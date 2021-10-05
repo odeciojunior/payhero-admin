@@ -65,8 +65,11 @@ window.updateBalances = function() {
 
             $(".loading").remove();
 
-            $("#div-available-money, #div-available-money_m").unbind('click');
+            $("#div-available-money, #div-available-money_m").off('click');
             $("#div-available-money, #div-available-money_m").on("click", function () {
+                if(response.available_balance.charAt(0) == '-' || onlyNumbers(response.available_balance) == "000") {
+                    return;
+                }
                 $("#custom-input-addon").val(removeMoneyCurrency(response.available_balance));
             });
 
