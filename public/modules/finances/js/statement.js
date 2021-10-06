@@ -55,15 +55,12 @@ window.updateTransfersTable = function(link = null) {
             let availableInPeriod = $('#available-in-period');
             availableInPeriod.html(`<span ${isNegative ? ' style="color:red;"' : ''}><span class="currency">R$ </span>${balance_in_period}</span>`);
             if (isNegative) {
-                console.log('here 1');
                 availableInPeriod.html(`<span style="color:red;"><span class="currency">R$ </span>${balance_in_period}</span>`)
                     .parent()
                     .find('.grad-border')
                     .removeClass('green')
                     .addClass('red');
             } else {
-                console.log('here 2');
-
                 availableInPeriod.html(`<span class="currency">R$ </span>${balance_in_period}`)
                     .parent()
                     .find('.grad-border')

@@ -161,57 +161,54 @@ class AsaasService implements Statement
 
     public function updateAvailableBalance($saleId = null)
     {
-        $transactions = Transaction::with('company')
-            ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
-            ->where('status_enum', Transaction::STATUS_PAID)
-            ->whereIn('gateway_id', $this->gatewayIds)
-            ->where(function ($where) {
-                $where->where('tracking_required', false)
-                    ->orWhereHas('sale', function ($query) {
-                        $query->where(function ($q) {
-                            $q->where('has_valid_tracking', true)
-                                ->orWhereNull('delivery_id');
-                        });
-                    });
-            });
-
-        if (empty($saleId)) {
-            $transactions->where('sale_id', $saleId);
-        }
-
-        dd($transactions->count());
-
         try {
             DB::beginTransaction();
+
+            $transactions = Transaction::with('company')
+                ->where('created_at', '>', '2021-09-15')
+                ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
+                ->where('status_enum', Transaction::STATUS_PAID)
+                ->whereIn('gateway_id', $this->gatewayIds)
+                ->whereNotNull('company_id')
+                ->where(function ($where) {
+                    $where->where('tracking_required', false)
+                        ->orWhereHas('sale', function ($query) {
+                            $query->where(function ($q) {
+                                $q->where('has_valid_tracking', true)
+                                    ->orWhereNull('delivery_id');
+                            });
+                        });
+                });
+
+            if (!empty($saleId)) {
+                $transactions->where('sale_id', $saleId);
+            }
+
+            // dd($transactions->count());
+
             foreach ($transactions->cursor() as $transaction) {
-                try {
-                    if (!empty($transaction->company_id)) {
-                        $company = $transaction->company;
+                $company = $transaction->company;
 
-                        Transfer::create(
-                            [
-                                'transaction_id' => $transaction->id,
-                                'user_id' => $company->user_id,
-                                'company_id' => $company->id,
-                                'type_enum' => (new Transfer)->present()->getTypeEnum('in'),
-                                'value' => $transaction->value,
-                                'type' => 'in',
-                                'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
-                            ]
-                        );
+                Transfer::create(
+                    [
+                        'transaction_id' => $transaction->id,
+                        'user_id' => $company->user_id,
+                        'company_id' => $company->id,
+                        'type_enum' => Transfer::TYPE_IN,
+                        'value' => $transaction->value,
+                        'type' => 'in',
+                        'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
+                    ]
+                );
 
-                        $company->update([
-                            'asaas_balance' => $company->asaas_balance + $transaction->value
-                        ]);
+                $company->update([
+                    'asaas_balance' => $company->asaas_balance + $transaction->value
+                ]);
 
-                        $transaction->update([
-                            'status' => 'transfered',
-                            'status_enum' => Transaction::STATUS_TRANSFERRED,
-                        ]);
-                    }
-                } catch (Exception $e) {
-                    report($e);
-                }
+                $transaction->update([
+                    'status' => 'transfered',
+                    'status_enum' => Transaction::STATUS_TRANSFERRED,
+                ]);
             }
             DB::commit();
         } catch (Exception $e) {

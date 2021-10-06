@@ -34,6 +34,9 @@ class Transfer extends Model
 {
     use FoxModelTrait, PresentableTrait, LogsActivity;
 
+    const TYPE_IN = 1;
+    const TYPE_OUT = 2;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string

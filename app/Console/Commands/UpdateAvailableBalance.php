@@ -3,6 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Services\Gateways\AsaasService;
+use Modules\Core\Services\Gateways\CieloService;
+use Modules\Core\Services\Gateways\GerencianetService;
+use Modules\Core\Services\Gateways\GetnetService;
 
 class UpdateAvailableBalance extends Command
 {
@@ -22,9 +26,9 @@ class UpdateAvailableBalance extends Command
 
     private $defaultGateways = [
         AsaasService::class,
-        CieloService::class,
-        GetnetService::class,
-        GerencianetService::class
+        // CieloService::class,
+        // GetnetService::class,
+        // GerencianetService::class
     ];
 
     /**
