@@ -19,7 +19,7 @@ class AlterTableTransfersAddColumnGatewayId extends Migration
             $table->foreign('gateway_id')->references('id')->on('gateways');
         });
 
-        DB::row('update transfers set gateway_id = 5 where customer_id is null');
+        DB::statement('update transfers set gateway_id = 5 where customer_id is null');
     }
 
     /**
