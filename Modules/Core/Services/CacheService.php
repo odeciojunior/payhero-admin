@@ -61,7 +61,7 @@ class CacheService
                 ->keys($prefix . ':' . $key . ':*' . $uniqueKey . '*');
             foreach ($keys as $key) {
                 $cacheKey = preg_replace("/{$prefix}:/", '', $key);
-                cache()->driver('redis')
+                cache()->driver('redis-cache')
                     ->forget($cacheKey);
             }
             return true;
