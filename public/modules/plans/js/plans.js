@@ -318,12 +318,24 @@ $(function () {
                                 alertCustom('error', 'Ocorreu um erro, por favor, refaça a operação');
                             },
                             success: function success(response) {
-                                append += '<div class="product d-flex" data-code="' + response.data.id + '">';
+                                append += '<div class="product d-flex align-items-center" data-code="' + response.data.id + '">';
                                     append += '<div class="div-product d-flex align-items-center">';
                                         append += '<div class="div-photo"><img class="product-photo" src="' + response.data.photo + '" alt="Image Product"></div>';
                                         append += '<h1 class="title">' + response.data.name + '</h1>';
                                     append += '</div>';
-                                    append += '<div class="div-amount"><input class="form-control form-control-lg" type="number" min="1" value="1" name="amount" placeholder="Qtd."></div>';
+                                    append += '<div class="div-amount">';
+                                        append += '<div class="d-flex align-items-center  justify-content-center ">';
+                                            append += '<div class="input-number">';
+                                                append += '<button class="btn-sub">';
+                                                    append += '<img src="http://dev.checkout.com/assets/img/minus.svg">';
+                                                append += '</button>';
+                                                append += '<input type="number" class="form-control" name="amount" value="1" min="1" max="99" step="1">';
+                                                append += '<button class="btn-add">';
+                                                    append += '<img src="http://dev.checkout.com/assets/img/plus.svg">';
+                                                append += '</button>';
+                                            append += '</div>';
+                                        append += '</div>';
+                                    append += '</div>';
                                     append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" type="text" name="value" placeholder="Valor un."></div>';
                                     append += '<div class="div-currency">';
                                         append += '<select class="form-control form-control-lg" type="text" name="currency_type_enum">';
@@ -377,7 +389,12 @@ $(function () {
             var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
             
             var name_input = $(this).attr('name');
-            if (name_input == 'amount') selected_products[product_selected_index].amount = $(this).val();
+            if (name_input == 'amount') {
+                var productID_ = $(this).parent().parent().parent().parent().data('code');
+                var product_selected_index_ = selected_products.map(function(p) { return p.id; }).indexOf(productID_);
+                
+                selected_products[product_selected_index_].amount = $(this).val();
+            }
             if (name_input == 'value') selected_products[product_selected_index].value = $(this).val();
             if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
         });
@@ -437,13 +454,13 @@ $(function () {
                 </div>`
             );
 
+            $('input[name="price"]').mask('#.##0,00', { reverse: true });
+
             loadOnModalNewLayoutRemove('#modal_add_plan');
 
         }, 450);
 
         $(modalID).find('#btn-modal-plan-prosseguir').html('Finalizar');
-
-        $('input[name="price"]').mask('#.##0,00', { reverse: true });
     }
 
     function storePlan(modalID, type, planID = '') {
@@ -635,13 +652,24 @@ $(function () {
         appendProductsDetails('#modal_add_plan');
     });
 
-    // All values
-    $('.box-review').on('click', '#check-values', function() {
+    // All values products
+    $('body').on('click', '#check-values', function() {
         var checkbox_value = $(this).val();
         if (checkbox_value == 0) {
-            $(this).val(1)
+            $(this).val(1);
+
+            var first_value = $('.box-products').find('.product').first().find('.form-control[name="value"]').val();
+            $('.box-products .form-control[name="value"]').val(first_value);
         } else if (checkbox_value == 1) {
             $(this).val(0);
+        }
+    });
+
+    // Change values products
+    $('body').on('keyup', '.form-control[name="value"]', function(e) {
+        var same_cost = $('#check-values').val();
+        if (same_cost == 1) {
+            $('.box-products .form-control[name="value"]').val($(this).val());
         }
     });
 
@@ -1323,7 +1351,33 @@ $(function () {
                 alertCustom("success", "Configuração atualizada com sucesso");
             }
         });
+    });
 
+    function changeProductAmount(input) {
+        let amount = parseInt(input.val());
+        
+        input.val(amount);
+    }
+
+    $('body').on('click', '.input-number button', function () {
+        var input = $(this).parent().find('input');
+        
+        if ($(this).hasClass('btn-add')) {
+            input[0].stepUp();
+        } else if ($(this).hasClass('btn-sub')) {
+            input[0].stepDown();
+        }
+
+        changeProductAmount(input);
+    });
+
+    $('body').on('keyup', '.input-number input', function () {
+        let max = parseInt($(this).prop('max')) || 99;
+        let min = parseInt($(this).prop('min')) || 1;
+        let value = parseInt($(this).val() || 1);
+        if (value <= min) $(this).val(min)
+        if (value > max) $(this).val(max)
+        changeProductAmount($(this));
     });
 
     $(document).on('click', '.bt-update-cost-configs', function (event) {

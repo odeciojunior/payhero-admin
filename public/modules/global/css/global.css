@@ -979,7 +979,7 @@ img.border-icon{
 }
 
 /* MODAL PLANS - new layout */
-.modal-plans .box-breadcrumbs {
+#modal_add_plan .box-breadcrumbs {
     margin-bottom: 24px;
 }
 .modal-plans .box-description {
@@ -1081,7 +1081,10 @@ img.border-icon{
     letter-spacing: 0;
 }
 .modal-plans .box-products .box-details .head div,
-.modal-plans .box-products .box-details .body .product div {
+.modal-plans .box-products .box-details .body .product .div-product,
+.modal-plans .box-products .box-details .body .product .div-amount,
+.modal-plans .box-products .box-details .body .product .div-value,
+.modal-plans .box-products .box-details .body .product .div-currency {
     margin-right: 13px;
 }
 .modal-plans .box-products .box-details .head div:nth-child(1),
@@ -1107,7 +1110,7 @@ img.border-icon{
 }
 
 .modal-plans .box-products .box-details .body .product .div-photo {
-    margin-right: 14px;
+    margin-right: 13px;
     position: relative;
     cursor: pointer;
 }
@@ -1342,4 +1345,76 @@ input[type="checkbox"], input[type="radio"] {
 .flex-fill {
     -ms-flex: 1 1 auto!important;
     flex: 1 1 auto!important;
+}
+
+.input-number {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    width: 75px;
+    height: 32px;
+    border-radius: 20px;
+}
+.input-number button {
+    border: none;
+        border-top-color: currentcolor;
+        border-top-style: none;
+        border-top-width: medium;
+        border-bottom-color: currentcolor;
+        border-bottom-style: none;
+        border-bottom-width: medium;
+        border-left-color: currentcolor;
+        border-left-style: none;
+        border-left-width: medium;
+    outline: 0;
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    transition: all .5s;
+    line-height: 0;
+}
+.input-number button:first-child {
+    border-radius: 30px 0 0 30px;
+    border-top: solid 1px #C1C1C1;
+    border-left: solid 1px #C1C1C1;
+    border-bottom: solid 1px #C1C1C1;
+}
+.input-number .form-control {
+    width: 20px;
+    height: 30px !important;
+    padding: 0;
+    outline: 0;
+    box-shadow: none;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 14px;
+    -webkit-appearance: textfield;
+    -webkit-background-clip: padding-box;
+    -moz-appearance: textfield;
+    -moz-background-clip: padding-box;
+    appearance: textfield;
+    background-clip: padding-box;
+    border: none;
+        border-top-color: currentcolor;
+        border-top-style: none;
+        border-top-width: medium;
+        border-bottom-color: currentcolor;
+        border-bottom-style: none;
+        border-bottom-width: medium;
+    border-radius: 0 !important;
+    border-top: solid 1px #C1C1C1;
+    border-bottom: solid 1px #C1C1C1;
+}
+.input-number button:last-child {
+    border-radius: 0 30px 30px 0;
+    border-top: solid 1px #C1C1C1;
+    border-right: solid 1px #C1C1C1;
+    border-bottom: solid 1px #C1C1C1;
+}
+.input-number button:hover {
+    background: #fafafa;
+}
+.btn-add, .btn-sub {
+    cursor: pointer;
 }
