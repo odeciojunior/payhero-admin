@@ -279,7 +279,7 @@ class GetnetService implements Statement
                         });
                 });
 
-            if ($saleId) {
+            if (!empty($saleId)) {
                 $transactions->where('sale_id', $saleId);
             }
 

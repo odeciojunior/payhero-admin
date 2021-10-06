@@ -13,8 +13,8 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 
@@ -189,56 +189,53 @@ class CieloService implements Statement
 
     public function updateAvailableBalance($saleId = null)
     {
-        $transactions = Transaction::with('company')
-            ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
-            ->where('status_enum', Transaction::STATUS_PAID)
-            ->whereIn('gateway_id', $this->gatewayIds)
-            ->where(function ($where) {
-                $where->where('tracking_required', false)
-                    ->orWhereHas('sale', function ($query) {
-                        $query->where(function ($q) {
-                            $q->where('has_valid_tracking', true)
-                                ->orWhereNull('delivery_id');
-                        });
-                    });
-            });
-
-        if (empty($saleId)) {
-            $transactions->where('sale_id', $saleId);
-        }
-
-        dd($transactions->count());
-
         try {
             DB::beginTransaction();
+
+            $transactions = Transaction::with('company')
+                ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
+                ->where('status_enum', Transaction::STATUS_PAID)
+                ->whereIn('gateway_id', $this->gatewayIds)
+                ->whereNotNull('company_id')
+                ->where(function ($where) {
+                    $where->where('tracking_required', false)
+                        ->orWhereHas('sale', function ($query) {
+                            $query->where(function ($q) {
+                                $q->where('has_valid_tracking', true)
+                                    ->orWhereNull('delivery_id');
+                            });
+                        });
+                });
+
+            if (!empty($saleId)) {
+                $transactions->where('sale_id', $saleId);
+            }
+
+            dd($transactions->count());
+
             foreach ($transactions->cursor() as $transaction) {
-                try {
-                    if (!empty($transaction->company_id)) {
-                        $company = $transaction->company;
+                $company = $transaction->company;
 
-                        Transfer::create(
-                            [
-                                'transaction_id' => $transaction->id,
-                                'user_id' => $company->user_id,
-                                'company_id' => $company->id,
-                                'type_enum' => (new Transfer)->present()->getTypeEnum('in'),
-                                'value' => $transaction->value,
-                                'type' => 'in',
-                            ]
-                        );
+                Transfer::create(
+                    [
+                        'transaction_id' => $transaction->id,
+                        'user_id' => $company->user_id,
+                        'company_id' => $company->id,
+                        'type_enum' => Transfer::TYPE_IN,
+                        'value' => $transaction->value,
+                        'type' => 'in',
+                        'gateway_id' => foxutils()->isProduction() ? Gateway::CIELO_PRODUCTION_ID : Gateway::CIELO_SANDBOX_ID
+                    ]
+                );
 
-                        $company->update([
-                            'cielo_balance' => $company->cielo_balance + $transaction->value
-                        ]);
+                $company->update([
+                    'cielo_balance' => $company->cielo_balance + $transaction->value
+                ]);
 
-                        $transaction->update([
-                            'status' => 'transfered',
-                            'status_enum' => Transaction::STATUS_TRANSFERRED,
-                        ]);
-                    }
-                } catch (Exception $e) {
-                    report($e);
-                }
+                $transaction->update([
+                    'status' => 'transfered',
+                    'status_enum' => Transaction::STATUS_TRANSFERRED,
+                ]);
             }
             DB::commit();
         } catch (Exception $e) {
@@ -247,8 +244,9 @@ class CieloService implements Statement
         }
     }
 
-    public function getStatement()
+    public function getStatement($filters)
     {
+        return (new StatementService)->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
 
     }
 }

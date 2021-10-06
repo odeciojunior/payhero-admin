@@ -37,7 +37,7 @@
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-3">
                         <div class="form-group">
-                            <label for="transaction">Transação/Antecipação</label>
+                            <label for="transaction">Transação</label>
                             <input type="text" id="transaction" class="form-control select-pad" placeholder="Digite o código">
                         </div>
                     </div>
@@ -46,8 +46,8 @@
                             <label for="type">Tipo</label>
                             <select class="form-control select-pad" id="type">
                                 <option value="">Todos</option>
-                                <option value="in">Entrada</option>
-                                <option value="out">Saída</option>
+                                <option value="1">Entrada</option>
+                                <option value="2">Saída</option>
                             </select>
                         </div>
                     </div>
