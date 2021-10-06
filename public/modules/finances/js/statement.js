@@ -1,30 +1,31 @@
 window.updateTransfersTable = function(link = null) {
     $("#table-transfers-body").html('');
-    let balanceLoader = {
-        styles: {
-            container: {
-                minHeight: '31px',
-                justifyContent: 'flex-start',
-            },
-            loader: {
-                width: '20px',
-                height: '20px',
-                borderWidth: '4px'
-            },
-        },
-        insertBefore: '.grad-border',
-    };
-    loadOnAny('#available-in-period', false, balanceLoader);
+    // let balanceLoader = {
+    //     styles: {
+    //         container: {
+    //             minHeight: '31px',
+    //             justifyContent: 'flex-start',
+    //         },
+    //         loader: {
+    //             width: '20px',
+    //             height: '20px',
+    //             borderWidth: '4px'
+    //         },
+    //     },
+    //     insertBefore: '.grad-border',
+    // };
+    // loadOnAny('#available-in-period', false, balanceLoader);
 
     loadOnTable('#table-transfers-body', '#transfersTable');
     if (link == null) {
-        link = '/api/old_transfers';
+        link = '/api/transfers';
     } else {
-        link = '/api/old_transfers' + link;
+        link = '/api/transfers' + link;
     }
 
     let data = {
-        company: $("#extract_company_select option:selected").val(),
+        company_id: $("#extract_company_select option:selected").val(),
+        gateway_id: window.gatewayCode,
         date_type: $("#date_type").val(),
         date_range: $("#date_range").val(),
         reason: $('#reason').val(),
@@ -52,14 +53,17 @@ window.updateTransfersTable = function(link = null) {
             let balance_in_period = response.meta.balance_in_period;
             let isNegative = parseFloat(balance_in_period.replace('.', '').replace(',', '.')) < 0;
             let availableInPeriod = $('#available-in-period');
-            availableInPeriod.html(`<span${isNegative ? ' style="color:red;"' : ''}><span class="currency">R$ </span>${balance_in_period}</span>`);
+            availableInPeriod.html(`<span ${isNegative ? ' style="color:red;"' : ''}><span class="currency">R$ </span>${balance_in_period}</span>`);
             if (isNegative) {
+                console.log('here 1');
                 availableInPeriod.html(`<span style="color:red;"><span class="currency">R$ </span>${balance_in_period}</span>`)
                     .parent()
                     .find('.grad-border')
                     .removeClass('green')
                     .addClass('red');
             } else {
+                console.log('here 2');
+
                 availableInPeriod.html(`<span class="currency">R$ </span>${balance_in_period}`)
                     .parent()
                     .find('.grad-border')
@@ -83,12 +87,12 @@ window.updateTransfersTable = function(link = null) {
                     data += '<tr >';
                     if (value.is_owner && value.sale_id) {
                         data += `<td style="vertical-align: middle;">
-                                    ${value.reason}
-                                    <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
-                                        <span style="color:black;">#${value.sale_id}</span>
-                                    </a><br>
-                                    <small>(Data da venda: ${value.sale_date})</small>
-                                </td>`;
+                            ${value.reason}
+                            <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
+                                <span style="color:black;">#${value.sale_id}</span>
+                            </a><br>
+                            <small>(Data da venda: ${value.sale_date})</small>
+                        </td>`;
                     } else {
                         if (value.reason === 'Antecipação') {
                             data += `<td style="vertical-align: middle;">${value.reason} <span style='color: black;'> #${value.anticipation_id} </span></td>`;
@@ -101,8 +105,6 @@ window.updateTransfersTable = function(link = null) {
                         data += `<td style="vertical-align: middle; color:green;"> ${value.value}`;
                         if (value.reason === 'Antecipação') {
                             data += `<br><small style='color:#543333;'>(Taxa: ${value.tax})</small> </td>`;
-                        } else if (value.value_anticipable != '0,00') {
-                            data += `<br><small style='color:#543333;'>(${value.value_anticipable} antecipados em <b>#${value.anticipation_id}</b> )</small> </td>`;
                         } else {
                             data += `</td>`;
                         }

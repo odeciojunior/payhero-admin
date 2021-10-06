@@ -14,6 +14,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 
@@ -195,6 +196,7 @@ class AsaasService implements Statement
                                 'type_enum' => (new Transfer)->present()->getTypeEnum('in'),
                                 'value' => $transaction->value,
                                 'type' => 'in',
+                                'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
                             ]
                         );
 
@@ -218,11 +220,9 @@ class AsaasService implements Statement
         }
     }
 
-    public function getStatement()
+    public function getStatement($filters)
     {
-
+        return (new StatementService)->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
     }
-
-
 
 }

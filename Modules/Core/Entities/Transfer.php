@@ -15,6 +15,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property integer $transaction_id
  * @property int $user_id
  * @property int $company_id
+ * @property int $gateway_id
  * @property int $anticipation_id
  * @property string $value
  * @property string $type
@@ -56,6 +57,7 @@ class Transfer extends Model
         'transaction_id',
         'user_id',
         'company_id',
+        'gateway_id',
         'customer_id',
         'anticipation_id',
         'value',
@@ -132,6 +134,14 @@ class Transfer extends Model
     public function company()
     {
         return $this->belongsTo('Modules\Core\Entities\Company');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function gateway()
+    {
+        return $this->belongsTo('Modules\Core\Entities\Gateway');
     }
 
     /**

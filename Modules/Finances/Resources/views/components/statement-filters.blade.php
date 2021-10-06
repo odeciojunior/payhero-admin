@@ -46,8 +46,8 @@
                             <label for="type">Tipo</label>
                             <select class="form-control select-pad" id="type">
                                 <option value="">Todos</option>
-                                <option value="in">Entrada</option>
-                                <option value="out">Saída</option>
+                                <option value="1">Entrada</option>
+                                <option value="2">Saída</option>
                             </select>
                         </div>
                     </div>

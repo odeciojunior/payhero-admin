@@ -13,8 +13,8 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 
@@ -224,6 +224,7 @@ class CieloService implements Statement
                                 'type_enum' => (new Transfer)->present()->getTypeEnum('in'),
                                 'value' => $transaction->value,
                                 'type' => 'in',
+                                'gateway_id' => foxutils()->isProduction() ? Gateway::CIELO_PRODUCTION_ID : Gateway::CIELO_SANDBOX_ID
                             ]
                         );
 
@@ -247,8 +248,9 @@ class CieloService implements Statement
         }
     }
 
-    public function getStatement()
+    public function getStatement($filters)
     {
+        return (new StatementService)->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
 
     }
 }
