@@ -182,9 +182,32 @@ $(function () {
         defaultBreadCrumbs(modal, 'create');
         
         $('#search-product').val('');
+        modalID.find('.box-products').html('');
         modalID.find('.box-review').html('');
         
-        loadOnModalNewLayout(modal, '#load-products');
+        var htmlLoad = `
+            <div class="ph-item">
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+            </div>
+        `;
+        loadModalPlaceholderLoading(modal, '#load-products', htmlLoad);
         $.ajax({
             method: "POST",
             url: "/api/products/userproducts",
@@ -195,25 +218,39 @@ $(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnModalNewLayoutRemove(modal);
+                loadOnModalRemove(modal);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 appendProducts(response.data, modal);
-                
-                $(".product-photo").on("error", function () {
-                    $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
-                });
-
-                loadOnModalNewLayoutRemove(modal);
             }
         });
     }
 
-    function searchProducts(product) {
-        var modalID = '#modal_add_plan';
-        
-        loadOnModalNewLayout('#modal_add_plan', '#load-products');
+    function searchProducts(product, modalID) {
+        var htmlLoad = `
+            <div class="ph-item">
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+                <div class="ph-col-6">
+                    <div class="ph-picture div-product"></div>
+                </div>
+            </div>
+        `;
+        loadModalPlaceholderLoading('#modal_add_plan', '#load-products', htmlLoad);
         $.ajax({
             method: "POST",
             url: "/api/products/search",
@@ -232,12 +269,6 @@ $(function () {
             },
             success: function success(response) {
                 appendProducts(response.data, modalID);
-
-                $(".product-photo").on("error", function () {
-                    $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
-                });
-                
-                loadOnModalNewLayoutRemove('#modal_add_plan');
             }
         });
     }
@@ -279,13 +310,23 @@ $(function () {
         });
         data + '</div>';
 
-        $(modalID).find('#load-products').html(data);
-        
-        if (flag == 'edit' && products.length > 2) {
-            $(modalID).find('.products-edit').append('<a type="button" id="all-products" data-open="0">Ver todos os produtos <span class="fas fa-chevron-down"></span></a>');
-        } else {
-            $(modalID).find('.products-edit').find('#all-products').remove();
-        }
+        $(modalID).find('.ph-item').fadeOut('fast', function(){ this.remove(); });
+        $(modalID).find('.ph-item').promise().done(function() {
+            $(modalID).find('#load-products').addClass('scrollbar-outer').html(data).promise().done(function() {
+                $(".product-photo").on("error", function () {
+                    $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                });
+                
+                if (flag == 'edit' && products.length > 2) {
+                    $(modalID).find('.products-edit').append('<a type="button" id="all-products" data-open="0">Ver todos os produtos <span class="fas fa-chevron-down"></span></a>');
+                } else {
+                    $(modalID).find('.products-edit').find('#all-products').remove();
+                }
+
+                $(modalID).find('.modal-body').children().fadeIn('fast');
+                $(modalID).find('.modal-footer').fadeIn('fast');
+            });
+        });
     }
     
     function appendProductsDetails(modalID) {
@@ -293,7 +334,24 @@ $(function () {
             $(modalID).find('#load-products').html('');
             $(modalID).find('.box-review').html('');
             
-            loadOnModalNewLayout(modalID, '#load-products');
+            var htmlLoad = '';
+            htmlLoad += '<div class="ph-item">';
+                htmlLoad += '<div class="ph-col-12">';
+                    htmlLoad += '<div class="ph-picture big"></div>';
+                htmlLoad += '</div>';
+
+                for (var i = 1; i <= selected_products.length; i++) {
+                    htmlLoad += '<div class="ph-col-12">';
+                        htmlLoad += '<div class="ph-picture div-product-cost"></div>';
+                    htmlLoad += '</div>';
+                }
+
+                htmlLoad += '<div class="ph-col-6">';
+                    htmlLoad += '<div class="ph-picture div-product-check"></div>';
+                htmlLoad += '</div>';
+            htmlLoad += '</div>';
+
+            loadModalPlaceholderLoading(modalID, '#load-products', htmlLoad);
 
             var append = '';
             append += '<div class="box-details">';
@@ -351,20 +409,21 @@ $(function () {
             append += '</div>';
 
             $(modalID).find('.modal-body').addClass('show');
-            $(modalID).find('.box-products').html(append);
+            $(modalID).find('.ph-item').fadeOut('fast', function(){ this.remove(); });
+            $(modalID).find('.ph-item').promise().done(function() {
+                $(modalID).find('.box-products').html(append);
 
-            if (selected_products.length > 1) {
-                $(modalID).find('.box-review').html('<div class="form-check"><input class="form-check-input" type="checkbox" value="0" id="check-values"><label class="form-check-label" for="check-values">Todos os produtos têm o mesmo custo</label></div>');
-            } else {
-                $(modalID).find('.box-review').html('');
-            }
+                if (selected_products.length > 1) {
+                    $(modalID).find('.box-review').html('<div class="form-check"><input class="form-check-input" type="checkbox" value="0" id="check-values"><label class="form-check-label" for="check-values">Todos os produtos têm o mesmo custo</label></div>');
+                } else {
+                    $(modalID).find('.box-review').html('');
+                }
 
-            loadOnModalNewLayoutRemove('#modal_add_plan');
+                $('input[name="value"]').mask('#.##0,00', {reverse: true});
 
-            $('input[name="value"]').mask('#.##0,00', {reverse: true});
-
-            $(".product-photo").on("error", function () {
-                $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                $(".product-photo").on("error", function () {
+                    $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                });
             });
         } else {
             alertCustom('error', 'Selecione um produto para prosseguir');
@@ -400,7 +459,7 @@ $(function () {
         });
         
         $(modalID).find('#load-products').html('');        
-        loadOnModalNewLayout('#modal_add_plan', '#load-products');
+        loadModalPlaceholderLoading('#modal_add_plan', '#load-products', '');
 
         setTimeout(function() {
             $(modalID).find('.box-products').html(
@@ -456,7 +515,7 @@ $(function () {
 
             $('input[name="price"]').mask('#.##0,00', { reverse: true });
 
-            loadOnModalNewLayoutRemove('#modal_add_plan');
+            loadOnModalRemove('#modal_add_plan');
 
         }, 450);
 
@@ -604,11 +663,13 @@ $(function () {
 
     // Search products
     $('body').on('keyup', '#search-product', function() {
+        var modalID = $(this).parents('.modal').attr('id');
+        
         var search_product = $(this).val();
         if (search_product != '') {
-            searchProducts(search_product);
+            searchProducts(search_product, modalID);
         } else {
-            getProdutcts('#modal_add_plan');
+            getProdutcts(modalID);
         }
     });
 
@@ -746,7 +807,7 @@ $(function () {
             if (stage_plan == 0) {
                 showPlan(planID, modalID);
             } else if (stage_plan == 1) {
-                loadOnModalNewLayout('#modal_edit_plan');
+                loadModalPlaceholderLoading('#modal_edit_plan', '', '');
                 $.ajax({
                     method: "POST",
                     url: "/api/products/userproducts",
@@ -757,14 +818,14 @@ $(function () {
                         'Accept': 'application/json',
                     },
                     error: function error(response) {
-                        loadOnModalNewLayoutRemove('#modal_edit_plan');
+                        loadOnModalRemove('#modal_edit_plan');
                         errorAjaxResponse(response);
                     },
                     success: function success(response) {
                         appendProductsPlanEdit(response, planID);
                         appendProducts(response.data, modalID);
 
-                        loadOnModalNewLayoutRemove('#modal_edit_plan');
+                        loadOnModalRemove('#modal_edit_plan');
                     }
                 });
             } else if (stage_plan == 2) {
@@ -777,10 +838,13 @@ $(function () {
     $("#add-plan").on('click', function () {
         selected_products = [];
         
-        getProdutcts('#modal_add_plan');
+        var modalID = '#modal_add_plan';
+
+        $(modalID).modal('show');
+        getProdutcts(modalID);
         $('.btn-close-add-plan').on('click', function () {
             clearFields();
-            $('#modal_add_plan').removeAttr('data-backdrop');
+            $(modalID).removeAttr('data-backdrop');
         });
     });
 
@@ -815,7 +879,7 @@ $(function () {
         $(modalID).find('.modal-body').html('');
         $(modalID).find('.modal-footer').html('');
 
-        loadOnModalNewLayout(modalID);
+        loadModalPlaceholderLoading(modalID, '', '');
         $.ajax({
             method: "GET",
             url: '/api/project/' + projectId + '/plans/' + planID,
@@ -825,7 +889,7 @@ $(function () {
                 'Accept': 'application/json',
             },
             error: function (response) {
-                loadOnModalNewLayoutRemove(modalID);
+                loadOnModalRemove(modalID);
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -958,7 +1022,7 @@ $(function () {
 
                 products_plan = response.data.products;
 
-                loadOnModalNewLayoutRemove('#modal_edit_plan');
+                loadOnModalRemove('#modal_edit_plan');
             }
         });
     }
@@ -1076,7 +1140,7 @@ $(function () {
         var modalID = $('#modal_edit_plan');
         var planID = $(this).parents('.informations-edit').find('#btn-edit-informations-plan').attr('data-code');
         
-        loadOnModalNewLayout('#modal_edit_plan', '.informations-data');
+        loadModalPlaceholderLoading('#modal_edit_plan', '.informations-data', '');
         $.ajax({
             method: "PUT",
             url: '/api/plans/' + planID + '/informations',
@@ -1091,7 +1155,7 @@ $(function () {
                 'Accept': 'application/json',
             },
             error: function (response) {
-                loadOnModalNewLayoutRemove('#modal_edit_plan', '.informations-data');
+                loadOnModalRemove('#modal_edit_plan');
                 errorAjaxResponse(response);
             },
             success: function success(response) {
@@ -1114,7 +1178,7 @@ $(function () {
                 
                 index();
                 alertCustom('success', response.message)
-                loadOnModalNewLayoutRemove('#modal_edit_plan', '.informations-data');
+                loadOnModalRemove('#modal_edit_plan');
             }
         });
     });
@@ -1130,7 +1194,7 @@ $(function () {
 
         stage_plan = 1;
         
-        loadOnModalNewLayout('#modal_edit_plan');
+        loadModalPlaceholderLoading('#modal_edit_plan', '', '');
         $.ajax({
             method: "POST",
             url: "/api/products/userproducts",
@@ -1141,14 +1205,14 @@ $(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                loadOnModalNewLayoutRemove('#modal_edit_plan');
+                loadOnModalRemove('#modal_edit_plan');
                 errorAjaxResponse(response);
             },
             success: function success(response) {
                 appendProductsPlanEdit(response, planID);
                 appendProducts(response.data, modalID);
 
-                loadOnModalNewLayoutRemove('#modal_edit_plan');
+                loadOnModalRemove('#modal_edit_plan');
             }
         });
         

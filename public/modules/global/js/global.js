@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    $('.scrollbar-outer').scrollbar();
+    
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
 
@@ -212,33 +214,43 @@ function loadOnModal(whereToLoad) {
     $('#loadingOnScreen').append("<div class='blockScreen'></div>");
 }
 
+function loadModalPlaceholderLoading(modal, whereToLoad, htmlLoad) {
+    $(modal).find('.modal-body').removeClass('show');
+    
+    if (whereToLoad) {
+        $(modal).find(whereToLoad).children().fadeOut('fast');
+        $(modal).find(whereToLoad).append(htmlLoad);
+    } else {
+        $(modal).find('.modal-title').html('Carregando...');
+        $(modal).find('.modal-body').children().fadeOut('fast');
+        $(modal).find('.modal-footer').fadeOut('fast');
+        $(modal).find('.modal-body').append(htmlLoad);
+    }
+}
+
 function loadOnModalNewLayout(modal, whereToLoad) {
     $(modal).find('.modal-body').removeClass('show');
     
     if (whereToLoad) {
         $(modal).find(whereToLoad).children().fadeOut('fast');
         $(modal).find(whereToLoad).append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
-        $(modal).modal('show');
     } else {
         $(modal).find('.modal-title').html('Carregando...');
         $(modal).find('.modal-body').children().fadeOut('fast');
         $(modal).find('.modal-footer').fadeOut('fast');
         $(modal).find('.modal-body').append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
-        $(modal).modal('show');
     }
+    
+    $(modal).modal('show');
 }
 
-function loadOnModalNewLayoutRemove(modal, whereToLoad) {
+function loadOnModalRemove(modal) {
     $(modal).find('.modal-body').addClass('show');
-    $(modal).find('.loadingModal').remove();
+    $(modal).find('.ph-item').fadeOut(3000, function(){ this.remove(); });
     
-    if (whereToLoad) {
-        $(modal).find(whereToLoad).children().fadeIn('fast');
-    } else {
-        $(modal).find('.modal-body').children().fadeIn('fast');
-    }
+    $(modal).find('.modal-body').children().fadeIn(3000);
 
-    $(modal).find('.modal-footer').fadeIn('fast');
+    $(modal).find('.modal-footer').fadeIn(3000);
 }
 
 function loadOnTable(whereToLoad, tableReference) {

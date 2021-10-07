@@ -1054,7 +1054,7 @@ img.border-icon{
     overflow: hidden;
 }
 .modal-plans .modal-body {
-    max-height: 275px;
+    max-height: 500px;
     transition: max-height 450ms ease-out;
 }
 .modal-plans .modal-body.show {
@@ -1347,6 +1347,7 @@ input[type="checkbox"], input[type="radio"] {
     flex: 1 1 auto!important;
 }
 
+/* INPUT NUMBER */
 .input-number {
     display: flex;
     justify-content: space-between;
@@ -1417,4 +1418,41 @@ input[type="checkbox"], input[type="radio"] {
 }
 .btn-add, .btn-sub {
     cursor: pointer;
+}
+
+/* PLACEHOLDER LOADING */
+.ph-item {
+    border: none;
+    border-radius: 0;
+    margin: 0 -15px;
+    padding: 0;
+}
+.ph-item > * {
+    margin-bottom: 0;
+}
+.ph-item > .ph-col-6:nth-child(odd) {
+    padding-right: 8px;
+}
+.ph-item > .ph-col-6:nth-child(even) {
+    padding-left: 8px;
+}
+.ph-picture {
+    background-color: #EDEDED;
+    border-radius: 8px;
+    margin-bottom: 0;
+}
+.ph-picture.big {
+    height: 22px;
+    margin-bottom: 22px;
+}
+.ph-picture.div-product {
+    height: 84px;
+    margin-bottom: 12px;
+}
+.ph-picture.div-product-cost {
+    height: 46px;
+    margin-bottom: 18px;
+}
+.ph-picture.div-product-check {
+    height: 31px;
 }
