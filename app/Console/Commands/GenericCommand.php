@@ -12,6 +12,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-
+        $prefix = 'laravel';
+        dd(preg_replace("/{$prefix}:/", '', 'laravel:sua-mae'));
     }
 }
