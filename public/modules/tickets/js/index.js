@@ -360,11 +360,13 @@ $(() => {
                     }
                 }
             }
-        } else if (btn.hasClass('daterange')) {
-            btn.data('dateRangePicker')
-                .clear()
-            btn.removeClass('active')
-                .addClass('focused');
+
+            if (btn.hasClass('daterange')) {
+                btn.removeClass('active')
+                    .addClass('focused')
+                    .data('dateRangePicker')
+                    .clear()
+            }
         } else {
             btn.toggleClass('active');
             index();
