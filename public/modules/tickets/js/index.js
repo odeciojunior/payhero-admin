@@ -617,18 +617,12 @@ $(() => {
     $('.filter-container').slick({
         infinite: false,
         speed: 300,
-        slidesToShow: 10,
+        slidesToShow: 9,
+        slidesToScroll: 9,
         variableWidth: true,
         nextArrow: false,
         prevArrow: false,
         responsive: [
-            {
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 9,
-                    slidesToScroll: 9,
-                }
-            },
             {
                 breakpoint: 992,
                 settings: {
