@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\ProjectUpsellRule;
+use Modules\Core\Services\CacheService;
 use Modules\ProjectUpsellRule\Http\Requests\ProjectUpsellStoreRequest;
 use Modules\ProjectUpsellRule\Http\Requests\ProjectUpsellUpdateRequest;
 use Modules\ProjectUpsellRule\Transformers\ProjectsUpsellResource;
@@ -161,6 +162,9 @@ class ProjectUpsellRuleApiController extends Controller
                                                  'apply_on_plans' => $applyPlanEncoded,
                                                  'offer_on_plans' => $offerPlanEncoded,
                                              ]);
+
+            CacheService::forget(CacheService::UPSELL_DATA, $upsell->project_id);
+
             if ($upsellUpdated) {
                 return response()->json(['message' => 'Upsell atualizado com sucesso!'], 200);
             } else {
@@ -192,6 +196,8 @@ class ProjectUpsellRuleApiController extends Controller
 
             $projectUpsellModel = new ProjectUpsellRule();
             $upsell             = $projectUpsellModel->find(current(Hashids::decode($id)));
+
+            CacheService::forget(CacheService::UPSELL_DATA, $upsell->project_id);
 
             if (!empty($upsell)) {
                 $upsellDeleted = $upsell->delete();
