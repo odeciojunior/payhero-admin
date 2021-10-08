@@ -655,6 +655,10 @@ select.header-select:active {
         grid-template-columns: 1fr 0;
     }
 
+    .tickets-grid-left {
+        border-right: none;
+    }
+
     .btn-search {
         border-top-right-radius: 20px;
     }
