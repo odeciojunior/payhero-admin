@@ -954,8 +954,10 @@
             getValue: function () {
                 return $(this).val();
             },
-            setValue: function (s) {
-                this.innerHTML = s
+            setValue: function(s) {
+                if (!$(this).attr('readonly') && !$(this).is(':disabled') && s != $(this).val()) {
+                    $(this).val(s);
+                }
             },
             startDate: false,
             endDate: moment().endOf('day').toDate(),
