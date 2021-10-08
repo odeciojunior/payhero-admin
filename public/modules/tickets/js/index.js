@@ -613,6 +613,7 @@ $(() => {
         if ($(this).data('value')) {
             $(this).addClass('active')
         }
+        $(this).removeClass('focused');
         index();
     });
 
