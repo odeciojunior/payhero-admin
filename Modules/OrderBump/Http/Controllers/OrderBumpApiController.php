@@ -96,7 +96,7 @@ class OrderBumpApiController extends Controller
             $rule = $orderBumpModel->find($id);
             $rule->update($data);
 
-            CacheService::forget(CacheService::CHECKOUT_OB_RULES, $rule->project_id);
+            CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_RULES, $rule->project_id);
             CacheService::forget(CacheService::CHECKOUT_OB_RULE_PLANS, $rule->id);
 
             return response()->json(['message' => 'Regra order bump atualizada com succeso!']);
@@ -116,7 +116,7 @@ class OrderBumpApiController extends Controller
             $projectId = $rule->project_id;
             $rule->delete();
 
-            CacheService::forget(CacheService::CHECKOUT_OB_RULES, $projectId);
+            CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_RULES, $projectId);
             CacheService::forget(CacheService::CHECKOUT_OB_RULE_PLANS, $id);
             CacheService::forgetContainsUnique(CacheService::SHIPPING_OB_RULES, $id);
 
