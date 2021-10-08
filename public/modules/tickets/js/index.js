@@ -59,9 +59,6 @@ const attachments2send = [];
 
 $(() => {
 
-    $("#project-empty").hide();
-    $("#project-not-empty").show();
-
     loadingOnScreen();
 
     getProjects();
@@ -86,9 +83,11 @@ $(() => {
                     }
                     index();
                     getResume();
-                    $("#project-empty").hide();
+                    $('.page-header').show();
                     $("#project-not-empty").show();
+                    $("#project-empty").hide();
                 } else {
+                    $('.page-header').hide();
                     $("#project-not-empty").hide();
                     $("#project-empty").show();
                 }
@@ -116,13 +115,7 @@ $(() => {
         let name = $('#filter-name').data('value') || '';
         let answered = $("#filter-answer").data('value') || '';
 
-        let period = $('#period-30.active').length
-            ? 30
-            : $('#period-15.active').length
-                ? 15
-                : $('#period-7.active').length
-                    ? 7
-                    : '';
+        let period = $('#filter-date').data('value') || '';
 
         let status = $('#filter-status').val();
 
@@ -146,7 +139,7 @@ $(() => {
     function index(page = 1) {
 
         loadOnAny('.tickets-container', false, ticketLoader);
-        $('.tickets-grid').addClass('empty');
+        clearViews();
 
         $.ajax({
             method: "GET",
@@ -163,20 +156,13 @@ $(() => {
                 loadOnAny('.tickets-container', true);
                 if (resp.data.length) {
                     renderTickets(resp.data);
-                    $('.ticket-item:first').click();
-                    $('.tickets-grid').removeClass('empty');
-
-                    $('.current-page-text').show()
-                    $('.current-page-text .per-page').text(resp.data.length)
-                    $('.current-page-text .total').text(resp.meta.total)
+                    if (!isMobile()) {
+                        $('.ticket-item:first').click();
+                    }
+                    $('.current-page-text .per-page').text(resp.data.length);
+                    $('.current-page-text .total').text(resp.meta.total);
                 } else {
-                    const empty = `<div class="tickets-empty">
-                                     <img src="/modules/global/img/suporte.svg">
-                                     <div>Nenhum chamado encontrado</div>
-                                   </div>`;
-                    $('.tickets-container').html(empty);
-
-                    $('.current-page-text').hide()
+                    setEmptyViews();
                 }
                 paginate('#tickets-pagination', resp.meta);
             }
@@ -198,10 +184,13 @@ $(() => {
                      </div>`;
         }
         $('.tickets-container').html(html);
+        $('.pagination-container').show();
     }
 
     function show(id) {
-        loadOnAny('.tickets-grid-right', false, messageLoader);
+        if(!isMobile()) {
+            loadOnAny('.tickets-grid-right', false, messageLoader);
+        }
         $.ajax({
             method: "GET",
             url: '/api/tickets/' + id,
@@ -216,6 +205,7 @@ $(() => {
             success: resp => {
                 loadOnAny('.tickets-grid-right', true);
                 showTicket(resp.data);
+                showMessagesMobile();
             }
         });
     }
@@ -251,7 +241,7 @@ $(() => {
         $('.ticket-start-date').text(ticket.created_at);
         $('.ticket-project').text(ticket.project_name);
 
-        let html = ``;
+        let html = '';
         for (let message of ticket.messages) {
             html += renderMessage(message)
 
@@ -260,6 +250,36 @@ $(() => {
             .scrollTop(function () {
                 return this.scrollHeight;
             });
+        $('.ticket-header *').show();
+        $('.write-container').show();
+    }
+
+    function clearViews() {
+        $('.tickets-container').html('');
+        $('.messages-container').html('');
+        $('.ticket-header *').hide();
+        $('.write-container').hide();
+        $('.pagination-container').hide();
+    }
+
+    function setEmptyViews() {
+        const ticketEmpty = `<div class="tickets-empty">
+                               <img src="/modules/global/img/tickets.svg">
+                               <h3>Tudo tranquilo por aqui!</h3>
+                               <div>Por enquanto, não há nenhum atendimento a ser resolvido. Volte mais tarde!</div>
+                             </div>`;
+        $('.tickets-container').html(ticketEmpty);
+
+        const messageEmpty = `<div class="messages-empty">
+                                <img src="/modules/global/img/chat.svg">
+                                <h3>Esse é o seu espaço de chat.</h3>
+                                <div>
+                                  Para usar o chat e responder seus clientes, basta selecionar algum dos tickets
+                                  na aba aqui no lado direito. Nesse espaço, você poderá tirar dúvidas, responder
+                                  reclamações e sugestões de seus compradores.
+                                </div>
+                              </div>`;
+        $('.messages-container').html(messageEmpty);
     }
 
     function getResume() {
@@ -338,10 +358,15 @@ $(() => {
                     }
                 }
             }
+        } else if (btn.hasClass('daterange')) {
+            btn.data('dateRangePicker')
+                .clear()
         } else {
             btn.toggleClass('active');
             index();
         }
+
+        showTicketsMobile();
     });
 
     $('.filter-badge-input button').on('click', function () {
@@ -396,16 +421,25 @@ $(() => {
 
         $('.ticket-item').removeClass('active');
         $(this).addClass('active');
-        if (window.innerWidth < 768) {
-            $('.tickets-grid-left').css('grid-area', '1 / 2')
-            $('.tickets-grid-right').css('grid-area', '1 / 1')
-        }
     });
 
     $('.ticket-back').on('click', function () {
-        $('.tickets-grid-left').css('grid-area', '1 / 1')
-        $('.tickets-grid-right').css('grid-area', '1 / 2')
+       showTicketsMobile();
     });
+
+    function showMessagesMobile() {
+        if (isMobile()) {
+            $('.tickets-grid-left').css('grid-area', '1 / 2')
+            $('.tickets-grid-right').css('grid-area', '1 / 1')
+        }
+    }
+
+    function showTicketsMobile() {
+        if (isMobile()) {
+            $('.tickets-grid-left').css('grid-area', '1 / 1')
+            $('.tickets-grid-right').css('grid-area', '1 / 2')
+        }
+    }
 
     // Attachments
     $('#btn-file').on('click', function () {
@@ -549,33 +583,23 @@ $(() => {
         index(page);
     });
 
+    function isMobile() {
+        return window.innerWidth < 768;
+    }
+
     // third party
 
-    $('#input-date').daterangepicker({
-        startDate: moment().subtract(30, "days"),
-        endDate: moment(),
-        maxDate: moment().endOf("day"),
-        alwaysShowCalendar: true,
-        autoUpdateInput: true,
-        locale: {
-            locale: "pt-br",
-            format: "DD/MM/YYYY",
-            applyLabel: "Aplicar",
-            cancelLabel: "Limpar",
-            fromLabel: "De",
-            toLabel: "Até",
-            customRangeLabel: "Customizado",
-            weekLabel: "W",
-            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
-            monthNames: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-        },
-        ranges: {
-            'Hoje': [moment(), moment()],
-            '7 dias': [moment().subtract(6, "days"), moment()],
-            '15 dias': [moment().subtract(29, "days"), moment()],
-            'Último mês': [moment().startOf("month"), moment().endOf("month")],
-            'Desde o início': [moment("2018-01-01 00:00:00"), moment()],
-        },
+    $('#filter-date').dateRangePicker({
+        setValue: function (s) {
+            if (s) {
+                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                $(this).html(s).data('value', normalize);
+            } else {
+                $(this).html('Selecionar').data('value', '');
+            }
+        }
+    }).on('datepicker-close', function () {
+        index();
     });
 
     const picker = new EmojiButton();

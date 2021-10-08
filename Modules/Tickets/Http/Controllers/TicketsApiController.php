@@ -27,9 +27,7 @@ class TicketsApiController extends Controller
     {
         try {
             $data = (object)$request->all();
-
             $userId = auth()->user()->account_owner_id;
-            $userId = 2100;
 
             $ticketsQuery = Ticket::select([
                 'tickets.id',
@@ -75,7 +73,8 @@ class TicketsApiController extends Controller
             }
 
             if ($data->period) {
-                $ticketsQuery->where('tickets.created_at', '>=', now()->subDays($data->period));
+                $dateRange = FoxUtils::validateDateRange($data->period);
+                $ticketsQuery->whereBetween('tickets.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
             }
 
             if ($data->status) {
@@ -217,7 +216,7 @@ class TicketsApiController extends Controller
             $ticketsModel = new Ticket();
             $data = $request->all();
             $userId = auth()->user()->account_owner_id;
-            $userId = 2100;
+
             $ticketPresenter = $ticketsModel->present();
             $ticket = $ticketsModel->selectRaw('count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('open') . ' then 1 end) as openCount,
                                                      count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('mediation') . ' then 1 end) as mediationCount,

@@ -100,6 +100,17 @@ select.header-select:active {
     overflow: hidden;
 }
 
+.filter-container::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(to left, rgba(243, 243, 243, 1), rgba(243, 243, 243, 0.8), transparent);
+    z-index: 1;
+}
+
 .filter-icon {
     display: flex;
     align-items: center;
@@ -121,11 +132,13 @@ select.header-select:active {
 }
 
 .filter-badge {
+    position: relative;
     margin: 0 4px;
     padding: 12px 20px;
     border-radius: 60px;
     white-space: nowrap;
     font-weight: bold;
+    line-height: 1;
     background-color: #ffffff;
     color: #454545;
     user-select: none
@@ -136,8 +149,22 @@ select.header-select:active {
     color: #ffffff;
 }
 
+.filter-badge.daterange {
+    padding: 11px 48px 11px 19px;
+    background-image: url('/modules/global/img/calendar.svg');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 15px);
+    border: 1px solid #2E85EC;
+    color: #2E85EC;
+}
+
+.filter-badge img {
+    display: inline-block !important;
+    height: 22px;
+}
+
 .filter-badge-input {
-    position:absolute;
+    position: absolute;
     display: none;
     min-width: 250px;
     max-width: 250px;
@@ -189,21 +216,9 @@ select.header-select:active {
 }
 
 .tickets-grid-right {
-    position:relative;
+    position: relative;
     display: grid;
     grid-template-rows: 50px 380px 90px;
-}
-
-/*.tickets-grid.empty {*/
-/*    grid-template-columns: 1fr 0;*/
-/*}*/
-
-/*.tickets-grid.empty .tickets-grid-left {*/
-/*    border-right: none;*/
-/*}*/
-
-.tickets-grid.empty .tickets-grid-right * {
-   display:none;
 }
 
 /* Search */
@@ -341,12 +356,33 @@ select.header-select:active {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 322px;
     height: 100%;
+    margin: 0 auto;
+    text-align: center;
 }
+
 .tickets-empty img {
-    width: 124px;
-    margin-bottom: 12px;
+    width: 190px;
+    margin-bottom: 32px;
 }
+
+.messages-empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    max-width: 535px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.messages-empty img {
+    width: 173px;
+    margin-bottom: 27px;
+}
+
 
 /* Pagination */
 
@@ -359,9 +395,12 @@ select.header-select:active {
 }
 
 .current-page-text {
-    margin-right: auto;
     font-size: 12px;
     color: #8D8D8D;
+}
+
+.pagination {
+    margin-left: auto;
 }
 
 .pagination button {
@@ -386,7 +425,7 @@ select.header-select:active {
 }
 
 .ticket-back {
-    display: none;
+    display: none !important;
     justify-content: center;
     align-items: center;
     width: 49px;
@@ -395,8 +434,11 @@ select.header-select:active {
 }
 
 .ticket-customer {
-    display: none;
+    display: none !important;
     font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .ticket-status {
@@ -522,8 +564,8 @@ select.header-select:active {
 /* Write */
 
 .write-container {
-    position:absolute;
-    bottom:0;
+    position: absolute;
+    bottom: 0;
     width: 100%;
     display: flex;
     padding: 0;
@@ -619,7 +661,7 @@ select.header-select:active {
 
     .ticket-back,
     .ticket-customer {
-        display: flex;
+        display: flex !important;
     }
 
     .ticket-status {
@@ -628,7 +670,7 @@ select.header-select:active {
     }
 
     .ticket-category {
-        display: none;
+        display: none !important;
     }
 
     .messages-container {
@@ -640,11 +682,7 @@ select.header-select:active {
     }
 
     .current-page-text {
-        display: none;
-    }
-
-    .current-page-text {
-        display: none;
+        display: none !important;
     }
 
     .pagination {
@@ -653,8 +691,14 @@ select.header-select:active {
     }
 
     .pagination button {
-        padding: 15px;
+        padding: 10px 15px;;
         text-align: center;
         font-size: 14px;
+    }
+}
+
+@media (max-width: 418px) {
+    .card .detail {
+        display: none;
     }
 }
