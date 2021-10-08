@@ -1,3 +1,12 @@
+window.loadStatementTable = function() {
+    if(window.gatewayCode == 'w7YL9jZD6gp4qmv') {
+        updateAccountStatementData();
+    }
+    else {
+        updateTransfersTable();
+    }
+}
+
 window.updateTransfersTable = function(link = null) {
     $("#table-transfers-body").html('');
     // let balanceLoader = {
@@ -110,7 +119,7 @@ window.updateTransfersTable = function(link = null) {
                     }
                     data += '</tr>';
                 });
-
+        
                 $("#table-transfers-body").html(data);
 
                 paginationTransfersTable(response);
@@ -170,17 +179,182 @@ window.updateTransfersTable = function(link = null) {
     }
 }
 
+window.updateAccountStatementData = function() {
+    // loadOnAnyEllipsis(
+    //     "#nav-statement #available-in-period-statement",
+    //     // false,
+    //     // balanceLoader
+    // );
+
+    // $("#table-statement-body").html("");
+    // $("#pagination-statement").html("");
+    // loadOnTable("#table-statement-body", "#statementTable");
+
+    // let link =
+    //     "/api/transfers/account-statement-data?dateRange=" +
+    //     $("#date_range_statement").val() +
+    //     "&company=" +
+    //     $("#statement_company_select").val() +
+    //     "&sale=" + encodeURIComponent(
+    //     $("#statement_sale").val()) +
+    //     "&status=" +
+    //     $("#statement_status_select").val() +
+    //     "&statement_data_type=" +
+    //     $("#statement_data_type_select").val() +
+    //     "&payment_method=" +
+    //     $("#payment_method").val() +
+    //     "&withdrawal_id=" +
+    //     $("#withdrawal_id").val();
+
+    // $(".numbers").hide();
+
+    // $.ajax({
+    //     method: "GET",
+    //     url: link,
+    //     dataType: "json",
+    //     headers: {
+    //         Authorization: $('meta[name="access-token"]').attr("content"),
+    //         Accept: "application/json",
+    //     },
+    //     error: (response) => {
+    //         loadOnAnyEllipsis(
+    //             "#nav-statement #available-in-period-statement",
+    //             true
+    //         );
+
+    //         let error = "Erro ao gerar o extrato";
+    //         $("#export-excel").css("opacity", 0);
+    //         $("#table-statement-body").html(
+    //             "<tr style='border-radius: 16px;'><td style='padding:  10px !important' style='' colspan='11' class='text-center'>" +
+    //                 error +
+    //                 "</td></tr>"
+    //         );
+    //         errorAjaxResponse(error);
+    //     },
+    //     success: (response) => {
+    //         updateClassHTML();
+
+    //         let items = response.items;
+    //         $("#statement-money #available-in-period-statement").html(
+    //             "R$ 0,00"
+    //         );
+
+    //         if (isEmpty(items)) {
+    //             loadOnAnyEllipsis(
+    //                 "#nav-statement #available-in-period-statement",
+    //                 true
+    //             );
+    //             $("#export-excel").css("opacity", 0);
+    //             $("#table-statement-body").html(
+    //                 "<tr class='text-center'><td colspan='11' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+    //                     $("#table-statement-body").attr("img-empty") +
+    //                     "'>Nenhum dado encontrado</td></tr>"
+    //             );
+    //             return false;
+    //         }
+
+    //         items.forEach(function (item) {
+    //             let dataTable = `<tr class="s-table table-finance-schedule"><td style="vertical-align: middle; grid-area: sale;">`;
+
+    //             if (item.order && item.order.hashId) {
+    //                 dataTable += `Transação`;
+
+    //                 if (item.isInvite) {
+    //                     dataTable += `
+    //                         <a>
+    //                             <span class="bold">#${item.order.hashId}</span>
+    //                         </a>
+    //                     `;
+    //                 } else {
+    //                     dataTable += `
+    //                          <a class="detalhes_venda disabled pointer-md" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
+    //                             <span class="bold">#${item.order.hashId}</span>
+    //                         </a>
+    //                     `;
+    //                 }
+    //                 dataTable += `<br>
+    //                                 <small>${item.details.description}</small>`;
+    //             } else {
+    //                 dataTable += `${item.details.description}`;
+    //             }
+
+    //             dataTable += `
+    //                  </td>
+    //                 <td style="vertical-align: middle; grid-area: date">
+    //                     ${item.date}
+    //                 </td>
+    //                  <td style="grid-area: status" class="text-center">
+    //                     <span data-toggle="tooltip" data-placement="left" title="${
+    //                         item.details.status
+    //                     }" class="badge badge-sm badge-${
+    //                 statusExtract[item.details.type]
+    //             } p-2">${item.details.status}</span>
+    //                  </td>
+    //                 <td class="text-xs-right text-md-left bold" style="vertical-align: middle;grid-area: value;};">
+    //                 ${item.amount.toLocaleString("pt-BR", {
+    //                     style: "currency",
+    //                     currency: "BRL",
+    //                 })}
+    //                 </td>
+    //                 </tr>`;
+
+    //             $(function () {
+    //                 $('[data-toggle="tooltip"]').tooltip();
+    //             });
+
+    //             updateClassHTML(dataTable);
+    //         });
+
+    //         let totalInPeriod = response.totalInPeriod ?? "0,00";
+
+    //         let isNegativeStatement = false;
+    //         if (totalInPeriod < 1) {
+    //             isNegativeStatement = true;
+    //         }
+
+    //         let aux = totalInPeriod.toLocaleString("pt-BR", {
+    //             style: "currency",
+    //             currency: "BRL",
+    //         });
+
+    //         $("#statement-money #available-in-period-statement").html(`
+    //             <span${isNegativeStatement ? ' style="color:red;"' : ""}>
+    //                <small class="font-size-12">R$ </small> ${totalInPeriod.toLocaleString(
+    //                    "pt-BR"
+    //                )}
+    //             </span>`);
+    //         paginationStatement();
+
+    //         $("#export-excel").css("opacity", 1);
+    //         $("#pagination-statement span").addClass("jp-hidden");
+    //         $("#pagination-statement a")
+    //             .removeClass("active")
+    //             .addClass("btn nav-btn");
+    //         $("#pagination-statement a.jp-current").addClass("active");
+    //         $("#pagination-statement a").on("click", function () {
+    //             $("#pagination-statement a").removeClass("active");
+    //             $(this).addClass("active");
+    //         });
+
+    //         $("#pagination-statement").on("click", function () {
+    //             $("#pagination-statement span").remove();
+    //         });
+
+    //         loadOnAnyEllipsis(
+    //             "#nav-statement #statement-money  #available-in-period-statement",
+    //             true
+    //         );
+    //     },
+    // });
+}
+
 $(window).on("load", function() {
 
     //atualiza a table de extrato
     $(document).on("click", "#bt_filtro", function () {
         $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]").prop("selected", true);
-        updateTransfersTable();
-        if ($(this).children("option:selected").attr('country') != 'brazil') {
-            $("#transferred_value").show();
-        } else {
-            $("#transferred_value").hide();
-        }
+
+        $("#transferred_value").hide();
     });
 
     function getFilters(urlParams = false) {
@@ -280,7 +454,7 @@ $(window).on("load", function() {
         }
     });
 
-    $(".btn-light-1").click(function () {
+    $(".btn-light-1").on('click', function () {
         var collapse = $("#icon-filtro");
         var text = $("#text-filtro");
 
@@ -295,6 +469,22 @@ $(window).on("load", function() {
             collapse.css("transform", "rotate(0deg)");
             text.text("Filtros avançados").fadeIn();
         }
+
+        var collapse = $("#icon-custom-filtro");
+        var text = $("#text-custom-filtro");
+
+        text.fadeOut(10);
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
+            collapse.css("transform", "rotate(180deg)");
+            text.text("Minimizar filtros").fadeIn();
+        } else {
+            collapse.css("transform", "rotate(0deg)");
+            text.text("Filtros avançados").fadeIn();
+        }
+
     });
     //abaixo função para apagar numero zerado no botão de valor na aba extrato
     document.getElementById("transaction-value").addEventListener("focusout", inputOutOfFocus);

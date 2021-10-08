@@ -7,6 +7,10 @@ $(window).on("load", function(){
     }
     else if(window.gatewayCode == 'w7YL9jZD6gp4qmv') {
         $(".page-title").text('Finanças - Getnet');
+        $("#transfersTable").hide();
+        $("#transfers-table-custom").show();
+        $("#default-statement-filters").hide();
+        $("#custom-statement-filters").show();
     }
     else if(window.gatewayCode == 'oXlqv13043xbj4y') {
         $(".page-title").text('Finanças - Gerencianet');
@@ -78,11 +82,12 @@ $(window).on("load", function(){
                     let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
                     $("#transfers_company_select").append(data);
                     $("#extract_company_select").append(data);
+                    $("#statement_company_select").append(data);
                 });
 
                 checkBlockedWithdrawal();
                 updateBalances();
-                updateTransfersTable();
+                loadStatementTable();
                 $("#nav-statement").css('display', '');
                 $("#nav-statement").css('display', '');
                 $("#nav-statement-tab").on('click', function () {
