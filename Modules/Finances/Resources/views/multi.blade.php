@@ -73,12 +73,46 @@
         .badge-orange{
             background-color: #FF7A00
         }
-        @media only screen and (min-width: 768px){
+        .owl-carousel .owl-nav .owl-next{
+            right: -35px !important;
+        }
+        .owl-carousel .owl-nav .owl-prev{
+            left: -35px !important;
+        }
+        /* @media only screen and (min-width: 768px){
             .item > .card {
                 margin-right: 10px;
                 /* max-width: calc(33.3% - 5px); */
             }
+        } */
+        .owl-carousel .nav-btn{
+            height: 47px;
+            position: absolute;
+            width: 26px;
+            cursor: pointer;
+            top: 100px !important;
         }
+
+        .owl-carousel .owl-prev.disabled,
+        .owl-carousel .owl-next.disabled{
+        pointer-events: none;
+        opacity: 0.2;
+        }
+
+        .owl-carousel .prev-slide{
+        background: url(nav-icon.png) no-repeat scroll 0 0;
+        left: -33px;
+        }
+        .owl-carousel .next-slide{
+        background: url(nav-icon.png) no-repeat scroll -24px 0px;
+        right: -33px;
+        }
+        .owl-carousel .prev-slide:hover{
+        background-position: 0px -53px;
+        }
+        .owl-carousel .next-slide:hover{
+        background-position: -24px -53px;
+        }  
     </style>
 @endpush
 
@@ -109,7 +143,7 @@
             <div class="row" id="container-gateways">
                 <div class="col-sm-8">
                     <div class="row" style="padding-top:30px;">
-                        <div class="owl-carousel">
+                        <div class="owl-carousel owl-carousel-shortcode owl-loaded owl-drag">
                             <div class="item" style="margin-right: 5px">
                                 <p style="color: #9E9E9E;font-size: 12px;line-height: 15px;">Última transação na quarta-feira</p>
                                 <div class="card">
@@ -234,7 +268,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="row" style="display: flex;justify-content: flex-end">
-                        <div class="col-sm-12" style="padding-top: 60px;">
+                        <div class="col-sm-10" style="padding-top: 60px;">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="col-12 p-0 mb-35">
@@ -437,7 +471,11 @@
     {{-- <script src="{{ asset('modules/finances/js/statement.js?v='. uniqid()) }}"></script> --}}
     <script>
         $(document).ready(function(){
-            $('.owl-carousel').owlCarousel();
+            $('.owl-carousel').owlCarousel({
+                margin : 10,
+                navText : ["<i class='fa fa-chevron-left text-info'></i>","<i class='fa fa-chevron-right text-info'></i>"],
+                nav    : true,
+            });
             $(document).on('click','#container-return',function(){
                 if($('#container-config').is(':visible')){
                     $('#container-config').hide();
