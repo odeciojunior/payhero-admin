@@ -4,7 +4,9 @@ namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Sale;
 use Exception;
+use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\IntegrationLog;
+use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UnicodropIntegration;
 
 class UnicodropService
@@ -21,10 +23,13 @@ class UnicodropService
     function boletoPaid(Sale $sale)
     {
         try{
+            $comission = $sale->transactions->where('type', Transaction::TYPE_PRODUCER)->first()->value;
+
             $data = [
                 'transaction_id' => hashids_encode($sale->id, 'sale_id'),
                 'payment_method' => 'billet',
                 'status' => 'paid',
+                'comission' => foxutils()->floatFormat($comission),
                 'name' => $sale->customer->name,
                 'phone' => str_replace('+55', '', $sale->customer->telephone),
                 'email' => $sale->customer->present()->getEmail(),
@@ -36,10 +41,14 @@ class UnicodropService
                 'address_state' => $sale->delivery->state,
                 'address_country' => 'BR',
                 'document' => $sale->customer->document,
-                'total_price' => $sale->total_paid_value,
+                'shipping_value' => $sale->shipment_value,
+                'total_price' => $sale->sub_total,
                 'billet_url' => $sale->boleto_link,
                 'products' => $this->getPlansList($sale),
+                'created_at' => $sale->created_at->format('Y-m-d H:i:s'),
+                'paid_at' => $sale->end_date
             ];
+
             $this->sendPost($data);
         }
         catch(Exception $e) {
@@ -50,10 +59,16 @@ class UnicodropService
     function pixExpired(Sale $sale)
     {
         try{
+            $domain = Domain::where('project_id', $sale->project->id)->where('status', Domain::STATUS_APPROVED)->first();
+            $pixLink = 'https://checkout.' . ( $domain ? $domain->name : 'cloudfox.net' ) . '/order/' . hashids_encode($sale->id, 'sale_id');
+            $comission = $sale->transactions->where('type', Transaction::TYPE_PRODUCER)->first()->value;
+
             $data = [
                 'transaction_id' => hashids_encode($sale->id, 'sale_id'),
                 'payment_method' => 'pix',
                 'status' => 'expired',
+                'comission' => foxutils()->floatFormat($comission),
+                'pix_url' => $pixLink,
                 'name' => $sale->customer->name,
                 'phone' => str_replace('+55', '', $sale->customer->telephone),
                 'email' => $sale->customer->present()->getEmail(),
@@ -65,10 +80,13 @@ class UnicodropService
                 'address_state' => $sale->delivery->state,
                 'address_country' => 'BR',
                 'document' => $sale->customer->document,
-                'total_price' => $sale->total_paid_value,
+                'shipping_value' => $sale->shipment_value,
+                'total_price' => $sale->sub_total,
                 'billet_url' => $sale->boleto_link,
                 'products' => $this->getPlansList($sale),
+                'created_at' => $sale->created_at->format('d/m/Y-H:i:s'),
             ];
+
             $this->sendPost($data);
         }
         catch(Exception $e) {
@@ -108,15 +126,16 @@ class UnicodropService
     public function getPlansList(Sale $sale)
     {
         $plans = [];
-
         foreach ($sale->plansSales as $planSale) {
             $plans[] = [
+                "id" => hashids_encode($planSale->plan()->first()->id),
                 "price" => $planSale->plan()->first()->price,
                 "quantity" => $planSale->amount,
                 "product_name" => $planSale->plan()->first()->name . ' - ' . $planSale->plan()->first()->description,
+                "photo" => $planSale->plan->productsPlans()->first()->product->photo
             ];
         }
-
         return $plans;
     }
+
 }
