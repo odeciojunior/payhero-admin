@@ -361,10 +361,10 @@ $(() => {
                 }
             }
         } else if (btn.hasClass('daterange')) {
-            btn.removeClass('active')
-                .addClass('focused')
-                .data('dateRangePicker')
+            btn.data('dateRangePicker')
                 .clear()
+            btn.removeClass('active')
+                .addClass('focused');
         } else {
             btn.toggleClass('active');
             index();
