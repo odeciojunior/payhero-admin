@@ -188,7 +188,7 @@ $(() => {
     }
 
     function show(id) {
-        if(!isMobile()) {
+        if (!isMobile()) {
             loadOnAny('.tickets-grid-right', false, messageLoader);
         }
         $.ajax({
@@ -332,13 +332,15 @@ $(() => {
     $('.filter-badge').on('click', function () {
         let btn = $(this);
         if (btn.hasClass('editable')) {
+            btn.removeClass('active');
             if (btn.data('value')) {
-                btn.data('value', '').removeClass('active');
+                btn.data('value', '');
                 if (btn.data('original-text')) {
                     btn.text(btn.data('original-text'));
                 }
                 index();
             } else {
+                btn.addClass('focused');
                 let target = $(btn.data('target'));
                 if (target.length) {
                     $('.filter-badge-input').not(target).removeClass('show');
@@ -359,7 +361,9 @@ $(() => {
                 }
             }
         } else if (btn.hasClass('daterange')) {
-            btn.data('dateRangePicker')
+            btn.removeClass('active')
+                .addClass('focused')
+                .data('dateRangePicker')
                 .clear()
         } else {
             btn.toggleClass('active');
@@ -389,9 +393,16 @@ $(() => {
     });
 
     $(document).on('click', function (e) {
-        let container = $(".filter-badge.editable, .filter-badge-input");
-        if (!container.is(e.target) && container.has(e.target).length === 0) {
-            $('.filter-badge-input').removeClass('show');
+        let target = $(e.target);
+
+        if (!target.is('.filter-badge-input')) {
+            if (!target.is('.filter-badge.editable')
+                && !target.parents('.filter-badge-input').length) {
+                $('.filter-badge-input').removeClass('show');
+            }
+            if (!target.is('.filter-badge-input input') && !target.is('.filter-badge-input select')) {
+                $('.filter-badge').not(target).removeClass('focused');
+            }
         }
     });
 
@@ -424,7 +435,7 @@ $(() => {
     });
 
     $('.ticket-back').on('click', function () {
-       showTicketsMobile();
+        showTicketsMobile();
     });
 
     function showMessagesMobile() {
@@ -599,6 +610,9 @@ $(() => {
             }
         }
     }).on('datepicker-close', function () {
+        if ($(this).data('value')) {
+            $(this).addClass('active')
+        }
         index();
     });
 
@@ -617,12 +631,18 @@ $(() => {
     $('.filter-container').slick({
         infinite: false,
         speed: 300,
-        slidesToShow: 9,
-        slidesToScroll: 9,
+        slidesToShow: 10,
         variableWidth: true,
         nextArrow: false,
         prevArrow: false,
         responsive: [
+            {
+                breakpoint: 1584,
+                settings: {
+                    slidesToShow: 9,
+                    slidesToScroll: 1,
+                }
+            },
             {
                 breakpoint: 992,
                 settings: {

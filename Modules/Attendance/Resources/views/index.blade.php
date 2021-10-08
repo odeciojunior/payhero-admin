@@ -77,7 +77,7 @@
                             <span class="vertical-line"></span>
                             <span id="filter-answer" class="filter-badge editable" data-target="#input-answer">Respostas</span>
                             <span class="vertical-line"></span>
-                            <span id="filter-date" class="filter-badge daterange">Selecionar</span>
+                            <span id="filter-date" class="filter-badge editable daterange">Selecionar</span>
                         </div>
                     </div>
                 </div>

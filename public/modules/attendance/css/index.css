@@ -35,10 +35,6 @@ select.header-select {
     appearance: none;
 }
 
-select.header-select:active {
-    text-align: left;
-}
-
 .card {
     padding: 16px 20px;
     font-size: 16px;
@@ -141,31 +137,55 @@ select.header-select:active {
     line-height: 1;
     background-color: #ffffff;
     color: #454545;
-    user-select: none
+    transition: background-color .3s ease-in-out, color .3s ease-in-out, padding-right .1s;
+    user-select: none;
+}
+
+.filter-badge.active::after {
+    content: '\00d7';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 12px;
+    font-size: 24px;
+    visibility: hidden;
+    transition: visibility 1s ease-in-out;
 }
 
 .filter-badge.active {
+    padding-right: 32px;
     background: #2E85EC;
     color: #ffffff;
 }
 
-.filter-badge.daterange {
-    padding: 11px 48px 11px 19px;
-    background-image: url('/modules/global/img/calendar.svg');
-    background-repeat: no-repeat;
-    background-position: calc(100% - 15px);
+.filter-badge.active:not(.daterange)::after {
+    visibility: visible;
+}
+
+.filter-badge.focused {
+    padding: 11px 19px;
     border: 1px solid #2E85EC;
     color: #2E85EC;
 }
 
-.filter-badge img {
-    display: inline-block !important;
-    height: 22px;
+.filter-badge.daterange {
+    padding-right: 48px !important;
+    background-image: url('/modules/global/img/calendar.svg');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 15px);
+}
+
+.filter-badge.active.daterange {
+    background-image: url('/modules/global/img/calendar-white.svg');
+}
+
+.filter-badge.focused.daterange {
+    background-image: url('/modules/global/img/calendar-blue.svg');
 }
 
 .filter-badge-input {
     position: absolute;
-    display: none;
+    display: flex;
     min-width: 250px;
     max-width: 250px;
     margin-top: 5px;
@@ -174,10 +194,14 @@ select.header-select:active {
     border-radius: 8px;
     box-shadow: 0 8px 10px #00000012;
     background-color: #FFFFFF;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
 }
 
 .filter-badge-input.show {
-    display: flex;
+    visibility: visible;
+    opacity: 1;
 }
 
 .filter-badge-input input,
