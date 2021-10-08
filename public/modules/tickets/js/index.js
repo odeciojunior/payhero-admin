@@ -157,7 +157,9 @@ $(() => {
                 if (resp.data.length) {
                     renderTickets(resp.data);
                     if (!isMobile()) {
-                        $('.ticket-item:first').click();
+                        show(resp.data[0].id);
+                        $('.ticket-item').removeClass('active');
+                        $('.ticket-item:first').addClass('active');
                     }
                     $('.current-page-text .per-page').text(resp.data.length);
                     $('.current-page-text .total').text(resp.meta.total);
@@ -431,7 +433,6 @@ $(() => {
     $(document).on('click', '.ticket-item', function () {
         let id = $(this).data('id');
         show(id);
-
         $('.ticket-item').removeClass('active');
         $(this).addClass('active');
     });
