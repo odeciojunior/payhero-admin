@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\UnicodropIntegration;
+use Modules\Core\Services\UnicodropService;
 
 class GenericCommand extends Command
 {
@@ -12,7 +15,11 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $prefix = 'laravel';
-        dd(preg_replace("/{$prefix}:/", '', 'laravel:sua-mae'));
+        $unicodropIntegration = UnicodropIntegration::find(3);
+
+        $unicoDropService = new UnicodropService($unicodropIntegration);
+
+        $unicoDropService->boletoPaid(Sale::find(1219416));
+        $unicoDropService->pixExpired(Sale::find(1222164));
     }
 }
