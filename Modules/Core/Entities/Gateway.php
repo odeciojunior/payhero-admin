@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\GatewayPresenter;
 use App\Traits\LogsActivity;
+use LogicException;
+use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\Gateways\AsaasService;
+use Modules\Core\Services\Gateways\CieloService;
+use Modules\Core\Services\Gateways\GerencianetService;
+use Modules\Core\Services\Gateways\GetnetService;
 
 /**
  * Class Gateway
@@ -89,6 +95,25 @@ class Gateway extends Model
      * @var bool
      */
     protected static $submitEmptyLogs = false;
+
+    public function getService() : Statement
+    {
+        if(str_contains($this->name, 'getnet')) {
+            return new GetnetService();
+        }
+        elseif(str_contains($this->name, 'gerencianet')) {
+            return new GerencianetService();
+        }
+        elseif(str_contains($this->name, 'asaas')) {
+            return new AsaasService();
+        }
+        elseif(str_contains($this->name, 'cielo')) {
+            return new CieloService();
+        }
+        else {
+            throw new LogicException("Gateway {$this->name} não encontrado");
+        }
+    }
 
     /**
      * @return HasMany

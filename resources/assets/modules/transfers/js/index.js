@@ -1,5 +1,6 @@
 $(function () {
 
+    alert('aquiii');
     updateTransfersTable();
 
     $("#extract_company_select").on("change", function () {

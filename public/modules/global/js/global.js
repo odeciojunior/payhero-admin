@@ -714,3 +714,15 @@ function verifyAccountFrozen() {
     }
     return false;
 }
+
+function onlyNumbers(string) {
+    return string.replace(/\D/g,'');
+}
+
+function removeMoneyCurrency(string) {
+    if(string.charAt(0) == '-') {
+        return '-' + string.substring(4);
+    }
+    return string.substring(3);
+}
+

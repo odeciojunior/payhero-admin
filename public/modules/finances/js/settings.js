@@ -60,11 +60,11 @@ $(document).ready(function () {
                 //Company withdrawal settings
                 getSettings($("#settings_company_select").val())
                 loadingOnScreenRemove();
-                if(verifyAccountFrozen()) {
-                    $('#nav-settings-tab').hide();
-                } else {
-                    $('#nav-settings-tab').show();
-                }
+                // if(verifyAccountFrozen()) {
+                //     $('#nav-settings-tab').hide();
+                // } else {
+                //     $('#nav-settings-tab').show();
+                // }
             }
         });
     }
@@ -340,9 +340,9 @@ $(document).ready(function () {
         onWithdrawalByPeriodChange()
     }
 
-    $('#nav-settings-tab').on('click', function () {
-        setTimeout(function () {
-            if (settingsData.rule == SETTINGS_RULE_AMOUNT) withdrawalAmount.focus()
-        }, 1500)
-    })
+    // $('#nav-settings-tab').on('click', function () {
+    //     setTimeout(function () {
+    //         if (settingsData.rule == SETTINGS_RULE_AMOUNT) withdrawalAmount.focus()
+    //     }, 1500)
+    // })
 });

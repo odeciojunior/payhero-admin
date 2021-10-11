@@ -321,7 +321,7 @@ strong span {
     margin-left: 15px;
 }
 
-#nav-home-tab {
+#nav-transfers-tab {
     margin-left: 0px !important;
 }
 
@@ -637,4 +637,12 @@ select, .select-pad {
         margin-right: 10px;
         max-width: calc(33.3% - 10px);
     }
+}
+.popover {
+    left: -50px !important;
+}
+
+.disableFields {
+    background-color: #f3f7f9;
+    opacity: 1;
 }

@@ -194,7 +194,7 @@ $(document).ready(function () {
 
                                     $('.btn-return').click(function () {
                                         $('#modal_body').modal('hide');
-                                        updateWithdrawalsTable()
+                                        loadWithdrawalsTable()
                                         updateBalances();
 
                                     });

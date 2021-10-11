@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Hashids\Hashids;
 use Illuminate\Console\Command;
 
 class GenericCommand extends Command
@@ -12,7 +13,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $prefix = 'laravel';
-        dd(preg_replace("/{$prefix}:/", '', 'laravel:sua-mae'));
+       dd(hashids_encode(8));
     }
 }

@@ -244,10 +244,6 @@
                                             <td class="table-title" scope="col">Liberação</td>
                                             <td class="table-title text-center" scope="col">Status</td>
                                             <td class="table-title" scope="col">Valor</td>
-                                            <td class="table-title" style="display: none" id="col_transferred_value"
-                                                scope="col">Valor
-                                                transferido
-                                            </td>
                                             <td scope="col" class="d-none d-md-block table-title"> &nbsp;</td>
                                         </tr>
                                         </thead>
