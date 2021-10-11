@@ -32,6 +32,7 @@
     <ul id="pagination-transfers" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
         {{--loaded by js...--}}
     </ul>
-    <div id="pagination-statement" class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right d-none" style="margin-top: 10px; position:relative;">
+    <div id="pagination-statement" class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right" style="margin-top: 10px; position:relative;display: none">
+        {{--loaded by js...--}}
     </div>
 </div>

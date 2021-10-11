@@ -17,6 +17,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Modules\Transfers\Services\GetNetStatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -326,8 +327,24 @@ class GetnetService implements Statement
         }
     }
 
-    public function getStatement()
+    public function getStatement($filters)
     {
+        if (!empty(request('sale'))) {
+            request()->merge(['sale' => str_replace('#', '', request('sale'))]);
+        }
 
+        if (!empty($filters['sale'])) {
+            $filters['sale'] = str_replace('#', '', $filters['sale']);
+        }
+
+        $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($filters);
+        $filters = $filtersAndStatement['filters'];
+        $result = json_decode($filtersAndStatement['statement']);
+
+        if (isset($result->errors)) {
+            return response()->json($result->errors, 400);
+        }
+        $data = (new GetNetStatementService())->performWebStatement($result, $filters, 1000);
+        return response()->json($data);
     }
 }

@@ -156,7 +156,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="collapse" id="bt_collapse">
+                <div class="collapse" id="bt-collapse-custom">
                     <div class="row">
                         <div class="col-md-3">
                             <div class="input-holder form-group">
@@ -190,9 +190,9 @@
                     <div class="col-12">
                         <div class="row" style="height: 0">
                             <div class="col-6 col-xl-3 offset-xl-6 pr-0 mt-20">
-                                <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center" data-toggle="collapse" data-target="#bt_collapse" aria-expanded="false" aria-controls="bt_collapse">
+                                <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center" data-toggle="collapse" data-target="#bt-collapse-custom" aria-expanded="false" aria-controls="bt_collapse">
                                     <img id="icon-custom-filtro" src="{{ asset('/modules/global/img/svg/filter-2-line.svg') }}"/>
-                                    <span id="text-custom-filtro">Filtros avançados</span>
+                                    <span id="text-custom-filtro" style="margin-left: 10px">Filtros avançados</span>
                                 </div>
                             </div>
 
