@@ -1,0 +1,60 @@
+.theme-radio[type="radio"] {
+  position: absolute;
+  left: -9999px;
+}
+
+.theme-radio[type="radio"] + label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 90px;
+  height: 110px;
+  padding: 5px;
+  transition: background 0.5s;
+  font-size: 11px;
+  color: #37474F;
+  margin: 0
+}
+
+.theme-primary-color {
+  width: 65px;
+  height: 40px;
+  border-radius: 10px 10px 0 0;
+}
+
+.theme-secondary-color {
+  width: 65px;
+  height: 25px;
+  border-radius: 0 0 10px 10px;
+}
+
+.theme-label {
+  height: 15px;
+}
+
+.theme-radio[type="radio"]:checked + label {
+  background: #FFF;
+  border: 2px solid #2E85EC;
+  border-radius: 10px;
+}
+
+
+
+/* ------------------- Custom Color Picker --------------------- */
+
+input[type="color"] {
+	-webkit-appearance: none;
+	border: none;
+	width: 100px;
+	height: 30px;
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+	border: none;
+  border-radius: 5px;
+}

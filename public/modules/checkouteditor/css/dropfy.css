@@ -1,0 +1,135 @@
+/* Dropify - Upload de Imagem */
+
+#upload_logo > .dropify-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 150px !important;
+  width: 150px !important;
+  border: 2px dashed #2E85EC;
+  border-radius: 8px;
+  font-weight: bold;
+  background-color: #F8FDFF;
+}
+
+#upload-banner > .dropify-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 120px !important;
+  width: 100% !important;
+  border: 2px dashed #2E85EC;
+  border-radius: 8px;
+  font-weight: bold;
+  background-color: #F8FDFF;
+}
+
+.dropify-wrapper .dropify-message {
+  transform: none;
+  top: auto;
+}
+
+.dropify-errors-container ul {
+  padding-left: 0;
+  font-size: 10px;
+  color: red;
+  padding-top: 10px;
+}
+
+.dropify-errors-container li {
+  list-style-type: none;
+}
+
+.dropify-infos-message::before,
+.dropify-filename span.dropify-filename-inner {
+  display: none;
+}
+
+.dropify-wrapper .dropify-message span.file-icon, p {
+  color: #3B8CED;
+}
+
+.dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
+  white-space: normal;
+}
+
+.dropify-filename span.file-icon::before {
+  content: '\e800';
+}
+
+.dropify-filename span.file-icon {
+  font-family: dropify;
+  display: inline;
+  font-size: 4em;
+}
+
+.dropify-wrapper .dropify-clear {
+color: #0D2C54;
+border: 2px solid #3B8CED;
+}
+
+.dropify-wrapper .dropify-preview .dropify-infos {
+  background: #F8FDFFE6;
+}
+
+.dropify-wrapper:hover .dropify-preview .dropify-infos {
+opacity: .9;
+}
+
+.dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
+line-height: 14px;
+color: #3B8CED;
+text-align: center;
+}
+
+.dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-infos-message {
+  margin-top: 0;
+  padding-top: 8px;
+
+}
+
+.dropify-wrapper .dropify-clear {
+  content: '';
+  color: #3B8CED;
+  border: 2px solid #3B8CED;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+}
+
+/* Upload Digital Product Input */
+
+.input-file-trigger::before {
+  content: "\e800";
+  font-family: dropify;
+  font-size: 25px;
+  margin-right: 10px;
+}
+
+#file_return,
+.input-file-trigger {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.input-file-trigger {
+  color: #3B8CED;
+  cursor: pointer;
+  background-color: #F8FDFF;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.input-file {
+  display: none;
+}
+
+.div-expiration-time > .input-group {
+  width: 150px;
+}
+
+.o-arrow-right-1:before {
+  transform: rotate(180deg);
+}

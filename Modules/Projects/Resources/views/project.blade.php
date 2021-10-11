@@ -128,6 +128,12 @@
                                    aria-controls="tab-domains" role="tab">Domínios <span id="count-cupons" class=" d-none tab-counter"> 0 </span>
                                 </a>
                             </li>
+                            <li class="nav-item tab-checkout" role="presentation">
+                                <span class="category-tabs">&nbsp;</span>
+                                <a id="tab-checkout" class="nav-link" data-toggle="tab" href="#tab_checkout-panel"
+                                   aria-controls="tab-checkout" role="tab">Checkout<span id="count-checkout" class=" d-none tab-counter"> 0 </span>
+                                </a>
+                            </li>
                             <li class="nav-item tab_plans" role="presentation">
                                 <span class="category-tabs">&nbsp;</span>
                                 <a id="tab_plans" class="nav-link" data-toggle="tab" href="#tab_plans-panel"
@@ -197,6 +203,12 @@
                         <div id="tab_domains" class="tab-pane active" role="tabpanel">
                             <div class="card card-body">
                                 @include('domains::index')
+                            </div>
+                        </div>
+                        <!-- Painel de Editor de Checkout -->
+                        <div class="tab-pane" id="tab_checkout-panel" role="tabpanel">
+                            <div>
+                                @include('checkouteditor::index')
                             </div>
                         </div>
                         <!-- Painel de Pixels -->
