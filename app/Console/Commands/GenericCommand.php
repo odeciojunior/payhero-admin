@@ -32,12 +32,11 @@ class GenericCommand extends Command
     {
         $chargebacks = GetnetChargeback::with('sale')
                                     ->whereHas('sale', function($q) {
-                                        $q->where('status', Sale::STATUS_APPROVED);
+                                        $q->where('id', 1167532);
                                     })
                                     ->get();
 
         foreach($chargebacks as $chargeback) {
-            $this->fixChargeback($chargeback->sale);
             $this->createDebit($chargeback->sale);
         }
 
