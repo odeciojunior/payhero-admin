@@ -57,6 +57,8 @@ class SalesController extends Controller
                 })->first();
 
             $company = (object)$transaction->company->toArray();
+            $company->subseller_getnet_id = $company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID);
+
             $result = $getnetService->setStatementSubSellerId($company->subseller_getnet_id)
                 ->setStatementSaleHashId($hashid)
                 ->getStatement();

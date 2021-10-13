@@ -68,9 +68,9 @@ class TransactionsService
                     } else {
 
                         if (FoxUtils::isProduction()) {
-                            $subsellerId = $transaction->company->subseller_getnet_id;
+                            $subsellerId = $transaction->company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID);
                         } else {
-                            $subsellerId = $transaction->company->subseller_getnet_homolog_id;
+                            $subsellerId = $transaction->company->getGatewaySubsellerId(Gateway::GETNET_SANDBOX_ID);
                         }
 
                         $getnetService->setStatementSubSellerId($subsellerId)

@@ -20,7 +20,7 @@ class CreateTableGatewaysCompaniesCredentials extends Migration
             $table->unsignedBigInteger('gateway_id');
             $table->foreign('gateway_id')->references('id')->on('gateways');
             $table->tinyInteger('gateway_status')->nullable()->default(null);
-            $table->string('gateway_subseller_id',50)->nullable()->default(null);
+            $table->string('gateway_subseller_id',100)->nullable()->default(null);
             $table->string('gateway_api_key',100)->nullable()->default(null);
             $table->timestamps();
         });
