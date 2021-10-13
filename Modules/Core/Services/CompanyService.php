@@ -24,7 +24,7 @@ class CompanyService
     public const STATEMENT_AUTOMATIC_LIQUIDATION_TYPE = 1;
     public const STATEMENT_MANUAL_LIQUIDATION_TYPE = 2;
 
-    public static function getSubsellerId(Company $company): string
+    public static function getSubsellerId(Company $company)
     {
         if (FoxUtils::isProduction()) {
             return $company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID);
@@ -217,7 +217,7 @@ class CompanyService
                     $company->address_document_status == Company::DOCUMENT_STATUS_REFUSED &&
                     $company->contract_document_status == Company::DOCUMENT_STATUS_REFUSED){
                     return $company;
-                }            
+                }
             } elseif ($company->bank_document_status == Company::DOCUMENT_STATUS_REFUSED) {
                 return $company;
             }
@@ -287,12 +287,12 @@ class CompanyService
     public function createCompanyPjGetnet(Company $company)
     {
         try {
-            if (empty($company->user->cellphone) || empty($company->user->email)) 
+            if (empty($company->user->cellphone) || empty($company->user->email))
             {
                 $this->createRowCredential($company->id);
                 return;
             }
-            
+
             $result = (new GetnetBackOfficeService())->createPjCompany($company);
             $this->updateToReviewStatusGetnet($company, $result);
         } catch (Exception $e) {
@@ -303,7 +303,7 @@ class CompanyService
     private function updateToReviewStatusGetnet($company, $result)
     {
         $credential = GatewaysCompaniesCredential::where('company_id',$company->id)->first();
-        
+
         if (empty($result) || empty(json_decode($result)->subseller_id)) {
             $credential->update(
                 [
@@ -324,8 +324,8 @@ class CompanyService
     {
         try {
             if ((new UserService())->verifyFieldsEmpty($company->user))
-            {                
-                $this->createRowCredential($company->id);                
+            {
+                $this->createRowCredential($company->id);
                 return;
             }
 
@@ -340,7 +340,7 @@ class CompanyService
     // {
     //     $getnetService = new GetnetBackOfficeService();
     //     $user = $company->user;
-    //     if ($company->company_type == Company::PHYSICAL_PERSON && (!(new UserService())->verifyFieldsEmpty($user))) 
+    //     if ($company->company_type == Company::PHYSICAL_PERSON && (!(new UserService())->verifyFieldsEmpty($user)))
     //     {
     //         $getnetService->updatePfCompany($company);
     //     } elseif (!empty($user->cellphone) && !empty($user->email)) {
@@ -356,7 +356,7 @@ class CompanyService
         return GatewaysCompaniesCredential::create([
             'company_id'=>$companyId,
             'gateway_id'=>Gateway::GETNET_PRODUCTION_ID,
-            'gateway_status'=>GatewaysCompaniesCredential::GATEWAY_STATUS_PENDING                        
+            'gateway_status'=>GatewaysCompaniesCredential::GATEWAY_STATUS_PENDING
         ]);
     }
 
@@ -406,7 +406,7 @@ class CompanyService
         if (!empty($liquidationType)) {
             if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
                 return $blockedBalance->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->sum('value');
-            } 
+            }
 
             if ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
                 if (!$company->user->show_old_finances){
@@ -414,8 +414,8 @@ class CompanyService
                 }
                 return $blockedBalance->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->sum('value');
             }
-            
-            throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");            
+
+            throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");
         }
 
         if (!$company->user->show_old_finances){
@@ -445,20 +445,20 @@ class CompanyService
                     return 0;
                 }
                 return  $blockedBalance->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->sum('value');
-            }            
-            throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");            
+            }
+            throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");
         }
         if (!$company->user->show_old_finances){
             return 0;
         }
-        return $blockedBalance->sum('value');        
+        return $blockedBalance->sum('value');
     }
 
     public function updateCaptureTransactionEnabled(Company $company): void
     {
-        try {   
-            $credential = $company->gatewayCredential(Gateway::GETNET_PRODUCTION_ID);         
-            if ($credential->gateway_status == GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED) 
+        try {
+            $credential = $company->gatewayCredential(Gateway::GETNET_PRODUCTION_ID);
+            if ($credential->gateway_status == GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED)
             {
                 $credential->update(['capture_transaction_enabled' => true]);
 
@@ -467,8 +467,8 @@ class CompanyService
                 }
                 return ;
             }
-            
-            $credential->update(['capture_transaction_enabled' => false]);        
+
+            $credential->update(['capture_transaction_enabled' => false]);
 
         } catch (Exception $e) {
             report($e);
@@ -478,7 +478,7 @@ class CompanyService
     public function isDocumentValidated(int $companyId): bool
     {
         $company = Company::find($companyId);
-        if (!empty($company)) {      
+        if (!empty($company)) {
             if($company->company_type == Company::JURIDICAL_PERSON){
                 return $company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED &&
                     $company->address_document_status == Company::DOCUMENT_STATUS_APPROVED &&
@@ -555,7 +555,7 @@ class CompanyService
                 return 0;
             }
             return $company->balance;
-        
+
         }
         $transactionsValue = $company->transactions()
         ->whereIn(
@@ -568,9 +568,9 @@ class CompanyService
 
         if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
             return $transactionsValue;
-        } 
+        }
 
-        if (empty($liquidationType)) {            
+        if (empty($liquidationType)) {
             if ($company->user->show_old_finances){
                 return $transactionsValue + $company->balance;
             }

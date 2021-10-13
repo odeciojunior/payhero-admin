@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Modules\Core\Services\CompanyService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
@@ -24,6 +25,9 @@ class GenericCommand extends Command
 
     public function updateCaptureTransactionEnabled(): void
     {
-        return;
+        $companyService = new CompanyService();
+        foreach (Company::all() as $company) {
+            $this->line("company id = " . $company->id . " getSubsellerId = " . $companyService->getSubsellerId( $company) . " getGatewaySubsellerId = " . $company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID) );
+        }
     }
 }

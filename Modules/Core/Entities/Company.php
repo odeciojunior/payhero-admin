@@ -266,5 +266,5 @@ class Company extends Model
     public function getGatewaySubsellerId($gateway_id){
         return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_subseller_id??null;
     }
-    
+
 }
