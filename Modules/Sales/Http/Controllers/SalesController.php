@@ -8,6 +8,7 @@ use PDF;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
@@ -57,7 +58,7 @@ class SalesController extends Controller
                 })->first();
 
             $company = (object)$transaction->company->toArray();
-            $company->subseller_getnet_id = $company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID);
+            $company->subseller_getnet_id = CompanyService::getSubsellerId($company);
 
             $result = $getnetService->setStatementSubSellerId($company->subseller_getnet_id)
                 ->setStatementSaleHashId($hashid)
