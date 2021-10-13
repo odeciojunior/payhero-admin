@@ -34,6 +34,9 @@ class GetAllStatementChargebacks extends Command
             $startDateFilter = $start_day->addDay()->format('Y-m-d') . ' 00:00:00';
             $endDateFilter = $start_day->addDays(20)->format('Y-m-d') . ' 23:59:59';
 
+            $startDateFilter = '2021-08-20 00:00:00';
+            $endDateFilter = '2021-09-15 23:59:59';
+
             $filters = [
                 'schedule_date_init' => $startDateFilter,
                 'schedule_date_end' => $endDateFilter,
@@ -66,6 +69,9 @@ class GetAllStatementChargebacks extends Command
                             }
 
                             if (!in_array($gateway_order_id, $sale_gateway_order_ids_news)) {
+
+                                $this->line($chargeback->adjustment_reason);
+
                                 $sale_gateway_order_ids_news[] = $gateway_order_id;
 
                                 $userProject = UserProject::with('company')
