@@ -34,8 +34,8 @@ class GetAllStatementChargebacks extends Command
             $startDateFilter = $start_day->addDay()->format('Y-m-d') . ' 00:00:00';
             $endDateFilter = $start_day->addDays(20)->format('Y-m-d') . ' 23:59:59';
 
-            $startDateFilter = '2021-08-20 00:00:00';
-            $endDateFilter = '2021-09-15 23:59:59';
+            $startDateFilter = '2021-09-13 00:00:00';
+            $endDateFilter = '2021-10-10 23:59:59';
 
             $filters = [
                 'schedule_date_init' => $startDateFilter,
