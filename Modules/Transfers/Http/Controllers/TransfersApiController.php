@@ -126,7 +126,7 @@ class TransfersApiController
                 $dataRequest['sale'] = str_replace('#', '', $dataRequest['sale']);
             }
 
-            $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($dataRequest);
+            $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement(hashids_decode($dataRequest['company_id']));
             $filters = $filtersAndStatement['filters'];
             $result = json_decode($filtersAndStatement['statement']);
 

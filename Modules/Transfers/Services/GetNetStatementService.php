@@ -679,14 +679,14 @@ class GetNetStatementService
         ];
     }
 
-    public function getFiltersAndStatement()
+    public function getFiltersAndStatement($companyId)
     {
-        $credential = GatewaysCompaniesCredential::where('company_id',current(Hashids::decode('6q510ZOjpX3E9D4')))
-        ->where('gateway_id',FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID:Gateway::GETNET_SANDBOX_ID)
-        ->where('gateway_status',GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED)        
-        ->with('company',function($qr){            
-            $qr->where('user_id', auth()->user()->account_owner_id);
-        })->first();
+        $credential = GatewaysCompaniesCredential::where('company_id',$companyId)
+                                ->where('gateway_id',FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID)
+                                ->where('gateway_status',GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED)        
+                                ->with('company',function($qr){            
+                                    $qr->where('user_id', auth()->user()->account_owner_id);
+                                })->first();
 
         if (empty($credential)) {
             return response()->json([]);
