@@ -3,6 +3,8 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\NewChargebackEvent;
@@ -10,8 +12,10 @@ use Modules\Core\Services\AdjustmentRequest;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 
-class CreateChargebackDebitListener
+class CreateChargebackDebitListener implements ShouldQueue
 {
+    use Queueable;
+
     public function __construct()
     {
         //
