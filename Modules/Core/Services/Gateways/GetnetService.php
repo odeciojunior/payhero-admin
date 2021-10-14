@@ -347,4 +347,28 @@ class GetnetService implements Statement
         $data = (new GetNetStatementService())->performWebStatement($result, $filters, 1000);
         return response()->json($data);
     }
+
+    public function getResume()
+    {
+        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)->orderBy('id', 'desc')->first();
+
+        if(empty($lastTransaction)) {
+            return [];
+        }
+
+        $availableBalance = $this->getAvailableBalance();
+        $pendingBalance = $this->getPendingBalance();
+        $blockedBalance = $this->getBlockedBalance();
+        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $lastTransactionDate = $lastTransaction->created_at;
+
+        return [
+            'name' => 'Getnet',
+            'available_balance' => $availableBalance,
+            'pending_balance' => $pendingBalance,
+            'blocked_balance' => $blockedBalance,
+            'total_balance' => $totalBalance,
+            'last_transaction' => $lastTransactionDate
+        ];
+    }
 }

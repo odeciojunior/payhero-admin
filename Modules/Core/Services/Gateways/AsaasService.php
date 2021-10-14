@@ -222,4 +222,24 @@ class AsaasService implements Statement
         return (new StatementService)->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
     }
 
+    public function getResume()
+    {
+        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)->orderBy('id', 'desc')->first();
+
+        $availableBalance = $this->getAvailableBalance();
+        $pendingBalance = $this->getPendingBalance();
+        $blockedBalance = $this->getBlockedBalance();
+        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at : '';
+
+        return [
+            'name' => 'Asaas',
+            'available_balance' => $availableBalance,
+            'pending_balance' => $pendingBalance,
+            'blocked_balance' => $blockedBalance,
+            'total_balance' => $totalBalance,
+            'last_transaction' => $lastTransactionDate
+        ];
+    }
+
 }
