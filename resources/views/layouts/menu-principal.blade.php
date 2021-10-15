@@ -109,7 +109,7 @@
         
         @hasanyrole('account_owner|admin')
             <li class="site-menu-item has-sub disabled">
-                <a class="disabled" href="{{ route('showcase') }}">
+                <a class="disabled" href="/dashboard">
                     <span class="bg-menu">
                         <img src="{{ asset('modules/global/img/svg/vitrine.svg') }}" alt="Vitrine">
                     </span>

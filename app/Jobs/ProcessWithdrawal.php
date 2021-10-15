@@ -45,8 +45,7 @@ class ProcessWithdrawal implements ShouldQueue
             $getnetService = new GetnetService();
             $getnetService->setCompany($this->withdrawal->company);
 
-            $responseCreateWithdrawal = $getnetService->processWithdrawal($this->withdrawal, $this->isFirstUserWithdrawal);
-
+            $getnetService->processWithdrawal($this->withdrawal, $this->isFirstUserWithdrawal);
 
         } catch (Exception $e) {
             report($e);

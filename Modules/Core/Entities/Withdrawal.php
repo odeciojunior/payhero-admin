@@ -117,6 +117,11 @@ class Withdrawal extends Model
         return $this->belongsTo('Modules\Core\Entities\Company');
     }
 
+    public function gateway(): BelongsTo
+    {
+        return $this->belongsTo('Modules\Core\Entities\Gateway');
+    }
+
     public function pendingDebts(): BelongsToMany
     {
         return $this->belongsToMany(PendingDebt::class, 'pending_debt_withdrawals');

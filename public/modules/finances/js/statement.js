@@ -1,30 +1,25 @@
+window.loadStatementTable = function() {
+    if(window.gatewayCode == 'w7YL9jZD6gp4qmv') {
+        updateAccountStatementData();
+    }
+    else {
+        updateTransfersTable();
+    }
+}
+
 window.updateTransfersTable = function(link = null) {
     $("#table-transfers-body").html('');
-    let balanceLoader = {
-        styles: {
-            container: {
-                minHeight: '31px',
-                justifyContent: 'flex-start',
-            },
-            loader: {
-                width: '20px',
-                height: '20px',
-                borderWidth: '4px'
-            },
-        },
-        insertBefore: '.grad-border',
-    };
-    loadOnAny('#available-in-period', false, balanceLoader);
 
     loadOnTable('#table-transfers-body', '#transfersTable');
     if (link == null) {
-        link = '/api/old_transfers';
+        link = '/api/transfers';
     } else {
-        link = '/api/old_transfers' + link;
+        link = '/api/transfers' + link;
     }
 
     let data = {
-        company: $("#extract_company_select option:selected").val(),
+        company_id: $("#extract_company_select option:selected").val(),
+        gateway_id: window.gatewayCode,
         date_type: $("#date_type").val(),
         date_range: $("#date_range").val(),
         reason: $('#reason').val(),
@@ -52,7 +47,7 @@ window.updateTransfersTable = function(link = null) {
             let balance_in_period = response.meta.balance_in_period;
             let isNegative = parseFloat(balance_in_period.replace('.', '').replace(',', '.')) < 0;
             let availableInPeriod = $('#available-in-period');
-            availableInPeriod.html(`<span${isNegative ? ' style="color:red;"' : ''}><span class="currency">R$ </span>${balance_in_period}</span>`);
+            availableInPeriod.html(`<span ${isNegative ? ' style="color:red;"' : ''}><span class="currency">R$ </span>${balance_in_period}</span>`);
             if (isNegative) {
                 availableInPeriod.html(`<span style="color:red;"><span class="currency">R$ </span>${balance_in_period}</span>`)
                     .parent()
@@ -83,12 +78,12 @@ window.updateTransfersTable = function(link = null) {
                     data += '<tr >';
                     if (value.is_owner && value.sale_id) {
                         data += `<td style="vertical-align: middle;">
-                                    ${value.reason}
-                                    <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
-                                        <span style="color:black;">#${value.sale_id}</span>
-                                    </a><br>
-                                    <small>(Data da venda: ${value.sale_date})</small>
-                                </td>`;
+                            ${value.reason}
+                            <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
+                                <span style="color:black;">#${value.sale_id}</span>
+                            </a><br>
+                            <small>(Data da venda: ${value.sale_date})</small>
+                        </td>`;
                     } else {
                         if (value.reason === 'Antecipação') {
                             data += `<td style="vertical-align: middle;">${value.reason} <span style='color: black;'> #${value.anticipation_id} </span></td>`;
@@ -101,8 +96,6 @@ window.updateTransfersTable = function(link = null) {
                         data += `<td style="vertical-align: middle; color:green;"> ${value.value}`;
                         if (value.reason === 'Antecipação') {
                             data += `<br><small style='color:#543333;'>(Taxa: ${value.tax})</small> </td>`;
-                        } else if (value.value_anticipable != '0,00') {
-                            data += `<br><small style='color:#543333;'>(${value.value_anticipable} antecipados em <b>#${value.anticipation_id}</b> )</small> </td>`;
                         } else {
                             data += `</td>`;
                         }
@@ -111,7 +104,7 @@ window.updateTransfersTable = function(link = null) {
                     }
                     data += '</tr>';
                 });
-
+        
                 $("#table-transfers-body").html(data);
 
                 paginationTransfersTable(response);
@@ -171,17 +164,205 @@ window.updateTransfersTable = function(link = null) {
     }
 }
 
+window.updateAccountStatementData = function() {
+    loadOnAnyEllipsis("#nav-statement #available-in-period-statement");
+
+    $("#table-statement-body").html("");
+    $("#pagination-statement").html("");
+    loadOnTable("#table-statement-body", "#statementTable");
+
+    let link =
+        "/api/transfers?" +
+        "company_id=" + $("#statement_company_select").val() +
+        "&gateway_id=" + window.gatewayCode + 
+        "&dateRange=" + $("#date_range_statement").val() + 
+        "&sale=" + encodeURIComponent($("#statement_sale").val()) +
+        "&status=" + $("#statement_status_select").val() +
+        "&statement_data_type=" + $("#statement_data_type_select").val() +
+        "&payment_method=" + $("#payment_method").val() +
+        "&withdrawal_id=" + $("#withdrawal_id").val();
+
+    $(".numbers").hide();
+
+    $.ajax({
+        method: "GET",
+        url: link,
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: (response) => {
+            loadOnAnyEllipsis(
+                "#nav-statement #available-in-period-statement",
+                true
+            );
+
+            let error = "Erro ao gerar o extrato";
+            $("#export-excel").css("opacity", 0);
+            $("#table-statement-body").html(
+                "<tr style='border-radius: 16px;'><td style='padding:  10px !important' style='' colspan='11' class='text-center'>" +
+                    error +
+                    "</td></tr>"
+            );
+            errorAjaxResponse(error);
+        },
+        success: (response) => {
+            updateClassHTML();
+
+            let items = response.items;
+
+            if (isEmpty(items)) {
+                loadOnAnyEllipsis(
+                    "#nav-statement #available-in-period-statement",
+                    true
+                );
+                $("#export-excel").css("opacity", 0);
+                $("#table-statement-body").html(
+                    "<tr class='text-center'><td colspan='11' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
+                        $("#table-statement-body").attr("img-empty") +
+                        "'>Nenhum dado encontrado</td></tr>"
+                );
+                return false;
+            }
+
+            const statusExtract = {
+                WAITING_FOR_VALID_POST: "warning",
+                WAITING_LIQUIDATION: "warning",
+                WAITING_WITHDRAWAL: "warning",
+                WAITING_RELEASE: "warning",
+                PAID: "success",
+                REVERSED: "warning",
+                ADJUSTMENT_CREDIT: "success",
+                ADJUSTMENT_DEBIT: "danger",
+                ERROR: "error",
+            };
+
+            items.forEach(function (item) {
+                let dataTable = `<tr class="s-table table-finance-schedule"><td style="vertical-align: middle; grid-area: sale;">`;
+
+                if (item.order && item.order.hashId) {
+                    dataTable += `Transação`;
+
+                    if (item.isInvite) {
+                        dataTable += `
+                            <a>
+                                <span class="bold">#${item.order.hashId}</span>
+                            </a>
+                        `;
+                    } else {
+                        dataTable += `
+                             <a class="detalhes_venda disabled pointer-md" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
+                                <span class="bold">#${item.order.hashId}</span>
+                            </a>
+                        `;
+                    }
+                    dataTable += `<br>
+                                    <small>${item.details.description}</small>`;
+                } else {
+                    dataTable += `${item.details.description}`;
+                }
+
+                dataTable += `
+                     </td>
+                    <td style="vertical-align: middle; grid-area: date">
+                        ${item.date}
+                    </td>
+                     <td style="grid-area: status" class="text-center">
+                        <span data-toggle="tooltip" data-placement="left" title="${
+                            item.details.status
+                        }" class="badge badge-sm badge-${
+                    statusExtract[item.details.type]
+                } p-2">${item.details.status}</span>
+                     </td>
+                    <td class="text-xs-right text-md-left bold" style="vertical-align: middle;grid-area: value;};">
+                    ${item.amount.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                    })}
+                    </td>
+                    </tr>`;
+
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                });
+
+                updateClassHTML(dataTable);
+            });
+
+            let totalInPeriod = response.totalInPeriod ?? "0,00";
+
+            let isNegativeStatement = false;
+            if (totalInPeriod < 1) {
+                isNegativeStatement = true;
+            }
+
+            $("#statement-money #available-in-period-statement").html(`
+                <span${isNegativeStatement ? ' style="color:red;"' : ""}>
+                   <small class="font-size-12">R$ </small> ${totalInPeriod.toLocaleString(
+                       "pt-BR"
+                   )}
+                </span>`);
+
+            let availableInPeriod = $('#available-in-period');
+            availableInPeriod.html(`<span ${isNegativeStatement ? ' style="color:red;"' : ''}><span class="currency">R$ </span>${totalInPeriod.toLocaleString("pt-BR")}</span>`);
+
+            paginationStatement();
+
+            $("#export-excel").css("opacity", 1);
+            $("#pagination-statement span").addClass("jp-hidden");
+            $("#pagination-statement a")
+                .removeClass("active")
+                .addClass("btn nav-btn");
+            $("#pagination-statement a.jp-current").addClass("active");
+            $("#pagination-statement a").on("click", function () {
+                $("#pagination-statement a").removeClass("active");
+                $(this).addClass("active");
+            });
+
+            $("#pagination-statement").on("click", function () {
+                $("#pagination-statement span").remove();
+            });
+
+            loadOnAnyEllipsis(
+                "#nav-statement #statement-money  #available-in-period-statement",
+                true
+            );
+        },
+    });
+
+    function updateClassHTML(dataTable = 0) {
+        if (dataTable.length > 0) {
+            $("#table-statement-body").append(dataTable);
+            $("#statementTable").addClass("table-striped");
+        } else {
+            $("#table-statement-body").html("");
+        }
+    }
+
+    function paginationStatement() {
+        $("#pagination-statement").jPages({
+            containerID: "table-statement-body",
+            perPage: 10,
+            startPage: 1,
+            startRange: 1,
+            first: false,
+            previous: false,
+            next: false,
+            last: false,
+            delay: 1,
+        });
+    }
+}
+
 $(window).on("load", function() {
 
     //atualiza a table de extrato
-    $(document).on("click", "#bt_filtro", function () {
+    $(document).on("click", "#bt_filtro, #bt_filtro_statement", function () {
         $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]").prop("selected", true);
-        updateTransfersTable();
-        if ($(this).children("option:selected").attr('country') != 'brazil') {
-            $("#transferred_value").show();
-        } else {
-            $("#transferred_value").hide();
-        }
+
+        $("#transferred_value").hide();
+        loadStatementTable();
     });
 
     function getFilters(urlParams = false) {
@@ -281,7 +462,7 @@ $(window).on("load", function() {
         }
     });
 
-    $(".btn-light-1").click(function () {
+    $(".btn-light-1").on('click', function () {
         var collapse = $("#icon-filtro");
         var text = $("#text-filtro");
 
@@ -296,6 +477,22 @@ $(window).on("load", function() {
             collapse.css("transform", "rotate(0deg)");
             text.text("Filtros avançados").fadeIn();
         }
+
+        var collapse = $("#icon-custom-filtro");
+        var text = $("#text-custom-filtro");
+
+        text.fadeOut(10);
+        if (
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
+        ) {
+            collapse.css("transform", "rotate(180deg)");
+            text.text("Minimizar filtros").fadeIn();
+        } else {
+            collapse.css("transform", "rotate(0deg)");
+            text.text("Filtros avançados").fadeIn();
+        }
+
     });
     //abaixo função para apagar numero zerado no botão de valor na aba extrato
     document.getElementById("transaction-value").addEventListener("focusout", inputOutOfFocus);

@@ -1,17 +1,21 @@
 $('#bt-withdrawal').on('click', function () {
+
     let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
     let toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
 
     if (toTransfer > availableBalance) {
+
         alertCustom('error', 'O valor requerido ultrapassa o limite disponivel');
         toTransferText = $('#custom-input-addon').val();
         toTransfer = toTransferText.slice(0, -2);
         $('#custom-input-addon').val('');
         $('.withdrawal-value').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+
     } else if ($('#custom-input-addon').val() == '') {
         alertCustom('error', 'Valor do saque inválido!');
+
     } else {
         $.ajax({
                 url: "/api/withdrawals/getaccountinformation",
@@ -70,35 +74,17 @@ $('#bt-withdrawal').on('click', function () {
                                                         <div><b>Documento:</b><span id="modal-withdrawal-document"></span></div>
                                                         </div>`;
 
-                        if (response.data.currency !== 'real') {
-                            confirmationData += `<div class="col">
-                                                    <h4>Transferência para o exterior:</h4>
-                                                    <div><b>Moeda:</b> ${response.data.currency}</div>
-                                                    <div><b>Cotação:</b> R$ ${response.data.quotation}</div>
-                                                    <div><b>Taxa de IOF:</b> R$ ${response.data.iof.value} ( ${response.data.iof.tax}%)</div>
-                                                    <div><b>Custo:</b> R$ ${response.data.cost.value} (${response.data.cost.tax}%)</div>
-                                                    <div><b>Total:</b> R$ ${response.data.abroad_transfer.value} (${response.data.abroad_transfer.tax}%)</div>
-                                                    </div>`;
-                        }
-
                         confirmationData += `</div>
                                                 <hr>
                                                 <h4>Valor do saque: <span id="modal-withdrawal-value" class='greenGradientText'></span>`;
 
-                        if (response.data.currency !== 'real') {
-                            confirmationData += `</h4>
-                                                    <h4>Valor convertido:
-                                                    <span class='greenGradientText'>${response.data.abroad_transfer.converted_money}</span>
-                                                    <span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque"> ( em ${response.data.currency} )</span>`;
-                        }
-
-                        confirmationData += `</h4>
-                                            <hr>
-                                            <div class="alert alert-warning text-center">
-                                                <p><b>Atenção! A taxa para saques é gratuita para saques com o valor igual ou superior a R$500,00. Caso contrário a taxa cobrada será de R$10,00.</b></p>
-                                                <p><b>Os saques solicitados poderão ser liquidados em até um dia útil!</b></p>
-                                            </div>
-                                        </div>`;
+                        // confirmationData += `</h4>
+                        //                     <hr>
+                        //                     <div class="alert alert-warning text-center">
+                        //                         <p><b>Atenção! A taxa para saques é gratuita para saques com o valor igual ou superior a R$500,00. Caso contrário a taxa cobrada será de R$10,00.</b></p>
+                        //                         <p><b>Os saques solicitados poderão ser liquidados em até um dia útil!</b></p>
+                        //                     </div>
+                        //                 </div>`;
 
                         $('#modal_body').html(confirmationData);
 
@@ -135,17 +121,18 @@ $('#bt-withdrawal').on('click', function () {
                         }
                         $("#modal-withdrawal-document").html('  ' + response.data.document);
 
-                        $("#bt-confirm-withdrawal").unbind("click");
+                        $("#bt-confirm-withdrawal").off("click");
                         $("#bt-confirm-withdrawal").on("click", function () {
                             loadOnModal('#modal-body');
 
                             $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
                             $.ajax({
-                                url: "/api/old_withdrawals",
+                                url: "/api/withdrawals",
                                 type: "POST",
                                 data: {
                                     company_id: $('#transfers_company_select').val(),
-                                    withdrawal_value: $('#custom-input-addon').val()
+                                    withdrawal_value: $('#custom-input-addon').val(),
+                                    gateway_id: window.gatewayCode,
                                 },
                                 dataType: "json",
                                 headers: {
@@ -168,7 +155,7 @@ $('#bt-withdrawal').on('click', function () {
 
                                     updateBalances();
 
-                                    $('.btn-return').click(function () {
+                                    $('.btn-return').on(function () {
                                         $('#modal_body').modal('hide');
                                     });
                                 },

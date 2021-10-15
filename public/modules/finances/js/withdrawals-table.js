@@ -52,7 +52,7 @@ window.loadWithdrawalsTable = function(link = null) {
                     tableData += '<td class="text-left font-size-14" style="grid-area: date-start"> <strong class="bold-mobile">    ' + data.date_request + '</strong> <br> <small class="gray font-size-12">'+data.date_request_time+' </small></td>';
                     tableData += '<td class="text-left font-size-14" style="grid-area: date-start"> <strong class="bold-mobile">    ' + data.date_release + '</strong> <br> <small class="gray font-size-12">'+data.date_release_time+' </small></td>';
                     tableData += '<td class="shipping-status"><span class="badge badge-' + statusWithdrawals[data.status] + '">' + data.status_translated + '</span></td>';
-                    if (data.tax_value < 50000) {
+                    if (data.tax_value > 0) {
                         tableData += ' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + '</strong><br><small>(taxa de R$10,00)</small>';
                     } else {
                         tableData +=' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + "</strong>";

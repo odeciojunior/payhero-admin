@@ -5,7 +5,7 @@
     <table id='withdrawalsTable' class="table table-striped table-condensed unify">
         <thead>
             <tr>
-                <td class="table-title" scope="col">Código Saque</td>
+                <td class="table-title" scope="col">Código</td>
                 <td scope="col" class="table-title">Conta</td>
                 <td scope="col" class="table-title">Solicitação</td>
                 <td scope="col" class="table-title">Liberação</td>

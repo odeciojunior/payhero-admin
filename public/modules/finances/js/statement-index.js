@@ -7,6 +7,12 @@ $(window).on("load", function(){
     }
     else if(window.gatewayCode == 'w7YL9jZD6gp4qmv') {
         $(".page-title").text('Finanças - Getnet');
+        $("#transfersTable").hide();
+        $("#statementTable").show();
+        $("#default-statement-filters").hide();
+        $("#custom-statement-filters").show();
+        $("#pagination-transfers").hide();
+        $("#pagination-statement").show();
     }
     else if(window.gatewayCode == 'oXlqv13043xbj4y') {
         $(".page-title").text('Finanças - Gerencianet');
@@ -47,6 +53,39 @@ $(window).on("load", function(){
         }
     });
 
+
+    $('#date_range_statement').daterangepicker({
+        startDate: moment().startOf('week'),
+        endDate: moment(),
+        opens: 'center',
+        maxDate: moment().endOf("day"),
+        alwaysShowCalendar: true,
+        showCustomRangeLabel: 'Customizado',
+        autoUpdateInput: true,
+        locale: {
+            locale: 'pt-br',
+            format: 'DD/MM/YYYY',
+            applyLabel: "Aplicar",
+            cancelLabel: "Limpar",
+            fromLabel: 'De',
+            toLabel: 'Até',
+            customRangeLabel: 'Customizado',
+            weekLabel: 'W',
+            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            firstDay: 0
+        },
+        ranges: {
+            'Hoje': [moment(), moment()],
+            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+            'Este mês': [moment().startOf('month'), moment().endOf('month')],
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+            'Vitalício': [moment('2018-01-01 00:00:00'), moment()]
+        }
+    });
+    
     function getCompanies() {
         loadingOnScreen();
 
@@ -78,11 +117,12 @@ $(window).on("load", function(){
                     let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
                     $("#transfers_company_select").append(data);
                     $("#extract_company_select").append(data);
+                    $("#statement_company_select").append(data);
                 });
 
                 checkBlockedWithdrawal();
                 updateBalances();
-                updateTransfersTable();
+                loadStatementTable();
                 $("#nav-statement").css('display', '');
                 $("#nav-statement").css('display', '');
                 $("#nav-statement-tab").on('click', function () {

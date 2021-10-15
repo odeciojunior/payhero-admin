@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services\Gateways;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
@@ -10,9 +11,10 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Events\WithdrawalRequestEvent;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 
@@ -47,7 +49,7 @@ class CieloService implements Statement
             return 0;
         }
 
-        return $this->company->balance;
+        return $this->company->cielo_balance;
     }
 
     public function getPendingBalance() : int
@@ -120,7 +122,7 @@ class CieloService implements Statement
 
     public function withdrawalValueIsValid($withdrawalValue): bool
     {
-        $availableBalance = $this->company->balance;
+        $availableBalance = $this->company->cielo_balance;
         $blockedBalance = $this->getBlockedBalance();
         $availableBalance -= $blockedBalance;
 
@@ -137,7 +139,7 @@ class CieloService implements Statement
             DB::beginTransaction();
 
             $this->company->update([
-                'balance' => $this->company->balance -= $withdrawalValue
+                'cielo_balance' => $this->company->cielo_balance -= $withdrawalValue
             ]);
 
             $withdrawal = Withdrawal::where([
@@ -149,7 +151,7 @@ class CieloService implements Statement
 
             if (empty($withdrawal)) {
 
-                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user);
+                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
 
                 $withdrawal = Withdrawal::create(
                     [
@@ -180,13 +182,95 @@ class CieloService implements Statement
             return false;                
         }
 
-        event(new WithdrawalRequestEvent($withdrawal));
+        // event(new WithdrawalRequestEvent($withdrawal));
 
         return true;
     }
 
-    public function getStatement()
+    public function updateAvailableBalance($saleId = null)
     {
+        try {
+            DB::beginTransaction();
 
+            $transactions = Transaction::with('company')
+                ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
+                ->where('status_enum', Transaction::STATUS_PAID)
+                ->whereIn('gateway_id', $this->gatewayIds)
+                ->whereNotNull('company_id')
+                ->where(function ($where) {
+                    $where->where('tracking_required', false)
+                        ->orWhereHas('sale', function ($query) {
+                            $query->where(function ($q) {
+                                $q->where('has_valid_tracking', true)
+                                    ->orWhereNull('delivery_id');
+                            });
+                        });
+                });
+
+            if (!empty($saleId)) {
+                $transactions->where('sale_id', $saleId);
+            }
+
+            dd($transactions->count());
+
+            foreach ($transactions->cursor() as $transaction) {
+                $company = $transaction->company;
+
+                Transfer::create(
+                    [
+                        'transaction_id' => $transaction->id,
+                        'user_id' => $company->user_id,
+                        'company_id' => $company->id,
+                        'type_enum' => Transfer::TYPE_IN,
+                        'value' => $transaction->value,
+                        'type' => 'in',
+                        'gateway_id' => foxutils()->isProduction() ? Gateway::CIELO_PRODUCTION_ID : Gateway::CIELO_SANDBOX_ID
+                    ]
+                );
+
+                $company->update([
+                    'cielo_balance' => $company->cielo_balance + $transaction->value
+                ]);
+
+                $transaction->update([
+                    'status' => 'transfered',
+                    'status_enum' => Transaction::STATUS_TRANSFERRED,
+                ]);
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            report($e);
+        }
+    }
+
+    public function getStatement($filters)
+    {
+        return (new StatementService)->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
+
+    }
+
+    public function getResume()
+    {
+        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)->orderBy('id', 'desc')->first();
+
+        if(empty($lastTransaction)) {
+            return [];
+        }
+
+        $availableBalance = $this->getAvailableBalance();
+        $pendingBalance = $this->getPendingBalance();
+        $blockedBalance = $this->getBlockedBalance();
+        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $lastTransactionDate = $lastTransaction->created_at;
+
+        return [
+            'name' => 'Cielo',
+            'available_balance' => $availableBalance,
+            'pending_balance' => $pendingBalance,
+            'blocked_balance' => $blockedBalance,
+            'total_balance' => $totalBalance,
+            'last_transaction' => $lastTransactionDate
+        ];
     }
 }

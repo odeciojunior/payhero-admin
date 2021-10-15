@@ -27,4 +27,16 @@ class PlanService
 
         return $applyPlanArray;
     }
+
+    public static function forgetCache($id)
+    {
+        CacheService::forget(CacheService::CHECKOUT_PARAM_PLAN, $id);
+        CacheService::forget(CacheService::CHECKOUT_PARAM_PRODUCT_PLANS, $id);
+        CacheService::forget(CacheService::CHECKOUT_CART_PLAN, $id);
+        CacheService::forget(CacheService::SHIPPING_PLAN, $id);
+        CacheService::forgetContainsUnique(CacheService::CHECKOUT_CART_PRODUCT_PLANS, $id);
+        CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_APPLY_ON_PLANS, $id);
+        CacheService::forgetContainsUnique(CacheService::CHECKOUT_ONLY_DIGITAL_PRODUCTS, $id);
+        CacheService::forgetContainsUnique(CacheService::SHIPPING_OB_PLANS, $id);
+    }
 }

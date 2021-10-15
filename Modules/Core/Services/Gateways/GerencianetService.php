@@ -3,6 +3,7 @@
 namespace Modules\Core\Services\Gateways;
 
 use App\Jobs\ProcessWithdrawal;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -12,8 +13,10 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 
@@ -27,7 +30,7 @@ class GerencianetService implements Statement
     {
         $this->gatewayIds = [ 
             Gateway::GERENCIANET_PRODUCTION_ID, 
-            // Gateway::GERENCIANET_SANDBOX_ID 
+            Gateway::GERENCIANET_SANDBOX_ID 
         ];
     }
 
@@ -162,9 +165,9 @@ class GerencianetService implements Statement
         }
     }
 
-    public function getLowerAndBiggerAvailableValues(Company $company, int $withdrawalValueRequested): array
+    public function getLowerAndBiggerAvailableValues($withdrawalValueRequested): array
     {
-        $transactionsSum = $company->transactions()
+        $transactionsSum = $this->company->transactions()
             ->whereIn('gateway_id', $this->gatewayIds)
             ->where('is_waiting_withdrawal', 1)
             ->whereNull('withdrawal_id')
@@ -202,10 +205,81 @@ class GerencianetService implements Statement
         return false;
     }
 
-    public function getStatement()
+    public function updateAvailableBalance($saleId = null)
     {
+        try {
+            $transactions = Transaction::with('company')
+                ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
+                ->where('status_enum', Transaction::STATUS_PAID)
+                ->where('is_waiting_withdrawal', 0)
+                ->whereNull('withdrawal_id')
+                ->whereIn('gateway_id', $this->gatewayIds)
+                ->whereNotNull('company_id')
+                ->where(function ($where) {
+                    $where->where('tracking_required', false)
+                        ->orWhereHas('sale', function ($query) {
+                            $query->where(function ($q) {
+                                $q->where('has_valid_tracking', true)
+                                    ->orWhereNull('delivery_id');
+                            });
+                        });
+                });
+    
+            if (!empty($saleId)) {
+                $transactions->where('sale_id', $saleId);
+            }
+    
+            $transactions->chunkById(100, function ($transactions) {
+                foreach ($transactions as $transaction) {
 
+                    Transfer::create(
+                        [
+                            'transaction_id' => $transaction->id,
+                            'user_id' => $transaction->company->user_id,
+                            'company_id' => $transaction->company->id,
+                            'type_enum' => Transfer::TYPE_IN,
+                            'value' => $transaction->value,
+                            'type' => 'in',
+                            'gateway_id' => foxutils()->isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID : Gateway::GERENCIANET_SANDBOX_ID
+                        ]
+                    );
+
+                    $transaction->update([
+                            'is_waiting_withdrawal' => 1,
+                        ]);
+                }
+            });
+        } catch (Exception $e) {
+            report($e);
+        }
     }
 
+    public function getStatement($filters)
+    {
+        return (new StatementService)->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
+    }
 
+    public function getResume()
+    {
+        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)->orderBy('id', 'desc')->first();
+
+        if(empty($lastTransaction)) {
+            return [];
+        }
+
+        $availableBalance = $this->getAvailableBalance();
+        $pendingBalance = $this->getPendingBalance();
+        $blockedBalance = $this->getBlockedBalance();
+        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $lastTransactionDate = $lastTransaction->created_at;
+
+        return [
+            'name' => 'Gerencianet',
+            'available_balance' => $availableBalance,
+            'pending_balance' => $pendingBalance,
+            'blocked_balance' => $blockedBalance,
+            'total_balance' => $totalBalance,
+            'last_transaction' => $lastTransactionDate
+        ];
+    }
 }

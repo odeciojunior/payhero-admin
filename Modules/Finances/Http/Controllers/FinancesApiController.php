@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Services\CompanyBalanceService;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\RemessaOnlineService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +40,6 @@ class FinancesApiController extends Controller
             }
 
             $companyService = new CompanyBalanceService($company, $gateway->getService());
-            // $companyService = new CompanyBalanceService($company);
 
             $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
             $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
@@ -93,5 +90,14 @@ class FinancesApiController extends Controller
 
             return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
         }
+    }
+
+    public function getStatementResume(Request $request)
+    {
+        $company = Company::find(hashids_decode($request->company));
+
+        $companyService = new CompanyBalanceService($company);
+
+        return response()->json($companyService->getResumes());
     }
 }

@@ -17,7 +17,7 @@ class FinancesController extends Controller
      */
     public function index()
     {
-
+         return view('finances::multi');
     }
 
     public function show()

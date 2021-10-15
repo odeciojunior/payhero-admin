@@ -12,6 +12,7 @@ use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\ProjectUpsellConfig;
 use Modules\Core\Entities\ProjectUpsellRule;
+use Modules\Core\Services\CacheService;
 use Modules\Core\Services\InstallmentsService;
 use Modules\ProjectUpsellConfig\Transformers\PreviewUpsellResource;
 use Modules\ProjectUpsellConfig\Transformers\ProjectUpsellConfigResource;
@@ -74,6 +75,8 @@ class ProjectUpsellConfigApiController extends Controller
                                                              'countdown_time' => $data['countdown_time'],
                                                              'countdown_flag' => !empty($data['countdown_flag']) ? true : false,
                                                          ]);
+            CacheService::forget(CacheService::UPSELL_DATA, $projectId);
+
             if ($upsellConfigUpdated) {
                 return response()->json(['message' => 'Configuração do upsell atualizado com sucesso!'], 200);
             } else {

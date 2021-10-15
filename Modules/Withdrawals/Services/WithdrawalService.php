@@ -10,8 +10,6 @@ use Modules\Core\Entities\Withdrawal;
 class WithdrawalService
 {
 
-    private int $biggerValue, $lowerValue, $currentValue;
-
     public function requestWithdrawal($company, $withdrawalValue): Withdrawal
     {
         $withdrawalModel = new Withdrawal();
@@ -44,7 +42,6 @@ class WithdrawalService
 
     public function isFirstUserWithdrawal($user): bool
     {
-
         $withdrawalStatus = [
             Withdrawal::STATUS_IN_REVIEW,
             Withdrawal::STATUS_LIQUIDATING,
@@ -54,9 +51,8 @@ class WithdrawalService
 
         $isFirstUserWithdrawal = false;
         $userWithdrawal = Withdrawal::whereHas('company', function ($query) use ($user) {
-                    $query->where('user_id', $user->account_owner_id);
-                }
-            )
+                $query->where('user_id', $user->account_owner_id);
+            })
             ->whereIn('status', $withdrawalStatus)
             ->exists();
 
@@ -98,11 +94,13 @@ class WithdrawalService
         return $currentValue;
     }
 
-    public function isNotFirstWithdrawalToday(Company $company)
+    public function isNotFirstWithdrawalToday($companyId, $gatewayId)
     {
-        return (new Withdrawal())->where('company_id', $company->id)
-            ->whereDate('created_at', now())
-            ->exists();
+        return (new Withdrawal())
+                ->where('company_id', $companyId)
+                ->where('gateway_id', $gatewayId)
+                ->whereDate('created_at', now())
+                ->exists();
     }
 
 }

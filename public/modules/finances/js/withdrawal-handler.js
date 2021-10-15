@@ -5,7 +5,7 @@ $(window).on("load", function() {
     }
 
     let url = '';
-    if(window.gatewayCode == 'w7YL9jZD6gp4qmv'){
+    if(window.gatewayCode == 'w7YL9jZD6gp4qmv' || window.gatewayCode == 'oXlqv13043xbj4y'){
         url = '/modules/finances/js/withdrawal-custom.js';
     }
     else {
