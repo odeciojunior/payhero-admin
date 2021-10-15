@@ -47,3 +47,8 @@ Route::group(['middleware' => ['auth:api', 'scopes:sale', 'throttle:120,1'], 'pr
     Route::get('/orders', 'ProfitfyApiController@index');
     Route::get('/orders/{saleId}', 'ProfitfyApiController@show');
 });
+//rotas consumida por terceiros: unicodrop
+Route::group(['middleware' => ['auth:api', 'scopes:sale', 'throttle:120,1']], function () {
+    Route::get('/orders', 'ProfitfyApiController@index');
+    Route::get('/orders/{saleId}', 'ProfitfyApiController@show');
+});
