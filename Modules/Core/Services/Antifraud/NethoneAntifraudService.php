@@ -10,7 +10,7 @@ use Modules\Core\Entities\NethoneAntifraudTransaction;
 class NethoneAntifraudService
 {
     private array $exceptions;
-    private string $url;
+    private string $url = '';
     private $antifraudId;
     private $clientId;
     private $clientSecret;
