@@ -11,6 +11,8 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class CreateAccountAsaas extends Command
 {
@@ -61,26 +63,40 @@ class CreateAccountAsaas extends Command
      */
     public function handle()
     {
+        try {
 
-        $companies = Company::whereDoesntHave('gatewayCompanyCredential', function($q) {
-                $q->where('gateway_id', $this->gatewayId);
-            })
-            ->where('contract_document_status', Company::STATUS_APPROVED)
-            ->where('bank_document_status', Company::STATUS_APPROVED)
-            ->where('address_document_status', Company::STATUS_APPROVED)
-            ->get();
+            $companies = Company::whereDoesntHave('gatewayCompanyCredential', function($q) {
+                    $q->where('gateway_id', $this->gatewayId);
+                    $q->whereNull('gateway_subseller_id');
+                })
+                ->where('contract_document_status', Company::STATUS_APPROVED)
+                ->where('bank_document_status', Company::STATUS_APPROVED)
+                ->where('address_document_status', Company::STATUS_APPROVED)
+                ->get();
 
-        foreach ($companies as $company) {
+            $total = count($companies);
+
+            $output = new ConsoleOutput();
+            $progress = new ProgressBar($output, $total);
+            $progress->start();
+
+            foreach ($companies as $company) {
 
                 $this->createAccount($company);
+                $progress->advance();
+            }
 
+            $progress->finish();
+            $output->writeln('Fim do command!!');
         }
-
-
+        catch(Exception $ex) {
+            report($ex->getMessage());
+        }
     }
 
     public function createAccount(Company $company){
-        try{
+
+        try {
 
             $company->load('user');
             $company->user->email = $company->id . $company->user->email;
@@ -117,7 +133,7 @@ class CreateAccountAsaas extends Command
 
         }
         catch(Exception $ex) {
-            Log::info($ex->getMessage());
+            throw new Exception($ex->getMessage());
         }
     }
 
