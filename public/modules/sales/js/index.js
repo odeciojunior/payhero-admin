@@ -3,6 +3,10 @@ var atualizar = null;
 var exportFormat = null;
 
 $(document).ready(function () {
+    $('#status').select2({
+        width:'100%',
+        closeOnSelect: false
+    });
     //checkbox
     $(".check").on("click", function () {
         if ($(this).is(":checked")) {

@@ -49,9 +49,9 @@ class CreateAccountAsaas extends Command
             $this->apiEndpoint = "https://sandbox.asaas.com";
         }
 
-        $configs = json_decode(foxutils()->xorEncrypt(Gateway::find($this->gatewayId)->json_config, "decrypt"), true);
+        $configs = '';// json_decode(foxutils()->xorEncrypt(Gateway::find($this->gatewayId)->json_config, "decrypt"), true);
 
-        $this->apiToken = $configs['api_key'];
+        $this->apiToken =''; // $configs['api_key'];
     }
 
     /**
