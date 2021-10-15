@@ -25,6 +25,7 @@ class UnicodropResource extends JsonResource
             'credit_card_refused' => $this->credit_card_refused,
             'credit_card_paid'    => $this->credit_card_paid,
             'abandoned_cart'      => $this->abandoned_cart,
+            'pix'                 => $this->pix,
             'created_at'          => $this->created_at->format('d/m/Y'),
         ];
     }

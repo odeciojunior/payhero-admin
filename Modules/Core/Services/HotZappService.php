@@ -91,7 +91,7 @@ class HotZappService
     public function getHotzappPlansList(Sale $sale)
     {
         $plans = [];
-        /** @var PlanSale $planSale */
+
         foreach ($sale->plansSales as $planSale) {
             $plans[] = [
                 "price" => $planSale->plan()->first()->price,

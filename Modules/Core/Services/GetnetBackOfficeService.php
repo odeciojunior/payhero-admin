@@ -389,9 +389,9 @@ class GetnetBackOfficeService extends GetnetBaseService
             $response = json_decode($response);
 
             $adjustmentResponse = new AdjustmentResponse();
-            $adjustmentResponse->code = $response->cod;
-            $adjustmentResponse->errorMessage = $response->msg_Erro;
-            $adjustmentResponse->errorCode = $response->cod_Erro;
+            $adjustmentResponse->code = $response->cod ?? '';
+            $adjustmentResponse->errorMessage = $response->msg_Erro ?? '';
+            $adjustmentResponse->errorCode = $response->cod_Erro ?? '';
             $adjustmentResponse->isSuccess = is_null($response->msg_Erro);
 
             if (
