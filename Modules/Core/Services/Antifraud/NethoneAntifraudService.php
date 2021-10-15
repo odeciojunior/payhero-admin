@@ -10,11 +10,16 @@ use Modules\Core\Entities\NethoneAntifraudTransaction;
 class NethoneAntifraudService
 {
     private array $exceptions;
-    private string $url = '';
+    private string $url;
     private $antifraudId;
     private $clientId;
     private $clientSecret;
     private $merchantId;
+
+    public function __construct()
+    {
+        $this->setAntifraudConfigs();
+    }
 
     private function getAntifraud()
     {
