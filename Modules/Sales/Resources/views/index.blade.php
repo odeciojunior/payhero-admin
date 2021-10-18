@@ -80,15 +80,18 @@
                     <div class="fixhalf"></div>
                     <form id='filter_form'>
                         <div id="" class="card shadow p-20">
-                            <div class="row align-items-baseline mb-md-15">
-                                <div class="col-sm-12 col-md">
+
+                            <!-- FILTRO DE EXIBICAO PERMANENTE -->
+                            <div class="row mb-md-15">
+
+                                <div class="col-sm-12 col-md-3">
                                     <label for="transaction">Transação</label>
                                     <input name='transaction' id="transaction" class="input-pad" placeholder="Transação">
                                 </div>
 
-                                <div class="col-sm-12 col-md">
+                                <div class="col-sm-12 col-md-3">
                                     <label for="status">Status</label>
-                                    <select name='sale_status' id="status" class="form-control select-pad">
+                                    <select name='sale_status[]' id="status" class="form-control" multiple="multiple">
                                         <option value="">Todos status</option>
                                         <option value="1">Aprovado</option>
                                         <option value="2">Aguardando pagamento</option>
@@ -103,7 +106,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md">
+                                <div class="col-sm-12 col-md-3">
                                     <label for="forma">Forma de pagamento</label>
                                     <select name='select_payment_method' id="forma" class="form-control select-pad">
                                         <option value="">Todas formas de pagamento</option>
@@ -113,7 +116,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-6 col-md">
+                                <div class="col-sm-12 col-md-3">
                                     <label for="date_type">Data</label>
                                     <select name='date_type' id="date_type" class="form-control select-pad">
                                         <option value="start_date">Data do pedido</option>
@@ -121,35 +124,42 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-6 col-md form-icons">
-                                    <label for="date_range">&nbsp;</label>
-                                    <i style="right: 20px; margin-top: 13px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
-                                    <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly>
-                                </div>
                             </div>
 
-                            <div class="row collapse" id="bt_collapse">
-                                <div class="d-flex flex-wrap mb-md-15">
-                                    <div class="col-sm-12 col-md">
+                            <div id="bt_collapse">
+
+                                <div class="row mb-md-15">
+
+                                    <div class="col-sm-12 col-md-3 form-icons">
+                                        <label for="date_range">&nbsp;</label>
+                                        <i style="right: 20px; margin-top: 13px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
+                                        <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-3">
                                         <label for="empresa">Empresa</label>
                                         <select name="select_company" id="empresa" class="form-control select-pad select-company">
                                             <option value="">Todas empresas</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md-3">
                                         <label for="projeto">Projeto</label>
                                         <select name='select_project' id="projeto" class="form-control select-pad">
                                             <option value="">Todos projetos</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md-3">
                                         <label for="plan">Plano</label>
                                         <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
                                             <option value="">Todos planos</option>
                                         </select>
                                     </div>
+
+                                </div>
+
+                                <div class="row mb-md-15">
 
                                     <div class="col-sm-12 col-md">
                                         <label for="cupom">Cupom</label>
@@ -160,9 +170,7 @@
                                         <label for="valor">Comissão</label>
                                         <input name="value" id="valor" class="input-pad transaction-value" placeholder="Valor da comissão">
                                     </div>
-                                </div>
 
-                                <div class="d-flex flex-wrap">
                                     <div class="col-sm-12 col-md">
                                         <label for="comprador">Nome do cliente</label>
                                         <input name='client' id="comprador" class="input-pad" placeholder="Cliente">
@@ -173,6 +181,10 @@
                                         <input name='customer_document' id="customer_document" class="input-pad" placeholder="CPF" data-mask="000.000.000-00">
                                     </div>
 
+                                </div>
+
+                                <div class="row mb-md-15">
+                                    
                                     <div class="col-sm-12 col-md">
                                         <label for="email_cliente">Email do cliente</label>
                                         <input name="email_client" id="email_cliente" class="input-pad" placeholder="Email">
@@ -180,6 +192,7 @@
 
                                     <div class="col-sm-12 col-md mt-20" style="flex-grow: 2.134 !important;">
                                         <div class="row w-full">
+
                                             <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                                 <label class="switch mr-2">
                                                     <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
@@ -203,8 +216,10 @@
                                                 </label>
                                                 <span class="switch-text"> Cashback </span>
                                             </div>
+
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
 
