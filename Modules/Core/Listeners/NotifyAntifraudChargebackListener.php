@@ -3,11 +3,15 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\NewChargebackEvent;
 use Modules\Core\Services\Antifraud\NethoneAntifraudService;
 
-class NotifyAntifraudChargebackListener
+class NotifyAntifraudChargebackListener implements ShouldQueue
 {
+    use Queueable;
+
     public function __construct()
     {
         //

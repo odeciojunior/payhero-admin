@@ -3,9 +3,14 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use LogicException;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\GatewaysCompaniesCredential;
+use Modules\Core\Entities\PendingDebt;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
 
@@ -15,12 +20,12 @@ use Modules\Core\Events\UpdateCompanyGetnetEvent;
  */
 class CompanyService
 {
-    public static function getSubsellerId(Company $company): string
+    public static function getSubsellerId(Company $company)
     {
         if (FoxUtils::isProduction()) {
-            return $company->subseller_getnet_id;
+            return $company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID);
         }
-        return $company->subseller_getnet_homolog_id;
+        return $company->getGatewaySubsellerId(Gateway::GETNET_SANDBOX_ID);
     }
 
     public function getCompaniesUser($paginate = false)
@@ -203,13 +208,12 @@ class CompanyService
     {
         $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
         foreach ($companies as $company) {
-            if (
-                $company->company_type == Company::JURIDICAL_PERSON &&
-                $company->bank_document_status == Company::DOCUMENT_STATUS_REFUSED &&
-                $company->address_document_status == Company::DOCUMENT_STATUS_REFUSED &&
-                $company->contract_document_status == Company::DOCUMENT_STATUS_REFUSED
-            ) {
-                return $company;
+            if ($company->company_type == Company::JURIDICAL_PERSON){
+                if($company->bank_document_status == Company::DOCUMENT_STATUS_REFUSED &&
+                    $company->address_document_status == Company::DOCUMENT_STATUS_REFUSED &&
+                    $company->contract_document_status == Company::DOCUMENT_STATUS_REFUSED){
+                    return $company;
+                }
             } elseif ($company->bank_document_status == Company::DOCUMENT_STATUS_REFUSED) {
                 return $company;
             }
@@ -279,14 +283,12 @@ class CompanyService
     public function createCompanyPjGetnet(Company $company)
     {
         try {
-            if (empty($company->user->cellphone) || empty($company->user->email)) {
-                $company->update(
-                    [
-                        'get_net_status' => Company::GETNET_STATUS_PENDING,
-                    ]
-                );
+            if (empty($company->user->cellphone) || empty($company->user->email))
+            {
+                $this->createRowCredential($company->id);
                 return;
             }
+
             $result = (new GetnetBackOfficeService())->createPjCompany($company);
             $this->updateToReviewStatusGetnet($company, $result);
         } catch (Exception $e) {
@@ -296,18 +298,20 @@ class CompanyService
 
     private function updateToReviewStatusGetnet($company, $result)
     {
+        $credential = GatewaysCompaniesCredential::where('company_id',$company->id)->first();
+
         if (empty($result) || empty(json_decode($result)->subseller_id)) {
-            $company->update(
+            $credential->update(
                 [
-                    'get_net_status' => Company::GETNET_STATUS_ERROR,
+                    'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_ERROR,
                 ]
             );
             return;
         }
-        $company->update(
+        $credential->update(
             [
-                'subseller_getnet_id' => json_decode($result)->subseller_id,
-                'get_net_status' => Company::GETNET_STATUS_REVIEW,
+                'gateway_subseller_id' => json_decode($result)->subseller_id,
+                'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_REVIEW,
             ]
         );
     }
@@ -315,14 +319,12 @@ class CompanyService
     public function createCompanyPfGetnet(Company $company)
     {
         try {
-            if ((new UserService())->verifyFieldsEmpty($company->user)) {
-                $company->update(
-                    [
-                        'get_net_status' => Company::GETNET_STATUS_PENDING,
-                    ]
-                );
+            if ((new UserService())->verifyFieldsEmpty($company->user))
+            {
+                $this->createRowCredential($company->id);
                 return;
             }
+
             $result = (new GetnetBackOfficeService())->createPfCompany($company);
             $this->updateToReviewStatusGetnet($company, $result);
         } catch (Exception $e) {
@@ -330,46 +332,46 @@ class CompanyService
         }
     }
 
-    public function updateCompanyGetnet(Company $company): array
-    {
-        $getnetService = new GetnetBackOfficeService();
-        $user = $company->user;
-        if (
-            $company->company_type == Company::PHYSICAL_PERSON
-            && (!(new UserService())->verifyFieldsEmpty($user))
-        ) {
-            $getnetService->updatePfCompany($company);
-        } elseif (!empty($user->cellphone) && !empty($user->email)) {
-            $getnetService->updatePjCompany($company);
-        }
-        return [
-            'message' => 'success',
-            'data' => '',
-        ];
+    // public function updateCompanyGetnet(Company $company): array
+    // {
+    //     $getnetService = new GetnetBackOfficeService();
+    //     $user = $company->user;
+    //     if ($company->company_type == Company::PHYSICAL_PERSON && (!(new UserService())->verifyFieldsEmpty($user)))
+    //     {
+    //         $getnetService->updatePfCompany($company);
+    //     } elseif (!empty($user->cellphone) && !empty($user->email)) {
+    //         $getnetService->updatePjCompany($company);
+    //     }
+    //     return [
+    //         'message' => 'success',
+    //         'data' => '',
+    //     ];
+    // }
+
+    public function createRowCredential($companyId){
+        return GatewaysCompaniesCredential::create([
+            'company_id'=>$companyId,
+            'gateway_id'=>Gateway::GETNET_PRODUCTION_ID,
+            'gateway_status'=>GatewaysCompaniesCredential::GATEWAY_STATUS_PENDING
+        ]);
     }
 
     public function updateCaptureTransactionEnabled(Company $company): void
     {
         try {
-            if ($company->get_net_status == Company::GETNET_STATUS_APPROVED) {
-                $company->update(
-                    [
-                        'capture_transaction_enabled' => true
-                    ]
-                );
-                if (
-                    $this->isDocumentValidated($company->id)
-                    && (new UserService())->isDocumentValidated($company->user->id)
-                ) {
+            $credential = $company->gatewayCredential(Gateway::GETNET_PRODUCTION_ID);
+            if ($credential->gateway_status == GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED)
+            {
+                $credential->update(['capture_transaction_enabled' => true]);
+
+                if ($this->isDocumentValidated($company->id) && (new UserService())->isDocumentValidated($company->user->id)) {
                     event(new UpdateCompanyGetnetEvent($company));
                 }
-            } else {
-                $company->update(
-                    [
-                        'capture_transaction_enabled' => false
-                    ]
-                );
+                return ;
             }
+
+            $credential->update(['capture_transaction_enabled' => false]);
+
         } catch (Exception $e) {
             report($e);
         }
@@ -377,20 +379,14 @@ class CompanyService
 
     public function isDocumentValidated(int $companyId): bool
     {
-        $companyModel = new Company();
-        $company = $companyModel->find($companyId);
-        if (empty($company)) {
-            return false;
-        }
-        if (
-            $company->company_type == Company::JURIDICAL_PERSON &&
-            $company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED &&
-            $company->address_document_status == Company::DOCUMENT_STATUS_APPROVED &&
-            $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED
-        ) {
-            return true;
-        } elseif ($company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED) {
-            return true;
+        $company = Company::find($companyId);
+        if (!empty($company)) {
+            if($company->company_type == Company::JURIDICAL_PERSON){
+                return $company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED &&
+                    $company->address_document_status == Company::DOCUMENT_STATUS_APPROVED &&
+                    $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED;
+            }
+            return $company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED;
         }
         return false;
     }
