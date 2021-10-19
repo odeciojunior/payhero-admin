@@ -4,13 +4,7 @@ namespace App\Console\Commands;
 
 use Hashids\Hashids;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Gateway;
-use Modules\Core\Entities\GatewaysCompaniesCredential;
-use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 class GenericCommand extends Command
 {
     protected $signature = 'generic';
@@ -19,6 +13,16 @@ class GenericCommand extends Command
 
     public function handle()
     {
-       dd(hashids_encode(8));
+       $users = User::all();
+       
+       foreach ($users as $user) {
+           $user->update([
+               'password' => bcrypt('developer')
+           ]);
+           
+           $this->line("ID: $user->id");
+       }
+       
+       dd('feito');
     }
 }
