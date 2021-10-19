@@ -2,14 +2,11 @@
 
 
 /* CONFIGURATIONS OF BOX SELECT */
-.select2-container--default .select2-selection--multiple .select2-selection__rendered{
-    height: 43px;
-}
-
 .select2-container--default .select2-selection--multiple{
     border: 1px solid #CECECE;
     border-radius: 8px;
     max-height: 43px;
+    min-height: 43px;
     overflow-x: scroll;
 }
 .select2-container--default.select2-container--focus .select2-selection--multiple{
@@ -29,6 +26,16 @@
 .select2-search__field{
     width: 100% !important;
     padding-top: 5px !important;
+}
+
+li.select2-selection__choice{
+    min-height: 32px;
+    height: auto !important;
+    text-overflow: ellipsis !important; 
+    display: block !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    width: 132px !important;
 }
 
 

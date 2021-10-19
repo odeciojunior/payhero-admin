@@ -89,6 +89,7 @@ class SaleService
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
+
                 $transactions->whereHas(
                     'sale',
                     function ($querySale) use ($projectId) {
@@ -208,7 +209,7 @@ class SaleService
                 $transactions->whereHas(
                     'sale',
                     function ($querySale) use ($forma) {
-                        $querySale->where('payment_method', $forma);
+                        $querySale->whereIn('payment_method', explode(',', $forma));
                     }
                 );
             }
@@ -1155,6 +1156,7 @@ class SaleService
             }
 
             if (!empty($filters["project"])) {
+                
                 $projectId = current(Hashids::decode($filters["project"]));
                 $transactions->where('sales.project_id', $projectId);
             }

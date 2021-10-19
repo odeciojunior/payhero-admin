@@ -184,9 +184,10 @@ $(document).ready(function () {
             date_range = moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY")
         }
 
+        
         let data = {
-            'project': $("#projeto").val(),
-            'payment_method': $("#forma").val(),
+            'project': $("#projeto").val().join(','),
+            'payment_method': $("#forma").val().join(','),
             'status': $("#status").val(),
             'client': $("#comprador").val(),
             'customer_document': $("#customer_document").val(),
@@ -208,6 +209,8 @@ $(document).ready(function () {
             for (let param in data) {
                 params += "&" + param + "=" + data[param];
             }
+            console.log(params);
+
             return encodeURI(params);
         } else {
             return data;
@@ -701,7 +704,7 @@ $(document).ready(function () {
         let value = $(this).val();
         $("#plan").val(null).trigger("change");
     });
-    
+
     //Search plan
     $("#plan").select2({
         placeholder: "Nome do plano",
