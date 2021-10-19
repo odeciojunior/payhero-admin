@@ -3,9 +3,9 @@ var atualizar = null;
 var exportFormat = null;
 
 $(document).ready(function () {
-    $('#status').select2({
+    $('.applySelect2').select2({
         width:'100%',
-        closeOnSelect: false
+        multiple:true,
     });
     //checkbox
     $(".check").on("click", function () {
@@ -696,16 +696,17 @@ $(document).ready(function () {
             },
         });
     }
+
     $("#projeto").on("change", function () {
         let value = $(this).val();
         $("#plan").val(null).trigger("change");
     });
+    
     //Search plan
     $("#plan").select2({
         placeholder: "Nome do plano",
-        // multiple: true,
+        multiple: true,
         allowClear: true,
-        dropdownParent: $(".align-items-baseline"),
         language: {
             noResults: function () {
                 return "Nenhum plano encontrado";
@@ -735,11 +736,7 @@ $(document).ready(function () {
                     results: $.map(res.data, function (obj) {
                         return {
                             id: obj.id,
-                            text:
-                                obj.name +
-                                (obj.description
-                                    ? " - " + obj.description
-                                    : ""),
+                            text: obj.name + (obj.description ? " - " + obj.description : ""),
                         };
                     }),
                 };

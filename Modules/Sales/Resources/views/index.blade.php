@@ -15,12 +15,10 @@
                 height: 43px !important;
             }
             .select2-selection__rendered {
-                color: #707070 !important;
+                color: #707070;
+                border: none;
                 font-size: 16px !important;
                 font-family: 'Muli', sans-serif;
-                line-height: 43px !important;
-                padding-left: 14px !important;
-                padding-right: 38px !important;
             }
             .select2-selection__arrow {
                 height: 43px !important;
@@ -91,7 +89,7 @@
 
                                 <div class="col-sm-12 col-md-3">
                                     <label for="status">Status</label>
-                                    <select name='sale_status[]' id="status" class="form-control" multiple="multiple">
+                                    <select name='sale_status' id="status" class="form-control applySelect2">
                                         <option value="">Todos status</option>
                                         <option value="1">Aprovado</option>
                                         <option value="2">Aguardando pagamento</option>
@@ -108,7 +106,7 @@
 
                                 <div class="col-sm-12 col-md-3">
                                     <label for="forma">Forma de pagamento</label>
-                                    <select name='select_payment_method' id="forma" class="form-control select-pad">
+                                    <select name='select_payment_method' id="forma" class="form-control select-pad applySelect2">
                                         <option value="">Todas formas de pagamento</option>
                                         <option value="1">Cartão de crédito</option>
                                         <option value="2">Boleto</option>
@@ -138,14 +136,14 @@
 
                                     <div class="col-sm-12 col-md-3">
                                         <label for="empresa">Empresa</label>
-                                        <select name="select_company" id="empresa" class="form-control select-pad select-company">
+                                        <select name="select_company" id="empresa" class="form-control select-pad select-company applySelect2">
                                             <option value="">Todas empresas</option>
                                         </select>
                                     </div>
 
                                     <div class="col-sm-12 col-md-3">
                                         <label for="projeto">Projeto</label>
-                                        <select name='select_project' id="projeto" class="form-control select-pad">
+                                        <select name='select_project' id="projeto" class="form-control select-pad applySelect2">
                                             <option value="">Todos projetos</option>
                                         </select>
                                     </div>
@@ -191,7 +189,7 @@
                                     </div>
 
                                     <div class="col-sm-12 col-md mt-20" style="flex-grow: 2.134 !important;">
-                                        <div class="row w-full">
+                                        <div class="row w-full pt-15">
 
                                             <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                                 <label class="switch mr-2">
