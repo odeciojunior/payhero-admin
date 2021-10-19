@@ -267,4 +267,9 @@ class Company extends Model
         return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_subseller_id??null;
     }
 
+    public function asaasBackofficeRequest(): HasMany
+    {
+        return $this->hasMany('Modules\Core\Entities\AsaasBackofficeRequest');
+    }
+
 }
