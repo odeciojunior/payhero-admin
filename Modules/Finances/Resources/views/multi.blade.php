@@ -497,6 +497,7 @@
     {{-- <script src="{{ asset('modules/finances/js/statement.js?v='. uniqid()) }}"></script> --}}
     <script>
         $(document).ready(function(){
+
             function getCompanies() {
                 loadingOnScreen();
 
@@ -530,7 +531,9 @@
                             $("#extract_company_select").append(data);
                             $("#statement_company_select").append(data);
                         });
-                        updateBalances();
+
+                        updateStatements();
+                        updateWithdrawals();
 
                         loadingOnScreenRemove();
                     }
@@ -541,52 +544,53 @@
             $("#transfers_company_select").on("change", function () {
                 $("#extract_company_select").val($(this).val());
                 $('#custom-input-addon').val('');
-                updateBalances();
+                updateStatements();
             });
 
-            $("#extract_company_select").on("change", function () {
-                $("#transfers_company_select").val($(this).val());
-                updateBalances();
-            });
-            function updateBalances() {
+            function updateStatements() {
+
                 $.ajax({
-                url: "/api/finances/get-statement-resumes",
+                    url: "/api/finances/get-statement-resumes/",
                     type: "GET",
-                    data : {company : $("#transfers_company_select").val()},
+                    dataType: "json",
+                    data : {company_id : $("#transfers_company_select").val()},
                     headers: {
-                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'application/json',
+                    },
+                    error: function () {
+                        //
+                    },
+                    success: function (response) {
+                        $.each(response, function(index, data) {
+                            console.log(data);
+                        })
+                        
+                    }
+                });
+
+            }
+
+            function updateWithdrawals() {
+
+                $.ajax({
+                    url: "/api/withdrawals/get-resume/",
+                    type: "GET",
+                    dataType: "json",
+                    data : {company_id : $("#transfers_company_select").val()},
+                    headers: {
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'application/json',
                     },
                     error: function () {
                         //
                     },
                     success: function (response) {
                         console.log(response);
-                        // $('.saldoPendente').html('<span class="currency">R$</span><span class="pending-balance">0,00</span>');
-                        // // $('.saldoAntifraude').html('<span class="currency">R$</span><span class="pending-antifraud-balance">0,00</span>');
-                        // $('.removeSpan').remove();
-                        // $('.disponivelAntecipar').append('<span class="currency removeSpan">R$</span><span class="antecipable-balance removeSpan">0,00</span>');
-                        // $('.saldoDisponivel').html('<span class="currency">R$</span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>');
-                        // $('.saltoTotal').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
-                        // $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
-                        // $('.total_available').html('<span class="currency">R$</span>' + response.available_balance);
-                        // $(".currency").html(response.currency);
-                        // $(".available-balance").html(response.available_balance);
-                        // $(".antecipable-balance").html(response.antecipable_balance);
-                        // $(".pending-balance").html(response.pending_balance);
-                        // // $(".pending-antifraud-balance").html(response.pending_antifraud_balance);
-                        // $(".total-balance").html(response.total_balance);
-                        // $(".loading").remove();
-                        // $("#div-available-money").unbind('click');
-                        // $("#div-available-money").on("click", function () {
-                        //     $(".withdrawal-value").val(response.available_balance);
-                        // });
-                        // $.getScript('modules/withdrawals/js/index.js')
-                        // $("#table-withdrawals-body").html('');
-
                     }
                 });
-
             }
+
             $(document).on('click','.fa-eye-slash',function(){
                 if($('#hide-withdraw').is(':visible')){
                     $('#container_val').removeClass('flex-center');

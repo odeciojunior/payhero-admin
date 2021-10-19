@@ -95,7 +95,7 @@ class FinancesApiController extends Controller
 
     public function getStatementResume(Request $request)
     {
-        $company = Company::find(hashids_decode($request->company));
+        $company = Company::find(hashids_decode($request->company_id));
         $companyService = new CompanyBalanceService($company);
         return response()->json($companyService->getResumes());
     }

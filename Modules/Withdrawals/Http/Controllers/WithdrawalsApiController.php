@@ -359,7 +359,7 @@ class WithdrawalsApiController
     {
         $company = Company::find(hashids_decode($request->company_id));
 
-        $withdrawals = Withdrawal::where('company_id', $company->id)->orderBy('id' , 'desc')->limit(10);
+        $withdrawals = Withdrawal::where('company_id', $company->id)->latest()->limit(10)->get();
 
         return WithdrawalsResumeResource::collection($withdrawals);
 

@@ -17,8 +17,6 @@ Route::group(
         Route::post('/finances/export', 'FinancesApiController@export')
             ->name('api.finances.export')
             ->middleware('permission:finances_manage');
-        Route::get('/finances/get-statement-resumes', 'FinancesApiController@getStatementResume')->name('finances.statement-resumes');
-
 
         /**
          * News routes after getnet
@@ -28,5 +26,9 @@ Route::group(
 
         Route::post('/old_finances/export', 'OldFinancesApiController@export')
             ->name('api.finances.export');
+
+        Route::get('/finances/get-statement-resumes', 'FinancesApiController@getStatementResume')
+                ->name('finances.statement-resumes');
+                
     }
 );
