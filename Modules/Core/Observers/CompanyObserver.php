@@ -35,7 +35,7 @@ class CompanyObserver
                                                 $q->where('capture_transaction_enabled', 1);
                                             })
                                             ->where('user_id', $user->id)
-                                            ->where('company_type', Company::COMPANY_TYPE_PHYSICAL_PERSON)
+                                            ->where('company_type', Company::PHYSICAL_PERSON)
                                             ->where('bank_document_status', Company::STATUS_APPROVED)
                                             ->exists();
 
@@ -45,7 +45,7 @@ class CompanyObserver
                                                 $q->where('capture_transaction_enabled', 1);
                                             })
                                             ->where('user_id', $user->id)
-                                            ->where('company_type', Company::COMPANY_TYPE_JURIDICAL_PERSON)
+                                            ->where('company_type', Company::JURIDICAL_PERSON)
                                             ->where('address_document_status', CompanyDocument::STATUS_APPROVED)
                                             ->where('contract_document_status', CompanyDocument::STATUS_APPROVED)
                                             ->where('bank_document_status', CompanyDocument::STATUS_APPROVED)
