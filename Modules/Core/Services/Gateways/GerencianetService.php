@@ -259,5 +259,28 @@ class GerencianetService implements Statement
         return (new StatementService)->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
     }
 
+    public function getResume()
+    {
+        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)->orderBy('id', 'desc')->first();
 
+        if(empty($lastTransaction)) {
+            return [];
+        }
+
+        $availableBalance = $this->getAvailableBalance();
+        $pendingBalance = $this->getPendingBalance();
+        $blockedBalance = $this->getBlockedBalance();
+        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
+
+        return [
+            'name' => 'Gerencianet',
+            'available_balance' => foxutils()->formatMoney($availableBalance / 100),
+            'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
+            'blocked_balance' => foxutils()->formatMoney($blockedBalance / 100),
+            'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+            'last_transaction' => $lastTransactionDate,
+            'id' => 'oXlqv13043xbj4y'
+        ];
+    }
 }

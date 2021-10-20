@@ -60,4 +60,27 @@ class CompanyBalanceService
         return $this->gatewayStatementService->hasEnoughBalanceToRefund($sale);
     }
 
+    public function getResumes() : array
+    {
+        $gatewaysBalances = [];
+
+        foreach($this->defaultGateways as $gatewayClass) {
+            $gatewayService = app()->make($gatewayClass);
+            $gatewayService->setCompany($this->company);
+            $gatewayResume = $gatewayService->getResume();
+            if(!empty($gatewayResume)) {
+                $gatewaysBalances[] = $gatewayResume;
+            }
+        }
+
+        $totalAvailable = 0;
+        foreach($gatewaysBalances as $gatewaysBalance) {
+            $totalAvailable += foxutils()->onlyNumbers($gatewaysBalance['total_balance']);
+        }
+
+        $gatewaysBalances['total_gateways_available'] = foxutils()->formatMoney($totalAvailable / 100);
+
+        return $gatewaysBalances;
+    }
+
 }

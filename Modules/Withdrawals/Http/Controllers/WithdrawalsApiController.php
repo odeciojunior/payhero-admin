@@ -17,6 +17,7 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\UserService;
 use Modules\Withdrawals\Exports\Reports\WithdrawalsReportExport;
 use Modules\Withdrawals\Services\WithdrawalService;
+use Modules\Withdrawals\Transformers\WithdrawalsResumeResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -352,5 +353,15 @@ class WithdrawalsApiController
             report($e);
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
         }
+    }
+
+    public function getResume(Request $request)
+    {
+        $company = Company::find(hashids_decode($request->company_id));
+
+        $withdrawals = Withdrawal::where('company_id', $company->id)->latest()->limit(10)->get();
+
+        return WithdrawalsResumeResource::collection($withdrawals);
+
     }
 }

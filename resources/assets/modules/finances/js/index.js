@@ -30,6 +30,7 @@ $(document).ready(function () {
             "</span>" +
             "</span>");
 
+
         $.ajax({
             url: "/finances/getbalances/" + $("#transfers_company_select").val(),
             type: "GET",
@@ -178,6 +179,7 @@ $(document).ready(function () {
                                     }
 
                                 },
+                                
                                 success: function (response) {
                                     loadingOnScreenRemove()
                                     $('#modal-withdrawal').modal('show');
