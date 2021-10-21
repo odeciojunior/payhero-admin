@@ -252,7 +252,9 @@ class CieloService implements Statement
 
     public function getResume()
     {
-        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)->orderBy('id', 'desc')->first();
+        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
 
         if(empty($lastTransaction)) {
             return [];

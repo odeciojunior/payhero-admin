@@ -357,11 +357,14 @@ class WithdrawalsApiController
 
     public function getResume(Request $request)
     {
-        $company = Company::find(hashids_decode($request->company_id));
-
-        $withdrawals = Withdrawal::where('company_id', $company->id)->latest()->limit(10)->get();
-
-        return WithdrawalsResumeResource::collection($withdrawals);
+        try {
+            $company = Company::find(hashids_decode($request->company_id));
+            $withdrawals = Withdrawal::where('company_id', $company->id)->latest()->limit(10)->get();
+            return WithdrawalsResumeResource::collection($withdrawals);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);
+        }
 
     }
 }

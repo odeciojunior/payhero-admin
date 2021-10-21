@@ -14,7 +14,10 @@ class WithdrawalsResumeResource extends JsonResource
             'gateway_name' => $this->gateway->present()->getName(),
             'bank_name' => (new BankService())->getBankName($this->bank),
             'value' => foxutils()->formatMoney($this->value),
-            'status' => Lang::get('definitions.enum.withdrawals.status.' . $this->present()->getStatus($this->status))
+            'status' => $this->status,
+            'status_translated' => Lang::get(
+                'definitions.enum.withdrawals.status.' . $this->present()->getStatus($this->status)
+            )
         ];
     }
 }
