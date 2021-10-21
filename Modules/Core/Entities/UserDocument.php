@@ -22,6 +22,12 @@ use Spatie\Activitylog\Models\Activity;
 class UserDocument extends Model
 {
     use PresentableTrait, LogsActivity;
+
+    public const STATUS_PENDING = 1;
+    public const STATUS_ANALYZING = 2;
+    public const STATUS_APPROVED = 3;
+    public const STATUS_REFUSED = 4;
+
     /**
      * @var string
      */

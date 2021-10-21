@@ -225,7 +225,7 @@ class CompanyPresenter extends Presenter
     public function getStatusGetnet($status = null)
     {
         $company = $this->entity;
-        $status = $status ?? $company->getGatewayStatus(Gateway::GERENCIANET_PRODUCTION_ID);
+        $status = $status ?? $company->getGatewayStatus(Gateway::GETNET_PRODUCTION_ID);
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:

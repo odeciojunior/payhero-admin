@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Hashids\Hashids;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Console\Command;
-use Modules\Core\Entities\User;
+
 class GenericCommand extends Command
 {
     protected $signature = 'generic';
@@ -13,16 +13,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-       $users = User::all();
-       
-       foreach ($users as $user) {
-           $user->update([
-               'password' => bcrypt('developer')
-           ]);
-           
-           $this->line("ID: $user->id");
-       }
-       
-       dd('feito');
+        //
     }
+
 }
