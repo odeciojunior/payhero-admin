@@ -11,6 +11,8 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class CreateAccountAsaas extends Command
 {
@@ -61,26 +63,41 @@ class CreateAccountAsaas extends Command
      */
     public function handle()
     {
+        try {
 
-        $companies = Company::whereDoesntHave('gatewayCompanyCredential', function($q) {
-                $q->where('gateway_id', $this->gatewayId);
-            })
-            ->where('contract_document_status', Company::STATUS_APPROVED)
-            ->where('bank_document_status', Company::STATUS_APPROVED)
-            ->where('address_document_status', Company::STATUS_APPROVED)
-            ->get();
+            $companies = Company::whereHas('gatewayCompanyCredential', function($q) {
+                    $q->where('gateway_id', $this->gatewayId);
+//                    $q->whereNull('gateway_subseller_id');
+                        $q->where('gateway_status', '6');
+                })
+                ->where('contract_document_status', Company::STATUS_APPROVED)
+                ->where('bank_document_status', Company::STATUS_APPROVED)
+                ->where('address_document_status', Company::STATUS_APPROVED)
+                ->get();
 
-        foreach ($companies as $company) {
+            $total = count($companies);
+
+            $output = new ConsoleOutput();
+            $progress = new ProgressBar($output, $total);
+            $progress->start();
+
+            foreach ($companies as $company) {
 
                 $this->createAccount($company);
+                $progress->advance();
+            }
 
+            $progress->finish();
+            $output->writeln('Fim do command!!');
         }
-
-
+        catch(Exception $ex) {
+            report($ex->getMessage());
+        }
     }
 
     public function createAccount(Company $company){
-        try{
+
+        try {
 
             $company->load('user');
             $company->user->email = $company->id . $company->user->email;
@@ -113,7 +130,7 @@ class CreateAccountAsaas extends Command
 
             $result = $this->runCurl($url, 'POST', $data, $company->id);
 
-            return $this->updateToReviewStatus($result);
+            return $this->updateToReviewStatus($result, $company->id);
 
         }
         catch(Exception $ex) {
@@ -161,7 +178,7 @@ class CreateAccountAsaas extends Command
                 report(new Exception('Erro na executação do Curl - Asaas Service' . $url . ' - code:' . $httpStatus));
             }
 
-            $this->saveRequests($url, $response, $httpStatus, $data, $companyId);
+            //$this->saveRequests($url, $response, $httpStatus, $data, $companyId);
             return $response;
 
         } catch (Exception $ex) {
@@ -169,25 +186,46 @@ class CreateAccountAsaas extends Command
         }
     }
 
+    public function updateStatusCredential($status, $companyId): void
+    {
+        try {
+            $gatewayCompanyCredential = GatewaysCompaniesCredential::where('company_id',$companyId)->where('gateway_id', $this->gatewayId)->first();
+            $gatewayCompanyCredential->update(
+                [
+                    'gateway_status' =>  $status
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+        }
+    }
 
-
-    private function updateToReviewStatus($result): array
+    private function updateToReviewStatus($result, $companyId): array
     {
         try {
 
             if(!empty($result->errors)) {
-                throw new Exception("Empresa {$this->company->id} - {$this->company->fantasy_name}, erro: " . $result->errors[0]->description);
+
+                //dd($result->errors[0]);
+
+                //$this->updateStatusCredential(GatewaysCompaniesCredential::GATEWAY_STATUS_ERROR, $companyId);
+
+                return [
+                    'message' =>  $result->errors[0]->description,
+                    'success' => false
+                ];
+                //throw new Exception("Empresa {$this->company->id} - {$this->company->fantasy_name}, erro: " . $result->errors[0]->description);
+                report("Empresa {$companyId}, erro: " . $result->errors[0]->description);
             }
 
-            $gatewayCompanyCredential = new GatewaysCompaniesCredential();
-            $dataToCreate = [
-                'company_id' => $this->company->id,
-                'gateway_id' => $this->gatewayId,
-                'gateway_subseller_id' => $result->walletId,
-                'gateway_api_key' => $result->apiKey,
-            ];
-
-            $gatewayCompanyCredential->create($dataToCreate);
+            $gatewayCompanyCredential = GatewaysCompaniesCredential::where('company_id',$companyId)->where('gateway_id', $this->gatewayId)->first();
+            $gatewayCompanyCredential->update(
+                [
+                    'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED,
+                    'gateway_subseller_id' => $result->walletId,
+                    'gateway_api_key' => $result->apiKey,
+                ]
+            );
 
             return [
                 'message' => 'Cadastro realizado com sucesso',

@@ -24,6 +24,20 @@ use Spatie\Activitylog\Models\Activity;
 class CompanyDocument extends Model
 {
     use PresentableTrait, FoxModelTrait, LogsActivity;
+
+    public const STATUS_PENDING = 1;
+    public const STATUS_ANALYZING = 2;
+    public const STATUS_APPROVED = 3;
+    public const STATUS_REFUSED = 4;
+
+    public const DOCUMENT_TYPE_BANK_ENUM = 1;
+    public const DOCUMENT_TYPE_ADDRESS_ENUM = 2;
+    public const DOCUMENT_TYPE_CONTRACT_ENUM = 3;
+
+    public const DOCUMENT_TYPE_BANK = 'bank_document';
+    public const DOCUMENT_TYPE_ADDRESS = 'address_document';
+    public const DOCUMENT_TYPE_CONTRACT = 'contract_document';
+
     /**
      * @var string
      */
