@@ -97,7 +97,6 @@
                                         <option value="7">Estornado</option>
                                         {{--<option value="6">Em análise</option>--}}
                                         {{--<option value="8">Parcialmente estornado</option>--}}
-                                        <option value="chargeback_recovered">Chargeback recuperado</option>
                                         <option value="20">Revisão Antifraude</option>
                                         <option value="21">Cancelado Antifraude</option>
                                         <option value="24">Em disputa</option>
