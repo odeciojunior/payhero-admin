@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Services\CacheService;

@@ -25,6 +25,7 @@ Route::group(
 
           //role:account_owner|admin|attendance|finantial
           Route::post('/products/search', 'ProductsApiController@getProductFilter')->name('api.products.filterproducts')->middleware('role:account_owner|admin');
+          Route::get('/product/{id}', 'ProductsApiController@getProductById')->name('api.products.getproduct')->middleware('role:account_owner|admin');
           Route::get('/products/saleproducts/{saleId}', 'ProductsApiController@getProductBySale')->name('api.products.saleproducts')
                ->middleware('permission:sales|contestations|trackings|finances|report_pending');
      }
