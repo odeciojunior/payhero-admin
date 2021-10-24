@@ -17,7 +17,8 @@ class ProductsSelectResource extends JsonResource
     {
         return [
             'id'            => Hashids::encode($this->id),
-            'name'          => Str::limit($this->name, 14),
+            'name'          => $this->name,
+            'name_short'    => Str::limit($this->name, 14),
             'description'   => Str::limit($this->description, 28),
             'type_enum'     => $this->type_enum,
             'status_enum'   => $this->status_enum,

@@ -52,6 +52,7 @@ class ProductService
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->where('project_id', $projectId)
                 ->where('name', 'like', '%'. $product .'%')
+                ->take(12)
                 ->get();
             } else {
                 return $productModel

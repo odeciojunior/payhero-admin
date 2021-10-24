@@ -36,6 +36,7 @@ class PlansDetailsResource extends JsonResource
         return [
             'id' => hashids_encode($this->id),
             'name' => $this->name,
+            'name_short' => Str::limit($this->name, 24),
             'description' => $this->description,
             'code' => isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Domínio não configurado',
             'price' => 'R$' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, '.', ','),

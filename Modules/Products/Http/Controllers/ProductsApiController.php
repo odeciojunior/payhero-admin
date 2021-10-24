@@ -450,7 +450,7 @@ class ProductsApiController extends Controller
     {
         try {
             $project = $request->input('project');
-            $product = $request->input('product');
+            $product = $request->input('product') ?? '';
 
             $projectId = current(Hashids::decode($project));
             

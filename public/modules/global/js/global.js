@@ -1,7 +1,5 @@
 $(document).ready(function () {
 
-    $('.scrollbar-outer').scrollbar();
-    
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
 
@@ -215,8 +213,6 @@ function loadOnModal(whereToLoad) {
 }
 
 function loadModalPlaceholderLoading(modal, whereToLoad, htmlLoad) {
-    $(modal).find('.modal-body').removeClass('show');
-    
     if (whereToLoad) {
         $(modal).find(whereToLoad).children().fadeOut('fast');
         $(modal).find(whereToLoad).append(htmlLoad);

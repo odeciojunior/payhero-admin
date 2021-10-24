@@ -420,6 +420,7 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/plans/js/loading.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/shipping/js/shipping.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v='.uniqid())}}"></script>

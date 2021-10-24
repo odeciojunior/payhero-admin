@@ -7,7 +7,7 @@ Route::group(
         'middleware' => ['auth:api', 'scopes:admin'],
     ],
     function() {
-        //        project/{projectId}/plan
+        //project/{projectId}/plan
         Route::apiResource('/project/{projectId}/plans', 'PlansApiController')
         ->only('index', 'show', 'store', 'update', 'destroy')->names('api.plans');
 

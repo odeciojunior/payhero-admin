@@ -1,4 +1,4 @@
-<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_delete_plan" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+<div class="modal fade example-modal-lg" id="modal_delete_plan" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
         <div class="modal-content">
             <div class="modal-header text-center">

@@ -45,7 +45,6 @@
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/placeholder-loading.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/jquery.scrollbar.css') }}">
 
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">--}}
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
@@ -63,8 +62,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=21') }}">
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=22') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=49') }}"> --}}
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v='.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=49') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')

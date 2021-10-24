@@ -9,51 +9,22 @@
             </div>
 
             <div class="modal-body" id="modal_add_body">
-                <div class="box-breadcrumbs">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="box-stage products active d-flex align-items-center">
-                            <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-products-plans.svg') }}" alt="Icon Products"></div>
-                            <div class="title">Produtos</div>
-                        </div>
-
-                        <div class="line"><hr></div>
-            
-                        <div class="box-stage details d-flex align-items-center">
-                            <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-costs-plans.svg') }}" alt="Icon Costs"></div>
-                            <div class="title">Detalhes</div>
-                        </div>
-
-                        <div class="line"><hr></div>
-            
-                        <div class="box-stage informations d-flex align-items-center">
-                            <div class="icon mr-15"><img src="{{ asset('modules/global/img/icon-info-plans.svg') }}" alt="Icon Informations"></div>
-                            <div class="title">Informações</div>
-                        </div>
+                <div class="tab-content" id="tabs-modal-create-plans">
+                    <div class="tab-pane fade" id="stage1" role="tabpanel" aria-labelledby="stage1-tab">
+                        @include('plans::stages/stage1-create')
+                    </div>
+                    <div class="tab-pane fade" id="stage2" role="tabpanel" aria-labelledby="stage2-tab">
+                        @include('plans::stages/stage2-create')
+                    </div>
+                    <div class="tab-pane fade" id="stage3" role="tabpanel" aria-labelledby="stage3-tab">
+                        @include('plans::stages/stage3-create')
                     </div>
                 </div>
-
-                <div class="box-description">
-                    <p class="font-weight-bold" style="margin-bottom: 21px;">Selecione os produtos do novo plano</p>
-                    <div class="input-group input-group-lg">
-                        <input class="form-control" type="text" id="search-product" placeholder="Pesquisa por nome">
-                        <div class="input-group-append">
-                            <span class="input-group-text">
-                                <img src="{{ asset('modules/global/img/icon-search.svg') }}" alt="Icon Search">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="box-products" id="load-products">
-                    {{-- JS carrega --}}
-                </div>
-
-                <div class="box-review"></div>
             </div>
 
             <div class="modal-footer">
-                <button id="btn-modal-plan-voltar" type="button" data-type="create" class="btn btn-default btn-lg" role="button">Voltar</button>
-                <button id="btn-modal-plan-prosseguir" type="button" data-type="create" data-stage="1" class="btn btn-primary btn-lg">Prosseguir</button>
+                <button id="btn-modal-plan-return" type="button" data-type="create" class="btn btn-default btn-lg" role="button">Fechar</button>
+                <button id="btn-modal-plan-next" type="button" data-type="create" data-stage="1" class="btn btn-primary btn-lg">Continuar</button>
             </div>
         </div>
     </div>
