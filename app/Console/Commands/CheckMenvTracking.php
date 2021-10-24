@@ -55,23 +55,28 @@ class CheckMenvTracking extends Command
                     ]);
                     $service = new MelhorenvioService($integration);
 
-                    $order = $service->getOrder($delivery->melhorenvio_order_id);
+                    $orders = json_decode($delivery->melhorenvio_order_id);
 
-                    if (!empty($order) && !empty($order->status) && in_array($order->status, ['posted', 'delivered'])) {
+                    foreach ($orders as $orderId) {
+                        $order = $service->getOrder($orderId);
 
-                        Tracking::updateOrCreate([
-                            'sale_id' => $delivery->sale_id,
-                            'product_id' => $delivery->product_id,
-                            'product_plan_sale_id' => $delivery->pps_id,
-                            'amount' => $delivery->amount,
-                            'delivery_id' => $delivery->delivery_id,
-                            'tracking_code' => $order->tracking,
-                            'tracking_status_enum' => $order->status === 'delivered' ? Tracking::STATUS_DELIVERED : Tracking::STATUS_POSTED,
-                            'system_status_enum' => Tracking::SYSTEM_STATUS_VALID,
-                        ]);
+                        if (!empty($order) && !empty($order->status) && in_array($order->status, ['posted', 'delivered'])) {
 
-                        event(new CheckSaleHasValidTrackingEvent($delivery->sale_id));
+                            Tracking::updateOrCreate([
+                                'sale_id' => $delivery->sale_id,
+                                'product_id' => $delivery->product_id,
+                                'product_plan_sale_id' => $delivery->pps_id,
+                                'amount' => $delivery->amount,
+                                'delivery_id' => $delivery->delivery_id,
+                                'tracking_code' => $order->tracking,
+                                'tracking_status_enum' => $order->status === 'delivered' ? Tracking::STATUS_DELIVERED : Tracking::STATUS_POSTED,
+                                'system_status_enum' => Tracking::SYSTEM_STATUS_VALID,
+                            ]);
+
+                            event(new CheckSaleHasValidTrackingEvent($delivery->sale_id));
+                        }
                     }
+
                 } catch (\Exception $e) {
                     $this->error('ERROR: ' . $e->getMessage());
                     report($e);

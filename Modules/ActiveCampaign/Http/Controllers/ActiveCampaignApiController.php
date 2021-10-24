@@ -27,6 +27,7 @@ class ActiveCampaignApiController extends Controller
     public function index()
     {
         try {
+            $user = auth()->user();
             $activecampaignIntegration = new ActivecampaignIntegration();
             $userProjectModel          = new UserProject();
 
@@ -34,11 +35,11 @@ class ActiveCampaignApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todas as integrações do ActiveCampaign');
 
-            $activecampaignIntegrations = $activecampaignIntegration->where('user_id', auth()->id())->with('project')
+            $activecampaignIntegrations = $activecampaignIntegration->where('user_id', $user->account_owner_id)->with('project')
                                                                     ->get();
 
             $projects     = collect();
-            $userProjects = $userProjectModel->where('user_id', auth()->id())->with('project')->get();
+            $userProjects = $userProjectModel->where('user_id', $user->account_owner_id)->with('project')->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     if (!empty($userProject->project)) {

@@ -40,7 +40,7 @@
                 <div class="col-6">
                     <h1 class="page-title">Recuperação de vendas</h1>
                 </div>
-                @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                @can('recovery')                
                     <div class="col-6 text-right">
                         <div class="justify-content-end align-items-center" id="export-excel">
                             <div class="p-2 d-flex justify-content-end align-items-center">
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                     </div>
-                @endif
+                @endcan
             </div>
         </div>
         <div id='project-not-empty' style='display:none'>
@@ -61,7 +61,7 @@
                     <div class="row align-items-baseline">
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="type_recovery">Tipo de Recuperação</label>
-                            <select name='select_type_recovery' id="type_recovery" class="form-control select-pad">
+                            <select name='select_type_recovery' id="recovery_type" class="form-control select-pad">
                                 <option value="1" selected>Carrinho Abandonado</option>
                                 <option value="5">Boleto Vencido</option>
                                 <option value="4">PIX Vencido</option>

@@ -28,7 +28,9 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CheckForAnyScope;
 use Laravel\Passport\Http\Middleware\CheckScopes;
-use Spatie\Permission\Middlewares\RoleMiddleware;
+use App\Http\Middleware\RoleMiddleware;
+use App\Http\Middleware\PermissionMiddleware;
+use App\Http\Middleware\RoleOrPermissionMiddleware;
 use App\Http\Middleware\VerifyFrozenAccountWeb;
 use App\Http\Middleware\VerifyFrozenAccountApi;
 
@@ -95,6 +97,8 @@ class Kernel extends HttpKernel
         'VerifyShopifyPostback' => VerifyShopifyPostback::class,
         'broadcast' => Broadcast::class,
         'role' => RoleMiddleware::class,
+        'permission'=>PermissionMiddleware::class,
+        'role_or_permission' => RoleOrPermissionMiddleware::class,
         'scopes' => CheckScopes::class,
         'scope' => CheckForAnyScope::class,
         'InternalApiAuth' => InternalApiAuth::class,

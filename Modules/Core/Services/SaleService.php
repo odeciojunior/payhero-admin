@@ -214,7 +214,7 @@ class SaleService
             }
 
             if (empty($filters['status'])) {
-                $status = [1, 2, 4, 7, 8, 12, 20, 22, 24];
+                $status = [1, 2, 4, 7, 8, 12, 20, 21, 22, 24];
             } else {
                 $status = $filters["status"] == 7 ? [7, 22] : [$filters["status"]];
             }
@@ -938,11 +938,11 @@ class SaleService
             if (FoxUtils::isProduction()) {
                 $merchantId = env('GET_NET_MERCHANT_ID_PRODUCTION');
                 $sellerId = env('GET_NET_SELLER_ID_PRODUCTION');
-                $subSellerId = $transaction->company->subseller_getnet_id;
+                $subSellerId = $transaction->company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID);
             } else {
                 $merchantId = env('GET_NET_MERCHANT_ID_SANDBOX');
                 $sellerId = env('GET_NET_SELLER_ID_SANDBOX');
-                $subSellerId = $transaction->company->subseller_getnet_homolog_id;
+                $subSellerId = $transaction->company->getGatewaySubsellerId(Gateway::GETNET_SANDBOX_ID);
             }
 
             $adjustmentData = [

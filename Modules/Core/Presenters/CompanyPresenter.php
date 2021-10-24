@@ -4,6 +4,7 @@ namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Services\FoxUtils;
 
 class CompanyPresenter extends Presenter
@@ -224,7 +225,7 @@ class CompanyPresenter extends Presenter
     public function getStatusGetnet($status = null)
     {
         $company = $this->entity;
-        $status = $status ?? $company->get_net_status;
+        $status = $status ?? $company->getGatewayStatus(Gateway::GETNET_PRODUCTION_ID);
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:

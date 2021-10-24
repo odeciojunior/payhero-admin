@@ -776,7 +776,7 @@ $(() => {
             sale.userPermissionRefunded
         ) {
             $("#div_refund_billet").html(
-                '<button class="btn btn-secondary btn-sm btn_refund_billet float-right" sale=' +
+                '<button class="btn btn-danger btn-sm btn_refund_billet" sale=' +
                     sale.id +
                     ">Estornar boleto</button>"
             );

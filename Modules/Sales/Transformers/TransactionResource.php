@@ -25,8 +25,8 @@ class TransactionResource extends JsonResource
         }
 
         $customerName = $sale->customer->name;
-        if($sale->status == Sale::STATUS_CANCELED_ANTIFRAUD){
-            $name = explode(' ',$customerName);
+        if (in_array($sale->status, [Sale::STATUS_IN_REVIEW, Sale::STATUS_CANCELED_ANTIFRAUD])) {
+            $name = explode(' ', $customerName);
             $customerName = $name[0];
             array_shift($name);
             $customerName .= ' ' . preg_replace('/\S/', '*', implode(' ', $name));
@@ -37,9 +37,9 @@ class TransactionResource extends JsonResource
             'id'                      => Hashids::connection('sale_id')->encode($sale->id),
             'id_default'              => Hashids::encode($this->sale->id),
             'upsell'                  => Hashids::connection('sale_id')->encode($this->sale->upsell_id),
-            'project'                 => $project,
-            'product'                 => $product,
-            'client'                  => $customerName,
+            'project'                 => !empty($sale->project)?$sale->project->name:'',
+            'product'                 => (count($sale->getRelation('plansSales')) > 1) ? 'Carrinho' : (!empty($sale->plansSales->first()->plan->name) ? $sale->plansSales->first()->plan->name : ''),
+            'client'                  => $customerName??'',
             'method'                  => $sale->payment_method,
             'status'                  => $sale->status,
             'status_translate'        => Lang::get('definitions.enum.sale.status.' . $sale->present()

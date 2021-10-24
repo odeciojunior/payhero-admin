@@ -14,6 +14,7 @@ class ChargebackService
     function getQuery($filters)
     {
 
+        $user = \Auth::user();
         $getnetChargebacks = GetnetChargeback::with(
             [
                 'sale',
@@ -26,7 +27,7 @@ class ChargebackService
                 'sale.contestations',
                 'company',
             ]
-        )->where('user_id', \Auth::id());
+        )->where('user_id', $user->account_owner_id);
 
         if(request()->has('from_contestation') || request('date_type') == 'expiration_date') {
 
@@ -244,7 +245,7 @@ class ChargebackService
                 'start_date',
                 [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
             );
-        })->where('user_id', $user->id);
+        })->where('user_id', $user->account_owner_id);
 
         $chargebacksAmount = $getnetChargebacks->count();
         $approvedSalesAmount = $approvedSales->count();
@@ -259,7 +260,7 @@ class ChargebackService
                 'start_date',
                 [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
             );
-        })->where('user_id', $user->id)
+        })->where('user_id', $user->account_owner_id)
             ->get();
     }
 

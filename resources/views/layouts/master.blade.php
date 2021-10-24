@@ -60,6 +60,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=21') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}"> --}}
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=22') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=49') }}">
@@ -136,7 +137,6 @@
 @if(env('APP_ENV', 'production') == 'production')
     <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=13') }}"></script>
     <script src="{{ asset('modules/global/js/notifications.js?v=13') }}"></script>
-<<<<<<< HEAD
     <style>
         .margin-chat-pagination {
             display:block !important; height:20px  !important;
@@ -152,7 +152,6 @@
             })(window,document,'script','https://app.mais.im/support/assets/js/core/embed.js','273c7ff74192d8dac2ef370dc930d643');
         @endif
     </script>
-=======
 
     @if(\Auth::user())
         <script>
@@ -173,7 +172,6 @@
             window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
         </script>
     @endif
->>>>>>> master
 
 @endif
 

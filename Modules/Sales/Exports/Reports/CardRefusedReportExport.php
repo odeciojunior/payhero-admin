@@ -60,7 +60,7 @@ class CardRefusedReportExport implements FromQuery, WithHeadings, ShouldAutoSize
             })->leftJoin('customers as customer', function($join) {
                 $join->on('sales.customer_id', '=', 'customer.id');
             })->whereIn('sales.status', [3])->where([
-                                                        ['sales.payment_method', 1],
+                                                        ['sales.payment_method', Sale::CREDIT_CARD_PAYMENT],
                                                     ])->with([
                                                                  'project',
                                                                  'customer',
@@ -139,13 +139,7 @@ class CardRefusedReportExport implements FromQuery, WithHeadings, ShouldAutoSize
                 'payment_form'               => $sale->present()->getPaymentForm(),
                 'installments_amount'        => $sale->installments_amount ?? '',
                 'flag'                       => $sale->flag ?? '',
-                'boleto_link'                => $sale->boleto_link ?? '',
-                'boleto_digitable_line'      => $sale->boleto_digitable_line ?? '',
-                'boleto_due_date'            => $sale->boleto_due_date,
                 'start_date'                 => $sale->start_date . ' ' . $sale->hours,
-                'end_date'                   => $sale->end_date ? Carbon::parse($sale->end_date)
-                                                                        ->format('d/m/Y H:i:s') : '',
-                'status'                     => $sale->present()->getStatus(),
                 'total_paid'                 => $sale->total_paid_value ?? '',
                 'subtotal'                   => $sale->sub_total,
                 'shipping'                   => $sale->shipping->name ?? '',
@@ -200,12 +194,7 @@ class CardRefusedReportExport implements FromQuery, WithHeadings, ShouldAutoSize
             'Forma de Pagamento',
             'Número de Parcelas',
             'Bandeira do Cartão',
-            'Link do Boleto',
-            'Linha Digitavel do Boleto',
-            'Data de Vencimento do Boleto',
             'Data Inicial do Pagamento',
-            'Data Final do Pagamento',
-            'Status',
             'Valor Total Venda',
             'Subtotal',
             'Frete',

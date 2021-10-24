@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+//role:account_owner|admin|finantial
 Route::group(
     [
-        'middleware' => ['auth:api', 'role:account_owner|admin', 'scopes:admin'],
+        'middleware' => ['auth:api', 'permission:dashboard', 'scopes:admin'],
     ],
     function() {
         Route::apiResource('dashboard', 'DashboardApiController')
