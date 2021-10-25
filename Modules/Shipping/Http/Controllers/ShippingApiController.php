@@ -2,6 +2,7 @@
 
 namespace Modules\Shipping\Http\Controllers;
 
+use Composer\Cache;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
+use Modules\Core\Services\CacheService;
 use Modules\Shipping\Http\Requests\ShippingStoreRequest;
 use Modules\Shipping\Http\Requests\ShippingUpdateRequest;
 use Modules\Shipping\Transformers\ShippingResource;
@@ -131,6 +133,7 @@ class ShippingApiController extends Controller
 
                     $shippingCreated = $shippingModel->create($shippingValidated);
                     if ($shippingCreated) {
+                        CacheService::forget(CacheService::SHIPPING_RULES, $projectId);
                         return response()->json(['message' => 'Frete cadastrado com sucesso!'], 200);
                     }
 

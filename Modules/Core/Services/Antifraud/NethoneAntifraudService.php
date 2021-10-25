@@ -16,6 +16,11 @@ class NethoneAntifraudService
     private $clientSecret;
     private $merchantId;
 
+    public function __construct()
+    {
+        $this->setAntifraudConfigs();
+    }
+
     private function getAntifraud()
     {
         if (foxutils()->isProduction()) {
