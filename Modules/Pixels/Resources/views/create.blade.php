@@ -71,7 +71,7 @@
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">UOL Ads</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="/modules/global/img/tiktok.jpg"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tik-tok"
                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
                             data-value="tiktok"
                             alt="logo uol ads">

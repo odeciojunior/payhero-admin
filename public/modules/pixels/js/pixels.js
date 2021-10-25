@@ -12,7 +12,7 @@ const srcPlatforms = {
     'taboola': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola',
     'pinterest': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest',
     'uol_ads': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads',
-    'tiktok': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads'
+    'tiktok': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tik-tok'
 }
 
 $(function () {
@@ -159,6 +159,7 @@ $(function () {
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 const pixel = response.data;
+                console.log(pixel);
                 pixelEdit = pixel;
                 renderModalPixelEdit(pixel);
                 openModalEditPixel();
