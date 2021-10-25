@@ -71,7 +71,7 @@
                         <div class="mt-10" style="font: normal normal normal 11px Muli;">UOL Ads</div>
                     </div>
                     <div class="col-lg-4 col-6 text-center mb-30">
-                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tik-tok"
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok"
                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
                             data-value="tiktok"
                             alt="logo uol ads">
@@ -223,7 +223,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="checkout" class='mb-10'>Checkout (venda)</label>
+                                            <label for="checkout" class='mb-10'>Checkout<br>(venda)</label>
                                             <br>
                                             <label class="switch">
                                                 <input type="checkbox" value="" name='checkout'
@@ -234,7 +234,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="purchase_card">Purchase (cartão)</label>
+                                            <label for="purchase_card">Purchase<br>(cartão)</label>
                                             <br>
                                             <label class='switch'>
                                                 <input type="checkbox" value="" name='purchase_card'
@@ -246,7 +246,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="purchase_boleto">Purchase (boleto)</label>
+                                            <label for="purchase_boleto">Purchase<br>(boleto)</label>
                                             <label class='switch'>
                                                 <input type="checkbox" value="" name='purchase_boleto'
                                                        class='purchase-boleto' checked>
@@ -256,8 +256,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="pix">Purchase &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;‎ <br>
-                                                (pix)</label>
+                                            <label for="pix">Purchase<br>(pix)</label>
                                             <label class='switch'>
                                                 <input type="checkbox" value="" name='purchase_pix'
                                                        class='purchase-pix' checked>
@@ -273,14 +272,16 @@
             </div>
         </div>
 
-        <div class="col-12 row">
-            <div class="col-4"></div>
-            <div class="col-4 text-center">
-                <button type="button" class="btn btn-success" id="btn-store-pixel"
-                        style="padding: 15px 50px;">Confirmar
-                </button>
+        <div class="modal-footer">
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4 text-center">
+                    <button type="button" class="btn btn-success" id="btn-store-pixel"
+                            style="padding: 15px 50px;">Confirmar
+                    </button>
+                </div>
+                <div class="col-4"></div>
             </div>
-            <div class="col-4"></div>
         </div>
     </div>
 </div>
