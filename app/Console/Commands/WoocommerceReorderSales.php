@@ -69,11 +69,11 @@ class WoocommerceReorderSales extends Command
                 
                 
 
-                // $result = $service->woocommerce->post('orders', $data);
+                $result = $service->woocommerce->post('orders', $data);
 
-                // $saleModel = Sale::where('id',$sale->id)->first();
-                // $saleModel->woocommerce_order = $result->id;
-                // $saleModel->save();
+                $saleModel = Sale::where('id',$sale->id)->first();
+                $saleModel->woocommerce_order = $result->id;
+                $saleModel->save();
                 $this->line('gateway_status: '.$sale->gateway_status);
 
                 $this->line('sucesso: '.$sale->id.' - '.$integration->url_store);
