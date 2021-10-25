@@ -43,13 +43,7 @@ class WoocommerceReorderSales extends Command
         $salePresenter = $saleModel->present();
         // $date          = Carbon::now()->subDay()->toDateString();
         $sales         = $saleModel->whereNull('woocommerce_order')
-                                    //->where('gateway_status', 'paid')                                   
-                                    ->where(function($q){
-                                        $q->where('gateway_status', 'paid')
-                                        ->orWhere('gateway_status', 'approved')
-                                        ->orWhere('gateway_status', 'AUTHORIZED');
-                                        
-                                    })
+                                    ->where('status',1)
                                    //->whereDate('created_at', $date)
                                    ->whereHas('project.woocommerceIntegrations', function($query) {
                                        $query->where('status', 2);
