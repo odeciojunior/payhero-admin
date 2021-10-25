@@ -156,6 +156,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00');
         /** Confirma a transferencia do dinheiro da azx */
         $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30');
+
+        /** Antecipações Asaas */
+//        $schedule->command('anticipations:asaas')->dailyAt('03:00');
+//        $schedule->command('anticipations:asaas-pending')->dailyAt('04:00');
     }
 
     protected function commands()
