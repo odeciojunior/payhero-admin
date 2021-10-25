@@ -43,7 +43,13 @@ class WoocommerceReorderSales extends Command
         $salePresenter = $saleModel->present();
         // $date          = Carbon::now()->subDay()->toDateString();
         $sales         = $saleModel->whereNull('woocommerce_order')
-                                   
+                                    //->where('gateway_status', 'paid')                                   
+                                    ->where(function($q){
+                                        $q->where('gateway_status', 'paid')
+                                        ->orWhere('gateway_status', 'approved')
+                                        ->orWhere('gateway_status', 'AUTHORIZED');
+                                        
+                                    })
                                    //->whereDate('created_at', $date)
                                    ->whereHas('project.woocommerceIntegrations', function($query) {
                                        $query->where('status', 2);
@@ -63,22 +69,23 @@ class WoocommerceReorderSales extends Command
                 
                 
 
-                $result = $service->woocommerce->post('orders', $data);
+                // $result = $service->woocommerce->post('orders', $data);
 
-                $saleModel = Sale::where('id',$sale->id)->first();
-                $saleModel->woocommerce_order = $result->id;
-                $saleModel->save();
+                // $saleModel = Sale::where('id',$sale->id)->first();
+                // $saleModel->woocommerce_order = $result->id;
+                // $saleModel->save();
+                $this->line('gateway_status: '.$sale->gateway_status);
 
                 $this->line('sucesso: '.$sale->id.' - '.$integration->url_store);
 
                 //dd($result->id);
             } catch (Exception $e) {
-                
+
                 $this->line('erro -> ' . $e->getMessage());
-                if(stristr($e->getMessage(),'URL Error:')){
+                if(stristr($e->getMessage(),'Error')){
                     $saleModel = Sale::where('id',$sale->id)->first();
 
-                    $saleModel->woocommerce_order = 1;
+                    $saleModel->woocommerce_order = -1;
                     $saleModel->save();
                 }
             }
