@@ -269,4 +269,7 @@ class Company extends Model
         return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_subseller_id??null;
     }
 
+    public function getGatewayApiKey($gatewayId){
+        return $this->gatewayCompanyCredential->where('gateway_id',$gatewayId)->first()->gateway_api_key ?? null;
+    }
 }
