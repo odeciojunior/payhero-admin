@@ -132,7 +132,7 @@ $(document).ready(function(){
                     $('#gateway-skeleton').hide();
                     $('#container-all-gateways').html('<div class="owl-carousel owl-carousel-shortcode owl-loaded owl-drag"></div>');
                     $.each(response, function(index, data) {
-                        console.log(data);
+                        // console.log(data);
                         if (data.name) {
                             let img_gateway = returnGatewayImg(data.name.toLowerCase());
                             let html_transaction='Nenhuma Venda Encontrada';
@@ -209,31 +209,34 @@ $(document).ready(function(){
                 //
             },
             success: function (response) {
-                if (response.data.length > 2) {
-                    $('#skeleton-withdrawal').hide();
-                }
-                $('#container-withdraw').show();
-                let c = 1;
-                $.each(response.data, function(index, data) {
-                    // console.log(data);
-                    let img_gateway = returnGatewayImg(data.gateway_name.toLowerCase());
-                    let extra='';
-                    let class2='';
-                    if (c>1) {
-                        extra='<hr>';
-                        class2='mt-10';
+                if(response.data){
+                    if (response.data.length > 2) {
+                        $('#skeleton-withdrawal').hide();
                     }
-                    $('#container-withdraw').append(`
-                        ${extra}
-                        <div class="row ${class2}">
-                            <div class="col-sm-6">${img_gateway}</div>
-                            <div class="col-sm-6 text-right">${data.bank_name}</div>
-                            <div class="col-sm-6" style="margin-top:10px"><h4 style="margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.value}</span></h4></div>
-                            <div class="col-sm-6" style="margin-top:10px"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status}</span></span></div>
-                        </div>
-                    `);
-                    c++;
-                });
+                    $('#container-withdraw').show();
+                    let c = 1;
+                    $.each(response.data, function(index, data) {
+                        // console.log(data);
+                        let img_gateway = returnGatewayImg(data.gateway_name.toLowerCase());
+                        let extra='';
+                        let class2='';
+                        if (c>1) {
+                            extra='<hr>';
+                            class2='mt-10';
+                        }
+                        $('#container-withdraw').append(`
+                            ${extra}
+                            <div class="row ${class2}">
+                                <div class="col-sm-6">${img_gateway}</div>
+                                <div class="col-sm-6 text-right">${data.bank_name}</div>
+                                <div class="col-sm-6" style="margin-top:10px"><h4 style="margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.value)}</span></h4></div>
+                                <div class="col-sm-6" style="margin-top:10px"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status}</span></span></div>
+                            </div>
+                        `);
+                        c++;
+                    });
+
+                }
             }
         });
     }
