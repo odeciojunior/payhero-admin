@@ -44,7 +44,7 @@
 
                             @include('finances::components.statement-filters')
 
-                            @include('finances::components.statement')                            
+                            @include('finances::components.statement')
 
                         </div>
                     </div>

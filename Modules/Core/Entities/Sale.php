@@ -220,6 +220,7 @@ class Sale extends Model
         'boleto_due_date',
         'cupom_code',
         'shopify_order',
+        'woocommerce_order',
         'shopify_discount',
         'dolar_quotation',
         'first_confirmation',
