@@ -109,7 +109,7 @@
         }
         .owl-carousel .next-slide:hover{
         background-position: -24px -53px;
-        }  
+        }
         #hide-withdraw{
             width: 150px;
             height: 29px;
@@ -339,34 +339,34 @@
                                         DOM
                                     </button>
                                 </div>
-                                <div class="day-container d-none flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">                                                         
+                                <div class="day-container d-none flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">
                                     <button type="button" class="btn py-15 disabled" data-day="01" disabled="">
                                         01
                                     </button>
-                                                                                                
+
                                     <button type="button" class="btn py-15 disabled" data-day="05" disabled="">
                                         05
                                     </button>
-                                                                                                
+
                                     <button type="button" class="btn py-15 disabled" data-day="10" disabled="">
                                         10
                                     </button>
-                                                                                                
+
                                     <button type="button" class="btn py-15 disabled" data-day="15" disabled="">
                                         15
                                     </button>
-                                                                                                
+
                                     <button type="button" class="btn py-15 disabled" data-day="20" disabled="">
                                         20
                                     </button>
-                                                                                                
+
                                     <button type="button" class="btn py-15 disabled" data-day="25" disabled="">
                                         25
                                     </button>
-                                                                                                
+
                                     <button type="button" class="btn py-15 disabled" data-day="30" disabled="">
                                         30
-                                    </button>                                       
+                                    </button>
                                 </div>
                                 <br>
                                 <div class="row">
@@ -401,9 +401,9 @@
                                         <span class="input-group-text">R$</span>
                                     </div>
                                     <input id="withdrawal_amount" name="withdrawal_amount" type="text" class="form-control" aria-label="Valor mínimo para saque">
-                                    
-                                    
-                                    
+
+
+
                                 </div>
                                 <br>
                                 <div class="row">
