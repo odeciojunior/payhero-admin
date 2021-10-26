@@ -3,8 +3,8 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css?v=14'.uniqid()) }}">
     <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=21'.uniqid()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css?v=14'.uniqid()) }}"><link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=21'.uniqid()) }}">
     <style>
         .popover {
             left: -50px !important;
@@ -174,7 +174,7 @@
                     <p>Dísponivel para Saque</p>
                     <div id="val-skeleton"><div class="skeleton skeleton-text" style="width:50% !important"></div></div>
                     <div id="container_val" style="display: none">
-                        <span class="font-size-16 gray">R$</span> <span class="font-size-32 bold total-available-balance" style="color: #636363;">0,00</span> 
+                        <span class="font-size-16 gray">R$</span> <span class="font-size-32 bold total-available-balance" style="color: #636363;">0,00</span>
                         <span id="hide-withdraw"></span>
                         <i style="margin-left:24px;cursor:pointer" class="fa fa-eye-slash font-size-24"></i>
                     </div>
@@ -283,142 +283,144 @@
                 </div>
             </div>
             <div style="display:none" id="container-config">
-                <div class="row">
-                    <div class="col-md-6 mb-50">
-                        <div class="card no-shadow mt-30">
-                            <div class="card-body">
-                                <h5 class="title-pad">
-                                    Saque automático por período
-                                    <label class="switch" style="float: right; top:3px">
-                                        <input type="checkbox" id="withdrawal_by_period" name="withdrawal_by_period" class="check">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </h5>
-                                <p class="p-0 m-0">
-                                    Crie um saque automático de frequência diária, semanal ou
-                                    mensal.
+                <form id="finances-settings-form">
+                    <div class="row">
+                        <div class="col-md-6 mb-50">
+                            <div class="card no-shadow mt-30">
+                                <div class="card-body">
+                                    <h5 class="title-pad">
+                                        Saque automático por período
+                                        <label class="switch" style="float: right; top:3px">
+                                            <input type="checkbox" id="withdrawal_by_period" name="withdrawal_by_period" class="check">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </h5>
+                                    <p class="p-0 m-0">
+                                        Crie um saque automático de frequência diária, semanal ou
+                                        mensal.
+                                        <br>
+                                        O valor será automaticamente solicitado quando superior a R$
+                                        100,00.
+                                    </p>
                                     <br>
-                                    O valor será automaticamente solicitado quando superior a R$
-                                    100,00.
-                                </p>
-                                <br>
-                                <p class="mb-0">Frequência</p>
-                                <div class="frequency-container py-10 d-flex flex-wrap flex-md-nowrap justify-content-between align-items-center">
-                                    <button type="button" data-frequency="daily" class="btn btn-block m-0 mr-5 py-10 disabled" disabled="">
-                                        Diário
-                                    </button>
-
-                                    <button type="button" data-frequency="weekly" class="btn btn-block m-0 mx-5 py-10 disabled" disabled="">
-                                        Semanal
-                                    </button>
-
-                                    <button type="button" data-frequency="monthly" class="btn btn-block m-0 ml-5 py-10 disabled" disabled="">
-                                        Mensal
-                                    </button>
-                                </div>
-
-                                <div class="weekdays-container d-flex flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">
-                                    <button type="button" class="btn py-15 disabled" data-weekday="1" disabled="">
-                                        SEG
-                                    </button>
-                                    <button type="button" class="btn py-15 disabled" data-weekday="2" disabled="">
-                                        TER
-                                    </button>
-                                    <button type="button" class="btn py-15 disabled" data-weekday="3" disabled="">
-                                        QUA
-                                    </button>
-                                    <button type="button" class="btn py-15 disabled" data-weekday="4" disabled="">
-                                        QUI
-                                    </button>
-                                    <button type="button" class="btn py-15 disabled" data-weekday="5" disabled="">
-                                        SEX
-                                    </button>
-                                    <button type="button" class="btn py-15 disabled" data-weekday="6" disabled="">
-                                        SAB
-                                    </button>
-                                    <button type="button" class="btn py-15 disabled" data-weekday="0" disabled="">
-                                        DOM
-                                    </button>
-                                </div>
-                                <div class="day-container d-none flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">
-                                    <button type="button" class="btn py-15 disabled" data-day="01" disabled="">
-                                        01
-                                    </button>
-
-                                    <button type="button" class="btn py-15 disabled" data-day="05" disabled="">
-                                        05
-                                    </button>
-
-                                    <button type="button" class="btn py-15 disabled" data-day="10" disabled="">
-                                        10
-                                    </button>
-
-                                    <button type="button" class="btn py-15 disabled" data-day="15" disabled="">
-                                        15
-                                    </button>
-
-                                    <button type="button" class="btn py-15 disabled" data-day="20" disabled="">
-                                        20
-                                    </button>
-
-                                    <button type="button" class="btn py-15 disabled" data-day="25" disabled="">
-                                        25
-                                    </button>
-
-                                    <button type="button" class="btn py-15 disabled" data-day="30" disabled="">
-                                        30
-                                    </button>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <button type="submit" class="btn btn-block btn-success-1 py-10 px-15 disabled" disabled="">
-                                            <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">
-                                            &nbsp;Salvar&nbsp;
+                                    <p class="mb-0">Frequência</p>
+                                    <div class="frequency-container py-10 d-flex flex-wrap flex-md-nowrap justify-content-between align-items-center">
+                                        <button type="button" data-frequency="daily" class="btn btn-block m-0 mr-5 py-10 disabled" disabled="">
+                                            Diário
                                         </button>
+
+                                        <button type="button" data-frequency="weekly" class="btn btn-block m-0 mx-5 py-10 disabled" disabled="">
+                                            Semanal
+                                        </button>
+
+                                        <button type="button" data-frequency="monthly" class="btn btn-block m-0 ml-5 py-10 disabled" disabled="">
+                                            Mensal
+                                        </button>
+                                    </div>
+
+                                    <div class="weekdays-container d-flex flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">
+                                        <button type="button" class="btn py-15 disabled" data-weekday="1" disabled="">
+                                            SEG
+                                        </button>
+                                        <button type="button" class="btn py-15 disabled" data-weekday="2" disabled="">
+                                            TER
+                                        </button>
+                                        <button type="button" class="btn py-15 disabled" data-weekday="3" disabled="">
+                                            QUA
+                                        </button>
+                                        <button type="button" class="btn py-15 disabled" data-weekday="4" disabled="">
+                                            QUI
+                                        </button>
+                                        <button type="button" class="btn py-15 disabled" data-weekday="5" disabled="">
+                                            SEX
+                                        </button>
+                                        <button type="button" class="btn py-15 disabled" data-weekday="6" disabled="">
+                                            SAB
+                                        </button>
+                                        <button type="button" class="btn py-15 disabled" data-weekday="0" disabled="">
+                                            DOM
+                                        </button>
+                                    </div>
+                                    <div class="day-container d-none flex-wrap flex-md-nowrap align-items-center justify-content-between mt-20">
+                                        <button type="button" class="btn py-15 disabled" data-day="01" disabled="">
+                                            01
+                                        </button>
+
+                                        <button type="button" class="btn py-15 disabled" data-day="05" disabled="">
+                                            05
+                                        </button>
+
+                                        <button type="button" class="btn py-15 disabled" data-day="10" disabled="">
+                                            10
+                                        </button>
+
+                                        <button type="button" class="btn py-15 disabled" data-day="15" disabled="">
+                                            15
+                                        </button>
+
+                                        <button type="button" class="btn py-15 disabled" data-day="20" disabled="">
+                                            20
+                                        </button>
+
+                                        <button type="button" class="btn py-15 disabled" data-day="25" disabled="">
+                                            25
+                                        </button>
+
+                                        <button type="button" class="btn py-15 disabled" data-day="30" disabled="">
+                                            30
+                                        </button>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <button type="submit" class="btn btn-block btn-success-1 py-10 px-15 disabled" disabled="">
+                                                <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">
+                                                &nbsp;Salvar&nbsp;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card no-shadow mt-30">
+                                <div class="card-body">
+                                    <h5 class="title-pad">
+                                        Saque automático por valor
+                                        <label class="switch" style="float: right; top:3px">
+                                            <input type="checkbox" id="withdrawal_by_value" name="withdrawal_by_value" class="check">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </h5>
+                                    <p class="p-0 m-0">
+                                        Crie um saque automático quando o saldo disponível for
+                                        superior ao valor informado abaixo.
+                                        <br>O valor deve ser superior a R$ 100,00.
+                                    </p>
+                                    <br>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">R$</span>
+                                        </div>
+                                        <input id="withdrawal_amount" name="withdrawal_amount" type="text" class="form-control" aria-label="Valor mínimo para saque">
+
+
+
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <button type="submit" class="btn btn-block py-10 px-15 btn-success">
+                                                <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">
+                                                &nbsp;Salvar&nbsp;
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card no-shadow mt-30">
-                            <div class="card-body">
-                                <h5 class="title-pad">
-                                    Saque automático por valor
-                                    <label class="switch" style="float: right; top:3px">
-                                        <input type="checkbox" id="withdrawal_by_value" name="withdrawal_by_value" class="check">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </h5>
-                                <p class="p-0 m-0">
-                                    Crie um saque automático quando o saldo disponível for
-                                    superior ao valor informado abaixo.
-                                    <br>O valor deve ser superior a R$ 100,00.
-                                </p>
-                                <br>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">R$</span>
-                                    </div>
-                                    <input id="withdrawal_amount" name="withdrawal_amount" type="text" class="form-control" aria-label="Valor mínimo para saque">
-
-
-
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <button type="submit" class="btn btn-block py-10 px-15 btn-success">
-                                            <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">
-                                            &nbsp;Salvar&nbsp;
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -432,4 +434,5 @@
     {{-- <script src="{{ asset('modules/finances/js/withdrawals.js?v='. uniqid()) }}"></script> --}}
     <script src="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.js?v='. uniqid()) }}"></script>
     <script src="{{ asset('modules/finances/js/multi-finances.js?v='. uniqid()) }}"></script>
+    <script src="{{ asset('modules/finances/js/settings.js?v='. uniqid()) }}"></script>
 @endpush

@@ -3,7 +3,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=21'.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?'.uniqid()) }}">
 @endpush
 
 @section('content')
