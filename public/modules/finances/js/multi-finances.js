@@ -155,7 +155,7 @@ $(document).ready(function(){
                                                     <h4 class="saltoTotal${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.total_balance}</span></h4>
                                                 </div>
                                             </div>
-                                            <div id="container-saque-${data.name}" style="display:none">
+                                            <div id="container-withdrawal-${data.name}" style="display:none">
                                                 <div class="col-sm-12">
                                                     <label for="custom-input-addon"> Valor a sacar</label>
                                                     <div class="input-moeda">R$</div>
@@ -163,24 +163,24 @@ $(document).ready(function(){
                                                             aria-describedby="basic-addon1" style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
                                                 </div>
                                             </div>
-                                            <a href="#" class="col-12 btn-outline-success btn" id="solicita_${data.name}">Solicitar saque</a>
-                                            <a href="#" class="btn btn-saque" id="saque${data.name}" style="display:none">Realizar Saque</a>
+                                            <a href="#" class="col-12 btn-outline-success btn" id="request-withdrawal-${data.name}">Solicitar saque</a>
+                                            <a href="#" class="btn btn-saque" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
                                         </div>
                                     </div>
                                 </div>
                             `);
 
-                            $(document).on("click","#solicita_" + data.name + ",#saque" + data.name,function(){
+                            $(document).on("click","#request-withdrawal-" + data.name + ",#new-withdrawal-" + data.name,function(){
                                 if($("#balance-not-available-" + data.name).is(":visible")){
                                     $("#balance-not-available-" + data.name).hide();
-                                    $("#container-saque-" + data.name).show();
-                                    $("#solicita_" + data.name).hide();
-                                    $("#saque" + data.name).show();
+                                    $("#container-withdrawal-" + data.name).show();
+                                    $("#request-withdrawal-" + data.name).hide();
+                                    $("#new-withdrawal-" + data.name).show();
                                 }else{
                                     $("#balance-not-available-" + data.name).css("display","inline-block");
-                                    $("#container-saque-" + data.name).hide();
-                                    $("#solicita_" + data.name).show();
-                                    $("#saque" + data.name).hide();
+                                    $("#container-withdrawal-" + data.name).hide();
+                                    $("#request-withdrawal-" + data.name).show();
+                                    $("#new-withdrawal-" + data.name).hide();
                                 }
                             });
 
