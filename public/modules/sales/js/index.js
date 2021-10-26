@@ -186,23 +186,34 @@ $(document).ready(function () {
 
         
         let data = {
-            'project': $("#projeto").val().join(','),
-            'payment_method': $("#forma").val().join(','),
-            'status': $("#status").val().join(','),
+            'project': $("#projeto").val(),
+            'payment_method': $("#forma").val(),
+            'status': $("#status").val(),
             'client': $("#comprador").val(),
             'customer_document': $("#customer_document").val(),
             'date_type': $("#date_type").val(),
             'date_range': date_range,
             'transaction': transaction,
             'cashback': $("#cashback").val(),
-            'plan': $('#plan').val().join(','),
+            'plan': $('#plan').val(),
             'coupon': $("#cupom").val(),
-            'company': $("#empresa").val().join(','),
+            'company': $("#empresa").val(),
             'value': $("#valor").val().replace(/[^\d]+/g, ''),
             'email_client': $("#email_cliente").val(),
             'upsell': $("#upsell").val(),
             'order_bump': $("#order-bump").val(),
         };
+
+        Object.keys(data).forEach((value)=>{
+            if(Array.isArray(data[value])){
+                if(data[value].length > 1){
+                    data[value] = data[value].filter((value) => value != '').join(',');
+                
+                }else if(data[value].length == 1){
+                    data[value] = data[value].join(',');
+                }
+            }
+        })
 
         if (urlParams) {
             let params = "";
