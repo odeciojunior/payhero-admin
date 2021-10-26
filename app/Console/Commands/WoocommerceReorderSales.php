@@ -19,7 +19,7 @@ class WoocommerceReorderSales extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'WoocommerceReorderSales';
+    protected $signature = 'command:WoocommerceReorderSales';
     /**
      * The console command description.
      * @var string
@@ -37,10 +37,9 @@ class WoocommerceReorderSales extends Command
 
     public function handle()
     {
-        //Dia anterior
         
         $saleModel     = new Sale();
-        $salePresenter = $saleModel->present();
+        // $salePresenter = $saleModel->present();
         // $date          = Carbon::now()->subDay()->toDateString();
         $sales         = $saleModel->whereNull('woocommerce_order')
                                     ->where('status',1)
