@@ -15,6 +15,9 @@
         -ms-transition: all 0.3s;
         -o-transition: all 0.3s;
         transition: all 0.3s;
+
+        width: 72px;
+        margin: 0 auto;
     }
 
     .slider::before {
@@ -35,8 +38,7 @@
             <div class="col-md-12 pl-0">
                 <div class="btn-holder d-flex align-items-center pointer mr-10 float-right">
                     <span class="link-button-dependent red"> Adicionar</span>
-                    <a id="add-pixel" data-toggle="modal"
-                       data-target="#modal-create-pixel" class="ml-10 rounded-add pointer">
+                    <a id="add-pixel" data-toggle="modal" data-target="#modal-create-pixel" class="ml-10 rounded-add pointer">
                         <i class="o-add-1" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -79,7 +81,7 @@
 
 <!-- Create -->
 <div id="modal-create-pixel" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-simple">
+    <div class="modal-dialog modal-dialog-centered">
         @include('pixels::create')
     </div>
 </div>
@@ -97,8 +99,7 @@
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
                 <h4 class="modal-title" id="modal-title">Detalhes do pixel</h4>
-                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal"
-                   aria-label="Close">
+                <a id="modal-button-close" class="pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
@@ -110,13 +111,11 @@
 </div>
 
 <!-- Delete -->
-<div id="modal-delete-pixel" class="modal fade example-modal-lg modal-3d-flip-vertical" aria-hidden="true" role="dialog"
-     tabindex="-1">
+<div id="modal-delete-pixel" class="modal fade example-modal-lg modal-3d-flip-vertical" aria-hidden="true" role="dialog" tabindex="-1">
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close"
-                   id="fechar_modal_excluir">
+                <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>

@@ -1,4 +1,4 @@
-<div style="display: block" id="select-platform-pixel">
+<div style="display: block; width: 100%;" id="select-platform-pixel">
     <div class="modal-content p-10 s-border-radius">
         <div class="modal-header simple-border-bottom mb-10">
             <h4 class="col-12 modal-title text-center" id="modal-title"
@@ -10,72 +10,77 @@
                 <i class="material-icons md-16">close</i>
             </a>
         </div>
-        <div style='min-height: 100px'>
-            <div>
-                <h4 class="col-12 modal-title text-center mb-15" style="color:#787878">Selecione a
-                    plataforma</h4>
+        <div class="modal-body">
+            <div style='min-height: 100px'>
+                <h4 class="col-12 modal-title text-center mb-15" style="color:#787878">Selecione a plataforma</h4>
                 <div class="row text-center">
-                    <div class="col-lg-2 col-6 mr-30 offset-md-1">
+                    <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/analytics"
-                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
-                             data-value="google_analytics"
-                             alt="logo analytics">
-                        <div class="" style="font: normal normal normal 11px Muli;">Google Analytics</div>
+                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                            data-value="google_analytics"
+                            alt="logo analytics">
+                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Analytics</div>
                     </div>
-                    <div class="col-lg-2 col-6 mr-30">
+                    <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/old-analytics"
-                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
-                             data-value="google_analytics_four"
-                             alt="logo analytics four">
-                        <div style="font: normal normal normal 11px Muli;">Google Analytics 4</div>
+                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
+                            data-value="google_analytics_four"
+                            alt="logo analytics four">
+                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Analytics 4</div>
                     </div>
-                    <div class="col-lg-2 col-6 mr-30">
+                    <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/google-ads"
-                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
-                             data-value="google_adwords"
-                             alt="logo google adwords">
-                        <div style="font: normal normal normal 11px Muli;">Google Ads</div>
+                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
+                            data-value="google_adwords"
+                            alt="logo google adwords">
+                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Google Ads</div>
                     </div>
-                    <div class="col-lg-2 col-6 mr-30">
+                    <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/facebook"
-                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
-                             data-value="facebook"
-                             alt="logo facebook">
-                        <div style="font: normal normal normal 11px Muli;">Facebook</div>
+                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
+                            data-value="facebook"
+                            alt="logo facebook">
+                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Facebook</div>
                     </div>
-                    <div class="col-lg-2 col-6 mt-30 mr-30 offset-md-1">
+                    <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain"
-                             class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
-                             data-value="outbrain"
-                             alt="logo outbrain">
-                        <div style="font: normal normal normal 11px Muli;">Outbrain</div>
+                            class="rounded-circle img-fluid  logo-pixels logo-pixels-create"
+                            data-value="outbrain"
+                            alt="logo outbrain">
+                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Outbrain</div>
                     </div>
-                    <div class="col-lg-2 col-6 mt-30 mr-30">
+                    <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola"
-                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
-                             data-value="taboola"
-                             alt="logo taboola">
-                        <div style="font: normal normal normal 11px Muli;">Taboola</div>
+                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                            data-value="taboola"
+                            alt="logo taboola">
+                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Taboola</div>
                     </div>
-                    <div class="col-lg-2 col-6 mt-30 mr-30">
+                    <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest"
-                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
-                             data-value="pinterest"
-                             alt="logo pinterest">
-                        <div style="font: normal normal normal 11px Muli;">Pinterest</div>
+                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                            data-value="pinterest"
+                            alt="logo pinterest">
+                        <div class="mt-10" style="font: normal normal normal 11px Muli;">Pinterest</div>
                     </div>
-                    <div class="col-lg-2 col-6 mt-30 mr-30">
+                    <div class="col-lg-4 col-6 text-center mb-30">
                         <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads"
-                             class="rounded-circle img-fluid logo-pixels logo-pixels-create"
-                             data-value="uol_ads"
-                             alt="logo uol ads">
-                        <div style="font: normal normal normal 11px Muli;">UOL Ads</div>
+                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                            data-value="uol_ads"
+                            alt="logo uol ads">
+                        <div class="mt-10" style="font: normal normal normal 11px Muli;">UOL Ads</div>
+                    </div>
+                    <div class="col-lg-4 col-6 text-center mb-30">
+                        <img src="https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok"
+                            class="rounded-circle img-fluid logo-pixels logo-pixels-create"
+                            data-value="tiktok"
+                            alt="logo uol ads">
+                        <div class="mt-10" style="font: normal normal normal 11px Muli;">TikTok</div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
-        </div>
+        <div class="modal-footer"></div>
     </div>
 </div>
 
@@ -218,7 +223,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="checkout" class='mb-10'>Checkout (venda)</label>
+                                            <label for="checkout" class='mb-10'>Checkout<br>(venda)</label>
                                             <br>
                                             <label class="switch">
                                                 <input type="checkbox" value="" name='checkout'
@@ -229,7 +234,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="purchase_card">Purchase (cartão)</label>
+                                            <label for="purchase_card">Purchase<br>(cartão)</label>
                                             <br>
                                             <label class='switch'>
                                                 <input type="checkbox" value="" name='purchase_card'
@@ -241,7 +246,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="purchase_boleto">Purchase (boleto)</label>
+                                            <label for="purchase_boleto">Purchase<br>(boleto)</label>
                                             <label class='switch'>
                                                 <input type="checkbox" value="" name='purchase_boleto'
                                                        class='purchase-boleto' checked>
@@ -251,8 +256,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="switch-holder">
-                                            <label for="pix">Purchase &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;‎ <br>
-                                                (pix)</label>
+                                            <label for="pix">Purchase<br>(pix)</label>
                                             <label class='switch'>
                                                 <input type="checkbox" value="" name='purchase_pix'
                                                        class='purchase-pix' checked>
@@ -268,14 +272,16 @@
             </div>
         </div>
 
-        <div class="col-12 row">
-            <div class="col-4"></div>
-            <div class="col-4 text-center">
-                <button type="button" class="btn btn-success" id="btn-store-pixel"
-                        style="padding: 15px 50px;">Confirmar
-                </button>
+        <div class="modal-footer">
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4 text-center">
+                    <button type="button" class="btn btn-success" id="btn-store-pixel"
+                            style="padding: 15px 50px;">Confirmar
+                    </button>
+                </div>
+                <div class="col-4"></div>
             </div>
-            <div class="col-4"></div>
         </div>
     </div>
 </div>
