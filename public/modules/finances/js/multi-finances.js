@@ -54,7 +54,6 @@ $(document).ready(function(){
 
     $(document).on("change","#transfers_company_select", function () {
         $("#extract_company_select").val($(this).val());
-        $('#custom-input-addon').val('');
         updateStatements();
     });
     function returnGatewayImg(nome){
@@ -132,7 +131,6 @@ $(document).ready(function(){
                     $('#gateway-skeleton').hide();
                     $('#container-all-gateways').html('<div class="owl-carousel owl-carousel-shortcode owl-loaded owl-drag"></div>');
                     $.each(response, function(index, data) {
-                        // console.log(data);
                         if (data.name) {
                             let img_gateway = returnGatewayImg(data.name.toLowerCase());
                             let html_transaction='Nenhuma Venda Encontrada';
@@ -148,32 +146,49 @@ $(document).ready(function(){
                                                 <div class="col-12 p-0 mb-35">${img_gateway}</div>
                                                 <h6 class="font-size-16 gray m-0"><span class="circulo circulo-green"></span>Saldo Dísponivel</h6>
                                                 <h4 class="saldoDisponivel${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-24 bold">${data.available_balance}</span></h4>
-                                                <h6 class="font-size-16 gray m-0"><span class="circulo circulo-orange"></span>Saldo Pendente</h6>
-                                                <h4 class="saldoPendente${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.pending_balance}</span></h4>
-                                                <h6 class="font-size-16 gray m-0"><span class="circulo circulo-red"></span>Saldo Bloqueado</h6>
-                                                <h4 class="saldoBloqueado${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.blocked_balance}</span></h4>
-                                                <h6 class="font-size-16 gray m-0"><span class="circulo circulo-blue"></span>Total</h6>
-                                                <h4 class="saltoTotal${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.total_balance}</span></h4>
+                                                <div id="balance-not-available-${data.name}">
+                                                    <h6 class="font-size-16 gray m-0"><span class="circulo circulo-orange"></span>Saldo Pendente</h6>
+                                                    <h4 class="saldoPendente${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.pending_balance}</span></h4>
+                                                    <h6 class="font-size-16 gray m-0"><span class="circulo circulo-red"></span>Saldo Bloqueado</h6>
+                                                    <h4 class="saldoBloqueado${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.blocked_balance}</span></h4>
+                                                    <h6 class="font-size-16 gray m-0"><span class="circulo circulo-blue"></span>Total</h6>
+                                                    <h4 class="saltoTotal${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.total_balance}</span></h4>
+                                                </div>
                                             </div>
-                                            <div id="container-saque" style="display:none"></div>
+                                            <div id="container-saque-${data.name}" style="display:none">
+                                                <div class="col-sm-12">
+                                                    <label for="custom-input-addon"> Valor a sacar</label>
+                                                    <div class="input-moeda">R$</div>
+                                                    <input id="custom-input-addon" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" 
+                                                            aria-describedby="basic-addon1" style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
+                                                </div>
+                                            </div>
                                             <a href="#" class="col-12 btn-outline-success btn" id="solicita_${data.name}">Solicitar saque</a>
                                             <a href="#" class="btn btn-saque" id="saque${data.name}" style="display:none">Realizar Saque</a>
                                         </div>
                                     </div>
                                 </div>
-                                `);
+                            `);
+
+                            $(document).on("click","#solicita_" + data.name + ",#saque" + data.name,function(){
+                                if($("#balance-not-available-" + data.name).is(":visible")){
+                                    $("#balance-not-available-" + data.name).hide();
+                                    $("#container-saque-" + data.name).show();
+                                    $("#solicita_" + data.name).hide();
+                                    $("#saque" + data.name).show();
+                                }else{
+                                    $("#balance-not-available-" + data.name).css("display","inline-block");
+                                    $("#container-saque-" + data.name).hide();
+                                    $("#solicita_" + data.name).show();
+                                    $("#saque" + data.name).hide();
+                                }
+                            });
+
                         }else{
                             $('#val-skeleton').hide();
                             $('#container_val').show();
                             $('.total-available-balance').html(data);
                         }
-                        // loadOnAny(".number", true);
-                        // $(".available-balance").html(removeMoneyCurrency(response.available_balance));
-                        // $(".pending-balance").html(removeMoneyCurrency(response.pending_balance));
-                        // $(".total-balance").html(removeMoneyCurrency(response.total_balance));
-                        // $(".blocked-balance").html(removeMoneyCurrency(response.blocked_balance));
-                        // $(".debt-balance").html(removeMoneyCurrency(response.pending_debt_balance));
-                        // $(".loading").remove();
                     });
                     $('.owl-carousel').owlCarousel({
                         margin : 10,
@@ -252,16 +267,7 @@ $(document).ready(function(){
             $('.total-available-balance').hide();
         }
     });
-    $(document).on('click','#solicita_asaas',function(){
-        if($('#container_info_asaas').is(':visible')){
-            $('#container_info_asaas').hide();
-            $('#container-saque').show();
-        }else{
-            $('#container_info_asaas').css('display','inline-block');
-            $('#container-saque').hide();
-        }
-    });
-    
+
     $(document).on('click','#container-return',function(){
         if($('#container-config').is(':visible')){
             $('#container-config').hide();
