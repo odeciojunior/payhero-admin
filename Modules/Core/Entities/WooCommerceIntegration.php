@@ -84,16 +84,16 @@ class WooCommerceIntegration extends Model
     /**
      * @return BelongsTo
      */
-    public function project()
+    public function project(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo(Project::class);
     }
 
     /**
      * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo(User::class);
     }
 }

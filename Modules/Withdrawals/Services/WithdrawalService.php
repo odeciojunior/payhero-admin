@@ -67,10 +67,7 @@ class WithdrawalService
     {
         $currentValue = 0;
         $withdrawal->company->transactions()
-            ->whereIn(
-                'gateway_id',
-                [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]
-            )
+            ->whereIn('gateway_id',[Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
             ->where('is_waiting_withdrawal', 1)
             ->whereNull('withdrawal_id')
             ->orderBy('id')
