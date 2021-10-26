@@ -102,6 +102,9 @@ class Kernel extends ConsoleKernel
         //Reorder shopify
         $schedule->command('command:ShopifyReorderSales')->dailyAt('03:00');
 
+        //Reorder woocommerce
+        $schedule->command('command:WoocommerceReorderSales')->dailyAt('03:45');
+
         //checks the trackings that have been recognized by the carrier but has no movement yet
         $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');
 
