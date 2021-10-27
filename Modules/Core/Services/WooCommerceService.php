@@ -509,6 +509,16 @@ class WooCommerceService
                 ];
             }
 
+            //check for _aftership_tracking_number
+            if(!empty($order->meta_data)){
+                foreach ($order->meta_data as $meta) {
+                    if($meta->key == '_aftership_tracking_number'){
+                        if(!empty($meta->value))
+                            $order->correios_tracking_code = $meta->value;
+                    }
+                }
+            }
+            
             if(!empty($order->correios_tracking_code)){
                 
                 
