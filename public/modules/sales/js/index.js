@@ -143,7 +143,6 @@ $(document).ready(function () {
 
     function hoverBilletPending() {
         if (verifyAccountFrozen() == true) {
-            console.log($("#accountStatus").val());
             $(document).on(
                 {
                     mouseenter: function () {
@@ -220,7 +219,6 @@ $(document).ready(function () {
             for (let param in data) {
                 params += "&" + param + "=" + data[param];
             }
-            console.log(params);
 
             return encodeURI(params);
         } else {
@@ -709,11 +707,14 @@ $(document).ready(function () {
         $("#plan").val(null).trigger("change");
     });
 
+    // $('#status').on("change", function(e){
+
+    //     let filters = $('#status').val();
+
+    // })
+
     //Search plan
     $("#plan").select2({
-        placeholder: "Nome do plano",
-        multiple: true,
-        allowClear: true,
         language: {
             noResults: function () {
                 return "Nenhum plano encontrado";

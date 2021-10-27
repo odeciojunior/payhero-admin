@@ -89,7 +89,7 @@
 
                                 <div class="col-sm-12 col-md-3">
                                     <label for="status">Status</label>
-                                    <select name='sale_status' id="status" class="form-control applySelect2">
+                                    <select name='sale_status[]' id="status" class="form-control applySelect2">
                                         <option value="">Todos status</option>
                                         <option value="1">Aprovado</option>
                                         <option value="2">Aguardando pagamento</option>
@@ -149,7 +149,7 @@
 
                                     <div class="col-sm-12 col-md-3">
                                         <label for="plan">Plano</label>
-                                        <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
+                                        <select name='plan' id="plan" class="form-control select-pad applySelect2" style='width:100%;'>
                                             <option value="">Todos planos</option>
                                         </select>
                                     </div>
@@ -180,17 +180,18 @@
 
                                 </div>
 
-                                <div class="row mb-md-15">
+                                <div class="row mb-md-15 d-flex justify-content-between">
                                     
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md-3">
                                         <label for="email_cliente">Email do cliente</label>
                                         <input name="email_client" id="email_cliente" class="input-pad" placeholder="Email">
                                     </div>
 
-                                    <div class="col-sm-12 col-md mt-20" style="flex-grow: 2.134 !important;">
-                                        <div class="row w-full pt-15">
+                                    <div class="col-sm-12 col-md-8 mt-20 pr-0 pl-20" style="flex-grow: 2.134 !important;">
+                                    
+                                        <div class="row pt-15 d-flex justify-content-end mr-0">
 
-                                            <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                            <div class='col-sm-4 col-md-3 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                                 <label class="switch mr-2">
                                                     <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
                                                     <span class="slider round"></span>
@@ -198,7 +199,7 @@
                                                 <span class="switch-text"> Upsell </span>
                                             </div>
 
-                                            <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                            <div class='col col-sm-4 col-md-3 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                                 <label class="switch mr-2">
                                                     <input type="checkbox" id='order-bump' name="order_bump" class='check' value='0'>
                                                     <span class="slider round"></span>
@@ -206,7 +207,7 @@
                                                 <span class="switch-text"> Order Bump </span>
                                             </div>
 
-                                            <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                            <div class='col col-sm-4 col-md-3 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                                 <label class="switch mr-2">
                                                     <input type="checkbox" id='cashback' name="cashback" class='check shopify_error' value='0'>
                                                     <span class="slider round"></span>
