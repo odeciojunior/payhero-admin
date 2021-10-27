@@ -98,6 +98,7 @@
                         <div class="col-sm-10" style="padding-top: 60px;">
                             <div class="card card-skeleton" id="card-history">
                                 <div class="card-body">
+                                    <div class="list-linear-gradient-top"></div>
                                     <div class="col-12 p-0 mb-35">
                                         <p><b>Histórico de saques</b></p>
                                     </div>
@@ -107,6 +108,7 @@
                                         <div class="skeleton skeleton-text"></div>
                                     </div>
                                     @include('finances::components.empty-history');
+                                    <div class="list-linear-gradient-bottom"></div>
                                 </div>
                             </div>
                         </div>

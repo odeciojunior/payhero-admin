@@ -1,5 +1,12 @@
 
 $(document).ready(function(){
+    
+    $(document).on('click','.card-gateway', function(evt){
+        if($(evt.target).closest('.btn').length==0){
+            let id=$(this).attr('href');
+            window.location.href ='/finances/'+id;
+        }  
+    });
     let statusWithdrawals = {
         1: 'warning',
         2: 'primary',
@@ -56,8 +63,11 @@ $(document).ready(function(){
         $("#extract_company_select").val($(this).val());
         $('#gateway-skeleton').show();
         $('#container-all-gateways').html('');
+        $('#val-skeleton').show();
+        $('#container_val').hide();
         $('#skeleton-withdrawal').show();
         $('#container-withdraw').html('');
+        $('#empty-history').hide();
         updateStatements();
         updateWithdrawals();
     });
@@ -164,7 +174,6 @@ $(document).ready(function(){
                                     </div>
                                 </div>
                             `);
-                            $("#request-withdrawal-" + data.name + ",#new-withdrawal-" + data.name).unbind('click');
                             $(document).on("click","#request-withdrawal-" + data.name + ",#new-withdrawal-" + data.name,function(){
                                 if($("#balance-not-available-" + data.name).is(":visible")){
                                     $("#balance-not-available-" + data.name).hide();
@@ -205,10 +214,6 @@ $(document).ready(function(){
         });
 
     }
-    $(document).on('click','.card-gateway', function(){
-        let id=$(this).attr('href');
-        window.location.href ='/finances/'+id;
-    });
 
     function updateWithdrawals() {
         $.ajax({
@@ -237,6 +242,7 @@ $(document).ready(function(){
                         $('#skeleton-withdrawal').hide();
                     }
                     $('#container-withdraw').show();
+                    $('#card-history').asScrollable();
                     let c = 1;
                     $.each(response.data, function(index, data) {
                         let img_gateway = returnGatewayImg(data.gateway_name.toLowerCase());
