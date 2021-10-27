@@ -54,7 +54,12 @@ $(document).ready(function(){
 
     $(document).on("change","#transfers_company_select", function () {
         $("#extract_company_select").val($(this).val());
+        $('#gateway-skeleton').show();
+        $('#container-all-gateways').html('');
+        $('#skeleton-withdrawal').show();
+        $('#container-withdraw').html('');
         updateStatements();
+        updateWithdrawals();
     });
     function returnGatewayImg(nome){
         let html='';
@@ -140,28 +145,18 @@ $(document).ready(function(){
                             $('.owl-carousel').append(`
                                 <div class="item">
                                     <p style="color: #9E9E9E;font-size: 12px;line-height: 15px;">${html_transaction}</p>
-                                    <div class="card">
+                                    <div class="card card-gateway" href="${data.id}">
                                         <div class="card-body">
                                             <div class="col-sm-12 p-0" id="container_info_${data.name}">
                                                 <div class="col-12 p-0 mb-35">${img_gateway}</div>
                                                 <h6 class="font-size-16 gray m-0"><span class="circulo circulo-green"></span>Saldo Dísponivel</h6>
-                                                <h4 class="saldoDisponivel${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-24 bold">${data.available_balance}</span></h4>
-                                                <div id="balance-not-available-${data.name}">
-                                                    <h6 class="font-size-16 gray m-0"><span class="circulo circulo-orange"></span>Saldo Pendente</h6>
-                                                    <h4 class="saldoPendente${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.pending_balance}</span></h4>
-                                                    <h6 class="font-size-16 gray m-0"><span class="circulo circulo-red"></span>Saldo Bloqueado</h6>
-                                                    <h4 class="saldoBloqueado${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.blocked_balance}</span></h4>
-                                                    <h6 class="font-size-16 gray m-0"><span class="circulo circulo-blue"></span>Total</h6>
-                                                    <h4 class="saltoTotal${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.total_balance}</span></h4>
-                                                </div>
-                                            </div>
-                                            <div id="container-withdrawal-${data.name}" style="display:none">
-                                                <div class="col-sm-12">
-                                                    <label for="custom-input-addon"> Valor a sacar</label>
-                                                    <div class="input-moeda">R$</div>
-                                                    <input id="custom-input-addon" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" 
-                                                            aria-describedby="basic-addon1" style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
-                                                </div>
+                                                <h4 class="saldoDisponivel${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-24 bold">${removeMoneyCurrency(data.available_balance)}</span></h4>
+                                                <h6 class="font-size-16 gray m-0"><span class="circulo circulo-orange"></span>Saldo Pendente</h6>
+                                                <h4 class="saldoPendente${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
+                                                <h6 class="font-size-16 gray m-0"><span class="circulo circulo-red"></span>Saldo Bloqueado</h6>
+                                                <h4 class="saldoBloqueado${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.blocked_balance)}</span></h4>
+                                                <h6 class="font-size-16 gray m-0"><span class="circulo circulo-blue"></span>Total</h6>
+                                                <h4 class="saltoTotal${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.total_balance)}</span></h4>
                                             </div>
                                             <a href="#" class="col-12 btn-outline-success btn" id="request-withdrawal-${data.name}">Solicitar saque</a>
                                             <a href="#" class="btn btn-saque" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
@@ -169,7 +164,7 @@ $(document).ready(function(){
                                     </div>
                                 </div>
                             `);
-
+                            $("#request-withdrawal-" + data.name + ",#new-withdrawal-" + data.name).unbind('click');
                             $(document).on("click","#request-withdrawal-" + data.name + ",#new-withdrawal-" + data.name,function(){
                                 if($("#balance-not-available-" + data.name).is(":visible")){
                                     $("#balance-not-available-" + data.name).hide();
@@ -187,20 +182,21 @@ $(document).ready(function(){
                         }else{
                             $('#val-skeleton').hide();
                             $('#container_val').show();
-                            $('.total-available-balance').html(data);
+                            $('.total-available-balance').html(removeMoneyCurrency(data));
                         }
                     });
                     $('.owl-carousel').owlCarousel({
                         margin : 10,
                         navText : ["<i class='fa fa-chevron-left text-info'></i>","<i class='fa fa-chevron-right text-info'></i>"],
-                        nav    : true,
                         dots    : false,
                         responsive:{
                             0:{
                                 items:1,
+                                nav    : false,
                             },
                             600:{
                                 items:3,
+                                nav    : true,
                             }
                         }
                     });   
@@ -209,6 +205,10 @@ $(document).ready(function(){
         });
 
     }
+    $(document).on('click','.card-gateway', function(){
+        let id=$(this).attr('href');
+        window.location.href ='/finances/'+id;
+    });
 
     function updateWithdrawals() {
         $.ajax({
@@ -221,17 +221,24 @@ $(document).ready(function(){
                 'Accept': 'application/json',
             },
             error: function () {
-                //
+                $('#skeleton-withdrawal').hide();
+                $('#empty-history')
+                    .css({
+                        'display':'flex',
+                        'justify-content':'center',
+                        'align-items':'center',
+                        'flex-direction':'column',
+                    });
             },
             success: function (response) {
-                if(response.data){
+                if(response.data.length){
+                    $('#empty-history').hide();
                     if (response.data.length > 2) {
                         $('#skeleton-withdrawal').hide();
                     }
                     $('#container-withdraw').show();
                     let c = 1;
                     $.each(response.data, function(index, data) {
-                        // console.log(data);
                         let img_gateway = returnGatewayImg(data.gateway_name.toLowerCase());
                         let extra='';
                         let class2='';
@@ -245,12 +252,21 @@ $(document).ready(function(){
                                 <div class="col-sm-6">${img_gateway}</div>
                                 <div class="col-sm-6 text-right">${data.bank_name}</div>
                                 <div class="col-sm-6" style="margin-top:10px"><h4 style="margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.value)}</span></h4></div>
-                                <div class="col-sm-6" style="margin-top:10px"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status}</span></span></div>
+                                <div class="col-sm-6" style="margin-top:10px"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated}</span></span></div>
                             </div>
                         `);
                         c++;
                     });
 
+                }else{
+                    $('#skeleton-withdrawal').hide();
+                    $('#empty-history')
+                        .css({
+                            'display':'flex',
+                            'justify-content':'center',
+                            'align-items':'center',
+                            'flex-direction':'column',
+                        });
                 }
             }
         });
