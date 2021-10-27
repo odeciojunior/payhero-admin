@@ -707,9 +707,9 @@ $(document).ready(function () {
         $("#plan").val(null).trigger("change");
     });
 
-    $('#status').on("click", function(){
-        console.log("funcionouy");
-    })
+    // $('#status').on("click", function(){
+    //     console.log("funcionouy");
+    // })
     
     //Search plan
     $("#plan").select2({
