@@ -89,7 +89,7 @@
 
                                 <div class="col-sm-12 col-md-3">
                                     <label for="status">Status</label>
-                                    <select name='sale_status[]' id="status" class="form-control applySelect2">
+                                    <select name='sale_status' id="status" class="form-control applySelect2">
                                         <option value="">Todos status</option>
                                         <option value="1">Aprovado</option>
                                         <option value="2">Aguardando pagamento</option>
