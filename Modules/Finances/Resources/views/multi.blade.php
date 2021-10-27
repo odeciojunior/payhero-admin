@@ -107,7 +107,7 @@
                                         <div class="skeleton skeleton-text"></div>
                                         <div class="skeleton skeleton-text"></div>
                                     </div>
-                                    @include('finances::components.empty-history');
+                                    @include('finances::components.empty-history')
                                     <div class="list-linear-gradient-bottom"></div>
                                 </div>
                             </div>
@@ -207,7 +207,7 @@
                                     <div class="row">
                                         <div class="col-md-5">
                                             <button type="submit" class="btn btn-block btn-success-1 py-10 px-15 disabled" disabled="">
-                                                <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">
+                                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }}">
                                                 &nbsp;Salvar&nbsp;
                                             </button>
                                         </div>
@@ -244,7 +244,7 @@
                                     <div class="row">
                                         <div class="col-md-5">
                                             <button type="submit" class="btn btn-block py-10 px-15 btn-success">
-                                                <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">
+                                                <img style="height: 12px; margin-right: 4px" src=" {{asset('/modules/global/img/svg/check-all.svg')}} ">
                                                 &nbsp;Salvar&nbsp;
                                             </button>
                                         </div>
