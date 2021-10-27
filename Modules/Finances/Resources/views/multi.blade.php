@@ -3,9 +3,9 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css?v=14'.uniqid()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=21'.uniqid()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/multi-finances.css?v=02'.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css?'.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?'.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/multi-finances.css?'.uniqid()) }}">
 @endpush
 
 @section('content')
