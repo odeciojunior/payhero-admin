@@ -1,11 +1,11 @@
 
 $(document).ready(function(){
-    
+
     $(document).on('click','.card-gateway', function(evt){
         if($(evt.target).closest('.btn').length==0 && $(evt.target).closest('.withdrawal-value').length==0){
             let id=$(this).attr('href');
             window.location.href ='/finances/'+id;
-        }  
+        }
     });
     let statusWithdrawals = {
         1: 'warning',
@@ -120,7 +120,7 @@ $(document).ready(function(){
                         <path d="M9.73922 13.007C9.55685 12.8416 9.32588 12.7465 9.08468 12.7373C8.84347 12.7282 8.60653 12.8056 8.41319 12.9567C7.83134 13.4225 7.13651 13.7086 6.40726 13.7829C5.67802 13.8572 4.94345 13.7165 4.28664 13.3769C3.62975 13.0367 3.07648 12.5118 2.6889 11.8611C2.30139 11.2098 2.09543 10.4582 2.09423 9.69097C2.09303 8.92379 2.29663 8.17149 2.68211 7.51878C3.06728 6.86656 3.61896 6.33982 4.27499 5.99792C4.9307 5.65569 5.66494 5.51237 6.39453 5.58421C7.12412 5.65605 7.81989 5.94018 8.40301 6.4044C8.5941 6.55846 8.83 6.63919 9.07121 6.6331C9.31242 6.627 9.5443 6.53444 9.72806 6.37091C9.84694 6.26434 9.94155 6.1324 10.0046 5.98371C10.0677 5.83503 10.0997 5.67264 10.0968 5.50924C10.0939 5.34583 10.0551 5.18547 9.98522 5.03983C9.91535 4.89419 9.81443 4.7658 9.69167 4.66634C8.79782 3.95069 7.73018 3.5112 6.60974 3.39769C5.48888 3.28378 4.35995 3.50091 3.35117 4.02442C2.34238 4.54792 1.49418 5.35682 0.902912 6.35923C0.31075 7.36174 -0.0019624 8.51729 9.26621e-06 9.69568C0.00198093 10.8741 0.318558 12.0285 0.914071 13.0288C1.50942 14.0281 2.36038 14.8331 3.3706 15.3526C4.38082 15.8722 5.50994 16.0855 6.63011 15.9685C7.75007 15.8511 8.8162 15.4079 9.70769 14.6892C9.82885 14.5898 9.92736 14.4635 9.99609 14.3194C10.0648 14.1753 10.102 14.017 10.1051 13.856C10.1081 13.695 10.077 13.5353 10.0138 13.3884C9.95059 13.2416 9.85698 13.1113 9.73971 13.007H9.73922Z" fill="#5A646E"/>
                         </svg>`;
                 break;
-        
+
             default:
                 // return html;
                 break;
@@ -143,6 +143,7 @@ $(document).ready(function(){
             },
             success: function (response) {
                 if (response) {
+                    let emptyStates = 3 - (Object.values(response).length - 1 );
                     $('#gateway-skeleton').hide();
                     $('#container-all-gateways').html('<div class="owl-carousel owl-carousel-shortcode owl-loaded owl-drag"></div>');
                     $.each(response, function(index, data) {
@@ -174,7 +175,7 @@ $(document).ready(function(){
                                             <div class="col-sm-12">
                                                 <label for="custom-input-addon"> Valor a sacar</label>
                                                 <div class="input-moeda">R$</div>
-                                                <input id="custom-input-addon" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" 
+                                                <input id="custom-input-addon" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor"
                                                         aria-describedby="basic-addon1" style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
                                             </div>
                                         </div>
@@ -203,6 +204,25 @@ $(document).ready(function(){
                             $('.total-available-balance').html(removeMoneyCurrency(data));
                         }
                     });
+
+                    if (emptyStates > 0) {
+                        for (let i=0; i < emptyStates; i++) {
+                            $('.owl-carousel').append(
+                                `<div class="item">
+                                    <p style="color: #9E9E9E;font-size: 12px;line-height: 15px;">&nbsp;</p>
+                                    <div class="card card-gateway bg-transparent" style="border: 2px dashed #B0AFAF; color: #A2A2A2;">
+                                        <div class="card-body text-center d-flex align-items-center">
+                                            <div class="col-sm-12 p-0">
+                                                <div class="d-flex justify-content-center mb-30"><img src="/modules/global/img/logos/2021/svg/icon-multi.svg" alt="Image" style="width: 90px"></div>
+                                               <span> <strong> O Sirius é multiadquirente.</strong> <br/> Sempre tem espaço pra mais uma :) </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`
+                            )
+                        }
+                    }
+
                     $('.owl-carousel').owlCarousel({
                         margin : 10,
                         navText : ["<i class='fa fa-chevron-left text-info'></i>","<i class='fa fa-chevron-right text-info'></i>"],
@@ -217,7 +237,7 @@ $(document).ready(function(){
                                 nav    : true,
                             }
                         }
-                    });   
+                    });
                 }
             }
         });
