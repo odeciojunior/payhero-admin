@@ -258,6 +258,9 @@
         </div>
     </div>
 @endsection
+
+@include('finances::components.new-withdrawal-modal')
+
 @push('scripts')
     <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
@@ -267,5 +270,6 @@
     {{-- <script src="{{ asset('modules/finances/js/withdrawals.js?v='. uniqid()) }}"></script> --}}
     <script src="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.js?v='. uniqid()) }}"></script>
     <script src="{{ asset('modules/finances/js/multi-finances.js?v='. uniqid()) }}"></script>
+    <script src="{{ asset('modules/finances/js/multi-finances-withdrawals.js?v='. uniqid()) }}"></script>
     <script src="{{ asset('modules/finances/js/settings.js?v='. uniqid()) }}"></script>
 @endpush

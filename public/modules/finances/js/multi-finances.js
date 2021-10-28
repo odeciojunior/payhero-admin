@@ -7,6 +7,7 @@ $(document).ready(function(){
             window.location.href ='/finances/'+id;
         }  
     });
+
     let statusWithdrawals = {
         1: 'warning',
         2: 'primary',
@@ -160,7 +161,7 @@ $(document).ready(function(){
                                             <div class="col-sm-12 p-0" id="container_info_${data.name}">
                                                 <div class="col-12 p-0 mb-35">${img_gateway}</div>
                                                 <h6 class="font-size-16 gray m-0"><span class="circulo circulo-green"></span>Saldo Dísponivel</h6>
-                                                <h4 class="saldoDisponivel${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-24 bold">${removeMoneyCurrency(data.available_balance)}</span></h4>
+                                                <h4 style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span></h4>
                                                 <div id="balance-not-available-${data.name}">
                                                     <h6 class="font-size-16 gray m-0"><span class="circulo circulo-orange"></span>Saldo Pendente</h6>
                                                     <h4 style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
@@ -172,31 +173,61 @@ $(document).ready(function(){
                                             </div>
                                             <div id="container-withdrawal-${data.name}" style="display:none">
                                             <div class="col-sm-12">
-                                                <label for="custom-input-addon"> Valor a sacar</label>
+                                                <label for="withdrawal-value-${data.id}"> Valor a sacar</label>
                                                 <div class="input-moeda">R$</div>
-                                                <input id="custom-input-addon" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" 
-                                                        aria-describedby="basic-addon1" style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
+                                                <input id="withdrawal-value-${data.id}" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" 
+                                                        value="0,00" aria-describedby="basic-addon1" style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
                                             </div>
                                         </div>
                                         <a href="#" class="col-12 btn-outline-success btn" id="request-withdrawal-${data.name}">Solicitar saque</a>
                                         <a href="#" class="btn btn-saque" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
+                                        <a href="#" class="btn btn-danger" id="cancel-withdrawal-${data.name}" style="display:none; margin-top:20px">Cancelar</a>
                                     </div>
                                 </div>
                             `);
-                            $(document).on("click","#request-withdrawal-" + data.name + ",#new-withdrawal-" + data.name,function(){
-                                if($("#balance-not-available-" + data.name).is(":visible")){
-                                    $("#balance-not-available-" + data.name).hide();
-                                    $("#container-withdrawal-" + data.name).show();
-                                    $("#request-withdrawal-" + data.name).hide();
-                                    $("#new-withdrawal-" + data.name).show();
-                                }else{
-                                    $("#balance-not-available-" + data.name).css("display","inline-block");
-                                    $("#container-withdrawal-" + data.name).hide();
-                                    $("#request-withdrawal-" + data.name).show();
-                                    $("#new-withdrawal-" + data.name).hide();
-                                }
+
+                            $("#withdrawal-value-" + data.id).maskMoney({
+                                thousands: ".",
+                                decimal: ",",
+                                allowZero: true,
+                            });
+    
+                            $(document).on("click","#request-withdrawal-" + data.name,function(){
+                                $("#balance-not-available-" + data.name).hide();
+                                $("#container-withdrawal-" + data.name).show();
+                                $("#request-withdrawal-" + data.name).hide();
+                                $("#new-withdrawal-" + data.name).show();
+                                $("#cancel-withdrawal-" + data.name).show();
+                            });
+                            $(document).on("click","#cancel-withdrawal-" + data.name,function(){
+                                $("#balance-not-available-" + data.name).css("display","inline-block");
+                                $("#container-withdrawal-" + data.name).hide();
+                                $("#request-withdrawal-" + data.name).show();
+                                $("#new-withdrawal-" + data.name).hide();
+                                $("#cancel-withdrawal-" + data.name).hide();
                             });
 
+                            if(data.id == 'w7YL9jZD6gp4qmv' || data.id == 'oXlqv13043xbj4y') {
+                                $(document).on("click","#new-withdrawal-" + data.name,function(){
+                                    let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.name).val());
+                                    if(withdrawalValue == '' || withdrawalValue <= 0){
+                                        alertCustom('error', 'Valor do saque inválido!');
+                                        return;
+                                    }
+                                    $("#modal-withdrawal-custom").modal("show");
+                                });
+                            }
+                            else {
+                                $(document).on("click","#new-withdrawal-" + data.name,function(){
+                                    let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
+                                    if(withdrawalValue <= 0 || withdrawalValue == ''){
+                                        alertCustom('error', 'Valor do saque inválido!');
+                                        console.log(withdrawalValue);
+                                        return;
+                                    }
+                                    defaultWithdrawal(data.id);
+                                });
+                            }
                         }else{
                             $('#val-skeleton').hide();
                             $('#container_val').show();
