@@ -701,17 +701,44 @@ $(document).ready(function () {
             },
         });
     }
+    
+    //COMPORTAMENTO DO FILTRO MULTIPLO
+    function behaviorMultipleFilter(element, selectId){
+        var $select = $('#'+selectId);
+        var idToRemove = '';
+        var values = $select.val();
+
+        if (element.value != '') {
+              if (values) {
+                var i = values.indexOf(idToRemove);
+
+                if (i >= 0) {
+                    values.splice(i, 1);
+                    $select.val(values).change();
+                }
+            }
+         } else {
+            if (values) {
+              values.splice(0, values.lenght);
+              $select.val(null).change();
+              
+              values.push('');
+              $select.val('').change();
+            }
+        }
+    }
+    $(".applySelect2").on("select2:select", function (evt) {
+        var element = evt.params.data.element;
+        var selectId = $(this).attr('id')
+        behaviorMultipleFilter(element, selectId)
+    });
+
 
     $("#projeto").on("change", function () {
         let value = $(this).val();
         $("#plan").val(null).trigger("change");
     });
 
-    // $('#status').on("click", function(){
-    //     console.log("funcionouy");
-    // })
-    
-    //Search plan
     $("#plan").select2({
         language: {
             noResults: function () {
