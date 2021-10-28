@@ -16,6 +16,8 @@ $(document).ready(function(){
         5: 'primary',
         6: 'primary',
         7: 'danger',
+        8: "primary",
+        9: "partially-liquidating",
     };
 
     function getCompanies() {
@@ -132,7 +134,8 @@ $(document).ready(function(){
         return html;
     }
 
-    function updateStatements() {
+    window.updateStatements = function() {
+
         $.ajax({
             url: "/api/finances/get-statement-resumes/",
             type: "GET",
@@ -182,11 +185,11 @@ $(document).ready(function(){
                                                 </div>
                                             </div>
                                             <div id="container-withdrawal-${data.name}" style="display:none">
-                                            <div class="col-sm-12">
-                                                <label for="withdrawal-value-${data.id}"> Valor a sacar</label>
-                                                <div class="input-moeda">R$</div>
-                                                <input id="withdrawal-value-${data.id}" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" 
-                                                        value="0,00" aria-describedby="basic-addon1" style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
+                                            <div class="input-group mb-3 withdrawal-value">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">R$</span>
+                                                </div>
+                                                <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque">
                                             </div>
                                         </div>
                                         <a href="#" class="col-12 btn-outline-success btn" id="request-withdrawal-${data.id}">Solicitar saque</a>
@@ -203,6 +206,10 @@ $(document).ready(function(){
                             });
     
                             $(document).on("click","#request-withdrawal-" + data.id,function(){
+                                if(onlyNumbers($("#available-balance-" + data.id).html()) < 1) {
+                                    alertCustom('error', 'Saldo insuficiente para realizar saques!');
+                                    return;
+                                }
                                 $("#balance-not-available-" + data.name).hide();
                                 $("#container-withdrawal-" + data.name).show();
                                 $("#request-withdrawal-" + data.id).hide();
@@ -249,7 +256,7 @@ $(document).ready(function(){
                             $('.owl-carousel').append(
                                 `<div class="item">
                                     <p style="color: #9E9E9E;font-size: 12px;line-height: 15px;">&nbsp;</p>
-                                    <div class="card card-gateway bg-transparent" style="border: 2px dashed #B0AFAF; color: #A2A2A2;">
+                                    <div class="card bg-transparent" style="border: 2px dashed #B0AFAF; color: #A2A2A2;">
                                         <div class="card-body text-center d-flex align-items-center">
                                             <div class="col-sm-12 p-0">
                                                 <div class="d-flex justify-content-center mb-30"><img src="/modules/global/img/logos/2021/svg/icon-multi.svg" alt="Image" style="width: 90px"></div>
@@ -283,7 +290,7 @@ $(document).ready(function(){
 
     }
 
-    function updateWithdrawals() {
+    window.updateWithdrawals = function() {
         $.ajax({
             url: "/api/withdrawals/get-resume/",
             type: "GET",
@@ -309,6 +316,7 @@ $(document).ready(function(){
                     if (response.data.length > 2) {
                         $('#skeleton-withdrawal').hide();
                     }
+                    $('#container-withdraw').html('');
                     $('#container-withdraw').show();
                     $('#card-history').asScrollable();
                     let c = 1;

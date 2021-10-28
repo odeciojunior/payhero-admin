@@ -146,7 +146,8 @@ window.defaultWithdrawal = function(gatewayId) {
                                         $('#withdrawal-value-' + gatewayId).val('');
                                     });
 
-                                    updateBalances();
+                                    updateStatements();
+                                    updateWithdrawals();
 
                                     $('.btn-return').on(function () {
                                         $('#modal_body').modal('hide');
@@ -163,7 +164,6 @@ window.defaultWithdrawal = function(gatewayId) {
         );
     }
 }
-
 
 window.customWithdrawal = function(gatewayId) {
 
@@ -237,7 +237,8 @@ window.customWithdrawal = function(gatewayId) {
                     $(".modal-body, #modal-body-withdrawal-custom").modal("hide");
                 });
 
-                updateBalances();
+                updateStatements();
+                updateWithdrawals();
             },
             complete: (response) => {
                 $("#bt-confirm-withdrawal-modal-custom").removeAttr("disabled");

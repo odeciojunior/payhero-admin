@@ -236,9 +236,6 @@
                                             <span class="input-group-text">R$</span>
                                         </div>
                                         <input id="withdrawal_amount" name="withdrawal_amount" type="text" class="form-control" aria-label="Valor mínimo para saque">
-
-
-
                                     </div>
                                     <br>
                                     <div class="row">
