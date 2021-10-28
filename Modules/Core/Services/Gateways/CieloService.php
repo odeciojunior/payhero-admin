@@ -264,6 +264,7 @@ class CieloService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
         $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $availableBalance -= $blockedBalance;
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
 
         return [

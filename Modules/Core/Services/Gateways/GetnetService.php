@@ -359,6 +359,7 @@ class GetnetService implements Statement
         }
 
         $availableBalance = $this->getAvailableBalance();
+        $pendingDebtBalance = $this->getPendingDebtBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
         $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
@@ -367,6 +368,7 @@ class GetnetService implements Statement
         return [
             'name' => 'Getnet',
             'available_balance' => foxutils()->formatMoney($availableBalance / 100),
+            'pending_debt_balance' => foxutils()->formatMoney($pendingDebtBalance / 100),
             'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
             'blocked_balance' => foxutils()->formatMoney($blockedBalance / 100),
             'total_balance' => foxutils()->formatMoney($totalBalance / 100),

@@ -40,7 +40,7 @@ $(document).ready(function () {
             },
             error: response => {
                 if (notify) {
-                    alertCustom('error', 'Nenhuma configuração de saque automático encontrada para a empresa selecionada')
+                    alertCustom('warning', 'Nenhuma configuração de saque automático encontrada para a empresa selecionada')
                 }
                 clearSettingsForm()
             },
