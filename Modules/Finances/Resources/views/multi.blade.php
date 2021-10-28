@@ -12,12 +12,15 @@
     <div class="page">
         <div class="page-header container">
             <div class="row" style="margin-top: 50px">
-                <div class="col-sm-6">
+                <div class="col-sm-7">
                     <h1 class="page-title">Finanças</h1>
-                    <p class="mt-10"><span class="badge badge-info">NOVO!</span> Uma nova central para você controlar seus extratos em diferentes adquirentes.</p>
+                    <p class="mt-10">
+                        <span class="badge badge-info new-badge">NOVO!</span>
+                        <span class="new-title">Uma nova central para você controlar seus extratos em diferentes adquirentes.</span>
+                    </p>
                 </div>
-                <div class="col-sm-6 text-right">
-                    <div class="col-sm-6 float-right">
+                <div class="col-sm-5 text-right">
+                    <div class="col-sm-11 float-right">
                         <div class="input-holder">
                             <label for="transfers_company_select"> Empresa</label>
                             <select style='border-radius:10px' class="form-control select-pad"
@@ -25,22 +28,31 @@
                                     id="transfers_company_select"> </select>
                         </div>
                     </div>
-                    <div class="col-sm-12 float-right"><span class="gray"><i class="fa fa-info-circle"></i> Dúvidas sobre adquirentes</span></div>
-                </div>
-                <div class="col-sm-6" id="container-disponivel">
-                    <p>Dísponivel para Saque</p>
-                    <div id="val-skeleton"><div class="skeleton skeleton-text" style="width:50% !important"></div></div>
-                    <div id="container_val" style="display: none">
-                        <span class="font-size-16 gray">R$</span> <span class="font-size-32 bold total-available-balance" style="color: #636363;">0,00</span>
-                        <span id="hide-withdraw"></span>
-                        <i style="margin-left:24px;cursor:pointer" class="fa fa-eye-slash font-size-24"></i>
+                    <div class="col-sm-12 float-right">
+                        <span class="d-flex justify-content-end align-items-center" style="font-size: 16px;color: #636363;">
+                            <span style="margin-right: 9px" class="o-question-help-1"></span> Dúvidas sobre adquirentes?
+                        </span>
                     </div>
                 </div>
-                <div class="col-sm-6" style="display:none;cursor: pointer" id="container-return">
-                    <i class="fa fa-arrow-left"></i> Retornar para tela inicial
+                <div class="col-sm-6" id="container-available">
+                    <p class="m-0 color-default">Disponível para saque</p>
+                    <div id="val-skeleton"><div class="skeleton skeleton-text" style="width:50% !important"></div></div>
+                    <div id="container_val" class="d-flex align-items-center">
+                        <div style="margin-right: 24px">
+                            <span class="font-size-16 gray">R$</span>
+                            <span class="font-size-32 bold total-available-balance" style="color: #636363;">0,00</span>
+                        </div>
+                        <img id="eye-slash" src="{{ asset('modules/global/img/logos/2021/svg/eye-slash.svg') }}" alt="" class="pointer">
+                        <img id="eye-no-slash" src="{{ asset('modules/global/img/logos/2021/svg/eye-no-slash.svg') }}" alt="" class="pointer d-none">
+                    </div>
                 </div>
-                <div class="col-sm-6 text-right">
-                    <a href="#" id="btn-config-all" class="btn btn-sm btn-default btn-outline" style="background-color: #f3f7f9 !important"><i class="fa fa-cog"></i></a>
+                <div class="col-sm-6 pointer default-hover" style="display:none;" id="container-return">
+                    <div class="d-flex align-items-center h-p100 default-hover">
+                        <i class="o-arrow-right-1" style="margin-right: 8px"></i> Retornar para tela inicial
+                    </div>
+                </div>
+                <div class="col-sm-6 d-flex justify-content-end align-items-center">
+                    <a href="#" id="btn-config-all" class="btn btn-sm btn-default" style="background-color: #f3f7f9 !important"><i class="o-gear-1"></i></a>
                 </div>
             </div>
         </div>

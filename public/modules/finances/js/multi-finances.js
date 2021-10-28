@@ -204,7 +204,7 @@ $(document).ready(function(){
                                 decimal: ",",
                                 allowZero: true,
                             });
-    
+
                             $(document).on("click","#request-withdrawal-" + data.id,function(){
                                 if(onlyNumbers($("#available-balance-" + data.id).html()) < 1) {
                                     alertCustom('error', 'Saldo insuficiente para realizar saques!');
@@ -354,15 +354,20 @@ $(document).ready(function(){
         });
     }
 
-    $(document).on('click','.fa-eye-slash',function(){
-        if($('#hide-withdraw').is(':visible')){
-            $('#container_val').removeClass('flex-center');
-            $('#hide-withdraw').hide();
-            $('.total-available-balance').show();
-        }else{
-            $('#container_val').addClass('flex-center');
-            $('#hide-withdraw').css('display','inline-block');
-            $('.total-available-balance').hide();
+    $('#eye-slash, #eye-no-slash').on('click',function(){
+        let availableBalance = $('.total-available-balance')
+
+        let iconEye = $('#eye-slash')
+        let iconNoEye = $('#eye-no-slash')
+
+        if (!availableBalance.hasClass('hide-withdraw')) {
+            availableBalance.addClass('hide-withdraw').css('color', 'transparent')
+            iconEye.addClass('d-none')
+            iconNoEye.removeClass('d-none')
+        } else {
+            availableBalance.removeClass('hide-withdraw').css('color', '#636363')
+            iconEye.removeClass('d-none')
+            iconNoEye.addClass('d-none')
         }
     });
 
@@ -371,7 +376,7 @@ $(document).ready(function(){
             $('#container-config').hide();
             $('#container-return').hide();
             $('#container-gateways').show();
-            $('#container-disponivel').show();
+            $('#container-available').show();
         }
     });
 
@@ -380,12 +385,12 @@ $(document).ready(function(){
             $('#container-config').show();
             $('#container-return').show();
             $('#container-gateways').hide();
-            $('#container-disponivel').hide();
+            $('#container-available').hide();
         }else{
             $('#container-config').hide();
             $('#container-return').hide();
             $('#container-gateways').show();
-            $('#container-disponivel').show();
+            $('#container-available').show();
         }
     });
 });
