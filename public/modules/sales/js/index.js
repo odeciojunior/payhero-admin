@@ -205,12 +205,7 @@ $(document).ready(function () {
 
         Object.keys(data).forEach((value)=>{
             if(Array.isArray(data[value])){
-                if(data[value].length > 1){
-                    data[value] = data[value].filter((value) => value != '').join(',');
-                
-                }else if(data[value].length == 1){
-                    data[value] = data[value].join(',');
-                }
+                data[value] = data[value].filter((value) => value).join(',');
             }
         })
 
@@ -705,12 +700,12 @@ $(document).ready(function () {
     //COMPORTAMENTO DO FILTRO MULTIPLO
     function behaviorMultipleFilter(element, selectId){
         var $select = $('#'+selectId);
-        var idToRemove = '';
+        var valueToRemove = '';
         var values = $select.val();
 
         if (element.value != '') {
-              if (values) {
-                var i = values.indexOf(idToRemove);
+            if (values) {
+                var i = values.indexOf(valueToRemove);
 
                 if (i >= 0) {
                     values.splice(i, 1);
