@@ -17,6 +17,7 @@ $(document).ready(function(){
         6: 'primary',
         7: 'danger',
     };
+
     function getCompanies() {
         loadingOnScreen();
 
@@ -58,6 +59,7 @@ $(document).ready(function(){
             }
         });
     }
+
     getCompanies();
 
     $(document).on("change","#transfers_company_select", function () {
@@ -72,7 +74,8 @@ $(document).ready(function(){
         updateStatements();
         updateWithdrawals();
     });
-    function returnGatewayImg(nome){
+
+    function getGatewayImg(nome){
         let html='';
         switch (nome) {
             case 'getnet':
@@ -128,6 +131,7 @@ $(document).ready(function(){
         }
         return html;
     }
+
     function updateStatements() {
         $.ajax({
             url: "/api/finances/get-statement-resumes/",
@@ -149,10 +153,14 @@ $(document).ready(function(){
                     $('#container-all-gateways').html('<div class="owl-carousel owl-carousel-shortcode owl-loaded owl-drag"></div>');
                     $.each(response, function(index, data) {
                         if (data.name) {
-                            let img_gateway = returnGatewayImg(data.name.toLowerCase());
+                            let img_gateway = getGatewayImg(data.name.toLowerCase());
                             let html_transaction='Nenhuma Venda Encontrada';
                             if (data.last_transaction) {
                                 html_transaction='Última transação : '+data.last_transaction;
+                            }
+                            let pendingDebt = "";
+                            if(data.pending_debt_balance) {
+                                pendingDebt = "<input id='pending-debt-" + data.id + "' type='hidden' value='" + data.pending_debt_balance + "' >";
                             }
                             $('.owl-carousel').append(`
                                 <div class="item">
@@ -163,6 +171,7 @@ $(document).ready(function(){
                                                 <div class="col-12 p-0 mb-35">${img_gateway}</div>
                                                 <h6 class="font-size-16 gray m-0"><span class="circulo circulo-green"></span>Saldo Dísponivel</h6>
                                                 <h4 style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span></h4>
+                                                ${pendingDebt}
                                                 <div id="balance-not-available-${data.name}">
                                                     <h6 class="font-size-16 gray m-0"><span class="circulo circulo-orange"></span>Saldo Pendente</h6>
                                                     <h4 style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
@@ -180,7 +189,7 @@ $(document).ready(function(){
                                                         value="0,00" aria-describedby="basic-addon1" style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
                                             </div>
                                         </div>
-                                        <a href="#" class="col-12 btn-outline-success btn" id="request-withdrawal-${data.name}">Solicitar saque</a>
+                                        <a href="#" class="col-12 btn-outline-success btn" id="request-withdrawal-${data.id}">Solicitar saque</a>
                                         <a href="#" class="btn btn-saque" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
                                         <a href="#" class="btn btn-danger" id="cancel-withdrawal-${data.name}" style="display:none; margin-top:20px">Cancelar</a>
                                     </div>
@@ -193,29 +202,29 @@ $(document).ready(function(){
                                 allowZero: true,
                             });
     
-                            $(document).on("click","#request-withdrawal-" + data.name,function(){
+                            $(document).on("click","#request-withdrawal-" + data.id,function(){
                                 $("#balance-not-available-" + data.name).hide();
                                 $("#container-withdrawal-" + data.name).show();
-                                $("#request-withdrawal-" + data.name).hide();
+                                $("#request-withdrawal-" + data.id).hide();
                                 $("#new-withdrawal-" + data.name).show();
                                 $("#cancel-withdrawal-" + data.name).show();
                             });
                             $(document).on("click","#cancel-withdrawal-" + data.name,function(){
                                 $("#balance-not-available-" + data.name).css("display","inline-block");
                                 $("#container-withdrawal-" + data.name).hide();
-                                $("#request-withdrawal-" + data.name).show();
+                                $("#request-withdrawal-" + data.id).show();
                                 $("#new-withdrawal-" + data.name).hide();
                                 $("#cancel-withdrawal-" + data.name).hide();
                             });
 
                             if(data.id == 'w7YL9jZD6gp4qmv' || data.id == 'oXlqv13043xbj4y') {
                                 $(document).on("click","#new-withdrawal-" + data.name,function(){
-                                    let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.name).val());
-                                    if(withdrawalValue == '' || withdrawalValue <= 0){
+                                    let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
+                                    if(withdrawalValue <= 0 || withdrawalValue == ''){
                                         alertCustom('error', 'Valor do saque inválido!');
                                         return;
                                     }
-                                    $("#modal-withdrawal-custom").modal("show");
+                                    customWithdrawal(data.id);
                                 });
                             }
                             else {
@@ -223,7 +232,6 @@ $(document).ready(function(){
                                     let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
                                     if(withdrawalValue <= 0 || withdrawalValue == ''){
                                         alertCustom('error', 'Valor do saque inválido!');
-                                        console.log(withdrawalValue);
                                         return;
                                     }
                                     defaultWithdrawal(data.id);
@@ -305,7 +313,7 @@ $(document).ready(function(){
                     $('#card-history').asScrollable();
                     let c = 1;
                     $.each(response.data, function(index, data) {
-                        let img_gateway = returnGatewayImg(data.gateway_name.toLowerCase());
+                        let img_gateway = getGatewayImg(data.gateway_name.toLowerCase());
                         let extra='';
                         let class2='';
                         if (c>1) {
