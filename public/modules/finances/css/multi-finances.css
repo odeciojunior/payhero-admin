@@ -192,3 +192,23 @@ background-position: -24px -53px;
     color: #2E85EC;
     transition: 0.3s;
 }
+
+.radio-badge {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    margin-right: 8px;
+    display: inline-block;
+}
+.radio-badge.green {
+    background-color: #1BE4A8;
+}
+.radio-badge.orange {
+    background-color: #FF7A00;
+}
+.radio-badge.red {
+    background-color: #FF003D;
+}
+.radio-badge.blue {
+    background-color: #2E85EC;
+}
