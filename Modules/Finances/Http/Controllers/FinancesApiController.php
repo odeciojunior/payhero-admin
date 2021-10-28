@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Services\CompanyBalanceService;
@@ -49,7 +50,7 @@ class FinancesApiController extends Controller
             $availableBalance -= $blockedBalance;
             $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
             $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
-
+            // dd($companyService);
             return response()->json(
                 [
                     'available_balance' => foxutils()->formatMoney($availableBalance / 100),
@@ -94,10 +95,8 @@ class FinancesApiController extends Controller
 
     public function getStatementResume(Request $request)
     {
-        $company = Company::find(hashids_decode($request->company));
-
+        $company = Company::find(hashids_decode($request->company_id));
         $companyService = new CompanyBalanceService($company);
-
         return response()->json($companyService->getResumes());
     }
 }

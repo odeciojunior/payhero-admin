@@ -274,4 +274,7 @@ class Company extends Model
         return $this->hasMany('Modules\Core\Entities\AsaasBackofficeRequest');
     }
 
+    public function getGatewayApiKey($gatewayId){
+        return $this->gatewayCompanyCredential->where('gateway_id',$gatewayId)->first()->gateway_api_key ?? null;
+    }
 }

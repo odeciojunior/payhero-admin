@@ -134,7 +134,7 @@ class CreateAccountAsaas extends Command
 
         }
         catch(Exception $ex) {
-            report($ex);
+            throw new Exception($ex->getMessage());
         }
     }
 

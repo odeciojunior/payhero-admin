@@ -12,6 +12,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\StatementService;
@@ -25,9 +26,9 @@ class AsaasService implements Statement
 
     public function __construct()
     {
-        $this->gatewayIds = [ 
-            Gateway::ASAAS_PRODUCTION_ID, 
-            Gateway::ASAAS_SANDBOX_ID 
+        $this->gatewayIds = [
+            Gateway::ASAAS_PRODUCTION_ID,
+            Gateway::ASAAS_SANDBOX_ID
         ];
     }
 
@@ -77,7 +78,7 @@ class AsaasService implements Statement
 
     public function getPendingDebtBalance() : int
     {
-        return 0;    
+        return 0;
     }
 
     public function hasEnoughBalanceToRefund(Sale $sale): bool
@@ -151,7 +152,7 @@ class AsaasService implements Statement
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            return false;                
+            return false;
         }
 
         // event(new WithdrawalRequestEvent($withdrawal));
@@ -224,22 +225,64 @@ class AsaasService implements Statement
 
     public function getResume()
     {
-        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)->orderBy('id', 'desc')->first();
+        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
 
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
         $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
-        $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at : '';
+        $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
 
         return [
             'name' => 'Asaas',
-            'available_balance' => $availableBalance,
-            'pending_balance' => $pendingBalance,
-            'blocked_balance' => $blockedBalance,
-            'total_balance' => $totalBalance,
-            'last_transaction' => $lastTransactionDate
+            'available_balance' => foxutils()->formatMoney($availableBalance / 100),
+            'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
+            'blocked_balance' => foxutils()->formatMoney($blockedBalance / 100),
+            'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+            'last_transaction' => $lastTransactionDate,
+            'id' => 'NzJqoR32egVj5D6'
         ];
     }
 
+    public function makeAnticipationSale(Sale $sale)
+    {
+        $apiKey = $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
+
+        $curl = curl_init('https://www.asaas.com/api/v3/anticipations');
+
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Accept: application/json',
+            'access_token: ' . $apiKey,
+        ]);
+
+        curl_setopt($curl, CURLOPT_POSTFIELDS, [
+            "agreementSignature"=> $sale->customer->name,
+            "installment"=> null,
+            "payment"=> $sale->gateway_transaction_id,
+            "documents"=> null
+        ]);
+
+        $result = curl_exec($curl);
+
+        curl_close($curl);
+
+        return json_decode($result, true);
+    }
+
+    public function getCompanyApiKey($owner_id,$project_id)
+    {
+        return UserProject::where('user_id', $owner_id)
+            ->where('project_id', $project_id)
+            ->first()
+            ->company
+            ->getGatewayApiKey(foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID);
+
+    }
 }

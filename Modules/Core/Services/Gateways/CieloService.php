@@ -252,7 +252,9 @@ class CieloService implements Statement
 
     public function getResume()
     {
-        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)->orderBy('id', 'desc')->first();
+        $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
 
         if(empty($lastTransaction)) {
             return [];
@@ -262,15 +264,16 @@ class CieloService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
         $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
-        $lastTransactionDate = $lastTransaction->created_at;
+        $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
 
         return [
             'name' => 'Cielo',
-            'available_balance' => $availableBalance,
-            'pending_balance' => $pendingBalance,
-            'blocked_balance' => $blockedBalance,
-            'total_balance' => $totalBalance,
-            'last_transaction' => $lastTransactionDate
+            'available_balance' => foxutils()->formatMoney($availableBalance / 100),
+            'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
+            'blocked_balance' => foxutils()->formatMoney($blockedBalance / 100),
+            'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+            'last_transaction' => $lastTransactionDate,
+            'id' => 'pM521rZJrZeaXoQ'
         ];
     }
 }
