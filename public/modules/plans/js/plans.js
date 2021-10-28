@@ -1,6 +1,6 @@
 $(function () {
     var statusPlan = {
-        0: "danger",
+        0: "default",
         1: "success",
     }
     var projectId = $(window.location.pathname.split('/')).get(-1);
@@ -44,32 +44,6 @@ $(function () {
 
     function isEmpty(obj) {
         return Object.keys(obj).length === 0;
-    }
-
-    function clearFields(modal, type) {
-        selected_products = [];
-        stage_plan = 1;
-        
-        var modalID = $(modal);
-        
-        if (type == 'create') {
-            modalID.find('.box-breadcrumbs .products').find('img').attr('src', '/modules/global/img/icon-products-plans.svg');
-            modalID.find('.box-breadcrumbs .details').find('img').attr('src', '/modules/global/img/icon-costs-plans.svg');
-            modalID.find('.box-breadcrumbs .informations').find('img').attr('src', '/modules/global/img/icon-info-plans.svg');
-
-            modalID.find('.box-breadcrumbs .products').removeClass('finalized').addClass('active');
-            modalID.find('.box-breadcrumbs .details').removeClass('finalized');
-            modalID.find('.box-breadcrumbs .informations').removeClass('finalized');
-            
-            modalID.find('.box-description').html('<p class="font-weight-bold" style="margin-bottom: 21px;">Selecione os produtos do novo plano</p><input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome">');
-            $('.box-review').html('');
-
-            $('#name').val('');
-            $('#price').val('');
-            $('#description').val('');
-        } else {
-            modalID.modal('hide');
-        }
     }
 
     function getIconTypeCustomProduct(custom_type) {
@@ -797,16 +771,14 @@ $(function () {
                     'description': $(modalID).find('#description').val()
                 },
                 error: function error(response) {
-                    clearFields();
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
-                    $(modalID).find('.box-breadcrumbs .informations').find('img').attr('src', '/modules/global/img/icon-check.svg');
-                    $(modalID).find('.box-breadcrumbs .informations').removeClass('active');
-                    $(modalID).find('.box-breadcrumbs .informations').addClass('finalized');
-                    
                     index();
-                    clearFields();
+                    $(modalID).find('#name').val('');
+                    $(modalID).find('#price').val('');
+                    $(modalID).find('#description').val('');
+
                     alertCustom('success', 'Plano adicionado com sucesso');
     
                     $(modalID).modal('hide');
@@ -840,7 +812,6 @@ $(function () {
                     'products': selected_products
                 },
                 error: function error(response) {
-                    clearFields();
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
@@ -1507,10 +1478,10 @@ $(function () {
                                 data += '<td id="" class="display-lg-none display-xlg-none text-center" style="vertical-align: middle;"><a class="pointer" onclick="copyToClipboard(\'#link\')"><img src="/modules/global/img/icon-copy-c.svg"></a></td>';
                                 data += '<td id="" class="text-center"><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
                                 data += "<td class='mg-responsive text-center' style='line-height: 1;'>"
-                                    data += "<div class='d-flex align-items-center'>";
+                                    data += "<div class='d-flex justify-content-end align-items-center'>";
                                         data += "<a title='Visualizar' class='mg-responsive pointer details-plan' plan='" + value.id + "' role='button'><span class='o-eye-1'></span></a>"
                                         data += "<a title='Editar' class='mg-responsive pointer edit-plan' plan='" + value.id + "' role='button'><span class='o-edit-1'></span></a>"
-                                        data += "<a title='Excluir' class='mg-responsive pointer delete-plan' plan='" + value.id + "' role='button'><span class='o-bin-1'></span></a>";
+                                        data += "<a title='Excluir' class='mr-0 mg-responsive pointer delete-plan' plan='" + value.id + "' role='button'><span class='o-bin-1'></span></a>";
                                     data += "</div>";
                                 data += "</td>";
                             data += '</tr>';

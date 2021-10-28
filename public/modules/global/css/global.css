@@ -1587,9 +1587,14 @@ input[type="checkbox"], input[type="radio"] {
     padding: 10px 24px;
     font-size: 14px;
     line-height: 14px;
+    min-width: 94px;
 }
 #table-plans .badge-success {
     background-color: #1BE4A8;
+}
+#table-plans .badge-default {
+    color: #8B8B8B !important;
+    background-color: #E6E6E6;
 }
 
 .ph-item::before {

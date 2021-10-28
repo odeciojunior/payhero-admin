@@ -3,22 +3,27 @@
         <div class='d-flex align-items-center'>
             <div class='col-md-5'>
                 <div class="input-group">
-                    <input type="text" class="form-control" id='plan-name' name="plan" placeholder="Nome">
+                    <input type="text" class="form-control" id='plan-name' name="plan" placeholder="Pesquisa por nome">
                     <span class="input-group-append" id='btn-search-plan'>
-                        <button type="submit" class="btn btn-primary btn-sm"><i class="icon wb-search" aria-hidden="true"></i></button>
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <img src="/modules/global/img/icon-search_.svg">
+                        </button>
                     </span>
                 </div>
             </div>
             <div class='col-md-7'>
                 <div class="d-flex justify-content-end">
                     <div id="config-cost-plan" class="btn-holder d-flex align-items-center pointer" style="margin-right: 32px;">
-                        <span class="link-button-dependent"> Configurações Custo Plano </span>
+                        <span class="link-button-dependent">Configurar custos </span>
                         <a class="ml-10 rounded-add pointer bg-secondary">
-                            <i class="icon wb-settings" aria-hidden="true"></i></a>
+                            <img src="/modules/global/img/icon-config.svg">
+                        </a>
                     </div>
                     <div id="add-plan" class="btn-holder d-flex align-items-center pointer">
-                        <span class="link-button-dependent blue"> Adicionar Plano </span>
-                        <a class="ml-10 rounded-add pointer" style="display: inline-flex;"><i class="o-add-1" aria-hidden="true"></i></a>
+                        <span class="link-button-dependent blue">Adicionar plano </span>
+                        <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
+                            <img src="/modules/global/img/icon-add.svg">
+                        </a>
                     </div>
                 </div>
             </div>

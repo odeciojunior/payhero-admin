@@ -411,7 +411,7 @@ input[type=radio] {
 
 .nav-tabs .nav-link {
     text-transform: uppercase;
-    opacity: 0.5;
+    opacity: 1;
     font-size: 11px;
     font-weight: bold;
     font-style: normal;
@@ -1020,7 +1020,7 @@ input[type=radio] {
 }
 
 .page {
-    background: #f3f3f3;
+    background: #F4F4F4;
     margin-bottom: 50px !important;
 }
 

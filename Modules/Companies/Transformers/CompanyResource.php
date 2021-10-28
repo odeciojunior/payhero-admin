@@ -90,7 +90,7 @@ class CompanyResource extends JsonResource
             'extra_document' => $this->extra_document ?? '',
             'active_flag' => $this->active_flag,
             'has_project' => !empty($project),
-            'capture_transaction_enabled' => $this->gatewayCredential(Gateway::GETNET_PRODUCTION_ID)->capture_transaction_enabled,
+            'capture_transaction_enabled' => $this->gatewayCredential(Gateway::GETNET_PRODUCTION_ID)->capture_transaction_enabled ?? '',
             'transaction_rate' => $this->transaction_rate,
             'gateway_tax' => $this->gateway_tax,
             'installment_tax' => $this->installment_tax,

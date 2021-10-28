@@ -122,7 +122,7 @@ class PlansApiController extends Controller
             $productModel       = new Product();
             $projectModel       = new Project();
             $affiliateLinkModel = new AffiliateLink();
-            $planService = new PlanService();
+            $planService        = new PlanService();
 
             $requestData = $request->validated();
             $requestData['project_id'] = current(Hashids::decode($requestData['project_id']));
@@ -136,19 +136,17 @@ class PlansApiController extends Controller
                 if (Gate::allows('edit', [$project])) {
                     $requestData['price'] = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
                     $requestData['price'] = $this->getValue($requestData['price']);
-                    if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
+                    if (!empty($requestData['products'])) {
                         $get_product = $productModel->find(current(Hashids::decode($request['products'][0]['id'])));
                         
                         $requestData['name'] = FoxUtils::removeSpecialChars($requestData['name']);
                         $requestData['description'] = FoxUtils::removeSpecialChars($requestData['description']);
 
-                        $price = number_format(intval(preg_replace("/[^0-9]/", "", $request['price'])) / 100, 2, ',', '.');
-
                         $plan = $planModel->create([
                             'project_id'            => $projectId,
                             'name'                  => FoxUtils::removeSpecialChars($request['name']),
                             'description'           => FoxUtils::removeSpecialChars($request['description']),
-                            'price'                 => $this->getValue($price),
+                            'price'                 => $requestData['price'],
                             'status'                => 1,
                             'shopify_id'            => $get_product->shopify_id ?? null,
                             'shopify_variant_id'    => $get_product->shopify_variant_id ?? null
@@ -183,9 +181,13 @@ class PlansApiController extends Controller
                                 'message' => 'Ocorreu um erro, tente novamente mais tarde',
                             ], 400);
                         }
-                    }
 
-                    return response()->json('Plano Configurado com sucesso!', 200);
+                        return response()->json('Plano Configurado com sucesso!', 200);
+                    } else {
+                        return response()->json([
+                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                        ], 400);
+                    }
                 } else {
                     return response()->json([
                         'message' => 'Sem permissão para salvar este plano',
