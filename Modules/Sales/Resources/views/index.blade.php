@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=10') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=011') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
@@ -535,7 +535,7 @@
     @push('scripts')
         <script src="{{ asset('/modules/sales/js/index.js?v=' . random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
+        <script src="{{ asset('modules/global/js/daterangepicker.min.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 
