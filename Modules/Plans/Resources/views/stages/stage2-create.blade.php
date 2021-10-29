@@ -10,7 +10,7 @@
 
             <div class="box-stage details active d-flex align-items-center">
                 <div class="icon mr-15"><img src="/modules/global/img/icon-costs-plans-c.svg" alt="Icon Costs"></div>
-                <div class="title" style="color: #2E85EC;">Detalhes</div>
+                <div class="title" style="color: #2E85EC;">Custos</div>
             </div>
 
             <div class="line"><hr></div>

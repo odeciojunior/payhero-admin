@@ -326,8 +326,8 @@ $(function () {
                                 alertCustom('error', 'Ocorreu um erro, por favor, refaça a operação');
                             },
                             success: function success(response) {
-                                append += '<div class="product d-flex align-items-center">';
-                                    append += '<div class="div-product d-flex align-items-center" data-code="' + response.data.id + '" data-toggle="tooltip" data-placement="top" title="' + response.data.name + '">';
+                                append += '<div class="product d-flex align-items-center" data-code="' + response.data.id + '">';
+                                    append += '<div class="div-product d-flex align-items-center" data-toggle="tooltip" data-placement="top" title="' + response.data.name + '">';
                                         append += '<div class="div-photo" data-type="' + type + '"><img class="product-photo" src="' + response.data.photo + '"></div>';
                                         append += '<h1 class="title">' + response.data.name_short + '</h1>';
                                     append += '</div>';
@@ -591,7 +591,7 @@ $(function () {
                             append += '</div>';
                             append += '<div>';
                                 append += '<h1 class="title">' + product.product_name_short + '</h1>';
-                                append += '<p class="description m-0">Qtd: ' + products_plan.length + '</p>';
+                                append += '<p class="description m-0">Qtd: ' + product.amount + '</p>';
                             append += '</div>';
                         append += '</div>';
                     append += '</div>';
@@ -896,17 +896,24 @@ $(function () {
 
     // Calculate details
     $('body').on('change', '.box-products #price', function() {
-        var price = parseFloat($(this).val()).toFixed(2);
+        if ($(this).val() != '') {
+            var price = parseFloat($(this).val()).toFixed(2);
 
-        var tax = (price * gateway_tax / 100).toFixed(2);
-        var costs = calculateCostsPlan();
-        var comission = (price - tax).toFixed(2);
-        var return_value = (comission - costs).toFixed(2);
+            var tax = (price * gateway_tax / 100).toFixed(2);
+            var costs = calculateCostsPlan();
+            var comission = (price - tax).toFixed(2);
+            var return_value = (comission - costs).toFixed(2);
 
-        $('.price-plan').find('p').html('R$'+price.replace('.', ','));
-        $('.tax-plan').find('p').html('R$'+tax.replace('.', ','));
-        $('.comission-plan').find('p').html('R$'+comission.replace('.', ','));
-        $('.profit-plan').find('p').html('R$'+ return_value.replace('.', ','));
+            $('.price-plan').find('p').html('R$'+price.replace('.', ','));
+            $('.tax-plan').find('p').html('R$'+tax.replace('.', ','));
+            $('.comission-plan').find('p').html('R$'+comission.replace('.', ','));
+            $('.profit-plan').find('p').html('R$'+ return_value.replace('.', ','));
+        } else {
+            $('.price-plan').find('p').html('R$0,00');
+            $('.tax-plan').find('p').html('R$0,00');
+            $('.comission-plan').find('p').html('R$0,00');
+            $('.profit-plan').find('p').html('R$0,00');
+        }
     });
     
     // Select products
