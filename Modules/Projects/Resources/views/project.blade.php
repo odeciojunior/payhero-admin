@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=11') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=12') }}">
     {{-- <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=' . uniqid()) }}"> --}}
     <style>
         @font-face {

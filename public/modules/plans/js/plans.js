@@ -179,7 +179,7 @@ $(function () {
                 selected_products.push({ id: e.product_id });
             });
         } else {
-            $(modal).find('#btn-modal-plan-return').html('Fechar');
+            $(modal).find('#btn-modal-plan-return').html('Voltar');
         }
 
         $(modal).find('.modal-body').css('height', 'auto');
@@ -212,7 +212,7 @@ $(function () {
                     if (response.data.length > 0) {
                         response.data.forEach(function(product) {
                             var index_product = selected_products.map(function(e) { return e.id; }).indexOf(product.id);
-                            append += '<div class="col-sm-6" alt="' + product.name + '" data-toggle="tooltip" data-placement="top" title="' + product.name + '">';
+                            append += '<div class="col-sm-6" data-toggle="tooltip" data-placement="top"  title="' + product.name + '">';
                                 append += '<div data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
                                     append += '<div class="d-flex align-items-center">';
                                         append += '<div class="background-photo">';
@@ -253,7 +253,7 @@ $(function () {
                             
                             var appendProductsPlan = '<div class="d-flex">';
                             products_plan.forEach(function(product) {
-                                appendProductsPlan += '<div class="background-photo">';
+                                appendProductsPlan += '<div class="background-photo" data-toggle="tooltip" data-placement="top"  title="' + product.product_name + '">';
                                     appendProductsPlan += '<img class="product-photo" src="' + product.photo + '">';
                                 appendProductsPlan += '</div>';
                             });
@@ -326,8 +326,8 @@ $(function () {
                                 alertCustom('error', 'Ocorreu um erro, por favor, refaça a operação');
                             },
                             success: function success(response) {
-                                append += '<div class="product d-flex align-items-center" data-code="' + response.data.id + '" data-toggle="tooltip" data-placement="top" title="' + response.data.name + '">';
-                                    append += '<div class="div-product d-flex align-items-center">';
+                                append += '<div class="product d-flex align-items-center">';
+                                    append += '<div class="div-product d-flex align-items-center" data-code="' + response.data.id + '" data-toggle="tooltip" data-placement="top" title="' + response.data.name + '">';
                                         append += '<div class="div-photo" data-type="' + type + '"><img class="product-photo" src="' + response.data.photo + '"></div>';
                                         append += '<h1 class="title">' + response.data.name_short + '</h1>';
                                     append += '</div>';
@@ -335,11 +335,11 @@ $(function () {
                                         append += '<div class="d-flex align-items-center  justify-content-center ">';
                                             append += '<div class="input-number">';
                                                 append += '<button class="btn-sub">';
-                                                    append += '<img src="http://dev.checkout.com/assets/img/minus.svg">';
+                                                    append += '<img src="/modules/global/img/minus.svg">';
                                                 append += '</button>';
                                                 append += '<input type="number" class="form-control" name="amount" value="' + (selected_products[index_product].amount ?? 1) + '" min="1" max="99" step="1">';
                                                 append += '<button class="btn-add">';
-                                                    append += '<img src="http://dev.checkout.com/assets/img/plus.svg">';
+                                                    append += '<img src="/modules/global/img/plus.svg">';
                                                 append += '</button>';
                                             append += '</div>';
                                         append += '</div>';
