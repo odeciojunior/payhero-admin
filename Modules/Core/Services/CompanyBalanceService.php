@@ -27,9 +27,9 @@ class CompanyBalanceService
 
     private $defaultGateways = [
         AsaasService::class,
-        CieloService::class,
         GetnetService::class,
-        GerencianetService::class
+        GerencianetService::class,
+        CieloService::class,
     ];
 
     public function __construct(Company $company, Statement $gatewayStatementService = null)

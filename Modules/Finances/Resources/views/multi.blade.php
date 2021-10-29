@@ -27,11 +27,11 @@
                                     id="transfers_company_select"> </select>
                         </div>
                     </div>
-                    <div class="col-sm-12 float-right">
-                        <span class="d-flex justify-content-end align-items-center" style="font-size: 16px;color: #636363;">
-                            <span style="margin-right: 9px" class="o-question-help-1"></span> Dúvidas sobre adquirentes?
-                        </span>
-                    </div>
+{{--                    <div class="col-sm-12 float-right d-none d-sm-flex justify-content-end">--}}
+{{--                        <div class="d-flex justify-content-end align-items-center" style="font-size: 16px;color: #636363;">--}}
+{{--                            <span style="margin-right: 9px" class="o-question-help-1"></span> Dúvidas sobre adquirentes?--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
                 <div class="col-sm-6" id="container-available">
                     <p class="m-0 color-default">Disponível para saque</p>

@@ -267,3 +267,15 @@ select.form-control {
     display: flex;
     align-items: center;
 }
+
+@media (max-width: 991px) {
+    .badge {
+         width: unset;
+         height: unset;
+         padding: 8px 16px;;
+         border: unset;
+         box-shadow: unset;
+         text-indent: unset;
+         white-space: unset;
+    }
+}
