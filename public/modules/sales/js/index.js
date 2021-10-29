@@ -40,7 +40,6 @@ $(document).ready(function () {
     });
 
     // COMPORTAMENTOS DA JANELA
-
     $("#bt_get_csv").on("click", function () {
         $("#modal-export-sale").modal("show");
         exportFormat = "csv";
@@ -220,7 +219,6 @@ $(document).ready(function () {
             return data;
         }
     }
-
     // FIM - COMPORTAMENTOS DA JANELA
 
     getProjects();
@@ -727,13 +725,14 @@ $(document).ready(function () {
         var selectId = $(this).attr('id');                
         behaviorMultipleFilter(data, selectId)
     });
-
+    // FIM DO COMPORTAMENTO DO FILTRO
 
     $("#projeto").on("change", function () {
         let value = $(this).val();
         $("#plan").val(null).trigger("change");
     });
 
+    //LISTA PLANOS DE ACORDO COM O PROJETO(S)
     $("#plan").select2({
         language: {
             noResults: function () {
