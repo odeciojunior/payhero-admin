@@ -1,6 +1,40 @@
-/* ======================= CONFIGURATIONS MULTIPLE SELECT 2 BOX ======================= */
+/* WAS IN DOCUMENT */
+.select2-selection--single {
+    border: 1px solid #dddddd !important;
+    border-radius: .215rem !important;
+    height: 43px !important;
+}
+.select2-selection__rendered {
+    color: #707070;
+    border: none;
+    font-size: 16px !important;
+    font-family: 'Muli', sans-serif;
+}
+.select2-selection__arrow {
+    height: 43px !important;
+    right: 10px !important;
+}
+.select2-selection__arrow b {
+    border-color: #8f9ca2 transparent transparent transparent !important;
+}
+.select2-container--open .select2-selection__arrow b {
+    border-color: transparent transparent #8f9ca2 transparent !important;
+}
+.badge {
+    color: white;
+    padding: 5px 15px !important;
+    border-radius: 16px;
+    font-weight: 700;
+}
+.badge.badge-success  {
+    background-color: #5EE2A1;
+}
+.status-sale{
+    min-width: 84px;
+}
+/* and */
 
-
+/* ========= CONFIGURATIONS MULTIPLE SELECT 2 BOX ========= */
 /* CONFIGURATIONS OF BOX SELECT */
 .select2-container--default .select2-selection--multiple{
     border: 1px solid #CECECE;
@@ -37,6 +71,7 @@ li.select2-selection__choice{
     white-space: nowrap !important;
     width: 132px !important;
 }
+/* END CONFIGURATIONS MULTIPLE SELECT 2 */
 
 
 .table-warning-roll {

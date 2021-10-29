@@ -3,48 +3,11 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=011') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=112') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
-        <style>
-            .select2-selection--single {
-                border: 1px solid #dddddd !important;
-                border-radius: .215rem !important;
-                height: 43px !important;
-            }
-            .select2-selection__rendered {
-                color: #707070;
-                border: none;
-                font-size: 16px !important;
-                font-family: 'Muli', sans-serif;
-            }
-            .select2-selection__arrow {
-                height: 43px !important;
-                right: 10px !important;
-            }
-            .select2-selection__arrow b {
-                border-color: #8f9ca2 transparent transparent transparent !important;
-            }
-            .select2-container--open .select2-selection__arrow b {
-                border-color: transparent transparent #8f9ca2 transparent !important;
-            }
-
-            .badge {
-                color: white;
-                padding: 5px 15px !important;
-                border-radius: 16px;
-                font-weight: 700;
-            }
-
-            .badge.badge-success  {
-                background-color: #5EE2A1;
-            }
-            .status-sale{
-                min-width: 84px;
-            }
-        </style>
     @endpush
 
     <!-- Page -->
@@ -104,21 +67,17 @@
                                 </div>
 
                                 <div class="col-sm-12 col-md-3">
-                                    <label for="forma">Forma de pagamento</label>
-                                    <select name='select_payment_method' id="forma" class="form-control select-pad applySelect2">
-                                        <option value="">Todas formas de pagamento</option>
-                                        <option value="1">Cartão de crédito</option>
-                                        <option value="2">Boleto</option>
-                                        <option value="4">Pix</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-sm-12 col-md-3">
                                     <label for="date_type">Data</label>
                                     <select name='date_type' id="date_type" class="form-control select-pad">
                                         <option value="start_date">Data do pedido</option>
                                         <option value="end_date">Data do pagamento</option>
                                     </select>
+                                </div>
+
+                                <div class="col-sm-12 col-md-3 form-icons">
+                                    <label for="date_range">&nbsp;</label>
+                                    <i style="right: 20px; margin-top: 13px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
+                                    <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly>
                                 </div>
 
                             </div>
@@ -127,10 +86,14 @@
 
                                 <div class="row mb-md-15">
 
-                                    <div class="col-sm-12 col-md-3 form-icons">
-                                        <label for="date_range">&nbsp;</label>
-                                        <i style="right: 20px; margin-top: 13px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
-                                        <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly>
+                                    <div class="col-sm-12 col-md-3">
+                                        <label for="forma">Forma de pagamento</label>
+                                        <select name='select_payment_method' id="forma" class="form-control select-pad applySelect2">
+                                            <option value="">Todas formas de pagamento</option>
+                                            <option value="1">Cartão de crédito</option>
+                                            <option value="2">Boleto</option>
+                                            <option value="4">Pix</option>
+                                        </select>
                                     </div>
 
                                     <div class="col-sm-12 col-md-3">
