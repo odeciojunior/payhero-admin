@@ -35,11 +35,8 @@ class PixService
                 ->whereHas(
                     'pixCharges',
                     function ($querySale) {
-                        $querySale->where(
-                            'created_at',
-                            '<=',
-                            Carbon::now()->subHour()->toDateTimeString()
-                        );
+                        $querySale->where('status', 'ATIVA');
+                        $querySale->where( 'created_at', '<=', Carbon::now()->subHour()->toDateTimeString());
                     }
                 )
                 ->get();
