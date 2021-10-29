@@ -107,7 +107,7 @@ background-position: -24px -53px;
 }
 /* configuração do skeleton */
 .card,.card-skeleton{
-    min-height: 460px;
+    min-height: 475px;
 }
 .skeleton{
     opacity: .7;
@@ -211,4 +211,59 @@ background-position: -24px -53px;
 }
 .radio-badge.blue {
     background-color: #2E85EC;
+}
+
+.card-gateway h4 {
+    margin-top:3px;
+    border-bottom: 1px solid #F4F4F4;
+    padding-bottom: 18px;
+    margin-bottom:18px;
+}
+
+.card-gateway h6 + h4 {
+    color: #636363;
+}
+
+.card-gateway h4:last-child {
+    border: none;
+}
+
+.btn-outline-success {
+    color: #1BE4A8;
+    border: 1px solid #1BE4A8;
+    padding: 12px 32px;
+    border-radius: 8px;
+}
+
+.btn-outline-success:hover {
+    background: #1BE4A8;
+}
+
+select.form-control {
+    color: #636363;
+    background: transparent url('/modules/global/img/svg/Arrow2.svg') no-repeat center right;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+    font-style: normal;
+    border: none;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.o-angle-down-1 {
+    color: #636363;
+    font-size: 30px;
+}
+.o-angle-down-1:before {
+    font-weight: bold;
+}
+
+.o-angle-down-1:hover {
+    color: #636363;
+}
+.input-holder {
+    display: flex;
+    align-items: center;
 }

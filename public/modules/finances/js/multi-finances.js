@@ -172,18 +172,16 @@ $(document).ready(function(){
                                         <div class="card-body">
                                             <div class="col-sm-12 p-0" id="container_info_${data.name}">
                                                 <div class="col-12 p-0 mb-35">${img_gateway}</div>
-                                                <h6 class="font-size-16 gray m-0"><span class="radio-badge green"></span>Saldo Disponível</h6>
-                                                <h4 style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span><hr></h4>
+                                                <h6 class="font-size-16 m-0"><span class="radio-badge green"></span>Saldo Disponível</h6>
+                                                <h4><span class="font-size-16">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span></h4>
                                                 ${pendingDebt}
                                                 <div id="balance-not-available-${data.name}">
-                                                    <h6 class="font-size-16 gray m-0"><span class="radio-badge orange"></span>Saldo Pendente</h6>
-                                                    <h4 style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
-                                                    <hr>
-                                                    <h6 class="font-size-16 gray m-0"><span class="radio-badge red"></span>Saldo Bloqueado</h6>
-                                                    <h4 style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.blocked_balance)}</span></h4>
-                                                    <hr>
-                                                    <h6 class="font-size-16 gray m-0"><span class="radio-badge blue"></span>Total</h6>
-                                                    <h4 style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.total_balance)}</span></h4>
+                                                    <h6 class="font-size-16 m-0"><span class="radio-badge orange"></span>Saldo Pendente</h6>
+                                                    <h4><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
+                                                    <h6 class="font-size-16 m-0"><span class="radio-badge red"></span>Saldo Bloqueado</h6>
+                                                    <h4><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.blocked_balance)}</span></h4>
+                                                    <h6 class="font-size-16 m-0"><span class="radio-badge blue"></span>Total</h6>
+                                                    <h4><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.total_balance)}</span></h4>
                                                 </div>
                                             </div>
                                             <div id="container-withdrawal-${data.name}" style="display:none">
