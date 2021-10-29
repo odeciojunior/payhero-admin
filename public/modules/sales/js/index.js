@@ -698,12 +698,12 @@ $(document).ready(function () {
     }
     
     //COMPORTAMENTO DO FILTRO MULTIPLO
-    function behaviorMultipleFilter(element, selectId){
+    function behaviorMultipleFilter(data, selectId){
         var $select = $('#'+selectId);
         var valueToRemove = '';
         var values = $select.val();
 
-        if (element.value != '') {
+        if (data.id != '') {
             if (values) {
                 var i = values.indexOf(valueToRemove);
 
@@ -723,9 +723,9 @@ $(document).ready(function () {
         }
     }
     $(".applySelect2").on("select2:select", function (evt) {
-        var element = evt.params.data.element;
-        var selectId = $(this).attr('id')
-        behaviorMultipleFilter(element, selectId)
+        var data = evt.params.data;
+        var selectId = $(this).attr('id');                
+        behaviorMultipleFilter(data, selectId)
     });
 
 
@@ -760,13 +760,22 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             processResults: function (res) {
+                result = $.map(res.data, function (obj) {
+                    return {
+                        id: obj.id,
+                        text: obj.name + (obj.description ? " - " + obj.description : ""),
+                    };
+                });
+
+                if(res.data.length > 0){
+                    result.splice(0, 0, {
+                        id: "",
+                        text: "Todos os Planos"
+                    });
+                }
+
                 return {
-                    results: $.map(res.data, function (obj) {
-                        return {
-                            id: obj.id,
-                            text: obj.name + (obj.description ? " - " + obj.description : ""),
-                        };
-                    }),
+                    results: result
                 };
             },
         },

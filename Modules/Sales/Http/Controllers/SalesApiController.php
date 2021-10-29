@@ -316,8 +316,6 @@ class SalesApiController extends Controller
             foreach($data['project_id'] as $project){
                 array_push($projectIds, current(Hashids::decode($project)));
             };
-            // $projectId = current(Hashids::decode($data['project_id']));
-
 
             if ($projectIds) {
                 $plans = null;
