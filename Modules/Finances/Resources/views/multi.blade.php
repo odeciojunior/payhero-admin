@@ -1,11 +1,12 @@
 @extends("layouts.master")
 
 @push('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css?'.uniqid()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?'.uniqid()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/multi-finances.css?'.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css?v='.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v='.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/multi-finances.css?v='.uniqid()) }}">
 @endpush
 
 @section('content')
@@ -20,11 +21,9 @@
                     </p>
                 </div>
                 <div class="col-sm-5 text-right">
-                    <div class="col-sm-11 float-right">
+                    <div class="col-sm-11 float-right d-flex justify-content-end">
                         <div class="input-holder">
-                            <label for="transfers_company_select"> Empresa</label>
                             <select style='border-radius:10px' class="form-control select-pad"
-                                    name="company"
                                     id="transfers_company_select"> </select>
                         </div>
                     </div>
@@ -271,6 +270,7 @@
 @include('finances::components.new-withdrawal-modal')
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
