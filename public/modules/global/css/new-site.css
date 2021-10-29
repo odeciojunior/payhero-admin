@@ -1021,7 +1021,7 @@ input[type=radio] {
 
 .page {
     background: #F4F4F4;
-    margin-bottom: 50px !important;
+    margin-bottom: 0px !important;
 }
 
 .dropdown-menu > .dropdown-item > img {

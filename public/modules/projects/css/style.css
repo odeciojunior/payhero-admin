@@ -96,7 +96,7 @@
 }
 
 .tab-content .card.card-body, #tab_configuration_project .card.shadow {
-    border-radius: 0 0 16px 16px;
+    border-radius: 0 0 12px 12px;
 }
 
 .tab-content .card.shadow:not(#tab_configuration_project) {

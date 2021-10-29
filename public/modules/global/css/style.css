@@ -97,7 +97,8 @@ body {
 .holderProdutos {
   margin: 30px 10px;
   max-height: 300px;
-  overflow: auto; }
+  overflow: auto; 
+}
 
 .listaPedido {
   padding: 20px 0px; }

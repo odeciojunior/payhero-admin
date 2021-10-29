@@ -405,14 +405,22 @@ var loadingEditStage2 = `
 
 var loadingEditStage3 = `
 <div class="ph-item">
-    <div class="row" style="margin-bottom: 36px;">    
+    <div class="row" style="margin-bottom: 27px;">    
         <div class="col-12">
-            <div class="d-flex  align-items-center">
-                <div style="margin-right: 12px;">
-                    <div class="placeholder-avatar"></div>
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center" style="width: 100%; margin-right: 15px;">
+                    <div><div class="placeholder-avatar" style="width: 36px; height: 36px; margin-right: 15px;"></div></div>
+                    <div class="placeholder-picture" style="width: 70px; height: 20px;"></div>
                 </div>
-                <div style="width: 100%;">
-                    <div class="placeholder-picture" style="height: 20px"></div>
+                <div class="placeholder-picture" style="width: 100%; height: 2px; margin-right: 15px;"></div>
+                <div class="d-flex align-items-center" style="width: 100%; margin-right: 15px;">
+                    <div><div class="placeholder-avatar" style="width: 36px; height: 36px; margin-right: 15px;"></div></div>
+                    <div class="placeholder-picture" style="width: 70px; height: 20px;"></div>
+                </div>
+                <div class="placeholder-picture" style="width: 100%; height: 2px; margin-right: 15px;"></div>
+                <div class="d-flex align-items-center" style="width: 100%;">
+                <div><div class="placeholder-avatar" style="width: 36px; height: 36px; margin-right: 15px;"></div></div>
+                    <div class="placeholder-picture" style="width: 70px; height: 20px;"></div>
                 </div>
             </div>
         </div>
@@ -420,58 +428,65 @@ var loadingEditStage3 = `
 
     <div class="row">
         <div class="col-12">
-            <div class="placeholder-picture" style="height: 18px; margin-bottom: 18px;"></div>
+            <div class="placeholder-picture" style="height: 40px; margin-bottom: 25px;"></div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 18px;">
+        <div class="col-12">
+            <div class="placeholder-picture" style="height: 18px;"></div>
         </div>
     </div>
     
-    <div class="row" style="margin-bottom: 20px;">
+    <div class="row" style="margin-bottom: 22px;">
         <div class="col-12">
             <div class="d-flex">
-                <div class="placeholder-picture" style="width: 46px; height: 46px; margin-bottom: 16px;"></div>
+                <div style="width: 46px; height: 46px; margin-right: 16px;">
+                    <div class="placeholder-picture" style="width: 46px; height: 100%;"></div>
+                </div>
                 <div class="placeholder-picture" style="height: 46px;"></div>
             </div>
-        </div>
-        <div class="col-6" style="padding-left: 7.5px;">
-            <div class="placeholder-picture" style="height: 84px; margin-bottom: 14px;"></div>
         </div>
     </div>
-    <div class="row" style="margin-bottom: 20px;">
+    <div class="row" style="margin-bottom: 22px;">
         <div class="col-12">
             <div class="d-flex">
-                <div class="placeholder-picture" style="width: 46px; height: 46px; margin-bottom: 16px;"></div>
+                <div style="width: 46px; height: 46px; margin-right: 16px;">
+                    <div class="placeholder-picture" style="width: 46px; height: 100%;"></div>
+                </div>
                 <div class="placeholder-picture" style="height: 46px;"></div>
             </div>
-        </div>
-        <div class="col-6" style="padding-left: 7.5px;">
-            <div class="placeholder-picture" style="height: 84px; margin-bottom: 14px;"></div>
         </div>
     </div>
-    <div class="row" style="margin-bottom: 20px;">
+    <div class="row" style="margin-bottom: 22px;">
         <div class="col-12">
             <div class="d-flex">
-                <div class="placeholder-picture" style="width: 46px; height: 46px; margin-bottom: 16px;"></div>
+                <div style="width: 46px; height: 46px; margin-right: 16px;">
+                    <div class="placeholder-picture" style="width: 46px; height: 100%;"></div>
+                </div>
                 <div class="placeholder-picture" style="height: 46px;"></div>
             </div>
-        </div>
-        <div class="col-6" style="padding-left: 7.5px;">
-            <div class="placeholder-picture" style="height: 84px; margin-bottom: 14px;"></div>
         </div>
     </div>
-    <div class="row" style="margin-bottom: 44px;">
+    <div class="row" style="margin-bottom: 22px;">
         <div class="col-12">
             <div class="d-flex">
-                <div class="placeholder-picture" style="width: 46px; height: 46px; margin-bottom: 16px;"></div>
+                <div style="width: 46px; height: 46px; margin-right: 16px;">
+                    <div class="placeholder-picture" style="width: 46px; height: 100%;"></div>
+                </div>
                 <div class="placeholder-picture" style="height: 46px;"></div>
             </div>
-        </div>
-        <div class="col-6" style="padding-left: 7.5px;">
-            <div class="placeholder-picture" style="height: 84px; margin-bottom: 14px;"></div>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="margin-bottom: 22px;">
         <div class="col-12">
-            <div class="placeholder-picture" style="height: 31px;"></div>
+            <div class="d-flex align-items-center">
+                <div style="width: 46px; height: 26px; margin-right: 16px;">
+                    <div class="placeholder-picture" style="width: 100%; height: 100%;"></div>
+                </div>
+                <div class="placeholder-picture" style="height: 18px;"></div>
+            </div>
         </div>
     </div>
 </div>

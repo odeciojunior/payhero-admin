@@ -226,9 +226,7 @@
                         </div>
                         <!--- Painel de Planos -->
                         <div class="tab-pane" id="tab_plans-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('plans::index')
-                            </div>
+                            @include('plans::index')
                         </div>
                         <!--- Upsell -->
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
