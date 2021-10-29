@@ -270,6 +270,7 @@ $(document).ready(function(){
                     }
 
                     $('.owl-carousel').owlCarousel({
+                        mouseDrag: false,
                         margin : 10,
                         navText : ["<i class='fa fa-chevron-left text-info'></i>","<i class='fa fa-chevron-right text-info'></i>"],
                         dots    : false,
