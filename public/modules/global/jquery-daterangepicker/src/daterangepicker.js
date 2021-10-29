@@ -992,7 +992,7 @@
                 },
                 {
                     name: 'Desde o início',
-                    dates: () => [moment().subtract(29, 'days').toDate(), new Date()]
+                    dates: () => [moment('2018-01-01').toDate(), new Date()]
                 }
             ],
             inline: false,

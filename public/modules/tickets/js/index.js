@@ -21,6 +21,7 @@ const statusColor = {
 const resumeLoader = {
     styles: {
         container: {
+            justifyContent: 'flex-start',
             minHeight: 33
         },
         loader: {
@@ -72,13 +73,14 @@ $(() => {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: function error(response) {
+            error: resp => {
                 loadingOnScreenRemove();
-                errorAjaxResponse(response);
+                errorAjaxResponse(resp);
             },
-            success: function success(response) {
-                if (response.data.length) {
-                    for (let project of response.data) {
+            success: resp => {
+                console.log(resp.data)
+                if (resp.data.length) {
+                    for (let project of resp.data) {
                         $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
                     }
                     index();
@@ -286,11 +288,15 @@ $(() => {
 
     function getResume() {
 
+        $('#ticket-open .detail').html('');
+        $('#ticket-mediation .detail').html('');
+        $('#ticket-closed .detail').html('');
+
         loadOnAny('.number', false, resumeLoader);
 
         $.ajax({
             method: "GET",
-            url: '/api/tickets/getvalues',
+            url: '/api/tickets/getvalues?project='+$('#project-select').val(),
             dataType: "json",
             data: {
                 date: $("#date_range").val(),
@@ -325,8 +331,14 @@ $(() => {
 
     // Comportamentos da tela
 
+    //Project Select
+    $('#project-select').on('change', function () {
+        index();
+        getResume();
+    });
+
     // Filters
-    $('#project-select, #filter-status').on('change', function () {
+    $('#filter-status').on('change', function () {
         index();
     });
 
@@ -519,7 +531,7 @@ $(() => {
     });
 
     // Send Message
-    $('#btn-send').on('click', function () {
+    function sendMessage() {
         let writeArea = $('#write-area');
         if (writeArea.val().length || attachments2send.length) {
             let data = new FormData();
@@ -555,6 +567,17 @@ $(() => {
                     });
                 }
             });
+        }
+    }
+
+    $('#btn-send').on('click', function () {
+        sendMessage();
+    });
+
+    $('#write-area').on('keypress', function (e) {
+        if (e.which === 13 && !e.shiftKey) {
+            e.preventDefault()
+            sendMessage()
         }
     });
 

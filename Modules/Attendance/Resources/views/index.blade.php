@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css') }}">
     @endpush
 
-    <div class="page mb-0">
+    <div class="page mb-0" id="project-not-empty" style="display: none !important;">
         <div class="page-header container pb-0" style="display: none !important;">
             <h1 class="page-title">Atendimento</h1>
             <div class="d-flex align-items-center flex-wrap mt-15">
@@ -22,8 +22,7 @@
                 </select>
             </div>
         </div>
-        <div id="project-not-empty" style="display: none !important;">
-            <div class="page-content container">
+        <div class="page-content container">
                 <div class="row">
                     <div class="col-md-3 col-6 pr-20">
                         <div class="card border orange">
@@ -193,7 +192,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
     @include('projects::empty')
@@ -201,7 +199,7 @@
     @push('scripts')
         <script src="{{asset('/modules/global/adminremark/global/vendor/slick-carousel/slick.min.js')}}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js') }}"></script>
+        <script src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js?v=' . uniqid()) }}"></script>
         <script src="{{asset('/modules/tickets/js/emoji-button.min.js')}}"></script>
         <script src="{{asset('/modules/tickets/js/index.js?v=' . uniqid())}}"></script>
     @endpush

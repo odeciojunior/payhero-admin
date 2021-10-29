@@ -74,7 +74,7 @@ class TicketsApiController extends Controller
 
             if ($data->period) {
                 $dateRange = FoxUtils::validateDateRange($data->period);
-                $ticketsQuery->whereBetween('tickets.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+                $ticketsQuery->whereBetween('tickets.created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
             }
 
             if ($data->status) {
@@ -150,10 +150,6 @@ class TicketsApiController extends Controller
 
                 if (!empty($data['message'])) {
 
-                    if (strlen($data['message']) < 10) {
-                        return response()->json(['message' => 'A mensagem informada é muito curta!'], 400);
-                    }
-
                     $messageEmail = explode(' ', $data['message']);
                     foreach ($messageEmail as $key => $value) {
                         $position = stripos($value, '@');
@@ -222,13 +218,14 @@ class TicketsApiController extends Controller
                                                      count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('mediation') . ' then 1 end) as mediationCount,
                                                      count(case when ticket_status_enum = ' . $ticketPresenter->getTicketStatusEnum('closed') . ' then 1 end) as closedCount
                                             ')
-                ->whereHas('sale', function ($query) use ($userId) {
+                ->whereHas('sale', function ($query) use ($userId, $data) {
                     $query->where('owner_id', $userId);
+                    if (!empty($data['project'])) {
+                        $projectId = hashids_decode($data['project']);
+                        $query->where('project_id', $projectId);
+                    }
                 });
-            if (!empty($data['date'])) {
-                $date = FoxUtils::validateDateRange($data["date"]);
-                $ticket->whereBetween('created_at', [$date[0] . ' 00:00:00', $date[1] . ' 23:59:59']);
-            }
+
             $ticket = $ticket->first();
             $totalCount = $ticket->openCount + $ticket->mediationCount + $ticket->closedCount;
 
