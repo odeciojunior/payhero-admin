@@ -150,6 +150,7 @@ background-position: -24px -53px;
     height: 15px;
     margin-bottom: -15px;
     z-index: 1;
+    position: relative;
 }
 .list-linear-gradient-bottom{
     background: linear-gradient(to top, white, rgba(255, 255, 255, 0.8), transparent);
@@ -157,6 +158,7 @@ background-position: -24px -53px;
     height: 30px;
     margin-top: -30px;
     z-index: 1;
+    position: relative;
 }
 
 .color-default {
@@ -266,4 +268,16 @@ select.form-control {
 .input-holder {
     display: flex;
     align-items: center;
+}
+
+@media (max-width: 991px) {
+    .badge {
+         width: unset;
+         height: unset;
+         padding: 8px 16px;;
+         border: unset;
+         box-shadow: unset;
+         text-indent: unset;
+         white-space: unset;
+    }
 }

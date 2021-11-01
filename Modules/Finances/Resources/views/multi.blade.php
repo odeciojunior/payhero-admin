@@ -27,11 +27,11 @@
                                     id="transfers_company_select"> </select>
                         </div>
                     </div>
-                    <div class="col-sm-12 float-right">
-                        <span class="d-flex justify-content-end align-items-center" style="font-size: 16px;color: #636363;">
-                            <span style="margin-right: 9px" class="o-question-help-1"></span> Dúvidas sobre adquirentes?
-                        </span>
-                    </div>
+{{--                    <div class="col-sm-12 float-right d-none d-sm-flex justify-content-end">--}}
+{{--                        <div class="d-flex justify-content-end align-items-center" style="font-size: 16px;color: #636363;">--}}
+{{--                            <span style="margin-right: 9px" class="o-question-help-1"></span> Dúvidas sobre adquirentes?--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
                 <div class="col-sm-6" id="container-available">
                     <p class="m-0 color-default">Disponível para saque</p>
@@ -108,18 +108,18 @@
                     <div class="row" style="display: flex;justify-content: flex-end">
                         <div class="col-sm-10" style="padding-top: 60px;">
                             <div class="card card-skeleton" id="card-history">
-                                <div class="card-body">
-                                    <div class="list-linear-gradient-top"></div>
+                                <div class="card-body" style="max-height: 475px">
                                     <div class="col-12 p-0 mb-35">
                                         <p><b>Histórico de saques</b></p>
                                     </div>
-                                    <div id="container-withdraw" style="display:none"></div>
+                                    <div class="list-linear-gradient-top" style="display: none"></div>
+                                    <div id="container-withdraw" style="display:none;height: auto;max-height: 390px"></div>
+                                    <div class="list-linear-gradient-bottom"></div>
                                     <div class="row" id="skeleton-withdrawal">
                                         <div class="skeleton skeleton-text"></div>
                                         <div class="skeleton skeleton-text"></div>
                                     </div>
                                     @include('finances::components.empty-history')
-                                    <div class="list-linear-gradient-bottom"></div>
                                 </div>
                             </div>
                         </div>
