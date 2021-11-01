@@ -269,7 +269,10 @@ select.form-control {
     display: flex;
     align-items: center;
 }
-
+.overflow-bank-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 @media (max-width: 991px) {
     .badge {
          width: unset;

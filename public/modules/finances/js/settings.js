@@ -179,7 +179,7 @@ $(document).ready(function () {
     }
 
     companySelect.on('change', function () {
-        getSettings($(this).val(), null, true)
+        getSettings($(this).val())
     })
 
     frequencyButtons.on('click', function () {
