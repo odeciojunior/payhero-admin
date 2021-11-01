@@ -561,6 +561,10 @@ class SaleService
 
     private function checkPendingDebt($sale, $company, $transactionRefundAmount)
     {
+        if(!in_array($sale->gateway_id, [Gateway::GETNET_PRODUCTION_ID, Gateway::GETNET_SANDBOX_ID])) {
+            return;
+        }
+
         $getnetBackOffice = new GetnetBackOfficeService();
         $getnetBackOffice->setStatementSubSellerId(CompanyService::getSubsellerId($company))
             ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'));
@@ -631,9 +635,27 @@ class SaleService
             foreach ($refundTransactions as $refundTransaction) {
                 $transactionRefundAmount = (int)$refundTransaction->value;
 
-                $company = Company::find($refundTransaction->company_id);
-                if (!is_null($company) && $sale->gateway_id == Gateway::GETNET_PRODUCTION_ID) {
+                $company = $refundTransaction->company;
+                if (!empty($company)) {
                     $this->checkPendingDebt($sale, $company, $transactionRefundAmount);
+
+                    if (in_array($sale->gateway_id, [Gateway::ASAAS_PRODUCTION_ID, Gateway::ASAAS_SANDBOX_ID]) && $refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
+                        Transfer::create([
+                            'transaction_id' => $refundTransaction->id,
+                            'user_id' => $refundTransaction->user_id,
+                            'company_id' => $refundTransaction->company_id,
+                            'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID,
+                            'value' => $refundTransaction->value,
+                            'type' => 'out',
+                            'type_enum' => Transfer::TYPE_OUT,
+                            'reason' => 'refunded',
+                            'is_refunded_tax' => 0
+                        ]);
+
+                        $refundTransaction->company->update([
+                            'asaas_balance' => $refundTransaction->company->asaas_balance -= $refundTransaction->value
+                        ]);
+                    }
                 }
 
                 $refundTransaction->status = 'refunded';
