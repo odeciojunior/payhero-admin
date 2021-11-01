@@ -79,6 +79,10 @@ li.select2-selection__choice{
     padding-top: 5px !important;
 }
 
+.select2-selection .select2-selection--multiple{
+    overflow: hidden;
+}
+
 /* END CONFIGURATIONS MULTIPLE SELECT 2 */
 
 
