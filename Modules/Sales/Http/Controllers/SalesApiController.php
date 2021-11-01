@@ -317,7 +317,8 @@ class SalesApiController extends Controller
                 array_push($projectIds, current(Hashids::decode($project)));
             };
 
-            if ($projectIds) {
+            if (current($projectIds)) {
+                
                 $plans = null;
 
                 if (!empty($data['search'])) {
@@ -338,7 +339,7 @@ class SalesApiController extends Controller
                     $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->where('project_id', $userProjects)->get();
 
                 } else {
-                    $plans = $planModel->where('project_id', $userProjects)->limit(10)->get();
+                    $plans = $planModel->whereIn('project_id', $userProjects)->limit(10)->get();
                     
                 }
                 return PlansSelectResource::collection($plans);

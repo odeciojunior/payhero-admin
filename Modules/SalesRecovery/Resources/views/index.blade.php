@@ -51,7 +51,7 @@
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="plan">Plano</label>
-                            <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
+                            <select name='plan' id="plan" class="form-control select-pad applySelect2" style="width:100%;">
                                 <option value="">Todos planos</option>
                             </select>
                         </div>
