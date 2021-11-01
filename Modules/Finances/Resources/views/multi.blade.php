@@ -108,18 +108,18 @@
                     <div class="row" style="display: flex;justify-content: flex-end">
                         <div class="col-sm-10" style="padding-top: 60px;">
                             <div class="card card-skeleton" id="card-history">
-                                <div class="card-body">
-                                    <div class="list-linear-gradient-top"></div>
+                                <div class="card-body" style="max-height: 475px">
                                     <div class="col-12 p-0 mb-35">
                                         <p><b>Histórico de saques</b></p>
                                     </div>
-                                    <div id="container-withdraw" style="display:none"></div>
+                                    <div class="list-linear-gradient-top" style="display: none"></div>
+                                    <div id="container-withdraw" style="display:none;height: auto;max-height: 390px"></div>
+                                    <div class="list-linear-gradient-bottom"></div>
                                     <div class="row" id="skeleton-withdrawal">
                                         <div class="skeleton skeleton-text"></div>
                                         <div class="skeleton skeleton-text"></div>
                                     </div>
                                     @include('finances::components.empty-history')
-                                    <div class="list-linear-gradient-bottom"></div>
                                 </div>
                             </div>
                         </div>
