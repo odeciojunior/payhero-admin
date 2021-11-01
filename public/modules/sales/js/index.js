@@ -3,6 +3,8 @@ var atualizar = null;
 var exportFormat = null;
 
 $(document).ready(function () {
+
+    //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
     $('.applySelect2').select2({
         width:'100%',
         multiple:true,

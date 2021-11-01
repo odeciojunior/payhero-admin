@@ -3,6 +3,12 @@ var exportFormat = null;
 $(document).ready(function () {
     getProjects();
 
+    //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
+    $('.applySelect2').select2({
+        width:'100%',
+        multiple:true,
+    });
+
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
         updateSalesRecovery();
@@ -696,6 +702,12 @@ $(document).ready(function () {
             date_type: "created_at",
         };
 
+        Object.keys(data).forEach((value)=>{
+            if(Array.isArray(data[value])){
+                data[value] = data[value].filter((value) => value).join(',');
+            }
+        })
+
         if (urlParams) {
             let params = "";
             for (let param in data) {
@@ -728,11 +740,42 @@ $(document).ready(function () {
             },
         });
     }
+    //COMPORTAMENTO DO FILTRO MULTIPLO
+    function behaviorMultipleFilter(data, selectId){
+        var $select = $('#'+selectId);
+        var valueToRemove = 'all';
+        var values = $select.val();
+
+        if (data.id != 'all') {
+            if (values) {
+                var i = values.indexOf(valueToRemove);
+
+                if (i >= 0) {
+                    values.splice(i, 1);
+                    $select.val(values).change();
+                }
+            }
+            } else {
+            if (values) {
+                values.splice(0, values.lenght);
+                $select.val(null).change();
+                
+                values.push('all');
+                $select.val('all').change();
+            }
+        }
+    }
+    $(".applySelect2").on("select2:select", function (evt) {
+        var data = evt.params.data;
+        console.log(evt.params.data);
+        // debugger;
+        var selectId = $(this).attr('id');                
+        behaviorMultipleFilter(data, selectId)
+    });
+    // FIM DO COMPORTAMENTO DO FILTRO
+    
     //Search plan
     $("#plan").select2({
-        placeholder: "Nome do plano",
-        // multiple: true,
-        allowClear: true,
         language: {
             noResults: function () {
                 return "Nenhum plano encontrado";
@@ -758,17 +801,22 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             processResults: function (res) {
+                result = $.map(res.data, function (obj) {
+                    return {
+                        id: obj.id,
+                        text: obj.name + (obj.description ? " - " + obj.description : ""),
+                    };
+                });
+
+                if(res.data.length > 0){
+                    result.splice(0, 0, {
+                        id: "",
+                        text: "Todos os Planos"
+                    });
+                }
+
                 return {
-                    results: $.map(res.data, function (obj) {
-                        return {
-                            id: obj.id,
-                            text:
-                                obj.name +
-                                (obj.description
-                                    ? " - " + obj.description
-                                    : ""),
-                        };
-                    }),
+                    results: result
                 };
             },
         },

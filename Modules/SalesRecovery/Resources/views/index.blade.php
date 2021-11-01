@@ -3,34 +3,9 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=112') }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
-        <style>
-            .select2-selection--single {
-                border: 1px solid #dddddd !important;
-                border-radius: .215rem !important;
-                height: 43px !important;
-            }
-            .select2-selection__rendered {
-                color: #707070 !important;
-                font-size: 16px !important;
-                font-family: 'Muli', sans-serif;
-                line-height: 43px !important;
-                padding-left: 14px !important;
-                padding-right: 38px !important;
-            }
-            .select2-selection__arrow {
-                height: 43px !important;
-                right: 10px !important;
-            }
-            .select2-selection__arrow b {
-                border-color: #8f9ca2 transparent transparent transparent !important;
-            }
-            .select2-container--open .select2-selection__arrow b {
-                border-color: transparent transparent #8f9ca2 transparent !important;
-            }
-        </style>
     @endpush
 
     <!-- Page -->
@@ -61,7 +36,7 @@
                     <div class="row align-items-baseline">
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="type_recovery">Tipo de Recuperação</label>
-                            <select name='select_type_recovery' id="recovery_type" class="form-control select-pad">
+                            <select name='select_type_recovery' id="recovery_type" class="form-control select-pad applySelect2">
                                 <option value="1" selected>Carrinho Abandonado</option>
                                 <option value="5">Boleto Vencido</option>
                                 <option value="4">PIX Vencido</option>
@@ -70,7 +45,7 @@
                         </div>
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="project">Projeto</label>
-                            <select name='select_project' id="project" class="form-control select-pad">
+                            <select name='select_project' id="project" class="form-control select-pad applySelect2">
                                 <option value="all">Todos projetos</option>
                             </select>
                         </div>
@@ -348,7 +323,7 @@
 
         <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=' . uniqid()) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
+        <script src="{{asset('modules/global/js/daterangepicker.min.js')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush
