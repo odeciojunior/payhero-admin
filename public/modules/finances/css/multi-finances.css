@@ -284,3 +284,6 @@ select.form-control {
          white-space: unset;
     }
 }
+.card-gateway{
+    cursor: pointer;
+}

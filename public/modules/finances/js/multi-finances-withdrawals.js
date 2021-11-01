@@ -145,7 +145,13 @@ window.defaultWithdrawal = function(gatewayId) {
                                     $('.btn-return').on('click', function () {
                                         $('#withdrawal-value-' + gatewayId).val('');
                                     });
-
+                                    $('#gateway-skeleton').show();
+                                    $('#container-all-gateways').html('');
+                                    $('#val-skeleton').show();
+                                    $('#container_val').css('display','none');
+                                    $('#skeleton-withdrawal').show();
+                                    $('#container-withdraw').html('');
+                                    $('#empty-history').hide();
                                     updateStatements();
                                     updateWithdrawals();
 
