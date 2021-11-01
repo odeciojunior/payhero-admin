@@ -92,6 +92,8 @@ $(function () {
         
         $(modal).find('.modal-body').css('height', 'auto');
         $(modal).find(find_stage).find('.box-review').html('').css('margin-bottom', '0px');
+
+        $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden');
         
         $(modal).find(find_stage).find('.box-products').html(loadingProducts).promise().done(function() {
             $.ajax({
@@ -141,6 +143,10 @@ $(function () {
                         append += '</div>';
                     }
                     append + '</div>';
+
+                    if (response.data.length > 6) {
+                        $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden scroll');
+                    }
 
                     var curHeight = $(modal).find('.modal-body').height();
                     $(modal).find(find_stage).find('.box-products').append(append).promise().done(function() {
@@ -241,9 +247,9 @@ $(function () {
                     append + '</div>';
 
                     if (response.data.length > 6) {
-                        $(modal).find(find_stage).find('.box-products').css({'overflow-y': 'scroll', 'overflow-x': 'hidden'});
+                        $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden scroll');
                     } else {
-                        $(modal).find(find_stage).find('.box-products').css({'overflow-y': 'hidden', 'overflow-x': 'hidden'});
+                        $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden');
                     }
 
                     var curHeight = $(modal).find('.modal-body').height();
@@ -367,9 +373,9 @@ $(function () {
                 $('input[name="value"]').mask('#.##0,00', { reverse: true });
                 
                 if (selected_products.length > 4) {
-                    $(modal).find(find_stage).find('.box-products').css({'overflow-y': 'scroll', 'overflow-x': 'hidden'});
+                    $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden scroll');
                 } else {
-                    $(modal).find(find_stage).find('.box-products').css({'overflow-y': 'hidden', 'overflow-x': 'hidden'});
+                    $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden');
                 }
                 
                 if (selected_products.length > 1) {
@@ -872,8 +878,10 @@ $(function () {
         var costs_plan = 0;
 
         for (var i = 0; i < selected_products.length; i++) {
+            console.log(selected_products[i]['value'].replace(',', '.'));
+            
             if (selected_products[i]['value']) {
-                costs_plan += (parseFloat(selected_products[i]['value'].replace(',', '.')) * parseFloat(selected_products[i]['amount'].replace(',', '.')));
+                costs_plan += (selected_products[i]['value'].replace(',', '.') * selected_products[i]['amount'].replace(',', '.'));
             }
         }
 
@@ -881,17 +889,20 @@ $(function () {
     }
 
     // Search products
-    $('body').on('keyup', '#search-product', function() {
+    let timeoutID = null;
+    $('body').on('keyup', '#search-product', function(e) {
+        clearTimeout(timeoutID);
+        
         var modal = '#' + $(this).parents('.modal').attr('id');
         var type = 'create';
         if (modal == '#modal_edit_plan') {
             type = 'edit';
         }
         
-        var search_product = $(this).val();
-        setTimeout(function() {
+        var search_product = e.target.value;
+        timeoutID = setTimeout(function() {
             searchProducts(search_product, modal, type);
-        }, 450);
+        }, 800);
     });
 
     // Calculate details
