@@ -36,7 +36,7 @@
                 <div class="col-sm-6" id="container-available">
                     <p class="m-0 color-default">Disponível para saque</p>
                     <div id="val-skeleton"><div class="skeleton skeleton-text" style="width:50% !important"></div></div>
-                    <div id="container_val" class="d-flex align-items-center">
+                    <div id="container_val" style="display:none;">
                         <div style="margin-right: 24px">
                             <span class="font-size-16 gray">R$</span>
                             <span class="font-size-32 bold total-available-balance" style="color: #636363;">0,00</span>
@@ -65,10 +65,13 @@
                                 <div class="card-body">
                                     <div class="col-sm-12 p-0 pt-5">
                                         <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                         <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                         <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                         <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                     </div>
                                 </div>
                             </div>
@@ -79,10 +82,13 @@
                                 <div class="card-body">
                                     <div class="col-sm-12 p-0">
                                         <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                         <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                         <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                         <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                     </div>
                                 </div>
                             </div>
@@ -93,10 +99,13 @@
                                 <div class="card-body">
                                     <div class="col-sm-12 p-0">
                                         <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                         <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                         <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                         <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
                                     </div>
                                 </div>
                             </div>
@@ -116,6 +125,7 @@
                                     <div id="container-withdraw" style="display:none;height: auto;max-height: 390px"></div>
                                     <div class="list-linear-gradient-bottom"></div>
                                     <div class="row" id="skeleton-withdrawal">
+                                        
                                         <div class="skeleton skeleton-text"></div>
                                         <div class="skeleton skeleton-text"></div>
                                     </div>

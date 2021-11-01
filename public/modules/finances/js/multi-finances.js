@@ -1,11 +1,9 @@
 
 $(document).ready(function(){
 
-    $(document).on('click','.card-gateway', function(evt){
-        if($(evt.target).closest('.btn').length==0 && $(evt.target).closest('.withdrawal-value').length==0){
-            let id=$(this).attr('href');
-            window.location.href ='/finances/'+id;
-        }
+    $(document).on('click','.img-gateway', function(evt){
+        let id=$(this).attr('href');
+        window.location.href ='/finances/'+id;
     });
 
     let statusWithdrawals = {
@@ -69,7 +67,7 @@ $(document).ready(function(){
         $('#gateway-skeleton').show();
         $('#container-all-gateways').html('');
         $('#val-skeleton').show();
-        $('#container_val').hide();
+        $('#container_val').css('display','none');
         $('#skeleton-withdrawal').show();
         $('#container-withdraw').html('');
         $('#empty-history').hide();
@@ -168,10 +166,10 @@ $(document).ready(function(){
                             $('.owl-carousel').append(`
                                 <div class="item">
                                     <p style="color: #9E9E9E;font-size: 12px;line-height: 15px;">${html_transaction}</p>
-                                    <div class="card" href="${data.id}">
+                                    <div class="card card-gateway">
                                         <div class="card-body">
                                             <div class="col-sm-12 p-0" id="container_info_${data.name}">
-                                                <div class="col-12 p-0 mb-35 card-gateway pointer">${img_gateway}</div>
+                                                <div class="col-12 p-0 mb-35 img-gateway" href="${data.id}">${img_gateway}</div>
                                                 <h6 class="font-size-16 m-0"><span class="radio-badge green"></span>Saldo Disponível</h6>
                                                 <h4><span class="font-size-16">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span></h4>
                                                 ${pendingDebt}
@@ -185,16 +183,19 @@ $(document).ready(function(){
                                                 </div>
                                             </div>
                                             <div id="container-withdrawal-${data.name}" style="display:none">
-                                            <div class="input-group mb-3 withdrawal-value">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">R$</span>
+                                                <div class="input-group mb-3 withdrawal-value">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">R$</span>
+                                                    </div>
+                                                    <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque">
                                                 </div>
-                                                <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque">
                                             </div>
                                         </div>
-                                        <a href="#" class="col-12 btn-outline-success btn" id="request-withdrawal-${data.id}">Solicitar saque</a>
-                                        <a href="#" class="btn btn-saque" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
-                                        <a href="#" class="btn btn-danger" id="cancel-withdrawal-${data.name}" style="display:none; margin-top:20px">Cancelar</a>
+                                        <div class="col-sm-12 pb-5">
+                                            <a href="#" class="col-12 btn-outline-success btn" id="request-withdrawal-${data.id}">Solicitar saque</a>
+                                            <a href="#" class="btn btn-saque" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
+                                            <a href="#" class="btn btn-danger col-12" id="cancel-withdrawal-${data.name}" style="display:none; margin-top:20px">Cancelar</a>
+                                        </div>
                                     </div>
                                 </div>
                             `);
@@ -246,7 +247,10 @@ $(document).ready(function(){
                             }
                         }else{
                             $('#val-skeleton').hide();
-                            $('#container_val').show();
+                            $('#container_val').css({
+                                'display':'flex',
+                                'align-items':'center'
+                            });
                             $('.total-available-balance').html(removeMoneyCurrency(data));
                         }
                     });
@@ -270,7 +274,6 @@ $(document).ready(function(){
                     }
 
                     $('.owl-carousel').owlCarousel({
-                        mouseDrag: false,
                         margin : 10,
                         navText : ["<i class='fa fa-chevron-left text-info'></i>","<i class='fa fa-chevron-right text-info'></i>"],
                         dots    : false,
@@ -310,6 +313,7 @@ $(document).ready(function(){
                         'align-items':'center',
                         'flex-direction':'column',
                     });
+                    
             },
             success: function (response) {
                 if(response.data.length){
@@ -319,7 +323,7 @@ $(document).ready(function(){
                     }
                     $('#container-withdraw').html('');
                     $('#container-withdraw').show();
-
+                    $('#card-history').asScrollable();
                     let c = 1;
                     $.each(response.data, function(index, data) {
                         let img_gateway = getGatewayImg(data.gateway_name.toLowerCase());
@@ -355,6 +359,7 @@ $(document).ready(function(){
                             }
                         }
                     })
+
                 }else{
                     $('#skeleton-withdrawal').hide();
                     $('#empty-history')
