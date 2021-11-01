@@ -37,7 +37,8 @@
 /* ========= CONFIGURATIONS MULTIPLE SELECT 2 BOX ========= */
 /* CONFIGURATIONS OF BOX SELECT */
 .applySelect2{
-    overflow: hidden;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .select2-container--default .select2-selection--multiple{
