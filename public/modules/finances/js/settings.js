@@ -290,10 +290,13 @@ $(document).ready(function () {
 
     withdrawalAmount.maskMoney({thousands: '.', decimal: ',', allowZero: true});
     frequencyButtons.removeClass('active')
-    if (companySelect.val()) {
-        getSettings(companySelect.val())
-    } else {
-        onWithdrawalByAmountChange()
-        onWithdrawalByPeriodChange()
-    }
+
+    setTimeout(() => {
+        if (companySelect.val()) {
+            getSettings(companySelect.val())
+        } else {
+            onWithdrawalByAmountChange()
+            onWithdrawalByPeriodChange()
+        }
+    }, 1000)
 });
