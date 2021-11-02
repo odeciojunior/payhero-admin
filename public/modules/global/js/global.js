@@ -53,6 +53,37 @@ $(document).ready(function () {
     // })
 });
 
+function scrollCustom(div) {
+    var scroll = 0;
+    var scrollDiv = 0;
+
+    $(div).on('wheel', function(event) {
+        if(event.originalEvent.deltaY !== 0) {
+            var heightDivScroll = $(div).height();
+
+            var heightCalculateScroll = (heightDivScroll - (heightDivScroll - 72)) / 4;
+            var heightCalculateTotal = (heightDivScroll - (heightDivScroll - 72)) / 3;
+            
+            if(event.originalEvent.deltaY < 0) {
+                // wheeled up
+                if (scroll >= heightCalculateScroll) {
+                    scroll -= heightCalculateScroll;
+                    scrollDiv -= heightCalculateTotal;
+                }
+            } else {
+                // wheeled down
+                if (scrollDiv < heightDivScroll) {
+                    scroll += heightCalculateScroll;
+                    scrollDiv += heightCalculateTotal;
+                }
+            }
+
+            $(div).find('.scrollbox-bar').css('top', scroll + 'px');
+            $(div).find('.row').css('margin-top', '-' + scrollDiv + 'px');
+        }
+    });
+}
+
 function alertCustom(type, message) {
     swal({
         position: 'bottom',

@@ -1099,7 +1099,9 @@ img.border-icon{
 }
 
 .modal-plans .box-products {
-    max-height: 288px;
+    max-height: 276px;
+    overflow: hidden;
+    position: relative;
 }
 .modal-plans .box-products:not(.customizations) .col-sm-6:nth-child(odd) {
     padding-right: 8px;
@@ -1156,6 +1158,9 @@ img.border-icon{
 .modal-plans .box-products .box-details {
     table-layout: fixed;
     width: 100%;
+}
+.modal-plans .box-products .box-details .body {
+    position: relative;
 }
 .modal-plans .box-products .box-details .body .product {
     font-weight: normal;
@@ -1682,3 +1687,42 @@ input[type="checkbox"], input[type="radio"] {
 .nav-tabs-horizontal-custom .nav-tabs .nav-link:hover {
     background-color: #fff;
 }
+
+.scrollbox {
+    height: 100%;
+    display: block;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    width: 4px;
+    -webkit-border-radius: 8px;
+    -khtml-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    background-color: #D4D4D4;
+}
+.scrollbox-bar {
+    height: 60px;
+    display: block;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    width: 4px;
+    -webkit-border-radius: 8px;
+    -khtml-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    background-color: #9E9E9E;
+}
+/*.modal-plans .box-products:hover .scrollbox {
+    opacity: 1;
+    transition: opacity 0.6s ease-in-out;
+}
+.modal-plans .box-products:hover .scrollbox-bar {
+    opacity: 1;
+    transition: opacity 0.6s ease-in-out;
+}*/

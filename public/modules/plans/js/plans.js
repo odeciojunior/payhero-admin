@@ -93,7 +93,8 @@ $(function () {
         $(modal).find('.modal-body').css('height', 'auto');
         $(modal).find(find_stage).find('.box-review').html('').css('margin-bottom', '0px');
 
-        $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden');
+        $(modal).find(find_stage).find('.box-products').html('').css({'max-height': '276px', 'padding-right': '0px'});
+        $(modal).find(find_stage).find('.box-products').find('.scrollbox').remove();
         
         $(modal).find(find_stage).find('.box-products').html(loadingProducts).promise().done(function() {
             $.ajax({
@@ -144,12 +145,16 @@ $(function () {
                     }
                     append + '</div>';
 
-                    if (response.data.length > 6) {
-                        $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden scroll');
-                    }
-
                     var curHeight = $(modal).find('.modal-body').height();
                     $(modal).find(find_stage).find('.box-products').append(append).promise().done(function() {
+                        if (response.data.length > 6) {
+                            $(modal).find(find_stage).find('.box-products').css('padding-right', '12px');
+                            $(modal).find(find_stage).find('.box-products').append('<div class="scrollbox"></div>');
+                            $(modal).find(find_stage).find('.box-products').append('<div class="scrollbox-bar"></div>');
+
+                            scrollCustom(modal + ' ' + find_stage + ' .box-products');
+                        }
+
                         $(modal).find('.product-photo').on('error', function() {
                             $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg')
                         });
@@ -190,7 +195,7 @@ $(function () {
 
         $(modal).find('.modal-body').css('height', 'auto');
         $(modal).find('.tab-pane').removeClass('show active');
-        $(modal).find(find_stage).find('.box-products').html('');
+        $(modal).find(find_stage).find('.box-products').html('').css({'max-height': '276px', 'padding-right': '0px'});
         $(modal).find(find_stage).find('#search-product').val('');
         $(modal).find(find_stage).find('.box-review').html('');
 
@@ -246,14 +251,16 @@ $(function () {
                     }
                     append + '</div>';
 
-                    if (response.data.length > 6) {
-                        $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden scroll');
-                    } else {
-                        $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden');
-                    }
-
                     var curHeight = $(modal).find('.modal-body').height();
                     $(modal).find(find_stage).find('.box-products').html(append).promise().done(function() {
+                        if (response.data.length > 6) {
+                            $(modal).find(find_stage).find('.box-products').css('padding-right', '12px');
+                            $(modal).find(find_stage).find('.box-products').append('<div class="scrollbox"></div>');
+                            $(modal).find(find_stage).find('.box-products').append('<div class="scrollbox-bar"></div>');
+
+                            scrollCustom(modal + ' ' + find_stage + ' .box-products');
+                        }
+                        
                         if (type == 'edit') {
                             $(modal).find('.box-breadcrumbs').find('.title span').html(' ' + products_plan.length + (products_plan.length > 1 ? ' produtos' : ' produto'));
                             
@@ -292,6 +299,7 @@ $(function () {
         var find_stage = type == 'create' ? '#stage2' : '#stage3';
 
         $(modal).find('.modal-body').css('height', 'auto');
+        $(modal).find(find_stage).find('.box-products').html('').css({'max-height': 'unset', 'padding-right': '0px'});
         $(modal).find(find_stage).find('.box-review').html('');
         $(modal).find('#btn-modal-plan-return').html('Voltar');
         if (type == 'create') {
@@ -316,51 +324,55 @@ $(function () {
                     append += '<div>Moeda</div>';
                 append += '</div>';
                 append += '<div class="body">';
-                    selected_products.forEach(function(product) {
-                        var index_product = selected_products.map(function(p) { return p.id; }).indexOf(product.id);
+                    append += '<div class="row">';
+                        append += '<div class="col-sm-12">';
+                            selected_products.forEach(function(product) {
+                                var index_product = selected_products.map(function(p) { return p.id; }).indexOf(product.id);
 
-                        $.ajax({
-                            async: false,
-                            method: "GET",
-                            url: "/api/product/" + product.id,
-                            dataType: "json",
-                            headers: {
-                                'Authorization': $('meta[name="access-token"]').attr('content'),
-                                'Accept': 'application/json',
-                            },
-                            error: function error(response) {
-                                alertCustom('error', 'Ocorreu um erro, por favor, refaça a operação');
-                            },
-                            success: function success(response) {
-                                append += '<div class="product d-flex align-items-center" data-code="' + response.data.id + '">';
-                                    append += '<div class="div-product d-flex align-items-center" data-toggle="tooltip" data-placement="top" title="' + response.data.name + '">';
-                                        append += '<div class="div-photo" data-type="' + type + '"><img class="product-photo" src="' + response.data.photo + '"></div>';
-                                        append += '<h1 class="title">' + response.data.name_short + '</h1>';
-                                    append += '</div>';
-                                    append += '<div class="div-amount">';
-                                        append += '<div class="d-flex align-items-center  justify-content-center ">';
-                                            append += '<div class="input-number">';
-                                                append += '<button class="btn-sub">';
-                                                    append += '<img src="/modules/global/img/minus.svg">';
-                                                append += '</button>';
-                                                append += '<input type="number" class="form-control" name="amount" value="' + (selected_products[index_product].amount ?? 1) + '" min="1" max="99" step="1">';
-                                                append += '<button class="btn-add">';
-                                                    append += '<img src="/modules/global/img/plus.svg">';
-                                                append += '</button>';
+                                $.ajax({
+                                    async: false,
+                                    method: "GET",
+                                    url: "/api/product/" + product.id,
+                                    dataType: "json",
+                                    headers: {
+                                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                                        'Accept': 'application/json',
+                                    },
+                                    error: function error(response) {
+                                        alertCustom('error', 'Ocorreu um erro, por favor, refaça a operação');
+                                    },
+                                    success: function success(response) {
+                                        append += '<div class="product d-flex align-items-center" data-code="' + response.data.id + '">';
+                                            append += '<div class="div-product d-flex align-items-center" data-toggle="tooltip" data-placement="top" title="' + response.data.name + '">';
+                                                append += '<div class="div-photo" data-type="' + type + '"><img class="product-photo" src="' + response.data.photo + '"></div>';
+                                                append += '<h1 class="title">' + response.data.name_short + '</h1>';
+                                            append += '</div>';
+                                            append += '<div class="div-amount">';
+                                                append += '<div class="d-flex align-items-center  justify-content-center ">';
+                                                    append += '<div class="input-number">';
+                                                        append += '<button class="btn-sub">';
+                                                            append += '<img src="/modules/global/img/minus.svg">';
+                                                        append += '</button>';
+                                                        append += '<input type="number" class="form-control" name="amount" value="' + (selected_products[index_product].amount ?? 1) + '" min="1" max="99" step="1">';
+                                                        append += '<button class="btn-add">';
+                                                            append += '<img src="/modules/global/img/plus.svg">';
+                                                        append += '</button>';
+                                                    append += '</div>';
+                                                append += '</div>';
+                                            append += '</div>';
+                                            append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + (selected_products[index_product].value ?? '') + '" type="text" name="value" placeholder="Valor un."></div>';
+                                            append += '<div class="div-currency">';
+                                                append += '<select class="form-control form-control-lg" type="text" name="currency_type_enum">';
+                                                    append += '<option value="BRL" ' + (selected_products[index_product].currency_type_enum == 'BRL' ? 'selected' : '') + '>BRL (R$)</option>';
+                                                    append += '<option value="USD" ' + (selected_products[index_product].currency_type_enum == 'USD' ? 'selected' : '') + '>USD ($)</option>';
+                                                append += '</select>';
                                             append += '</div>';
                                         append += '</div>';
-                                    append += '</div>';
-                                    append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + (selected_products[index_product].value ?? '') + '" type="text" name="value" placeholder="Valor un."></div>';
-                                    append += '<div class="div-currency">';
-                                        append += '<select class="form-control form-control-lg" type="text" name="currency_type_enum">';
-                                            append += '<option value="BRL" ' + (selected_products[index_product].currency_type_enum == 'BRL' ? 'selected' : '') + '>BRL (R$)</option>';
-                                            append += '<option value="USD" ' + (selected_products[index_product].currency_type_enum == 'USD' ? 'selected' : '') + '>USD ($)</option>';
-                                        append += '</select>';
-                                    append += '</div>';
-                                append += '</div>';
-                            }
-                        });
-                    });
+                                    }
+                                });
+                            });
+                        append += '</div>';
+                    append += '</div>';
                 append += '</div>';
             append += '</div>';
 
@@ -373,9 +385,11 @@ $(function () {
                 $('input[name="value"]').mask('#.##0,00', { reverse: true });
                 
                 if (selected_products.length > 4) {
-                    $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden scroll');
-                } else {
-                    $(modal).find(find_stage).find('.box-products').css('overflow', 'hidden');
+                    $(modal).find(find_stage).find('.box-products').find('.body').css({'max-height': '238px', 'padding-right': '12px', 'position': 'relative', 'overflow': 'hidden'});
+                    $(modal).find(find_stage).find('.box-products').find('.body').append('<div class="scrollbox"></div>');
+                    $(modal).find(find_stage).find('.box-products').find('.body').append('<div class="scrollbox-bar"></div>');
+
+                    scrollCustom(modal + ' ' + find_stage + ' .box-products .body');
                 }
                 
                 if (selected_products.length > 1) {

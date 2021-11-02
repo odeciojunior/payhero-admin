@@ -31,5 +31,5 @@
         <!-- JS carrega -->
     </div>
 
-    <div class="box-review" style="margin-top: 10px;"></div>
+    <div class="box-review" style="margin-top: 30px;"></div>
 </div>
