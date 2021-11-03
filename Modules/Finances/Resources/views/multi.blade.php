@@ -15,10 +15,6 @@
             <div class="row" style="margin-top: 50px">
                 <div class="col-sm-7">
                     <h1 class="page-title">Finanças</h1>
-                    <p class="mt-10">
-                        <span class="badge badge-info new-badge">NOVO!</span>
-                        <span class="new-title">Uma nova central para você controlar seus extratos em diferentes adquirentes.</span>
-                    </p>
                 </div>
                 <div class="col-sm-5 text-right">
                     <div class="col-sm-11 float-right d-flex justify-content-end">
@@ -32,6 +28,12 @@
 {{--                            <span style="margin-right: 9px" class="o-question-help-1"></span> Dúvidas sobre adquirentes?--}}
 {{--                        </div>--}}
 {{--                    </div>--}}
+                </div>
+                <div class="col-sm-12">
+                    <p class="mt-10">
+                        <span class="badge badge-info new-badge">NOVO!</span>
+                        <span class="new-title">Uma nova central para você controlar seus extratos em diferentes adquirentes.</span>
+                    </p>
                 </div>
                 <div class="col-sm-6" id="container-available">
                     <p class="m-0 color-default">Disponível para saque</p>
@@ -125,7 +127,7 @@
                                     <div id="container-withdraw" style="display:none;height: auto;max-height: 390px"></div>
                                     <div class="list-linear-gradient-bottom"></div>
                                     <div class="row" id="skeleton-withdrawal">
-                                        
+
                                         <div class="skeleton skeleton-text"></div>
                                         <div class="skeleton skeleton-text"></div>
                                     </div>

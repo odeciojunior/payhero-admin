@@ -646,3 +646,20 @@ select, .select-pad {
     background-color: #f3f7f9;
     opacity: 1;
 }
+
+.o-arrow-right-1::before {
+    transform: rotate(180deg);
+}
+
+.page-title a {
+    display: flex;
+    align-items: center;
+    color: #404040;
+}
+
+.page-title svg {
+    width: auto;
+    height: 20px;
+    margin-left: 10px;
+    margin-top: 5px;
+}
