@@ -27,9 +27,9 @@ class CompanyBalanceService
 
     private $defaultGateways = [
         AsaasService::class,
-        CieloService::class,
         GetnetService::class,
-        GerencianetService::class
+        GerencianetService::class,
+        CieloService::class,
     ];
 
     public function __construct(Company $company, Statement $gatewayStatementService = null)
@@ -75,7 +75,7 @@ class CompanyBalanceService
 
         $totalAvailable = 0;
         foreach($gatewaysBalances as $gatewaysBalance) {
-            $totalAvailable += foxutils()->onlyNumbers($gatewaysBalance['total_balance']);
+            $totalAvailable += foxutils()->onlyNumbers($gatewaysBalance['available_balance']);
         }
 
         $gatewaysBalances['total_gateways_available'] = foxutils()->formatMoney($totalAvailable / 100);

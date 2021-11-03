@@ -1074,3 +1074,7 @@ img.border-icon{
 tbody td{
     font-size:14px;
 }
+
+.badge-partially-liquidating {
+    background-color: #0D2C54;
+}

@@ -716,6 +716,9 @@ function verifyAccountFrozen() {
 }
 
 function onlyNumbers(string) {
+    if(string == undefined) {
+        return 0;
+    }
     return string.replace(/\D/g,'');
 }
 

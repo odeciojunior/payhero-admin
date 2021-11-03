@@ -1,5 +1,11 @@
 
 $(document).ready(function(){
+
+    $(document).on('click','.img-gateway', function(evt){
+        let id=$(this).attr('href');
+        window.location.href ='/finances/'+id;
+    });
+
     let statusWithdrawals = {
         1: 'warning',
         2: 'primary',
@@ -8,7 +14,10 @@ $(document).ready(function(){
         5: 'primary',
         6: 'primary',
         7: 'danger',
+        8: "primary",
+        9: "partially-liquidating",
     };
+
     function getCompanies() {
         loadingOnScreen();
 
@@ -50,13 +59,23 @@ $(document).ready(function(){
             }
         });
     }
+
     getCompanies();
 
     $(document).on("change","#transfers_company_select", function () {
         $("#extract_company_select").val($(this).val());
+        $('#gateway-skeleton').show();
+        $('#container-all-gateways').html('');
+        $('#val-skeleton').show();
+        $('#container_val').css('display','none');
+        $('#skeleton-withdrawal').show();
+        $('#container-withdraw').html('');
+        $('#empty-history').hide();
         updateStatements();
+        updateWithdrawals();
     });
-    function returnGatewayImg(nome){
+
+    function getGatewayImg(nome){
         let html='';
         switch (nome) {
             case 'getnet':
@@ -105,14 +124,16 @@ $(document).ready(function(){
                         <path d="M9.73922 13.007C9.55685 12.8416 9.32588 12.7465 9.08468 12.7373C8.84347 12.7282 8.60653 12.8056 8.41319 12.9567C7.83134 13.4225 7.13651 13.7086 6.40726 13.7829C5.67802 13.8572 4.94345 13.7165 4.28664 13.3769C3.62975 13.0367 3.07648 12.5118 2.6889 11.8611C2.30139 11.2098 2.09543 10.4582 2.09423 9.69097C2.09303 8.92379 2.29663 8.17149 2.68211 7.51878C3.06728 6.86656 3.61896 6.33982 4.27499 5.99792C4.9307 5.65569 5.66494 5.51237 6.39453 5.58421C7.12412 5.65605 7.81989 5.94018 8.40301 6.4044C8.5941 6.55846 8.83 6.63919 9.07121 6.6331C9.31242 6.627 9.5443 6.53444 9.72806 6.37091C9.84694 6.26434 9.94155 6.1324 10.0046 5.98371C10.0677 5.83503 10.0997 5.67264 10.0968 5.50924C10.0939 5.34583 10.0551 5.18547 9.98522 5.03983C9.91535 4.89419 9.81443 4.7658 9.69167 4.66634C8.79782 3.95069 7.73018 3.5112 6.60974 3.39769C5.48888 3.28378 4.35995 3.50091 3.35117 4.02442C2.34238 4.54792 1.49418 5.35682 0.902912 6.35923C0.31075 7.36174 -0.0019624 8.51729 9.26621e-06 9.69568C0.00198093 10.8741 0.318558 12.0285 0.914071 13.0288C1.50942 14.0281 2.36038 14.8331 3.3706 15.3526C4.38082 15.8722 5.50994 16.0855 6.63011 15.9685C7.75007 15.8511 8.8162 15.4079 9.70769 14.6892C9.82885 14.5898 9.92736 14.4635 9.99609 14.3194C10.0648 14.1753 10.102 14.017 10.1051 13.856C10.1081 13.695 10.077 13.5353 10.0138 13.3884C9.95059 13.2416 9.85698 13.1113 9.73971 13.007H9.73922Z" fill="#5A646E"/>
                         </svg>`;
                 break;
-        
+
             default:
                 // return html;
                 break;
         }
         return html;
     }
-    function updateStatements() {
+
+    window.updateStatements = function() {
+
         $.ajax({
             url: "/api/finances/get-statement-resumes/",
             type: "GET",
@@ -128,89 +149,152 @@ $(document).ready(function(){
             },
             success: function (response) {
                 if (response) {
+                    let emptyStates = 3 - (Object.values(response).length - 1 );
                     $('#gateway-skeleton').hide();
                     $('#container-all-gateways').html('<div class="owl-carousel owl-carousel-shortcode owl-loaded owl-drag"></div>');
                     $.each(response, function(index, data) {
                         if (data.name) {
-                            let img_gateway = returnGatewayImg(data.name.toLowerCase());
+                            let img_gateway = getGatewayImg(data.name.toLowerCase());
                             let html_transaction='Nenhuma Venda Encontrada';
                             if (data.last_transaction) {
                                 html_transaction='Última transação : '+data.last_transaction;
                             }
+                            let pendingDebt = "";
+                            if(data.pending_debt_balance) {
+                                pendingDebt = "<input id='pending-debt-" + data.id + "' type='hidden' value='" + data.pending_debt_balance + "' >";
+                            }
                             $('.owl-carousel').append(`
                                 <div class="item">
                                     <p style="color: #9E9E9E;font-size: 12px;line-height: 15px;">${html_transaction}</p>
-                                    <div class="card">
+                                    <div class="card card-gateway">
                                         <div class="card-body">
                                             <div class="col-sm-12 p-0" id="container_info_${data.name}">
-                                                <div class="col-12 p-0 mb-35">${img_gateway}</div>
-                                                <h6 class="font-size-16 gray m-0"><span class="circulo circulo-green"></span>Saldo Dísponivel</h6>
-                                                <h4 class="saldoDisponivel${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-24 bold">${data.available_balance}</span></h4>
+                                                <div class="col-12 p-0 mb-35 img-gateway" href="${data.id}">${img_gateway}</div>
+                                                <h6 class="font-size-16 m-0"><span class="radio-badge green"></span>Saldo Disponível</h6>
+                                                <h4><span class="font-size-16">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span></h4>
+                                                ${pendingDebt}
                                                 <div id="balance-not-available-${data.name}">
-                                                    <h6 class="font-size-16 gray m-0"><span class="circulo circulo-orange"></span>Saldo Pendente</h6>
-                                                    <h4 class="saldoPendente${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.pending_balance}</span></h4>
-                                                    <h6 class="font-size-16 gray m-0"><span class="circulo circulo-red"></span>Saldo Bloqueado</h6>
-                                                    <h4 class="saldoBloqueado${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.blocked_balance}</span></h4>
-                                                    <h6 class="font-size-16 gray m-0"><span class="circulo circulo-blue"></span>Total</h6>
-                                                    <h4 class="saltoTotal${data.name}" style="margin-bottom:35px; margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${data.total_balance}</span></h4>
+                                                    <h6 class="font-size-16 m-0"><span class="radio-badge orange"></span>Saldo Pendente</h6>
+                                                    <h4><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
+                                                    <h6 class="font-size-16 m-0"><span class="radio-badge red"></span>Saldo Bloqueado</h6>
+                                                    <h4><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.blocked_balance)}</span></h4>
+                                                    <h6 class="font-size-16 m-0"><span class="radio-badge blue"></span>Total</h6>
+                                                    <h4><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.total_balance)}</span></h4>
                                                 </div>
                                             </div>
                                             <div id="container-withdrawal-${data.name}" style="display:none">
-                                                <div class="col-sm-12">
-                                                    <label for="custom-input-addon"> Valor a sacar</label>
-                                                    <div class="input-moeda">R$</div>
-                                                    <input id="custom-input-addon" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" 
-                                                            aria-describedby="basic-addon1" style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
+                                                <div class="input-group mb-3 withdrawal-value">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">R$</span>
+                                                    </div>
+                                                    <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque">
                                                 </div>
                                             </div>
-                                            <a href="#" class="col-12 btn-outline-success btn" id="request-withdrawal-${data.name}">Solicitar saque</a>
+                                        </div>
+                                        <div class="col-sm-12 pb-5">
+                                            <a href="#" class="col-12 btn-outline-success btn" id="request-withdrawal-${data.id}">Solicitar saque</a>
                                             <a href="#" class="btn btn-saque" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
+                                            <a href="#" class="btn btn-danger col-12" id="cancel-withdrawal-${data.name}" style="display:none; margin-top:20px">Cancelar</a>
                                         </div>
                                     </div>
                                 </div>
                             `);
 
-                            $(document).on("click","#request-withdrawal-" + data.name + ",#new-withdrawal-" + data.name,function(){
-                                if($("#balance-not-available-" + data.name).is(":visible")){
-                                    $("#balance-not-available-" + data.name).hide();
-                                    $("#container-withdrawal-" + data.name).show();
-                                    $("#request-withdrawal-" + data.name).hide();
-                                    $("#new-withdrawal-" + data.name).show();
-                                }else{
-                                    $("#balance-not-available-" + data.name).css("display","inline-block");
-                                    $("#container-withdrawal-" + data.name).hide();
-                                    $("#request-withdrawal-" + data.name).show();
-                                    $("#new-withdrawal-" + data.name).hide();
-                                }
+                            $("#withdrawal-value-" + data.id).maskMoney({
+                                thousands: ".",
+                                decimal: ",",
+                                allowZero: true,
                             });
 
+                            $(document).on("click","#request-withdrawal-" + data.id,function(){
+                                if(onlyNumbers($("#available-balance-" + data.id).html()) < 1) {
+                                    alertCustom('error', 'Saldo insuficiente para realizar saques!');
+                                    return;
+                                }
+                                $("#balance-not-available-" + data.name).hide();
+                                $("#container-withdrawal-" + data.name).show();
+                                $("#request-withdrawal-" + data.id).hide();
+                                $("#new-withdrawal-" + data.name).show();
+                                $("#cancel-withdrawal-" + data.name).show();
+                            });
+                            $(document).on("click","#cancel-withdrawal-" + data.name,function(){
+                                $("#balance-not-available-" + data.name).css("display","inline-block");
+                                $("#container-withdrawal-" + data.name).hide();
+                                $("#request-withdrawal-" + data.id).show();
+                                $("#new-withdrawal-" + data.name).hide();
+                                $("#cancel-withdrawal-" + data.name).hide();
+                            });
+
+                            if(data.id == 'w7YL9jZD6gp4qmv' || data.id == 'oXlqv13043xbj4y') {
+                                $(document).on("click","#new-withdrawal-" + data.name,function(){
+                                    let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
+                                    if(withdrawalValue <= 0 || withdrawalValue == ''){
+                                        alertCustom('error', 'Valor do saque inválido!');
+                                        return;
+                                    }
+                                    customWithdrawal(data.id);
+                                });
+                            }
+                            else {
+                                $(document).on("click","#new-withdrawal-" + data.name,function(){
+                                    let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
+                                    if(withdrawalValue <= 0 || withdrawalValue == ''){
+                                        alertCustom('error', 'Valor do saque inválido!');
+                                        return;
+                                    }
+                                    defaultWithdrawal(data.id);
+                                });
+                            }
                         }else{
                             $('#val-skeleton').hide();
-                            $('#container_val').show();
-                            $('.total-available-balance').html(data);
+                            $('#container_val').css({
+                                'display':'flex',
+                                'align-items':'center'
+                            });
+                            $('.total-available-balance').html(removeMoneyCurrency(data));
                         }
                     });
+
+                    if (emptyStates > 0) {
+                        for (let i=0; i < emptyStates; i++) {
+                            $('.owl-carousel').append(
+                                `<div class="item">
+                                    <p style="color: #9E9E9E;font-size: 12px;line-height: 15px;">&nbsp;</p>
+                                    <div class="card bg-transparent" style="border: 2px dashed #B0AFAF; color: #A2A2A2;">
+                                        <div class="card-body text-center d-flex align-items-center">
+                                            <div class="col-sm-12 p-0">
+                                                <div class="d-flex justify-content-center mb-30"><img src="/modules/global/img/logos/2021/svg/icon-multi.svg" alt="Image" style="width: 90px"></div>
+                                               <span> <strong> O Sirius é multiadquirente.</strong> <br/> Sempre tem espaço pra mais uma :) </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`
+                            )
+                        }
+                    }
+
                     $('.owl-carousel').owlCarousel({
                         margin : 10,
                         navText : ["<i class='fa fa-chevron-left text-info'></i>","<i class='fa fa-chevron-right text-info'></i>"],
-                        nav    : true,
                         dots    : false,
                         responsive:{
                             0:{
                                 items:1,
+                                nav    : false,
                             },
                             600:{
                                 items:3,
+                                nav    : true,
                             }
                         }
-                    });   
+                    });
                 }
             }
         });
 
     }
 
-    function updateWithdrawals() {
+    window.updateWithdrawals = function() {
         $.ajax({
             url: "/api/withdrawals/get-resume/",
             type: "GET",
@@ -221,18 +305,28 @@ $(document).ready(function(){
                 'Accept': 'application/json',
             },
             error: function () {
-                //
+                $('#skeleton-withdrawal').hide();
+                $('#empty-history')
+                    .css({
+                        'display':'flex',
+                        'justify-content':'center',
+                        'align-items':'center',
+                        'flex-direction':'column',
+                    });
+                    
             },
             success: function (response) {
-                if(response.data){
+                if(response.data.length){
+                    $('#empty-history').hide();
                     if (response.data.length > 2) {
                         $('#skeleton-withdrawal').hide();
                     }
+                    $('#container-withdraw').html('');
                     $('#container-withdraw').show();
+                    $('#card-history').asScrollable();
                     let c = 1;
                     $.each(response.data, function(index, data) {
-                        // console.log(data);
-                        let img_gateway = returnGatewayImg(data.gateway_name.toLowerCase());
+                        let img_gateway = getGatewayImg(data.gateway_name.toLowerCase());
                         let extra='';
                         let class2='';
                         if (c>1) {
@@ -245,26 +339,55 @@ $(document).ready(function(){
                                 <div class="col-sm-6">${img_gateway}</div>
                                 <div class="col-sm-6 text-right">${data.bank_name}</div>
                                 <div class="col-sm-6" style="margin-top:10px"><h4 style="margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.value)}</span></h4></div>
-                                <div class="col-sm-6" style="margin-top:10px"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status}</span></span></div>
+                                <div class="col-sm-6" style="margin-top:10px"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated}</span></span></div>
                             </div>
                         `);
                         c++;
                     });
+                    $('#container-withdraw').asScrollable();
 
+                    $('.asScrollable-container').scroll(() => {
+                        if ($('.list-linear-gradient-top').css('display') === 'none') {
+                            if ($('.asScrollable-container').scrollTop() > 90) {
+                                $('.list-linear-gradient-top').fadeIn()
+                            }
+                        }
+
+                        if ($('.list-linear-gradient-top').css('display') === 'block') {
+                            if ($('.asScrollable-container').scrollTop() < 90) {
+                                $('.list-linear-gradient-top').fadeOut()
+                            }
+                        }
+                    })
+
+                }else{
+                    $('#skeleton-withdrawal').hide();
+                    $('#empty-history')
+                        .css({
+                            'display':'flex',
+                            'justify-content':'center',
+                            'align-items':'center',
+                            'flex-direction':'column',
+                        });
                 }
             }
         });
     }
 
-    $(document).on('click','.fa-eye-slash',function(){
-        if($('#hide-withdraw').is(':visible')){
-            $('#container_val').removeClass('flex-center');
-            $('#hide-withdraw').hide();
-            $('.total-available-balance').show();
-        }else{
-            $('#container_val').addClass('flex-center');
-            $('#hide-withdraw').css('display','inline-block');
-            $('.total-available-balance').hide();
+    $('#eye-slash, #eye-no-slash').on('click',function(){
+        let availableBalance = $('.total-available-balance')
+
+        let iconEye = $('#eye-slash')
+        let iconNoEye = $('#eye-no-slash')
+
+        if (!availableBalance.hasClass('hide-withdraw')) {
+            availableBalance.addClass('hide-withdraw').css('color', 'transparent')
+            iconEye.addClass('d-none')
+            iconNoEye.removeClass('d-none')
+        } else {
+            availableBalance.removeClass('hide-withdraw').css('color', '#636363')
+            iconEye.removeClass('d-none')
+            iconNoEye.addClass('d-none')
         }
     });
 
@@ -273,20 +396,21 @@ $(document).ready(function(){
             $('#container-config').hide();
             $('#container-return').hide();
             $('#container-gateways').show();
-            $('#container-disponivel').show();
+            $('#container-available').show();
         }
     });
+
     $(document).on('click','#btn-config-all',function(){
         if($('#container-config').is(':hidden')){
             $('#container-config').show();
             $('#container-return').show();
             $('#container-gateways').hide();
-            $('#container-disponivel').hide();
+            $('#container-available').hide();
         }else{
             $('#container-config').hide();
             $('#container-return').hide();
             $('#container-gateways').show();
-            $('#container-disponivel').show();
+            $('#container-available').show();
         }
     });
 });

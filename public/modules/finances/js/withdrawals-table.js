@@ -8,6 +8,8 @@ window.loadWithdrawalsTable = function(link = null) {
         5: 'primary',
         6: 'primary',
         7: 'danger',
+        8: "primary",
+        9: "partially-liquidating",
     };
 
     $("#withdrawals-table-data").html("");
