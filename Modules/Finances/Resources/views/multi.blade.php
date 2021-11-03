@@ -16,7 +16,7 @@
     <div class="page">
         <div class="page-header container">
             <div class="row">
-                <div class="col-sm-7">
+                <div class="col-sm-7" style="margin-top: 30px">
                     <h1 class="page-title">Finanças</h1>
                 </div>
                 <div class="col-sm-5 text-right">
