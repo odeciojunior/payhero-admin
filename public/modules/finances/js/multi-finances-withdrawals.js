@@ -220,7 +220,7 @@ window.customWithdrawal = function(gatewayId) {
             type: "POST",
             data: {
                 company_id: $("#transfers_company_select").val(),
-                withdrawal_value: $("#withdrawal-value-" + gatewayId).val(),
+                withdrawal_value: $(".s-btn.green").data("value"),
                 gateway_id: gatewayId,
             },
             dataType: "json",
@@ -618,7 +618,7 @@ window.customWithdrawal = function(gatewayId) {
             </div>
         `;
     }
-    
+
     function formatMoney(value) {
         return (value / 100).toLocaleString("pt-BR", {
             style: "currency",

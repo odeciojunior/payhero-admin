@@ -206,6 +206,7 @@ $(document).ready(function(){
                                 allowZero: true,
                             });
 
+                            $(document).off("click","#request-withdrawal-" + data.id);
                             $(document).on("click","#request-withdrawal-" + data.id,function(){
                                 if(onlyNumbers($("#available-balance-" + data.id).html()) < 1) {
                                     alertCustom('error', 'Saldo insuficiente para realizar saques!');
@@ -217,6 +218,8 @@ $(document).ready(function(){
                                 $("#new-withdrawal-" + data.name).show();
                                 $("#cancel-withdrawal-" + data.name).show();
                             });
+
+                            $(document).off("click","#cancel-withdrawal-" + data.name);
                             $(document).on("click","#cancel-withdrawal-" + data.name,function(){
                                 $("#balance-not-available-" + data.name).css("display","inline-block");
                                 $("#container-withdrawal-" + data.name).hide();
@@ -226,6 +229,7 @@ $(document).ready(function(){
                             });
 
                             if(data.id == 'w7YL9jZD6gp4qmv' || data.id == 'oXlqv13043xbj4y') {
+                                $(document).off("click","#new-withdrawal-" + data.name);
                                 $(document).on("click","#new-withdrawal-" + data.name,function(){
                                     let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
                                     if(withdrawalValue <= 0 || withdrawalValue == ''){
@@ -236,6 +240,7 @@ $(document).ready(function(){
                                 });
                             }
                             else {
+                                $(document).off("click","#new-withdrawal-" + data.name);
                                 $(document).on("click","#new-withdrawal-" + data.name,function(){
                                     let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
                                     if(withdrawalValue <= 0 || withdrawalValue == ''){
