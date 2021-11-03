@@ -37,7 +37,7 @@
                 </div>
                 <div class="col-sm-6" id="container-available">
                     <p class="m-0 color-default">Disponível para saque</p>
-                    <div id="val-skeleton"><div class="skeleton skeleton-text" style="width:50% !important"></div></div>
+                    <div id="val-skeleton"><div class="skeleton skeleton-text" style="width:207px !important;height: 40px !important;border-radius:20px !important"></div></div>
                     <div id="container_val" style="display:none;">
                         <div style="margin-right: 24px">
                             <span class="font-size-16 gray">R$</span>
@@ -126,7 +126,17 @@
                                     <div class="list-linear-gradient-top" style="display: none"></div>
                                     <div id="container-withdraw" style="display:none;height: auto;max-height: 390px"></div>
                                     <div class="list-linear-gradient-bottom"></div>
-                                    <div class="row" id="skeleton-withdrawal">
+                                    <div class="row skeleton-withdrawal" id="skeleton-withdrawal">
+
+                                        <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text"></div>
+                                    </div>
+                                    <div class="row skeleton-withdrawal mt-25" id="skeleton-withdrawal2">
+
+                                        <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text"></div>
+                                    </div>
+                                    <div class="row skeleton-withdrawal mt-25" id="skeleton-withdrawal3">
 
                                         <div class="skeleton skeleton-text"></div>
                                         <div class="skeleton skeleton-text"></div>

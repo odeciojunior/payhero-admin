@@ -68,7 +68,7 @@ $(document).ready(function(){
         $('#container-all-gateways').html('');
         $('#val-skeleton').show();
         $('#container_val').css('display','none');
-        $('#skeleton-withdrawal').show();
+        $('.skeleton-withdrawal').show();
         $('#container-withdraw').html('');
         $('#empty-history').hide();
         updateStatements();
@@ -191,10 +191,10 @@ $(document).ready(function(){
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 pb-5">
-                                            <a href="#" class="col-12 btn-outline-success btn" id="request-withdrawal-${data.id}">Solicitar saque</a>
-                                            <a href="#" class="btn btn-saque" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
-                                            <a href="#" class="btn btn-danger col-12" id="cancel-withdrawal-${data.name}" style="display:none; margin-top:20px">Cancelar</a>
+                                        <div class="col-sm-12 mb-10 pb-10">
+                                            <a href="#" class="col-12 btn-outline-success btn fw-bold" id="request-withdrawal-${data.id}">Solicitar saque</a>
+                                            <a href="#" class="btn btn-saque fw-bold" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
+                                            <a href="#" class="btn btn-danger btn-cancel fw-bold" id="cancel-withdrawal-${data.name}" style="display:none;">Cancelar</a>
                                         </div>
                                     </div>
                                 </div>
@@ -311,7 +311,7 @@ $(document).ready(function(){
                 'Accept': 'application/json',
             },
             error: function () {
-                $('#skeleton-withdrawal').hide();
+                $('.skeleton-withdrawal').hide();
                 $('#empty-history')
                     .css({
                         'display':'flex',
@@ -323,8 +323,12 @@ $(document).ready(function(){
             success: function (response) {
                 if(response.data.length){
                     $('#empty-history').hide();
-                    if (response.data.length > 2) {
+                    if (response.data.length ==2) {
                         $('#skeleton-withdrawal').hide();
+                        $('#skeleton-withdrawal2').show();
+                        $('#skeleton-withdrawal3').show();
+                    }else if (response.data.length > 2) {
+                        $('.skeleton-withdrawal').hide();
                     }
                     $('#container-withdraw').html('');
                     $('#container-withdraw').show();
@@ -370,7 +374,7 @@ $(document).ready(function(){
                     })
 
                 }else{
-                    $('#skeleton-withdrawal').hide();
+                    $('.skeleton-withdrawal').hide();
                     $('#empty-history')
                         .css({
                             'display':'flex',
