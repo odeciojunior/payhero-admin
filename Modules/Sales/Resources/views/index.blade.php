@@ -53,7 +53,8 @@
                                     <input name='transaction' id="transaction" class="input-pad" placeholder="Transação">
                                 </div>
 
-                                <div class="col-sm-12 col-md-3">
+
+                                <div class="col-sm-12 col-md-3 scrol">
                                     <label for="status">Status</label>
                                     <select name='sale_status' id="status" class="form-control applySelect2">
                                         <option value="">Todos status</option>
