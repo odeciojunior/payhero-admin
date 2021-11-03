@@ -49,10 +49,6 @@
     overflow-x: hidden !important;
 }
 
-.applySelect2{
-    overflow: hidden !important;
-}
-
 /* CONFIGURATIONS THE INTERN CONTENT*/
 .select2-container--default .select2-selection--multiple .select2-selection__choice{
     height: 32px;
@@ -60,8 +56,18 @@
     padding-top: 5px !important;
 }
 
-.select2-selection .select2-selection--multiple{
-    overflow: hidden;
+::-webkit-scrollbar{
+    width: 5px;
+}
+
+::-webkit-scrollbar-track{
+    border-radius: 5px;
+    box-shadow: inset 0 0 0px rgba(0, 0, 0, 0.25);
+}
+
+::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    background-color: #a7a9ad;
 }
 
 li.select2-selection__choice{
@@ -80,7 +86,7 @@ li.select2-selection__choice{
 }
 
 .select2-selection .select2-selection--multiple{
-    overflow: hidden;
+    overflow: hidden !important;
 }
 
 /* END CONFIGURATIONS MULTIPLE SELECT 2 */
