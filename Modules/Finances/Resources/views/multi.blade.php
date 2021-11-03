@@ -15,7 +15,7 @@
 @section('content')
     <div class="page">
         <div class="page-header container">
-            <div class="row" style="margin-top: 50px">
+            <div class="row">
                 <div class="col-sm-7">
                     <h1 class="page-title">Finanças</h1>
                 </div>
@@ -122,12 +122,12 @@
                     <div class="row" style="display: flex;justify-content: flex-end">
                         <div class="col-sm-10" style="padding-top: 60px;">
                             <div class="card card-skeleton" id="card-history">
-                                <div class="card-body" style="max-height: 475px">
+                                <div class="card-body" style="max-height: 460px">
                                     <div class="col-12 p-0 mb-35">
                                         <p><b>Histórico de saques</b></p>
                                     </div>
                                     <div class="list-linear-gradient-top" style="display: none"></div>
-                                    <div id="container-withdraw" style="display:none;height: auto;max-height: 390px"></div>
+                                    <div id="container-withdraw" style="display:none;height: auto;max-height: 380px"></div>
                                     <div class="list-linear-gradient-bottom"></div>
                                     <div class="row skeleton-withdrawal" id="skeleton-withdrawal">
 

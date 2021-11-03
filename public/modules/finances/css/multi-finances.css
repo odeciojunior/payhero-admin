@@ -107,7 +107,7 @@ background-position: -24px -53px;
 }
 /* configuração do skeleton */
 .card,.card-skeleton{
-    min-height: 492px;
+    min-height: 460px;
 }
 .skeleton{
     opacity: .7;
@@ -228,6 +228,8 @@ background-position: -24px -53px;
 
 .card-gateway h4:last-child {
     border: none;
+    padding-bottom:  0;
+    margin-bottom: 0;
 }
 
 .btn-outline-success {
