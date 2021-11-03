@@ -743,6 +743,9 @@ $(document).ready(function () {
             searching: function () {
                 return "Procurando...";
             },
+            errorLoading: function () {
+                return "Os resultados não puderam ser carregados";
+            }
         },
         ajax: {
             data: function (params) {
