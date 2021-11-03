@@ -565,15 +565,15 @@ window.customWithdrawal = function(gatewayId) {
                 </span>
             </div>`);
     }
-    
+
     function modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue) {
-    
+
         let valueLowerIsNegative = 2;
     
         if (debitValue != undefined) {
             valueLowerIsNegative = dataWithdrawal.lower_value - removeFormatNumbers(debitValue);
         }
-    
+
         return (
             valueLowerIsNegative < 1 ||
             dataWithdrawal.lower_value == 0 ||
@@ -584,6 +584,7 @@ window.customWithdrawal = function(gatewayId) {
     }
     
     function removeFormatNumbers(number) {
+        number += '';
         return number.replace(/,/g, "").replace(/\./g, "");
     }
     

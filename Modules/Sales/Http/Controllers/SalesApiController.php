@@ -144,6 +144,7 @@ class SalesApiController extends Controller
                     Response::HTTP_BAD_REQUEST
                 );
             }
+
             activity()->on((new Sale()))->tap(
                 function (Activity $activity) use ($saleIdDecoded) {
                     $activity->log_name = 'estorno';
