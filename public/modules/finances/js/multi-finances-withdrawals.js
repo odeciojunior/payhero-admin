@@ -34,7 +34,6 @@ window.defaultWithdrawal = function(gatewayId) {
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
-
                     if (response.data.user_documents_status == 'pending') {
                         let route = '/profile';
                         $('#modal-withdrawal').modal('show');
@@ -133,11 +132,9 @@ window.defaultWithdrawal = function(gatewayId) {
                                     'Accept': 'application/json',
                                 },
                                 error: (response) => {
-                                    loadingOnScreenRemove();
                                     errorAjaxResponse(response);
                                 },
                                 success: (response) => {
-                                    loadingOnScreenRemove();
                                     $('#modal-withdrawal').modal('show');
                                     $('#modal-withdrawal-title').text("Sucesso!");
                                     $('#modal_body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' + '<h3 align="center"><strong>Sua solicitação foi para avaliação!</strong></h3>');
@@ -184,6 +181,7 @@ window.customWithdrawal = function(gatewayId) {
 
     $("#request-withdrawal-" + gatewayId).attr("disabled", "disabled");
 
+
     $.ajax({
         url: "/api/withdrawals/getWithdrawalValues",
         type: "POST",
@@ -205,6 +203,7 @@ window.customWithdrawal = function(gatewayId) {
         },
         complete: (response) => {
             $("#request-withdrawal-" + gatewayId).removeAttr("disabled");
+            loadingOnScreenRemove();
         }
     });
 
