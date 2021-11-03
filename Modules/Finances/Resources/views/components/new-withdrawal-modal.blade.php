@@ -1,4 +1,4 @@
-<div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1" data-keyboard="false" data-backdrop="static">
+<div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical" role="dialog" tabindex="-1" data-keyboard="false" data-backdrop="static" style="display: none">
     <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple ">
         <div id="conteudo_modal_add" class="modal-content modal-content-style">
             <div class="modal-header header-modal simple-border-bottom modal-title-withdrawal" style="height: 60px;">

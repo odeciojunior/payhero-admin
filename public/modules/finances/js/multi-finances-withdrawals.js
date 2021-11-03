@@ -5,7 +5,9 @@ window.defaultWithdrawal = function(gatewayId) {
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
 
-    console.log(toTransfer + ' - ' + availableBalance);
+    if ($('#modal-withdrawal').css('display') === 'none') {
+        $('#modal-withdrawal').removeAttr("style")
+    }
     if (toTransfer > availableBalance) {
 
         alertCustom('error', 'O valor requerido ultrapassa o limite disponivel');
@@ -262,7 +264,7 @@ window.customWithdrawal = function(gatewayId) {
             });
             return false;
         }
-    
+
         if (toTransfer > availableBalance) {
             alertCustom("error", "O valor requerido ultrapassa o limite disponivel");
             $("#withdrawal-value-" + gatewayId).val("");
@@ -273,7 +275,7 @@ window.customWithdrawal = function(gatewayId) {
             });
             return false;
         }
-    
+
         if ($("#withdrawal-value-" + gatewayId).val() == "") {
             alertCustom("error", "Valor do saque inválido!");
             return false;
@@ -354,11 +356,11 @@ window.customWithdrawal = function(gatewayId) {
                         </div>
                     </div>`
                 ).show();
-    
+
                 let result = currentBalance - removeFormatNumbers(debitValue);
-    
+
                 $("#value-withdrawal-received").text(formatMoney(result));
-    
+
                 $("#modal-withdrawal-custom-footer").html(`
                     <hr>
                     <div class="col-md-12 text-center">
@@ -368,15 +370,15 @@ window.customWithdrawal = function(gatewayId) {
                     </div>
                 `);
             } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1) {
-    
+
                 withdrawRequestValid = true;
                 $("#modal-body-withdrawal-custom").html("");
                 $("#text-description-debit-pending").html("");
-    
+
                 $("#modal-withdrawal-custom-title").text(
                     "Não é possivel realizar este saque"
                 );
-    
+
                 $("#debit-pending-informations")
                     .html(`
                     <div class="col-12">
@@ -419,7 +421,7 @@ window.customWithdrawal = function(gatewayId) {
                         </div>
                     </div>
                 `).show();
-    
+
                 $("#modal-withdrawal-custom-footer").html(`
                     <hr>
                     <div class="col-md-12 text-center">
@@ -428,21 +430,21 @@ window.customWithdrawal = function(gatewayId) {
                         </button>
                     </div>
                 `);
-    
+
                 $("#requested-amount-withdrawal").text(formatMoney(withdrawal));
-    
+
                 let result = removeFormatNumbers(withdrawal) - removeFormatNumbers(debitValue);
                 $("#value-withdrawal-received").text(formatMoney(result));
                 $("#debit-pending-informations").show();
             }
         }
-    
+
         if (withdrawRequestValid === false && totalBalanceNegative === false) {
             const htmlModal = optionsValuesWithdrawal(singleValue, dataWithdrawal);
-    
+
             $("#modal-body-withdrawal-custom, #debit-pending-informations, #text-title-debit-pending,#text-description-debit-pending").html("");
             $("#modal-withdrawal-custom-title").html("").html("Confirmar Saque");
-    
+
             $("#modal-body-withdrawal-custom").html(`
                 <div>
                     <div class="mt-10 mb-10">
@@ -507,47 +509,47 @@ window.customWithdrawal = function(gatewayId) {
                         </div>
                     </div>
                 `).show();
-    
+
                 const newValueSelected = $(`#${$("#modal-body-withdrawal-custom .s-btn.green").attr("id")}`);
-    
+
                 $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
-    
+
                 $("#value-withdrawal-received").text(formatMoney(newValueSelected.data("value") - removeFormatNumbers(debitValue)));
             }
-    
+
             $("#modal-withdrawal-custom-footer").html(`
                 <div class="col-md-12 text-center">
                     <button id="bt-cancel-withdrawal" class="btn col-5 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:200px; border-radius: 12px; color:#818181;">
                         Cancelar
                     </button>
-    
+
                     <button id="bt-confirm-withdrawal-modal-custom" class="btn btn-success col-5 btn-confirmation s-btn-border" style="background-color: #41DC8F;font-size:20px; width:200px;">
                         <strong>Confirmar</strong>
                     </button>
                 </div>
             `);
         }
-    
+
         $("#modal-withdrawal-custom").modal("show");
-    
+
         $("#bigger-value, #lower-value, #single-value").off("click");
         $("#bigger-value, #lower-value, #single-value").on("click", function () {
             $("#bigger-value, #lower-value, #single-value").removeClass("green");
-    
+
             const optionSelected = $(this).attr("id");
             const newValueSelected = $(`#${optionSelected}`).addClass("green");
             $("#requested-amount-withdrawal").text(newValueSelected.text().trim());
-    
+
             if (debitValue != undefined) {
                 let result = $(`#${optionSelected}`).data("value") - removeFormatNumbers(debitValue);
                 $("#value-withdrawal-received").text(formatMoney(result));
             }
         });
     }
-    
+
     function manipulateModalSuccessWithdrawal() {
         $("#debit-pending-informations").html("");
-    
+
         $("#modal-withdrawal-custom-title").text("Sucesso!");
         $(".modal-body #modal-body-withdrawal-custom").html(`
             <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
@@ -568,7 +570,7 @@ window.customWithdrawal = function(gatewayId) {
     function modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue) {
 
         let valueLowerIsNegative = 2;
-    
+
         if (debitValue != undefined) {
             valueLowerIsNegative = dataWithdrawal.lower_value - removeFormatNumbers(debitValue);
         }
@@ -581,17 +583,17 @@ window.customWithdrawal = function(gatewayId) {
             currentBalance == dataWithdrawal.bigger_value
         );
     }
-    
+
     function removeFormatNumbers(number) {
         number += '';
         return number.replace(/,/g, "").replace(/\./g, "");
     }
-    
+
     function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
         const biggerValue = formatMoney(dataWithdrawal.bigger_value);
-    
+
         const lowerValue = formatMoney(dataWithdrawal.lower_value);
-    
+
         if (singleValue) {
             return `
                 <div id="just-value-show" class="text-center mt-25 radio-custom radio-primary">
@@ -601,15 +603,15 @@ window.customWithdrawal = function(gatewayId) {
                 </div>
             `;
         }
-    
+
         return `
             <div class="">
                 <div class="row justify-content-center">
-    
+
                     <div class="btn btn-primary mr-4 s-btn s-btn-border" id="lower-value" data-value="${dataWithdrawal.lower_value}">
                         ${lowerValue}
                     </div>
-    
+
                         <div class="btn btn-primary s-btn s-btn-border green" id="bigger-value" data-value="${dataWithdrawal.bigger_value}">
                         ${biggerValue}
                     </div>
