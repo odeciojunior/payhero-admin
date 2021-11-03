@@ -332,7 +332,6 @@ $(document).ready(function(){
                     }
                     $('#container-withdraw').html('');
                     $('#container-withdraw').show();
-                    $('#card-history').asScrollable();
                     let c = 1;
                     $.each(response.data, function(index, data) {
                         let img_gateway = getGatewayImg(data.gateway_name.toLowerCase());
@@ -357,7 +356,9 @@ $(document).ready(function(){
                             <div style="height: 15px"></div>
                         `);
 
-                    $('#container-withdraw').asScrollable();
+                    if (response.data.length > 4) {
+                        $('#container-withdraw').asScrollable();
+                    }
 
                     $('.asScrollable-container').scroll(() => {
                         if ($('.list-linear-gradient-top').css('display') === 'none') {
