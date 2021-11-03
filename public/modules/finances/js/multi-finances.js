@@ -318,7 +318,6 @@ $(document).ready(function(){
                         'align-items':'center',
                         'flex-direction':'column',
                     });
-                    
             },
             success: function (response) {
                 if(response.data.length){
@@ -342,7 +341,7 @@ $(document).ready(function(){
                             ${extra}
                             <div class="row ${class2}">
                                 <div class="col-sm-6">${img_gateway}</div>
-                                <div class="col-sm-6 text-right">${data.bank_name}</div>
+                                <div class="col-sm-6 text-right overflow-bank-name">${data.bank_name.replace('BANCO ', '')}</div>
                                 <div class="col-sm-6" style="margin-top:10px"><h4 style="margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.value)}</span></h4></div>
                                 <div class="col-sm-6" style="margin-top:10px"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated}</span></span></div>
                             </div>

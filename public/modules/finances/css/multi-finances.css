@@ -272,6 +272,7 @@ select.form-control {
 .overflow-bank-name {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap
 }
 @media (max-width: 991px) {
     .badge {
