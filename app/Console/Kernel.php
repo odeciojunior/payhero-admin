@@ -102,6 +102,9 @@ class Kernel extends ConsoleKernel
         //Reorder shopify
         $schedule->command('command:ShopifyReorderSales')->dailyAt('03:00');
 
+        //Reorder woocommerce
+        $schedule->command('command:WoocommerceReorderSales')->dailyAt('03:45');
+
         //checks the trackings that have been recognized by the carrier but has no movement yet
         $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');
 
@@ -150,7 +153,7 @@ class Kernel extends ConsoleKernel
         /** Check GatewayTax invitations Diogo */
         $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
 
-        $schedule->command('check:sales-refunded')->dailyAt('16:00');
+        $schedule->command('check:sales-refunded')->weeklyOn(1, '23:00');
 
         /** Libera o dinheiro da azx */
         $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00');
