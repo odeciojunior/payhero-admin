@@ -1,6 +1,9 @@
 @extends("layouts.master")
 
 @push('css')
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
@@ -12,13 +15,9 @@
 @section('content')
     <div class="page">
         <div class="page-header container">
-            <div class="row" style="margin-top: 50px">
-                <div class="col-sm-7">
+            <div class="row">
+                <div class="col-sm-7" style="margin-top: 30px">
                     <h1 class="page-title">Finanças</h1>
-                    <p class="mt-10">
-                        <span class="badge badge-info new-badge">NOVO!</span>
-                        <span class="new-title">Uma nova central para você controlar seus extratos em diferentes adquirentes.</span>
-                    </p>
                 </div>
                 <div class="col-sm-5 text-right">
                     <div class="col-sm-11 float-right d-flex justify-content-end">
@@ -33,9 +32,15 @@
 {{--                        </div>--}}
 {{--                    </div>--}}
                 </div>
+                <div class="col-sm-12">
+                    <p class="mt-10">
+                        <span class="badge badge-info new-badge">NOVO!</span>
+                        <span class="new-title">Uma nova central para você controlar seus extratos em diferentes adquirentes.</span>
+                    </p>
+                </div>
                 <div class="col-sm-6" id="container-available">
                     <p class="m-0 color-default">Disponível para saque</p>
-                    <div id="val-skeleton"><div class="skeleton skeleton-text" style="width:50% !important"></div></div>
+                    <div id="val-skeleton"><div class="skeleton skeleton-text" style="width:207px !important;height: 40px !important;border-radius:20px !important"></div></div>
                     <div id="container_val" style="display:none;">
                         <div style="margin-right: 24px">
                             <span class="font-size-16 gray">R$</span>
@@ -47,7 +52,7 @@
                 </div>
                 <div class="col-sm-6 pointer default-hover" style="display:none;" id="container-return">
                     <div class="d-flex align-items-center h-p100 default-hover">
-                        <i class="o-arrow-right-1" style="margin-right: 8px"></i> Retornar para tela inicial
+                        <i class="o-arrow-right-1" style="margin-right: 8px"></i> Voltar
                     </div>
                 </div>
                 <div class="col-sm-6 d-flex justify-content-end align-items-center">
@@ -58,7 +63,7 @@
         <div class="page-content container">
             <div class="row" id="container-gateways">
                 <div class="col-sm-8">
-                    <div class="row" id="gateway-skeleton" style="padding-top:30px;">
+                    <div class="row" id="gateway-skeleton" style="padding-top:25px;">
                         <div class="col-sm-4">
                             <div class="skeleton skeleton-text" style="margin-bottom: 10px !important"></div>
                             <div class="card card-skeleton">
@@ -111,21 +116,31 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" style="padding-top:30px;" id="container-all-gateways"></div>
+                    <div class="row" style="padding-top:25px;" id="container-all-gateways"></div>
                 </div>
                 <div class="col-sm-4">
                     <div class="row" style="display: flex;justify-content: flex-end">
-                        <div class="col-sm-10" style="padding-top: 60px;">
+                        <div class="col-sm-10" style="padding-top: 50px;">
                             <div class="card card-skeleton" id="card-history">
-                                <div class="card-body" style="max-height: 475px">
+                                <div class="card-body" style="max-height: 460px">
                                     <div class="col-12 p-0 mb-35">
                                         <p><b>Histórico de saques</b></p>
                                     </div>
                                     <div class="list-linear-gradient-top" style="display: none"></div>
-                                    <div id="container-withdraw" style="display:none;height: auto;max-height: 390px"></div>
+                                    <div id="container-withdraw" style="display:none;height: auto;max-height: 380px"></div>
                                     <div class="list-linear-gradient-bottom"></div>
-                                    <div class="row" id="skeleton-withdrawal">
-                                        
+                                    <div class="row skeleton-withdrawal" id="skeleton-withdrawal">
+
+                                        <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text"></div>
+                                    </div>
+                                    <div class="row skeleton-withdrawal mt-25" id="skeleton-withdrawal2">
+
+                                        <div class="skeleton skeleton-text"></div>
+                                        <div class="skeleton skeleton-text"></div>
+                                    </div>
+                                    <div class="row skeleton-withdrawal mt-25" id="skeleton-withdrawal3">
+
                                         <div class="skeleton skeleton-text"></div>
                                         <div class="skeleton skeleton-text"></div>
                                     </div>

@@ -13,7 +13,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        //
+        dd(current(Hashids::decode('5pjw3RjjNv32lQq')));
     }
 
 }

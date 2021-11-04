@@ -1,3 +1,7 @@
+.page-content {
+    padding-bottom: 0;
+}
+
 .popover {
     left: -50px !important;
 }
@@ -107,7 +111,7 @@ background-position: -24px -53px;
 }
 /* configuração do skeleton */
 .card,.card-skeleton{
-    min-height: 475px;
+    min-height: 460px;
 }
 .skeleton{
     opacity: .7;
@@ -228,6 +232,8 @@ background-position: -24px -53px;
 
 .card-gateway h4:last-child {
     border: none;
+    padding-bottom:  0;
+    margin-bottom: 0;
 }
 
 .btn-outline-success {
@@ -272,6 +278,7 @@ select.form-control {
 .overflow-bank-name {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap
 }
 @media (max-width: 991px) {
     .badge {
@@ -286,4 +293,15 @@ select.form-control {
 }
 .card-gateway{
     cursor: pointer;
+}
+.btn-cancel {
+    margin-top: 5px;
+    border-radius: 8px;
+    color: #f3f7f9;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 32px;
 }
