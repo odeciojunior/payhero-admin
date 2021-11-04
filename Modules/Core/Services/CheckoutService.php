@@ -204,10 +204,10 @@ class CheckoutService
                 'total_paid_value' => $totalPaidValue,
             ];
 
-            $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
+            $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);\Log::info((array)$response);
             if ($response->status == 'success' && $response->response->status == 'success') {
                 // $saleModel  = new Sale();
-                $dataUpdate = (array)$response->response->response;
+                $dataUpdate = (array)$response->response;
                 // if (!empty($dataUpdate['gateway_received_date'])) {
                 //     unset($dataUpdate['gateway_received_date']);
                 // }
