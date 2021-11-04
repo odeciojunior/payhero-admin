@@ -71,6 +71,7 @@ $(document).ready(function(){
         $('.skeleton-withdrawal').show();
         $('#container-withdraw').html('');
         $('#empty-history').hide();
+        $('.asScrollable').hide();
         updateStatements();
         updateWithdrawals();
     });
@@ -332,6 +333,7 @@ $(document).ready(function(){
                     }
                     $('#container-withdraw').html('');
                     $('#container-withdraw').show();
+                    $('.asScrollable').show();
                     let c = 1;
                     $.each(response.data, function(index, data) {
                         let img_gateway = getGatewayImg(data.gateway_name.toLowerCase());

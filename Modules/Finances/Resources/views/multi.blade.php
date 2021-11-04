@@ -52,7 +52,7 @@
                 </div>
                 <div class="col-sm-6 pointer default-hover" style="display:none;" id="container-return">
                     <div class="d-flex align-items-center h-p100 default-hover">
-                        <i class="o-arrow-right-1" style="margin-right: 8px"></i> Retornar para tela inicial
+                        <i class="o-arrow-right-1" style="margin-right: 8px"></i> Voltar
                     </div>
                 </div>
                 <div class="col-sm-6 d-flex justify-content-end align-items-center">

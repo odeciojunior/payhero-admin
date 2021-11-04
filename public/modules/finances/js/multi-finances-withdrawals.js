@@ -151,6 +151,7 @@ window.defaultWithdrawal = function(gatewayId) {
                                     $('#skeleton-withdrawal').show();
                                     $('#container-withdraw').html('');
                                     $('#empty-history').hide();
+                                    $('.asScrollable').hide();
                                     updateStatements();
                                     updateWithdrawals();
 
@@ -248,8 +249,9 @@ window.customWithdrawal = function(gatewayId) {
                 $('#val-skeleton').show();
                 $('#container_val').css('display','none');
                 $('#skeleton-withdrawal').show();
-                $('#container-withdraw').html('');
+                $('#container-withdraw').html(' ');
                 $('#empty-history').hide();
+                $('.asScrollable').hide();
                 updateStatements();
                 updateWithdrawals();
             },
