@@ -243,7 +243,13 @@ window.customWithdrawal = function(gatewayId) {
                     $("#withdrawal-value-" + gatewayId).val("");
                     $(".modal-body, #modal-body-withdrawal-custom").modal("hide");
                 });
-
+                $('#gateway-skeleton').show();
+                $('#container-all-gateways').html('');
+                $('#val-skeleton').show();
+                $('#container_val').css('display','none');
+                $('#skeleton-withdrawal').show();
+                $('#container-withdraw').html('');
+                $('#empty-history').hide();
                 updateStatements();
                 updateWithdrawals();
             },
