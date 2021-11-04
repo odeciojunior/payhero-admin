@@ -86,7 +86,7 @@
 
                             </div>
 
-                            <div id="bt_collapse">
+                            <div id="bt_collapse" class="collapse">
 
                                 <div class="row mb-md-15">
 
