@@ -29,8 +29,20 @@ class TicketsApiController extends Controller
                 'messages',
                 'customer',
                 'sale',
-            ])->whereHas('sale', function ($query) use ($userId) {
-                $query->where('owner_id', $userId);
+            ])->whereHas('sale', function ($sale) use ($userId, $data) {
+                $sale->where('owner_id', $userId);
+
+                if(!empty($data['project'])){
+                    $projectId = hashids_decode($data['project']);
+                    $sale->where('project_id', $projectId);
+                }
+
+                if(!empty($data['plan'])){
+                    $planId = hashids_decode($data['plan']);
+                    $sale->whereHas('plansSales', function ($query) use ($planId) {
+                        $query->where('plan_id', $planId);
+                    });
+                }
             });
 
             if (!empty($data['date'])) {
