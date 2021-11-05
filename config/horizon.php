@@ -157,7 +157,7 @@ return [
                 'connection' => 'redis-horizon-long-running',
                 'queue' => 'long',
                 'balance' => 'false',
-                'processes' => 10,
+                'processes' => 4,
                 'tries' => 3,
                 'timeout' => 300,
                 'delay' => 1,
