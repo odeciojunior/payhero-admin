@@ -700,7 +700,7 @@ $(document).ready(function () {
     
     //COMPORTAMENTO DO FILTRO MULTIPLO
     function behaviorMultipleFilter(data, selectId){
-        var $select = $('#'+selectId);
+        var $select = $(`#${selectId}`);
         var valueToRemove = '';
         var values = $select.val();
 
@@ -725,10 +725,29 @@ $(document).ready(function () {
     }
     $(".applySelect2").on("select2:select", function (evt) {
         var data = evt.params.data;
-        var selectId = $(this).attr('id');                
-        behaviorMultipleFilter(data, selectId)
+        var selectId = $(this).attr('id');
+
+        behaviorMultipleFilter(data, selectId);
+    });
+
+
+    //NAO PERMITI QUE O FILTRO FIQUE VAZIO
+    function deniedEmptyFilter(idTarget){
+        let arrayValues = $(`#${idTarget}`).val();
+        let valueAmount = $(`#${idTarget}`).val().length;
+
+        if(valueAmount === 0){
+            arrayValues.push('');
+            arrayValues = $(`#${idTarget}`).val('').trigger("change");
+        }
+    }
+    $(".applySelect2").on("change", function () {            
+        let idTarget = $(this).attr('id');
+        deniedEmptyFilter(idTarget);
     });
     // FIM DO COMPORTAMENTO DO FILTRO
+
+
 
     $("#projeto").on("change", function () {
         let value = $(this).val();

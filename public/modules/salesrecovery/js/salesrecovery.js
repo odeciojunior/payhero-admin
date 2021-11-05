@@ -767,10 +767,8 @@ $(document).ready(function () {
     }
     $(".applySelect2").on("select2:select", function (evt) {
         var data = evt.params.data;
-        console.log(evt.params.data);
-        // debugger;
-        var selectId = $(this).attr('id');                
-        behaviorMultipleFilter(data, selectId)
+        var selectId = $(this).attr('id');
+        behaviorMultipleFilter(data, selectId);
     });
     // FIM DO COMPORTAMENTO DO FILTRO
     
