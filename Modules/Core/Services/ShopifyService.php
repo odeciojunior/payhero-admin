@@ -827,8 +827,7 @@ class ShopifyService
                 if (!empty($productPlan)) {
                     if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
                         $costProduct = $this->getCostShopify($variant);
-                        //sleep(1);
-                        if ($costProduct !== '') {
+                        if (!empty($costProduct)) {
                             $productPlan->fill(['cost' => $costProduct * 100]);
                             if ($productPlan->isDirty()) {
                                 $productPlan->save();
@@ -899,8 +898,7 @@ class ShopifyService
                     ];
                     if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
                         $costShopify = $this->getCostShopify($variant);
-                        //sleep(1);
-                        if ($costShopify !== '') {
+                        if (!empty($costProduct)) {
                             $dataProductPlan['cost'] = $costShopify * 100;
                         }
                     }
@@ -949,8 +947,7 @@ class ShopifyService
                 ];
                 if (($updateCostShopify->update_cost_shopify ?? 0) == 1) {
                     $costShopify = $this->getCostShopify($variant);
-                    //sleep(1);
-                    if ($costShopify !== '') {
+                    if (!empty($costProduct)) {
                         $dataProductPlan['cost'] = $costShopify * 100;
                     }
                 }
