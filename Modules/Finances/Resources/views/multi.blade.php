@@ -152,6 +152,8 @@
                 </div>
             </div>
             <div style="display:none" id="container-config">
+                <div style="font-weight: bold; font-size: 24px; line-height: 30px; color: #636363;">Automatize seus saques</div>
+                <div style="font-size: 16px; line-height: 20px; color: #70707E;">Crie regras para realizar saques automaticamente, sem precisar se preocupar!</div>
                 <form id="finances-settings-form">
                     <div class="row">
                         <div class="col-md-6 mb-50">
