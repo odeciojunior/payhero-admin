@@ -159,7 +159,7 @@ return [
                 'balance' => 'false',
                 'processes' => 4,
                 'tries' => 3,
-                'timeout' => 300,
+                'timeout' => 36000,
                 'delay' => 1,
             ],
         ],

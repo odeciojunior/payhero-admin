@@ -80,8 +80,8 @@ return [
             'driver' => 'redis',
             'connection' => 'redis-horizon',
             'queue' => 'long',
-            'retry_after' => 600, // 5 minutes after timeout
-            'timeout' => 300,
+            'retry_after' => 36300, // 5 minutes after timeout
+            'timeout' => 36000,
             'block_for' => null,
         ],
     ],
