@@ -157,7 +157,7 @@
                 <form id="finances-settings-form">
                     <div class="row">
                         <div class="col-md-6 mb-50">
-                            <div class="card no-shadow mt-30">
+                            <div class="card no-shadow mt-30" style="min-height: unset">
                                 <div class="card-body">
                                     <h5 class="title-pad">
                                         Saque automático por período
@@ -254,7 +254,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="card no-shadow mt-30">
+                            <div class="card no-shadow mt-30" style="min-height: unset">
                                 <div class="card-body">
                                     <h5 class="title-pad">
                                         Saque automático por valor

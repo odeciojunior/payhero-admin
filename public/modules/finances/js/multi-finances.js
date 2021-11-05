@@ -417,11 +417,13 @@ $(document).ready(function(){
 
     $(document).on('click','#btn-config-all',function(){
         if($('#container-config').is(':hidden')){
+            $('#btn-config-all').addClass('active-outline');
             $('#container-config').show();
             $('#container-return').show();
             $('#container-gateways').hide();
             $('#container-available').hide();
         }else{
+            $('#btn-config-all').removeClass('active-outline');
             $('#container-config').hide();
             $('#container-return').hide();
             $('#container-gateways').show();

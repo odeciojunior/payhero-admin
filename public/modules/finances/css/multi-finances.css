@@ -280,6 +280,21 @@ select.form-control {
     text-overflow: ellipsis;
     white-space: nowrap
 }
+.bg-light {
+    background-color: white !important;
+}
+
+.bg-lighter {
+    border: 1px solid #636363;
+}
+
+.active-outline{
+    border: 1px solid #2E85EC !important;
+}
+
+.active-outline .o-gear-1 {
+    color: #2E85EC;
+}
 @media (max-width: 991px) {
     .badge {
          width: unset;
