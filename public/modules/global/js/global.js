@@ -60,21 +60,38 @@ function scrollCustom(div) {
     $(div).on('wheel', function(event) {
         if(event.originalEvent.deltaY !== 0) {
             var heightDivScroll = $(div).height();
+            var heightDivScrollTotal = $(div).find('.row').height();
 
-            var heightCalculateScroll = (heightDivScroll - (heightDivScroll - 72)) / 4;
-            var heightCalculateTotal = (heightDivScroll - (heightDivScroll - 72)) / 3;
-            
+            var heightCalculateScroll = ((heightDivScroll - 60) / 60) * 2;
+            var heightCalculateTotal = ((heightDivScrollTotal - heightDivScroll) / 60) * 2;
+
+            console.log(heightCalculateScroll);
+            console.log(heightCalculateTotal);
+
             if(event.originalEvent.deltaY < 0) {
+                //console.log('up');
+
                 // wheeled up
-                if (scroll >= heightCalculateScroll) {
+                if (scroll > heightCalculateScroll) {
                     scroll -= heightCalculateScroll;
                     scrollDiv -= heightCalculateTotal;
+                } else if (scroll == heightCalculateScroll || scroll > 0) {
+                    scroll = 0;
+                    scrollDiv = 0;
                 }
             } else {
+                console.log(scroll + heightCalculateScroll);
+                console.log(heightDivScroll);
+
+                var sumScroll = scroll + heightCalculateScroll;
+
                 // wheeled down
-                if (scrollDiv < heightDivScroll) {
+                if (sumScroll <= (heightDivScroll - 60)) {
                     scroll += heightCalculateScroll;
                     scrollDiv += heightCalculateTotal;
+                } else {
+                    scroll = heightDivScroll - 60;
+                    scrollDiv = (heightDivScrollTotal - heightDivScroll);
                 }
             }
 
@@ -209,7 +226,7 @@ function loadOnAnyEllipsis(target, remove = false, options = {}) {
 function heightAnimate(element, height){
   	var curHeight = element.height(); // Get Default Height
     var autoHeight = element.css('height', 'auto').height(); // Get Auto Height
-    
+
     element.height(curHeight); // Reset to Default Height
     element.stop().animate({ height: autoHeight }, time); // Animate to Auto Height
 }
@@ -257,7 +274,7 @@ function loadModalPlaceholderLoading(modal, whereToLoad, htmlLoad) {
 
 function loadOnModalNewLayout(modal, whereToLoad) {
     $(modal).find('.modal-body').removeClass('show');
-    
+
     if (whereToLoad) {
         $(modal).find(whereToLoad).children().fadeOut('fast');
         $(modal).find(whereToLoad).append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
@@ -267,14 +284,14 @@ function loadOnModalNewLayout(modal, whereToLoad) {
         $(modal).find('.modal-footer').fadeOut('fast');
         $(modal).find('.modal-body').append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
     }
-    
+
     $(modal).modal('show');
 }
 
 function loadOnModalRemove(modal) {
     $(modal).find('.modal-body').addClass('show');
     $(modal).find('.ph-item').fadeOut(3000, function(){ this.remove(); });
-    
+
     $(modal).find('.modal-body').children().fadeIn(3000);
 
     $(modal).find('.modal-footer').fadeIn(3000);
