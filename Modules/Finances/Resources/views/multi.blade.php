@@ -19,10 +19,10 @@
                 <div class="col-sm-7" style="margin-top: 30px">
                     <h1 class="page-title">Finanças</h1>
                 </div>
-                <div class="col-sm-5 text-right">
-                    <div class="col-sm-11 float-right d-flex justify-content-end">
+                <div class="col-sm-5 d-flex d-fall align-items-end">
+                    <div class="col-sm-11 float-right">
                         <div class="input-holder">
-                            <select style='border-radius:10px' class="form-control select-pad"
+                            <select style='border-radius:10px' class="form-control select-pad text-right"
                                     id="transfers_company_select"> </select>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                     <div id="val-skeleton"><div class="skeleton skeleton-text" style="width:207px !important;height: 40px !important;border-radius:20px !important"></div></div>
                     <div id="container_val" style="display:none;">
                         <div style="margin-right: 24px">
-                            <span class="font-size-16 gray">R$</span>
+                            <span class="font-size-24 gray">R$</span>
                             <span class="font-size-32 bold total-available-balance" style="color: #636363;">0,00</span>
                         </div>
                         <img id="eye-slash" src="{{ asset('modules/global/img/logos/2021/svg/eye-slash.svg') }}" alt="" class="pointer">
