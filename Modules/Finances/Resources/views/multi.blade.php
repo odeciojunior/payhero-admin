@@ -19,7 +19,7 @@
                 <div class="col-sm-7" style="margin-top: 30px">
                     <h1 class="page-title">Finanças</h1>
                 </div>
-                <div class="col-sm-5 d-flex d-fall align-items-end">
+                <div class="col-sm-5 d-flex d-fall align-items-end justify-content-end">
                     <div class="col-sm-11 float-right">
                         <div class="input-holder">
                             <select style='border-radius:10px' class="form-control select-pad text-right"
