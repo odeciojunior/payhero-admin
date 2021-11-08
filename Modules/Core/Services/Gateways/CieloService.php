@@ -260,6 +260,10 @@ class CieloService implements Statement
 
     public function getResume()
     {
+        if(!$this->company->user->show_old_finances) {
+            return [];
+        }
+
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
                                         ->where('company_id', $this->company->id)
                                         ->orderBy('id', 'desc')->first();

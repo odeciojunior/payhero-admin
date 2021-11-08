@@ -132,7 +132,7 @@ $(document).ready(function(){
         return html;
     }
 
-    function updateStatements() {
+    window.updateStatements = function() {
 
         $.ajax({
             url: "/api/finances/get-statement-resumes/",
@@ -308,7 +308,7 @@ $(document).ready(function(){
 
     }
 
-    function updateWithdrawals() {
+    window.updateWithdrawals = function() {
         $.ajax({
             url: "/api/withdrawals/get-resume/",
             type: "GET",
