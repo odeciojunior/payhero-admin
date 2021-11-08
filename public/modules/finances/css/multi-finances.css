@@ -190,10 +190,14 @@ background-position: -24px -53px;
     min-height: 73px;
 }
 
-.o-arrow-right-1::before {
+.back-button::before {
     transform: rotate(180deg);
 }
 
+.redirect::before {
+    color: #107DFF;
+    transform: unset;
+}
 .default-hover:hover {
     color: #2E85EC;
     transition: 0.3s;
@@ -299,6 +303,45 @@ select.form-control {
 .slider.round:before {
     box-shadow: none;
     transform: translateX(6px);
+}
+#gateway-redirection{
+    color: #107DFF;
+    background-color: #F1F1F1;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 0;
+
+    display: flex;
+    align-items: center;
+
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+
+    cursor: pointer;
+}
+
+#gateway-redirection i::before {
+    background-color: transparent !important;
+}
+
+#gateway-redirection:hover, #gateway-redirection:hover i::before {
+    color: #FFF;
+    background-color: #107DFF;
+}
+
+#gateway-redirection span {
+    font-weight: bold;
+    max-width: 0;
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
+    overflow: hidden;
+    -webkit-transition: max-width 1s;
+    transition: max-width 1s;
+}
+#gateway-redirection:hover span {
+    max-width: 7rem;
+    margin-right: 8px
 }
 @media (max-width: 991px) {
     .badge {

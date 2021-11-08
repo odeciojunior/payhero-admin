@@ -169,7 +169,15 @@ $(document).ready(function(){
                                     <div class="card card-gateway">
                                         <div class="card-body">
                                             <div class="col-sm-12 p-0" id="container_info_${data.name}">
-                                                <div class="col-12 p-0 mb-35 img-gateway" href="${data.id}">${img_gateway}</div>
+                                                <div class="row mb-35 d-flex align-items-center" style="padding: 0 15px;">
+                                                    <div class="col-6 p-0">${img_gateway}</div>
+                                                    <div class="col-6 p-0 d-flex justify-content-end">
+                                                        <button id="gateway-redirection" class="img-gateway" href="${data.id}">
+                                                          <span>Acessar</span>
+                                                          <i class="o-arrow-right-1 redirect"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                                 <h6 class="font-size-16 m-0"><span class="radio-badge green"></span>Saldo Disponível</h6>
                                                 <h4><span class="font-size-16">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span></h4>
                                                 ${pendingDebt}
