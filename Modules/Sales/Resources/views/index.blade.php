@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="{{ asset('modules/global/css/select2.min.css')  }}"/>
         <style>
             .select2-selection--single {
                 border: 1px solid #dddddd !important;
@@ -523,7 +523,7 @@
         <script src="{{ asset('/modules/sales/js/index.js?v=' . random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+        <script src="{{ asset('modules/global/js/select2.min.js') }}"></script>
     @endpush
 
 @endsection

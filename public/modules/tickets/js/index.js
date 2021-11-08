@@ -52,7 +52,7 @@ $(document).ready(function () {
                     $("#project-not-empty").show();
 
                     $.each(response.data, function (i, project) {
-                        $("#projeto").append($('<option>', {
+                        $("#project").append($('<option>', {
                             value: project.id,
                             text: project.name
                         }));
@@ -81,6 +81,8 @@ $(document).ready(function () {
             date: $("#date_range").val(),
             category: $("#category-filter").val(),
             answered: $("#answered").val(),
+            project: $('#project').val(),
+            plan: $('#plan').val(),
         };
 
         if (urlParams) {
@@ -230,6 +232,7 @@ $(document).ready(function () {
             }
         });
     }
+
     $(document).on('click', '.ticket-details', function (event) {
         event.preventDefault();
         let id = $(this).data('id');
@@ -278,6 +281,7 @@ $(document).ready(function () {
             }
         });
     });
+
     function ticketShow(ticketId) {
 
         $.ajax({
@@ -371,6 +375,7 @@ $(document).ready(function () {
 
         });
     }
+
     function getTotalValues() {
         $.ajax({
             method: "GET",
@@ -396,6 +401,55 @@ $(document).ready(function () {
 
         });
     }
+
+    $("#project").on("change", function () {
+        $("#plan").val(null).trigger("change");
+    });
+    //Search plan
+    $("#plan").select2({
+        placeholder: "Nome do plano",
+        allowClear: true,
+        // dropdownParent: $(".align-items-baseline"),
+        language: {
+            noResults: function () {
+                return "Nenhum plano encontrado";
+            },
+            searching: function () {
+                return "Procurando...";
+            },
+        },
+        ajax: {
+            data: function (params) {
+                return {
+                    list: "plan",
+                    search: params.term,
+                    project_id: $("#project").val(),
+                };
+            },
+            method: "GET",
+            url: "/api/sales/user-plans",
+            delay: 300,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            processResults: function (res) {
+                return {
+                    results: $.map(res.data, function (obj) {
+                        return {
+                            id: obj.id,
+                            text:
+                                obj.name +
+                                (obj.description
+                                    ? " - " + obj.description
+                                    : ""),
+                        };
+                    }),
+                };
+            },
+        },
+    });
 
     //DatePicker
     function dateRangePicker() {
@@ -436,6 +490,7 @@ $(document).ready(function () {
             endDate = end.format('YYYY-MM-DD');
         });
     }
+
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
             deleteCookie('filterTickets');
