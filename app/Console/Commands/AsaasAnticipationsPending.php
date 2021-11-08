@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Gateway;
@@ -41,21 +42,29 @@ class AsaasAnticipationsPending extends Command
      */
     public function handle()
     {
-        $service = new AsaasService();
-        $sales = Sale::where([
-            'status' => Sale::STATUS_APPROVED,
-            'gateway_id' => Gateway::ASAAS_PRODUCTION_ID,
-            'anticipation_status' => 'PENDING',
-        ])
-            ->where('created_at', '>', '2021-10-19 00:00:00')
-            ->get();
+        try {
 
-        foreach ($sales as $sale) {
-           $response = $service->makeAnticipationSale($sale);
+            if ((date( 'w' )%6) ) {
+                $service = new AsaasService();
+                $sales = Sale::where([
+                                         'status' => Sale::STATUS_APPROVED,
+                                         'gateway_id' => Gateway::ASAAS_PRODUCTION_ID,
+                                         'anticipation_status' => 'PENDING',
+                                     ])
+                    ->where('created_at', '>', '2021-10-19 00:00:00')
+                    ->get();
 
-           if (isset($response->status)) {
-               $sale->update(['anticipation_status', $response->status]);
-           }
+                foreach ($sales as $sale) {
+                    $response = $service->makeAnticipationSale($sale);
+
+                    if (isset($response->status)) {
+                        $sale->update(['anticipation_status', $response->status]);
+                    }
+                }
+            }
+
+        } catch (Exception $e) {
+            report($e);
         }
     }
 }
