@@ -35,7 +35,7 @@ class CacheService
     {
         try {
             return cache()->driver('redis-cache')
-                ->remember($key . ':' . $uniqueKey, 1800, $callback);
+                ->remember($key . ':' . $uniqueKey, env('CACHE_EXPIRE', 1800), $callback);
         } catch (\Exception $e) {
             report($e);
             return null;
