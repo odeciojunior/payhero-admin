@@ -17,7 +17,7 @@
                             </a>
                         </li>
                         <li class="nav-item text-center" style="width: 50%;">
-                            <a id="tab-customizations" class="nav-link" data-toggle="tab" href="#tab-customizations_panel" role="tab">
+                            <a id="tab-customizations" class="nav-link disabled" data-toggle="tab" href="#tab-customizations_panel" role="tab">
                                 Personalizações
                             </a>
                         </li>

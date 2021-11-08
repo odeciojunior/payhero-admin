@@ -89,13 +89,13 @@ $(function () {
 
     function searchProducts(product, modal, type) {
         var find_stage = type == 'create' ? '#stage1' : '#stage2';
-        
+
         $(modal).find('.modal-body').css('height', 'auto');
         $(modal).find(find_stage).find('.box-review').html('').css('margin-bottom', '0px');
 
         $(modal).find(find_stage).find('.box-products').html('').css({'max-height': '276px', 'padding-right': '0px'});
         $(modal).find(find_stage).find('.box-products').find('.scrollbox').remove();
-        
+
         $(modal).find(find_stage).find('.box-products').html(loadingProducts).promise().done(function() {
             $.ajax({
                 method: "POST",
@@ -129,7 +129,7 @@ $(function () {
                                         append += '</div>';
                                     append += '</div>';
                                     append += '<div class="check">';
-                                        if (index_product != -1) {    
+                                        if (index_product != -1) {
                                             append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
                                         }
                                     append += '</div>';
@@ -139,7 +139,7 @@ $(function () {
                     } else {
                         append += '<div class="col-sm-12">';
                             append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.svg" ></div>';
-                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';    
+                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
                             append += '<p class="m-0 text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A;">Por aqui, nenhum produto com esse nome.</p>';
                         append += '</div>';
                     }
@@ -158,9 +158,9 @@ $(function () {
                         $(modal).find('.product-photo').on('error', function() {
                             $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg')
                         });
-                        
+
                         $(modal).find('.product-photo').on('load', function() {
-                            $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {    
+                            $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                                 $(modal).find(find_stage).find('.box-products').find('.row').css('display', 'flex').promise().done(function() {
                                     var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 40;
                                     $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
@@ -169,7 +169,7 @@ $(function () {
                         });
                     });
                 }
-            }); 
+            });
         });
     }
 
@@ -186,7 +186,7 @@ $(function () {
             );
 
             selected_products = [];
-            products_plan.map(function(e) { 
+            products_plan.map(function(e) {
                 selected_products.push({ id: e.product_id });
             });
         } else {
@@ -205,7 +205,7 @@ $(function () {
             } else {
                 $(modal).find('.modal-body').append(loadingEditStage2);
             }
-        
+
             $.ajax({
                 method: "POST",
                 url: "/api/products/userproducts",
@@ -245,7 +245,7 @@ $(function () {
                     } else {
                         append += '<div class="col-sm-12">';
                             append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.svg" ></div>';
-                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';    
+                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
                             append += '<p class="m-0 text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A;">Por aqui, nenhum produto com esse nome.</p>';
                         append += '</div>';
                     }
@@ -260,10 +260,10 @@ $(function () {
 
                             scrollCustom(modal + ' ' + find_stage + ' .box-products');
                         }
-                        
+
                         if (type == 'edit') {
                             $(modal).find('.box-breadcrumbs').find('.title span').html(' ' + products_plan.length + (products_plan.length > 1 ? ' produtos' : ' produto'));
-                            
+
                             var appendProductsPlan = '<div class="d-flex">';
                             products_plan.forEach(function(product) {
                                 appendProductsPlan += '<div class="background-photo" data-toggle="tooltip" data-placement="top"  title="' + product.product_name + '">';
@@ -274,7 +274,7 @@ $(function () {
 
                             $(modal).find('.box-photos-products').html(appendProductsPlan);
                         }
-                        
+
                         $(modal).find('.product-photo').on('error', function() {
                             $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg')
                         });
@@ -383,7 +383,7 @@ $(function () {
                 });
 
                 $('input[name="value"]').mask('#.##0,00', { reverse: true });
-                
+
                 if (selected_products.length > 4) {
                     $(modal).find(find_stage).find('.box-products').find('.body').css({'max-height': '238px', 'padding-right': '12px', 'position': 'relative', 'overflow': 'hidden'});
                     $(modal).find(find_stage).find('.box-products').find('.body').append('<div class="scrollbox"></div>');
@@ -391,7 +391,7 @@ $(function () {
 
                     scrollCustom(modal + ' ' + find_stage + ' .box-products .body');
                 }
-                
+
                 if (selected_products.length > 1) {
                     $(modal).find(find_stage).find('.box-review').html(
                         `<div class="switch-holder d-flex">
@@ -433,14 +433,14 @@ $(function () {
 
             $('.box-products .form-control').each(function() {
                 var product_ID = $(this).parent().parent().data('code');
-    
+
                 var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
-                
+
                 var name_input = $(this).attr('name');
                 if (name_input == 'amount') {
                     var productID_ = $(this).parent().parent().parent().parent().data('code');
                     var product_selected_index_ = selected_products.map(function(p) { return p.id; }).indexOf(productID_);
-                    
+
                     selected_products[product_selected_index_].amount = $(this).val();
                 }
                 if (name_input == 'value') selected_products[product_selected_index].value = $(this).val();
@@ -454,7 +454,7 @@ $(function () {
 
                     $(modal).find('.costs-plan').find('p').html('R$' + calculateCostsPlan().replace('.', ','));
                     $(modal).find('.box-review').find('.tax').html(gateway_tax.replace('.', ','));
-                    
+
                     $(modal).find('#stage3').addClass('show active').promise().done( function() {
                         setTimeout(function() {
                             var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 60;
@@ -468,8 +468,8 @@ $(function () {
 
     function getPlanData(modal, flag = false) {
         $(modal).find('.modal-body').css('height', 'auto');
-        
-        $(modal).find('#tab-customizations').removeClass('show active');
+
+        $(modal).find('#tab-customizations').removeClass('show active').addClass('disabled');
         $(modal).find('#tab-general-data').addClass('show active');
 
         $(modal).find('.nav-tabs-horizontal').css('display', 'block');
@@ -484,10 +484,10 @@ $(function () {
             '<button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>'
         ).removeClass('justify-content-end').addClass('justify-content-between');
         $(modal).find('#stage1').find('.products-edit').find('a').remove();
-        
+
         $(modal).find('.tab-pane').removeClass('show active').promise().done(function() {
             $(modal).find('.modal-body').append(loadingEditStage1);
-            
+
             $.ajax({
                 method: "GET",
                 url: '/api/project/' + projectId + '/plans/' + plan_id,
@@ -506,11 +506,11 @@ $(function () {
                     var costs = calculateCostsPlan();
                     var comission = (price - tax).toFixed(2);
                     var return_value = (comission - costs).toFixed(2);
-                    
+
                     var curHeight = $(modal).find('.modal-body').height();
 
                     var products = response.data.products;
-                    
+
                     var append = '<div class="row">';
                     products.forEach(function(product) {
                         append += '<div class="col-sm-6">';
@@ -527,15 +527,22 @@ $(function () {
                     });
 
                     $(modal).find('#stage1').find('.box-products').html(append).promise().done(function() {
+                        $(modal).find('#tab-customizations').removeClass('disabled');
+
                         $(modal).find('.modal-title').html('Detalhes de ' + response.data.name_short);
                         $(modal).find('.modal-title').attr('data-title', 'Detalhes de ' + response.data.name);
 
                         $(modal).find('#btn-edit-informations-plan').attr('data-code', response.data.id);
 
-                        $(modal).find('#name').val(response.data.name);
-                        $(modal).find('#price').val('R$' + price.replace('.', ','));
-                        $(modal).find('#description').val(response.data.description);
-                        
+                        $(modal).find('#name').val(response.data.name_short);
+                        $(modal).find('#name').attr('data-short', response.data.name_short).attr('data', response.data.name);
+
+                        $(modal).find('#price').val(response.data.price);
+                        $(modal).find('#price').attr('data', response.data.price);
+
+                        $(modal).find('#description').val(response.data.description_short);
+                        $(modal).find('#description').attr('data-short', response.data.description_short).attr('data', response.data.description);
+
                         if (products.length > 2) {
                             $(modal).find('#stage1').find('.products-edit').append('<a type="button" id="all-products" data-open="0">Ver todos os produtos <span class="fas fa-chevron-down"></span></a>');
                         } else {
@@ -551,7 +558,7 @@ $(function () {
                         $(modal).find('#stage1').find('.description-tax p span').html(gateway_tax.replace('.', ','));
 
                         $(modal).find('#stage1').find('.products-edit').find('.title').find('span').html(' ' + response.data.products.length + (response.data.products.length > 1 ? ' produtos' : ' produto'));
-                        
+
                         $(modal).find('#stage1').find(".product-photo").on("error", function () {
                             $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                         });
@@ -560,7 +567,7 @@ $(function () {
 
                         if (flag == true) {
                             getCustom(modal);
-                        } else {                        
+                        } else {
                             $(modal).find('.product-photo').on('load', function() {
                                 $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                                     $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
@@ -591,7 +598,7 @@ $(function () {
 
         $(modal).find('.tab-pane').removeClass('show active').promise().done(function() {
             $(modal).find('.modal-body').append(loadingCustomStage1);
-            
+
             var append = '';
             append += '<div class="row header">';
                 append += '<div class="col-sm-6">';
@@ -644,7 +651,7 @@ $(function () {
                                     }
                                 append += '</div>';
                             }
-                            
+
                             append += '<div class="d-flex align-items-center">';
                                 append += '<a class="btn-customizations" data-product="' + product.id + '" type="button" style="' + (product.is_custom ? 'margin-right: 14px;' : '') + '">' + (product.is_custom ? 'Editar' : 'Adicionar') + '</a>';
                                 if (product.is_custom) {
@@ -694,7 +701,7 @@ $(function () {
             $(modal).find('.modal-body').append(loadingCustomStage2);
 
             var curHeight = $(modal).find('.modal-body').height();
-            
+
             var index_product_custom = '';
             index_product_custom = products_plan.map(function(p) { return p.id }).indexOf(product_ID);
 
@@ -709,7 +716,7 @@ $(function () {
             if (products_plan[index_product_custom].shopify_id > 0) {
                 allow_change_in_block = true;
             }
-            
+
             var append = '';
             if (products_plan[index_product_custom].custom_configs.length > 0) {
                 products_plan[index_product_custom].custom_configs.forEach(function(custom) {
@@ -800,27 +807,27 @@ $(function () {
                     $(modalID).find('#description').val('');
 
                     alertCustom('success', 'Plano adicionado com sucesso');
-    
+
                     $(modalID).modal('hide');
                 }
             });
         } else {
             $('.box-products .form-control').each(function() {
                 var product_ID = $(this).parent().parent().data('code');
-    
+
                 var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
-                
+
                 var name_input = $(this).attr('name');
                 if (name_input == 'amount') {
                     var productID_ = $(this).parent().parent().parent().parent().attr('data-code');
                     var product_selected_index_ = selected_products.map(function(p) { return p.id; }).indexOf(productID_);
-                    
+
                     selected_products[product_selected_index_].amount = $(this).val();
                 }
                 if (name_input == 'value') selected_products[product_selected_index].value = $(this).val();
                 if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
             });
-            
+
             $.ajax({
                 method: 'PUT',
                 url: '/api/plans/' + plan_id + '/products',
@@ -837,7 +844,7 @@ $(function () {
                 success: function success(response) {
                     index();
                     alertCustom('success', 'Produtos do plano atualizados');
-    
+
                     $(modalID).modal('hide');
                 }
             });
@@ -853,7 +860,7 @@ $(function () {
 
         $(modal).find('.tab-pane').removeClass('show active').promise().done(function() {
             $(modal).find('.modal-body').append(loadingCustomStage2);
-        
+
             var formDataCP = new FormData(document.getElementById('form-update-custom-config'));
             formDataCP.append('plan', plan_id);
 
@@ -873,7 +880,7 @@ $(function () {
                     $(modal).find('.modal-footer').find('.btn').prop('disabled', false);
 
                     getPlanData(modal, false);
-                    
+
                     alertCustom("error", "Erro ao atualizar configurações do plano");
                 },
                 success: function success(data) {
@@ -893,7 +900,7 @@ $(function () {
 
         for (var i = 0; i < selected_products.length; i++) {
             console.log(selected_products[i]['value'].replace(',', '.'));
-            
+
             if (selected_products[i]['value']) {
                 costs_plan += (selected_products[i]['value'].replace(',', '.') * selected_products[i]['amount'].replace(',', '.'));
             }
@@ -906,13 +913,13 @@ $(function () {
     let timeoutID = null;
     $('body').on('keyup', '#search-product', function(e) {
         clearTimeout(timeoutID);
-        
+
         var modal = '#' + $(this).parents('.modal').attr('id');
         var type = 'create';
         if (modal == '#modal_edit_plan') {
             type = 'edit';
         }
-        
+
         var search_product = e.target.value;
         timeoutID = setTimeout(function() {
             searchProducts(search_product, modal, type);
@@ -940,13 +947,13 @@ $(function () {
             $('.profit-plan').find('p').html('R$0,00');
         }
     });
-    
+
     // Select products
     $('body').on('click', '.box-product', function() {
         var product_id = $(this).data('code');
         var tabID = $(this).parents('.tab-content').attr('id');
         var stageID = $(this).parents('.tab-pane').attr('id');
-        
+
         if ((tabID == 'tabs-modal-edit-plans' && stageID == 'stage2') || (tabID == 'tabs-modal-create-plans' && stageID == 'stage1')) {
             if (!$(this).hasClass('selected')) {
                 $(this).addClass('selected');
@@ -969,7 +976,7 @@ $(function () {
         var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
 
         selected_products.splice(index_selected_products, 1);
-        
+
         if (type == 'create') {
             modal = '#modal_add_plan';
         } else {
@@ -1011,7 +1018,7 @@ $(function () {
             updateCustomConfig(modal, true);
         } else {
             if (selected_products.length > 0) {
-                if (type == 'create') {            
+                if (type == 'create') {
                     if (stage == 'stage1') {
                         getDetailsProducts(modal, type);
                     } else if (stage == 'stage2') {
@@ -1041,7 +1048,7 @@ $(function () {
         var tag = (type == 'create' ? '#tabs-modal-create-plans' : '#tabs-modal-edit-plans');
         var stage = $(modal).find(tag).find('.tab-pane.active').attr('id');
 
-        if (type == 'create') {            
+        if (type == 'create') {
             if (stage == 'stage1') {
                 $(modal).modal('hide');
                 $.when(modal).done(function() {
@@ -1067,11 +1074,11 @@ $(function () {
     // Add new Plan
     $("#add-plan").on('click', function () {
         selected_products = [];
-        
+
         var modal = '#modal_add_plan';
 
         $(modal).find('.tab-pane').removeClass('show active');
-        
+
         $(modal).attr('data-backdrop', 'static');
         $(modal).modal('show');
 
@@ -1091,43 +1098,101 @@ $(function () {
     // Details Plan
     $('#table-plans').on('click', '.details-plan', function () {
         products_plan = [];
-        
+
         plan_id = $(this).attr('plan');
-        
+
         var modal = '#modal_edit_plan';
 
         $(modal).attr('data-backdrop', 'static');
         $(modal).modal('show');
-        
+
         getPlanData(modal);
     });
 
     // Edit Plan
     $('#table-plans').on('click', '.edit-plan', function () {
         products_plan = [];
-        
+
         plan_id = $(this).attr('plan');
-        
+
         var modal = '#modal_edit_plan';
 
         $(modal).attr('data-backdrop', 'static');
         $(modal).modal('show');
-        
+
         getPlanData(modal);
+    });
+
+    // Edit informations plan
+    $("body").on('click', '#btn-edit-informations-plan', function () {
+        var parent = $(this).parent().parent().parent();
+        var curHeight = parent.find('.informations-data').css('height', 'auto').height();
+
+        if (!parent.find('.informations-data').hasClass('edit')) {
+            setTimeout(function() {
+                parent.find('.informations-data').addClass('edit');
+                parent.find('.informations-data').find('.form-control').attr('readonly', false);
+                parent.find('#price').val(function(index, value) {
+                    return value.replace('R$', '');
+                });
+                parent.find('#price').mask('#.##0,00', {reverse: true});
+                parent.find('.informations-data').append(
+                    '<div class="buttons-update">' +
+                        '<div class="d-flex mt-20" style="justify-content: flex-end !important;">' +
+                            '<button type="button" class="btn btn-default btn-lg mr-10" id="btn-cancel-update-informations-plan">Cancelar</button>' +
+                            '<button type="button" class="btn btn-primary btn-lg" id="btn-update-informations-plan">Atualizar</button>' +
+                        '</div>' +
+                    '</div>'
+                ).promise().done(function() {
+                    var autoHeight = parent.find('.informations-data').height();
+                    parent.find('.informations-data').height(curHeight).animate({ height: autoHeight }, 300);
+                });
+
+                var name = parent.find('#name').attr('data');
+                var price = parent.find('#price').val();
+                var description = parent.find('#description').attr('data');
+
+                parent.find('#name').val(name);
+                parent.find('#price').val(price.replace('R$', ''));
+                parent.find('#description').val(description);
+            }, 0);
+        }
+    });
+
+    // Cancel update informations plan
+    $("body").on('click', '#btn-cancel-update-informations-plan', function () {
+        var parents = $(this).parents('.informations-edit');
+        var curHeight = parents.find('.informations-data').height();
+
+        parents.find('.informations-data').removeClass('edit');
+        parents.find('.form-control').attr('readonly', true);
+
+        var name_short = parents.find('#name').attr('data-short');
+        var price = parents.find('#price').attr('data');
+        var description_short = parents.find('#description').attr('data-short');
+
+        parents.find('#name').val(name_short);
+        parents.find('#price').val(price);
+        parents.find('#description').val(description_short);
+
+        $(this).parents('.buttons-update').remove().promise().done(function() {
+            var autoHeight = parents.find('.informations-data').css('height', 'auto').height();
+            parents.find('.informations-data').height(curHeight).animate({ height: autoHeight }, 300);
+        });
     });
 
     // Tab general data
     $('body').on('click', '#tab-general-data', function() {
         if (!$(this).hasClass('active')) {
-            var modal = '#modal_edit_plan';        
+            var modal = '#modal_edit_plan';
             getPlanData(modal);
         }
     });
-    
+
     // Tab customizations
     $('body').on('click', '#tab-customizations', function() {
         if (!$(this).hasClass('active')) {
-            var modal = '#modal_edit_plan';        
+            var modal = '#modal_edit_plan';
             getCustom(modal, false);
         }
     });
@@ -1136,7 +1201,7 @@ $(function () {
     $('body').on('click', '.btn-customizations', function() {
         var product_ID = $(this).attr('data-product');
         var modal = '#modal_edit_plan';
-        
+
         getProductCustom(modal, product_ID);
     });
 
@@ -1155,7 +1220,7 @@ $(function () {
             if ($('.list-custom-products').find('.custom-empty').length > 0) {
                 $('.list-custom-products').html('');
             }
-            
+
             $('#modal_edit_plan').find('.modal-body').css('height', 'auto');
 
             var input_type = getIconTypeCustomProduct(custom_type);
@@ -1188,7 +1253,7 @@ $(function () {
                     append += '</div>';
                 append += '</div>';
             append += '</div>';
-            
+
             $('.list-custom-products').append(append);
 
             $('#custom-title').val('');
@@ -1200,7 +1265,7 @@ $(function () {
     // Edit input custom
     $('body').on('click', '.edit-input', function () {
         $(this).prop('readonly', false);
-        
+
         var parent = $(this).parent().parent().parent().parent();
         parent.find('.btn-type-custom').addClass('btn-edit');
         parent.find('.btn-trash-custom').removeClass('btn-delete').addClass('btn-edit-row').html(`
@@ -1330,60 +1395,6 @@ $(function () {
         }
     });
 
-    // Edit informations plan
-    $("body").on('click', '#btn-edit-informations-plan', function () {
-        var parent = $(this).parent().parent().parent();
-        var curHeight = parent.find('.informations-data').css('height', 'auto').height();
-
-        if (!parent.find('.informations-data').hasClass('edit')) {
-            setTimeout(function() {
-                parent.find('.informations-data').addClass('edit');
-                parent.find('.informations-data').find('.form-control').attr('readonly', false);
-                parent.find('#price').val(function(index, value) {
-                    return value.replace('R$', '');
-                });
-                parent.find('#price').mask('#.##0,00', {reverse: true});
-                parent.find('.informations-data').append(
-                    '<div class="buttons-update">' +
-                        '<div class="d-flex mt-20" style="justify-content: flex-end !important;">' +
-                            '<button type="button" class="btn btn-default btn-lg mr-10" id="btn-cancel-update-informations-plan">Cancelar</button>' +
-                            '<button type="button" class="btn btn-primary btn-lg" id="btn-update-informations-plan">Atualizar</button>' +
-                        '</div>' +
-                    '</div>'
-                ).promise().done(function() {
-                    var autoHeight = parent.find('.informations-data').height();
-                    parent.find('.informations-data').height(curHeight).animate({ height: autoHeight }, 300);
-                });
-
-                var name = parent.find('#name').val();
-                parent.find('#name').attr('data-value', name);
-
-                var price = parent.find('#price').val();
-                parent.find('#price').attr('data-value', price);
-
-                var description = parent.find('#description').val();
-                parent.find('#description').attr('data-value', description);
-            }, 0);
-        }
-    });
-
-    // Cancel update informations plan
-    $("body").on('click', '#btn-cancel-update-informations-plan', function () {
-        var parents = $(this).parents('.informations-edit');
-        var curHeight = parents.find('.informations-data').height();
-
-        parents.find('.informations-data').removeClass('edit');
-        parents.find('.form-control').attr('readonly', true);
-
-        parents.find('#name').val(parents.find('#name').attr('data-value'));
-        parents.find('#price').val('R$' + parents.find('#price').attr('data-value'));
-        parents.find('#description').val(parents.find('#description').attr('data-value'));
-
-        $(this).parents('.buttons-update').remove().promise().done(function() {
-            var autoHeight = parents.find('.informations-data').css('height', 'auto').height();
-            parents.find('.informations-data').height(curHeight).animate({ height: autoHeight }, 300);
-        });
-    });
 
     // Update informations plan
     $("body").on('click', '#btn-update-informations-plan', function () {
@@ -1391,7 +1402,7 @@ $(function () {
 
         var parents = $(this).parents('.informations-edit');
         var curHeight = parents.find('.informations-data').height();
-        
+
         $.ajax({
             method: "PUT",
             url: '/api/plans/' + plan_id + '/informations',
@@ -1410,36 +1421,34 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $(modal).find('.modal-title').html('Detalhes de ' + $(modal).find('#name').val());
-                $(modal).find('#name').val($(modal).find('#name').val());
-                $(modal).find('#name').attr('data-value', $(modal).find('#name').val());
+                $(modal).find('.modal-title').html('Detalhes de ' + response.plan.name_short);
 
-                $(modal).find('#price').val($(modal).find('#price').val());
-                $(modal).find('#price').attr('data-value', $(modal).find('#price').val());
+                $(modal).find('#name').val(response.plan.name_short);
+                $(modal).find('#name').attr('data', response.plan.name).attr('data-short', response.plan.name_short);
 
-                $(modal).find('#description').val($(modal).find('#description').val());
-                $(modal).find('#description').attr('data-value', $(modal).find('#description').val());
-                
+                $(modal).find('#price').val(response.plan.price);
+                $(modal).find('#price').attr('data', response.plan.price);
+
+                $(modal).find('#description').val(response.plan.description_short);
+                $(modal).find('#description').attr('data', response.plan.description).attr('data-short', response.plan.description_short);
+
                 $(modal).find('.informations-data').removeClass('edit');
                 $(modal).find('.informations-edit').find('.form-control').attr('readonly', true);
-                $(modal).find('.informations-edit').find('#name').val($(modal).find('.informations-edit').find('#name').attr('data-value'));
-                $(modal).find('.informations-edit').find('#price').val('R$' + $(modal).find('.informations-edit').find('#price').attr('data-value'));
-                $(modal).find('.informations-edit').find('#description').val($(modal).find('.informations-edit').find('#description').attr('data-value'));
                 $(modal).find('.buttons-update').remove().promise().done(function() {
                     var autoHeight = parents.find('.informations-data').css('height', 'auto').height();
                     parents.find('.informations-data').height(curHeight).animate({ height: autoHeight }, 300);
                 });
-                
+
                 index();
                 alertCustom('success', response.message);
             }
         });
     });
-    
+
     // Edit products plan
     $("body").on('click', '#btn-edit-products-plan', function () {
         var modal = '#modal_edit_plan';
-        
+
         getProducts(modal, 'edit');
     });
 
@@ -1529,7 +1538,7 @@ $(function () {
                         $('#table-plans').addClass('table-striped');
                     }
 
-                }                
+                }
             }
         });
     }
@@ -1652,13 +1661,13 @@ $(function () {
 
     function changeProductAmount(input) {
         let amount = parseInt(input.val());
-        
+
         input.val(amount);
     }
 
     $('body').on('click', '.input-number button', function () {
         var input = $(this).parent().find('input');
-        
+
         if ($(this).hasClass('btn-add')) {
             input[0].stepUp();
         } else if ($(this).hasClass('btn-sub')) {

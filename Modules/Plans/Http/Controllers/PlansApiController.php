@@ -138,7 +138,7 @@ class PlansApiController extends Controller
                     $requestData['price'] = $this->getValue($requestData['price']);
                     if (!empty($requestData['products'])) {
                         $get_product = $productModel->find(current(Hashids::decode($request['products'][0]['id'])));
-                        
+
                         $requestData['name'] = FoxUtils::removeSpecialChars($requestData['name']);
                         $requestData['description'] = FoxUtils::removeSpecialChars($requestData['description']);
 
@@ -389,11 +389,11 @@ class PlansApiController extends Controller
     {
         try {
             $planModel    = new Plan();
-            
+
             $requestData = $request->validated();
             $price = number_format(intval(preg_replace("/[^0-9]/", "", $requestData['price'])) / 100, 2, ',', '.');
             $price = $this->getValue($price);
-            
+
             $planId   = current(Hashids::decode($id));
             $plan = $planModel->with('plansSales')->where('id', $planId)->first();
             $plan->update([
@@ -404,8 +404,11 @@ class PlansApiController extends Controller
                 'status'      => $planModel->present()->getStatus('active'),
             ]);
 
+            $planResource = $planModel->with(['productsPlans.product'])->find($planId);
+
             return response()->json([
                 'message' => 'Informações do plano atualizadas com sucesso',
+                'plan' => new PlansDetailsResource($planResource)
             ], 200);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar fazer update dos dados do plano (PlansController - updateInformations)');
@@ -422,9 +425,9 @@ class PlansApiController extends Controller
         try {
             $planModel    = new Plan();
             $productPlan  = new ProductPlan();
-            
+
             $requestData = $request->validated();
-            
+
             $planId   = current(Hashids::decode($id));
             $plan = $planModel->with(['productsPlans'])->where('id', $planId)->first();
             if (!empty($plan)) {
