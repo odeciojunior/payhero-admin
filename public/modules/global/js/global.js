@@ -69,12 +69,7 @@ function scrollCustom(div) {
             var heightCalculateScroll = ((heightDivScroll - 60) / 60) * 2;
             var heightCalculateTotal = ((heightDivScrollTotal - heightDivScroll) / 60) * 2;
 
-            console.log(heightCalculateScroll);
-            console.log(heightCalculateTotal);
-
             if(event.originalEvent.deltaY < 0) {
-                //console.log('up');
-
                 // wheeled up
                 if (scroll > heightCalculateScroll) {
                     scroll -= heightCalculateScroll;
@@ -84,9 +79,10 @@ function scrollCustom(div) {
                     scrollDiv = 0;
                 }
             } else {
+                // wheeled down
+
                 var sumScroll = scroll + heightCalculateScroll;
 
-                // wheeled down
                 if (sumScroll <= (heightDivScroll - 60)) {
                     scroll += heightCalculateScroll;
                     scrollDiv += heightCalculateTotal;

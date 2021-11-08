@@ -893,8 +893,6 @@ $(function () {
         var costs_plan = 0;
 
         for (var i = 0; i < selected_products.length; i++) {
-            console.log(selected_products[i]['value'].replace(',', '.'));
-
             if (selected_products[i]['value']) {
                 costs_plan += (selected_products[i]['value'].replace(',', '.') * selected_products[i]['amount'].replace(',', '.'));
             }
