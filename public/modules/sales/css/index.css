@@ -56,6 +56,10 @@
     padding-top: 5px !important;
 }
 
+.select2-selection .select2-selection--multiple{
+    scrollbar-width: thin;
+}
+
 ::-webkit-scrollbar {
     width: 12px;
 }

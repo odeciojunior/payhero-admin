@@ -730,24 +730,31 @@ $(document).ready(function () {
         behaviorMultipleFilter(data, selectId);
     });
 
-
     //NAO PERMITI QUE O FILTRO FIQUE VAZIO
-    function deniedEmptyFilter(idTarget){
-        let arrayValues = $(`#${idTarget}`).val();
-        let valueAmount = $(`#${idTarget}`).val().length;
+    function deniedEmptyFilter(selectId){
+        let arrayValues = $(`#${selectId}`).val();
+        let valueAmount = $(`#${selectId}`).val().length;
 
         if(valueAmount === 0){
             arrayValues.push('');
-            arrayValues = $(`#${idTarget}`).val('').trigger("change");
+            arrayValues = $(`#${selectId}`).val('').trigger("change");
         }
     }
+
+    $(".applySelect2").on("select2:select", function (evt) {
+        var data = evt.params.data;
+        var selectId = $(this).attr('id');
+        behaviorMultipleFilter(data, selectId);
+
+        $(`#${selectId}`).focus();
+        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    });
+
     $(".applySelect2").on("change", function () {            
         let idTarget = $(this).attr('id');
         deniedEmptyFilter(idTarget);
     });
     // FIM DO COMPORTAMENTO DO FILTRO
-
-
 
     $("#projeto").on("change", function () {
         let value = $(this).val();
