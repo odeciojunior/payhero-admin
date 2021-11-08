@@ -295,6 +295,11 @@ select.form-control {
 .active-outline .o-gear-1 {
     color: #2E85EC;
 }
+
+.slider.round:before {
+    box-shadow: none;
+    transform: translateX(6px);
+}
 @media (max-width: 991px) {
     .badge {
          width: unset;
