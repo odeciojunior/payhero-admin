@@ -254,10 +254,6 @@ $(function () {
                     var curHeight = $(modal).find('.modal-body').height();
                     $(modal).find(find_stage).find('.box-products').html(append).promise().done(function() {
                         if (response.data.length > 6) {
-                            $(modal).find(find_stage).find('.box-products').css('padding-right', '12px');
-                            $(modal).find(find_stage).find('.box-products').append('<div class="scrollbox"></div>');
-                            $(modal).find(find_stage).find('.box-products').append('<div class="scrollbox-bar"></div>');
-
                             scrollCustom(modal + ' ' + find_stage + ' .box-products');
                         }
 
@@ -385,9 +381,7 @@ $(function () {
                 $('input[name="value"]').mask('#.##0,00', { reverse: true });
 
                 if (selected_products.length > 4) {
-                    $(modal).find(find_stage).find('.box-products').find('.body').css({'max-height': '238px', 'padding-right': '12px', 'position': 'relative', 'overflow': 'hidden'});
-                    $(modal).find(find_stage).find('.box-products').find('.body').append('<div class="scrollbox"></div>');
-                    $(modal).find(find_stage).find('.box-products').find('.body').append('<div class="scrollbox-bar"></div>');
+                    $(modal).find(find_stage).find('.box-products').find('.body').css({'max-height': '238px', 'position': 'relative', 'overflow': 'hidden'});
 
                     scrollCustom(modal + ' ' + find_stage + ' .box-products .body');
                 }
@@ -1628,35 +1622,48 @@ $(function () {
     });
 
     $(document).on('click', '.bt-update-cost-block', function (event) {
-        $.ajax({
-            method: "POST",
-            url: '/api/plans/update-bulk-cost',
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            data: {
-                plan: $('#add_cost_on_plans').val(),
-                cost: $('#cost_plan').val(),
-            },
-            error: function (_error4) {
-                function error(_x4) {
-                    return _error4.apply(this, arguments);
+        var plan = $('#add_cost_on_plans').val();
+        var cost = $('#cost_plan').val();
+
+        if (plan !== null && cost !== null) {
+            $.ajax({
+                method: "POST",
+                url: '/api/plans/update-bulk-cost',
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                data: {
+                    plan: plan,
+                    cost: cost,
+                },
+                error: function (_error4) {
+                    function error(_x4) {
+                        return _error4.apply(this, arguments);
+                    }
+
+                    error.toString = function () {
+                        return _error4.toString();
+                    };
+
+                    return error;
+                }(function (response) {
+                    errorAjaxResponse(response);
+                }),
+                success: function success(data) {
+                    alertCustom('success', 'Configuração atualizada com sucesso');
                 }
-
-                error.toString = function () {
-                    return _error4.toString();
-                };
-
-                return error;
-            }(function (response) {
-                errorAjaxResponse(response);
-            }),
-            success: function success(data) {
-                alertCustom("success", "Configuração atualizada com sucesso");
+            });
+        } else {
+            if (plan == null) {
+                alertCustom('error', 'Selecione os planos para configuração');
             }
-        });
+
+            if (cost == null) {
+                alertCustom('error', 'Insira o novo custo para configuração');
+            }
+        }
     });
 
     function changeProductAmount(input) {

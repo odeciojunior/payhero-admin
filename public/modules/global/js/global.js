@@ -57,6 +57,10 @@ function scrollCustom(div) {
     var scroll = 0;
     var scrollDiv = 0;
 
+    $(div).css('padding-right', '12px');
+    $(div).append('<div class="scrollbox"></div>');
+    $(div).append('<div class="scrollbox-bar"></div>');
+
     $(div).on('wheel', function(event) {
         if(event.originalEvent.deltaY !== 0) {
             var heightDivScroll = $(div).height();
@@ -80,9 +84,6 @@ function scrollCustom(div) {
                     scrollDiv = 0;
                 }
             } else {
-                console.log(scroll + heightCalculateScroll);
-                console.log(heightDivScroll);
-
                 var sumScroll = scroll + heightCalculateScroll;
 
                 // wheeled down
