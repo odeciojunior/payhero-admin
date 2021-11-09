@@ -1,6 +1,7 @@
 body {
     background-color: #F1F4F5;
     font-family: 'Muli', sans-serif !important;
+    overflow-x: hidden !important;
 }
 
 .popover {
@@ -806,7 +807,7 @@ img.border-icon{
     font-weight: 700;
     border-color: #2E85EC;
     border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px; 
+    border-bottom-left-radius: 8px;
 }
 .new-layout #content-script .input-group .form-control[readonly] {
     background-color: #ffffff;
@@ -816,7 +817,7 @@ img.border-icon{
 }
 .new-layout #content-script .input-group .btn {
     border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px; 
+    border-bottom-right-radius: 8px;
     padding-left: 8px;
     padding-right: 8px;
     color: #3D4456;
@@ -870,7 +871,7 @@ img.border-icon{
 }
 .new-layout .table td .input-group .form-control:not(:last-child) {
     border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px; 
+    border-bottom-left-radius: 8px;
     font-size: 16px;
 }
 .new-layout .table td .input-group .form-control {
@@ -899,7 +900,7 @@ img.border-icon{
 }
 
 .new-layout .table td .btn.pointer {
-    padding-left: .5rem; 
+    padding-left: .5rem;
     padding-right: .5rem;
 }
 
@@ -922,7 +923,7 @@ img.border-icon{
     .new-layout #content-script .form-control {
         border-top-left-radius: 8px;
         border-bottom-left-radius: 8px;
-    } 
+    }
 }
 
 .modal-new-layout .modal-content {
