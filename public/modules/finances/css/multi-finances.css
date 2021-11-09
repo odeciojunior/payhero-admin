@@ -90,7 +90,7 @@
 }
 .owl-carousel .owl-nav .owl-prev{
     left: -35px !important;
-    
+
     background: #FFFFFF;
 }
 .owl-carousel .nav-btn{
@@ -360,6 +360,10 @@ select.form-control {
 #gateway-redirection:hover span {
     max-width: 7rem;
     margin-right: 8px
+}
+
+span.font-size-16 {
+    color: #9E9E9E;
 }
 @media (max-width: 991px) {
     .badge {
