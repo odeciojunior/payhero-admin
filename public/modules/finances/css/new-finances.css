@@ -321,6 +321,10 @@ strong span {
     margin-left: 15px;
 }
 
+#modal_detalhes .nav-tabs .nav-link:first-of-type {
+    margin-left: 0;
+}
+
 #nav-transfers-tab {
     margin-left: 0px !important;
 }
