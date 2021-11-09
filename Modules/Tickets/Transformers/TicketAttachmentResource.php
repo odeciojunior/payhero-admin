@@ -15,6 +15,7 @@ class TicketAttachmentResource extends JsonResource
             'content' => basename($this->file),
             'type' => 'file',
             'created_at' => Carbon::parse($this->created_at)->format('d/m \à\s H\hi'),
+            'filename' => $this->filename ?? null,
             'link' => $this->file,
             'from' => $this->type_enum,
         ];

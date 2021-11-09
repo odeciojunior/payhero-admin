@@ -11,6 +11,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property integer $id
  * @property integer $ticket_id
  * @property string $file
+ * @property string $filename
  * @property integer $type_enum
  * @property string $created_at
  * @property string $updated_at
@@ -30,6 +31,7 @@ class TicketAttachment extends Model
     protected $fillable = [
         'ticket_id',
         'file',
+        'filename',
         'type_enum',
         'created_at',
         'updated_at',
