@@ -200,9 +200,9 @@ $(document).ready(function(){
                                             </div>
                                         </div>
                                         <div class="col-sm-12 mb-10 pb-10">
-                                            <a href="#" class="col-12 btn-outline-success btn fw-bold" id="request-withdrawal-${data.id}">Solicitar saque</a>
-                                            <a href="#" class="btn btn-saque fw-bold" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
-                                            <a href="#" class="btn btn-danger btn-cancel fw-bold" id="cancel-withdrawal-${data.name}" style="display:none;">Cancelar</a>
+                                            <a href="#" class="col-12 btn-outline-success btn font-weight-bold" id="request-withdrawal-${data.id}" style="font-size:16px">Solicitar saque</a>
+                                            <a href="#" class="btn btn-saque font-weight-bold" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
+                                            <a href="#" class="btn btn-cancel" id="cancel-withdrawal-${data.name}" style="display:none;">Cancelar</a>
                                         </div>
                                     </div>
                                 </div>
@@ -354,9 +354,9 @@ $(document).ready(function(){
                             ${extra}
                             <div class="row ${class2}">
                                 <div class="col-sm-6">${img_gateway}</div>
-                                <div class="col-sm-6 text-right overflow-bank-name">${data.bank_name.replace('BANCO ', '')}</div>
+                                <div class="col-sm-6"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated}</span></span></div>
                                 <div class="col-sm-6" style="margin-top:10px"><h4 style="margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.value)}</span></h4></div>
-                                <div class="col-sm-6" style="margin-top:10px"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated}</span></span></div>
+                                <div class="col-sm-6 text-right overflow-bank-name" style="margin-top:10px">${data.bank_name.replace('BANCO ', '')}</div>
                             </div>
                         `);
                         c++;

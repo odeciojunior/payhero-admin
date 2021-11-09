@@ -387,6 +387,12 @@ select.form-control {
     align-items: center;
     padding: 12px 32px;
 }
+
+.btn-cancel:hover{
+    color: #FF003D;
+    border:1px solid #FF003D;
+}
+
 .input-group-text{
     background: #F1F1F1;
     /* font-size: 16px; */
