@@ -82,8 +82,6 @@ class AsaasAnticipations extends Command
                     if (isset($response->status)) {
                         $sale->update(['anticipation_status', $response->status]);
                     }
-
-                    dd($response);
                 }
         } catch (Exception $e) {
             report($e);

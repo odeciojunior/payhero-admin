@@ -265,17 +265,14 @@ class AsaasService implements Statement
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Accept: application/json',
+            'Content-Type: multipart/form-data',
             'access_token: ' . $apiKey,
         ]);
 
-        curl_setopt($curl, CURLOPT_POSTFIELDS, [
-            "agreementSignature"=> $sale->customer->name,
-            "installment"=> null,
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode([
+            "agreementSignature"=> $sale->user->name,
             "payment"=> $sale->gateway_transaction_id,
-            "documents"=> null
-        ]);
+        ]));
 
         $result = curl_exec($curl);
 

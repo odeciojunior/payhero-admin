@@ -49,7 +49,7 @@ class AsaasAnticipationsPending extends Command
                 $sales = Sale::where([
                                          'status' => Sale::STATUS_APPROVED,
                                          'gateway_id' => Gateway::ASAAS_PRODUCTION_ID,
-                                         'anticipation_status' => 'PENDING',
+                                         'anticipation_status' => 'SCHEDULED',
                                      ])
                     ->where('created_at', '>', '2021-10-19 00:00:00')
                     ->get();
