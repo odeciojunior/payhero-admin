@@ -390,5 +390,22 @@ class CompanyService
         }
         return false;
     }
+    public function getCompanyType(Company $company) 
+    {
+        $userDocument = foxutils()->onlyNumbers($company->user->document);
+
+        if(str_contains($company->fantasy_name, 'LTDA')) {
+            return 'LIMITED';
+        }
+        elseif(str_contains($company->fantasy_name, 'EIRELI')) {
+            return 'INDIVIDUAL';
+        }
+        elseif(str_contains($company->fantasy_name, $userDocument)) {
+            return 'MEI';
+        }
+        else {
+            return 'INDIVIDUAL';
+        }
+    }
 
 }

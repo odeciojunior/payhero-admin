@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\AsaasBackofficeRequest;
@@ -11,6 +11,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\Gateways\CheckoutGateway;
 
 class CreateAccountAsaas extends Command
 {
@@ -27,9 +28,8 @@ class CreateAccountAsaas extends Command
      * @var string
      */
     protected $description = 'Command description';
-
-    private String $apiToken;
-    private String $apiEndpoint;
+    
+    private $api = null;
     private int $gatewayId;
 
     /**
@@ -41,17 +41,8 @@ class CreateAccountAsaas extends Command
     {
         parent::__construct();
 
-        $this->gatewayId = Gateway::ASAAS_PRODUCTION_ID;
-        $this->apiEndpoint = "https://www.asaas.com";
-
-        if(!foxutils()->isProduction()){
-            $this->gatewayId = Gateway::ASAAS_SANDBOX_ID;
-            $this->apiEndpoint = "https://sandbox.asaas.com";
-        }
-
-        $configs = json_decode(foxutils()->xorEncrypt(Gateway::find($this->gatewayId)->json_config, "decrypt"), true);
-
-        $this->apiToken = $configs['api_key'];
+        $this->gatewayId = foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID:Gateway::ASAAS_SANDBOX_ID;
+        $this->api = new CheckoutGateway($this->gatewayId); 
     }
 
     /**
@@ -61,7 +52,6 @@ class CreateAccountAsaas extends Command
      */
     public function handle()
     {
-
         $companies = Company::whereDoesntHave('gatewayCompanyCredential', function($q) {
                 $q->where('gateway_id', $this->gatewayId);
             })
@@ -69,14 +59,10 @@ class CreateAccountAsaas extends Command
             ->where('bank_document_status', Company::STATUS_APPROVED)
             ->where('address_document_status', Company::STATUS_APPROVED)
             ->get();
-
+        
         foreach ($companies as $company) {
-
-                $this->createAccount($company);
-
+            $this->createAccount($company);
         }
-
-
     }
 
     public function createAccount(Company $company){
@@ -102,18 +88,16 @@ class CreateAccountAsaas extends Command
                 "postalCode" => $company->zip_code,
             ];
 
-            if ($company->company_type == Company::COMPANY_TYPE_JURIDICAL_PERSON) {
+            if ($company->company_type == Company::JURIDICAL_PERSON) {
                 $data['companyType'] = (new CompanyService)->getCompanyType($company);
                 $data['personType'] = 'JURIDICA';
             } else {
                 $data['personType'] = 'FISICA';
             }
 
-            $url = "{$this->apiEndpoint}/api/v3/accounts";
-
-            $result = $this->runCurl($url, 'POST', $data, $company->id);
-
-            return $this->updateToReviewStatus($result);
+            $result = $this->api->createAccount($data);            
+           
+            return $this->updateToReviewStatus($result,$company);
 
         }
         catch(Exception $ex) {
@@ -121,73 +105,29 @@ class CreateAccountAsaas extends Command
         }
     }
 
-    /**
-     * @param $url
-     * @param string $method
-     * @param null $data
-     * @return mixed
-     * @throws Exception
-     * @description GET/POST/PUT/DELETE
-     */
-    public function runCurl(string $url, string $method = 'GET', $data = null, $companyId = null)
+    private function updateToReviewStatus($result,$company): array
     {
         try {
 
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-            if ($method == 'POST') {
-                curl_setopt($ch, CURLOPT_POST, 1);
-            }
-            if (in_array($method, ["POST", 'PUT'])) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-            }
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-            curl_setopt($ch, CURLOPT_USERPWD, $this->apiToken);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'Accept: application/json',
-                'access_token: ' . $this->apiToken,
-            ]);
-
-            $result   = curl_exec($ch);
-            $httpStatus     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $response = json_decode($result);
-
-            if (($httpStatus < 200 || $httpStatus > 299) && (!isset($response->errors))) {
-                report(new Exception('Erro na executação do Curl - Asaas Service' . $url . ' - code:' . $httpStatus));
-            }
-
-            $this->saveRequests($url, $response, $httpStatus, $data, $companyId);
-            return $response;
-
-        } catch (Exception $ex) {
-            throw new Exception($ex->getMessage());
-        }
-    }
-
-
-
-    private function updateToReviewStatus($result): array
-    {
-        try {
-
-            if(!empty($result->errors)) {
-                throw new Exception("Empresa {$this->company->id} - {$this->company->fantasy_name}, erro: " . $result->errors[0]->description);
+            if($result->status =='error') {
+                throw new Exception("Empresa {$company->id} - {$company->fantasy_name}, erro: " . $result->errors[0]->description);
             }
 
             $gatewayCompanyCredential = new GatewaysCompaniesCredential();
             $dataToCreate = [
-                'company_id' => $this->company->id,
+                'company_id' => $company->id,
                 'gateway_id' => $this->gatewayId,
                 'gateway_subseller_id' => $result->walletId,
                 'gateway_api_key' => $result->apiKey,
+                'has_webhook'=>0
             ];
 
             $gatewayCompanyCredential->create($dataToCreate);
+
+            $response = $this->api->registerWebhookTransferAsaas($gatewayCompanyCredential->company_id);            
+            if($response->status =='success'){
+                $gatewayCompanyCredential->update(['has_webhook' => 1]);
+            }
 
             return [
                 'message' => 'Cadastro realizado com sucesso',
@@ -202,27 +142,4 @@ class CreateAccountAsaas extends Command
             ];
         }
     }
-
-    private function saveRequests($url, $result, $httpStatus, $data, $companyId)
-    {
-        AsaasBackofficeRequest::create(
-            [
-                'company_id' => $companyId,
-                'sent_data' => json_encode(
-                    [
-                        'url' => $url,
-                        'data' => $data
-                    ]
-                ),
-                'response' => json_encode(
-                    [
-                        'result' => $result,
-                        'status' => $httpStatus
-                    ]
-                )
-            ]
-
-        );
-    }
-
 }
