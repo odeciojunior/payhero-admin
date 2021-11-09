@@ -57,7 +57,10 @@
 }
 
 span.select2-selection.select2-selection--multiple{
-    scrollbar-width: thin !important;
+    scrollbar-width: thin;
+}
+.select2-results__options{
+    scrollbar-width: thin;
 }
 
 ::-webkit-scrollbar {
