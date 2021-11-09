@@ -27,8 +27,8 @@ Route::group(
         Route::post('/old_finances/export', 'OldFinancesApiController@export')
             ->name('api.finances.export');
 
-        Route::get('/finances/get-statement-resumes', 'FinancesApiController@getStatementResume')
+        Route::get('/finances/get-statement-resumes/', 'FinancesApiController@getStatementResume')
                 ->name('finances.statement-resumes');
-                
+
     }
 );

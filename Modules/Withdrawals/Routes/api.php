@@ -31,7 +31,7 @@ Route::group(
 
         Route::get('/withdrawals/settings/{companyId}/{settingsId}', 'WithdrawalsSettingsApiController@show');
 
-        Route::get('/withdrawals/get-resume', 'WithdrawalsApiController@getResume');
+        Route::get('/withdrawals/get-resume/', 'WithdrawalsApiController@getResume');
     }
 );
 

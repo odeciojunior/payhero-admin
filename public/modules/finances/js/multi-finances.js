@@ -133,12 +133,11 @@ $(document).ready(function(){
     }
 
     window.updateStatements = function() {
-
+        let companyId = $("#transfers_company_select").val()
         $.ajax({
-            url: "/api/finances/get-statement-resumes/",
+            url: `/api/finances/get-statement-resumes/?company_id=${companyId}`,
             type: "GET",
             dataType: "json",
-            data : {company_id : $("#transfers_company_select").val()},
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
@@ -309,11 +308,11 @@ $(document).ready(function(){
     }
 
     window.updateWithdrawals = function() {
+        let companyId = $("#transfers_company_select").val()
         $.ajax({
-            url: "/api/withdrawals/get-resume/",
+            url: `/api/withdrawals/get-resume/?company_id=${companyId}`,
             type: "GET",
             dataType: "json",
-            data : {company_id : $("#transfers_company_select").val()},
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
