@@ -28,7 +28,7 @@ class UpdateAvailableBalance extends Command
         AsaasService::class,
         // CieloService::class,
         // GetnetService::class,
-        // GerencianetService::class
+        GerencianetService::class
     ];
 
     /**

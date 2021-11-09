@@ -19,10 +19,10 @@
                 <div class="col-sm-7" style="margin-top: 30px">
                     <h1 class="page-title">Finanças</h1>
                 </div>
-                <div class="col-sm-5 text-right">
-                    <div class="col-sm-11 float-right d-flex justify-content-end">
+                <div class="col-sm-5 d-flex d-fall align-items-end justify-content-end">
+                    <div class="col-sm-11 float-right">
                         <div class="input-holder">
-                            <select style='border-radius:10px' class="form-control select-pad"
+                            <select style='border-radius:10px' class="form-control select-pad text-right"
                                     id="transfers_company_select"> </select>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                     <div id="val-skeleton"><div class="skeleton skeleton-text" style="width:207px !important;height: 40px !important;border-radius:20px !important"></div></div>
                     <div id="container_val" style="display:none;">
                         <div style="margin-right: 24px">
-                            <span class="font-size-16 gray">R$</span>
+                            <span class="font-size-24 gray">R$</span>
                             <span class="font-size-32 bold total-available-balance" style="color: #636363;">0,00</span>
                         </div>
                         <img id="eye-slash" src="{{ asset('modules/global/img/logos/2021/svg/eye-slash.svg') }}" alt="" class="pointer">
@@ -52,7 +52,7 @@
                 </div>
                 <div class="col-sm-6 pointer default-hover" style="display:none;" id="container-return">
                     <div class="d-flex align-items-center h-p100 default-hover">
-                        <i class="o-arrow-right-1" style="margin-right: 8px"></i> Voltar
+                        <i class="o-arrow-right-1 back-button" style="margin-right: 8px"></i> Voltar
                     </div>
                 </div>
                 <div class="col-sm-6 d-flex justify-content-end align-items-center">
@@ -63,7 +63,7 @@
         <div class="page-content container">
             <div class="row" id="container-gateways">
                 <div class="col-sm-8">
-                    <div class="row" id="gateway-skeleton" style="padding-top:25px;">
+                    <div class="row" id="gateway-skeleton">
                         <div class="col-sm-4">
                             <div class="skeleton skeleton-text" style="margin-bottom: 10px !important"></div>
                             <div class="card card-skeleton">
@@ -116,11 +116,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" style="padding-top:25px;" id="container-all-gateways"></div>
+                    <div class="row" id="container-all-gateways"></div>
                 </div>
                 <div class="col-sm-4">
                     <div class="row" style="display: flex;justify-content: flex-end">
-                        <div class="col-sm-10" style="padding-top: 50px;">
+                        <div class="col-sm-10" style="padding-top: 28px;">
                             <div class="card card-skeleton" id="card-history">
                                 <div class="card-body" style="max-height: 460px">
                                     <div class="col-12 p-0 mb-35">
@@ -152,10 +152,12 @@
                 </div>
             </div>
             <div style="display:none" id="container-config">
+                <div style="font-weight: bold; font-size: 24px; line-height: 30px; color: #636363;">Automatize seus saques</div>
+                <div style="font-size: 16px; line-height: 20px; color: #70707E;">Crie regras para realizar saques automaticamente, sem precisar se preocupar!</div>
                 <form id="finances-settings-form">
                     <div class="row">
                         <div class="col-md-6 mb-50">
-                            <div class="card no-shadow mt-30">
+                            <div class="card no-shadow mt-30" style="min-height: unset">
                                 <div class="card-body">
                                     <h5 class="title-pad">
                                         Saque automático por período
@@ -252,7 +254,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="card no-shadow mt-30">
+                            <div class="card no-shadow mt-30" style="min-height: unset">
                                 <div class="card-body">
                                     <h5 class="title-pad">
                                         Saque automático por valor

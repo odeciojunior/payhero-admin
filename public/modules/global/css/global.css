@@ -1078,3 +1078,10 @@ tbody td{
 .badge-partially-liquidating {
     background-color: #0D2C54;
 }
+/* badge config global */
+.badge{
+    color: white;
+    padding: 5px 15px;
+    border-radius: 16px;
+    font-weight: 700;
+}

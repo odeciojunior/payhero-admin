@@ -10,7 +10,7 @@ class StatementService
 
     public function getDefaultStatement($companyId, $gatewayIds, $filters)
     {
-        $transfers = Transfer::join('transactions as transaction','transaction.id','transfers.transaction_id')
+        $transfers = Transfer::leftJoin('transactions as transaction','transaction.id','transfers.transaction_id')
                                 ->whereIn('transfers.gateway_id', $gatewayIds)
                                 ->where('transfers.company_id', $companyId);
 

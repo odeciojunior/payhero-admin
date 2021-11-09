@@ -201,13 +201,13 @@ $(window).on("load", function(){
             case 'NzJqoR32egVj5D6':
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1" style="margin-right: 10px; font-size: 30px"></i>
-                                                Finanças ${gatewayLogos.asaas}
+                                                ${gatewayLogos.asaas}
                                             </a>`);
                 break;
             case 'w7YL9jZD6gp4qmv':
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1" style="margin-right: 10px; font-size: 30px"></i>
-                                                Finanças ${gatewayLogos.getnet}
+                                                ${gatewayLogos.getnet}
                                             </a>`);
                 $("#transfersTable").hide();
                 $("#statementTable").show();
@@ -219,13 +219,13 @@ $(window).on("load", function(){
             case 'oXlqv13043xbj4y':
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1" style="margin-right: 10px; font-size: 30px"></i>
-                                                Finanças ${gatewayLogos.gerencianet}
+                                                ${gatewayLogos.gerencianet}
                                             </a>`);
                 break;
             case 'pM521rZJrZeaXoQ':
                 $(".page-title").html(`<a href="/finances">
                                                 <i class="o-arrow-right-1" style="margin-right: 10px; font-size: 30px"></i>
-                                                Finanças ${gatewayLogos.cielo}
+                                                ${gatewayLogos.cielo}
                                             </a>`);
                 break;
 

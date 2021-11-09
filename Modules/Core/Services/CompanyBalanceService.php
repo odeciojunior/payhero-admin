@@ -64,6 +64,10 @@ class CompanyBalanceService
     {
         $gatewaysBalances = [];
 
+        if (!auth()->user()->show_old_finances) {
+            array_pop($this->defaultGateways);
+        }
+
         foreach($this->defaultGateways as $gatewayClass) {
             $gatewayService = app()->make($gatewayClass);
             $gatewayService->setCompany($this->company);
