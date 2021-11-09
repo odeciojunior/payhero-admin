@@ -63,7 +63,7 @@
         <div class="page-content container">
             <div class="row" id="container-gateways">
                 <div class="col-sm-8">
-                    <div class="row" id="gateway-skeleton" style="padding-top:25px;">
+                    <div class="row" id="gateway-skeleton">
                         <div class="col-sm-4">
                             <div class="skeleton skeleton-text" style="margin-bottom: 10px !important"></div>
                             <div class="card card-skeleton">
@@ -116,11 +116,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" style="padding-top:25px;" id="container-all-gateways"></div>
+                    <div class="row" id="container-all-gateways"></div>
                 </div>
                 <div class="col-sm-4">
                     <div class="row" style="display: flex;justify-content: flex-end">
-                        <div class="col-sm-10" style="padding-top: 50px;">
+                        <div class="col-sm-10" style="padding-top: 28px;">
                             <div class="card card-skeleton" id="card-history">
                                 <div class="card-body" style="max-height: 460px">
                                     <div class="col-12 p-0 mb-35">
