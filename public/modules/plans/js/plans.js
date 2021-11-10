@@ -919,7 +919,7 @@ $(function () {
     });
 
     // Calculate details
-    $('body').on('change', '.box-products #price', function() {
+    $('body').on('keyup', '.box-products #price', function() {
         if ($(this).val() != '') {
             var price = parseFloat($(this).val()).toFixed(2);
 
