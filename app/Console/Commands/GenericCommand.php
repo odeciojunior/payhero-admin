@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\User;
 
 class GenericCommand extends Command
 {
@@ -13,7 +14,19 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        dd(current(Hashids::decode('5pjw3RjjNv32lQq')));
+        $userExist = User::whereHas(
+            'roles',
+            function ($query) {
+                $query->whereIn('name', ['admin']);
+            }
+        )
+        ->where('email', 'luccas332@gmail.com')
+        ->orWhere(function($qr){
+            $qr->where('email', 'assdds')
+            ->whereNull('account_owner_id');
+        })->exists();
+
+            dd($userExist);
     }
 
 }
