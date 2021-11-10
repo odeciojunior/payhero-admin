@@ -194,6 +194,7 @@ $(document).ready(function(){
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">R$</span>
                                                     </div>
+                                                    <label>Valor a sacar</label>
                                                     <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque">
                                                 </div>
                                             </div>
