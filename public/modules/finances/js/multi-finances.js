@@ -132,7 +132,7 @@ $(document).ready(function(){
         return html;
     }
 
-    window.updateStatements = function() {
+     function updateStatements() {
         let companyId = $("#transfers_company_select").val()
         $.ajax({
             url: `/api/finances/get-statement-resumes/?company_id=${companyId}`,
@@ -314,7 +314,7 @@ $(document).ready(function(){
 
     }
 
-    window.updateWithdrawals = function() {
+     function updateWithdrawals() {
         let companyId = $("#transfers_company_select").val()
         $.ajax({
             url: `/api/withdrawals/get-resume/?company_id=${companyId}`,
