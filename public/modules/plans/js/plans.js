@@ -444,10 +444,10 @@ $(function () {
             setTimeout(function() {
                 var curHeight = $(modal).find('.modal-body').height();
                 $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
-                    $('input[name="price"]').mask('#.##0,00', { reverse: true });
+                    $('input[name="price"]').mask('#.##0,00', {reverse: true});
 
-                    $(modal).find('.costs-plan').find('p').html('R$' + calculateCostsPlan().replace('.', ','));
-                    $(modal).find('.box-review').find('.tax').html(gateway_tax.replace('.', ','));
+                    $(modal).find('.costs-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(calculateCostsPlan()));
+                    $(modal).find('.box-review').find('.tax').html(gateway_tax);
 
                     $(modal).find('#stage3').addClass('show active').promise().done( function() {
                         setTimeout(function() {
@@ -494,6 +494,17 @@ $(function () {
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
+                    products_plan = response.data.products;
+
+                    selected_products = [];
+                    products_plan.map(function(e) {
+                        selected_products.push({
+                            id: e.product_id,
+                            value: e.product_cost.replace('R$ ', '').replace(',', '').replace('.', ','),
+                            amount: e.amount
+                        });
+                    });
+
                     var price = parseFloat(response.data.price.replace('R$', '')).toFixed(2);
 
                     var tax = (price * gateway_tax / 100).toFixed(2);
@@ -543,21 +554,19 @@ $(function () {
                             $(modal).find('#stage1').find('.products-edit').find('a').remove();
                         }
 
-                        $(modal).find('#stage1').find('.price-plan p').html('R$' + price.replace('.', ','));
-                        $(modal).find('#stage1').find('.costs-plan p').html('R$' + tax.replace('.', ','));
-                        $(modal).find('#stage1').find('.tax-plan p').html('R$' + costs.replace('.', ','));
-                        $(modal).find('#stage1').find('.comission-plan p').html('R$' + comission.replace('.', ','));
-                        $(modal).find('#stage1').find('.profit-plan p').html('R$' + return_value.replace('.', ','));
+                        $(modal).find('#stage1').find('.price-plan p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price));
+                        $(modal).find('#stage1').find('.costs-plan p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(costs));
+                        $(modal).find('#stage1').find('.tax-plan p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tax));
+                        $(modal).find('#stage1').find('.comission-plan p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(comission));
+                        $(modal).find('#stage1').find('.profit-plan p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(return_value));
 
-                        $(modal).find('#stage1').find('.description-tax p span').html(gateway_tax.replace('.', ','));
+                        $(modal).find('#stage1').find('.description-tax p span').html(gateway_tax);
 
                         $(modal).find('#stage1').find('.products-edit').find('.title').find('span').html(' ' + response.data.products.length + (response.data.products.length > 1 ? ' produtos' : ' produto'));
 
                         $(modal).find('#stage1').find(".product-photo").on("error", function () {
                             $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                         });
-
-                        products_plan = response.data.products;
 
                         if (flag == true) {
                             getCustom(modal);
@@ -894,11 +903,11 @@ $(function () {
 
         for (var i = 0; i < selected_products.length; i++) {
             if (selected_products[i]['value']) {
-                costs_plan += (selected_products[i]['value'].replace(',', '.') * selected_products[i]['amount'].replace(',', '.'));
+                costs_plan += (selected_products[i]['value'].replace('.', '').replace(',', '.') * selected_products[i]['amount']);
             }
         }
 
-        return costs_plan.toFixed(2);
+        return costs_plan;
     }
 
     // Search products
@@ -921,22 +930,25 @@ $(function () {
     // Calculate details
     $('body').on('keyup', '.box-products #price', function() {
         if ($(this).val() != '') {
-            var price = parseFloat($(this).val()).toFixed(2);
+            var price = $(this).val().replace('.', '').replace(',', '.');
 
             var tax = (price * gateway_tax / 100).toFixed(2);
             var costs = calculateCostsPlan();
             var comission = (price - tax).toFixed(2);
             var return_value = (comission - costs).toFixed(2);
 
-            $('.price-plan').find('p').html('R$'+price.replace('.', ','));
-            $('.tax-plan').find('p').html('R$'+tax.replace('.', ','));
-            $('.comission-plan').find('p').html('R$'+comission.replace('.', ','));
-            $('.profit-plan').find('p').html('R$'+ return_value.replace('.', ','));
+            $('.price-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price));
+            $('.tax-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tax));
+            $('.comission-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(comission));
+            $('.profit-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(return_value));
         } else {
+            var costs = calculateCostsPlan();
+            var return_value = costs.toFixed(2);
+
             $('.price-plan').find('p').html('R$0,00');
             $('.tax-plan').find('p').html('R$0,00');
             $('.comission-plan').find('p').html('R$0,00');
-            $('.profit-plan').find('p').html('R$0,00');
+            $('.profit-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format('-' + return_value));
         }
     });
 
@@ -1127,7 +1139,7 @@ $(function () {
                 parent.find('#price').val(function(index, value) {
                     return value.replace('R$', '');
                 });
-                parent.find('#price').mask('#.##0,00', {reverse: true});
+                parent.find('#price').mask('#.##0,00', { reverse: true });
                 parent.find('.informations-data').append(
                     '<div class="buttons-update">' +
                         '<div class="d-flex mt-20" style="justify-content: flex-end !important;">' +
@@ -1423,6 +1435,18 @@ $(function () {
 
                 $(modal).find('#description').val(response.plan.description_short);
                 $(modal).find('#description').attr('data', response.plan.description).attr('data-short', response.plan.description_short);
+
+                var price = response.plan.price.replace('R$', '').replace('.', '').replace(',', '.');
+
+                var tax = (price * gateway_tax / 100).toFixed(2);
+                var costs = calculateCostsPlan();
+                var comission = (price - tax).toFixed(2);
+                var return_value = (comission - costs).toFixed(2);
+
+                $(modal).find('.price-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price));
+                $(modal).find('.tax-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tax));
+                $(modal).find('.comission-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(comission));
+                $(modal).find('.profit-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(return_value));
 
                 $(modal).find('.informations-data').removeClass('edit');
                 $(modal).find('.informations-edit').find('.form-control').attr('readonly', true);
@@ -1739,7 +1763,6 @@ $(function () {
      */
 
     $(document).on('click', '.btn-update-plan', function () {
-        console.log('update plan');
         $("#tab_plans-panel").loading({message: '...', start: true});
 
         var hasNoValue;
@@ -1796,8 +1819,6 @@ $(function () {
      * Update custom Config
      */
     $(document).on('click', '.btn-update-config-custom', function () {
-        console.log('update custom config');
-
         $("#tab_plans-panel").loading({message: '...', start: true});
         var formDataCP = new FormData(document.getElementById('form-update-plan-tab-2'));
         formDataCP.append('plan', $('#plan_id').val());

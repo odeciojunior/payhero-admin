@@ -53,6 +53,12 @@ $(document).ready(function () {
     // })
 });
 
+function stringToMoney(string, currency = 'BRL') {
+    let value = parseInt(string, 10);
+
+    return value.toLocaleString('pt-br', { style: 'currency', currency: currency });
+}
+
 function scrollCustom(div) {
     var scroll = 0;
     var scrollDiv = 0;

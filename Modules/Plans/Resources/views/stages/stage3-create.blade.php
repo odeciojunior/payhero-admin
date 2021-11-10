@@ -36,7 +36,7 @@
                 <label for="price">Preço de venda</label>
                 <input type="text" class="form-control form-control-lg" id="price" autocomplete="off" name="price" placeholder="R$ 99,90">
             </div>
-        </div>            
+        </div>
         <div class="row">
             <div class="col-sm-12 form-group">
                 <label for="description">Descrição</label>
