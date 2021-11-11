@@ -14,7 +14,7 @@
 
 @section('content')
     <div class="page">
-        <div class="page-header container">
+        <div class="page-header container" style="padding-bottom: 0">
             <div class="row">
                 <div class="col-sm-7" style="margin-top: 30px">
                     <h1 class="page-title">Finanças</h1>
@@ -33,7 +33,7 @@
 {{--                    </div>--}}
                 </div>
                 <div class="col-sm-12">
-                    <p class="mt-10">
+                    <p class="mt-10 mb-0">
                         <span class="badge badge-info new-badge">NOVO!</span>
                         <span class="new-title">Uma nova central para você controlar seus extratos em diferentes adquirentes.</span>
                     </p>
@@ -65,58 +65,109 @@
                 <div class="col-sm-8">
                     <div class="row" id="gateway-skeleton">
                         <div class="col-sm-4">
-                            <div class="skeleton skeleton-text" style="margin-bottom: 10px !important"></div>
+                            <div class="skeleton skeleton-text" style="margin-bottom: 10px !important;width:100%"></div>
                             <div class="card card-skeleton">
-                                <div class="card-body">
-                                    <div class="col-sm-12 p-0 pt-5">
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
+                                <div class="card-body p-0 pt-20">
+                                    <div class="col-sm-12 p-0">
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <div class="px-20">
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div class="skeleton skeleton-text" style="margin-bottom: 10px !important"></div>
+                            <div class="skeleton skeleton-text" style="margin-bottom: 10px !important;width:100%"></div>
                             <div class="card card-skeleton">
-                                <div class="card-body">
+                                <div class="card-body p-0 pt-20">
                                     <div class="col-sm-12 p-0">
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <div class="px-20">
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div class="skeleton skeleton-text" style="margin-bottom: 10px !important"></div>
+                            <div class="skeleton skeleton-text" style="margin-bottom: 10px !important;width:100%"></div>
                             <div class="card card-skeleton">
-                                <div class="card-body">
+                                <div class="card-body p-0 pt-20">
                                     <div class="col-sm-12 p-0">
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text" style="width: 50% !important"></div>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
+                                            <div class="skeleton skeleton-circle"></div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <div class="px-20">
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row" id="container-all-gateways"></div>
+                    <div id="container-all-gateways"></div>
                 </div>
                 <div class="col-sm-4">
                     <div class="row" style="display: flex;justify-content: flex-end">

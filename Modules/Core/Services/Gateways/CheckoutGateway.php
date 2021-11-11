@@ -23,7 +23,7 @@ class CheckoutGateway extends GatewayAbstract{
         $this->name_enum = 'checkout';
         $this->loadEndpoints();
         
-        $this->baseUrl = getenv('CHECKOUT_URL')."/api/";//self::URL_HOMOLOG;
+        $this->baseUrl = getenv('CHECKOUT_URL')."/api/";
         if (FoxUtils::isProduction()) {
            $this->baseUrl = self::URL_PRODUCTION;
         } 
@@ -58,6 +58,14 @@ class CheckoutGateway extends GatewayAbstract{
         return json_decode($this->requestHttp($options));
     }
 
+    public function getCurrentBalance($companyId){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'getCurrentBalance',  
+            'variables'=>[$this->gatewayId,$companyId]            
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
     public function getCurlInfo(){
         return $this->curlInfo;
     }
@@ -71,6 +79,10 @@ class CheckoutGateway extends GatewayAbstract{
             "createAccount" => [
                 "route" => "withdrawal/create-account/:gatewayId",
                 "method" => "POST"
+            ],  
+            "getCurrentBalance" => [
+                "route" => "withdrawal/current-balance/:gatewayId/:companyId",
+                "method" => "GET"
             ],                 
         ];
     }

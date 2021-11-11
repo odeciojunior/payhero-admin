@@ -132,7 +132,7 @@ $(document).ready(function(){
         return html;
     }
 
-    window.updateStatements = function() {
+     function updateStatements() {
         let companyId = $("#transfers_company_select").val()
         $.ajax({
             url: `/api/finances/get-statement-resumes/?company_id=${companyId}`,
@@ -166,9 +166,9 @@ $(document).ready(function(){
                                 <div class="item">
                                     <p style="color: #9E9E9E;font-size: 12px;line-height: 15px;">${html_transaction}</p>
                                     <div class="card card-gateway">
-                                        <div class="card-body">
+                                        <div class="card-body p-0 pt-20">
                                             <div class="col-sm-12 p-0" id="container_info_${data.name}">
-                                                <div class="row mb-35 d-flex align-items-center" style="padding: 0 15px;">
+                                                <div class="row mb-35 d-flex align-items-center m-0" style="padding: 0 15px;">
                                                     <div class="col-6 p-0">${img_gateway}</div>
                                                     <div class="col-6 p-0 d-flex justify-content-end">
                                                         <button id="gateway-redirection" class="img-gateway" href="${data.id}">
@@ -177,23 +177,24 @@ $(document).ready(function(){
                                                         </button>
                                                     </div>
                                                 </div>
-                                                <h6 class="font-size-16 m-0"><span class="radio-badge green"></span>Saldo Disponível</h6>
-                                                <h4><span class="font-size-16">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span></h4>
+                                                <h6 class="font-size-16 m-0 px-20"><span class="radio-badge green"></span>Saldo Disponível</h6>
+                                                <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span></h4>
                                                 ${pendingDebt}
                                                 <div id="balance-not-available-${data.name}">
-                                                    <h6 class="font-size-16 m-0"><span class="radio-badge orange"></span>Saldo Pendente</h6>
-                                                    <h4><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
-                                                    <h6 class="font-size-16 m-0"><span class="radio-badge red"></span>Saldo Bloqueado</h6>
-                                                    <h4><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.blocked_balance)}</span></h4>
-                                                    <h6 class="font-size-16 m-0"><span class="radio-badge blue"></span>Total</h6>
-                                                    <h4><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.total_balance)}</span></h4>
+                                                    <h6 class="font-size-16 m-0 px-20"><span class="radio-badge orange"></span>Saldo Pendente</h6>
+                                                    <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
+                                                    <h6 class="font-size-16 m-0 px-20"><span class="radio-badge red"></span>Saldo Bloqueado</h6>
+                                                    <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.blocked_balance)}</span></h4>
+                                                    <h6 class="font-size-16 m-0 px-20"><span class="radio-badge blue"></span>Total</h6>
+                                                    <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.total_balance)}</span></h4>
                                                 </div>
                                             </div>
                                             <div id="container-withdrawal-${data.name}" style="display:none">
-                                                <div class="input-group mb-3 withdrawal-value">
+                                                <div class="input-group mb-3 withdrawal-value px-20">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">R$</span>
                                                     </div>
+                                                    <label>Valor a sacar</label>
                                                     <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque">
                                                 </div>
                                             </div>
@@ -219,20 +220,26 @@ $(document).ready(function(){
                                     alertCustom('error', 'Saldo insuficiente para realizar saques!');
                                     return;
                                 }
-                                $("#balance-not-available-" + data.name).hide();
-                                $("#container-withdrawal-" + data.name).show();
-                                $("#request-withdrawal-" + data.id).hide();
-                                $("#new-withdrawal-" + data.name).show();
-                                $("#cancel-withdrawal-" + data.name).show();
+                                $("#balance-not-available-" + data.name).fadeOut();
+                                $("#request-withdrawal-" + data.id).fadeOut();
+
+                                setTimeout(() => {
+                                    $("#container-withdrawal-" + data.name).fadeIn();
+                                    $("#new-withdrawal-" + data.name).fadeIn();
+                                    $("#cancel-withdrawal-" + data.name).fadeIn();
+                                }, 400)
                             });
 
                             $(document).off("click","#cancel-withdrawal-" + data.name);
                             $(document).on("click","#cancel-withdrawal-" + data.name,function(){
-                                $("#balance-not-available-" + data.name).css("display","inline-block");
-                                $("#container-withdrawal-" + data.name).hide();
-                                $("#request-withdrawal-" + data.id).show();
-                                $("#new-withdrawal-" + data.name).hide();
-                                $("#cancel-withdrawal-" + data.name).hide();
+                                $("#container-withdrawal-" + data.name).fadeOut();
+                                $("#new-withdrawal-" + data.name).fadeOut();
+                                $("#cancel-withdrawal-" + data.name).fadeOut();
+
+                                setTimeout(() => {
+                                    $("#balance-not-available-" + data.name).fadeIn().css("display","inline-block");
+                                    $("#request-withdrawal-" + data.id).fadeIn();
+                                }, 400)
                             });
 
                             if(data.id == 'w7YL9jZD6gp4qmv' || data.id == 'oXlqv13043xbj4y') {
@@ -307,7 +314,7 @@ $(document).ready(function(){
 
     }
 
-    window.updateWithdrawals = function() {
+     function updateWithdrawals() {
         let companyId = $("#transfers_company_select").val()
         $.ajax({
             url: `/api/withdrawals/get-resume/?company_id=${companyId}`,
