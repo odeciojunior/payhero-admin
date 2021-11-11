@@ -48,18 +48,19 @@ class AsaasAnticipationsPending extends Command
                 $service = new AsaasService();
                 $sales = Sale::where([
                                          'status' => Sale::STATUS_APPROVED,
-                                         'gateway_id' => Gateway::ASAAS_PRODUCTION_ID,
-                                         'anticipation_status' => 'SCHEDULED',
+                                         'gateway_id' => Gateway::ASAAS_PRODUCTION_ID
                                      ])
+                    ->whereIn('anticipation_status', ['SCHEDULED','PENDING'])
                     ->where('created_at', '>', '2021-10-19 00:00:00')
                     ->get();
 
                 foreach ($sales as $sale) {
-                    $response = $service->makeAnticipationSale($sale);
+                    $response = $service->checkAnticipation($sale);
 
-                    if (isset($response->status)) {
-                        $sale->update(['anticipation_status', $response->status]);
+                    if (isset($response['status'])) {
+                        $sale->update(['anticipation_status' => $response['status']]);
                     }
+                    //dump($response);
                 }
             }
 

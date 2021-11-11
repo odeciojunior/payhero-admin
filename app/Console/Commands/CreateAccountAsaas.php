@@ -28,7 +28,7 @@ class CreateAccountAsaas extends Command
      * @var string
      */
     protected $description = 'Command description';
-    
+
     private $api = null;
     private int $gatewayId;
 
@@ -42,7 +42,7 @@ class CreateAccountAsaas extends Command
         parent::__construct();
 
         $this->gatewayId = foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID:Gateway::ASAAS_SANDBOX_ID;
-        $this->api = new CheckoutGateway($this->gatewayId); 
+        $this->api = new CheckoutGateway($this->gatewayId);
     }
 
     /**
@@ -59,7 +59,7 @@ class CreateAccountAsaas extends Command
             ->where('bank_document_status', Company::STATUS_APPROVED)
             ->where('address_document_status', Company::STATUS_APPROVED)
             ->get();
-        
+
         foreach ($companies as $company) {
             $this->createAccount($company);
         }
@@ -95,8 +95,8 @@ class CreateAccountAsaas extends Command
                 $data['personType'] = 'FISICA';
             }
 
-            $result = $this->api->createAccount($data);            
-           
+            $result = $this->api->createAccount($data);
+
             return $this->updateToReviewStatus($result,$company);
 
         }
@@ -124,7 +124,7 @@ class CreateAccountAsaas extends Command
 
             $gatewayCompanyCredential->create($dataToCreate);
 
-            $response = $this->api->registerWebhookTransferAsaas($gatewayCompanyCredential->company_id);            
+            $response = $this->api->registerWebhookTransferAsaas($gatewayCompanyCredential->company_id);
             if($response->status =='success'){
                 $gatewayCompanyCredential->update(['has_webhook' => 1]);
             }

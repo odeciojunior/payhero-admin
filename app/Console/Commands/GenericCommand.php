@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Support\Facades\DB;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Console\Command;
 
@@ -13,7 +14,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        dd(current(Hashids::decode('5pjw3RjjNv32lQq')));
+        DB::statement('update customers set asaas_buyer_id = null');
     }
 
 }

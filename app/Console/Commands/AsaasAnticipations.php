@@ -6,6 +6,7 @@ use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\Gateways\AsaasService;
 
@@ -74,33 +75,20 @@ class AsaasAnticipations extends Command
 
             $transactions->get();
 
-
                 foreach ($transactions->cursor() as $transaction) {
                     $sale = $transaction->sale;
-                    $response = $service->makeAnticipationSale($sale);
+                    $response = $service->makeAnticipation($sale);
 
-                    if (isset($response->status)) {
-                        $sale->update(['anticipation_status', $response->status]);
+                    if (isset($response['status'])) {
+                        $sale->update([
+                            'anticipation_status' => $response['status'],
+                            'anticipation_id' => $response['id']
+                        ]);
                     }
+                    //dump($response);
                 }
         } catch (Exception $e) {
             report($e);
         }
-
-//        $sales = Sale::where([
-//            'status' => Sale::STATUS_APPROVED,
-//            'gateway_id' => Gateway::ASAAS_PRODUCTION_ID,
-//            'anticipation_status' => null,
-//        ])
-//            ->where('created_at', '>', '2021-10-19 00:00:00')
-//            ->get();
-//
-//        foreach ($sales as $sale) {
-//           $response = $service->makeAnticipationSale($sale);
-//
-//            if (isset($response->status)) {
-//                $sale->update(['anticipation_status', $response->status]);
-//            }
-//        }
     }
 }

@@ -74,6 +74,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property int $has_valid_tracking
  * @property int $has_order_bump
  * @property string|null $anticipation_status
+ * @property string|null $anticipation_id
  * @property string|null $observation
  * @property string|null $antifraud_warning_level
  * @property Carbon|null $created_at
@@ -242,6 +243,8 @@ class Sale extends Model
         'observation',
         'original_total_paid_value',
         'antifraud_warning_level',
+        'anticipation_status',
+        'anticipation_id'
     ];
 
     public function checkout(): BelongsTo

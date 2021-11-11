@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\AsaasAnticipationRequests;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
@@ -14,6 +15,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Withdrawal;
+use Modules\Core\Entities\SaleGatewayRequest;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
@@ -23,6 +25,8 @@ class AsaasService implements Statement
 {
     public Company $company;
     public $gatewayIds = [];
+    public $apiKey;
+    public $companyId;
 
     public function __construct()
     {
@@ -193,8 +197,6 @@ class AsaasService implements Statement
                 $transactions->where('sale_id', $saleId);
             }
 
-            // dd($transactions->count());
-
             foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;
 
@@ -254,11 +256,22 @@ class AsaasService implements Statement
         ];
     }
 
-    public function makeAnticipationSale(Sale $sale)
-    {
-        $apiKey = $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
+    public function makeAnticipation(Sale $sale) {
+        $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
 
-        $curl = curl_init('https://www.asaas.com/api/v3/anticipations');
+        $data = [
+            "agreementSignature"=> $sale->user->name,
+        ];
+
+        if($sale->installments_amount == 1) {
+            $data["payment"] =$sale->gateway_transaction_id;
+        } else {
+            $saleInstallmentId = $this->saleInstallmentId($sale->saleGatewayRequests()->first());
+            $data["installment"] = $saleInstallmentId;
+        }
+
+        $url = 'https://www.asaas.com/api/v3/anticipations';
+        $curl = curl_init($url);
 
         curl_setopt($curl, CURLOPT_ENCODING, '');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
@@ -266,13 +279,41 @@ class AsaasService implements Statement
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
             'Content-Type: multipart/form-data',
-            'access_token: ' . $apiKey,
+            'access_token: ' . $this->apiKey,
         ]);
 
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode([
-            "agreementSignature"=> $sale->user->name,
-            "payment"=> $sale->gateway_transaction_id,
-        ]));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+
+        $result = curl_exec($curl);
+        $httpStatus     = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        $response = json_decode($result, true);
+
+        if (($httpStatus < 200 || $httpStatus > 299) && (!isset($response->errors))) {
+            //report(new Exception('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus));
+            report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus);
+        }
+
+        $this->saveRequests($url, $response, $httpStatus, $data, $sale->id);
+
+        return $response;
+    }
+
+    public function checkAnticipation(Sale $sale)
+    {
+        $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
+
+        $curl = curl_init('https://www.asaas.com/api/v3/anticipations/' . $sale->anticipation_id);
+
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        //curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_HEADER, FALSE);
+
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json",
+            'access_token: ' . $this->apiKey,
+        ]);
 
         $result = curl_exec($curl);
 
@@ -283,11 +324,46 @@ class AsaasService implements Statement
 
     public function getCompanyApiKey($owner_id,$project_id)
     {
-        return UserProject::where('user_id', $owner_id)
+        $company = UserProject::where('user_id', $owner_id)
             ->where('project_id', $project_id)
             ->first()
-            ->company
-            ->getGatewayApiKey(foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID);
+            ->company;
 
+        $this->companyId = $company->id;
+        $this->apiKey = $company->getGatewayApiKey(foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID);
+
+    }
+
+    private function saleInstallmentId(SaleGatewayRequest $gatewayRequest): string
+    {
+        $result = json_decode($gatewayRequest->gateway_result, true);
+        if (empty($result['installment'])) {
+            throw new Exception("Venda não tem o installment para estornar !");
+        }
+
+        return $result['installment'];
+    }
+
+    private function saveRequests($url, $result, $httpStatus, $data, $saleId)
+    {
+        AsaasAnticipationRequests::create(
+            [
+                'company_id' => $this->companyId,
+                'sale_id' => $saleId,
+                'sent_data' => json_encode(
+                    [
+                        'url' => $url,
+                        'data' => $data
+                    ]
+                ),
+                'response' => json_encode(
+                    [
+                        'result' => $result,
+                        'status' => $httpStatus
+                    ]
+                )
+            ]
+
+        );
     }
 }
