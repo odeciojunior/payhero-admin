@@ -736,11 +736,11 @@ $(() => {
                     '<button disabled class="btn btn-danger btn-sm">Estorno desabilitado, venda está em disputa</button>'
                 );
             } else {
-                $("#div_refund_transaction").html(
-                    '<button class="btn btn-danger btn-sm btn_refund_transaction" sale=' +
-                    sale.id +
-                    ">Estornar transação</button>"
-                );
+//                $("#div_refund_transaction").html(
+//                    '<button class="btn btn-danger btn-sm btn_refund_transaction" sale=' +
+//                    sale.id +
+//                    ">Estornar transação</button>"
+//                );
             }
         } else {
             $("#div_refund_transaction").html("");
