@@ -16,12 +16,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 120px !important;
+  height: fit-content !important;
   width: 100% !important;
   border: 2px dashed #2E85EC;
   border-radius: 8px;
   font-weight: bold;
   background-color: #F8FDFF;
+  object-fit: cover;
 }
 
 .dropify-wrapper .dropify-message {
