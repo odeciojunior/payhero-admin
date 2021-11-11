@@ -118,7 +118,7 @@ $(function () {
                         response.data.forEach(function(product) {
                             var index_product = selected_products.map(function(e) { return e.id; }).indexOf(product.id);
                             append += '<div class="col-sm-6">';
-                                append += '<div alt="' + product.name + '" data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
+                                append += '<div data-toggle="tooltip" data-placement="top" title="' + product.name + '" data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
                                     append += '<div class="d-flex align-items-center">';
                                         append += '<div class="background-photo">';
                                             append += '<img class="product-photo" src="' + product.photo + '">';
@@ -147,6 +147,10 @@ $(function () {
 
                     var curHeight = $(modal).find('.modal-body').height();
                     $(modal).find(find_stage).find('.box-products').append(append).promise().done(function() {
+                        $('[data-toggle="tooltip"]').tooltip({
+                            template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+                        });
+
                         if (response.data.length > 6) {
                             $(modal).find(find_stage).find('.box-products').css('padding-right', '12px');
                             $(modal).find(find_stage).find('.box-products').append('<div class="scrollbox"></div>');
@@ -223,8 +227,8 @@ $(function () {
                     if (response.data.length > 0) {
                         response.data.forEach(function(product) {
                             var index_product = selected_products.map(function(e) { return e.id; }).indexOf(product.id);
-                            append += '<div class="col-sm-6" data-toggle="tooltip" data-placement="top"  title="' + product.name + '">';
-                                append += '<div data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
+                            append += '<div class="col-sm-6">';
+                                append += '<div data-toggle="tooltip" data-placement="top" title="' + product.name + '" data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
                                     append += '<div class="d-flex align-items-center">';
                                         append += '<div class="background-photo">';
                                             append += '<img class="product-photo" src="' + product.photo + '">';
@@ -253,6 +257,10 @@ $(function () {
 
                     var curHeight = $(modal).find('.modal-body').height();
                     $(modal).find(find_stage).find('.box-products').html(append).promise().done(function() {
+                        $('[data-toggle="tooltip"]').tooltip({
+                            template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+                        });
+
                         if (response.data.length > 6) {
                             scrollCustom(modal + ' ' + find_stage + ' .box-products');
                         }
@@ -374,6 +382,10 @@ $(function () {
 
             var curHeight = $(modal).find('.modal-body').height();
             $(modal).find(find_stage).find('.box-products').html(append).promise().done(function() {
+                $('[data-toggle="tooltip"]').tooltip({
+                    template: '<div class="tooltip product-details" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+                });
+
                 $(modal).find(find_stage).find(".product-photo").on("error", function () {
                     $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                 });

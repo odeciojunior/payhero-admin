@@ -1721,6 +1721,24 @@ input[type="checkbox"], input[type="radio"] {
 .modal-plans .modal-dialog {
     max-width: 646px;
 }
+
+.tooltip {
+    line-height: 1.2;
+    font-size: 0.8rem;
+    top: -4px !important;
+}
+.tooltip.product-select .tooltip-inner {
+    max-width: 279px !important;
+}
+.tooltip.product-details .tooltip-inner {
+    max-width: 223px !important;
+}
+.bs-tooltip-auto[x-placement^="top"] .arrow::before, .bs-tooltip-top .arrow::before {
+    top: 4px;
+    border-width: 6px 6px 0;
+    border-top-color: rgb(0, 0, 0);
+}
+
 /*.modal-plans .box-products:hover .scrollbox {
     opacity: 1;
     transition: opacity 0.6s ease-in-out;
