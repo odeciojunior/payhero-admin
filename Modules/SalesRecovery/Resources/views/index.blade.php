@@ -33,46 +33,57 @@
         <div id='project-not-empty' style='display:none'>
             <div class="page-content container">
                 <div id="" class="card shadow p-20">
+
                     <div class="row align-items-baseline">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                             <label for="type_recovery">Tipo de Recuperação</label>
-                            <select name='select_type_recovery' id="recovery_type" class="form-control select-pad applySelect2">
+                            <select name='select_type_recovery' id="recovery_type" class="form-control select-pad">
                                 <option value="1" selected>Carrinho Abandonado</option>
                                 <option value="5">Boleto Vencido</option>
                                 <option value="4">PIX Vencido</option>
                                 <option value="3">Cartão Recusado</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                             <label for="project">Projeto</label>
                             <select name='select_project' id="project" class="form-control select-pad applySelect2">
                                 <option value="all">Todos projetos</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                             <label for="plan">Plano</label>
                             <select name='plan' id="plan" class="form-control select-pad applySelect2" style="width:100%;">
                                 <option value="">Todos planos</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                             <div class="form-group form-icons">
                                 <label for='date-range-sales-recovery'>Filtrar Data</label>
                                 <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
                                 <input name='date-range-sales-recovery' id='date-range-sales-recovery' class='select-pad pr-30' placeholder='Clique para editar...' readonly>
                             </div>
                         </div>
+
                     </div>
-                    <div class="collapse" id="bt_collapse">
+
+                    <div id="bt_collapse" class="collapse">
+                        
                         <div class="row pt-15">
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                            <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                                 <label for="client-name">Nome do Cliente</label>
                                 <input name='cliente-name' id="client-name" value='' class="input-pad" type="text" placeholder="Nome">
                             </div>
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                            <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                                 <label for="client-cpf">CPF do Cliente</label>
                                 <input name='client-cpf' id="client-cpf" value='' class="input-pad" type="text" placeholder="CPF" data-mask="000.000.000-00">
                             </div>
+
                         </div>
                     </div>
                     <div class="row" style="height: 30px">

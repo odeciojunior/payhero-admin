@@ -35,8 +35,8 @@
 }
 /* and */
 
+
 /* ========= CONFIGURATIONS MULTIPLE SELECT 2 BOX ========= */
-/* CONFIGURATIONS OF BOX SELECT */
 .select2-container--default.select2-container--focus .select2-selection--multiple{
     border: 1px solid #CECECE !important;
 }
@@ -56,12 +56,14 @@
     padding-top: 5px !important;
 }
 
+/* SPESIFIC CONFIGURATION TO FIREFOX */
 span.select2-selection.select2-selection--multiple{
     scrollbar-width: thin;
 }
 .select2-results__options{
     scrollbar-width: thin;
 }
+/* and */
 
 ::-webkit-scrollbar {
     width: 12px;

@@ -154,27 +154,28 @@ $(document).ready(function () {
     function urlDataFormatted(link) {
         let url = "";
         if (link == null) {
-            url = `?project=${$("#project option:selected").val()}&recovery_type=${$(
-                "#recovery_type option:selected"
-            ).val()}&date_range=${$(
-                "#date-range-sales-recovery"
-            ).val()}&client=${$(
-                "#client-name"
-            ).val()}&date_type=created_at&client_document=${$(
-                "#client-cpf"
-            ).val()}&plan=${$("#plan").val()}`;
+            url = `?project=${$("#project").val()}&recovery_type=${$("#recovery_type option:selected")
+
+            .val()}&date_range=${$("#date-range-sales-recovery")
+
+            .val()}&client=${$("#client-name")
+
+            .val()}&date_type=created_at&client_document=${$("#client-cpf")
+
+            .val()}&plan=${$("#plan").val()}`;
+            
         } else {
-            url = `${link}&project=${$(
-                "#project option:selected"
-            ).val()}&recovery_type=${$(
-                "#recovery_type option:selected"
-            ).val()}&date_range=${$(
-                "#date-range-sales-recovery"
-            ).val()}&client=${$(
-                "#client-name"
-            ).val()}&date_type=created_at&client_document=${$(
-                "#client-cpf"
-            ).val()}&plan=${$("#plan").val()}`;
+            url = `${link}&project=${$("#project").val()}
+
+            &recovery_type=${$("#recovery_type option:selected").val()}
+            
+            &date_range=${$("#date-range-sales-recovery").val()}
+            
+            &client=${$("#client-name").val()}
+            
+            &date_type=created_at&client_document=${$("#client-cpf").val()}
+            
+            &plan=${$("#plan").val()}`;
         }
 
         let recoveryTypeSelected = $("#recovery_type option:selected").val();
@@ -743,10 +744,13 @@ $(document).ready(function () {
     //COMPORTAMENTO DO FILTRO MULTIPLO
     function behaviorMultipleFilter(data, selectId){
         var $select = $('#'+selectId);
-        var valueToRemove = 'all';
         var values = $select.val();
 
-        if (data.id != 'all') {
+        if($(`#${selectId}`).val()[0] == 'all' || $(`#${selectId}`).val()[0] == ''){
+            var valueToRemove = $(`#${selectId}`).val()[0]
+        }
+
+        if (data.id != valueToRemove) {
             if (values) {
                 var i = values.indexOf(valueToRemove);
 
@@ -760,17 +764,44 @@ $(document).ready(function () {
                 values.splice(0, values.lenght);
                 $select.val(null).change();
                 
-                values.push('all');
-                $select.val('all').change();
+                values.push(valueToRemove);
+                $select.val(valueToRemove).change();
             }
         }
     }
+
+    //NAO PERMITI QUE O FILTRO FIQUE VAZIO
+    function deniedEmptyFilter(selectId){
+        let arrayValues = $(`#${selectId}`).val();
+        let valueAmount = $(`#${selectId}`).val().length;
+
+        if(valueAmount === 0){
+            if(selectId == 'project'){
+                arrayValues.push('all');
+                arrayValues = $(`#${selectId}`).val('all').trigger("change");
+
+            }else{
+                arrayValues.push('');
+                arrayValues = $(`#${selectId}`).val('').trigger("change");
+            }
+        }
+    }
+
     $(".applySelect2").on("select2:select", function (evt) {
         var data = evt.params.data;
         var selectId = $(this).attr('id');
         behaviorMultipleFilter(data, selectId);
+
+        $(`#${selectId}`).focus().scrollTop(0);
+        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    });
+
+    $(".applySelect2").on("change", function () {            
+        let idTarget = $(this).attr('id');
+        deniedEmptyFilter(idTarget);
     });
     // FIM DO COMPORTAMENTO DO FILTRO
+
     
     //Search plan
     $("#plan").select2({

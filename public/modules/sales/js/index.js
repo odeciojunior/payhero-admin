@@ -723,12 +723,6 @@ $(document).ready(function () {
             }
         }
     }
-    $(".applySelect2").on("select2:select", function (evt) {
-        var data = evt.params.data;
-        var selectId = $(this).attr('id');
-
-        behaviorMultipleFilter(data, selectId);
-    });
 
     //NAO PERMITI QUE O FILTRO FIQUE VAZIO
     function deniedEmptyFilter(selectId){
@@ -756,12 +750,13 @@ $(document).ready(function () {
     });
     // FIM DO COMPORTAMENTO DO FILTRO
 
+    
+    //LISTA PLANOS DE ACORDO COM O PROJETO(S)
     $("#projeto").on("change", function () {
         let value = $(this).val();
         $("#plan").val(null).trigger("change");
     });
 
-    //LISTA PLANOS DE ACORDO COM O PROJETO(S)
     $("#plan").select2({
         language: {
             noResults: function () {

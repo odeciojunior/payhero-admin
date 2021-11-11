@@ -29,10 +29,10 @@ class CheckoutService
     public function getAbandonedCart(): LengthAwarePaginator
     {
         $projectIds = [];
+
         if (request('project') == 'all') {
-            $projectIds = UserProject::where('user_id', auth()->user()->account_owner_id)
-                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
-                ->pluck('project_id')->toArray();
+            $projectIds = UserProject::where('user_id', auth()->user()->account_owner_id)->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)->pluck('project_id')->toArray();
+                
         } else {
             $projectIds[] = hashids_decode(request('project'));
         }
