@@ -27,7 +27,7 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
 
     public function __construct(Project $project, $restartWebhooks = true)
     {
-        $this->allOnQueue('long');
+        $this->allOnQueue('low');
 
         $this->project = $project;
         $this->restartWebhooks = $restartWebhooks;
