@@ -36,7 +36,7 @@ class AsaasHelper extends Command
     }
 
     public function listOptions(){
-        $this->comment("======== MENU ASAAS ========");
+        $this->comment("==== ASAAS (".(FoxUtils::isProduction() ? "Production": "Sandbox").") ======");
         $this->comment("[1] Listar opções");
         $this->comment("[2] Company Transfers ");
         $this->comment("[3] Company Transfer");
@@ -75,7 +75,7 @@ class AsaasHelper extends Command
                 $this->getCompanyAntipations();
             break;
             case 0:  
-                $this->info('By');              
+                $this->info('Bye!');              
                 exit;
             break;
             default:
