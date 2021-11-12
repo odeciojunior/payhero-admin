@@ -347,6 +347,7 @@ $(document).ready(function(){
                     //     $('.skeleton-withdrawal').hide();
                     // }
                     $('.skeleton-withdrawal').hide();
+                    console.log('dsds');
                     $('#container-withdraw').html('');
                     $('#container-withdraw').show();
                     $('.asScrollable').show();
