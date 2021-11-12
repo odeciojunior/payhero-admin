@@ -78,7 +78,6 @@ $(() => {
                 errorAjaxResponse(resp);
             },
             success: resp => {
-                console.log(resp.data)
                 if (resp.data.length) {
                     for (let project of resp.data) {
                         $('#project-select').append(`<option value="${project.id}">${project.name}</option>`)
@@ -296,7 +295,7 @@ $(() => {
 
         $.ajax({
             method: "GET",
-            url: '/api/tickets/getvalues?project='+$('#project-select').val(),
+            url: '/api/tickets/getvalues?project=' + $('#project-select').val(),
             dataType: "json",
             data: {
                 date: $("#date_range").val(),

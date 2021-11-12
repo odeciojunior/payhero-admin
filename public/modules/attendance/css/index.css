@@ -21,18 +21,24 @@ button:active {
     background-color: #ECECEC;
 }
 
-select.header-select {
+.sirius-select {
     width: auto;
-    padding: 5px 20px 5px 5px !important;
-    margin-right: 5px;
-    border: none;
-    text-align: right;
-    font-weight: bold;
-    background-color: transparent;
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iOSIgdmlld0JveD0iMCAwIDE2IDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+Cgk8cGF0aCBmaWxsPSIjNjM2MzYzIiBkPSJNMTUuMDcxNCAyLjM0MzA5TDguNzA3NCA4LjcwNzA2QzguMzE2ODggOS4wOTc1OCA3LjY4MzcyIDkuMDk3NTggNy4yOTMxOSA4LjcwNzA2TDAuOTI5MjI5IDIuMzQzMUMwLjUzODcwNCAxLjk1MjU3IDAuNTM4NzA0IDEuMzE5NDEgMC45MjkyMjkgMC45Mjg4ODJDMS4zMTk3NSAwLjUzODM1NyAxLjk1MjkyIDAuNTM4MzU3IDIuMzQzNDQgMC45Mjg4ODFMOC4wMDAzIDYuNTg1NzNMMTMuNjU3MiAwLjkyODg4QzE0LjA0NzcgMC41MzgzNTUgMTQuNjgwOCAwLjUzODM1NSAxNS4wNzE0IDAuOTI4ODhDMTUuNDYxOSAxLjMxOTQgMTUuNDYxOSAxLjk1MjU3IDE1LjA3MTQgMi4zNDMwOVoiLz4KPC9zdmc+Cg==);
+    padding: 14px 35px 14px 16px !important;
+    background-color: #FFFFFF;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMSIgaGVpZ2h0PSI2IiBmaWxsPSJub25lIj48cGF0aCBmaWxsPSIjNjM2MzYzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMC43ODEgMS4yMjUgNi4wMjggNS43OWEuNzY5Ljc2OSAwIDAgMS0xLjA1NiAwTC4yMTkgMS4yMjVhLjY5Ny42OTcgMCAwIDEgMC0xLjAxNS43NjkuNzY5IDAgMCAxIDEuMDU2IDBMNS41IDQuMjY4IDkuNzI1LjIxYS43NjkuNzY5IDAgMCAxIDEuMDU2IDAgLjY5Ny42OTcgMCAwIDEgMCAxLjAxNVoiIGNsaXAtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPgo=);
     background-repeat: no-repeat;
-    background-position: center right;
+    background-position: 93% center;
+    border: 1px solid #e0e7ee;
+    border-radius: 8px;
     appearance: none;
+}
+
+.sirius-select select {
+    border: 1px solid #cad1d8;
+}
+
+.sirius-select select:active {
+    border: 1px solid #88bfff;
 }
 
 .card {
@@ -150,9 +156,11 @@ select.header-select {
     white-space: nowrap;
     font-weight: bold;
     line-height: 1;
+    border: 1px solid #f3f3f3;
     background-color: #ffffff;
     color: #454545;
     transition: background-color .3s ease-in-out, color .3s ease-in-out, padding-right .1s;
+    cursor: pointer;
     user-select: none;
 }
 
@@ -178,7 +186,6 @@ select.header-select {
 }
 
 .filter-badge.focused {
-    padding: 11px 19px;
     border: 1px solid #2E85EC;
     color: #2E85EC;
 }
@@ -635,6 +642,7 @@ select.header-select {
     width: 4px;
     background-color: #fff;
 }
+
 #write-area::-webkit-scrollbar-thumb {
     background-color: #ccc;
 }
