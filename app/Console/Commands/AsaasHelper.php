@@ -74,7 +74,8 @@ class AsaasHelper extends Command
             case 7:
                 $this->getCompanyAntipations();
             break;
-            case 0:
+            case 0:  
+                $this->info('By');              
                 exit;
             break;
             default:
@@ -85,19 +86,19 @@ class AsaasHelper extends Command
 
     public function getTransfers()
     {
-        $companyId  = $this->ask('Informe CompanyId');    
-        VarDumper::dump($this->api->getTransfersAsaas($companyId));
+        $companyId = $this->anticipate('Informe CompanyId', ['2964', '3442']);  
+        VarDumper::dump($this->api->getTransfersAsaas($companyId)??[]);
     }
 
     public function getTransfer()
     {
         list($companyId,$transferId) = explode(',',$this->ask('Informe CompanyId,transferId'));
         
-        VarDumper::dump($this->api->getTransferAsaas($companyId,$transferId));//3442,'c9ac9dc4-ac2a-4991-8c4d-013081b5f9bc'
+        VarDumper::dump($this->api->getTransferAsaas($companyId,$transferId)??[]);
     }
 
     public function getCompanyBalance(){
-        $companyId  = $this->ask('Informe CompanyId');    
+        $companyId  = $this->anticipate('Informe CompanyId', ['2964', '3442']);
         VarDumper::dump($this->api->getCurrentBalance($companyId)??[]);
     }
 
@@ -108,13 +109,13 @@ class AsaasHelper extends Command
     public function getCompanyAntipation(){
         list($companyId,$anticipationId) = explode(',',$this->ask('Informe CompanyId,anticipationId'));
         
-        VarDumper::dump($this->api->getAnticipationAsaas($companyId,$anticipationId));
+        VarDumper::dump($this->api->getAnticipationAsaas($companyId,$anticipationId)??[]);
     }
 
     public function getCompanyAntipations(){
-        list($companyId) = $this->ask('Informe CompanyId');
+        $companyId = $this->anticipate('Informe CompanyId', ['2964', '3442']);
         
-        VarDumper::dump($this->api->getAnticipationsAsaas($companyId));
+        VarDumper::dump($this->api->getAnticipationsAsaas($companyId)??[]);
     }
 
 }
