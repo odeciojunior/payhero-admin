@@ -39,6 +39,7 @@ class PixService
                         $querySale->where( 'created_at', '<=', Carbon::now()->subHour()->toDateTimeString());
                     }
                 )
+                ->where('id', 1348648)
                 ->get();
 
             foreach ($sales as $sale) {
@@ -56,10 +57,12 @@ class PixService
                         [
                             ['payment_method', '=', Sale::PIX_PAYMENT],
                             ['status', '=', Sale::STATUS_APPROVED],
-                            ['customer_id', $sale->customer->id]
                         ]
                     )
-                    ->whereDate('start_date', \Carbon\Carbon::parse($sale->start_date)->format("Y-m-d"))->first();
+                        ->whereHas('customer', function($q) use($sale){
+                            $q->where('document', $sale->customer->document);
+                        })
+                        ->whereDate('start_date', \Carbon\Carbon::parse($sale->start_date)->format("Y-m-d"))->first();
 
 
                     if(empty($saleModel)) {

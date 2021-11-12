@@ -17,7 +17,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        DB::statement('update customers set asaas_buyer_id = null');
+        //DB::statement('update customers set asaas_buyer_id = null');
     }
 
 }
