@@ -164,25 +164,10 @@ button:active {
     user-select: none;
 }
 
-.filter-badge.active::after {
-    content: '\00d7';
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 12px;
-    font-size: 24px;
-    visibility: hidden;
-    transition: visibility 1s ease-in-out;
-}
-
 .filter-badge.active {
     padding-right: 32px;
     background: #2E85EC;
     color: #ffffff;
-}
-
-.filter-badge.active::after {
-    visibility: visible;
 }
 
 .filter-badge.focused {
@@ -190,19 +175,33 @@ button:active {
     color: #2E85EC;
 }
 
-.filter-badge.daterange:not(.active) {
-    padding-right: 48px !important;
-    background-image: url('/modules/global/img/calendar.svg');
-    background-repeat: no-repeat;
-    background-position: calc(100% - 15px);
+.filter-badge::after {
+    content: '\00d7';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 12px;
+    font-size: 24px;
+    line-height: 0;
+    visibility: hidden;
 }
 
-.filter-badge.focused.daterange {
-    background-image: url('/modules/global/img/calendar-blue.svg');
+.filter-badge.active::after {
+    visibility: visible;
 }
 
-.filter-badge.active.daterange {
-    background-image: none;
+.filter-badge.daterange {
+    padding-right: 44px !important;
+}
+
+.filter-badge.daterange:not(.active)::after {
+    content: url('/modules/global/img/calendar.svg') !important;
+    visibility: visible;
+}
+
+.filter-badge.daterange.focused::after {
+    content: url('/modules/global/img/calendar-blue.svg') !important;
+    visibility: visible;
 }
 
 .filter-badge-input {

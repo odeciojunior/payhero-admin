@@ -364,6 +364,7 @@ $(() => {
                 if (btn.hasClass('daterange')) {
                     btn.data('dateRangePicker').clear();
                     btn.data('dateRangePicker').close();
+                    index();
                     e.stopImmediatePropagation();
                 }
             } else {
