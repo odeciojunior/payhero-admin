@@ -316,7 +316,7 @@ $(document).ready(function(){
 
     }
 
-     function updateWithdrawals() {
+     window.updateWithdrawals = function() {
         let companyId = $("#transfers_company_select").val()
         $.ajax({
             url: `/api/withdrawals/get-resume/?company_id=${companyId}`,
