@@ -726,13 +726,8 @@ $(() => {
             $("#checkout-attempts").text("Quantidade de tentativas: " + sale.attempts).show();
         }
 
-//        if (
-//            (sale.payment_method == 1 || sale.payment_method == 3 || (sale.payment_method == 4 && !sale.has_withdrawal)) &&
-//            (sale.status == 1 || sale.status == 8 || sale.status == 24) &&
-//            sale.userPermissionRefunded
-//        )
         if (
-            (sale.payment_method == 1 || (sale.payment_method == 4 && !sale.has_withdrawal)) &&
+            (sale.payment_method == 1 || sale.payment_method == 3 || (sale.payment_method == 4 && !sale.has_withdrawal)) &&
             (sale.status == 1 || sale.status == 8 || sale.status == 24) &&
             sale.userPermissionRefunded
         ) {
@@ -775,19 +770,19 @@ $(() => {
             $("#details-api").show();
         }
 
-        if (
-            sale.payment_method == 2 &&
-            sale.status == 1 &&
-            sale.userPermissionRefunded
-        ) {
-            $("#div_refund_billet").html(
-                '<button class="btn btn-danger btn-sm btn_refund_billet" sale=' +
-                    sale.id +
-                    ">Estornar boleto</button>"
-            );
-        } else {
+//        if (
+//            sale.payment_method == 2 &&
+//            sale.status == 1 &&
+//            sale.userPermissionRefunded
+//        ) {
+//            $("#div_refund_billet").html(
+//                '<button class="btn btn-danger btn-sm btn_refund_billet" sale=' +
+//                    sale.id +
+//                    ">Estornar boleto</button>"
+//            );
+//        } else {
             $("#div_refund_billet").html("");
-        }
+//        }
         if (sale.refund_observation != null) {
             $(".div-refund-observation").show();
             $("#refund-observation")
