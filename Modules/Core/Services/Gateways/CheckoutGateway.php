@@ -24,9 +24,9 @@ class CheckoutGateway extends GatewayAbstract{
         $this->loadEndpoints();
         
         $this->baseUrl = getenv('CHECKOUT_URL')."/api/";
-        if (FoxUtils::isProduction()) {
-           $this->baseUrl = self::URL_PRODUCTION;
-        } 
+        // if (FoxUtils::isProduction()) {
+        //    $this->baseUrl = self::URL_PRODUCTION;
+        // } 
                 
         $this->gatewayId = $gatewayId;
     }
@@ -58,10 +58,42 @@ class CheckoutGateway extends GatewayAbstract{
         return json_decode($this->requestHttp($options));
     }
 
-    public function getCurrentBalance($companyId){
+    public function getCurrentBalance($companyId=null){
         $options = new GatewayCurlOptions([
             'endpoint'=>'getCurrentBalance',  
             'variables'=>[$this->gatewayId,$companyId]            
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
+    public function getAnticipationsAsaas($companyId){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'getAnticipationsAsaas',  
+            'variables'=>[$companyId]            
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
+    public function getAnticipationAsaas($companyId,$anticipationId){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'getAnticipationAsaas',  
+            'variables'=>[$companyId,$anticipationId]            
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
+    public function getTransfersAsaas($companyId){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'getTransfersAsaas',  
+            'variables'=>[$companyId]            
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
+    public function getTransferAsaas($companyId,$transferId){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'getTransferAsaas',  
+            'variables'=>[$companyId,$transferId]            
         ]);
         return json_decode($this->requestHttp($options));
     }
@@ -83,7 +115,23 @@ class CheckoutGateway extends GatewayAbstract{
             "getCurrentBalance" => [
                 "route" => "withdrawal/current-balance/:gatewayId/:companyId",
                 "method" => "GET"
-            ],                 
+            ],   
+            "getAnticipationAsaas" => [
+                "route" => "withdrawal/anticipation-asaas/:companyId/:anticipationId",
+                "method" => "GET"
+            ],
+            "getAnticipationsAsaas" => [
+                "route" => "withdrawal/anticipations-asaas/:companyId",
+                "method" => "GET"
+            ],
+            "getTransfersAsaas" => [
+                "route" => "withdrawal/transfers-asaas/:companyId",
+                "method" => "GET"
+            ],
+            "getTransferAsaas" => [
+                "route" => "withdrawal/transfer-asaas/:companyId/:transferId",
+                "method" => "GET"
+            ]
         ];
     }
 
