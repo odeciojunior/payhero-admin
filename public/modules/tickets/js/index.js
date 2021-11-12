@@ -330,7 +330,7 @@ $(() => {
 
     // Comportamentos da tela
 
-    //Project Select
+    // Project Select
     $('#project-select').on('change', function () {
         index();
         getResume();
@@ -342,43 +342,51 @@ $(() => {
     });
 
     // Filter Badge
-    $('.filter-badge').on('click', function () {
+    $('.filter-badge').on('click', function (e) {
         let btn = $(this);
         if (btn.hasClass('editable')) {
-            btn.removeClass('active');
-            if (btn.data('value')) {
+            let target = $(btn.data('target'));
+
+            let closeClick = btn.hasClass('active') && e.offsetX >= (this.offsetWidth - 32);
+            if (closeClick) {
+                btn.removeClass('active')
+                    .removeClass('focused');
+                btn.text(btn.data('original-text'));
                 btn.data('value', '');
-                if (btn.data('original-text')) {
-                    btn.text(btn.data('original-text'));
-                }
-                index();
-            } else {
-                btn.addClass('focused');
-                let target = $(btn.data('target'));
                 if (target.length) {
-                    $('.filter-badge-input').not(target).removeClass('show');
                     if (target.hasClass('show')) {
                         target.removeClass('show');
-                    } else {
-                        const inputWidth = 250;
-                        const colPadding = 15;
-                        let parent = target[0].parentNode;
-                        let {left: parentLeft, width: parentWidth} = parent.getBoundingClientRect();
-                        let maxLeft = parentWidth - inputWidth - (colPadding * 2);
-                        let left = this.getBoundingClientRect().left - parentLeft - colPadding;
-                        left = left > maxLeft ? maxLeft : left;
-                        target.css('margin-left', left + 'px')
-                            .addClass('show');
-                        target.find('input').val('').focus();
                     }
+                    target.find('input').val('');
+                    index();
                 }
-            }
 
-            if (btn.hasClass('daterange')) {
-                btn.removeClass('active')
-                    .addClass('focused')
-                    .data('dateRangePicker')
-                    .clear()
+                if (btn.hasClass('daterange')) {
+                    btn.data('dateRangePicker').clear();
+                    btn.data('dateRangePicker').close();
+                    e.stopImmediatePropagation();
+                }
+            } else {
+
+                if (!btn.data('value')) {
+                    btn.addClass('focused');
+                }
+
+                if (target.length) {
+                    $('.filter-badge-input').not(target).removeClass('show');
+                    const inputWidth = 250;
+                    const colPadding = 15;
+                    let parent = target[0].parentNode;
+                    let {left: parentLeft, width: parentWidth} = parent.getBoundingClientRect();
+                    let maxLeft = parentWidth - inputWidth - (colPadding * 2);
+                    let left = this.getBoundingClientRect().left - parentLeft - colPadding;
+                    left = left > maxLeft ? maxLeft : left;
+                    target.css('margin-left', left + 'px')
+                        .addClass('show');
+                    target.find('input').focus();
+                }
+
+
             }
         } else {
             btn.toggleClass('active');
@@ -634,12 +642,13 @@ $(() => {
                 $(this).html('Selecionar').data('value', '');
             }
         }
-    }).on('datepicker-close', function () {
-        if ($(this).data('value')) {
-            $(this).addClass('active')
-        }
-        $(this).removeClass('focused');
+    }).on('datepicker-change', function () {
         index();
+    }).on('datepicker-close', function () {
+        $(this).removeClass('focused');
+        if ($(this).data('value')) {
+            $(this).addClass('active');
+        }
     });
 
     const picker = new EmojiButton();

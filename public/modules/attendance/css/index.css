@@ -181,7 +181,7 @@ button:active {
     color: #ffffff;
 }
 
-.filter-badge.active:not(.daterange)::after {
+.filter-badge.active::after {
     visibility: visible;
 }
 
@@ -190,19 +190,19 @@ button:active {
     color: #2E85EC;
 }
 
-.filter-badge.daterange {
+.filter-badge.daterange:not(.active) {
     padding-right: 48px !important;
     background-image: url('/modules/global/img/calendar.svg');
     background-repeat: no-repeat;
     background-position: calc(100% - 15px);
 }
 
-.filter-badge.active.daterange {
-    background-image: url('/modules/global/img/calendar-white.svg');
-}
-
 .filter-badge.focused.daterange {
     background-image: url('/modules/global/img/calendar-blue.svg');
+}
+
+.filter-badge.active.daterange {
+    background-image: none;
 }
 
 .filter-badge-input {
