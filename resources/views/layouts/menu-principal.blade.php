@@ -219,45 +219,12 @@
             }
         @endphp
             <li class="site-menu-item has-sub">
-                <a href="javascript:void(0)" id="finances-link">
+                <a href="{!! route('finances') !!}" id="finances-link">
                     <span class="bg-menu">
                         <img src="{{ asset('modules/global/img/svg/financas.svg') }}" alt="Finanças">
                     </span>
                     <span class="site-menu-title">Finanças</span>
-                    <span class="site-menu-arrow"></span>
                 </a>
-                <ul class="site-menu-sub">
-                    <li class="site-menu-item has-sub">
-                        <a href="{!! route('finances') !!}">
-                            <span class="bg-menu"></span>
-                            <span class="site-menu-title">Novo layout</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item">
-                        <a href="/finances/NzJqoR32egVj5D6">
-                            <span class="bg-menu"></span>
-                            <span class="site-menu-title">Extrato - Asaas</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item">
-                        <a href="/finances/pM521rZJrZeaXoQ">
-                            <span class="bg-menu"></span>
-                            <span class="site-menu-title">Extrato - Cielo</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item">
-                        <a href="/finances/w7YL9jZD6gp4qmv">
-                            <span class="bg-menu"></span>
-                            <span class="site-menu-title">Extrato - Getnet</span>
-                        </a>
-                    </li>
-                    <li class="site-menu-item">
-                        <a href="/finances/oXlqv13043xbj4y">
-                            <span class="bg-menu"></span>
-                            <span class="site-menu-title">Extrato - Gerencianet</span>
-                        </a>
-                    </li>
-                </ul>
             </li>
 
             @endcan   

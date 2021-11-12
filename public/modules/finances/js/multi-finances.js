@@ -132,7 +132,8 @@ $(document).ready(function(){
         return html;
     }
 
-     function updateStatements() {
+    window.updateStatements = function() {
+        $('.container-history').css('padding-top','43px');
         let companyId = $("#transfers_company_select").val()
         $.ajax({
             url: `/api/finances/get-statement-resumes/?company_id=${companyId}`,
@@ -148,6 +149,7 @@ $(document).ready(function(){
             },
             success: function (response) {
                 if (response) {
+                    $('.container-history').css('padding-top','28px');
                     let emptyStates = 3 - (Object.values(response).length - 1 );
                     $('#gateway-skeleton').hide();
                     $('#container-all-gateways').html('<div class="owl-carousel owl-carousel-shortcode owl-loaded owl-drag"></div>');
@@ -190,11 +192,11 @@ $(document).ready(function(){
                                                 </div>
                                             </div>
                                             <div id="container-withdrawal-${data.name}" style="display:none">
+                                                <label class="ml-20" style="font-size:16px;color: #636363;">Valor a sacar</label>
                                                 <div class="input-group mb-3 withdrawal-value px-20">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">R$</span>
                                                     </div>
-                                                    <label>Valor a sacar</label>
                                                     <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque">
                                                 </div>
                                             </div>
@@ -314,7 +316,7 @@ $(document).ready(function(){
 
     }
 
-     function updateWithdrawals() {
+     window.updateWithdrawals = function() {
         let companyId = $("#transfers_company_select").val()
         $.ajax({
             url: `/api/withdrawals/get-resume/?company_id=${companyId}`,
@@ -337,13 +339,15 @@ $(document).ready(function(){
             success: function (response) {
                 if(response.data.length){
                     $('#empty-history').hide();
-                    if (response.data.length ==2) {
-                        $('#skeleton-withdrawal').hide();
-                        $('#skeleton-withdrawal2').show();
-                        $('#skeleton-withdrawal3').show();
-                    }else if (response.data.length > 2) {
-                        $('.skeleton-withdrawal').hide();
-                    }
+                    // if (response.data.length ==2) {
+                    //     $('#skeleton-withdrawal').hide();
+                    //     $('#skeleton-withdrawal2').show();
+                    //     $('#skeleton-withdrawal3').show();
+                    // }else if (response.data.length > 2) {
+                    //     $('.skeleton-withdrawal').hide();
+                    // }
+                    $('.skeleton-withdrawal').hide();
+                    console.log('dsds');
                     $('#container-withdraw').html('');
                     $('#container-withdraw').show();
                     $('.asScrollable').show();
