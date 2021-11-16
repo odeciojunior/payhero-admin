@@ -5,18 +5,11 @@ use Exception;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Services\FoxUtils;
 
-class CheckoutGateway extends GatewayAbstract{
-
-    public const URL_HOMOLOG = "\/api/";
-    public const URL_PRODUCTION = 'https://checkout.cloudfox.net/api/';
-
-    private $authorizationToken;
-    private $accessToken;
-    private $accessTokenMgm;
+class CheckoutGateway extends GatewayAbstract
+{
     public $gateway_id;
     public $name_enum;
     public string $merchantId;
-    private string $sellerId;
     
     public function __construct($gatewayId)
     {
@@ -24,9 +17,9 @@ class CheckoutGateway extends GatewayAbstract{
         $this->loadEndpoints();
         
         $this->baseUrl = getenv('CHECKOUT_URL')."/api/";
-        // if (FoxUtils::isProduction()) {
-        //    $this->baseUrl = self::URL_PRODUCTION;
-        // } 
+        if (FoxUtils::isProduction()) {
+           $this->baseUrl = "https://checkout.cloudfox.net/api/";
+        } 
                 
         $this->gatewayId = $gatewayId;
     }
@@ -98,6 +91,21 @@ class CheckoutGateway extends GatewayAbstract{
         return json_decode($this->requestHttp($options));
     }
 
+    public function simulateWebhookTransfer($data){
+        $this->baseUrl = getenv('CHECKOUT_URL')."/";
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'simulateWebhookTransfer',  
+            'data'=>$data
+        ]);        
+        $response = json_decode($this->requestHttp($options));
+        $this->baseUrl = getenv('CHECKOUT_URL')."/api/";
+        return $response;
+    }
+
+    public function setBaseUrl($newUrl){
+        $this->baseUrl = $newUrl;
+    }
+
     public function getCurlInfo(){
         return $this->curlInfo;
     }
@@ -131,6 +139,10 @@ class CheckoutGateway extends GatewayAbstract{
             "getTransferAsaas" => [
                 "route" => "withdrawal/transfer-asaas/:companyId/:transferId",
                 "method" => "GET"
+            ],
+            "simulateWebhookTransfer" => [
+                "route" => "postback/asaas",
+                "method" => "POST"
             ]
         ];
     }
