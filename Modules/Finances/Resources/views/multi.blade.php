@@ -171,7 +171,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="row" style="display: flex;justify-content: flex-end">
-                        <div class="col-sm-10 container-history" style="padding-top: 28px;">
+                        <div class="col-sm-10 container-history" style="padding-top: 42px;">
                             <div class="card card-skeleton" id="card-history">
                                 <div class="card-body" style="max-height: 460px">
                                     <div class="col-12 p-0 mb-35">

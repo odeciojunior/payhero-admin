@@ -420,3 +420,6 @@ span.font-size-16 {
 hr{
     margin: 0;
 }
+.menu-active span:first-child {
+    padding: 11px 10px 10px 15px;
+}
