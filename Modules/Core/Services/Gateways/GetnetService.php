@@ -345,7 +345,7 @@ class GetnetService implements Statement
             $filters['sale'] = str_replace('#', '', $filters['sale']);
         }
 
-        $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($filters);
+        $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($this->company->id);
         $filters = $filtersAndStatement['filters'];
         $result = json_decode($filtersAndStatement['statement']);
 
