@@ -170,7 +170,7 @@ $(document).ready(function(){
                                     <div class="card card-gateway">
                                         <div class="card-body p-0 pt-20">
                                             <div class="col-sm-12 p-0" id="container_info_${data.name}">
-                                                <div class="row mb-35 d-flex align-items-center m-0" style="padding: 0 15px;">
+                                                <div class="row mb-25 d-flex align-items-center m-0" style="padding: 0 15px;">
                                                     <div class="col-6 p-0">${img_gateway}</div>
                                                     <div class="col-6 p-0 d-flex justify-content-end">
                                                         <button id="gateway-redirection" class="img-gateway" href="${data.id}">
@@ -318,6 +318,7 @@ $(document).ready(function(){
 
      window.updateWithdrawals = function() {
         let companyId = $("#transfers_company_select").val()
+
         $.ajax({
             url: `/api/withdrawals/get-resume?company_id=${companyId}`,
             type: "GET",
@@ -347,26 +348,19 @@ $(document).ready(function(){
                     //     $('.skeleton-withdrawal').hide();
                     // }
                     $('.skeleton-withdrawal').hide();
-                    console.log('dsds');
                     $('#container-withdraw').html('');
                     $('#container-withdraw').show();
                     $('.asScrollable').show();
                     let c = 1;
                     $.each(response.data, function(index, data) {
                         let img_gateway = getGatewayImg(data.gateway_name.toLowerCase());
-                        let extra='';
-                        let class2='';
-                        if (c>1) {
-                            extra='<hr>';
-                            class2='mt-10';
-                        }
+
                         $('#container-withdraw').append(`
-                            ${extra}
-                            <div class="row ${class2}">
-                                <div class="col-sm-6">${img_gateway}</div>
-                                <div class="col-sm-6"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated}</span></span></div>
-                                <div class="col-sm-6" style="margin-top:10px"><h4 style="margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.value)}</span></h4></div>
-                                <div class="col-sm-6 text-right overflow-bank-name" style="margin-top:10px">${data.bank_name.replace('BANCO ', '')}</div>
+                            <div class="row mx-0 py-20">
+                                <div class="col-sm-6 px-20">${img_gateway}</div>
+                                <div class="col-sm-6 px-20"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated}</span></span></div>
+                                <div class="col-sm-12 px-20" style="margin-top:10px"><h4 style="margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.value)}</span></h4></div>
+                                <div class="col-sm-12 px-20 overflow-bank-name">${data.bank_name.replace('BANCO ', '')}</div>
                             </div>
                         `);
                         c++;

@@ -4,10 +4,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css')}}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css?v='.uniqid()) }}">
     <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v='.uniqid()) }}">
     <link rel="stylesheet" href="{{ asset('modules/finances/css/multi-finances.css?v='.uniqid()) }}">
 @endpush
@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-sm-6" id="container-available">
                     <p class="m-0 color-default">Disponível para saque</p>
-                    <div id="val-skeleton"><div class="skeleton skeleton-text" style="width:207px !important;height: 40px !important;border-radius:20px !important"></div></div>
+                    <div id="val-skeleton"><div class="skeleton skeleton-text mb-0 my-5" style="width:207px !important;height: 40px !important;border-radius:20px !important"></div></div>
                     <div id="container_val" style="display:none;">
                         <div style="margin-right: 24px">
                             <span class="font-size-24 gray">R$</span>
@@ -65,102 +65,138 @@
                 <div class="col-sm-8">
                     <div class="row" id="gateway-skeleton">
                         <div class="col-sm-4">
-                            <div class="skeleton skeleton-text" style="margin-bottom: 10px !important;width:100%"></div>
-                            <div class="card card-skeleton">
+                            <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
+                            <div class="card card-skeleton mb-0">
                                 <div class="card-body p-0 pt-20">
                                     <div class="col-sm-12 p-0">
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-text"></div>
+                                        <div class="px-20 py-0">
+                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
                                         </div>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
-                                            <div class="skeleton skeleton-text"></div>
-                                        </div>
-                                        <hr>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
-                                            <div class="skeleton skeleton-text"></div>
-                                        </div>
-                                        <hr>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
                                             <div class="skeleton skeleton-text"></div>
                                         </div>
                                         <hr>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
                                             <div class="skeleton skeleton-text"></div>
                                         </div>
                                         <div class="px-20">
-                                            <div class="skeleton skeleton-text"></div>
+                                            <div class="skeleton skeleton-button"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div class="skeleton skeleton-text" style="margin-bottom: 10px !important;width:100%"></div>
-                            <div class="card card-skeleton">
+                            <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
+                            <div class="card card-skeleton mb-0">
                                 <div class="card-body p-0 pt-20">
                                     <div class="col-sm-12 p-0">
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-text"></div>
+                                        <div class="px-20 py-0">
+                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
                                         </div>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
-                                            <div class="skeleton skeleton-text"></div>
-                                        </div>
-                                        <hr>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
-                                            <div class="skeleton skeleton-text"></div>
-                                        </div>
-                                        <hr>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
                                             <div class="skeleton skeleton-text"></div>
                                         </div>
                                         <hr>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
                                             <div class="skeleton skeleton-text"></div>
                                         </div>
                                         <div class="px-20">
-                                            <div class="skeleton skeleton-text"></div>
+                                            <div class="skeleton skeleton-button"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div class="skeleton skeleton-text" style="margin-bottom: 10px !important;width:100%"></div>
-                            <div class="card card-skeleton">
+                            <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
+                            <div class="card card-skeleton mb-0">
                                 <div class="card-body p-0 pt-20">
                                     <div class="col-sm-12 p-0">
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-text"></div>
+                                        <div class="px-20 py-0">
+                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
                                         </div>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
-                                            <div class="skeleton skeleton-text"></div>
-                                        </div>
-                                        <hr>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
-                                            <div class="skeleton skeleton-text"></div>
-                                        </div>
-                                        <hr>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
                                             <div class="skeleton skeleton-text"></div>
                                         </div>
                                         <hr>
-                                        <div class="px-20" style="padding-bottom: 0;padding-top: 0">
-                                            <div class="skeleton skeleton-circle"></div>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
                                             <div class="skeleton skeleton-text"></div>
                                         </div>
                                         <div class="px-20">
-                                            <div class="skeleton skeleton-text"></div>
+                                            <div class="skeleton skeleton-button"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -171,32 +207,30 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="row" style="display: flex;justify-content: flex-end">
-                        <div class="col-sm-10 container-history" style="padding-top: 42px;">
-                            <div class="card card-skeleton" id="card-history">
-                                <div class="card-body" style="max-height: 460px">
-                                    <div class="col-12 p-0 mb-35">
-                                        <p><b>Histórico de saques</b></p>
-                                    </div>
-                                    <div class="list-linear-gradient-top" style="display: none"></div>
-                                    <div id="container-withdraw" style="display:none;height: auto;max-height: 380px"></div>
-                                    <div class="list-linear-gradient-bottom"></div>
-                                    <div class="row skeleton-withdrawal" id="skeleton-withdrawal">
-
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                    </div>
-                                    <div class="row skeleton-withdrawal mt-25" id="skeleton-withdrawal2">
-
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                    </div>
-                                    <div class="row skeleton-withdrawal mt-25" id="skeleton-withdrawal3">
-
-                                        <div class="skeleton skeleton-text"></div>
-                                        <div class="skeleton skeleton-text"></div>
-                                    </div>
-                                    @include('finances::components.empty-history')
+                        <div class="col-sm-10 container-history" style="padding-top: 28px;">
+                            <div class="card card-skeleton mb-0" id="card-history">
+                                <div class="col-12 px-20 pt-25 mb-20">
+                                    <p class="m-0"><b>Histórico de saques</b></p>
                                 </div>
+                                <div class="list-linear-gradient-top" style="display: none"></div>
+                                <div id="container-withdraw" style="display:none;height: auto;max-height: 360px;"></div>
+                                <div class="list-linear-gradient-bottom"></div>
+                                    <div class="row justify-content-between skeleton-withdrawal p-20 mx-0" id="skeleton-withdrawal">
+                                        <div class="col-3 skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                        <div class="col-5 text-right skeleton skeleton-text" style="height: 30px"></div>
+                                        <div class="col-7 skeleton skeleton-text mb-0" style="height: 33px"></div>
+                                    </div>
+                                    <div class="row justify-content-between skeleton-withdrawal p-20 mx-0" id="skeleton-withdrawal2">
+                                        <div class="col-3 skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                        <div class="col-5 text-right skeleton skeleton-text" style="height: 30px"></div>
+                                        <div class="col-7 skeleton skeleton-text mb-0" style="height: 33px"></div>
+                                    </div>
+                                    <div class="row justify-content-between skeleton-withdrawal p-20 mx-0" id="skeleton-withdrawal3">
+                                        <div class="col-3 skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                        <div class="col-5 text-right skeleton skeleton-text" style="height: 30px"></div>
+                                        <div class="col-7 skeleton skeleton-text mb-0" style="height: 33px"></div>
+                                    </div>
+                                @include('finances::components.empty-history')
                             </div>
                         </div>
                     </div>
