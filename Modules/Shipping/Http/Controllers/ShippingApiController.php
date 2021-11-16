@@ -133,7 +133,7 @@ class ShippingApiController extends Controller
 
                     $shippingCreated = $shippingModel->create($shippingValidated);
                     if ($shippingCreated) {
-                        CacheService::forget(CacheService::SHIPPING_RULES, $projectId);
+                        CacheService::forget(CacheService::SHIPPING_RULES, $shippingValidated['project_id']);
                         return response()->json(['message' => 'Frete cadastrado com sucesso!'], 200);
                     }
 
@@ -337,6 +337,8 @@ class ShippingApiController extends Controller
                             $sh->update(['status' => 1]);
                             $mensagem = 'É obrigatório deixar um frete ativado';
                         }
+
+                        CacheService::forget(CacheService::SHIPPING_RULES, $shipping->project_id);
 
                         return response()->json([
                             'message' => $mensagem,
