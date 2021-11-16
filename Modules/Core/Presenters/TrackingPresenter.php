@@ -9,6 +9,7 @@ class TrackingPresenter extends Presenter
     public function getTrackingStatusEnum($status)
     {
         $statusArray = [
+            0 => 'unknown',
             1 => 'posted',
             2 => 'dispatched',
             3 => 'delivered',
@@ -16,7 +17,7 @@ class TrackingPresenter extends Presenter
             5 => 'exception',
         ];
 
-        return (is_numeric($status) ? $statusArray[$status] : array_search($status, $statusArray)) ?? '';
+        return (is_numeric($status) ? $statusArray[$status] : array_search($status, $statusArray)) ?: '';
     }
 
     public function getSystemStatusEnum($status)

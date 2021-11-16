@@ -300,20 +300,20 @@ class TrackingService
             }
         });
 
-        if (isset($filters['status'])) {
-            if ($filters['status'] === 'unknown') {
-                $productPlanSales->doesntHave('tracking');
-            } else {
-                $productPlanSales->whereHas(
-                    'tracking',
-                    function ($query) use ($trackingModel, $filters) {
-                        $query->where(
-                            'tracking_status_enum',
-                            $trackingModel->present()->getTrackingStatusEnum($filters['status'])
-                        );
-                    }
-                );
-            }
+        $statusSelecteds = explode(',', $filters['status']);
+        $statusParse = collect($statusSelecteds)->map(function ($statusSelected) use ($trackingModel){
+            return $trackingModel->present()->getTrackingStatusEnum($statusSelected);
+        })->toArray();
+
+        if(!empty($statusParse) && !in_array('', $statusParse)){
+            $productPlanSales->whereHas(
+                'tracking',
+                function ($query) use ($statusParse) {
+                    $query->whereIn(
+                        'tracking_status_enum', $statusParse
+                    );
+                }
+            );
         }
 
         if (isset($filters['problem'])) {
@@ -342,11 +342,15 @@ class TrackingService
             );
         }
 
-        if (isset($filters['project'])) {
+        $projects = explode(',', $filters['project']);
+        $projectsIds = collect($projects)->map(function ($project){
+            return current(Hashids::decode($project))?:'';
+        })->toArray();
+        if(!empty($projectsIds) && !in_array('', $projectsIds)){
             $productPlanSales->whereHas(
                 'product',
-                function ($query) use ($filters) {
-                    $query->where('project_id', current(Hashids::decode($filters['project'])));
+                function ($query) use ($projectsIds) {
+                    $query->whereIn('project_id', $projectsIds);
                 }
             );
         }
