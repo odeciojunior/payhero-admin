@@ -300,20 +300,23 @@ class TrackingService
             }
         });
 
-        $statusSelecteds = explode(',', $filters['status']);
-        $statusParse = collect($statusSelecteds)->map(function ($statusSelected) use ($trackingModel){
-            return $trackingModel->present()->getTrackingStatusEnum($statusSelected);
-        })->toArray();
+        if (!empty($filters['status'])) {
+            $filterStatus = explode(',', $filters['status']);
 
-        if(!empty($statusParse) && !in_array('', $statusParse)){
-            $productPlanSales->whereHas(
-                'tracking',
-                function ($query) use ($statusParse) {
-                    $query->whereIn(
-                        'tracking_status_enum', $statusParse
-                    );
+            $productPlanSales->where(function ($query) use ($filterStatus) {
+                $statusArray = array_reduce($filterStatus, function ($carry, $item) {
+                    if ($item !== 'unknown') $carry[] = (new Tracking())->present()->getTrackingStatusEnum($item);
+                    return $carry;
+                }, []);
+
+                $query->whereHas('tracking', function ($trackingQuery) use ($statusArray) {
+                    $trackingQuery->whereIn('tracking_status_enum', $statusArray);
+                });
+
+                if (in_array('unknown', $filterStatus)) {
+                    $query->orDoesntHave('tracking');
                 }
-            );
+            });
         }
 
         if (isset($filters['problem'])) {
@@ -343,10 +346,10 @@ class TrackingService
         }
 
         $projects = explode(',', $filters['project']);
-        $projectsIds = collect($projects)->map(function ($project){
-            return current(Hashids::decode($project))?:'';
+        $projectsIds = collect($projects)->map(function ($project) {
+            return current(Hashids::decode($project)) ?: '';
         })->toArray();
-        if(!empty($projectsIds) && !in_array('', $projectsIds)){
+        if (!empty($projectsIds) && !in_array('', $projectsIds)) {
             $productPlanSales->whereHas(
                 'product',
                 function ($query) use ($projectsIds) {
