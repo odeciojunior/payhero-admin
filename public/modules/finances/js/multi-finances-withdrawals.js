@@ -1,13 +1,14 @@
 window.defaultWithdrawal = function(gatewayId) {
 
-    let availableBalanceText = $('#available-balance-' + gatewayId).html().replace(',', '').replace('.', '');
-    let toTransferText = $('#withdrawal-value-' + gatewayId).val().replace(',', '').replace('.', '');
+    let availableBalanceText = onlyNumbers($('#available-balance-' + gatewayId).html());
+    let toTransferText = onlyNumbers($('#withdrawal-value-' + gatewayId).val());
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
 
     if ($('#modal-withdrawal').css('display') === 'none') {
         $('#modal-withdrawal').removeAttr("style")
     }
+
     if (toTransfer > availableBalance) {
 
         alertCustom('error', 'O valor requerido ultrapassa o limite disponivel');
@@ -173,8 +174,8 @@ window.defaultWithdrawal = function(gatewayId) {
 
 window.customWithdrawal = function(gatewayId) {
 
-    let availableBalanceText = $('#available-balance-' + gatewayId).html().replace(',', '').replace('.', '');
-    let toTransferText = $('#withdrawal-value-' + gatewayId).val().replace(',', '').replace('.', '');
+    let availableBalanceText = onlyNumbers($('#available-balance-' + gatewayId).html());
+    let toTransferText = onlyNumbers($('#withdrawal-value-' + gatewayId).val());
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
 
