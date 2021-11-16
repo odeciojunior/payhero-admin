@@ -136,6 +136,7 @@ $(window).on("load", function(){
                 $(response.data).each(function (index, value) {
                     let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
                     $("#transfers_company_select").append(data);
+                    $("#transfers_company_select_mobile").append(data);
                     $("#extract_company_select").append(data);
                     $("#statement_company_select").append(data);
                 });
