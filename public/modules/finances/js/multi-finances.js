@@ -71,6 +71,7 @@ $(document).ready(function(){
         $('#container-withdraw').html('');
         $('#empty-history').hide();
         $('.asScrollable').hide();
+        $('.container-history').css('padding-top','42px');
         updateStatements();
         updateWithdrawals();
     });
@@ -133,7 +134,6 @@ $(document).ready(function(){
     }
 
     window.updateStatements = function() {
-        $('.container-history').css('padding-top','43px');
         let companyId = $("#transfers_company_select").val()
         $.ajax({
             url: `/api/finances/get-statement-resumes?company_id=${companyId}`,
