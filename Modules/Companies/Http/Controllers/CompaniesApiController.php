@@ -23,8 +23,8 @@ use Modules\Core\Entities\Project;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\CompanyServiceGetnet;
 use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\Gateways\Getnet\CompanyServiceGetnet;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 

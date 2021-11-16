@@ -119,7 +119,7 @@ class Kernel extends ConsoleKernel
         //Remove temporary files in regiter
         $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
 
-        $schedule->command('check:automatic-liquidation-transactions')->dailyAt('06:15');
+        $schedule->command('available-balance:update')->dailyAt('06:15');
 
         $schedule->command('redis:update-sale-tracking')->hourly();
 
@@ -159,6 +159,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00');
         /** Confirma a transferencia do dinheiro da azx */
         $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30');
+
+        /** Antecipações Asaas */
+//        $schedule->command('anticipations:asaas')->dailyAt('03:00');
+//        $schedule->command('anticipations:asaas-pending')->dailyAt('13:00');
     }
 
     protected function commands()

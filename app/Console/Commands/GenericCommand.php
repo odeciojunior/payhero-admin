@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands;
 
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Console\Command;
-
 class GenericCommand extends Command
 {
     protected $signature = 'generic';
@@ -13,7 +11,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        //
+        
     }
 
 }

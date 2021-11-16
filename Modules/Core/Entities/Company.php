@@ -37,7 +37,8 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $account_digit
  * @property string $support_email
  * @property string $support_telephone
- * @property int $balance
+ * @property int $cielo_balance
+ * @property int $asaas_balance
  * @property int $company_type
  * @property int $bank_document_status
  * @property int $address_document_status
@@ -139,7 +140,8 @@ class Company extends Model
         'account_digit',
         'support_email',
         'support_telephone',
-        'balance',
+        'cielo_balance',
+        'asaas_balance',
         'bank_document_status',
         'address_document_status',
         'contract_document_status',
@@ -272,4 +274,7 @@ class Company extends Model
         return $this->hasMany('Modules\Core\Entities\AsaasBackofficeRequest');
     }
 
+    public function getGatewayApiKey($gatewayId){
+        return $this->gatewayCompanyCredential->where('gateway_id',$gatewayId)->first()->gateway_api_key ?? null;
+    }
 }

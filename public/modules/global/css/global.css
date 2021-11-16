@@ -707,13 +707,6 @@ a.label {
 .s-border-radius {
     border-radius: 16px;
 }
-.table td {
-    padding: 18px !important;
-}
-tbody td{
-    font-size:14px;
-}
-
 .panel-custom-product{
     background: #F8F8F8;
     border-radius: 8px !important;
@@ -951,8 +944,6 @@ img.border-icon{
 }
 .modal-new-layout select.form-control {
     padding: .429rem 1rem !important;
-<<<<<<< Updated upstream
-=======
 }
 
 .modal-new-layout .modal-header {
@@ -1076,5 +1067,21 @@ img.border-icon{
 }
 .modal-plans .modal-footer .btn-primary {
     border: 1px solid #2E85EC;
->>>>>>> Stashed changes
+}
+.table td {
+    padding: 18px !important;
+}
+tbody td{
+    font-size:14px;
+}
+
+.badge-partially-liquidating {
+    background-color: #0D2C54;
+}
+/* badge config global */
+.badge{
+    color: white;
+    padding: 5px 15px;
+    border-radius: 16px;
+    font-weight: 700;
 }
