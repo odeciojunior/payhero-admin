@@ -26,8 +26,8 @@ class UpdateAvailableBalance extends Command
 
     private $defaultGateways = [
         AsaasService::class,
-        // CieloService::class,
-        // GetnetService::class,
+        CieloService::class,
+        GetnetService::class,
         GerencianetService::class
     ];
 
