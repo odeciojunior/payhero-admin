@@ -110,7 +110,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 d-none d-sm-block">
                             <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
                             <div class="card card-skeleton mb-0">
                                 <div class="card-body p-0 pt-20">
@@ -156,7 +156,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 d-none d-sm-block">
                             <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
                             <div class="card card-skeleton mb-0">
                                 <div class="card-body p-0 pt-20">
