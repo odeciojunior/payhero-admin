@@ -174,7 +174,7 @@ $(document).ready(function(){
                                                     <div class="col-6 p-0">${img_gateway}</div>
                                                     <div class="col-6 p-0 d-flex justify-content-end">
                                                         <button id="gateway-redirection" class="img-gateway" href="${data.id}">
-                                                          <span>Acessar</span>
+                                                          <span>Acessar&nbsp&nbsp</span>
                                                           <i class="o-arrow-right-1 redirect"></i>
                                                         </button>
                                                     </div>

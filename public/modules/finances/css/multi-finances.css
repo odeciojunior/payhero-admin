@@ -135,7 +135,12 @@ background-position: -24px -53px;
 }
 .skeleton{
     opacity: .7;
-    animation: skeleton-loading 1s linear infinite alternate;
+    linear-gradient(#000 0 0) top         /100% 70%,
+    linear-gradient(#000 0 0) bottom right/70% 20%,
+    radial-gradient(circle closest-side,#000 90%,#0000) bottom left/25% 25%;
+    -webkit-mask-repeat:no-repeat;
+    background:linear-gradient(90deg,#ECECEC 40%,#FFFA ,#ECECEC 60%) right/300% 100% ;
+    animation: m 1s linear infinite;
 }
 .skeleton-circle{
     height: 10px;
@@ -160,13 +165,8 @@ background-position: -24px -53px;
     height:55px;
     border-radius:8px;
 }
-@keyframes skeleton-loading {
-    0%{
-        background-color: hsl(200,20%,70%);
-    }
-    100%{
-        background-color: hsl(200,20%,95%);
-    }
+@keyframes m {
+    to {background-position:left;}
 }
 #empty-history{
     display:none;
@@ -216,7 +216,7 @@ background-position: -24px -53px;
 }
 
 #container-available, #container-return {
-    /* min-height: 73px; */
+    min-height: 73px;
     margin-top: 26px;
     margin-bottom: 26px;
 }
@@ -373,7 +373,6 @@ select.form-control {
 }
 #gateway-redirection:hover span {
     max-width: 7rem;
-    margin-right: 8px
 }
 
 span.font-size-16 {
@@ -428,4 +427,8 @@ hr{
 
 #container-withdraw .row.mx-0:nth-child(even), #skeleton-withdrawal2 {
     background-color: #F6F7F9;
+}
+
+#skeleton-withdrawal2 .skeleton {
+    background: linear-gradient(90deg, #FFF 40%, #ECECEC, #FFF 60%) right/300% 100%;
 }
