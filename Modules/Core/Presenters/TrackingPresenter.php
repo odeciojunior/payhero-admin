@@ -16,7 +16,6 @@ class TrackingPresenter extends Presenter
             5 => 'exception',
         ];
 
-        $a = array_search($status, $statusArray);
         return (is_numeric($status) ? $statusArray[$status] : array_search($status, $statusArray)) ?? '';
     }
 
