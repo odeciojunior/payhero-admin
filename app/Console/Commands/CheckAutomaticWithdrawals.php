@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\WithdrawalSettings;
 use Modules\Core\Events\WithdrawalRequestEvent;
-use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\CompanyBalanceService;
+use Modules\Core\Services\Gateways\GetnetService;
 use Modules\Withdrawals\Services\WithdrawalService;
 
 class CheckAutomaticWithdrawals extends Command
@@ -50,13 +50,10 @@ class CheckAutomaticWithdrawals extends Command
             try {
                 DB::beginTransaction();
                 $companyModel = new Company();
-                $companyService = new CompanyService();
                 $company = $companyModel->find($settings->company->id);
+                $companyService = new CompanyBalanceService($company, (new GetnetService));
 
-                $availableBalance = $companyService->getAvailableBalance(
-                    $company,
-                    CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
-                );
+                $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
 
                 $withdrawalValue = 0;
                 if ($settings->rule == WithdrawalSettings::RULE_AMOUNT) {

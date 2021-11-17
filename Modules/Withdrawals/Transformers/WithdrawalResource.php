@@ -36,7 +36,7 @@ class WithdrawalResource extends JsonResource
                 'definitions.enum.withdrawals.status.' . $this->present()
                     ->getStatus($this->status)
             ),
-            'tax_value' => $this->value,
+            'tax_value' => $this->tax,
             'debt_pending_value' => 'R$ ' . number_format(intval($this->debt_pending_value) / 100, 2, ',', '.')
         ];
     }

@@ -6,7 +6,6 @@ use Exception;
 use LogicException;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
-use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
@@ -21,9 +20,6 @@ use Modules\Core\Events\UpdateCompanyGetnetEvent;
  */
 class CompanyService
 {
-    public const STATEMENT_AUTOMATIC_LIQUIDATION_TYPE = 1;
-    public const STATEMENT_MANUAL_LIQUIDATION_TYPE = 2;
-
     public static function getSubsellerId(Company $company)
     {
         if (FoxUtils::isProduction()) {
@@ -360,100 +356,6 @@ class CompanyService
         ]);
     }
 
-    public function getBlockedBalance(Company $company, $liquidationType = null)
-    {
-        $blockedBalance = Transaction::where('company_id', $company->id)
-            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-            ->whereHas(
-                'blockReasonSale',
-                function ($query) {
-                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                }
-            );
-
-        if (!empty($liquidationType)) {
-            if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                return $blockedBalance->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->sum('value');
-            } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-                if (!$company->user->show_old_finances){
-                    return 0;
-                }
-
-                return $blockedBalance->whereNotIn('gateway_id',[Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->sum('value');
-            }else {
-                throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");
-            }
-        }else{
-            if (!$company->user->show_old_finances){
-                return 0;
-            }
-
-            return $blockedBalance->sum('value');
-        }
-    }
-
-    public function getBlockedBalanceInvites(Company $company, $liquidationType = null)
-    {
-        $blockedBalance = Transaction::whereNotNull('invitation_id')
-            ->where('company_id', $company->id)
-            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-            ->whereHas(
-                'blockReasonSale',
-                function ($query) {
-                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                }
-            );
-        if (!empty($liquidationType)) {
-            if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                return $blockedBalance->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->sum('value');
-            }
-
-            if ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-                if (!$company->user->show_old_finances){
-                    return 0;
-                }
-                return $blockedBalance->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->sum('value');
-            }
-
-            throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");
-        }
-
-        if (!$company->user->show_old_finances){
-            return 0;
-        }
-
-        return $blockedBalance->sum('value');
-    }
-
-    public function getBlockedBalancePending(Company $company, $liquidationType = null)
-    {
-        $blockedBalance = Transaction::whereNull('invitation_id')
-            ->where('company_id', $company->id)
-            ->where('status_enum', Transaction::STATUS_PAID)
-            ->whereHas(
-                'blockReasonSale',
-                function ($query) {
-                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                }
-            );
-        if (!empty($liquidationType)) {
-            if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                return $blockedBalance->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->sum('value');
-            }
-            if ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-                if (!$company->user->show_old_finances){
-                    return 0;
-                }
-                return  $blockedBalance->whereNotIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])->sum('value');
-            }
-            throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");
-        }
-        if (!$company->user->show_old_finances){
-            return 0;
-        }
-        return $blockedBalance->sum('value');
-    }
-
     public function updateCaptureTransactionEnabled(Company $company): void
     {
         try {
@@ -488,119 +390,22 @@ class CompanyService
         }
         return false;
     }
-
-    public function hasBalanceToRefund($sale): bool
+    public function getCompanyType(Company $company) 
     {
-        $transaction = Transaction::where('sale_id', $sale->id)
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->first();
-        if($sale->gateway_id == Gateway::GETNET_PRODUCTION_ID) {
-            $pendingBalance = $this->getPendingBalance(
-                $transaction->company,
-                CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
-            );
-            $availableBalance = $this->getAvailableBalance(
-                $transaction->company,
-                CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE
-            );
-            $pendingDebt = $this->getPendingDebtBalance($transaction->company);
-            $totalBalance = $pendingBalance + $availableBalance - $pendingDebt;
-            if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
-                $saleValue = floatval($transaction->value);
-            } else {
-                $saleValue = floatval(foxutils()->onlyNumbers($sale->total_paid_value));
-            }
-            if ($totalBalance - $saleValue < 0) {
-                return false;
-            }
-            return true;
+        $userDocument = foxutils()->onlyNumbers($company->user->document);
+
+        if(str_contains($company->fantasy_name, 'LTDA')) {
+            return 'LIMITED';
         }
-        if ($sale->gateway_id == Gateway::GERENCIANET_PRODUCTION_ID) {
-            return $transaction->withdrawal_id == null && $transaction->status_enum == Transaction::STATUS_PAID;
+        elseif(str_contains($company->fantasy_name, 'EIRELI')) {
+            return 'INDIVIDUAL';
         }
-        return false;
+        elseif(str_contains($company->fantasy_name, $userDocument)) {
+            return 'MEI';
+        }
+        else {
+            return 'INDIVIDUAL';
+        }
     }
 
-    public function getPendingBalance(Company $company, ?int $liquidationType = null)
-    {
-        $pendingBalance = Transaction::where('company_id', $company->id)
-            ->where('status_enum', Transaction::STATUS_PAID);
-        if (!empty($liquidationType)) {
-            if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-                $pendingBalance = $pendingBalance->whereIn(
-                    'gateway_id',
-                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]
-                )
-                    ->where('is_waiting_withdrawal', 0)
-                    ->whereNull('withdrawal_id');
-            } elseif ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-                if (!$company->user->show_old_finances){
-                    return 0;
-                }
-
-                $pendingBalance = $pendingBalance->whereNotIn(
-                    'gateway_id',
-                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]
-                );
-
-            }
-        }
-        return $pendingBalance->sum('value');
-    }
-
-    public function getAvailableBalance(Company $company, ?int $liquidationType = null): int
-    {
-        if ($liquidationType == self::STATEMENT_MANUAL_LIQUIDATION_TYPE) {
-            if (!$company->user->show_old_finances){
-                return 0;
-            }
-            return $company->balance;
-
-        }
-        $transactionsValue = $company->transactions()
-        ->whereIn(
-            'gateway_id',
-            [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]
-        )
-        ->where('is_waiting_withdrawal', 1)
-        ->whereNull('withdrawal_id')
-        ->sum('value');
-
-        if ($liquidationType == self::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) {
-            return $transactionsValue;
-        }
-
-        if (empty($liquidationType)) {
-            if ($company->user->show_old_finances){
-                return $transactionsValue + $company->balance;
-            }
-            return $transactionsValue;
-        }
-        throw new LogicException("LiquidationType ( {$liquidationType} ) inválido");
-    }
-
-    public function getPendingDebtBalance(Company $company)
-    {
-        return PendingDebt::where('company_id', $company->id)
-            ->doesntHave('withdrawals')
-            ->whereNull('confirm_date')
-            ->sum("value");
-    }
-
-    public function hasBalanceManualToRefund($sale): bool
-    {
-        $transaction = Transaction::where('sale_id', $sale->id)
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->first();
-        $pendingBalance = $this->getPendingBalance(
-            $transaction->company,
-            CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE
-        );
-        $availableBalance = $this->getAvailableBalance(
-            $transaction->company,
-            CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE
-        );
-        $totalBalance = $pendingBalance + $availableBalance;
-        return $totalBalance - foxutils()->onlyNumbers($sale->total_paid_value) < 0;
-    }
 }

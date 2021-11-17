@@ -159,8 +159,8 @@ class UpdateListsFoxActiveCampaign extends Command
     {
         try {
             $users = User::select('id', 'name', 'email', 'cellphone', 'cellphone_verified', 'email_verified',
-                DB::raw('(SELECT SUM(balance) FROM companies WHERE companies.user_id = users.id) as balance')
-            )->havingRaw('(SELECT SUM(balance) FROM companies WHERE companies.user_id = users.id ) < 0')
+                DB::raw('(SELECT SUM(cielo_balance) FROM companies WHERE companies.user_id = users.id) as balance')
+            )->havingRaw('(SELECT SUM(cielo_balance) FROM companies WHERE companies.user_id = users.id ) < 0')
                 ->get();
 
             $this->updateUsersList($users, $listId);

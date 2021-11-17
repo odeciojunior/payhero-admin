@@ -62,10 +62,9 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=21') }}">
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}"> --}}
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=24') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=' . uniqid()) }}">
-    {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=52') }}"> --}}
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=23') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=31') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}"> --}}
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
@@ -123,7 +122,6 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/jquery.scrollbar.min.js') }}"></script>
 <script src="{{ asset('modules/global/js/global.js?v=581') }}"></script>
 <script>
     verifyDocumentPending();

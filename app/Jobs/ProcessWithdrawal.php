@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Modules\Core\Entities\Withdrawal;
+use Modules\Core\Services\Gateways\GetnetService;
 use Modules\Withdrawals\Services\WithdrawalService;
 
 class ProcessWithdrawal implements ShouldQueue
@@ -41,11 +42,10 @@ class ProcessWithdrawal implements ShouldQueue
     public function handle()
     {
         try {
+            $getnetService = new GetnetService();
+            $getnetService->setCompany($this->withdrawal->company);
 
-            $withdrawalService = new WithdrawalService();
-
-            $responseCreateWithdrawal = $withdrawalService->processWithdrawal($this->withdrawal, $this->isFirstUserWithdrawal);
-
+            $getnetService->processWithdrawal($this->withdrawal, $this->isFirstUserWithdrawal);
 
         } catch (Exception $e) {
             report($e);

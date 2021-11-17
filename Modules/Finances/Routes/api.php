@@ -9,7 +9,7 @@ Route::group(
     ],
     function () {
         /**
-         * News routes after GETNET
+         *  Old routes before ASAAS
          */
         Route::get('/finances/getbalances', 'FinancesApiController@getBalances')
             ->name('api.finances.balances');
@@ -19,12 +19,16 @@ Route::group(
             ->middleware('permission:finances_manage');
 
         /**
-         * Old routes before getnet
+         * News routes after getnet
          */
         Route::get('/old_finances/getbalances', 'OldFinancesApiController@getBalances')
             ->name('api.finances.balances');
 
         Route::post('/old_finances/export', 'OldFinancesApiController@export')
             ->name('api.finances.export');
+
+        Route::get('/finances/get-statement-resumes/', 'FinancesApiController@getStatementResume')
+                ->name('finances.statement-resumes');
+
     }
 );
