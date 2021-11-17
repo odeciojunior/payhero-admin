@@ -31,7 +31,7 @@ var loadingProducts = `
 // create
 var loadingCreateStage1 = `
 <div class="ph-item">
-    <div class="row" style="margin-bottom: 27px;">    
+    <div class="row" style="margin-bottom: 27px;">
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center" style="width: 100%; margin-right: 15px;">
@@ -62,7 +62,7 @@ var loadingCreateStage1 = `
             <div class="placeholder-picture" style="height: 48px; margin-bottom: 16px;"></div>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-6" style="padding-right: 7.5px;">
             <div class="placeholder-picture" style="height: 84px; margin-bottom: 12px;"></div>
@@ -92,7 +92,7 @@ var loadingCreateStage1 = `
 
 var loadingCreateStage2 = `
 <div class="ph-item">
-    <div class="row" style="margin-bottom: 27px;">    
+    <div class="row" style="margin-bottom: 27px;">
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center" style="width: 100%; margin-right: 15px;">
@@ -124,7 +124,7 @@ var loadingCreateStage2 = `
             <div class="placeholder-picture" style="height: 18px;"></div>
         </div>
     </div>
-    
+
     <div class="row" style="margin-bottom: 22px;">
         <div class="col-12">
             <div class="d-flex">
@@ -181,7 +181,7 @@ var loadingCreateStage2 = `
 
 var loadingCreateStage3 = `
 <div class="ph-item">
-    <div class="row" style="margin-bottom: 27px;">    
+    <div class="row" style="margin-bottom: 27px;">
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center" style="width: 100%; margin-right: 15px;">
@@ -224,7 +224,7 @@ var loadingCreateStage3 = `
             <div class="placeholder-picture" style="height: 70px;"></div>
         </div>
     </div>
-    
+
     <div class="row" style="margin-top: 31px; margin-bottom: 16px;">
         <div class="col-12">
             <div class="placeholder-picture" style="height: 20px; margin-bottom: 0;"></div>
@@ -268,7 +268,7 @@ var loadingCreateStage3 = `
 // edit
 var loadingEditStage1 = `
 <div class="ph-item">
-    <div class="row" style="margin-bottom: 27px;">    
+    <div class="row" style="margin-bottom: 27px;">
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center" style="width: 100%;">
@@ -278,7 +278,7 @@ var loadingEditStage1 = `
             </div>
         </div>
     </div>
-    
+
     <div class="row" style="margin-bottom: 24px;">
         <div class="col-6" style="padding-right: 7.5px;">
             <div class="placeholder-picture" style="height: 47px; margin-bottom: 0px;"></div>
@@ -293,7 +293,7 @@ var loadingEditStage1 = `
         </div>
     </div>
 
-    <div class="row" style="margin-bottom: 16px;">    
+    <div class="row" style="margin-bottom: 16px;">
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center" style="width: 100%;">
@@ -319,7 +319,7 @@ var loadingEditStage1 = `
         </div>
     </div>
 
-    <div class="row" style="margin-bottom: 16px;">    
+    <div class="row" style="margin-bottom: 16px;">
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center" style="width: 100%;">
@@ -346,7 +346,7 @@ var loadingEditStage1 = `
 
 var loadingEditStage2 = `
 <div class="ph-item">
-    <div class="row" style="margin-bottom: 16px;">    
+    <div class="row" style="margin-bottom: 16px;">
         <div class="col-12">
             <div class="d-flex  align-items-center">
                 <div style="margin-right: 12px;">
@@ -375,7 +375,7 @@ var loadingEditStage2 = `
             <div class="placeholder-picture" style="height: 48px; margin-bottom: 16px;"></div>
         </div>
     </div>
-    
+
     <div class="row" style="margin-bottom: 12px;">
         <div class="col-6" style="padding-right: 7.5px;">
             <div class="placeholder-picture" style="height: 84px;"></div>
@@ -405,7 +405,7 @@ var loadingEditStage2 = `
 
 var loadingEditStage3 = `
 <div class="ph-item">
-    <div class="row" style="margin-bottom: 27px;">    
+    <div class="row" style="margin-bottom: 27px;">
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center" style="width: 100%; margin-right: 15px;">
@@ -437,7 +437,7 @@ var loadingEditStage3 = `
             <div class="placeholder-picture" style="height: 18px;"></div>
         </div>
     </div>
-    
+
     <div class="row" style="margin-bottom: 22px;">
         <div class="col-12">
             <div class="d-flex">
@@ -494,7 +494,7 @@ var loadingEditStage3 = `
 
 var loadingCustomStage1 = `
 <div class="ph-item">
-    <div class="row" style="margin-bottom: 36px;">    
+    <div class="row" style="margin-bottom: 36px;">
         <div class="col-12">
             <div class="d-flex  align-items-center">
                 <div style="margin-right: 12px;">
@@ -506,13 +506,13 @@ var loadingCustomStage1 = `
             </div>
         </div>
     </div>
-    
+
     <div class="row" style="margin-bottom: 37px;">
         <div class="col-12">
             <div class="placeholder-picture" style="height: 18px;"></div>
         </div>
     </div>
-    
+
     <div class="row" style="margin-bottom: 40px;">
         <div class="col-12">
             <div style="display: flex;">
@@ -550,7 +550,7 @@ var loadingCustomStage1 = `
 
 var loadingCustomStage2 = `
 <div class="ph-item">
-    <div class="row" style="margin-bottom: 36px;">    
+    <div class="row" style="margin-bottom: 36px;">
         <div class="col-12">
             <div class="d-flex  align-items-center">
                 <div style="margin-right: 12px;">
@@ -599,6 +599,43 @@ var loadingCustomStage2 = `
     <div class="row">
         <div class="col-12">
             <div class="placeholder-picture" style="height: 28px;"></div>
+        </div>
+    </div>
+</div>
+`;
+
+// plans
+var loadingPlansConfigCost = `
+<div class="ph-item">
+    <div class="row" style="margin-bottom: 31px;">
+        <div class="col-12">
+            <div class="placeholder-picture" style="height: 18px; margin-bottom: 8px;"></div>
+            <div class="placeholder-picture" style="height: 48px;"></div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-12">
+            <div class="placeholder-picture" style="height: 20px; margin-bottom: 4px;"></div>
+            <div class="placeholder-picture" style="height: 15px; margin-bottom: 22px;"></div>
+            <div class="placeholder-picture" style="height: 48px;"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6" style="padding-right: 7.5px;">
+            <div class="placeholder-picture" style="height: 84px; margin-bottom: 12px;"></div>
+        </div>
+        <div class="col-6" style="padding-left: 7.5px;">
+            <div class="placeholder-picture" style="height: 84px; margin-bottom: 12px;"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" style="padding-right: 7.5px;">
+            <div class="placeholder-picture" style="height: 84px; margin-bottom: 12px;"></div>
+        </div>
+        <div class="col-6" style="padding-left: 7.5px;">
+            <div class="placeholder-picture" style="height: 84px; margin-bottom: 12px;"></div>
         </div>
     </div>
 </div>

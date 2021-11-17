@@ -13,6 +13,8 @@ $(function () {
     var gateway_tax = 0;
     var allow_change_in_block = false;
 
+    var selected_plans = [];
+
     $('.tab_plans').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
         index();
@@ -152,10 +154,6 @@ $(function () {
                         });
 
                         if (response.data.length > 6) {
-                            $(modal).find(find_stage).find('.box-products').css('padding-right', '12px');
-                            $(modal).find(find_stage).find('.box-products').append('<div class="scrollbox"></div>');
-                            $(modal).find(find_stage).find('.box-products').append('<div class="scrollbox-bar"></div>');
-
                             scrollCustom(modal + ' ' + find_stage + ' .box-products');
                         }
 
@@ -1571,62 +1569,155 @@ $(function () {
         });
     }
 
+    // Update table plans by 'enter' button
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
             index();
         }
     });
 
+    // Tab general settings
+    $('body').on('click', '#tab_configuration', function() {
+        $('#modal_config_cost_plan').find('.modal-body').css('height', 'auto');
+    });
 
-    $(document).on('click', '#config-cost-plan', function (event) {
-        event.preventDefault();
+    // Tab plan cost change
+    $('body').on('click', '#tab_update_cost_block', function() {
+        if (!$(this).hasClass('active')) {
+            let modal = '#modal_config_cost_plan';
+            getPlansConfig(modal);
+        }
+    });
 
-        $('#add_cost_on_plans').select2({
-            placeholder: 'Nome do plano',
-            multiple: false,
-            dropdownParent: $('#modal_config_cost_plan'),
-            language: {
-                noResults: function () {
-                    return 'Nenhum plano encontrado';
-                },
-                searching: function () {
-                    return 'Procurando...';
-                },
-                loadingMore: function () {
-                    return 'Carregando mais planos...';
-                },
-            },
-            ajax: {
-                data: function (params) {
-                    return {
-                        list: 'plan',
-                        search: params.term,
+    //Select all plans
+    $('body').on('click', '#select-all', function() {
+        if (!$(this).hasClass('selected')) {
+            $(this).attr('data-selected', true)
+            $(this).addClass('selected');
+            $(this).find('.check').html('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
+
+            $('#modal_config_cost_plan').find('.box-plan').addClass('selected');
+            $('#modal_config_cost_plan').find('.box-plan').find('.check').html('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
+        } else {
+            $(this).attr('data-selected', false)
+            $(this).removeClass('selected');
+            $(this).find('.check').html('');
+
+            $('#modal_config_cost_plan').find('.box-plan').removeClass('selected');
+            $('#modal_config_cost_plan').find('.box-plan').find('.check').html('');
+        }
+    });
+
+    // Select plans
+    $('body').on('click', '.box-plan', function() {
+        var plan_id = $(this).data('code');
+
+        if (!$(this).hasClass('selected')) {
+            $(this).addClass('selected');
+            $(this).find('.check').html('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
+
+            selected_plans.push({'id': plan_id});
+        } else {
+            $('#select-all').attr('data-selected', false)
+            $('#select-all').removeClass('selected');
+            $('#select-all').find('.check').html('');
+
+            $(this).removeClass('selected');
+            $(this).find('.check img').remove();
+
+            var index_selected_plans = selected_plans.map(function(e) { return e.id; }).indexOf(plan_id);
+            selected_plans.splice(index_selected_plans, 1);
+        }
+    });
+
+    // Get Plans Config Cost
+    function getPlansConfig(modal) {
+        $(modal).find('.modal-body').css('height', 'auto');
+
+        $(modal).find('.tab-content').fadeOut('fast').promise().done(function() {
+            $(modal).find('.modal-body').append(loadingPlansConfigCost).promise().done(function() {
+                $.ajax({
+                    method: "GET",
+                    url: "/api/plans/user-plans",
+                    data: {
                         project_id: projectId,
-                        page: params.page || 1
-                    };
-                },
-                method: "GET",
-                url: "/api/plans/user-plans",
-                delay: 300,
-                dataType: 'json',
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                processResults: function (res) {
-                    return {
-                        results: $.map(res.data, function (obj) {
-                            return {id: obj.id, text: obj.name + (obj.description ? ' - ' + obj.description : '')};
-                        }),
-                        pagination: {
-                            'more': res.meta.current_page !== res.meta.last_page
+                        is_config: true
+                    },
+                    dataType: "json",
+                    headers: {
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'application/json',
+                    },
+                    error: function error(response) {
+                        errorAjaxResponse(response);
+                    },
+                    success: function success(response) {
+                        var append = '<div class="row">';
+                        if (response.data.length > 0) {
+                            response.data.forEach(function(plan) {
+                                var index_plan = selected_plans.map(function(e) { return e.id; }).indexOf(plan.id);
+                                append += '<div class="col-sm-6">';
+                                    append += '<div data-toggle="tooltip" data-placement="top" title="' + plan.name + '" data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center">';
+                                        append += '<div class="d-flex align-items-center">';
+                                            append += '<div class="background-photo">';
+                                                append += '<img class="product-photo" src="https://cloudfox-files.s3.amazonaws.com/produto.svg">';
+                                            append += '</div>';
+                                            append += '<div>';
+                                                append += '<h1 class="title">' + plan.name_short + '</h1>';
+                                                append += '<p class="description">Custo: ' + plan.custo + '</p>';
+                                            append += '</div>';
+                                        append += '</div>';
+                                        append += '<div class="check">';
+                                            if (index_plan != -1) {
+                                                append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                                            }
+                                        append += '</div>';
+                                    append += '</div>';
+                                append += '</div>';
+                            });
+                        } else {
+                            append += '<div class="col-sm-12">';
+                                append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.svg" ></div>';
+                                append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
+                                append += '<p class="m-0 text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A;">Por aqui, nenhum produto com esse nome.</p>';
+                            append += '</div>';
                         }
-                    };
-                },
-            }
-        });
+                        append + '</div>';
 
-        $('#modal_config_cost_plan').find('#tab_configuration').addClass('active');
+                        var curHeight = $(modal).find('.modal-body').height();
+                        $(modal).find('#tab_update_cost_block-panel').find('.box-plans').html(append).promise().done(function() {
+                            $('[data-toggle="tooltip"]').tooltip();
+
+                            if (response.data.length > 4) {
+                                scrollCustom(modal + ' #tab_update_cost_block-panel .box-plans');
+                            }
+
+                            $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
+                                $(modal).find('.tab-content').fadeIn('fast').promise().done(function() {
+                                    var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 65;
+                                    $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
+                                });
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+    // Button custom config plan
+    $(document).on('click', '#config-cost-plan', function () {
+        selected_plans = [];
+
+        var modal = '#modal_config_cost_plan';
+
+        $(modal).find('.modal-body').css('height', 'auto');
+
+        $(modal).find('#tab_configuration').addClass('active');
+        $(modal).find('#tab_update_cost_block').removeClass('show active');
+
+        $(modal).find('#tab_configuration_cost-panel').addClass('show active');
+        $(modal).find('#tab_update_cost_block-panel').removeClass('show active');
 
         $.ajax({
             method: "GET",
@@ -1638,28 +1729,37 @@ $(function () {
             },
             error: function error() {
                 errorAjaxResponse(response);
-            }, success: function success(response) {
+            },
+            success: function success(response) {
+                console.log(response);
+
                 if (response.data.shopify_id == null) {
                     $('#tab_update_cost_block').prop('disabled', true);
                 } else {
                     $('#tab_update_cost_block').prop('disabled', false);
                 }
                 const indexCurrency = (response.data.cost_currency_type == 'BRL') ? 0 : 1;
+
                 $('#cost_currency_type').prop('selectedIndex', indexCurrency);
                 $('#update_cost_shopify').prop('selectedIndex', response.data.update_cost_shopify);
+
                 const prefixCurrency = (response.data.cost_currency_type == 'USD') ? 'US$' : 'R$';
-                $('#cost_plan').maskMoney({thousands: ',', decimal: '.', allowZero: true, prefix: prefixCurrency});
+
+                $('#cost_plan').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: prefixCurrency});
 
                 $('#modal_config_cost_plan').modal('show');
             },
         });
     });
 
+    // Plan cost config update
     $(document).on('click', '.bt-update-cost-block', function (event) {
-        var plan = $('#add_cost_on_plans').val();
-        var cost = $('#cost_plan').val();
+        let costCurrency = $('#cost_currency_type').val();
+        let updateCostShopify = $('#update_cost_shopify').val();
+        let updateAllCurrency = $('#select-all').attr('data-selected');
+        let cost = $('#cost_plan').val();
 
-        if (plan !== null && cost !== null) {
+        if (selected_plans.length > 0 && cost !== null) {
             $.ajax({
                 method: "POST",
                 url: '/api/plans/update-bulk-cost',
@@ -1669,8 +1769,12 @@ $(function () {
                     'Accept': 'application/json',
                 },
                 data: {
-                    plan: plan,
+                    project: projectId,
+                    costCurrency: costCurrency,
+                    updateCostShopify: updateCostShopify,
+                    updateAllCurrency: updateAllCurrency,
                     cost: cost,
+                    plans: selected_plans
                 },
                 error: function (_error4) {
                     function error(_x4) {
@@ -1687,10 +1791,12 @@ $(function () {
                 }),
                 success: function success(data) {
                     alertCustom('success', 'Configuração atualizada com sucesso');
+
+                    $('#modal_config_cost_plan').modal('hide');
                 }
             });
         } else {
-            if (plan == null) {
+            if (selected_plans == 0) {
                 alertCustom('error', 'Selecione os planos para configuração');
             }
 
@@ -1757,7 +1863,7 @@ $(function () {
             }),
             success: function success(data) {
                 let prefixCurrency = ($('#cost_currency_type').val() == 'USD') ? 'US$' : 'R$';
-                $('#cost_plan').maskMoney({thousands: ',', decimal: '.', allowZero: true, prefix: prefixCurrency});
+                $('#cost_plan').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: prefixCurrency});
                 $('#currency_type_project').val(($('#cost_currency_type').val() == 'USD') ? 2 : 1);
                 alertCustom("success", "Configuração atualizada com sucesso");
                 $("#modal_config_cost_plan").modal('hide');

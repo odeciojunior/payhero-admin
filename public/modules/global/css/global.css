@@ -1098,15 +1098,21 @@ img.border-icon{
     color: #989898;
 }
 
-.modal-plans .box-products {
+.modal-plans .box-products,
+.modal-plans .box-plans {
     max-height: 276px;
     overflow: hidden;
     position: relative;
 }
-.modal-plans .box-products:not(.customizations) .col-sm-6:nth-child(odd) {
+.modal-plans .box-plans {
+    max-height: 180px;
+}
+.modal-plans .box-products:not(.customizations) .col-sm-6:nth-child(odd),
+.modal-plans .box-plans .col-sm-6:nth-child(odd) {
     padding-right: 8px;
 }
-.modal-plans .box-products:not(.customizations) .col-sm-6:nth-child(even) {
+.modal-plans .box-products:not(.customizations) .col-sm-6:nth-child(even),
+.modal-plans .box-plans .col-sm-6:nth-child(even) {
     padding-left: 8px;
 }
 
@@ -1243,7 +1249,8 @@ img.border-icon{
 .modal-plans .form-control {
     border-color: #C1C1C1;
 }
-.modal-plans .box-product {
+.modal-plans .box-product,
+.modal-plans .box-plan {
     border: 1px solid #C1C1C1;
     box-sizing: border-box;
     border-radius: 8px;
@@ -1253,7 +1260,9 @@ img.border-icon{
     transition: 300ms;
 }
 .modal-plans .box-product.selected,
-.modal-plans .box-product:hover {
+.modal-plans .box-product:hover,
+.modal-plans .box-plan.selected,
+.modal-plans .box-plan:hover {
     background: #EFF6FF;
     border: 1px solid #2E85EC;
 }
@@ -1285,6 +1294,7 @@ img.border-icon{
     border-radius: 8px;
 }
 .modal-plans .box-product .title,
+.modal-plans .box-plan .title,
 .modal-plans .body .title {
     font-weight: bold;
     font-size: 14px;
@@ -1292,27 +1302,41 @@ img.border-icon{
     color: #636363;
     margin: 0 0 5px 0;
 }
-.modal-plans .box-product .description {
+.modal-plans .box-product .description,
+.modal-plans .box-plan .description {
     font-weight: normal;
     font-size: 12px;
     line-height: 100%;
     color: #9B9B9B;
     margin: 0;
 }
-.modal-plans .box-product .check {
+.modal-plans .box-product .check,
+.modal-plans .box-plan .check,
+.select-all .check {
     width: 19px;
     height: 19px;
     border: 1px solid #9B9B9B;
     box-sizing: border-box;
     border-radius: 50%;
 }
-.modal-plans .box-product.selected .check {
+.select-all.selected {
+    color: #2E85EC;
+}
+.select-all.selected .check {
     background-color: #2E85EC;
     border-color: #2E85EC;
     text-align: center;
     line-height: 14px;
 }
-.modal-plans .box-product.selected .check img {
+.modal-plans .box-product.selected .check,
+.modal-plans .box-plan.selected .check {
+    background-color: #2E85EC;
+    border-color: #2E85EC;
+    text-align: center;
+    line-height: 14px;
+}
+.modal-plans .box-product.selected .check img,
+.modal-plans .box-plan.selected .check img {
     width: 8.44px;
     height: 6.86px;
     margin: 0;
