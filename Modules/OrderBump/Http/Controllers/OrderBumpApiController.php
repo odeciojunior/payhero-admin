@@ -46,6 +46,8 @@ class OrderBumpApiController extends Controller
 
             $orderBumpModel->create($data);
 
+            CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_RULES, $data['project_id']);
+
             return response()->json(['message' => 'Nova regra de order bump criada com succeso!']);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Erro ao salvar nova regra de order bump!'], 400);
@@ -98,6 +100,7 @@ class OrderBumpApiController extends Controller
 
             CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_RULES, $rule->project_id);
             CacheService::forget(CacheService::CHECKOUT_OB_RULE_PLANS, $rule->id);
+            CacheService::forgetContainsUnique(CacheService::SHIPPING_OB_RULES, $rule->id);
 
             return response()->json(['message' => 'Regra order bump atualizada com succeso!']);
         } catch (\Exception $e) {

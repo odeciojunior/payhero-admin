@@ -7,7 +7,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
@@ -16,7 +15,6 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Services\CheckoutService;
-use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\EmailService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
@@ -25,12 +23,12 @@ use Modules\Core\Services\ShopifyService;
 use Modules\Plans\Transformers\PlansSelectResource;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
-use Modules\Sales\Transformers\SalesExternalResource;
 use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\WooCommerceService;
 
 class SalesApiController extends Controller
@@ -133,27 +131,43 @@ class SalesApiController extends Controller
         try {
             $saleIdDecoded = hashids_decode($saleId, 'sale_id');
             $sale = Sale::find($saleIdDecoded);
-            if (!in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID])) {
+            if (!in_array($sale->gateway_id, [
+                Gateway::GETNET_SANDBOX_ID, 
+                Gateway::GETNET_PRODUCTION_ID, 
+                Gateway::GERENCIANET_PRODUCTION_ID, 
+                Gateway::GERENCIANET_SANDBOX_ID,
+                Gateway::ASAAS_PRODUCTION_ID,
+                Gateway::ASAAS_SANDBOX_ID
+            ])) {
                 return response()->json(
                     ['status' => 'error', 'message' => 'Esta venda não pode mais ser estornada.'],
                     Response::HTTP_BAD_REQUEST
                 );
             }
+
             activity()->on((new Sale()))->tap(
                 function (Activity $activity) use ($saleIdDecoded) {
                     $activity->log_name = 'estorno';
                     $activity->subject_id = $saleIdDecoded;
                 }
             )->log('Tentativa estorno transação: #' . $saleId);
-            if (!(new CompanyService())->hasBalanceToRefund($sale)) {
+
+            $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
+            $gatewayService = $sale->gateway->getService();
+            $gatewayService->setCompany($producerCompany);
+
+            if (!$gatewayService->hasEnoughBalanceToRefund($sale)) {
                 return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], 400);
             }
+
             $refundObservation = $request->input('refund_observation') ?? null;
             $result = (new CheckoutService())->cancelPaymentCheckout($sale);
             if ($result['status'] != 'success') {
                 return response()->json(['message' => $result['message']], 400);
             }
+
             (new SaleService())->cancel($sale, $result['response'], $refundObservation);
+
             if (!empty($sale->shopify_order)) {
                 $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
                 if (!empty($shopifyIntegration)) {
@@ -195,7 +209,8 @@ class SalesApiController extends Controller
     {
         try {
             $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
-            if (!(new CompanyService())->hasBalanceToRefund($sale)) {
+            $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
+            if (!(new CompanyBalanceService($producerCompany))->hasEnoughBalanceToRefund($sale)) {
                 return response()->json(
                     [
                         'message' => 'Saldo insuficiente para realizar o estorno'

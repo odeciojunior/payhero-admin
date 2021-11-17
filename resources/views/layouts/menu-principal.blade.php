@@ -109,7 +109,7 @@
         
         @hasanyrole('account_owner|admin')
             <li class="site-menu-item has-sub disabled">
-                <a class="disabled" href="{{ route('showcase') }}">
+                <a class="disabled" href="/dashboard">
                     <span class="bg-menu">
                         <img src="{{ asset('modules/global/img/svg/vitrine.svg') }}" alt="Vitrine">
                     </span>
@@ -218,42 +218,17 @@
                 $showOldFinances = $userMaster->show_old_finances??false;
             }
         @endphp
-            @if(!$showOldFinances)
-                <li class="site-menu-item has-sub">
-                    <a href="{!! route('finances') !!}">
-                        <span class="bg-menu">
-                            <img src="{{ asset('modules/global/img/svg/financas.svg') }}" alt="Finanças">
-                        </span>
-                        <span class="site-menu-title">Finanças</span>
-                    </a>
-                </li>
-            @else
-                <li class="site-menu-item has-sub">
-                    <a href="javascript:void(0)" id="finances-link">
-                        <span class="bg-menu">
-                            <img src="{{ asset('modules/global/img/svg/financas.svg') }}" alt="Finanças">
-                        </span>
-                        <span class="site-menu-title">Finanças</span>
-                        <span class="site-menu-arrow"></span>
-                    </a>
-                    <ul class="site-menu-sub">
-                        <li class="site-menu-item has-sub">
-                            <a href="{!! route('finances') !!}">
-                                <span class="bg-menu"></span>
-                                <span class="site-menu-title">Extrato</span>
-                            </a>
-                        </li>
-                        <li class="site-menu-item">
-                            <a href="{{ route('old-finances') }}">
-                                <span class="bg-menu"></span>
-                                <span class="site-menu-title">Extrato (antigo)</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            @endif
-        @endcan   
-           
+            <li class="site-menu-item has-sub">
+                <a href="{!! route('finances') !!}" id="finances-link">
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/financas.svg') }}" alt="Finanças">
+                    </span>
+                    <span class="site-menu-title">Finanças</span>
+                </a>
+            </li>
+
+            @endcan   
+
         <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
         @if(auth()->user()->hasAnyPermission(['report_sales','report_checkouts','report_coupons','report_pending','report_blockedbalance']))
             <li class="site-menu-item has-sub">

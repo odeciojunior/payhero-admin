@@ -325,7 +325,7 @@ class SalesRecoveryApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao tentar regenerar Boleto (saleRecoveryApiController - regenerateSale)');
             report($e);
-
+Log::info($e->getMessage());
             return response()->json([
                 'message' => "Ocorreu um erro, tente novamente mais tarde",
             ], 400);
