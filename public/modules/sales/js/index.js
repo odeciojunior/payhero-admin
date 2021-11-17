@@ -9,6 +9,14 @@ $(document).ready(function () {
         dropdownParent : $('#bt_collapse'),
         width:'100%',
         multiple:true,
+        language: {
+            noResults: function () {
+                return "Nenhum resultado encontrado";
+            },
+            searching: function () {
+                return "Procurando...";
+            },
+        }
     });
     //checkbox
     $(".check").on("click", function () {
