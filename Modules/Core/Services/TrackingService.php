@@ -279,7 +279,6 @@ class TrackingService
             //filtro transactions
             if (!empty($filters['transaction_status'])) {
                 $filterTransaction = explode(',', $filters['transaction_status']);
-
                 $query->whereHas('transactions', function ($queryTransaction) use ($filterTransaction) {
                     
                     if (!empty($filterTransaction)) {
