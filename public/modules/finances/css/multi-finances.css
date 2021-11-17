@@ -69,28 +69,49 @@
 }
 .owl-carousel .owl-nav [class*=owl-]:before{
     color: #636363;
-    line-height: 25px !important;
     font-size: 15px !important;
 }
-.owl-carousel .owl-nav [class*=owl-]:active:before{
-    color: #2E85EC;
+.owl-carousel .owl-nav .owl-next:active{
     border: 1px solid #2E85EC;
 }
-.owl-carousel .owl-nav [class*=owl-]:hover:before{
+.owl-carousel .owl-nav .owl-next:active:before{
+    color: #2E85EC;
+}
+.owl-carousel .owl-nav .owl-next:hover:before{
     color: #2E85EC;
     border:0;
 }
-.owl-carousel .owl-nav [class*=owl-]:disabled:before{
+.owl-carousel .owl-nav .owl-next:disabled{
+    background: #E3E3E3;
+}
+.owl-carousel .owl-nav .owl-next:disabled:before{
+    color: #929292;
+}
+.owl-carousel .owl-nav .owl-prev:active{
+    border: 1px solid #2E85EC;
+}
+.owl-carousel .owl-nav .owl-prev:active:before{
+    color: #2E85EC;
+}
+.owl-carousel .owl-nav .owl-prev:hover:before{
+    color: #2E85EC;
+    border:0;
+}
+.owl-carousel .owl-nav .owl-prev:disabled:before{
+    background: #E3E3E3;
+}
+.owl-carousel .owl-nav .owl-prev:disabled:before{
     color: #929292;
     background: #E3E3E3;
 }
 .owl-carousel .owl-nav .owl-next{
     background: #FFFFFF;
     right: -35px !important;
+    border: none;
 }
 .owl-carousel .owl-nav .owl-prev{
     left: -35px !important;
-
+    border: none;
     background: #FFFFFF;
 }
 .owl-carousel .nav-btn{
@@ -420,6 +441,6 @@ span.font-size-16 {
 hr{
     margin: 0;
 }
-.menu-active span:first-child {
-    padding: 11px 10px 10px 15px;
+.menu-active > .bg-menu {
+    display:inline-block;
 }
