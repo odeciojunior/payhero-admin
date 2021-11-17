@@ -95,7 +95,7 @@ class FinancesApiController extends Controller
             $email = !empty($dataRequest['email']) ? $dataRequest['email'] : $user->email;
             $transfers = $gatewayService->getStatement($dataRequest);
 
-            (new ExtractReportExportGateway($filename,$transfers))->queue($filename)->allOnQueue('high');;
+            (new ExtractReportExportGateway($filename,$transfers))->queue($filename)->allOnQueue('high');
             return response()->json(['message' => 'A exportação começou', 'email' => $email]);
         } catch (Exception $e) {
             report($e);
