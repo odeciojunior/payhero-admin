@@ -19,7 +19,7 @@ class TransfersResource extends JsonResource
         $type = $this->type_enum == 2 ? '-' : '';
 
         return [
-            'id' => $this->id, // hashids_encode($this->id),
+            'id' => hashids_encode($this->id),
             'sale_id' => hashids_encode($this->sale_id, 'sale_id'),
             'type_enum' => $this->type_enum,
             'value' => number_format(intval($type . $this->value) / 100, 2, ',', '.'),

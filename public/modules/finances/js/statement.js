@@ -45,17 +45,23 @@ window.updateTransfersTable = function(link = null) {
             $("#table-transfers-body").html('');
 
             let balance_in_period = response.meta.balance_in_period;
-            let isNegative = parseFloat(balance_in_period.replace('.', '').replace(',', '.')) < 0;
+            let parseValue = parseFloat(balance_in_period.replace('.', '').replace(',', '.'));
             let availableInPeriod = $('#available-in-period');
-            availableInPeriod.html(`<span ${isNegative ? ' style="color:red;"' : ''}><span class="currency">R$ </span>${balance_in_period}</span>`);
-            if (isNegative) {
+            availableInPeriod.html(`<span ${parseValue < 0? ' style="color:red;"' : ''}><span class="currency">R$ </span>${balance_in_period}</span>`);
+            if (parseValue < 0) {
                 availableInPeriod.html(`<span style="color:red;"><span class="currency">R$ </span>${balance_in_period}</span>`)
                     .parent()
                     .find('.grad-border')
                     .removeClass('green')
                     .addClass('red');
-            } else {
+            } else if(parseValue > 0){
                 availableInPeriod.html(`<span class="currency">R$ </span>${balance_in_period}`)
+                    .parent()
+                    .find('.grad-border')
+                    .removeClass('red')
+                    .addClass('green');
+            } else {
+                availableInPeriod.html(`<span class="currency">R$ </span>0,00`)
                     .parent()
                     .find('.grad-border')
                     .removeClass('red')
@@ -104,7 +110,7 @@ window.updateTransfersTable = function(link = null) {
                     }
                     data += '</tr>';
                 });
-        
+
                 $("#table-transfers-body").html(data);
 
                 paginationTransfersTable(response);
@@ -174,8 +180,8 @@ window.updateAccountStatementData = function() {
     let link =
         "/api/transfers?" +
         "company_id=" + $("#statement_company_select").val() +
-        "&gateway_id=" + window.gatewayCode + 
-        "&dateRange=" + $("#date_range_statement").val() + 
+        "&gateway_id=" + window.gatewayCode +
+        "&dateRange=" + $("#date_range_statement").val() +
         "&sale=" + encodeURIComponent($("#statement_sale").val()) +
         "&status=" + $("#statement_status_select").val() +
         "&statement_data_type=" + $("#statement_data_type_select").val() +
@@ -192,14 +198,19 @@ window.updateAccountStatementData = function() {
             Authorization: $('meta[name="access-token"]').attr("content"),
             Accept: "application/json",
         },
-        error: (response) => {
+        error: () => {
+            $("#available-in-period").html(`
+                <span>
+                   <small class="font-size-12">R$ </small> 0,00
+                </span>`);
+
             loadOnAnyEllipsis(
                 "#nav-statement #available-in-period-statement",
                 true
             );
 
             let error = "Erro ao gerar o extrato";
-            $("#export-excel").css("opacity", 0);
+            $("#export-excel").addClass('d-none');
             $("#table-statement-body").html(
                 "<tr style='border-radius: 16px;'><td style='padding:  10px !important' style='' colspan='11' class='text-center'>" +
                     error +
@@ -217,7 +228,7 @@ window.updateAccountStatementData = function() {
                     "#nav-statement #available-in-period-statement",
                     true
                 );
-                $("#export-excel").css("opacity", 0);
+                $("#export-excel").addClass('d-none');
                 $("#table-statement-body").html(
                     "<tr class='text-center'><td colspan='11' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
                         $("#table-statement-body").attr("img-empty") +
@@ -309,7 +320,7 @@ window.updateAccountStatementData = function() {
 
             paginationStatement();
 
-            $("#export-excel").css("opacity", 1);
+            $("#export-excel").removeClass('d-none');
             $("#pagination-statement span").addClass("jp-hidden");
             $("#pagination-statement a")
                 .removeClass("active")
@@ -356,7 +367,6 @@ window.updateAccountStatementData = function() {
 }
 
 $(window).on("load", function() {
-
     //atualiza a table de extrato
     $(document).on("click", "#bt_filtro, #bt_filtro_statement", function () {
         $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]").prop("selected", true);
@@ -367,13 +377,16 @@ $(window).on("load", function() {
 
     function getFilters(urlParams = false) {
         let data = {
-            'company': $("#extract_company_select").val(),
+            'company_id': $("#extract_company_select").val(),
             'reason': $("#reason").val(),
             'transaction': $("#transaction").val().replace('#', ''),
             'type': $("#type").val(),
             'value': $("#transaction-value").val(),
             'date_range': $("#date_range").val(),
             'date_type': $("#date_type").val(),
+            'email': $('#email_finance_export').val(),
+            'format': exportFinanceFormat,
+            'gateway_id': window.gatewayCode,
         };
 
         if (urlParams) {
@@ -387,11 +400,10 @@ $(window).on("load", function() {
         }
     }
 
-    function extractExport(fileFormat, email) {
+    function extractExport() {
 
         let data = getFilters();
-        data['format'] = fileFormat;
-        data['email'] = email;
+
         $.ajax({
             method: "POST",
             url: '/api/finances/export',
@@ -402,6 +414,8 @@ $(window).on("load", function() {
             },
             error: response => {
                 errorAjaxResponse(response);
+                $("#bt_get_csv").prop("disabled", false);
+                $("#bt_get_xls").prop("disabled", false);
             },
             success: response => {
                 $('#export-email').text(response.email);
@@ -417,17 +431,17 @@ $(window).on("load", function() {
     }
 
     let exportFinanceFormat = 'xls'
-    $("#bt_get_csv").on("click", function () {
-    //  $(this).prop("disabled", true);
-    // $("#bt_get_xls").prop("disabled", true);
+    $("#bt_get_xls").on("click", function () {
+        $("#bt_get_csv").prop("disabled", true);
+        $("#bt_get_xls").prop("disabled", true);
         $('#modal-export-old-finance-getnet').modal('show');
-        exportFinanceFormat = 'csv'
     });
 
-    $("#bt_get_xls").on("click", function () {
-    //   $(this).prop("disabled", true);
-    // $("#bt_get_csv").prop("disabled", true);
+    $("#bt_get_csv").on("click", function () {
+        $("#bt_get_csv").prop("disabled", true);
+        $("#bt_get_xls").prop("disabled", true);
         $('#modal-export-old-finance-getnet').modal('show');
+        exportFinanceFormat = 'csv'
     });
 
     $(".btn-confirm-export-old-finance-getnet").on("click", function () {
@@ -438,7 +452,7 @@ $(window).on("load", function() {
             alertCustom('error', 'Preencha o e-mail corretamente');
             return false;
         } else {
-            extractExport('xls', email);
+            extractExport();
             $('#modal-export-old-finance-getnet').modal('hide');
         }
     });
@@ -449,10 +463,6 @@ $(window).on("load", function() {
 
     $(".nav-link-finances-hide-export").on("click", function () {
         $("#export-excel").addClass('d-none');
-    });
-
-    $("#nav-transfers-tab").on("click", function () {
-        $('#export-excel').hide();
     });
 
     $(document).on('keypress', function (e) {
