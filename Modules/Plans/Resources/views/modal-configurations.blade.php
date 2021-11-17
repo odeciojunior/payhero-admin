@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="tab-content">
-                    <!-- Painel de Configurações custo-->
+                    <!-- Painel de Configurações custo -->
                     <div class="tab-pane fade show active" id="tab_configuration_cost-panel" role="tabpanel">
                         <div class="row" style="margin-bottom: 24px;">
                             <div class="col-sm-12">
@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <!--- Painel de custo em bloco-->
+                    <!-- Painel de custo em bloco -->
                     <div class="tab-pane fade" id="tab_update_cost_block-panel" role="tabpanel">
                         <div class="box-description">
                             <div class="row" style="margin-bottom: 31px;">
@@ -77,21 +77,23 @@
                                         <p style="margin-bottom: 0; font-weight: bold; font-size: 16px; line-height: 20px; color: #636363;">Selecione um plano</p>
                                         <span style="font-weight: normal; font-size: 12px; line-height: 15px; color: #989898;">Selecione um ou mais planos para alterar os custos</span>
                                     </div>
-                                    <div class="d-flex justify-content-between align-items-center select-all" id="select-all" style="cursor: pointer;">
+                                    <div class="d-flex justify-content-between align-items-center select-all" id="select-all" data-selected="false" style="cursor: pointer;">
                                         <div class="mr-10" style="font-weight: bold; font-size: 16px; margin-top: -4px;">Selecionar todos</div>
                                         <div class="check"></div>
                                     </div>
                                 </div>
                             </div>
 
+                            <!--
                             <div class="input-group input-group-lg">
-                                <input class="form-control" type="text" id="search-product" placeholder="Pesquisa por nome">
+                                <input class="form-control" type="text" id="search-plan" placeholder="Pesquisa por nome">
                                 <div class="input-group-append">
                                     <span class="input-group-text">
                                         <img src="/modules/global/img/icon-search.svg" alt="Icon Search">
                                     </span>
                                 </div>
                             </div>
+                            -->
                         </div>
 
                         <div class="box-plans" style="max-height: 180px;">

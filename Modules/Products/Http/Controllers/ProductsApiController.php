@@ -458,14 +458,15 @@ class ProductsApiController extends Controller
             $product = $request->input('product') ?? '';
 
             $projectId = current(Hashids::decode($project));
-            
-            $productService = new ProductService();            
+
+            $productService = new ProductService();
             $products = $productService->getProductsFilter($projectId, $product);
+
             return ProductsSelectResource::collection($products);
         } catch (Exception $e) {
             report($e);
-            //return response()->json(['message' => 'Erro ao tentar buscar produto'], 400);
-            return response()->json(['message' => $e->getMessage()], 400);
+
+            return response()->json(['message' => 'Erro ao tentar buscar produto'], 400);
         }
     }
 

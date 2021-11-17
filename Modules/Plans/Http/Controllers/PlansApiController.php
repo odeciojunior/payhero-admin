@@ -603,6 +603,26 @@ class PlansApiController extends Controller
         return $str;
     }
 
+    public function getPlanFilter(Request $request)
+    {
+        try {
+            $project = $request->input('project');
+            $plan = $request->input('plan') ?? '';
+
+            $projectId = current(Hashids::decode($project));
+
+            $planService = new PlanService();
+            $plans = $planService->getPlansFilter($projectId, $plan);
+
+            return PlansSelectResource::collection($plans);
+        } catch (Exception $e) {
+            report($e);
+
+            //return response()->json(['message' => 'Erro ao tentar buscar plano'], 400);
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
     public function updateBulkCost(Request $request)
     {
         try {
@@ -615,6 +635,7 @@ class PlansApiController extends Controller
 
             $projectModel = new Project;
             $project = $projectModel->find($projectId);
+
             if (empty($project->notazz_configs)) {
                 $configs = [
                     'cost_currency_type' => $projectModel->present()->getCurrencyCost($costCurrency),
@@ -628,12 +649,15 @@ class PlansApiController extends Controller
 
             $project->update(['notazz_configs' => json_encode($configs)]);
 
-            if ($updateAllCurrency) {
+            if ($updateAllCurrency == 'true') {
                 $plans = Plan::where('project_id', $projectId)->get()->pluck('id');
                 $productPlans = ProductPlan::whereIn('plan_id', $plans)->get();
 
                 foreach ($productPlans as $productPlan) {
-                    $productPlan->update(['currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency)]);
+                    $productPlan->update([
+                        'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
+                        'cost' => $cost
+                    ]);
                 }
             } else {
                 foreach ($plansSelected as $p) {

@@ -17,6 +17,7 @@ class PlansDetailsResource extends JsonResource
                     $photo = $productsPlan->product->photo;
                 }
             }
+
             $products[] = [
                 'id' => hashids_encode($productsPlan->id),
                 'product_id' => hashids_encode($productsPlan->product_id),

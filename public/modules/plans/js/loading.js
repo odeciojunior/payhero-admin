@@ -640,3 +640,25 @@ var loadingPlansConfigCost = `
     </div>
 </div>
 `;
+
+// plans
+var loadingPlans = `
+<div class="ph-item">
+    <div class="row">
+        <div class="col-6" style="padding-right: 7.5px;">
+            <div class="placeholder-picture" style="height: 84px; margin-bottom: 12px;"></div>
+        </div>
+        <div class="col-6" style="padding-left: 7.5px;">
+            <div class="placeholder-picture" style="height: 84px; margin-bottom: 12px;"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" style="padding-right: 7.5px;">
+            <div class="placeholder-picture" style="height: 84px; margin-bottom: 12px;"></div>
+        </div>
+        <div class="col-6" style="padding-left: 7.5px;">
+            <div class="placeholder-picture" style="height: 84px; margin-bottom: 12px;"></div>
+        </div>
+    </div>
+</div>
+`;
