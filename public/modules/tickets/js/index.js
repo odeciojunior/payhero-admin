@@ -664,42 +664,24 @@ $(() => {
         picker.togglePicker(this);
     });
 
-    $('.filter-container').slick({
-        infinite: false,
-        speed: 300,
-        slidesToShow: 10,
-        variableWidth: true,
-        nextArrow: false,
-        prevArrow: false,
-        responsive: [
-            {
-                breakpoint: 1584,
-                settings: {
-                    slidesToShow: 9,
-                    slidesToScroll: 1,
-                }
-            },
-            {
-                breakpoint: 992,
-                settings: {
-                    slidesToShow: 5,
-                    slidesToScroll: 5,
-                }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 5,
-                    slidesToScroll: 4,
-                }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 2,
-                }
-            },
-        ]
+    $('.filter-container').on({
+        'mousewheel wheel': function (e) {
+            e.preventDefault();
+            this.scrollLeft += e.originalEvent.deltaY;
+        },
+        'mousedown': function (e) {
+            $(this).addClass('scrolling')
+                .data('x', e.clientX)
+                .data('left', this.scrollLeft);
+        },
+        'mouseup mouseleave': function (e) {
+            $(this).removeClass('scrolling')
+                .data('x', 0)
+                .data('left', 0);
+        },
+    });
+    $(document).on('mousemove', '.filter-container.scrolling', function (e) {
+        const dx = e.clientX - $(this).data('x');
+        this.scrollLeft = $(this).data('left') - dx;
     });
 })

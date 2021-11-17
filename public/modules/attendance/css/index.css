@@ -22,8 +22,7 @@ button:active {
 }
 
 .sirius-select {
-    width: auto;
-    padding: 14px 35px 14px 16px !important;
+    padding-right: 35px !important;
     background-color: #FFFFFF;
     background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMSIgaGVpZ2h0PSI2IiBmaWxsPSJub25lIj48cGF0aCBmaWxsPSIjNjM2MzYzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMC43ODEgMS4yMjUgNi4wMjggNS43OWEuNzY5Ljc2OSAwIDAgMS0xLjA1NiAwTC4yMTkgMS4yMjVhLjY5Ny42OTcgMCAwIDEgMC0xLjAxNS43NjkuNzY5IDAgMCAxIDEuMDU2IDBMNS41IDQuMjY4IDkuNzI1LjIxYS43NjkuNzY5IDAgMCAxIDEuMDU2IDAgLjY5Ny42OTcgMCAwIDEgMCAxLjAxNVoiIGNsaXAtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPgo=);
     background-repeat: no-repeat;
@@ -33,11 +32,14 @@ button:active {
     appearance: none;
 }
 
-.sirius-select select {
+.header-select {
+    width: auto;
+    margin-left: auto;
+    padding: 14px 35px 14px 16px !important;
     border: 1px solid #cad1d8;
 }
 
-.sirius-select select:active {
+.header-select:active {
     border: 1px solid #88bfff;
 }
 
@@ -98,14 +100,33 @@ button:active {
 .filter-container {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     width: 100%;
-    overflow: hidden;
+    padding: 0 20px;
+    overflow: auto hidden;
+    user-select: none;
+    scrollbar-width: none;
+}
+
+.filter-container::-webkit-scrollbar {
+    height: 0;
+}
+
+.filter-container::before {
+    content: '';
+    position: absolute;
+    left: 46px;
+    top: 0;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(243, 243, 243, 1), rgba(243, 243, 243, 0.8), transparent);
+    z-index: 1;
 }
 
 .filter-container::after {
     content: '';
     position: absolute;
-    right: 0;
+    right: 15px;
     top: 0;
     width: 30px;
     height: 100%;
@@ -127,25 +148,6 @@ button:active {
     display: none;
     font-size: 16px;
     font-weight: bold;
-}
-
-.filter-icon::after {
-    content: '';
-    position: absolute;
-    left: 46px;
-    top: 0;
-    width: 30px;
-    height: 100%;
-    background: linear-gradient(to right, rgba(243, 243, 243, 1), rgba(243, 243, 243, 0.8), transparent);
-    z-index: 1;
-}
-
-.slick-list {
-    padding-left: 20px !important;
-}
-
-.filter-icon.active {
-    color: #2E85EC;
 }
 
 .filter-badge {
@@ -178,8 +180,7 @@ button:active {
 .filter-badge::after {
     content: '\00d7';
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 19px;
     right: 12px;
     font-size: 24px;
     line-height: 0;
@@ -190,12 +191,23 @@ button:active {
     visibility: visible;
 }
 
+.filter-badge.multiselect {
+    padding-right: 32px !important;
+}
+
+.filter-badge.multiselect::after {
+    content: '\2304';
+    top: 16px;
+    visibility: visible;
+}
+
 .filter-badge.daterange {
     padding-right: 44px !important;
 }
 
 .filter-badge.daterange:not(.active)::after {
     content: url('/modules/global/img/calendar.svg') !important;
+    top: 9px;
     visibility: visible;
 }
 
@@ -240,7 +252,7 @@ button:active {
 }
 
 .vertical-line {
-    width: 1px;
+    min-width: 1px;
     height: 44px !important;
     margin: 0 20px;
     background-color: #DFDFDF;
