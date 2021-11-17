@@ -314,7 +314,6 @@ class TrackingService
                     ->whereNull('invitation_id')
                     ->where('is_waiting_withdrawal', 0)
                     ->whereNull('withdrawal_id');
-                    
                 });
             }
         });
