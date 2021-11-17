@@ -5,6 +5,7 @@ namespace Modules\Withdrawals\Http\Controllers;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
@@ -28,7 +29,7 @@ class WithdrawalsApiController
         try {
             $company = Company::find(hashids_decode($request->company_id));
             $gateway = Gateway::find(hashids_decode($request->gateway_id));
-    
+
             if(empty($company) || empty($gateway)) {
                 return response()->json([
                     'message' => 'Empresa não encontrada',
@@ -62,7 +63,6 @@ class WithdrawalsApiController
             if ($settingsWithdrawalRequest != null && $settingsWithdrawalRequest == false) {
                 return response()->json(['message' => 'Tente novamente em alguns minutos',],400);
             }
-            $withdrawalService = new WithdrawalService();
 
             if ((new UserService())->userWithdrawalBlocked(auth()->user())) {
                 return response()->json(['message' => 'Sem permissão para realizar saques'], 403);
@@ -81,6 +81,14 @@ class WithdrawalsApiController
 
             $gatewayService = $gateway->getService();
             $gatewayService->setCompany($company);
+
+            activity()->on((new Withdrawal()))->tap(
+                function (Activity $activity) {
+                    $activity->log_name = 'created';
+                }
+            )->withProperties([
+                'manager_user' => (bool) Cookie::get('isManagerUser'),
+            ])->log('Solicitou Saque');
 
             $withdrawalValue = (int) FoxUtils::onlyNumbers($request->withdrawal_value);
 
