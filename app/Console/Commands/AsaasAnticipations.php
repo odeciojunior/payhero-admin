@@ -65,15 +65,13 @@ class AsaasAnticipations extends Command
                     $query->whereNull('anticipation_status');
                 })
                 ->where('gateway_id', Gateway::ASAAS_PRODUCTION_ID)
-                ->where('status_enum', 2);
+                ->where('status_enum', Transaction::STATUS_PAID);
 
-            if ($week["$day"] = 'Sexta-Feira'){
-                $transactions->whereBetween('release_date', [$dayAfter->format("Y-m-d"), $dayAfter->addDays(2)->format("Y-m-d")]);
+            if ($week["$day"] == 'Sexta-Feira'){
+                $transactions = $transactions->whereBetween('release_date', [$dayAfter->format("Y-m-d"), $dayAfter->addDays(2)->format("Y-m-d")]);
             } else{
-                $transactions->where('release_date',  $dayAfter->format("Y-m-d"));
+                $transactions = $transactions->where('release_date',  $dayAfter->format("Y-m-d"));
             }
-
-            $transactions->get();
 
                 foreach ($transactions->cursor() as $transaction) {
                     $sale = $transaction->sale;
@@ -85,7 +83,6 @@ class AsaasAnticipations extends Command
                             'anticipation_id' => $response['id']
                         ]);
                     }
-                    //dump($response);
                 }
         } catch (Exception $e) {
             report($e);
