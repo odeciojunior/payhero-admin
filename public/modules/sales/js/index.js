@@ -6,7 +6,7 @@ $(document).ready(function () {
 
     //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
     $('.applySelect2').select2({
-        dropdownParent : $('#bt_collapse'),
+        //dropdownParent : $('#bt_collapse'),
         width:'100%',
         multiple:true,
         language: {
