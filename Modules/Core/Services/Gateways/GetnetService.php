@@ -346,13 +346,16 @@ class GetnetService implements Statement
         }
 
         $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($this->company->id);
+
         $filters = $filtersAndStatement['filters'];
-        $result = json_decode(json_encode($filtersAndStatement['statement']));
-report(new Exception($filtersAndStatement['statement']));
+        $result = json_decode($filtersAndStatement['statement']);
+
         if (isset($result->errors)) {
             return response()->json($result->errors, 400);
         }
+        
         $data = (new GetNetStatementService())->performWebStatement($result, $filters, 1000);
+        
         return response()->json($data);
     }
 
