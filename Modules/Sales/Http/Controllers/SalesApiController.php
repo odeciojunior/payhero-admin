@@ -340,7 +340,7 @@ class SalesApiController extends Controller
                     $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->whereIn('project_id', $projectIds)->get();
 
                 } else {
-                    $plans = $planModel->whereIn('project_id', $projectIds)->limit(10)->get();
+                    $plans = $planModel->whereIn('project_id', $projectIds)->limit(30)->get();
                 
                 }
                 return PlansSelectResource::collection($plans);
@@ -354,7 +354,7 @@ class SalesApiController extends Controller
                     $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->whereIn('project_id', $userProjects)->get();
 
                 } else {
-                    $plans = $planModel->whereIn('project_id', $userProjects)->limit(10)->get();
+                    $plans = $planModel->whereIn('project_id', $userProjects)->limit(30)->get();
                     
                 }
                 return PlansSelectResource::collection($plans);
