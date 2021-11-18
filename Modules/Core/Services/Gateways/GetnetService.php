@@ -348,7 +348,7 @@ class GetnetService implements Statement
         $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($this->company->id);
         $filters = $filtersAndStatement['filters'];
         $result = json_decode($filtersAndStatement['statement']);
-
+report(new Exception($filtersAndStatement['statement']));
         if (isset($result->errors)) {
             return response()->json($result->errors, 400);
         }
