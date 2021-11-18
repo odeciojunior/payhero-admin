@@ -351,7 +351,7 @@ class SalesApiController extends Controller
                 $plans = null;
 
                 if (!empty($data['search'])) {
-                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->where('project_id', $userProjects)->get();
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->whereIn('project_id', $userProjects)->get();
 
                 } else {
                     $plans = $planModel->whereIn('project_id', $userProjects)->limit(10)->get();
