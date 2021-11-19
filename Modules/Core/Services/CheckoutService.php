@@ -49,10 +49,15 @@ class CheckoutService
         ];
 
         $plansIds = [];
-        $plans = explode(',', request('plan'));
+        if (request('plan') == 'all') {
+            $plansIds = '';
+                
+        } else {
+            $plans = explode(',', request('plan'));
+            foreach($plans as $plan){
+                array_push($plansIds, hashids_decode($plan));
+            }
 
-        foreach($plans as $plan){
-            array_push($plansIds, hashids_decode($plan));
         }
 
         $abandonedCarts = Checkout::with(
