@@ -751,14 +751,11 @@ $(document).ready(function () {
     }
     //COMPORTAMENTO DO FILTRO MULTIPLO
     function behaviorMultipleFilter(data, selectId){
-        var $select = $('#'+selectId);
+        var $select = $(`#${selectId}`);
+        var valueToRemove = 'all';
         var values = $select.val();
 
-        if($(`#${selectId}`).val()[0] == 'all' || $(`#${selectId}`).val()[0] == ''){
-            var valueToRemove = $(`#${selectId}`).val()[0]
-        }
-
-        if (data.id != valueToRemove) {
+        if (data.id != '') {
             if (values) {
                 var i = values.indexOf(valueToRemove);
 
@@ -767,13 +764,13 @@ $(document).ready(function () {
                     $select.val(values).change();
                 }
             }
-            } else {
+         } else {
             if (values) {
-                values.splice(0, values.lenght);
-                $select.val(null).change();
-                
-                values.push(valueToRemove);
-                $select.val(valueToRemove).change();
+              values.splice(0, values.lenght);
+              $select.val(null).change();
+              
+              values.push('all');
+              $select.val('all').change();
             }
         }
     }
@@ -784,14 +781,8 @@ $(document).ready(function () {
         let valueAmount = $(`#${selectId}`).val().length;
 
         if(valueAmount === 0){
-            if(selectId == 'project'){
-                arrayValues.push('all');
-                arrayValues = $(`#${selectId}`).val('all').trigger("change");
-
-            }else{
-                arrayValues.push('');
-                arrayValues = $(`#${selectId}`).val('').trigger("change");
-            }
+            arrayValues.push('all');
+            arrayValues = $(`#${selectId}`).val('all').trigger("change");
         }
     }
 
