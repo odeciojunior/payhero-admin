@@ -12,7 +12,7 @@ class TicketAttachmentResource extends JsonResource
     {
         return [
             'id' => Hashids::encode($this->id),
-            'content' => basename($this->file),
+            'content' => basename($this->filename),
             'type' => 'file',
             'created_at' => Carbon::parse($this->created_at)->format('d/m \à\s H\hi'),
             'filename' => $this->filename ?? null,

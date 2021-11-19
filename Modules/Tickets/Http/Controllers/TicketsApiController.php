@@ -189,6 +189,7 @@ class TicketsApiController extends Controller
                         $attachment = TicketAttachment::create([
                             'ticket_id' => $ticket->id,
                             'file' => $url,
+                            'filename' => $file->getClientOriginalName(),
                             'type_enum' => TicketAttachment::TYPE_FROM_ADMIN,
                         ]);
 
