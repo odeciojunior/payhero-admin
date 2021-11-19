@@ -561,6 +561,10 @@ class SaleService
 
     private function checkPendingDebt($sale, $company, $transactionRefundAmount)
     {
+        if(!in_array($sale->gateway_id, [Gateway::GETNET_PRODUCTION_ID, Gateway::GETNET_SANDBOX_ID])) {
+            return;
+        }
+
         $getnetBackOffice = new GetnetBackOfficeService();
         $getnetBackOffice->setStatementSubSellerId(CompanyService::getSubsellerId($company))
             ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'));
@@ -631,9 +635,27 @@ class SaleService
             foreach ($refundTransactions as $refundTransaction) {
                 $transactionRefundAmount = (int)$refundTransaction->value;
 
-                $company = Company::find($refundTransaction->company_id);
-                if (!is_null($company) && $sale->gateway_id == Gateway::GETNET_PRODUCTION_ID) {
+                $company = $refundTransaction->company;
+                if (!empty($company)) {
                     $this->checkPendingDebt($sale, $company, $transactionRefundAmount);
+
+                    if (in_array($sale->gateway_id, [Gateway::ASAAS_PRODUCTION_ID, Gateway::ASAAS_SANDBOX_ID]) && $refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
+                        Transfer::create([
+                            'transaction_id' => $refundTransaction->id,
+                            'user_id' => $refundTransaction->user_id,
+                            'company_id' => $refundTransaction->company_id,
+                            'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID,
+                            'value' => $refundTransaction->value,
+                            'type' => 'out',
+                            'type_enum' => Transfer::TYPE_OUT,
+                            'reason' => 'refunded',
+                            'is_refunded_tax' => 0
+                        ]);
+
+                        $refundTransaction->company->update([
+                            'asaas_balance' => $refundTransaction->company->asaas_balance -= $refundTransaction->value
+                        ]);
+                    }
                 }
 
                 $refundTransaction->status = 'refunded';
@@ -719,7 +741,7 @@ class SaleService
                 );
                 $transaction->company->update(
                     [
-                        'balance' => $transaction->company->balance -= 100,
+                        'cielo_balance' => $transaction->company->cielo_balance -= 100,
                     ]
                 );
 
@@ -737,7 +759,7 @@ class SaleService
 
                 $transaction->company->update(
                     [
-                        'balance' => $transaction->company->balance -= $transaction->value,
+                        'cielo_balance' => $transaction->company->cielo_balance -= $transaction->value,
                     ]
                 );
 
@@ -849,7 +871,7 @@ class SaleService
 
         $sale->customer->update(
             [
-                'balance' => $sale->customer->balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
+                'cielo_balance' => $sale->customer->cielo_balance + preg_replace("/[^0-9]/", "", $sale->total_paid_value),
             ]
         );
 
@@ -938,11 +960,11 @@ class SaleService
             if (FoxUtils::isProduction()) {
                 $merchantId = env('GET_NET_MERCHANT_ID_PRODUCTION');
                 $sellerId = env('GET_NET_SELLER_ID_PRODUCTION');
-                $subSellerId = $transaction->company->subseller_getnet_id;
+                $subSellerId = $transaction->company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID);
             } else {
                 $merchantId = env('GET_NET_MERCHANT_ID_SANDBOX');
                 $sellerId = env('GET_NET_SELLER_ID_SANDBOX');
-                $subSellerId = $transaction->company->subseller_getnet_homolog_id;
+                $subSellerId = $transaction->company->getGatewaySubsellerId(Gateway::GETNET_SANDBOX_ID);
             }
 
             $adjustmentData = [
@@ -1006,7 +1028,7 @@ class SaleService
 
                 $transaction->company->update(
                     [
-                        'balance' => $transaction->company->balance -= $refundValue,
+                        'cielo_balance' => $transaction->company->cielo_balance -= $refundValue,
                     ]
                 );
             }

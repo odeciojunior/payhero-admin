@@ -3,6 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Entities\GatewaysCompaniesCredential;
+use Modules\Core\Services\AccountApprovedService;
+use Modules\Core\Services\FoxUtils;
+
+use function PHPUnit\Framework\isEmpty;
 
 class GenericCommand extends Command
 {
@@ -12,7 +17,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $prefix = 'laravel';
-        dd(preg_replace("/{$prefix}:/", '', 'laravel:sua-mae'));
+
     }
 }

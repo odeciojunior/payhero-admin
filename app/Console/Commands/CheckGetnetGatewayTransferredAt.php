@@ -63,7 +63,6 @@ class CheckGetnetGatewayTransferredAt extends Command
             ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
             ->orderBy('id', 'desc');
 
-//        $transactions->chunk(200, function ($transactions) use ($getnetService, $transactionsCount) {
             $i = 0;
             foreach ($transactions->cursor() as $transaction) {
                 if ($i == 4) {
@@ -91,9 +90,9 @@ class CheckGetnetGatewayTransferredAt extends Command
                     else {
                         $i ++;
                         if (FoxUtils::isProduction()) {
-                            $subsellerId = $transaction->company->subseller_getnet_id;
+                            $subsellerId = $transaction->company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID);
                         } else {
-                            $subsellerId = $transaction->company->subseller_getnet_homolog_id;
+                            $subsellerId = $transaction->company->getGatewaySubsellerId(Gateway::GETNET_SANDBOX_ID);
                         }
 
                         $getnetService->setStatementSubSellerId($subsellerId)

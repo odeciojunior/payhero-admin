@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Withdrawal;
 
 class ReleaseWithdrawalsWithGetFasterBenefit extends Command
@@ -26,6 +27,7 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
             ->whereIn('withdrawals.status', [Withdrawal::STATUS_PENDING, Withdrawal::STATUS_IN_REVIEW])
             ->where('automatic_liquidation', 1)
             ->where('u.get_faster', 1)
+            ->where('withdrawals.gateway_id',Gateway::GETNET_PRODUCTION_ID)
             ->whereNull('c.deleted_at')
             ->whereNull('u.deleted_at')
             ->orderBy('withdrawals.id')
