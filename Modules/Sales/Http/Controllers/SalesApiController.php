@@ -41,6 +41,7 @@ class SalesApiController extends Controller
                     $activity->log_name = 'visualization';
                 }
             )->log('Visualizou tela todas as vendas');
+
             $saleService = new SaleService();
             $data = $request->all();
             $sales = $saleService->getPaginatedSales($data);
@@ -325,25 +326,36 @@ class SalesApiController extends Controller
             $data = $request->all();
             $planModel = new Plan();
             $userProjectModel = new UserProject();
-            $projectId = current(Hashids::decode($data['project_id']));
-            if ($projectId) {
+
+            $projectIds = [];
+            foreach($data['project_id'] as $project){
+                array_push($projectIds, current(Hashids::decode($project)));
+            };
+
+            if (current($projectIds)) {
+                
                 $plans = null;
+
                 if (!empty($data['search'])) {
-                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')
-                        ->where('project_id', $projectId)->get();
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->whereIn('project_id', $projectIds)->get();
+
                 } else {
-                    $plans = $planModel->where('project_id', $projectId)->limit(10)->get();
+                    $plans = $planModel->whereIn('project_id', $projectIds)->limit(30)->get();
+                
                 }
                 return PlansSelectResource::collection($plans);
+            
             } else {
                 $userId = auth()->user()->account_owner_id;
                 $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
                 $plans = null;
+
                 if (!empty($data['search'])) {
-                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')
-                        ->whereIn('project_id', $userProjects)->get();
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->whereIn('project_id', $userProjects)->get();
+
                 } else {
-                    $plans = $planModel->whereIn('project_id', $userProjects)->limit(10)->get();
+                    $plans = $planModel->whereIn('project_id', $userProjects)->limit(30)->get();
+                    
                 }
                 return PlansSelectResource::collection($plans);
             }

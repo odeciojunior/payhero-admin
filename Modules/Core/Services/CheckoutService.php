@@ -29,12 +29,16 @@ class CheckoutService
     public function getAbandonedCart(): LengthAwarePaginator
     {
         $projectIds = [];
+
         if (request('project') == 'all') {
-            $projectIds = UserProject::where('user_id', auth()->user()->account_owner_id)
-                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
-                ->pluck('project_id')->toArray();
+            $projectIds = UserProject::where('user_id', auth()->user()->account_owner_id)->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)->pluck('project_id')->toArray();
+                
         } else {
-            $projectIds[] = hashids_decode(request('project'));
+            $projects = explode(',', request('project'));
+            foreach($projects as $project){
+                array_push($projectIds, hashids_decode($project));
+            }
+
         }
 
         $dateRange = FoxUtils::validateDateRange(request('date_range'));
@@ -44,6 +48,12 @@ class CheckoutService
             Checkout::STATUS_ABANDONED_CART
         ];
 
+        $plansIds = [];
+        $plans = explode(',', request('plan'));
+
+        foreach($plans as $plan){
+            array_push($plansIds, hashids_decode($plan));
+        }
 
         $abandonedCarts = Checkout::with(
             [
@@ -75,12 +85,12 @@ class CheckoutService
                 }
             )
             ->when(
-                !empty(request('plan')),
-                function ($query) {
+                !empty($plansIds),
+                function ($query) use ($plansIds) {
                     $query->whereHas(
                         'checkoutPlans',
-                        function ($query) {
-                            $query->where('plan_id', request('plan'));
+                        function ($query) use ($plansIds){
+                            $query->whereIn('plan_id', $plansIds);
                         }
                     );
                 }
