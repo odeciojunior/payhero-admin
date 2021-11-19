@@ -258,6 +258,12 @@ button:active {
     background-color: #DFDFDF;
 }
 
+/* Select */
+.select2-container {
+    width: 1005;
+}
+
+
 /* Grid */
 
 .tickets-grid {

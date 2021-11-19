@@ -3,11 +3,10 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/attendance/css/index.css?v='.uniqid()) }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v='.uniqid()) }}">
-        <link rel="stylesheet" type="text/css"
-              href="{{asset('/modules/global/adminremark/global/vendor/slick-carousel/slick.min.css')}}"/>
+        <link rel="stylesheet" href="{{ asset('/modules/global/css/select2.min.css') }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/attendance/css/index.css?v='.uniqid()) }}">
     @endpush
 
     <div class="page mb-0" id="project-not-empty" style="display: none !important;">
@@ -18,7 +17,7 @@
                     <span class="badge badge-primary mr-10">NOVO!</span>
                     <span>Uma nova central para você responder as solicitações de seus clientes.</span>
                 </div>
-                <select class="sirius-select ml-auto" id="project-select">
+                <select class="sirius-select header-select" id="project-select">
                     <option value="">Todos os projetos</option>
                 </select>
             </div>
@@ -62,10 +61,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col d-flex">
+                <div class="col d-flex align-items-center">
                     <div class="filter-icon">
                         <i class="material-icons">filter_list</i>
-                        <span>Filtros</span>
                     </div>
                     <div class="filter-container">
                         <span id="category-complaint" class="filter-badge">Reclamação</span>
@@ -98,7 +96,7 @@
                         </button>
                     </div>
                     <div class="filter-badge-input" id="input-answer">
-                        <select id="answered" class="select-pad">
+                        <select id="answered" class="sirius-select">
                             <option value="not-answered">Não respondidos</option>
                             <option value="last-answer-customer">Última resposta do cliente</option>
                             <option value="last-answer-admin">Última resposta minha</option>
@@ -201,7 +199,7 @@
     @include('projects::empty')
 
     @push('scripts')
-        <script src="{{asset('/modules/global/adminremark/global/vendor/slick-carousel/slick.min.js')}}"></script>
+        <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script
             src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js?v=' . uniqid()) }}"></script>
