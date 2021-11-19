@@ -755,7 +755,7 @@ $(document).ready(function () {
         var valueToRemove = 'all';
         var values = $select.val();
 
-        if (data.id != '') {
+        if (data.id != 'all' && data.id != '') {
             if (values) {
                 var i = values.indexOf(valueToRemove);
 

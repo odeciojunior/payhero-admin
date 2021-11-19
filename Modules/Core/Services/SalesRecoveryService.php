@@ -110,7 +110,7 @@ class SalesRecoveryService
         if (!empty($plans)) {
             $plansIds = collect($plans)->map(function ($plan) {
                 return current(Hashids::decode($plan));
-            });
+            })->toArray();
             
             $salesExpired->whereHas('plansSales', function ($query) use ($plansIds) {
                 $query->whereIn('plan_id', $plansIds);
