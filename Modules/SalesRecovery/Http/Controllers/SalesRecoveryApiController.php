@@ -157,7 +157,6 @@ class SalesRecoveryApiController extends Controller
             $salesRecoveryService = new SalesRecoveryService();
 
             $projectIds = ['all'];
-
             if ($data['project'] != 'all') {
                 $projectIds = [];
                 $projects = explode(',', $data['project']);
@@ -178,8 +177,7 @@ class SalesRecoveryApiController extends Controller
             }
 
             $plans = null;
-
-            if (!empty($data['plan'])) {
+            if ($data['plan'] != 'all') {
                 $plans = [];
                 $parsePlans = explode(',', $data['plan']);
 
@@ -241,8 +239,7 @@ class SalesRecoveryApiController extends Controller
         }
         
         $plans = null;
-
-        if (!empty($data['plan'])) {
+        if ($data['plan'] != 'all') {
             $plans = [];
             $parsePlans = explode(',', $data['plan']);
 
@@ -380,7 +377,7 @@ class SalesRecoveryApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao tentar regenerar Boleto (saleRecoveryApiController - regenerateSale)');
             report($e);
-Log::info($e->getMessage());
+            Log::info($e->getMessage());
             return response()->json([
                 'message' => "Ocorreu um erro, tente novamente mais tarde",
             ], 400);
@@ -446,8 +443,7 @@ Log::info($e->getMessage());
         }
 
         $plans = null;
-
-        if (!empty($data['plan'])) {
+        if ($data['plan'] != 'all') {
             $plans = [];
             $parsePlans = explode(',', $data['plan']);
 
