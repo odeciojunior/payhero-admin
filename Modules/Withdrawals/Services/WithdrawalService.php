@@ -28,6 +28,7 @@ class WithdrawalService
                 'tax' => 0,
                 'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
                 'automatic_liquidation' => true,
+                'gateway_id' => Gateway::GETNET_PRODUCTION_ID,
             ]
         );
 
