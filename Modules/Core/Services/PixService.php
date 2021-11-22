@@ -32,16 +32,15 @@ class PixService
                     ['status', '=', Sale::STATUS_PENDING]
                 ]
             )
-                ->whereHas(
-                    'pixCharges',
-                    function ($querySale) {
-                        $querySale->where('status', 'ATIVA');
-                        $querySale->where( 'created_at', '<=', Carbon::now()->subHour()->toDateTimeString());
-                    }
-                )
-                ->get();
+            ->whereHas(
+                'pixCharges',
+                function ($querySale) {
+                    $querySale->where('status', 'ATIVA');
+                    $querySale->where( 'created_at', '<=', Carbon::now()->subHour()->toDateTimeString());
+                }
+            );
 
-            foreach ($sales as $sale) {
+            foreach ($sales->cursor() as $sale) {
 
                 //consultar na Gerencianet para ver se não foi pago
                 $data = [
