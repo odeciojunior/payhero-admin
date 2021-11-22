@@ -278,8 +278,10 @@ class TrackingService
 
             //filtro transactions
             if (!empty($filters['transaction_status'])) {
-                $filterTransaction = explode(',', $filters['transaction_status']);
-              
+                $filterTransaction = $filters['transaction_status'];
+                if(!is_array($filterTransaction)){
+                    $filterTransaction = explode(',', $filters['transaction_status']);
+                }
                 $query->whereHas('transactions', function ($qrTransaction) use ($filterTransaction) 
                 {
                     $transactionPresenter = (new Transaction())->present();
@@ -319,7 +321,10 @@ class TrackingService
         });
 
         if (!empty($filters['status'])) {
-            $filterStatus = explode(',', $filters['status']);
+            $filterStatus = $filters['status'];
+            if(!is_array($filterStatus)){
+                $filterStatus = explode(',', $filters['status']);
+            }
 
             $productPlanSales->where(function ($query) use ($filterStatus) {
                 $statusArray = array_reduce($filterStatus, function ($carry, $item) {
@@ -363,10 +368,15 @@ class TrackingService
             );
         }
 
-        $projects = explode(',', $filters['project']);
+        
+        $projects = $filters['project'];
+        if(!is_array($projects)){
+            explode(',', $filters['project']);
+        }
         $projectsIds = collect($projects)->map(function ($project) {
             return current(Hashids::decode($project)) ?: '';
         })->toArray();
+
         if (!empty($projectsIds) && !in_array('', $projectsIds)) {
             $productPlanSales->whereHas(
                 'product',
