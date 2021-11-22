@@ -52,7 +52,7 @@ class AsaasAnticipations extends Command
             $transactions = Transaction::with('sale')
                 ->whereHas('sale', function ($query)  {
                     $query->whereNull('anticipation_status');
-                    $query->where('$sale->payment_method', Sale::CREDIT_CARD_PAYMENT);
+                    $query->where('payment_method', Sale::CREDIT_CARD_PAYMENT);
                 })
                 ->where('gateway_id', Gateway::ASAAS_PRODUCTION_ID)
                 ->where('status_enum', Transaction::STATUS_PAID)
