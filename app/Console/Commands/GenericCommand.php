@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AccountApprovedService;
 use Modules\Core\Services\FoxUtils;
@@ -30,6 +31,7 @@ class GenericCommand extends Command
             $transactions = Transaction::with('sale')
                 ->whereHas('sale', function ($query)  {
                     $query->whereNull('anticipation_status');
+                    $query->where('$sale->payment_method', Sale::CREDIT_CARD_PAYMENT);
                 })
                 ->where('gateway_id', Gateway::ASAAS_PRODUCTION_ID)
                 ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
@@ -38,7 +40,7 @@ class GenericCommand extends Command
 
             foreach ($transactions->cursor() as $transaction) {
                 $sale = $transaction->sale;
-                $this->line("Sale_id: ". $sale->is . ', ');
+                $this->line("Sale_id: ". $sale->id . ', ');
                 $response = $service->makeAnticipation($sale);
 
                 if (isset($response['status'])) {
