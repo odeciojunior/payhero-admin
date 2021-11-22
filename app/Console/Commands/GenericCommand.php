@@ -24,6 +24,11 @@ class GenericCommand extends Command
 
     public function handle()
     {
+        //$this->changeAnticipation();
+    }
+
+    public function changeAnticipation()
+    {
         try {
 
             $service = new AsaasService();
@@ -38,7 +43,6 @@ class GenericCommand extends Command
                 ->whereNotNull('company_id')
                 ->whereBetween('release_date',  ['2021-11-01', '2021-11-24']);
 
-            dd((count($transactions->get())));
 
             foreach ($transactions->cursor() as $transaction) {
                 $sale = $transaction->sale;
