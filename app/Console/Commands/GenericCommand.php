@@ -36,7 +36,10 @@ class GenericCommand extends Command
                 ->where('gateway_id', Gateway::ASAAS_PRODUCTION_ID)
                 ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
                 ->whereNotNull('company_id')
-                ->whereBetween('release_date',  ['2021-11-01', '2021-11-24']);
+                ->whereBetween('release_date',  ['2021-11-01', '2021-11-24'])
+                ->where('sale_id', 1359676);
+
+            //dd(($transactions->get()));
 
             foreach ($transactions->cursor() as $transaction) {
                 $sale = $transaction->sale;

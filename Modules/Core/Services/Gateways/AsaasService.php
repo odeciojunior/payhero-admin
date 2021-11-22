@@ -266,7 +266,7 @@ class AsaasService implements Statement
         if($sale->installments_amount == 1) {
             $data["payment"] =$sale->gateway_transaction_id;
         } else {
-            $saleInstallmentId = $this->saleInstallmentId($sale->saleGatewayRequests()->first());
+            $saleInstallmentId = $this->saleInstallmentId($sale);
             $data["installment"] = $saleInstallmentId;
         }
 
@@ -334,14 +334,20 @@ class AsaasService implements Statement
 
     }
 
-    private function saleInstallmentId(SaleGatewayRequest $gatewayRequest): string
+    private function saleInstallmentId(Sale $sale) : ?string
     {
-        $result = json_decode($gatewayRequest->gateway_result, true);
-        if (empty($result['installment'])) {
-            throw new Exception("Venda não tem o installment para estornar !");
-        }
+        $gatewayRequests = $sale->saleGatewayRequests()->get();
+        foreach ($gatewayRequests as $gatewayRequest) {
+            $result = json_decode($gatewayRequest->gateway_result, true);
 
-        return $result['installment'];
+            if(isset($result['id']) and $sale->gateway_transaction_id == $result['id'] and !empty($result['installment'])){
+                return $result['installment'];
+            }
+        }
+        if (empty($gatewayRequests)) {
+            throw new Exception("Venda não tem o installment para antecipar !");
+        }
+        return null;
     }
 
     private function saveRequests($url, $result, $httpStatus, $data, $saleId)
