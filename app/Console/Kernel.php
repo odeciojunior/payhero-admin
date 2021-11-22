@@ -162,7 +162,8 @@ class Kernel extends ConsoleKernel
 
         /** Antecipações Asaas */
         $schedule->command('anticipations:asaas')->dailyAt('4:00');
-        $schedule->command('anticipations:asaas-pending')->dailyAt('13:30');
+        $schedule->command('anticipations:asaas-pending')->dailyAt('14:00');
+        $schedule->command('anticipations:asaas-pending')->dailyAt('16:00');
     }
 
     protected function commands()

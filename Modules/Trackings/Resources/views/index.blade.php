@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
 <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v='.uniqid()) }}">
 <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v='.uniqid()) }}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+
 @endpush
 
 <!-- Page -->
@@ -156,7 +158,7 @@
                 <div class="row mb-xl-3">
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                         <label for="project-select">Projeto</label>
-                        <select name='project' id="project-select" class="form-control select-pad">
+                        <select name='project' id="project-select" class="form-control select-pad applySelect2">
                             <option value="">Todos projetos</option>
                         </select>
                     </div>
@@ -170,7 +172,7 @@
                     </div>
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                         <label for="status">Status</label>
-                        <select name='status' id="status" class="form-control select-pad">
+                        <select name='status' id="status" class="form-control select-pad applySelect2">
                             <option value="">Todos</option>
                             <option value="posted">Postados</option>
                             <option value="dispatched">Em trânsito</option>
@@ -186,7 +188,7 @@
                     <div class="row pt-15">
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="status_commission">Status da comissão</label>
-                            <select name='status_commission' id="status_commission" class="form-control select-pad">
+                            <select name='status_commission' id="status_commission" class="form-control select-pad applySelect2">
                                 <option value="">Todos</option>
                                 <option value="transfered">Transferido</option>
                                 <option value="pending">Pendente</option>
@@ -492,6 +494,9 @@
 <script src="{{ asset('modules/global/js/daterangepicker.min.js') }}"></script>
 <script src="{{ asset('/modules/trackings/js/index.js?v=' . uniqid()) }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+
+
 @endpush
 
 @endsection
