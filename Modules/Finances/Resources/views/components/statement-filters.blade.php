@@ -2,10 +2,9 @@
     <div class="row justify-content-start align-items-center">
         <div class="col-md-8 fix-5 px-sm-15">
             <div class="d-flex align-items-center">
-                <div class="p-2" style="flex:1">
-                    <h5 class="title-pad"> Extrato </h5>
-                    <p class="sub-pad"> Pra você controlar tudo que entra e sai da sua conta.
-                    </p>
+                <div class="p-2 text-xs-center text-lg-left" style="flex:1">
+                    <h5 class="title-pad col-12"> Extrato </h5>
+                    <p class="sub-pad col-12"> Pra você controlar tudo que entra e sai da sua conta.</p>
                 </div>
             </div>
         </div>
@@ -147,7 +146,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="statement_sale">
-                                Transação 
+                                Transação
                                 <i style="font-weight: normal" class="o-question-help-1 ml-5 font-size-14" data-toggle="tooltip" title=""
                                         data-original-title="Se for passado esse valor, o extrato vai listar as informações dessa transação independente do filtro de data">
                                 </i>

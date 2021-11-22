@@ -35,7 +35,7 @@ window.updateBalances = function() {
         url: "/api/finances/getbalances",
         type: "GET",
         data: {
-               company: $("#transfers_company_select option:selected").val(), 
+               company: $("#transfers_company_select option:selected").val(),
                gateway_id: gatewayCode
         },
         dataType: "json",
@@ -53,6 +53,7 @@ window.updateBalances = function() {
             $('.removeSpan').remove();
 
             $(".available-balance").html(removeMoneyCurrency(response.available_balance));
+            $('.available-balance-mobile').html(removeMoneyCurrency(response.available_balance));
             $(".pending-balance").html(removeMoneyCurrency(response.pending_balance));
             $(".total-balance").html(removeMoneyCurrency(response.total_balance));
             $(".blocked-balance").html(removeMoneyCurrency(response.blocked_balance));
