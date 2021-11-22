@@ -24,7 +24,7 @@ class GenericCommand extends Command
     public function handle()
     {
         try {
-            //'DB::beginTransaction();
+
             $service = new AsaasService();
 
             $transactions = Transaction::with('sale')
@@ -35,8 +35,10 @@ class GenericCommand extends Command
                 ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
                 ->whereNotNull('company_id')
                 ->whereBetween('release_date',  ['2021-11-01', '2021-11-24']);
+
             foreach ($transactions->cursor() as $transaction) {
                 $sale = $transaction->sale;
+                $this->line("Sale_id: ". $sale->is . ', ');
                 $response = $service->makeAnticipation($sale);
 
                 if (isset($response['status'])) {
@@ -47,10 +49,8 @@ class GenericCommand extends Command
                 }
             }
 
-            //DB::commit();
         } catch (Exception $e) {
             report($e);
-            //DB::rollBack();
         }
     }
 }
