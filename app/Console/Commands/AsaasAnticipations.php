@@ -57,6 +57,7 @@ class AsaasAnticipations extends Command
                 ->where('gateway_id', Gateway::ASAAS_PRODUCTION_ID)
                 ->where('status_enum', Transaction::STATUS_PAID)
                 ->whereNotNull('company_id')
+                ->where('type', Transaction::TYPE_PRODUCER)
                 ->where('release_date', '<=', $toDay->addDays(3)->format("Y-m-d"));
 
             foreach ($transactions->cursor() as $transaction) {
