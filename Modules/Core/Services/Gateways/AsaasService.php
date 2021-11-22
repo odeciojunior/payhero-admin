@@ -263,7 +263,7 @@ class AsaasService implements Statement
             "agreementSignature"=> $sale->user->name,
         ];
 
-        if($sale->installments_amount == 1) {
+        if($sale->installments_amount == 1 || in_array($sale->payment_method, [Sale::BOLETO_PAYMENT])) {
             $data["payment"] =$sale->gateway_transaction_id;
         } else {
             $saleInstallmentId = $this->saleInstallmentId($sale->saleGatewayRequests()->first());
