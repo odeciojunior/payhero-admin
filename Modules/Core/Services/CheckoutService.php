@@ -127,9 +127,9 @@ class CheckoutService
             } else {
                 $urlCancelPayment = env('CHECKOUT_URL') . "/api/payment/cancel/{$idEncoded}";
             }
-            \Log::info($urlCancelPayment);
+            
             $response = $this->runCurl($urlCancelPayment, 'POST');
-            \Log::info((array)$response);
+            
             if (($response->status ?? '') != 'success') {
                 return [
                     'status' => 'error',

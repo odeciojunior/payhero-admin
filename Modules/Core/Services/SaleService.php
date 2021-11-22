@@ -559,7 +559,7 @@ class SaleService
         return $productsSale;
     }
 
-    private function checkPendingDebt($sale, $company, $transactionRefundAmount)
+    public function checkPendingDebt($sale, $company, $transactionRefundAmount)
     {
         if(!in_array($sale->gateway_id, [Gateway::GETNET_PRODUCTION_ID, Gateway::GETNET_SANDBOX_ID])) {
             return;
@@ -612,83 +612,23 @@ class SaleService
         }
     }
 
-    public function cancel($sale, $response, $refundObservation): bool
+    public function getSaleTax($cloudfoxTransaction, $sale)
     {
-        try {
-            DB::beginTransaction();
-            $responseGateway = $response->response ?? [];
-            $statusGateway = $response->status_gateway ?? '';
-
-            SaleRefundHistory::create(
-                [
-                    'sale_id' => $sale->id,
-                    'refunded_amount' => foxutils()->onlyNumbers($sale->total_paid_value),
-                    'date_refunded' => Carbon::now(),
-                    'gateway_response' => json_encode($responseGateway),
-                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
-                    'refund_observation' => $refundObservation,
-                    'user_id' => auth()->user()->account_owner_id,
-                ]
-            );
-
-            $refundTransactions = $sale->transactions;
-            foreach ($refundTransactions as $refundTransaction) {
-                $transactionRefundAmount = (int)$refundTransaction->value;
-
-                $company = $refundTransaction->company;
-                if (!empty($company)) {
-                    $this->checkPendingDebt($sale, $company, $transactionRefundAmount);
-
-                    if (in_array($sale->gateway_id, [Gateway::ASAAS_PRODUCTION_ID, Gateway::ASAAS_SANDBOX_ID]) && $refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
-                        Transfer::create([
-                            'transaction_id' => $refundTransaction->id,
-                            'user_id' => $refundTransaction->user_id,
-                            'company_id' => $refundTransaction->company_id,
-                            'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID,
-                            'value' => $refundTransaction->value,
-                            'type' => 'out',
-                            'type_enum' => Transfer::TYPE_OUT,
-                            'reason' => 'refunded',
-                            'is_refunded_tax' => 0
-                        ]);
-
-                        $refundTransaction->company->update([
-                            'asaas_balance' => $refundTransaction->company->asaas_balance -= $refundTransaction->value
-                        ]);
-                    }
-                }
-
-                $refundTransaction->status = 'refunded';
-                $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
-                $refundTransaction->is_waiting_withdrawal = 0;
-                $refundTransaction->save();
+        $saleTax = $cloudfoxTransaction->value;
+        if (!empty($sale->installment_tax_value)) {
+            $saleTax -= $sale->installment_tax_value;
+        } elseif ($sale->installments_amount > 1) {
+            $saleTax -= ($sale->original_total_paid_value -
+                (
+                    foxutils()->onlyNumbers($sale->sub_total) +
+                    foxutils()->onlyNumbers($sale->shipment_value)
+                ));
+            if (!empty(foxutils()->onlyNumbers($sale->shopify_discount))) {
+                $saleTax -= foxutils()->onlyNumbers($sale->shopify_discount);
             }
-
-            $sale->update(
-                [
-                    'status' => Sale::STATUS_REFUNDED,
-                    'gateway_status' => $statusGateway,
-                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
-                    'date_refunded' => Carbon::now(),
-                ]
-            );
-
-            SaleLog::create(
-                [
-                    'sale_id' => $sale->id,
-                    'status' => 'refunded',
-                    'status_enum' => Sale::STATUS_REFUNDED,
-                ]
-            );
-
-            DB::commit();
-
-            return true;
-        } catch (Exception $ex) {
-            report($ex);
-            DB::rollBack();
-            throw $ex;
         }
+
+        return $saleTax;
     }
 
     public function saleIsGetnet(Sale $sale): bool
