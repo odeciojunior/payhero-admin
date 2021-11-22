@@ -38,10 +38,15 @@ window.loadWithdrawalsTable = function(link = null) {
         success: (response) => {
             $("#withdrawals-table-data").html('');
             if (response.data === '' || response.data === undefined || response.data.length === 0) {
+                const emptyImage = $("#withdrawals-table-data").attr("img-empty");
                 $("#withdrawals-table-data").html(
-                    "<tr style='border-radius: 16px;'><td colspan='6' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#withdrawals-table-data").attr("img-empty") +
-                        "'> Nenhum saque realizado até o momento</td></tr>"
+                `<tr style='border-radius: 16px; background-color: #FFF'>
+                            <td colspan='6' class='text-center' style='vertical-align: middle;height:257px;'>
+                                <div class="row justify-content-center align-items-center h-p100 font-size-16">
+                                    <img style="width: 124px;" src='${emptyImage}' alt="">Nenhum saque realizado até o momento
+                                </div>
+                            </td>
+                        </tr>`
                 );
                 $("#withdrawals-pagination").html("");
             } else {
