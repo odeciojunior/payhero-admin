@@ -45,13 +45,13 @@
                             <!-- FILTRO DE EXIBICAO PERMANENTE -->
                             <div class="row mb-md-15">
 
-                                <div class="col-sm-12 col-md-3">
+                                <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                     <label for="transaction">Transação</label>
                                     <input name='transaction' id="transaction" class="input-pad" placeholder="Transação">
                                 </div>
 
 
-                                <div class="col-sm-12 col-md-3 scrol">
+                                <div class="col-sm-12 col-md-3 scrol mb-15 mb-sm-0">
                                     <label for="status">Status</label>
                                     <select name='sale_status' id="status" class="form-control applySelect2">
                                         <option value="">Todos status</option>
@@ -67,7 +67,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md-3">
+                                <div class="col-sm-12 col-md-3 mb-sm-0">
                                     <label for="date_type">Data</label>
                                     <select name='date_type' id="date_type" class="form-control select-pad">
                                         <option value="start_date">Data do pedido</option>
@@ -75,7 +75,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md-3 form-icons">
+                                <div class="col-sm-12 col-md-3 form-icons mb-15 mb-sm-0">
                                     <label for="date_range">&nbsp;</label>
                                     <i style="right: 20px; margin-top: 13px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
                                     <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly>
@@ -87,7 +87,7 @@
 
                                 <div class="row mb-md-15">
 
-                                    <div class="col-sm-12 col-md-3">
+                                    <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="forma">Forma de pagamento</label>
                                         <select name='select_payment_method' id="forma" class="form-control select-pad applySelect2">
                                             <option value="">Todas formas de pagamento</option>
@@ -97,21 +97,21 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-12 col-md-3">
+                                    <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="empresa">Empresa</label>
                                         <select name="select_company" id="empresa" class="form-control select-pad select-company applySelect2">
                                             <option value="">Todas empresas</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-12 col-md-3">
+                                    <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="projeto">Projeto</label>
                                         <select name='select_project' id="projeto" class="form-control select-pad applySelect2">
                                             <option value="">Todos projetos</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-12 col-md-3">
+                                    <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="plan">Plano</label>
                                         <select name='plan' id="plan" class="form-control select-pad applySelect2" style='width:100%;'>
                                             <option value="">Todos planos</option>
@@ -122,22 +122,22 @@
 
                                 <div class="row mb-md-15">
 
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md mb-15 mb-sm-0">
                                         <label for="cupom">Cupom</label>
                                         <input name="coupon" id="cupom" class="input-pad" placeholder="Código do cupom">
                                     </div>
 
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md mb-15 mb-sm-0">
                                         <label for="valor">Comissão</label>
                                         <input name="value" id="valor" class="input-pad transaction-value" placeholder="Valor da comissão">
                                     </div>
 
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md mb-15 mb-sm-0">
                                         <label for="comprador">Nome do cliente</label>
                                         <input name='client' id="comprador" class="input-pad" placeholder="Cliente">
                                     </div>
 
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md mb-15 mb-sm-0">
                                         <label for="customer_document">CPF do cliente</label>
                                         <input name='customer_document' id="customer_document" class="input-pad" placeholder="CPF" data-mask="000.000.000-00">
                                     </div>
@@ -155,7 +155,7 @@
                                     
                                         <div class="row pt-15 d-flex justify-content-end mr-0">
 
-                                            <div class='col-sm-4 col-md-3 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                            <div class='col-sm-4 col-md-3 mb-10 mb-sm-0 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                                 <label class="switch mr-2">
                                                     <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
                                                     <span class="slider round"></span>
@@ -163,7 +163,7 @@
                                                 <span class="switch-text"> Upsell </span>
                                             </div>
 
-                                            <div class='col col-sm-4 col-md-3 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                            <div class='col col-sm-4 col-md-3 mb-10 mb-sm-0 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                                 <label class="switch mr-2">
                                                     <input type="checkbox" id='order-bump' name="order_bump" class='check' value='0'>
                                                     <span class="slider round"></span>
@@ -171,7 +171,7 @@
                                                 <span class="switch-text"> Order Bump </span>
                                             </div>
 
-                                            <div class='col col-sm-4 col-md-3 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                            <div class='col col-sm-4 col-md-3 mb-10 mb-sm-0 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                                 <label class="switch mr-2">
                                                     <input type="checkbox" id='cashback' name="cashback" class='check shopify_error' value='0'>
                                                     <span class="slider round"></span>
