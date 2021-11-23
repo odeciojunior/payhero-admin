@@ -1547,8 +1547,7 @@ $(function () {
                                 data += '<td id="" class="" style="vertical-align: middle; line-height: 1;">' + value.name_short + '<div style="color: #8B8B8B; line-height: 1;"><small>com ' + (value.products_length > 1 ? value.products_length + ' produtos' : value.products_length + ' produto') + '</small></div></td>';
                                 data += '<td id="" class="" style="vertical-align: middle;">' + value.description + '</td>';
                                 data += '<td id="" class="" style="vertical-align: middle;">' + value.price + '</td>';
-                                data += '<td id="link" class="display-sm-none display-m-none copy_link text-center" title="Copiar Link" style="vertical-align: middle; cursor:pointer;" link="' + value.code + '">Copiar <img src="/modules/global/img/icon-copy-c.svg"></td>';
-                                data += '<td id="" class="display-lg-none display-xlg-none text-center" style="vertical-align: middle;"><a class="pointer" onclick="copyToClipboard(\'#link\')"><img src="/modules/global/img/icon-copy-c.svg"></a></td>';
+                                data += '<td id="link" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; cursor:pointer;" link="' + value.code + '"><span class="display-sm-none display-m-none">Copiar </span><img src="/modules/global/img/icon-copy-c.svg"></td>';
                                 data += '<td id="" class="text-center"><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
                                 data += "<td class='mg-responsive text-center' style='line-height: 1;'>"
                                     data += "<div class='d-flex justify-content-end align-items-center'>";
