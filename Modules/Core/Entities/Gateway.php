@@ -115,7 +115,7 @@ class Gateway extends Model
         }
     }
     
-    protected function getServiceById($gatewayId){
+    public function getServiceById($gatewayId){
         if(!empty($gatewayId)){
             switch($gatewayId){
                 case self::ASAAS_PRODUCTION_ID:

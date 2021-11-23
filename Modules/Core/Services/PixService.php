@@ -39,7 +39,6 @@ class PixService
                         $querySale->where( 'created_at', '<=', Carbon::now()->subHour()->toDateTimeString());
                     }
                 )
-                ->where('id', 1348648)
                 ->get();
 
             foreach ($sales as $sale) {

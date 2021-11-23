@@ -25,6 +25,8 @@ use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 
+use function Clue\StreamFilter\fun;
+
 class AsaasService implements Statement
 {
     public Company $company;
@@ -99,7 +101,7 @@ class AsaasService implements Statement
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
-        return $availableBalance > $transaction->value;
+        return $availableBalance >= $transaction->value;
     }
 
     public function getWithdrawals(): JsonResource

@@ -55,9 +55,15 @@ class SaleService
                     ->get()
                     ->pluck('id')
                     ->toArray();
+
             } else {
-                $companyId = current(Hashids::decode($filters["company"]));
-                $userCompanies = array($companyId);
+                $userCompanies = [];
+                $companies = explode(',', $filters["company"]);
+
+                foreach($companies as $company){
+                    array_push($userCompanies, current(Hashids::decode($company)));
+                }
+
             }
 
             $relationsArray = [
@@ -88,11 +94,18 @@ class SaleService
             }
 
             if (!empty($filters["project"])) {
-                $projectId = current(Hashids::decode($filters["project"]));
+                $projectIds =[];
+                $projects = explode(',', $filters["project"]);
+
+                foreach($projects as $project){
+                    array_push($projectIds, current(Hashids::decode($project)));
+                }
+                
+                //$projectId = current(Hashids::decode($filters["project"]));
                 $transactions->whereHas(
                     'sale',
-                    function ($querySale) use ($projectId) {
-                        $querySale->where('project_id', $projectId);
+                    function ($querySale) use ($projectIds) {
+                        $querySale->whereIn('project_id', $projectIds);
                     }
                 );
             }
@@ -208,33 +221,36 @@ class SaleService
                 $transactions->whereHas(
                     'sale',
                     function ($querySale) use ($forma) {
-                        $querySale->where('payment_method', $forma);
+                        $querySale->whereIn('payment_method', explode(',', $forma));
                     }
                 );
             }
 
+            if (!empty($filters["plan"])) {
+                $planIds = [];
+                $plans = explode(',', $filters["plan"]);
+
+                foreach($plans as $plan){
+                    array_push($planIds, current(Hashids::decode($plan)));
+                }
+                // $planId = current(Hashids::decode($filters["plan"]));
+                
+                $transactions->whereHas(
+                    'sale.plansSales',
+                    function ($query) use ($planIds) {
+                        $query->whereIn('plan_id', $planIds);
+                    }
+                );
+            }
+            
             if (empty($filters['status'])) {
                 $status = [1, 2, 4, 7, 8, 12, 20, 21, 22, 24];
             } else {
-                $status = $filters["status"] == 7 ? [7, 22] : [$filters["status"]];
+                $status = explode(',', $filters['status']);
+                //$status = in_array(7, $status) ? [7, 22] : $status; //REMOVER ESTA LINHA PARA APARECER TODOS OS STATUS
             }
-            if (!empty($filters["plan"])) {
-                $planId = current(Hashids::decode($filters["plan"]));
-                $transactions->whereHas(
-                    'sale.plansSales',
-                    function ($query) use ($planId) {
-                        $query->where('plan_id', $planId);
-                    }
-                );
-            }
-            if ($filters['status'] == 'chargeback_recovered') {
-                $transactions->whereHas(
-                    'sale',
-                    function ($querySale) {
-                        $querySale->where('is_chargeback_recovered', true);
-                    }
-                );
-            } else {
+            
+            if(!empty($status)) {
                 $transactions->whereHas(
                     'sale',
                     function ($querySale) use ($status) {
@@ -1117,6 +1133,7 @@ class SaleService
             }
 
             if (!empty($filters["project"])) {
+                
                 $projectId = current(Hashids::decode($filters["project"]));
                 $transactions->where('sales.project_id', $projectId);
             }

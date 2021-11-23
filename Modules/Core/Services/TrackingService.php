@@ -277,43 +277,64 @@ class TrackingService
             }
 
             //filtro transactions
-            if (isset($filters['transaction_status'])) {
-                $query->whereHas('transactions', function ($queryTransaction) use ($filters) {
+            if (!empty($filters['transaction_status'])) {
+                $filterTransaction = explode(',', $filters['transaction_status']);
+              
+                $query->whereHas('transactions', function ($qrTransaction) use ($filterTransaction) 
+                {
                     $transactionPresenter = (new Transaction())->present();
-                    if ($filters['transaction_status'] != 'blocked') {
-                        $statusEnum = $transactionPresenter->getStatusEnum($filters['transaction_status']);
-                        $queryTransaction->where('status_enum', $statusEnum);
-                    } else {
-                        $queryTransaction->where(function ($query) {
-                            $query->where('transactions.release_date', '>', '2020-05-25') //data que começou a bloquear
-                            ->orWhereHas('sale', function ($query) {
-                                $query->where('is_chargeback_recovered', true);
-                            });
-                        })->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))
-                            ->where('tracking_required', true);
+                    $statusEnum = [];
+                    foreach($filterTransaction as $item){
+                        if($item <> 'blocked'){
+                            $statusEnum[] = $transactionPresenter->getStatusEnum($item);
+                        }
                     }
-                    $queryTransaction->where('type', Transaction::TYPE_PRODUCER)
-                        ->whereNull('invitation_id')
-                        ->where('is_waiting_withdrawal', 0)
-                        ->whereNull('withdrawal_id');
+
+                    if(in_array('blocked',$filterTransaction))
+                    {
+                        $qrTransaction->where(function ($qr) use ($statusEnum) {
+                            $qr->where(function ($query) {
+                                $query->where('transactions.release_date', '>', '2020-05-25') //data que começou a bloquear
+                                ->orWhereHas('sale', function ($query) {
+                                    $query->where('is_chargeback_recovered', true);
+                                });
+                            })->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))                                                   
+                            ->where('tracking_required', true);  
+                            
+                            if(count($statusEnum)>0){
+                                $qr->orWhereIn('status_enum', $statusEnum);
+                            }
+                        });
+                        
+                    }else{
+                        $qrTransaction->whereIn('status_enum', $statusEnum);
+                    }
+
+                    $qrTransaction->where('type', Transaction::TYPE_PRODUCER)
+                    ->whereNull('invitation_id')
+                    ->where('is_waiting_withdrawal', 0)
+                    ->whereNull('withdrawal_id');
                 });
             }
         });
 
-        if (isset($filters['status'])) {
-            if ($filters['status'] === 'unknown') {
-                $productPlanSales->doesntHave('tracking');
-            } else {
-                $productPlanSales->whereHas(
-                    'tracking',
-                    function ($query) use ($trackingModel, $filters) {
-                        $query->where(
-                            'tracking_status_enum',
-                            $trackingModel->present()->getTrackingStatusEnum($filters['status'])
-                        );
-                    }
-                );
-            }
+        if (!empty($filters['status'])) {
+            $filterStatus = explode(',', $filters['status']);
+
+            $productPlanSales->where(function ($query) use ($filterStatus) {
+                $statusArray = array_reduce($filterStatus, function ($carry, $item) {
+                    if ($item !== 'unknown') $carry[] = (new Tracking())->present()->getTrackingStatusEnum($item);
+                    return $carry;
+                }, []);
+
+                $query->whereHas('tracking', function ($trackingQuery) use ($statusArray) {
+                    $trackingQuery->whereIn('tracking_status_enum', $statusArray);
+                });
+
+                if (in_array('unknown', $filterStatus)) {
+                    $query->orDoesntHave('tracking');
+                }
+            });
         }
 
         if (isset($filters['problem'])) {
@@ -342,11 +363,15 @@ class TrackingService
             );
         }
 
-        if (isset($filters['project'])) {
+        $projects = explode(',', $filters['project']);
+        $projectsIds = collect($projects)->map(function ($project) {
+            return current(Hashids::decode($project)) ?: '';
+        })->toArray();
+        if (!empty($projectsIds) && !in_array('', $projectsIds)) {
             $productPlanSales->whereHas(
                 'product',
-                function ($query) use ($filters) {
-                    $query->where('project_id', current(Hashids::decode($filters['project'])));
+                function ($query) use ($projectsIds) {
+                    $query->whereIn('project_id', $projectsIds);
                 }
             );
         }
