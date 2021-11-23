@@ -148,7 +148,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('achievements:update')->dailyAt('21:00');
 
         /** Pix Canceled */
-        $schedule->command('change:pix-to-canceled')->everyMinute();
+        $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
 
         /** Check GatewayTax invitations Diogo */
         $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
@@ -162,7 +162,8 @@ class Kernel extends ConsoleKernel
 
         /** Antecipações Asaas */
         $schedule->command('anticipations:asaas')->dailyAt('4:00');
-        $schedule->command('anticipations:asaas-pending')->dailyAt('13:30');
+        $schedule->command('anticipations:asaas-pending')->dailyAt('14:00');
+        $schedule->command('anticipations:asaas-pending')->dailyAt('16:00');
     }
 
     protected function commands()

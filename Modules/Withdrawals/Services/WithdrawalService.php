@@ -10,7 +10,7 @@ use Modules\Core\Entities\Withdrawal;
 class WithdrawalService
 {
 
-    public function requestWithdrawal($company, $withdrawalValue): Withdrawal
+    public function requestWithdrawal($company, $withdrawalValue,$gatewayId): Withdrawal
     {
         $withdrawalModel = new Withdrawal();
         $isFirstUserWithdrawal = $this->isFirstUserWithdrawal($company->user);
@@ -28,12 +28,12 @@ class WithdrawalService
                 'tax' => 0,
                 'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
                 'automatic_liquidation' => true,
-                'gateway_id' => Gateway::GETNET_PRODUCTION_ID,
+                'gateway_id' => $gatewayId,
             ]
         );
 
         $transactionsAmount = $this->setWaitingTransactionsToWithdrawal($withdrawalValue, $withdrawal);
-        if ($transactionsAmount != Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')) {
+        if ($transactionsAmount != Transaction::where('withdrawal_id', $withdrawal->id)->sum('value') && $gatewayId == Gateway::GETNET_PRODUCTION_ID) {
             throw new \Exception('O valor total da operação difere do valor solicitado');
         }
         //$withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);

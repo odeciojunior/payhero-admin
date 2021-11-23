@@ -26,13 +26,13 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
             ->join('users as u', 'u.id', '=', 'c.user_id')
             ->whereIn('withdrawals.status', [Withdrawal::STATUS_PENDING, Withdrawal::STATUS_IN_REVIEW])
             ->where('automatic_liquidation', 1)
-            ->where('u.get_faster', 1)
-            ->where('withdrawals.gateway_id',Gateway::GETNET_PRODUCTION_ID)
+            ->where('u.get_faster', 1)           
+            ->whereIn('withdrawals.gateway_id',[Gateway::GETNET_PRODUCTION_ID,Gateway::ASAAS_PRODUCTION_ID,Gateway::GERENCIANET_PRODUCTION_ID])
             ->whereNull('c.deleted_at')
             ->whereNull('u.deleted_at')
             ->orderBy('withdrawals.id')
             ->get();
-
+        $this->comment(json_encode($withdrawals->pluck('id')));
         $managerUrl = env('MANAGER_URL', 'http://dev.manager.com.br') . '/api/release/withdrawalsgetfaster';
 
         foreach ($withdrawals as $withdrawal) {
