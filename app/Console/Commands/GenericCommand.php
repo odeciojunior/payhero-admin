@@ -166,7 +166,7 @@ class GenericCommand extends Command
                     }
                 }
 
-                $pix = $sale->pixCharges->where('status', 'ATIVA')->first();
+                $pix = $sale->pixCharges->first();
 
                 if (!FoxUtils::isEmpty($pix)) {
                     //Atualizar o e2id
