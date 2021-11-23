@@ -14,6 +14,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
@@ -288,5 +289,10 @@ class CieloService implements Statement
             'last_transaction' => $lastTransactionDate,
             'id' => 'pM521rZJrZeaXoQ'
         ];
+    }
+
+    public function getGatewayId()
+    {
+        return FoxUtils::isProduction() ? Gateway::CIELO_PRODUCTION_ID:Gateway::CIELO_SANDBOX_ID;
     }
 }
