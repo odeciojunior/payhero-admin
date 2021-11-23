@@ -126,7 +126,7 @@ class Gateway extends Model
                         return new GerencianetService();
                 case self::GETNET_PRODUCTION_ID:
                     case self::GETNET_SANDBOX_ID:
-                        return new AsaasService();
+                        return new GetnetService();
                 case self::CIELO_PRODUCTION_ID:
                     case self::CIELO_SANDBOX_ID:
                         return new CieloService();
