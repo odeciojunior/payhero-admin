@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use App\Jobs\RevalidateTrackingDuplicateJob;
+use Google\Service\PolyService\Format;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -247,7 +248,10 @@ class TrackingService
     {
         $trackingModel = new Tracking();
         $productPlanSaleModel = new ProductPlanSale();
-
+        $filters['status'] =  is_array($filters['status']) ? implode(',', $filters['status']) : $filters['status'];
+        $filters['project'] =  is_array($filters['project']) ? implode(',', $filters['project']) : $filters['project'];
+        $filters['transaction_status'] =  is_array($filters['transaction_status']) ? implode(',', $filters['transaction_status']) : $filters['transaction_status'];
+        
         if (!$userId) {
             $userId = auth()->user()->account_owner_id;
         }
@@ -276,12 +280,10 @@ class TrackingService
                 $query->where('id', $saleId);
             }
 
+
             //filtro transactions
             if (!empty($filters['transaction_status'])) {
-                $filterTransaction = $filters['transaction_status'];
-                if(!is_array($filterTransaction)){
-                    $filterTransaction = explode(',', $filters['transaction_status']);
-                }
+                $filterTransaction = explode(',', $filters['transaction_status']);
                 $query->whereHas('transactions', function ($qrTransaction) use ($filterTransaction) 
                 {
                     $transactionPresenter = (new Transaction())->present();
@@ -318,24 +320,21 @@ class TrackingService
                     ->whereNull('withdrawal_id');
                 });
             }
+            
         });
 
         if (!empty($filters['status'])) {
-            $filterStatus = $filters['status'];
-            if(!is_array($filterStatus)){
-                $filterStatus = explode(',', $filters['status']);
-            }
-
+            $filterStatus = explode(',', $filters['status']);
             $productPlanSales->where(function ($query) use ($filterStatus) {
                 $statusArray = array_reduce($filterStatus, function ($carry, $item) {
                     if ($item !== 'unknown') $carry[] = (new Tracking())->present()->getTrackingStatusEnum($item);
                     return $carry;
                 }, []);
-
+                
                 $query->whereHas('tracking', function ($trackingQuery) use ($statusArray) {
                     $trackingQuery->whereIn('tracking_status_enum', $statusArray);
                 });
-
+                
                 if (in_array('unknown', $filterStatus)) {
                     $query->orDoesntHave('tracking');
                 }
@@ -368,11 +367,7 @@ class TrackingService
             );
         }
 
-        
-        $projects = $filters['project'];
-        if(!is_array($projects)){
-            explode(',', $filters['project']);
-        }
+        $projects = explode(',', $filters['project']);
         $projectsIds = collect($projects)->map(function ($project) {
             return current(Hashids::decode($project)) ?: '';
         })->toArray();
