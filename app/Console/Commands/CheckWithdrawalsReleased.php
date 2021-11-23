@@ -27,6 +27,7 @@ class CheckWithdrawalsReleased extends Command
     {
         try {
             $withdrawals = Withdrawal::with('transactions', 'transactions.sale', 'transactions.company')
+                ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
                 ->where('automatic_liquidation', true)
                 ->where('is_released', false)
                 ->whereIn('status', [Withdrawal::STATUS_LIQUIDATING, Withdrawal::STATUS_PARTIALLY_LIQUIDATED])

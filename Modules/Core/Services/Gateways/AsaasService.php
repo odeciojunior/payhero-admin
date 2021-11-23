@@ -340,17 +340,20 @@ class AsaasService implements Statement
 
     }
 
-    private function saleInstallmentId(Sale $sale) : ?string
+    private function saleInstallmentId(Sale $sale): ?string
     {
-        $gatewayRequests = $sale->saleGatewayRequests()->get();
-        foreach ($gatewayRequests as $gatewayRequest) {
-            $result = json_decode($gatewayRequest->gateway_result, true);
+        $gatewayRequest = $sale->saleGatewayRequests()
+            ->where('gateway_result->status', AsaasGateway::PAYMENT_STATUS_CONFIRMED)
+            ->latest()
+            ->first();
 
-            if(isset($result['id']) and $sale->gateway_transaction_id == $result['id'] and !empty($result['installment'])){
-                return $result['installment'];
-            }
+        $result = json_decode($gatewayRequest->gateway_result, true);
+
+        if (isset($result['id']) and $sale->gateway_transaction_id == $result['id'] and !empty($result['installment'])) {
+            return $result['installment'];
         }
-        if (empty($gatewayRequests)) {
+
+        if (empty($gatewayRequest)) {
             throw new Exception("Venda não tem o installment para antecipar !");
         }
         return null;
@@ -411,24 +414,24 @@ class AsaasService implements Statement
             if(!empty($sale->anticipation_id)){
                 $saleTax = $saleService->getSaleTax($cloudfoxTransaction, $sale);
             }
-            
+
             foreach ($refundTransactions as $refundTransaction) {
                 $transactionRefundAmount = (int)$refundTransaction->value;
 
                 $company = $refundTransaction->company;
                 if (!empty($company)) {
-                 
+
                     if ($refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
-                                            
+
                         $refundValue = $refundTransaction->value;
                         if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
                             if (!empty($refundTransaction->sale->automatic_discount)) {
                                 $refundValue -= $refundTransaction->sale->automatic_discount;
                             }
-                            $refundValue += $saleTax;                            
+                            $refundValue += $saleTax;
                         }
                         $transactionRefundAmount = $refundValue;
-                                                
+
                         Transfer::create([
                             'transaction_id' => $refundTransaction->id,
                             'user_id' => $refundTransaction->user_id,
@@ -443,7 +446,7 @@ class AsaasService implements Statement
 
                         $company->update([
                             'asaas_balance' => $company->asaas_balance -= $transactionRefundAmount
-                        ]);                        
+                        ]);
                     }
                 }
 
