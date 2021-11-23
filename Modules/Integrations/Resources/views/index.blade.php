@@ -110,7 +110,7 @@
             </ul>
 
             <!-- Modal para criar integração -->
-            <div class="modal fade modal-3d-flip-vertical modal-new-layout" id="modal-integrate" role="dialog" tabindex="-1">
+            <div class="modal fade modal-new-layout" id="modal-integrate" role="dialog" tabindex="-1">
                 <div id='mainModalBody' class="modal-dialog modal-dialog-centered modal-simple">
                     <div id="modal-create-integration" class="modal-content">
                         <div class="modal-header simple-border-bottom">
@@ -165,7 +165,7 @@
     </div>
 
     <!-- Modal para editar integração -->
-    <div class="modal fade modal-3d-flip-vertical modal-new-layout" id="modal-edit-integration" role="dialog" tabindex="-1">
+    <div class="modal fade modal-new-layout" id="modal-edit-integration" role="dialog" tabindex="-1">
         <div id='mainModalBody' class="modal-dialog modal-dialog-centered modal-simple">
             <div id="modal-create-integration" class="modal-content">
                 <div class="modal-header simple-border-bottom">
@@ -200,7 +200,7 @@
     </div>
 
     <!-- Modal padrão para excluir -->
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical modal-new-layout" id="modal-delete-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+    <div class="modal fade example-modal-lg modal-new-layout" id="modal-delete-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
                 <div class="modal-header text-center">
@@ -231,7 +231,7 @@
     </div>
 
     <!-- Modal para reenviar convite -->
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical modal-new-layout" id="modal-refresh-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+    <div class="modal fade example-modal-lg modal-new-layout" id="modal-refresh-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
                 <div class="modal-header text-center">
