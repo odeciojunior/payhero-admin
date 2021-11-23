@@ -419,21 +419,16 @@ class AsaasService implements Statement
                 if (!empty($company)) {
                  
                     if ($refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
-                    
-                        if(!empty($sale->anticipation_id)){
-                            $refundValue = $refundTransaction->value;
-                            if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
-                                if (!empty($refundTransaction->sale->automatic_discount)) {
-                                    $refundValue -= $refundTransaction->sale->automatic_discount;
-                                }
-                                $refundValue += $saleTax;
-                                if (!empty($inviteTransaction)) {
-                                    $refundValue += $inviteTransaction->value;
-                                }
+                                            
+                        $refundValue = $refundTransaction->value;
+                        if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
+                            if (!empty($refundTransaction->sale->automatic_discount)) {
+                                $refundValue -= $refundTransaction->sale->automatic_discount;
                             }
-                            $transactionRefundAmount = $refundValue;
+                            $refundValue += $saleTax;                            
                         }
-                        
+                        $transactionRefundAmount = $refundValue;
+                                                
                         Transfer::create([
                             'transaction_id' => $refundTransaction->id,
                             'user_id' => $refundTransaction->user_id,
