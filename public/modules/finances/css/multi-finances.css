@@ -133,10 +133,14 @@ body {
 
 .owl-carousel .owl-prev.disabled,
 .owl-carousel .owl-next.disabled{
-pointer-events: none;
-opacity: 0.2;
+    pointer-events: none;
+    opacity: 0.2;
+    background: #E3E3E3;
 }
-
+.owl-carousel .owl-prev.disabled::before,
+.owl-carousel .owl-next.disabled::before{
+    color: #929292;
+}
 .owl-carousel .prev-slide{
 background: url(nav-icon.png) no-repeat scroll 0 0;
 left: -33px;
