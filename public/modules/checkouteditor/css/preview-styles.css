@@ -41,8 +41,9 @@
   -webkit-box-sizing: border-box; 
   -moz-box-sizing: border-box;    
   box-sizing: border-box;
-  object-fit: cover;
   transition: all 0.7s ease-out;
+  overflow: hidden;
+  -moz-box-overflow: hidden;
 }
 
 .preview-header-computer {
@@ -428,7 +429,7 @@
 }
 
 .post-purchase > img {
-  width: 100px;
+  width: 70px;
 }
 
 .shop-message-preview {
@@ -439,12 +440,12 @@
 }
 
 .shop-message-preview > h1{
-  font-size: 12px;
+  font-size: 10px;
   font-weight: bold;
 }
 
 .shop-message-preview-content {
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1.2;
 }
 
@@ -455,8 +456,8 @@
 
 .preview-body .card-container {
   background-color: #fff;
-  padding: 40px 30px;
-  border-radius: 12px;
+  padding: 20px 20px;
+  border-radius: 8px;
   width: 100%;
 }
 

@@ -4,11 +4,11 @@
 <link rel="stylesheet" href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/quill-editor.css?v=10') }}">
 <link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/dropfy.css?v=10') }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/color-theme-radio.css?v=10') }}">
 <link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/custom-inputs.css?v=10') }}">
 <link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/cropper.css?v=10') }}">
 <link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/style.css?v=10') }}">
 <link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/preview-styles.css?v=10') }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/color-theme-radio.css?v=10') }}">
 @endpush
 
 <!-- Page -->
@@ -112,7 +112,7 @@
                                 </div>
 
                                 <div class="button-template">
-                                    <button id="download_template_banner" class="line-button" type="button" data-href="{{ asset('/modules/checkouteditor/img/files/test-download.jpg') }}">Baixar gabarito</button>
+                                    <button id="download_template_banner" class="line-button" type="button" data-href="{{ asset('/modules/checkouteditor/files/test_download.xlsx') }}">Baixar gabarito</button>
                                 </div>
 
                             </div>
@@ -140,7 +140,7 @@
                                 <div class="input-container">
                                     <label for="countdown-time" class="checkout-label">Tempo</label>
                                     <div class="time-div">
-                                        <input class="time-input" type="number" id="countdown-time" name="countdown-time" min="1" max="99" maxlength="3">
+                                        <input class="time-input" type="number" id="countdown-time" name="countdown-time" min="1" max="99" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                         <div class="min-input-label">min</div>
                                     </div>
                                 </div>
@@ -240,7 +240,7 @@
                                         <table class="table table-hover selectable" id="notification-table" data-plugin="selectable" data-row-selectable="true">
                                             <thead>
                                                 <tr>
-                                                    <th class="th-notification">
+                                                    <th class="th-notification" style="height: 90px; max-height: 90px">
                                                         <span class="checkbox-custom checkbox-primary">
                                                             <input class="selectable-all" type="checkbox">
                                                             <label></label>
@@ -249,7 +249,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
+                                                <tr style="height: 90px; max-height: 90px">
                                                     <td>
                                                         <span class="checkbox-custom checkbox-primary">
                                                             <input class="selectable-item" type="checkbox" id="notification-select-1" value="619">
@@ -302,28 +302,28 @@
                                                 <tr>
                                                     <td><b>XX</b> pessoas estão comprando <b>{produto}</b> nesse momento.</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification-row-1" name="notification-row-1" min="1" max="999" style="padding: 3px">
+                                                        <input class="table-number-input" type="number" id="notification-row-1" name="notification-row-1" min="1" max="999" style="padding: 3px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                                     </td>
                                                 </tr>
 
                                                 <tr>
                                                     <td><b>XX</b> pessoas compraram <b>{produto}</b> nos últimos 30 minutos.</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification-row-2" name="notification-row-2" min="1" max="999" style="padding: 3px">
+                                                        <input class="table-number-input" type="number" id="notification-row-2" name="notification-row-2" min="1" max="999" style="padding: 3px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                                     </td>
                                                 </tr>
 
                                                 <tr>
                                                     <td><b>XX</b> pessoas compraram <b>{produto}</b> na última hora.</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification-row-3" name="notification-row-3" min="1" max="999" style="padding: 3px">
+                                                        <input class="table-number-input" type="number" id="notification-row-3" name="notification-row-3" min="1" max="999" style="padding: 3px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                                     </td>
                                                 </tr>
 
                                                 <tr>
                                                     <td><b>{nome}</b> de <b>{cidade}</b> acabou de comprar esse produto</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification-row-4" name="notification-row-4" min="1" max="999" style="padding: 3px">
+                                                        <input class="table-number-input" type="number" id="notification-row-4" name="notification-row-4" min="1" max="999" style="padding: 3px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                                     </td>
                                                 </tr>
 
@@ -373,7 +373,7 @@
 
                                 <div class="input-container">
                                     <label for="social-proof-message" class="checkout-label">Mínimo de vistantes</label>
-                                    <input type="number" class="min-visitors-input" id="social-proof-min-visitors" name="social-proof-min-visitors" min="1" max="999">
+                                    <input type="number" class="min-visitors-input" id="social-proof-min-visitors" name="social-proof-min-visitors" min="1" max="999" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                 </div>
 
                             </div>
@@ -416,29 +416,29 @@
 
                         <div class="row-flex">
                             <div class="input-container" style="flex: 2">
-                                <label for="company_billing" class="checkout-label">Aceitar pagamentos de</label>
-                                <div id="payment_accept" class="radio-group" style="justify-self: end;">
-                                    <input class="custom-radio" id="payment_cpf" type="radio" name="payment_accept" value="cpf" checked />
-                                    <label for="payment_cpf">CPF</label>
+                                <label for="payment_type_accept" class="checkout-label">Aceitar pagamentos de</label>
+                                <div id="payment_type_accept" class="check-group" style="justify-self: end;">
+                                    <input class="custom-bubble-check accept-payment-type" id="accept_cnpj" type="checkbox" name="accept_payment_type" checked>
+                                    <label for="accept_cnpj">CNPJ</label>
 
-                                    <input class="custom-radio" id="payment_cnpj" type="radio" name="payment_accept" value="cnpj" />
-                                    <label for="payment_cnpj">CNPJ</label>
+                                    <input class="custom-bubble-check accept-payment-type" id="accept_cpf" type="checkbox" name="accept_payment_type" >
+                                    <label for="accept_cpf">CPF</label>
                                 </div>
                             </div>
 
+                        
                             <div class="input-container" style="flex: 3">
-                                <label for="company_billing" class="checkout-label">Aceitar pagamentos de</label>
+                                <label for="payment_accept" class="checkout-label">Métodos aceitos</label>
                                 <div id="payment_accept" class="check-group" style="justify-self: end;">
 
-                                    <input class="custom-bubble-check accept-payment-method" id="accept_credit_card" type="checkbox" name="accept_payment_method" data-target="credit-card-container" data-preview="accepted_payment_card_creditcard" value="creditcard_accept" />
+                                    <input class="custom-bubble-check accept-payment-method" type="checkbox" name="accept_payment_method" data-target="credit-card-container" data-preview="accepted_payment_card_creditcard" id="accept_credit_card" checked>
                                     <label for="accept_credit_card">Cartão de crédito</label>
 
-                                    <input class="custom-bubble-check accept-payment-method" id="accept_billet" type="checkbox"  data-target="billet-container" name="accept_payment_method" data-preview="accepted_payment_card_billet" value="billet_accept" />
-                                    <label for="accept_billet">Boleto</label>
+                                    <input class="custom-bubble-check accept-payment-method" type="checkbox" name="accept_payment_method" data-target="bank-billet-container" data-preview="accepted_payment_bank_billet" id="accept_bank_billet">
+                                    <label for="accept_bank_billet">Boleto</label>
 
-                                    <input class="custom-bubble-check accept-payment-method" id="accept_pix" type="checkbox" data-preview="accepted_payment_card_pix" value="pix_accept" name="accept_payment_method" />
+                                    <input class="custom-bubble-check accept-payment-method" type="checkbox" name="accept_payment_method" data-target="pix-container" data-preview="accepted_payment_pix" id="accept_pix">
                                     <label for="accept_pix">Pix</label>
-
                                 </div>
                             </div>
                         </div>
@@ -546,7 +546,7 @@
                     </div>
 
 
-                    <div class="billet-container">
+                    <div class="bank-billet-container">
                         <hr>
 
                         <div class="title-buttons-group">
@@ -564,7 +564,7 @@
                             <div class="input-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">Dias para vencimento</label>
                                 <div class="tagged-input-div">
-                                    <input class="tagged-input" type="number" id="expiration_days" name="expiration_days" min="1" max="99" maxlength="3">
+                                    <input class="tagged-input" type="number" id="expiration_days" name="expiration_days" min="1" max="99" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                     <div class=" input-tag">dias</div>
                                 </div>
                             </div>
@@ -591,29 +591,31 @@
                         </div>
 
                         <div style="display:flex; justify-content: center;">
-                            <div class="input-container" style="flex: 1">
+
+                            <div class="input-container credit-card-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">Cartão de crédito</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="discount_applied_credit_card" name="discount_applied_credit_card" min="1" max="99" maxlength="2">
+                                    <input class="tagged-input" type="number" id="discount_applied_credit_card" name="discount_applied_credit_card" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
 
-                            <div class="input-container" style="flex: 1">
+                            <div class="input-container bank-billet-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">Boleto</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="discount_applied_bank_billet" name="discount_applied_bank_billet" min="1" max="99" maxlength="2">
+                                    <input class="tagged-input" type="number" id="discount_applied_bank_billet" name="discount_applied_bank_billet" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
 
-                            <div class="input-container" style="flex: 1">
+                            <div class="input-container pix_container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">PIX</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="discount_applied_pix" name="discount_applied_pix" min="1" max="99" maxlength="2">
+                                    <input class="tagged-input" type="number" id="discount_applied_pix" name="discount_applied_pix" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
+
                         </div>
 
                         
@@ -1031,12 +1033,12 @@
                                             <span>Cartão</span>
                                         </div>
                                     
-                                        <div class="accepted-payment" id="accepted_payment_card_pix">
+                                        <div class="accepted-payment" id="accepted_payment_pix">
                                             <img src="{{ asset('/modules/checkouteditor/img/svg/icon-pix.svg') }}" style="width: 35px;">
                                             <span>Pix</span>
                                         </div>
                                     
-                                        <div class="accepted-payment" id="accepted_payment_card_billet">
+                                        <div class="accepted-payment" id="accepted_payment_bank_billet">
                                             <img src="{{ asset('/modules/checkouteditor/img/svg/icon-boleto.svg') }}" style="width: 20px; filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(209deg) brightness(150%) contrast(102%);">
                                             <span>Boleto</span>
                                         </div>
@@ -1097,23 +1099,45 @@
                                 <div class="shop-message-preview-content">Aproveite o <strong>desconto extra</strong> ao comprar no <u>Cartão ou pelo PIX!</u> <strong>É por tempo limitado.</strong></div>
                             </div>
 
-                            <div class="card-container">
-                                <div class="grey-container" style="margin-bottom: 10px;"></div>
+                            <div class="card-container" style="margin-bottom: 20px;">
+                                <div class="grey-container" style="margin-bottom: 10px; height: 60px"></div>
 
-                                <div style="display: flex; width: 100%;">
-                                    <div style="border-radius: 12px; height: 40px; width: 120px; background-color: #F5F5F5; margin-right: 10px; margin-bottom: 10px;"></div>
-                                    <div style="border-radius: 12px; height: 40px; width: 100%; background-color: #2E85EC;"></div>
-                                </div>
+                                <div style="display: flex; width: 100%; justify-content: space-between">
+                                    <div style="border-radius: 12px; height: 25px; width: 70px; background-color: #F5F5F5; margin: 0 20px 0 0;border-radius: 4px;"></div>
 
-                                <div class="whatsapp-preview" style="display: flex; padding: 10px; border-radius: 12px; height: 40px; width: 100%; background-color: #36DB8C;">
+                                    <div style="border-radius: 12px; height: 25px; width: 80px; background-color: #2E85EC; border-radius: 4px; "></div>
+
+                                    <div class="whatsapp-preview" style="display: flex; padding: 6px; border-radius: 12px; height: 25px; width: 120px; background-color: #36DB8C; border-radius: 4px;">
                                         <img src="{{ asset('/modules/checkouteditor/img/svg/whatsapp-icon.svg') }}">
                                     </div>
+                                </div>
+
+                                
                             </div>
 
-                            <div class="card-container">
-                                <div style="display: flex; width: 100%;">
-                                    <div class="grey-container" style="height: 40px; width: 40px; margin: 0 10px 10px 0;"></div>
-                                    <div class="grey-container" style="height: 40px; width: 100%; margin-bottom: 0 10px 10px 0;"></div>
+                            <div class="card-container" style="display: flex; flex-direction: column; gap: 15px;">
+                                <div style="display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 5px;">
+                                    <div style="display: flex; width: 100%; align-items: center; gap: 5px;">
+                                        <div class="grey-container" style="border-radius: 4px; height: 50px; width: 50px; min-width: 50px; background: linear-gradient(90deg, #F7F7F7 2.82%, rgba(239, 239, 239, 0) 95.36%);"></div>
+                                        <div class="grey-container" style="border-radius: 4px; height: 35px; width: 100%; background: linear-gradient(90deg, #F7F7F7 2.82%, rgba(239, 239, 239, 0) 95.36%);"></div>
+                                    </div>                                    
+
+                                    <div style="display: flex; width: 100%; align-items: center; gap: 5px;">
+                                        <div class="grey-container" style="border-radius: 4px; height: 50px; width: 50px; min-width: 50px; background: linear-gradient(90deg, #F7F7F7 2.82%, rgba(239, 239, 239, 0) 95.36%);"></div>
+                                        <div class="grey-container" style="border-radius: 4px; height: 35px; width: 100%; background: linear-gradient(90deg, #F7F7F7 2.82%, rgba(239, 239, 239, 0) 95.36%);"></div>
+                                    </div>                                    
+                                </div>
+
+                                <div style="display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 5px;">
+                                    <div style="display: flex; width: 100%; align-items: center; gap: 5px;">
+                                        <div class="grey-container" style="border-radius: 4px; height: 50px; width: 50px; min-width: 50px; background: linear-gradient(90deg, #F7F7F7 2.82%, rgba(239, 239, 239, 0) 95.36%);"></div>
+                                        <div class="grey-container" style="border-radius: 4px; height: 35px; width: 100%; background: linear-gradient(90deg, #F7F7F7 2.82%, rgba(239, 239, 239, 0) 95.36%);"></div>
+                                    </div>                                    
+
+                                    <div style="display: flex; width: 100%; align-items: center; gap: 5px;">
+                                        <div class="grey-container" style="border-radius: 4px; height: 50px; width: 50px; min-width: 50px; background: linear-gradient(90deg, #F7F7F7 2.82%, rgba(239, 239, 239, 0) 95.36%);"></div>
+                                        <div class="grey-container" style="border-radius: 4px; height: 35px; width: 100%; background: linear-gradient(90deg, #F7F7F7 2.82%, rgba(239, 239, 239, 0) 95.36%);"></div>
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>
@@ -1123,7 +1147,7 @@
 
             </div>
 
-            <!-- <div class="editor-buttons">
+            <div class="editor-buttons">
                 <div class="save-changes" id="changing_container" style="display: none;">
                     <div style="margin-right: 50px;">
                         Você tem alterações que <strong>não estão salvas</strong>
@@ -1144,7 +1168,7 @@
                         <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-check.svg') }}">
                     </div>
                 </div>
-            </div>        -->
+            </div>       
 
         </div>
 </div>
@@ -1170,7 +1194,7 @@
                     </div>
                 </div>
                 <div class="modal-footer btn-group-crop" >
-                    <button type="button" class="btn btn-secondary btn-crop-outline" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary btn-crop-outline" id="button-cancel-crop" data-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary btn-crop-filled" id="button-crop">Cortar</button>
                 </div>
             </div>

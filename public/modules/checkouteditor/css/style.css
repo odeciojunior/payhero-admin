@@ -5,11 +5,11 @@
   gap: 20px 20px;
   grid-auto-flow: row;
   grid-template-areas:
-    "select-type preview"
-    "visual preview"
-    "payment preview"
-    "post-purchase-pages preview"
-    "buttons buttons";
+    "select-type           preview"
+    "visual                preview"
+    "payment               preview"
+    "post-purchase-pages   preview"
+    "buttons               buttons";
   font-family: 'Muli', sans-serif;
   font-style: normal;
   line-height: 30px;
@@ -52,7 +52,6 @@
 
 .editor-buttons {
   grid-area: buttons;
-  width: inherit;
 }
 
 .checkout-content {
@@ -66,6 +65,11 @@
   font-size: 20px;
   margin: 0 !important;
   line-height: 2 !important;
+}
+
+.checkout-subtitle {
+  display: flex;
+  align-items: center;
 }
 
 .checkout-subtitle > p {
@@ -82,7 +86,7 @@
   text-align: center;
   background: #2E85EC;
   color: #FFF;
-  border-radius: 10px;
+  border-radius: 99px;
   margin-right: 10px;
 }
 
@@ -180,6 +184,10 @@
 
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 .min-input-label {
@@ -303,7 +311,7 @@ hr {
   justify-content: space-between;
   align-items: center;
   height: 60px;
-  width: 100%;
+  width: inherit;
   max-width: 100%;
   padding: 10px 20px 10px 20px;
   z-index: 9999;
@@ -329,7 +337,11 @@ hr {
   font-weight: bold;
   margin-right: 10px;
 
-  transition: opacity 0.4s;
+  -webkit-transition: all 0.7s;
+     -moz-transition: all 0.7s;
+      -ms-transition: all 0.7s;
+       -o-transition: all 0.7s;
+          transition: all 0.7s;
 }
 
 .change-button:hover {
@@ -411,7 +423,11 @@ hr {
   border-radius: 999px;
   border: 1px solid #636363;
   margin: 0 5px 5px 0;
-  transition: opacity 0.7s;
+  -webkit-transition: all 0.7s;
+     -moz-transition: all 0.7s;
+      -ms-transition: all 0.7s;
+       -o-transition: all 0.7s;
+          transition: all 0.7s;
 }
 
 .add-tag:hover {
@@ -424,6 +440,17 @@ hr {
   -webkit-border-radius: 0 !important;
   -moz-border-radius: 0 !important;
   padding: 20px;
+}
+
+
+#notification-table tr {
+  height: 90px;
+  max-height: 90px;
+}
+
+#notification-table-count tr {
+  height: 90px;
+  max-height: 90px;
 }
 
 #notification-table > label {
@@ -459,11 +486,16 @@ hr {
   height: 70px;
 }
 
-
+a:focus,
+button:focus,
 input:focus,
-textarea:focus,
-ql-editor:focus {
-  border: 1px solid #2E85EC;
-  outline:none;
-  transition: all .7s ease-in-out;
-}
+textarea:focus {
+  -webkit-outline: 1px solid #2BB2FF;
+     -moz-outline: 1px solid #2BB2FF;
+      -ms-outline: 1px solid #2BB2FF;
+       -o-outline: 1px solid #2BB2FF;
+          outline: 1px solid #2BB2FF;
+  }
+
+
+
