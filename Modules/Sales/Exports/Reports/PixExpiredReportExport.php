@@ -53,22 +53,22 @@ class PixExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSize,
         }
 
         $salesExpired = $salesModel
-            ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
-                     'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
-            ->leftJoin('plans_sales as plan_sale', function($join) {
-                $join->on('plan_sale.sale_id', '=', 'sales.id');
-            })->leftJoin('checkouts as checkout', function($join) {
-                $join->on('sales.checkout_id', '=', 'checkout.id');
-            })->leftJoin('customers as customer', function($join) {
-                $join->on('sales.customer_id', '=', 'customer.id');
-            })->whereIn('sales.status', [5])->where([['sales.payment_method', Sale::PIX_PAYMENT],])->with([
-                'project',
-                'customer',
-                'project.domains' => function($query) {
-                    $query->where('status', 3)//dominio aprovado
-                    ->first();
-                },
-            ]);
+        ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
+            'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
+        ->leftJoin('plans_sales as plan_sale', function($join) {
+            $join->on('plan_sale.sale_id', '=', 'sales.id');
+        })->leftJoin('checkouts as checkout', function($join) {
+            $join->on('sales.checkout_id', '=', 'checkout.id');
+        })->leftJoin('customers as customer', function($join) {
+            $join->on('sales.customer_id', '=', 'customer.id');
+        })->whereIn('sales.status', [5])->where([['sales.payment_method', Sale::PIX_PAYMENT],])->with([
+            'project',
+            'customer',
+            'project.domains' => function($query) {
+                $query->where('status', 3)//dominio aprovado
+                ->first();
+            },
+        ]);
 
         if(!empty($this->filters['client'])) {
             $customerSearch = $customerModel->where('name', 'like', '%' . $this->filters['client'] . '%')->pluck('id')->toArray();
