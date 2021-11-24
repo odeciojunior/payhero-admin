@@ -60,25 +60,29 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             })->leftJoin('customers as customer', function($join) {
                 $join->on('sales.customer_id', '=', 'customer.id');
             })->whereIn('sales.status', [5])->where([
-                                                        ['sales.payment_method', Sale::BOLETO_PAYMENT],
-                                                    ])->with([
-                                                                 'project',
-                                                                 'customer',
-                                                                 'project.domains' => function($query) {
-                                                                     $query->where('status', 3)//dominio aprovado
-                                                                           ->first();
-                                                                 },
-                                                             ]);
+                ['sales.payment_method', Sale::BOLETO_PAYMENT],
+                ])->with([
+                    'project',
+                    'customer',
+                    'project.domains' => function($query) {
+                    $query->where('status', 3)//dominio aprovado
+                        ->first();
+                    },
+                ]);
 
         if (!empty($this->filters['client'])) {
             $customerSearch = $customerModel->where('name', 'like', '%' . $this->filters['client'] . '%')->pluck('id')
-                                            ->toArray();
+            ->toArray();
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
 
-        if (!empty($this->filters['project']) && $this->filters['project'] !== "all") {
-            $projectId = FoxUtils::decodeHash($this->filters['project']);
-            $salesExpired->where('sales.project_id', $projectId);
+        $parseProjectIds = explode(',', $this->filters['project']);
+        $projectIds = [];
+        if (!empty($parseProjectIds) && !in_array("all", $parseProjectIds)) {
+            foreach($parseProjectIds as $projectId){
+                array_push($projectIds, FoxUtils::decodeHash($projectId));
+            }
+            $salesExpired->whereIn('sales.project_id', $projectIds);
         } else {
             $userProjects = UserProject::select('project_id')
                 ->where('user_id', $this->user->id)
@@ -93,10 +97,15 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             $customerSearch = $customerModel->where('document', FoxUtils::onlyNumbers($this->filters['client_document']))->pluck('id');
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
-        if (!empty($this->filters['plan'])) {
-            $planId = current(Hashids::decode($this->filters['plan']));
-            $salesExpired->whereHas('plansSales', function ($query) use ($planId) {
-                $query->where('plan_id', $planId);
+
+        $parsePlanIds = explode(',', $this->filters['plan']);
+        $planIds = [];
+        if (!empty($parsePlanIds) && !in_array("all", $parsePlanIds)) {
+            foreach($parsePlanIds as $planId){
+                array_push($planIds, Hashids::decode($planId));
+            }
+            $salesExpired->whereHas('plansSales', function ($query) use ($planIds) {
+                $query->whereIn('plan_id', $planIds);
             });
         }
         if (!empty($startDate) && !empty($endDate)) {
