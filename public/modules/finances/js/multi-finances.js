@@ -301,13 +301,14 @@ $(document).ready(function(){
                         dots    : false,
                         responsive:{
                             0:{
-                                items:1,
-                                nav    : false,
+                                items: 1,
+                                nav: false,
+                                dots: true
                             },
-                            600:{
-                                items:3,
-                                nav    : true,
-                            }
+                            768:{
+                                items: 3,
+                                nav: true,
+                            },
                         }
                     });
                 }
@@ -315,7 +316,6 @@ $(document).ready(function(){
         });
 
     }
-
      window.updateWithdrawals = function() {
         let companyId = $("#transfers_company_select").val()
 
@@ -340,13 +340,6 @@ $(document).ready(function(){
             success: function (response) {
                 if(response.data.length){
                     $('#empty-history').hide();
-                    // if (response.data.length ==2) {
-                    //     $('#skeleton-withdrawal').hide();
-                    //     $('#skeleton-withdrawal2').show();
-                    //     $('#skeleton-withdrawal3').show();
-                    // }else if (response.data.length > 2) {
-                    //     $('.skeleton-withdrawal').hide();
-                    // }
                     $('.skeleton-withdrawal').hide();
                     $('#container-withdraw').html('');
                     $('#container-withdraw').show();
@@ -356,11 +349,40 @@ $(document).ready(function(){
                         let img_gateway = getGatewayImg(data.gateway_name.toLowerCase());
 
                         $('#container-withdraw').append(`
-                            <div class="row mx-0 py-20">
-                                <div class="col-sm-6 px-20">${img_gateway}</div>
-                                <div class="col-sm-6 px-20"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated}</span></span></div>
-                                <div class="col-sm-12 px-20" style="margin-top:10px"><h4 style="margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.value)}</span></h4></div>
-                                <div class="col-sm-12 px-20 overflow-bank-name">${data.bank_name.replace('BANCO ', '')}</div>
+                            <div class="row mx-0 py-20 px-md-20">
+                                <div class="col-6 col-md-3 col-lg-6
+                                            px-20 px-md-0
+                                            d-flex order-0
+                                            justify-content-start justify-content-md-center justify-content-lg-start
+                                            align-items-center">
+                                    ${img_gateway}
+                                </div>
+                                <div class="col-6 col-md-3 col-lg-6
+                                            px-20 px-md-0 mt-sm-0 text-sm-right
+                                            d-flex order-1 order-md-2 order-lg-1
+                                            justify-content-center align-items-center">
+                                    <span class="label label-warning">
+                                        <span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated.trim()}</span>
+                                    </span>
+                                </div>
+                                <div class="col-6 col-md-3 col-lg-6
+                                            px-20 px-md-0 mt-10 mt-md-0
+                                            d-flex order-2 order-md-1 order-lg-2
+                                            align-items-center">
+                                    <h4 style="margin-top:3px">
+                                        <span class="font-size-16 gray">R$</span>
+                                        <span class="font-size-18 bold">${removeMoneyCurrency(data.value)}</span>
+                                    </h4>
+                                </div>
+                                <div class="col-6 col-md-3 col-lg-6
+                                            px-20 px-md-0
+                                            d-flex order-4
+                                            justify-content-start justify-content-md-center justify-content-lg-start
+                                            align-items-center">
+                                    <span class="overflow-bank-name">
+                                        ${data.bank_name.replace('BANCO ', '')}
+                                    </span>
+                                </div>
                             </div>
                         `);
                         c++;

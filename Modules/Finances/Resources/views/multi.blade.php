@@ -16,11 +16,14 @@
     <div class="page">
         <div class="page-header container" style="padding-bottom: 0">
             <div class="row">
-                <div class="col-sm-7" style="margin-top: 30px">
-                    <h1 class="page-title">Finanças</h1>
+                <div class="col-12 col-md-7 order-0" style="margin-top: 30px">
+                    <h1 class="page-title d-flex">
+                        Finanças
+                        <span class="badge badge-info new-badge d-inline-block d-md-none ml-10">NOVO!</span>
+                    </h1>
                 </div>
-                <div class="col-sm-5 d-flex d-fall align-items-end justify-content-end">
-                    <div class="col-sm-11 float-right">
+                <div class="col-12 col-md-5 d-flex d-fall align-items-end justify-content-end order-2 order-md-1">
+                    <div class="col-12 col-md-11 float-right">
                         <div class="input-holder">
                             <select style='border-radius:10px' class="form-control select-pad text-right"
                                     id="transfers_company_select"> </select>
@@ -32,13 +35,13 @@
 {{--                        </div>--}}
 {{--                    </div>--}}
                 </div>
-                <div class="col-sm-12">
+                <div class="col-sm-12 order-1 order-md-2">
                     <p class="mt-10 mb-0">
-                        <span class="badge badge-info new-badge">NOVO!</span>
+                        <span class="badge badge-info new-badge d-none d-md-inline-block">NOVO!</span>
                         <span class="new-title">Uma nova central para você controlar seus extratos em diferentes adquirentes.</span>
                     </p>
                 </div>
-                <div class="col-sm-6" id="container-available">
+                <div class="col-sm-6 order-3" id="container-available">
                     <p class="m-0 color-default">Disponível para saque</p>
                     <div id="val-skeleton"><div class="skeleton skeleton-text mb-0 my-5" style="width:207px !important;height: 40px !important;border-radius:20px !important"></div></div>
                     <div id="container_val" style="display:none;">
@@ -55,16 +58,16 @@
                         <i class="o-arrow-right-1 back-button" style="margin-right: 8px"></i> Voltar
                     </div>
                 </div>
-                <div class="col-sm-6 d-flex justify-content-end align-items-center">
+                <div class="col-sm-6 d-none d-md-flex justify-content-end align-items-center order-4">
                     <a href="#" id="btn-config-all" class="btn btn-sm btn-default" style="background-color: #f3f7f9 !important"><i class="o-gear-1"></i></a>
                 </div>
             </div>
         </div>
         <div class="page-content container">
             <div class="row" id="container-gateways">
-                <div class="col-sm-8">
+                <div class="col-md-12 col-lg-8">
                     <div class="row" id="gateway-skeleton">
-                        <div class="col-sm-4">
+                        <div class="col-12 col-md-4">
                             <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
                             <div class="card card-skeleton mb-0">
                                 <div class="card-body p-0 pt-20">
@@ -110,7 +113,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4 d-none d-sm-block">
+                        <div class="col-md-4 d-none d-md-block">
                             <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
                             <div class="card card-skeleton mb-0">
                                 <div class="card-body p-0 pt-20">
@@ -156,7 +159,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4 d-none d-sm-block">
+                        <div class="col-md-4 d-none d-md-block">
                             <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
                             <div class="card card-skeleton mb-0">
                                 <div class="card-body p-0 pt-20">
@@ -205,9 +208,9 @@
                     </div>
                     <div id="container-all-gateways"></div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-md-12 col-lg-4">
                     <div class="row" style="display: flex;justify-content: flex-end">
-                        <div class="col-sm-10 container-history" style="padding-top: 28px;">
+                        <div class="col-md-12 col-lg-10 container-history" style="padding-top: 28px;">
                             <div class="card card-skeleton mb-0" id="card-history">
                                 <div class="col-12 px-20 pt-25 mb-20">
                                     <p class="m-0"><b>Histórico de saques</b></p>
