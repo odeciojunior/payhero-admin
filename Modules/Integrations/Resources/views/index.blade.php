@@ -21,38 +21,6 @@
                     </button>
                 </div>
             </div>
-
-            <div class="" id='card-integration-data' style='display:none;'>
-                <div class="row justify-content-center">
-                    <div class="col-md-3 col-sm-12">
-                        <div class="card shadow p-20">
-                            <p class="title">Integrações cadastradas</p>
-                            <p id='integrations_stored' class="number"></p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-12">
-                        <div class="card shadow p-20">
-                            <p class="">Integrações ativas</p>
-                            <p id='integrations_active' class="number"></p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-12">
-                        <div class="card shadow p-20">
-                            <p class="">Posts recebidos</p>
-                            <p id='posts_received' class="number"></p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-12">
-                        <div class="card shadow p-20">
-                            <p class="">Posts enviados</p>
-                            <p id='posts_sent' class="number"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
         <div class="page-content container" id='page-integrates'>
             <div id="content-error" class='' style='display:none;'>
@@ -124,7 +92,7 @@
                             <div class="row">
                                 <div class="form-group col-12">
                                     <label for="description">Nome da integração</label>
-                                    <input name="description" type="text" class="form-control form-control-lg" id="description" placeholder="Dê um nome para sua integração" value="Profitfy">
+                                    <input name="description" type="text" class="form-control form-control-lg" id="description" placeholder="Dê um nome para sua integração">
                                 </div>
                             </div>
                             <div class="row">
@@ -132,7 +100,7 @@
                                     <label for="token_type_enum">Tipo de Integração</label>
                                     <div id="enum-list">
                                         <select name="token_type_enum" class="form-control form-control-lg select-enum-list">
-                                            <option value="3">Profitfy (Integração Externa)</option>
+                                            <option value="3">Integração Externa</option>
                                             <option value="4">Checkout API</option>
                                         </select>
                                     </div>
