@@ -45,7 +45,8 @@ class CheckWithdrawalsReleased extends Command
 
                         $countTransactionsReleased = 0;
 
-                        foreach ($withdrawal->transactions as $transaction) {
+                        $transactions = $withdrawal->transactions()->whereNull('gateway_transferred_at')->get();
+                        foreach ($transactions as $transaction) {
                             if ($transaction->gateway_id != Gateway::GETNET_PRODUCTION_ID) {
                                 continue;
                             }
@@ -94,7 +95,7 @@ class CheckWithdrawalsReleased extends Command
                                         }
                                     }
                                     $this->warn($errorGetnet);
-                                    report(new Exception($errorGetnet));
+                                    //report(new Exception($errorGetnet));
                                 }
 
                                 $this->tryFixGatewayOrderIdAndGatewayTransactionId($sale);

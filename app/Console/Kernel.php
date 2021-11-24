@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
 
-        $schedule->command('getnet:release-get-faster')->everyThirtyMinutes();
+        $schedule->command('getnet:release-get-faster')->withoutOverlapping()->everyThirtyMinutes();
 
         $schedule->command('updateTransactionsReleaseDate')->hourly();
 

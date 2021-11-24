@@ -65,10 +65,10 @@ class CheckAutomaticWithdrawals extends Command
 
                     $gatewayService = new $gatewayClass;
                     $companyService = new CompanyBalanceService($company, $gatewayService);
-    
+
                     $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
                     $withdrawalValue = $this->getAvailableBalance($settings,$availableBalance);
-                    
+
                     if ($withdrawalValue >= 10000) {
                         $withdrawal = $service->requestWithdrawal($company, $withdrawalValue,$gatewayService->getGatewayId());
                         event(new WithdrawalRequestEvent($withdrawal));
