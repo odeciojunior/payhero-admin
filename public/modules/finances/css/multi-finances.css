@@ -237,6 +237,21 @@ background-position: -24px -53px;
 #btn-config-all {
     border-radius: 12px;
     border: none;
+    background-color: #FFF !important;
+    padding: 10px 12px;
+}
+
+#btn-config-all:focus {
+    border-color: #107DFF !important;
+}
+
+.active-outline svg {
+    filter: invert(33%)
+            sepia(64%)
+            saturate(1981%)
+            hue-rotate(199deg)
+            brightness(102%)
+            contrast(107%);
 }
 
 .new-badge {
