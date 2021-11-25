@@ -343,7 +343,7 @@ class AsaasService implements Statement
     private function saleInstallmentId(Sale $sale): ?string
     {
         $gatewayRequest = $sale->saleGatewayRequests()
-            ->where('gateway_result->status', AsaasGateway::PAYMENT_STATUS_CONFIRMED)
+            ->where('gateway_result->status', Gateway::PAYMENT_STATUS_CONFIRMED)
             ->latest()
             ->first();
 
