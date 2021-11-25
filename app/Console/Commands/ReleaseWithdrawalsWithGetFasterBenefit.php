@@ -9,7 +9,7 @@ use Modules\Core\Entities\Withdrawal;
 
 class ReleaseWithdrawalsWithGetFasterBenefit extends Command
 {
-    protected $signature = 'getnet:release-get-faster';
+    protected $signature = 'withdrawals:release-get-faster';
 
     protected $description = "Libera o saque dos usuário que possuem o benefício 'Receba + rápido' habilitado";
 
