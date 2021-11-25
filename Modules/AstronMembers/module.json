@@ -1,0 +1,13 @@
+{
+    "name": "AstronMembers",
+    "alias": "astronmembers",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\AstronMembers\\Providers\\AstronMembersServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

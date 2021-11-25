@@ -147,6 +147,19 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                        <div class="card app-integration" data-url="/apps/astronmembers" style='width: 270px;'>
+                            <a id="astronmembers-bt" href="/apps/astronmembers" class="add-btn">
+                                <i id="astronmembers-icon" class="o-add-1" aria-hidden="true"></i></a>
+                            <img class="card-img-top card-img-controll  mt-100 " src="{!! asset('modules/global/img/astromembers.jpeg') !!}" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title">Astron Members</h5>
+                                <p class="card-text sm">Integre seus projetos com Astron Members </p>
+                            </div>
+                        </div>
+                    </div>
                     
                     {{--
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
