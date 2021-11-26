@@ -81,6 +81,8 @@ class ProjectUpsellRuleApiController extends Controller
                                             'offer_on_plans' => $offerPlanEncoded,
                                         ]);
 
+            CacheService::forget(CacheService::UPSELL_DATA, $projectId);
+
             return response()->json(['message' => 'Upsell criado com sucesso!'], 200);
         } else {
             return response()->json([

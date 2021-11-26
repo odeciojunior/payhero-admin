@@ -34,7 +34,8 @@ class GatewaysCompaniesCredential extends Model
         'gateway_status',
         'gateway_subseller_id',
         'gateway_api_key',
-        'capture_transaction_enabled'
+        'capture_transaction_enabled',
+        'has_webhook'
     ];
     
     public function company(): BelongsTo

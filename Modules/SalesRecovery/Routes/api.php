@@ -7,11 +7,12 @@ Route::group(
         'middleware' => ['auth:api', 'scopes:admin', 'permission:recovery|sales_manage'],
     ],
     function() {
-        Route::apiResource('recovery', 'SalesRecoveryApiController')->only('index')
-             ->names('api.recovery');
+        Route::apiResource('recovery', 'SalesRecoveryApiController')->only('index')->names('api.recovery');
 
         Route::get('recovery/getrecoverydata', 'SalesRecoveryApiController@getRecoveryData');
         Route::get('checkout/getrecoverydata', 'SalesRecoveryApiController@getRecoveryData');
+
+        Route::get('recovery/getabandonedcart', 'SalesRecoveryApiController@getAbandonedCart');
         Route::get('recovery/getrefusedcart', 'SalesRecoveryApiController@getCartRefused');
         Route::get('recovery/getboleto', 'SalesRecoveryApiController@getBoletoOverdue');
         Route::get('recovery/get-pix', 'SalesRecoveryApiController@getPixOverdue');

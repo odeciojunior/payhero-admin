@@ -65,12 +65,12 @@ class SalesRecoveryService
     public function getSaleExpiredOrRefused(
         int $paymentMethod,
         array $status,
-        string $projectId,
+        array $projectIds,
         string $dateStart = null,
         string $dateEnd = null,
         string $customer = null,
         string $customerDocument = null,
-        string $plan = null
+        array $plans = null
     ) {
         $salesModel = new Sale();
         $userProjectsModel = new UserProject();
@@ -97,31 +97,36 @@ class SalesRecoveryService
                 },
             ]);
 
-
-
         if (!empty($customer)) {
             $customerSearch = $customerModel->where('name', 'like', '%' . $customer . '%')->pluck('id')->toArray();
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
+
         if (!empty($customerDocument)) {
             $customerSearch = $customerModel->where('document', FoxUtils::onlyNumbers($customerDocument))->pluck('id');
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
-        if (!empty($plan)) {
-            $planId = current(Hashids::decode($plan));
-            $salesExpired->whereHas('plansSales', function ($query) use ($planId) {
-                $query->where('plan_id', $planId);
+
+        if (!empty($plans)) {
+            $plansIds = collect($plans)->map(function ($plan) {
+                return current(Hashids::decode($plan));
+            })->toArray();
+            
+            $salesExpired->whereHas('plansSales', function ($query) use ($plansIds) {
+                $query->whereIn('plan_id', $plansIds);
             });
         }
-        if (!empty(request('project')) && request('project') != 'all') {
-            $salesExpired->where('sales.project_id', hashids_decode(request('project')));
+        
+        if (!empty($projectIds) && !in_array('all', $projectIds)) {
+            $salesExpired->whereIn('sales.project_id', $projectIds);
+
         } else {
             $userProjects = $userProjectsModel->where([
                 ['user_id', auth()->user()->account_owner_id],
                 [
                     'type_enum',
                     $userProjectsModel->present()
-                        ->getTypeEnum('producer'),
+                    ->getTypeEnum('producer'),
                 ],
             ])->pluck('project_id')->toArray();
 
@@ -284,14 +289,13 @@ class SalesRecoveryService
         }
 
         $domain = $domainModel->where('project_id', $sale->project_id)
-            ->where('status', $domainModel->present()->getStatus('approved'))->first();
+        ->where('status', $domainModel->present()->getStatus('approved'))->first();
 
-
-//        if (!empty($domain)) {
-//            $link = "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($checkout->id);
-//        } else {
-//            $link = 'Domínio removido';
-//        }
+        // if (!empty($domain)) {
+        //    $link = "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($checkout->id);
+        // }else {
+        //    $link = 'Domínio removido';
+        // }
 
         $link = '';
         if($sale->payment_method === Sale::PIX_PAYMENT) {
@@ -300,8 +304,8 @@ class SalesRecoveryService
             } else {
                 $link = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/pix/' . Hashids::connection('sale_id')->encode($sale->id);
             }
-        }
-        else {
+
+        }else {
             if(FoxUtils::isProduction()) {
                 $link = isset($domain) ? 'https://checkout.' . $domain->name . '/recovery/' . Hashids::encode($checkout->id) : 'Domínio removido';
             } else {

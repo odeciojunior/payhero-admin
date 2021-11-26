@@ -466,20 +466,20 @@ class GetNetStatementService
 
     private function preparesDatabasePixWithSaleSearch(): void
     {
-
         $companyId = $this->filters['company_id'];
 
-        $pix_sales = Sale::select('transactions.value as transaction_value', 'transactions.status as transaction_status',
+        $pixSales = Sale::select('transactions.value as transaction_value', 'transactions.status as transaction_status',
             'transactions.release_date', 'transactions.withdrawal_id',
             'sales.start_date', 'sales.end_date', 'sales.has_valid_tracking', 'sales.id', 'sales.delivery_id', 'transactions.gateway_released_at')
             ->join('transactions', 'transactions.sale_id', '=', 'sales.id')
             ->where('payment_method', Sale::PIX_PAYMENT)
             ->where('transactions.type', Transaction::TYPE_PRODUCER)
             ->where('sales.status', Sale::STATUS_APPROVED)
+            ->whereNotNull('transactions.withdrawal_id')
             ->whereCompanyId($companyId);
 
         if (array_key_exists('sale_id', $this->filters) && !empty($this->filters['sale_id'])) {
-            $pix_sales->where('sales.id', $this->filters['sale_id']);
+            $pixSales->where('sales.id', $this->filters['sale_id']);
         }
 
         if(request('dateRange')) {
@@ -487,13 +487,13 @@ class GetNetStatementService
             $dates = explode(' - ', request('dateRange') ?? '');
             $startDate = Carbon::createFromFormat('d/m/Y', $dates[0]);
             $endDate = Carbon::createFromFormat('d/m/Y', $dates[1]);
-            $pix_sales->whereDate('sales.start_date', '>=', $startDate->format('Y-m-d'));
-            $pix_sales->whereDate('sales.end_date', '<=', $endDate->format('Y-m-d'));
+            $pixSales->whereDate('sales.start_date', '>=', $startDate->format('Y-m-d'));
+            $pixSales->whereDate('sales.end_date', '<=', $endDate->format('Y-m-d'));
         }
 
-        $pix_sales = $pix_sales->get();
+        $pixSales = $pixSales->get();
 
-        foreach ($pix_sales as $pix_sale) {
+        foreach ($pixSales as $pix_sale) {
             $details = new Details();
 
             if (!empty($pix_sale->delivery_id)) {

@@ -3,54 +3,15 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=10') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=' . random_int(100, 10000)) }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/select2.min.css')  }}"/>
-        <style>
-            .select2-selection--single {
-                border: 1px solid #dddddd !important;
-                border-radius: .215rem !important;
-                height: 43px !important;
-            }
-            .select2-selection__rendered {
-                color: #707070 !important;
-                font-size: 16px !important;
-                font-family: 'Muli', sans-serif;
-                line-height: 43px !important;
-                padding-left: 14px !important;
-                padding-right: 38px !important;
-            }
-            .select2-selection__arrow {
-                height: 43px !important;
-                right: 10px !important;
-            }
-            .select2-selection__arrow b {
-                border-color: #8f9ca2 transparent transparent transparent !important;
-            }
-            .select2-container--open .select2-selection__arrow b {
-                border-color: transparent transparent #8f9ca2 transparent !important;
-            }
-
-            .badge {
-                color: white;
-                padding: 5px 15px !important;
-                border-radius: 16px;
-                font-weight: 700;
-            }
-
-            .badge.badge-success  {
-                background-color: #5EE2A1;
-            }
-            .status-sale{
-                min-width: 84px;
-            }
-        </style>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
     @endpush
 
     <!-- Page -->
-        <div class="page mb-0">
+        <div class="page pb-0" style="margin-bottom: 0px !important;">
             <div style="display: none" class="page-header container">
                 <div class="row align-items-center justify-content-between" style="min-height:50px">
                     <div class="col-6">
@@ -80,15 +41,19 @@
                     <div class="fixhalf"></div>
                     <form id='filter_form'>
                         <div id="" class="card shadow p-20">
-                            <div class="row align-items-baseline mb-md-15">
-                                <div class="col-sm-12 col-md">
+
+                            <!-- FILTRO DE EXIBICAO PERMANENTE -->
+                            <div class="row mb-md-15">
+
+                                <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                     <label for="transaction">Transação</label>
                                     <input name='transaction' id="transaction" class="input-pad" placeholder="Transação">
                                 </div>
 
-                                <div class="col-sm-12 col-md">
+
+                                <div class="col-sm-12 col-md-3 scrol mb-15 mb-sm-0">
                                     <label for="status">Status</label>
-                                    <select name='sale_status' id="status" class="form-control select-pad">
+                                    <select name='sale_status' id="status" class="form-control applySelect2">
                                         <option value="">Todos status</option>
                                         <option value="1">Aprovado</option>
                                         <option value="2">Aguardando pagamento</option>
@@ -96,24 +61,13 @@
                                         <option value="7">Estornado</option>
                                         {{--<option value="6">Em análise</option>--}}
                                         {{--<option value="8">Parcialmente estornado</option>--}}
-                                        <option value="chargeback_recovered">Chargeback recuperado</option>
                                         <option value="20">Revisão Antifraude</option>
                                         <option value="21">Cancelado Antifraude</option>
                                         <option value="24">Em disputa</option>
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md">
-                                    <label for="forma">Forma de pagamento</label>
-                                    <select name='select_payment_method' id="forma" class="form-control select-pad">
-                                        <option value="">Todas formas de pagamento</option>
-                                        <option value="1">Cartão de crédito</option>
-                                        <option value="2">Boleto</option>
-                                        <option value="4">Pix</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-sm-6 col-md">
+                                <div class="col-sm-12 col-md-3 mb-sm-0">
                                     <label for="date_type">Data</label>
                                     <select name='date_type' id="date_type" class="form-control select-pad">
                                         <option value="start_date">Data do pedido</option>
@@ -121,66 +75,87 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-6 col-md form-icons">
+                                <div class="col-sm-12 col-md-3 form-icons mb-15 mb-sm-0">
                                     <label for="date_range">&nbsp;</label>
                                     <i style="right: 20px; margin-top: 13px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
                                     <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly>
                                 </div>
+
                             </div>
 
-                            <div class="row collapse" id="bt_collapse">
-                                <div class="d-flex flex-wrap mb-md-15">
-                                    <div class="col-sm-12 col-md">
+                            <div id="bt_collapse" class="collapse">
+
+                                <div class="row mb-md-15">
+
+                                    <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
+                                        <label for="forma">Forma de pagamento</label>
+                                        <select name='select_payment_method' id="forma" class="form-control select-pad applySelect2">
+                                            <option value="">Todas formas de pagamento</option>
+                                            <option value="1">Cartão de crédito</option>
+                                            <option value="2">Boleto</option>
+                                            <option value="4">Pix</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="empresa">Empresa</label>
-                                        <select name="select_company" id="empresa" class="form-control select-pad select-company">
+                                        <select name="select_company" id="empresa" class="form-control select-pad select-company applySelect2">
                                             <option value="">Todas empresas</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="projeto">Projeto</label>
-                                        <select name='select_project' id="projeto" class="form-control select-pad">
+                                        <select name='select_project' id="projeto" class="form-control select-pad applySelect2">
                                             <option value="">Todos projetos</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="plan">Plano</label>
-                                        <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
+                                        <select name='plan' id="plan" class="form-control select-pad applySelect2" style='width:100%;'>
                                             <option value="">Todos planos</option>
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-12 col-md">
+                                </div>
+
+                                <div class="row mb-md-15">
+
+                                    <div class="col-sm-12 col-md mb-15 mb-sm-0">
                                         <label for="cupom">Cupom</label>
                                         <input name="coupon" id="cupom" class="input-pad" placeholder="Código do cupom">
                                     </div>
 
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md mb-15 mb-sm-0">
                                         <label for="valor">Comissão</label>
                                         <input name="value" id="valor" class="input-pad transaction-value" placeholder="Valor da comissão">
                                     </div>
-                                </div>
 
-                                <div class="d-flex flex-wrap">
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md mb-15 mb-sm-0">
                                         <label for="comprador">Nome do cliente</label>
                                         <input name='client' id="comprador" class="input-pad" placeholder="Cliente">
                                     </div>
 
-                                    <div class="col-sm-12 col-md">
+                                    <div class="col-sm-12 col-md mb-15 mb-sm-0">
                                         <label for="customer_document">CPF do cliente</label>
                                         <input name='customer_document' id="customer_document" class="input-pad" placeholder="CPF" data-mask="000.000.000-00">
                                     </div>
 
-                                    <div class="col-sm-12 col-md">
+                                </div>
+
+                                <div class="row mb-md-15 d-flex justify-content-between">
+                                    
+                                    <div class="col-sm-12 col-md-3">
                                         <label for="email_cliente">Email do cliente</label>
                                         <input name="email_client" id="email_cliente" class="input-pad" placeholder="Email">
                                     </div>
 
-                                    <div class="col-sm-12 col-md mt-20" style="flex-grow: 2.134 !important;">
-                                        <div class="row w-full">
-                                            <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                    <div class="col-sm-12 col-md-8 mt-20 pr-0 pl-20" style="flex-grow: 2.134 !important;">
+                                    
+                                        <div class="row pt-15 d-flex justify-content-end mr-0">
+
+                                            <div class='col-sm-4 col-md-3 mb-10 mb-sm-0 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                                 <label class="switch mr-2">
                                                     <input type="checkbox" id='upsell' name="upsell" class='check' value='0'>
                                                     <span class="slider round"></span>
@@ -188,7 +163,7 @@
                                                 <span class="switch-text"> Upsell </span>
                                             </div>
 
-                                            <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                            <div class='col col-sm-4 col-md-3 mb-10 mb-sm-0 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                                 <label class="switch mr-2">
                                                     <input type="checkbox" id='order-bump' name="order_bump" class='check' value='0'>
                                                     <span class="slider round"></span>
@@ -196,15 +171,17 @@
                                                 <span class="switch-text"> Order Bump </span>
                                             </div>
 
-                                            <div class='col d-flex align-items-center justify-content-sm-center justify-content-md-start'>
+                                            <div class='col col-sm-4 col-md-3 mb-10 mb-sm-0 d-flex align-items-center justify-content-sm-center justify-content-md-start'>
                                                 <label class="switch mr-2">
                                                     <input type="checkbox" id='cashback' name="cashback" class='check shopify_error' value='0'>
                                                     <span class="slider round"></span>
                                                 </label>
                                                 <span class="switch-text"> Cashback </span>
                                             </div>
+
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -322,7 +299,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row justify-content-center justify-content-md-end pr-md-15 pb-60">
+                    <div class="row justify-content-center justify-content-md-end pr-md-15 pb-50">
                     <ul id="pagination-sales" class="pagination-sm margin-chat-pagination " style="position:relative;float:right">
                             {{-- js carrega... --}}
                         </ul>
@@ -522,8 +499,8 @@
     @push('scripts')
         <script src="{{ asset('/modules/sales/js/index.js?v=' . random_int(100, 10000)) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="{{ asset('modules/global/js/select2.min.js') }}"></script>
+        <script src="{{ asset('modules/global/js/daterangepicker.min.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 
 @endsection

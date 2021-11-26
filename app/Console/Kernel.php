@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
 
-        $schedule->command('getnet:release-get-faster')->everyThirtyMinutes();
+        $schedule->command('withdrawals:release-get-faster')->withoutOverlapping()->everyThirtyMinutes();
 
         $schedule->command('updateTransactionsReleaseDate')->hourly();
 
@@ -105,6 +105,9 @@ class Kernel extends ConsoleKernel
         //Reorder woocommerce
         $schedule->command('command:WoocommerceReorderSales')->dailyAt('03:45');
 
+        //Retry woocommerce requests
+        $schedule->command('command:WoocommerceRetryFailedRequests')->dailyAt('04:15');
+
         //checks the trackings that have been recognized by the carrier but has no movement yet
         $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');
 
@@ -119,7 +122,7 @@ class Kernel extends ConsoleKernel
         //Remove temporary files in regiter
         $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
 
-        $schedule->command('check:automatic-liquidation-transactions')->dailyAt('06:15');
+        $schedule->command('available-balance:update')->dailyAt('06:15');
 
         $schedule->command('redis:update-sale-tracking')->hourly();
 
@@ -148,7 +151,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('achievements:update')->dailyAt('21:00');
 
         /** Pix Canceled */
-        $schedule->command('change:pix-to-canceled')->everyMinute();
+        $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
 
         /** Check GatewayTax invitations Diogo */
         $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
@@ -159,6 +162,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00');
         /** Confirma a transferencia do dinheiro da azx */
         $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30');
+
+        /** Antecipações Asaas */
+        $schedule->command('anticipations:asaas')->dailyAt('4:00');
+        $schedule->command('anticipations:asaas-pending')->dailyAt('14:00');
+        $schedule->command('anticipations:asaas-pending')->dailyAt('16:00');
     }
 
     protected function commands()
