@@ -558,10 +558,8 @@ hr{
 }
 
 .owl-dot {
-    width: 15px;
-    height: 15px;
     border-radius: 15px;
-    padding: 10px;
+    padding: 7px;
     border: none;
     background: #C4C4C4;
 }
