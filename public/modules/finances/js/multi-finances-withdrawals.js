@@ -341,10 +341,10 @@ window.customWithdrawal = function(gatewayId) {
                                 </div>
                             </div>
                             <div class="row" style="background-color:#F41C1C1A;">
-                                <div class='col-md-8 mt-10'>
-                                    <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
+                                <div class='col-md-8 d-flex align-items-center py-10'>
+                                    <p class="m-0" style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                                 </div>
-                                <div class="col-md-4 mt-10 text-right">
+                                <div class="col-md-4 d-flex align-items-center justify-content-end">
                                     <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
                                         <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
                                             ${formatMoney(removeFormatNumbers(debitValue))}
@@ -381,7 +381,7 @@ window.customWithdrawal = function(gatewayId) {
             } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1) {
 
                 withdrawRequestValid = true;
-                $("#modal-body-withdrawal-custom").html("");
+                $("#modal-body-withdrawal-custom").html("").addClass('d-none');
                 $("#text-description-debit-pending").html("");
 
                 $("#modal-withdrawal-custom-title").text(
@@ -406,10 +406,10 @@ window.customWithdrawal = function(gatewayId) {
                                 </div>
                             </div>
                             <div class="row" style="background-color:#F41C1C1A;">
-                                <div class='col-md-8 mt-10' >
-                                    <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
+                                <div class='col-md-8 d-flex align-items-center py-10'>
+                                    <p class="m-0" style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                                 </div>
-                                <div class="col-md-4 mt-10 text-right">
+                                <div class="col-md-4 d-flex align-items-center justify-content-end">
                                     <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
                                         <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
                                             ${formatMoney(removeFormatNumbers(debitValue))}
@@ -452,6 +452,7 @@ window.customWithdrawal = function(gatewayId) {
             const htmlModal = optionsValuesWithdrawal(singleValue, dataWithdrawal);
 
             $("#modal-body-withdrawal-custom, #debit-pending-informations, #text-title-debit-pending,#text-description-debit-pending").html("");
+            $("#modal-body-withdrawal-custom").removeClass('d-none');
             $("#modal-withdrawal-custom-title").html("").html("Confirmar Saque");
 
             $("#modal-body-withdrawal-custom").html(`
@@ -494,10 +495,10 @@ window.customWithdrawal = function(gatewayId) {
                                 </div>
                             </div>
                             <div class="row" style="background-color:#F41C1C1A;">
-                                <div class='col-md-8 mt-10' >
-                                    <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
+                                <div class='col-md-8 d-flex align-items-center py-10'>
+                                    <p class="m-0" style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                                 </div>
-                                <div class="col-md-4 mt-10 text-right">
+                                <div class="col-md-4 d-flex align-items-center justify-content-end">
                                     <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
                                         <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
                                             ${formatMoney(removeFormatNumbers(debitValue))}

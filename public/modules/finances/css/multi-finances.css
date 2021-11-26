@@ -234,15 +234,15 @@ background-position: -24px -53px;
     color: #636363;
 }
 
-#btn-config-all {
-    border-radius: 12px;
-    border: none;
-    background-color: #FFF !important;
-    padding: 10px 12px;
+.btn-default {
+    border: 1px solid transparent;
 }
 
-#btn-config-all:focus {
-    border-color: #107DFF !important;
+#btn-config-all {
+    border-radius: 12px;
+    border-color: transparent;
+    background-color: #FFF !important;
+    padding: 10px 12px;
 }
 
 .active-outline svg {
@@ -452,8 +452,12 @@ background-position: -24px -53px;
     background-color: white !important;
 }
 
+.bg-light, .bg-lighter {
+    border: 1px solid transparent;
+}
+
 .bg-lighter {
-    border: 1px solid #636363;
+    border-color: #BBB
 }
 
 .active-outline{
