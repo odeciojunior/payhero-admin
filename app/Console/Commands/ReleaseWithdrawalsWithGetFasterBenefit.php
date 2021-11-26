@@ -9,7 +9,7 @@ use Modules\Core\Entities\Withdrawal;
 
 class ReleaseWithdrawalsWithGetFasterBenefit extends Command
 {
-    protected $signature = 'getnet:release-get-faster';
+    protected $signature = 'withdrawals:release-get-faster';
 
     protected $description = "Libera o saque dos usuário que possuem o benefício 'Receba + rápido' habilitado";
 
@@ -24,15 +24,14 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
             ->selectRaw('withdrawals.*')
             ->join('companies as c', 'c.id', '=', 'withdrawals.company_id')
             ->join('users as u', 'u.id', '=', 'c.user_id')
-            ->whereIn('withdrawals.status', [Withdrawal::STATUS_PENDING, Withdrawal::STATUS_IN_REVIEW])
-            ->where('automatic_liquidation', 1)
+            ->whereIn('withdrawals.status', [Withdrawal::STATUS_PENDING, Withdrawal::STATUS_IN_REVIEW])            
             ->where('u.get_faster', 1)
-            ->where('withdrawals.gateway_id',Gateway::GETNET_PRODUCTION_ID)
+            ->whereIn('withdrawals.gateway_id',[Gateway::GETNET_PRODUCTION_ID,Gateway::ASAAS_PRODUCTION_ID,Gateway::GERENCIANET_PRODUCTION_ID])
             ->whereNull('c.deleted_at')
             ->whereNull('u.deleted_at')
             ->orderBy('withdrawals.id')
             ->get();
-
+        $this->comment(json_encode($withdrawals->pluck('id')));
         $managerUrl = env('MANAGER_URL', 'http://dev.manager.com.br') . '/api/release/withdrawalsgetfaster';
 
         foreach ($withdrawals as $withdrawal) {

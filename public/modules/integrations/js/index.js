@@ -95,7 +95,7 @@ $(document).ready(function () {
                         dados += '<input type="text" class="form-control font-sm brr inptToken" id="inputToken-' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
                         dados += '<div class="input-group-append">';
                             dados += '<button class="btn btn-primary bg-white btnCopiarLink" data-code="' + value.id_code + '" type="button" data-placement="top" data-toggle="tooltip" title="Copiar token">';
-                                dados += '<span class="icon-copy-2"></span>';
+                                dados += '<img src="/modules/global/img/icon-copy-c.svg">';
                             dados += '</button>';
                         dados += '</div>';
                     dados += '</div>';

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
@@ -28,6 +29,7 @@ class CheckWithdrawalsLiquidated extends Command
     {
         try {
             $withdrawals = Withdrawal::with('transactions', 'transactions.sale', 'transactions.company')
+                ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
                 ->where('automatic_liquidation', true)
                 ->whereIn('status', [Withdrawal::STATUS_LIQUIDATING, Withdrawal::STATUS_PARTIALLY_LIQUIDATED])
                 ->orderBy('id');

@@ -142,9 +142,9 @@ class CheckoutService
             } else {
                 $urlCancelPayment = env('CHECKOUT_URL') . "/api/payment/cancel/{$idEncoded}";
             }
-            \Log::info($urlCancelPayment);
+            
             $response = $this->runCurl($urlCancelPayment, 'POST');
-            \Log::info((array)$response);
+            
             if (($response->status ?? '') != 'success') {
                 return [
                     'status' => 'error',
@@ -220,7 +220,7 @@ class CheckoutService
             ];
 
             $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
-            if ($response->status == 'success' && $response->response->status == 'success') {
+            if (!empty($response) && $response->status == 'success' && $response->response->status == 'success') {
                 // $saleModel  = new Sale();
                 $dataUpdate = (array)$response->response;
                 // if (!empty($dataUpdate['gateway_received_date'])) {
