@@ -196,9 +196,9 @@ $(document).ready(function(){
                                                 <label class="ml-20" style="font-size:16px;color: #636363;">Valor a sacar</label>
                                                 <div class="input-group mb-3 withdrawal-value px-20">
                                                     <div class="input-group-prepend">
-                                                        <span class="input-group-text">R$</span>
+                                                        <div class="input-group-text">R$</div>
                                                     </div>
-                                                    <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque">
+                                                    <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque" placeholder="Digite o valor">
                                                 </div>
                                             </div>
                                         </div>

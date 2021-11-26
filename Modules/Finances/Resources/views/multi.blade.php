@@ -362,9 +362,9 @@
                                     <br>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text">R$</span>
+                                            <div class="input-group-text">R$</div>
                                         </div>
-                                        <input id="withdrawal_amount" name="withdrawal_amount" type="text" class="form-control" aria-label="Valor mínimo para saque">
+                                        <input id="withdrawal_amount" name="withdrawal_amount" type="text" class="form-control" aria-label="Valor mínimo para saque" placeholder="Digite o valor">
                                     </div>
                                     <br>
                                     <div class="row">
