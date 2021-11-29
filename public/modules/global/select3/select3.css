@@ -96,3 +96,17 @@
 .select3-container .select3-loading {
     padding-top: 18px;
 }
+
+@media (max-width: 480px) {
+    .select3-container {
+        max-width: 360px;
+        min-width: 360px;
+    }
+}
+
+@media (max-width: 320px) {
+    .select3-container {
+        max-width: 290px;
+        min-width: 290px;
+    }
+}

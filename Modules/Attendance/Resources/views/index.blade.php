@@ -178,7 +178,7 @@
                                         <textarea id="write-area" class="input-pad" rows="1"
                                                   placeholder="Digite sua mensagem..."></textarea>
                                         <div class="write-buttons">
-                                            <input type="file" accept="image/*,.txt,.pdf,.doc,.docx" id="input-file"
+                                            <input type="file" accept="audio/*,image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" id="input-file"
                                                    class="d-none">
                                             <input type="file" accept="image/*" id="input-image" class="d-none">
                                             <button id="btn-emoji">

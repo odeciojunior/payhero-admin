@@ -1394,9 +1394,10 @@
                 if ($(opt.container).css('position') == 'relative') {
                     var containerOffset = $(opt.container).offset();
                     var leftIndent = Math.max(0, offset.left + box.outerWidth() - $('body').width() + 16);
+                    var left = offset.left - containerOffset.left - leftIndent;
                     box.css({
                         top: offset.top - containerOffset.top + $(self).outerHeight() + 4,
-                        left: offset.left - containerOffset.left - leftIndent
+                        left: left < 0 ? 0 : left,
                     });
                 } else {
                     if (offset.left < 460) //left to right

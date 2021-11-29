@@ -485,9 +485,9 @@
     }
 
     .date-picker-wrapper .month-wrapper table .day {
-        width: 35px;
-        height: 35px;
-        line-height: 35px;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
     }
 
     .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {

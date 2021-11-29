@@ -383,15 +383,13 @@ $(() => {
                     const colPadding = 15;
                     let parent = target[0].parentNode;
                     let {left: parentLeft, width: parentWidth} = parent.getBoundingClientRect();
-                    let maxLeft = parentWidth - inputWidth - (colPadding * 2);
+                    let maxLeft = parentWidth - inputWidth - (colPadding * 4);
                     let left = this.getBoundingClientRect().left - parentLeft - colPadding;
                     left = left > maxLeft ? maxLeft : left;
                     target.css('margin-left', left + 'px')
                         .addClass('show');
                     target.find('input').focus();
                 }
-
-
             }
         } else {
             btn.toggleClass('active');
@@ -425,7 +423,7 @@ $(() => {
         let parentId = parent.attr('id');
         let badge = $(`[data-target='#${parentId}']`);
         let value = $(this).data('value');
-        if(value) {
+        if (value) {
             badge.addClass('active');
         } else {
             badge.removeClass('active');
@@ -701,6 +699,8 @@ $(() => {
         }
     }).on('datepicker-change', function () {
         index();
+    }).on('datepicker-open', function () {
+        $('.filter-badge-input').removeClass('show');
     }).on('datepicker-close', function () {
         $(this).removeClass('focused');
         if ($(this).data('value')) {

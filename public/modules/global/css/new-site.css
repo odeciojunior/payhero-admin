@@ -242,6 +242,11 @@ input, .input-pad {
     font-family: 'Muli', sans-serif;
 }
 
+.input-pad:focus {
+    border: 1px solid #88BFFF;
+    outline: 0;
+}
+
 .input-pad {
     line-height: 1.57142857;
 }
