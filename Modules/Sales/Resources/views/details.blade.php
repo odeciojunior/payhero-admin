@@ -100,10 +100,10 @@
                         <div class="col-sm-6 col-6 text-right">
                             <h4 id="total-value" class="table-title"></h4>
                         </div>
-                        <div class='col-sm-8 col-8'>
+                        <div class='col-sm-8 col-6'>
                             <span id="cashback-label" class="text-muted ft-12 d-none">Cashback</span>
                         </div>
-                        <div class='col-sm-4 col-4 text-right'>
+                        <div class='col-sm-4 col-6 text-right'>
                             <span id="cashback-value" class="text-muted ft-12 d-none">R$ </span>
                         </div>
                     </div>
@@ -114,10 +114,10 @@
                         <div id="cambio-value" class='col-4 text-right' style="display:none">
                             <span class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-sm-8 col-8'>
+                        <div class='col-sm-8 col-7'>
                             <span id="taxas-label" class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-sm-4 col-4 text-right'>
+                        <div class='col-sm-4 col-5 text-right'>
                             <span id="taxareal-value" class='text-muted ft-12'></span>
                         </div>
                         <div style="color: #2E85EC" class='col-sm-12 pointer mt-5' data-toggle="collapse" data-target="#taxas-detail" aria-expanded="false" aria-controls="taxas-detail">
@@ -255,26 +255,37 @@
                         <h4> Dados Pessoais </h4>
                         <span id="client-name" class="table-title gray"></span>
                         <br>
+
                         <div class="d-flex align-items-center">
-                            <label for="client-telephone" class="table-title gray mb-0">Telefone:</label>&nbsp;
-                            <input id="client-telephone" name="client-telephone"
-                                   class="detail-input mr-2 table-title gray fake-label" readonly>
-                            <a class="pointer btn-edit-client"><span class="o-edit-1"></span></a>
+                            <input id="client-telephone" name="client-telephone" class="detail-input mr-2 table-title gray fake-label" readonly>
+                            <a class="pointer btn-edit-client">
+                                <span class="o-edit-1"></span>
+                            </a>
+                            
                             <a class="pointer btn-save-client" style="display:none;">
-                                <i class="material-icons font-size-18">save</i></a>
+                                <i class="material-icons font-size-18">save</i>
+                            </a>
+                            
+                            <a class="pointer btn-close-client ml-2" style="display:none;">
+                                <i class="material-icons font-size-18">close</i>
+                            </a>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+
+                            <input id="client-email" type="email" name="client-email" class="detail-input mr-2 table-title gray fake-label" readonly>
+                            <a class="pointer btn-edit-client">
+                                <span class="o-edit-1"></span>
+                            </a>
+
+                            <a class="pointer btn-save-client" style="display:none;">
+                                <i class="material-icons font-size-18">save</i>
+                            </a>
+                            
                             <a class="pointer btn-close-client ml-2" style="display:none;">
                                 <i class="material-icons font-size-18">close</i></a>
                         </div>
-                        <div class="d-flex align-items-center">
-                            <label for="client-email" class="table-title gray mb-0">E-mail:</label>&nbsp;
-                            <input id="client-email" type="email" name="client-email"
-                                   class="detail-input mr-2 table-title gray fake-label" readonly>
-                            <a class="pointer btn-edit-client"><span class="o-edit-1"></span></a>
-                            <a class="pointer btn-save-client" style="display:none;">
-                                <i class="material-icons font-size-18">save</i></a>
-                            <a class="pointer btn-close-client ml-2" style="display:none;">
-                                <i class="material-icons font-size-18">close</i></a>
-                        </div>
+                        
                         <span id="client-document" class="table-title gray"></span>
                         <div class="mt-15 mb-5" id="client-whatsapp-container">
                             <a class="pointer label d-inline-flex align-items-center pl-3 d-block" id="client-whatsapp"
