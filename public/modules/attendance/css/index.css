@@ -216,6 +216,20 @@ button:active {
     visibility: visible;
 }
 
+.filter-badge.dropdown {
+    padding-right: 30px !important;
+}
+
+.filter-badge.dropdown:not(.active)::after {
+    content: url('/modules/global/img/down.svg') !important;
+    top: 16px;
+    visibility: visible;
+}
+
+.filter-badge.dropdown.focused::after {
+    content: url('/modules/global/img/down-blue.svg') !important;
+}
+
 .filter-badge-input {
     position: absolute;
     display: flex;
@@ -230,6 +244,13 @@ button:active {
     visibility: hidden;
     opacity: 0;
     transition: opacity .3s ease-in-out;
+}
+
+.filter-badge-input.clean {
+    max-width: none;
+    padding: 0;
+    background: none;
+    box-shadow: none;
 }
 
 .filter-badge-input.show {

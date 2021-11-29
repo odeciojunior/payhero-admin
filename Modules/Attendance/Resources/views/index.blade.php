@@ -4,7 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v='.uniqid()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/global/select3/select3.css') }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css') }}">
         <link rel="stylesheet" href="{{ asset('/modules/attendance/css/index.css?v='.uniqid()) }}">
     @endpush
@@ -66,6 +66,9 @@
                         <i class="material-icons">filter_list</i>
                     </div>
                     <div class="filter-container">
+                        <span id="filter-plan" class="filter-badge editable dropdown"
+                              data-target="#input-plan">Por plano</span>
+                        <span class="vertical-line"></span>
                         <span id="category-complaint" class="filter-badge">Reclamação</span>
                         <span id="category-doubt" class="filter-badge">Dúvida</span>
                         <span id="category-suggestion" class="filter-badge">Sugestão</span>
@@ -83,6 +86,11 @@
             </div>
             <div class="row">
                 <div class="col">
+                    <div class="filter-badge-input clean" id="input-plan">
+                        <select id="plan-select">
+                            <option value="">Todos planos</option>
+                        </select>
+                    </div>
                     <div class="filter-badge-input" id="input-document">
                         <input class="input-pad" placeholder="CPF/CNPJ do cliente">
                         <button class="btn btn-primary">
@@ -199,7 +207,7 @@
     @include('projects::empty')
 
     @push('scripts')
-        <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
+        <script src="{{asset('modules/global/select3/select3.js')}}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script
             src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js?v=' . uniqid()) }}"></script>

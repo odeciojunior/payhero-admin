@@ -101,6 +101,8 @@ $(() => {
 
         let project = $('#project-select').val();
 
+        let plan = $('#filter-plan').data('value') || '';
+
         let category = [];
         if ($('#category-complaint.active').length) {
             category.push(1);
@@ -124,6 +126,7 @@ $(() => {
 
         let filters = {
             project,
+            plan,
             category,
             document,
             name,
@@ -332,6 +335,7 @@ $(() => {
 
     // Project Select
     $('#project-select').on('change', function () {
+        $('#plan-select').clear();
         index();
         getResume();
     });
@@ -413,6 +417,22 @@ $(() => {
 
             index();
         }
+        parent.removeClass('show');
+    });
+
+    $(document).on('click', '.filter-badge-input .select3-option', function () {
+        let parent = $(this).parents('.filter-badge-input');
+        let parentId = parent.attr('id');
+        let badge = $(`[data-target='#${parentId}']`);
+        let value = $(this).data('value');
+        if(value) {
+            badge.addClass('active');
+        } else {
+            badge.removeClass('active');
+        }
+        badge.data('value', value)
+            .addClass('active');
+        index();
         parent.removeClass('show');
     });
 
@@ -633,6 +653,42 @@ $(() => {
     }
 
     // third party
+
+    $('#plan-select').select3({
+        placeholder: 'Selecione o plano',
+        language: {
+            noResults: 'Nenhum plano encontrado',
+            searching: 'Procurando...',
+            loadingMore: 'Carregando mais planos...'
+        },
+        ajax: {
+            url: '/api/plans/user-plans',
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            data: params => {
+                return {
+                    search: params.term,
+                    page: params.page || 1,
+                    project_id: $('#project-select').val()
+                }
+            },
+            processResults: res => {
+                return {
+                    results: $.map(res.data, function (obj) {
+                        return {
+                            id: obj.id,
+                            text: obj.name + (obj.description ? " - " + obj.description : ""),
+                        };
+                    }),
+                    pagination: {
+                        more: res.meta.current_page < res.meta.last_page
+                    }
+                }
+            }
+        }
+    });
 
     $('#filter-date').dateRangePicker({
         setValue: function (s) {
