@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
 
-        $schedule->command('getnet:release-get-faster')->everyThirtyMinutes();
+        $schedule->command('withdrawals:release-get-faster')->withoutOverlapping()->everyThirtyMinutes();
 
         $schedule->command('updateTransactionsReleaseDate')->hourly();
 
@@ -104,6 +104,9 @@ class Kernel extends ConsoleKernel
 
         //Reorder woocommerce
         $schedule->command('command:WoocommerceReorderSales')->dailyAt('03:45');
+
+        //Retry woocommerce requests
+        $schedule->command('command:WoocommerceRetryFailedRequests')->dailyAt('04:15');
 
         //checks the trackings that have been recognized by the carrier but has no movement yet
         $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');

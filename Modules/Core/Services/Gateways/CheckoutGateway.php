@@ -102,6 +102,15 @@ class CheckoutGateway extends GatewayAbstract
         return $response;
     }
 
+    public function newCustomerLoan($companyId,int $amount){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'newCustomerLoan',  
+            'variables'=>[$companyId],
+            'data' => ['amount'=>$amount]            
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
     public function setBaseUrl($newUrl){
         $this->baseUrl = $newUrl;
     }
@@ -143,7 +152,11 @@ class CheckoutGateway extends GatewayAbstract
             "simulateWebhookTransfer" => [
                 "route" => "postback/asaas",
                 "method" => "POST"
-            ]
+            ],
+            "newCustomerLoan" => [
+                "route" => "withdrawal/customer-loan-asaas/:companyId",
+                "method" => "POST"
+            ],
         ];
     }
 

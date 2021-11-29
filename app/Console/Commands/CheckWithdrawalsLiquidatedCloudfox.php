@@ -6,6 +6,7 @@ use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\TransactionCloudfox;
 
 use Modules\Core\Services\CompanyService;
@@ -26,6 +27,7 @@ class CheckWithdrawalsLiquidatedCloudfox extends Command
     {
         try {
             $transactionsCloudfox = TransactionCloudfox::with('sale', 'company')
+                ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
                 ->whereNotNull('gateway_released_at')->whereNull('gateway_transferred_at');
 
             $company = Company::find(2);

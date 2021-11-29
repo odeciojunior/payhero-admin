@@ -63,8 +63,8 @@ class PixService
                     ->whereDate('start_date', \Carbon\Carbon::parse($sale->start_date)->format("Y-m-d"))->first();
 
 
-                    if(!empty($saleModel)) {
-                        report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id . ' sale conflitante $saleModel' . $saleModel->id));
+                    if(empty($saleModel)) {
+                        report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id . ' sale conflitante $saleModel = ' . $saleModel->id));
                         continue;
                     }
 

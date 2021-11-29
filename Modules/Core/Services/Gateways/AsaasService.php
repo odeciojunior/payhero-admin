@@ -16,10 +16,16 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Entities\SaleGatewayRequest;
+use Modules\Core\Entities\SaleLog;
+use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
+
+use function Clue\StreamFilter\fun;
 
 class AsaasService implements Statement
 {
@@ -334,17 +340,20 @@ class AsaasService implements Statement
 
     }
 
-    private function saleInstallmentId(Sale $sale) : ?string
+    private function saleInstallmentId(Sale $sale): ?string
     {
-        $gatewayRequests = $sale->saleGatewayRequests()->get();
-        foreach ($gatewayRequests as $gatewayRequest) {
-            $result = json_decode($gatewayRequest->gateway_result, true);
+        $gatewayRequest = $sale->saleGatewayRequests()
+            ->where('gateway_result->status', Gateway::PAYMENT_STATUS_CONFIRMED)
+            ->latest()
+            ->first();
 
-            if(isset($result['id']) and $sale->gateway_transaction_id == $result['id'] and !empty($result['installment'])){
-                return $result['installment'];
-            }
+        $result = json_decode($gatewayRequest->gateway_result, true);
+
+        if (isset($result['id']) and $sale->gateway_transaction_id == $result['id'] and !empty($result['installment'])) {
+            return $result['installment'];
         }
-        if (empty($gatewayRequests)) {
+
+        if (empty($gatewayRequest)) {
             throw new Exception("Venda não tem o installment para antecipar !");
         }
         return null;
@@ -371,5 +380,106 @@ class AsaasService implements Statement
             ]
 
         );
+    }
+
+    public function getGatewayId()
+    {
+        return FoxUtils::isProduction() ? Gateway::ASAAS_PRODUCTION_ID:Gateway::ASAAS_SANDBOX_ID;
+    }
+
+    public function cancel($sale, $response, $refundObservation): bool
+    {
+        try {
+            DB::beginTransaction();
+            $responseGateway = $response->response ?? [];
+            $statusGateway = $response->status_gateway ?? '';
+
+            SaleRefundHistory::create(
+                [
+                    'sale_id' => $sale->id,
+                    'refunded_amount' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'date_refunded' => Carbon::now(),
+                    'gateway_response' => json_encode($responseGateway),
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'refund_observation' => $refundObservation,
+                    'user_id' => auth()->user()->account_owner_id,
+                ]
+            );
+
+            $refundTransactions = $sale->transactions;
+            $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
+
+            $saleService = new SaleService();
+            $saleTax = 0;
+            if(!empty($sale->anticipation_id)){
+                $saleTax = $saleService->getSaleTax($cloudfoxTransaction, $sale);
+            }
+
+            foreach ($refundTransactions as $refundTransaction) {
+                $transactionRefundAmount = (int)$refundTransaction->value;
+
+                $company = $refundTransaction->company;
+                if (!empty($company)) {
+
+                    if ($refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
+
+                        $refundValue = $refundTransaction->value;
+                        if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
+                            if (!empty($refundTransaction->sale->automatic_discount)) {
+                                $refundValue -= $refundTransaction->sale->automatic_discount;
+                            }
+                            $refundValue += $saleTax;
+                        }
+                        $transactionRefundAmount = $refundValue;
+
+                        Transfer::create([
+                            'transaction_id' => $refundTransaction->id,
+                            'user_id' => $refundTransaction->user_id,
+                            'company_id' => $refundTransaction->company_id,
+                            'gateway_id' => $sale->gateway_id,
+                            'value' => $transactionRefundAmount,
+                            'type' => 'out',
+                            'type_enum' => Transfer::TYPE_OUT,
+                            'reason' => 'refunded',
+                            'is_refunded_tax' => 0
+                        ]);
+
+                        $company->update([
+                            'asaas_balance' => $company->asaas_balance -= $transactionRefundAmount
+                        ]);
+                    }
+                }
+
+                $refundTransaction->status = 'refunded';
+                $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
+                $refundTransaction->is_waiting_withdrawal = 0;
+                $refundTransaction->save();
+            }
+
+            $sale->update(
+                [
+                    'status' => Sale::STATUS_REFUNDED,
+                    'gateway_status' => $statusGateway,
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'date_refunded' => Carbon::now(),
+                ]
+            );
+
+            SaleLog::create(
+                [
+                    'sale_id' => $sale->id,
+                    'status' => 'refunded',
+                    'status_enum' => Sale::STATUS_REFUNDED,
+                ]
+            );
+
+            DB::commit();
+
+            return true;
+        } catch (Exception $ex) {
+            report($ex);
+            DB::rollBack();
+            throw $ex;
+        }
     }
 }

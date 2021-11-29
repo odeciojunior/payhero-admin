@@ -392,19 +392,18 @@ class SalesRecoveryApiController extends Controller
 
             if ($dataRequest['recovery_type'] == 1) {
                 $filename = 'report_abandoned_cart' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
-
                 (new AbandonedCartReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+
             } else if ($dataRequest['recovery_type'] == 3) {
                 $filename = 'report_card_refused' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
-
                 (new CardRefusedReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+
             } else if ($dataRequest['recovery_type'] == 4) {
                 $filename = 'report_pix_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
-
                 (new PixExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+                
             } else {
                 $filename = 'report_billet_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
-
                 (new BilletExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
             }
 
@@ -412,7 +411,7 @@ class SalesRecoveryApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 400);
+            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'.$e->getMessage()], 400);
         }
     }
 
