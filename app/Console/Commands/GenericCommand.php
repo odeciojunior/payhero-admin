@@ -28,7 +28,7 @@ class GenericCommand extends Command
     public function handle()
     {
         //$this->changeAnticipation();
-        $this->changePixToCanceled();
+        //$this->changePixToCanceled();
     }
 
     public function changeAnticipation()
