@@ -34,6 +34,7 @@ use App\Jobs\ProcessWooCommercePostbackTracking;
 use App\Jobs\ImportWooCommerceOrders;
 use App\Jobs\ProcessWooCommerceOrderNotes;
 use App\Jobs\ProcessWooCommerceSaveProductSku;
+use Modules\Core\Entities\SaleWoocommerceRequests;
 
 class WooCommerceService
 {
@@ -574,6 +575,67 @@ class WooCommerceService
         }
 
 
+    }
+
+    public function approveBillet($woocommerce_order, $project_id = null)
+    {
+        if(empty($woocommerce_order)){
+            return false;
+        }else{
+
+            
+            
+            $data = [
+                'status' => 'processing',
+                'set_paid' => true
+            ];
+
+            //$log_request_id = $this->log_post_requests($data, $project_id, 'approve_billet', $woocommerce_order);
+            
+            try {
+                
+                $res = $this->woocommerce->put('orders/'.$woocommerce_order, $data);
+                
+                // if(!empty($res->status) && $res->status == 'processing'){
+                //     $res = json_encode($res);
+                //     $this->update_post_request($log_request_id, 1, $res);
+
+                // }else{
+                //     $this->update_post_request($log_request_id, 0, $res);
+
+                // }
+
+
+                return $res;
+
+            } catch (\Throwable $th) {
+                
+                //$this->update_post_request($log_request_id, 0, $th);
+                report($th);
+            }
+            
+        }
+    }
+
+    public function log_post_requests($data, $project_id = null, $method = null, $order = null, $sale_id = null)
+    {
+        $model = new SaleWoocommerceRequests();
+        $model->send_data = json_encode($data);
+        $model->method = $method;
+        $model->order = $order;
+        $model->project_id = $project_id;
+        $model->save();
+        return $model->id;
+    }
+
+    public function update_post_request($id, $status, $received_data)
+    {
+        $model = SaleWoocommerceRequests::where('id', $id)->first();
+        
+        $model->status = $status;
+        $model->received_data = $received_data;
+        $model->save();
+        
     }
 
 }

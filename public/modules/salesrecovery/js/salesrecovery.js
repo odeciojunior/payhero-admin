@@ -702,7 +702,7 @@ $(document).ready(function () {
     }
     function getFilters(urlParams = false) {
         let data = {
-            project: $("#project option:selected").val(),
+            project: $("#project").val(),
             recovery_type: $("#recovery_type option:selected").val(),
             date_range: $("#date-range-sales-recovery").val(),
             client: $("#client-name").val(),

@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\WithdrawalSettings;
 use Modules\Core\Events\WithdrawalRequestEvent;
-use Modules\Core\Services\CompanyBalanceService;
-
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
@@ -64,13 +62,13 @@ class CheckAutomaticWithdrawals extends Command
                 foreach($this->defaultGateways as $gatewayClass){
 
                     $gatewayService = new $gatewayClass;
-                    $companyService = new CompanyBalanceService($company, $gatewayService);
-    
-                    $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
+                    $gatewayService->setCompany($company);
+
+                    $availableBalance = $gatewayService->getAvailableBalance();
                     $withdrawalValue = $this->getAvailableBalance($settings,$availableBalance);
-                    
+
                     if ($withdrawalValue >= 10000) {
-                        $withdrawal = $service->requestWithdrawal($company, $withdrawalValue,$gatewayService->getGatewayId());
+                        $withdrawal = $gatewayService->createWithdrawal($withdrawalValue);
                         event(new WithdrawalRequestEvent($withdrawal));
                     }
                 }
