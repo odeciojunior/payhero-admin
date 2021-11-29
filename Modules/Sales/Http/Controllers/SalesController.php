@@ -70,7 +70,8 @@ class SalesController extends Controller
                 ->getStatement();
             $result = json_decode($result);
             $sale = end($result->list_transactions);
-
+            \Log::info((array)$sale);
+            \Log::info($transaction->sale->flag);
             $sale->flag = strtoupper($transaction->sale->flag) ?? null;
 
             $pdf = PDF::loadView('sales::refundreceipt', compact('company', 'sale'));
