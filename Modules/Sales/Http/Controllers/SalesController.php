@@ -68,6 +68,7 @@ class SalesController extends Controller
             $result = $getnetService->setStatementSubSellerId($company->subseller_getnet_id)
                 ->setStatementSaleHashId($hashid)
                 ->getStatement();
+            \Log::info((array)$result);
             $result = json_decode($result);
             $sale = end($result->list_transactions);
             \Log::info((array)$sale);
