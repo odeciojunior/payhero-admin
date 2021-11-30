@@ -13,7 +13,7 @@
         <div class="page-header container pb-0" style="display: none !important;">
             <h1 class="page-title">Atendimento</h1>
             <div class="d-flex align-items-center flex-wrap mt-15 mb-30">
-                <div class="d-flex align-items-center mb-md-0 mb-15 mr-auto">
+                <div class="d-flex align-items-center mb-lg-0 mb-15 mr-auto">
                     <span class="badge badge-primary mr-10">NOVO!</span>
                     <span>Uma nova central para você responder as solicitações de seus clientes.</span>
                 </div>
