@@ -1157,9 +1157,3 @@ tbody td{
     background: #F6F7F9;
 }
 
-@media (max-width: 480px) {
-    .sirius-select-container {
-        width: 100%;
-    }
-}
-
