@@ -47,6 +47,15 @@ class TicketsApiController extends Controller
                 $ticketsQuery->where('sales.project_id', hashids_decode($data->project));
             }
 
+            if ($data->plan) {
+                $ticketsQuery->whereExists(function ($query) use ($data) {
+                    $query->select(DB::raw(1))
+                        ->from('plans_sales')
+                        ->where('plans_sales.sale_id', DB::raw('sales.id'))
+                        ->where('plans_sales.plan_id', hashids_decode($data->plan));
+                });
+            }
+
             if ($data->category) {
                 $categories = explode(',', $data->category);
                 $ticketsQuery->whereIn('tickets.ticket_category_enum', $categories);
