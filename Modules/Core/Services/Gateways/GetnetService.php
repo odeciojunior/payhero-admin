@@ -468,7 +468,7 @@ class GetnetService implements Statement
     public function refundReceipt($hashSaleId,$transaction)
     {
         $company = (object)$transaction->company->toArray();
-        $company->subseller_getnet_id = CompanyService::getSubsellerId($company);
+        $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
         $getnetService = new GetnetBackOfficeService();
         $result = $getnetService->setStatementSubSellerId($company->subseller_getnet_id)
             ->setStatementSaleHashId($hashSaleId)
