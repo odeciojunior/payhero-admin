@@ -4,7 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v='.uniqid()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/global/select3/select3.css') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/global/select3/select3.css?v='.uniqid()) }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css') }}">
         <link rel="stylesheet" href="{{ asset('/modules/attendance/css/index.css?v='.uniqid()) }}">
     @endpush
