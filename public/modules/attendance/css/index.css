@@ -263,12 +263,12 @@ button:active {
 }
 
 .filter-badge-input#input-answer {
-    min-width: 315px;
-    max-width: 315px;
+    min-width: 298px;
+    max-width: 298px;
 }
 
 .filter-badge-input#input-answer .sirius-select-text {
-    width: 245px;
+    width: 220px;
 }
 
 .filter-badge-input.clean {
@@ -1014,5 +1014,11 @@ button:active {
 
     .card .detail {
         font-size: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .card .detail {
+        display: none;
     }
 }
