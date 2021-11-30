@@ -263,7 +263,12 @@ button:active {
 }
 
 .filter-badge-input#input-answer {
-    max-width: 300px;
+    min-width: 315px;
+    max-width: 315px;
+}
+
+.filter-badge-input#input-answer .sirius-select-text {
+    width: 245px;
 }
 
 .filter-badge-input.clean {
@@ -791,6 +796,7 @@ button:active {
     align-items: center;
     width: 100%;
     height: 90px;
+    overflow: hidden;
     font-size: 12px;
     color: #636363;
 }
@@ -925,7 +931,7 @@ button:active {
         display: inline-block;
     }
 
-    .sirius-select-container {
+    .page-header .sirius-select-container {
         width: 100%;
     }
 
@@ -980,6 +986,19 @@ button:active {
         padding: 10px 15px;;
         text-align: center;
         font-size: 14px;
+    }
+
+    .ticket-closed-info,
+    .write-buttons {
+        border-bottom-left-radius: 8px;
+    }
+
+    .write-buttons button {
+        margin-right: 5px;
+    }
+
+    .write-buttons i {
+        font-size: 20px;
     }
 }
 

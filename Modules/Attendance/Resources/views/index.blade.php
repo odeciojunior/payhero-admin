@@ -25,9 +25,9 @@
             </div>
         </div>
         <div class="page-content container">
-            <div class="row mb-20">
-                <div class="col-md-3 col-6 pr-5 pr-md-15">
-                    <div class="card border orange mb-10">
+            <div class="row mb-md-20">
+                <div class="col-md-3 col-6 pr-6 pr-md-15">
+                    <div class="card border orange">
                         <span class="title">Em aberto</span>
                         <div class="tickets-resume"  id="ticket-open">
                             <span class="number"></span>
@@ -35,8 +35,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-6 pl-5 pl-md-15">
-                    <div class="card border purple mb-10">
+                <div class="col-md-3 col-6 pl-6 pl-md-15">
+                    <div class="card border purple">
                         <span class="title">Em mediação</span>
                         <div class="tickets-resume" id="ticket-mediation">
                             <span class="number"></span>
@@ -44,8 +44,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-6 pr-5 pr-md-15">
-                    <div class="card border green mb-10">
+                <div class="col-md-3 col-6 pr-6 pr-md-15">
+                    <div class="card border green">
                         <span class="title">Resolvidos</span>
                         <div class="tickets-resume"  id="ticket-closed">
                             <span class="number"></span>
@@ -53,8 +53,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-6 pl-5 pl-md-15">
-                    <div class="card border blue mb-10">
+                <div class="col-md-3 col-6 pl-6 pl-md-15">
+                    <div class="card border blue">
                         <span class="title">Total</span>
                         <div class="tickets-resume"  id="ticket-total">
                             <span class="number"></span>

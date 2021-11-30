@@ -104,6 +104,13 @@
     }
 }
 
+@media (max-width: 360px) {
+    .select3-container {
+        max-width: 320px;
+        min-width: 320px;
+    }
+}
+
 @media (max-width: 320px) {
     .select3-container {
         max-width: 290px;

@@ -394,12 +394,13 @@ $(() => {
                 if (target.length) {
                     $('.filter-badge-input').not(target).removeClass('show');
                     const inputWidth = target.width();
-                    const colPadding = 20;
+                    const colPadding = 55;
                     let parent = target[0].parentNode;
                     let {left: parentLeft, width: parentWidth} = parent.getBoundingClientRect();
-                    let maxLeft = parentWidth - inputWidth - (colPadding * 2);
-                    let left = this.getBoundingClientRect().left - parentLeft - colPadding;
-                    left = left > maxLeft ? maxLeft : left < 0 ? 0 : left;
+                    let maxLeft = parentWidth - inputWidth - colPadding;
+                    let left = this.getBoundingClientRect().left - parentLeft;
+                    left = left > maxLeft ? maxLeft : left;
+                    left = left < 0 ? 0 : left;
                     target.css('margin-left', left + 'px')
                         .addClass('show');
                     target.find('input').focus();
@@ -565,7 +566,16 @@ $(() => {
                 errorAjaxResponse(resp);
             },
             success: resp => {
-                window.open(resp.url, '_blank');
+                if(isMobile() && isSafari()) {
+                    let a = document.createElement(`a`);
+                    a.style.display = `none`;
+                    a.href = resp.url
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } else {
+                    window.open(resp.url, '_blank');
+                }
             }
         });
     });
@@ -665,6 +675,12 @@ $(() => {
 
     function isMobile() {
         return window.innerWidth < 768;
+    }
+
+    function isSafari() {
+        let chromeAgent = navigator.userAgent.indexOf('Chrome') > -1;
+        let safariAgent = navigator.userAgent.indexOf('Safari') > -1;
+        return !chromeAgent && safariAgent;
     }
 
     // third party
