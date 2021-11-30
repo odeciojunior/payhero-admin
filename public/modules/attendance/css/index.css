@@ -634,7 +634,7 @@ button:active {
 }
 
 .ticket-category {
-    padding-left: 20px;
+    padding: 0 20px;
     font-size: 12px;
 }
 
@@ -653,6 +653,28 @@ button:active {
 
 .messages-container::-webkit-scrollbar {
     width: 0;
+}
+
+.ticket-messages-resume {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    text-align: center;
+    font-size: 12px;
+    color: #B1B1B1;
+}
+
+.ticket-messages-resume::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    display: block;
+    width: 60%;
+    height: 1px;
+    margin-top: 15px;
+    background-color: #ECECEC;
 }
 
 .ticket-message {

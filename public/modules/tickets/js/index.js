@@ -246,17 +246,30 @@ $(() => {
         $('.ticket-category-text').text(categoryEnum[ticket.ticket_category_enum]);
         $('.ticket-start-date').text(ticket.created_at);
         $('.ticket-project').text(ticket.project_name);
+        $('.ticket-header *').show();
 
         let html = '';
-        for (let message of ticket.messages) {
-            html += renderMessage(message)
-
+        if (isMobile()) {
+            html += `<div class="ticket-messages-resume"><b>${categoryEnum[ticket.ticket_category_enum]}</b> aberta em ${ticket.created_at} para <b>${ticket.project_name}</b></div>`;
         }
+        for (let message of ticket.messages) {
+            html += renderMessage(message);
+        }
+
         $('.messages-container').html(html)
             .scrollTop(function () {
                 return this.scrollHeight;
             });
-        $('.ticket-header *').show();
+
+        if (statusColor[ticket.ticket_status_enum] === 'closed') {
+            $('.write-container .inputs-container').children().hide();
+            $('#btn-send').hide();
+        } else {
+            $('.tickets-grid-right').removeClass('closed');
+            $('.write-container .inputs-container').children().show();
+            $('#btn-send').show();
+        }
+
         $('.write-container').show();
     }
 
@@ -358,10 +371,11 @@ $(() => {
                 btn.text(btn.data('original-text'));
                 btn.data('value', '');
                 if (target.length) {
-                    if (target.hasClass('show')) {
-                        target.removeClass('show');
+                    target.removeClass('show').find('input').val('');
+                    if(btn.hasClass('dropdown')) {
+                        target.find('select').val('');
+                        target.find('.select3-option').removeClass('active');
                     }
-                    target.find('input').val('');
                     index();
                 }
 
@@ -373,7 +387,7 @@ $(() => {
                 }
             } else {
 
-                if (!btn.data('value')) {
+                if (!btn.hasClass('active')) {
                     btn.addClass('focused');
                 }
 

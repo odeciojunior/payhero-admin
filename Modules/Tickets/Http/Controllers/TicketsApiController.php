@@ -267,7 +267,7 @@ class TicketsApiController extends Controller
 
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro obter anexo'], 400);
+            return response()->json(['message' => 'Não foi possível acessar o arquivo solicitado.'], 400);
         }
     }
 }

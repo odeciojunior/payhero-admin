@@ -37,7 +37,7 @@ $.fn.select3 = function (options) {
             let searchValue = $searchInput.val().toLowerCase();
 
             if (!searchValue || text.toLowerCase().includes(searchValue)) {
-                let option = `<div class="select3-option ${config.multiselect ? 'multiselect' : ''} ${$this.is(':selected') ? 'active' : ''}"
+                let option = `<div class="select3-option ${config.multiselect ? 'multiselect' : ''}"
                           data-value="${$this.val()}" >
                           ${config.multiselect ? '<span class="select3-checkbox"></span>' : ''}
                           <span class="select3-option-text">${text}</span>
@@ -153,7 +153,7 @@ $.fn.select3 = function (options) {
     });
     $(document).on('click', '.select3-container .select3-option', function () {
         if (!config.multiselect) {
-            $('.select3-container .select3-option').not(this).removeClass('active');
+            $('.select3-container .select3-option').removeClass('active');
             $(this).addClass('active');
             $select.val($(this).data('value'));
         } else {

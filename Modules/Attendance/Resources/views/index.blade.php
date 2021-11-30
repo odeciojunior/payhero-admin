@@ -23,9 +23,9 @@
             </div>
         </div>
         <div class="page-content container">
-            <div class="row">
-                <div class="col-md-3 col-6 pr-20">
-                    <div class="card border orange">
+            <div class="row mb-20">
+                <div class="col-md-3 col-6 pr-5 pr-md-15">
+                    <div class="card border orange mb-10">
                         <span class="title">Em aberto</span>
                         <div id="ticket-open">
                             <span class="number"></span>
@@ -33,8 +33,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-6 px-20">
-                    <div class="card border purple">
+                <div class="col-md-3 col-6 pl-5 pl-md-15">
+                    <div class="card border purple mb-10">
                         <span class="title">Em mediação</span>
                         <div id="ticket-mediation">
                             <span class="number"></span>
@@ -42,8 +42,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-6 px-20">
-                    <div class="card border green">
+                <div class="col-md-3 col-6 pr-5 pr-md-15">
+                    <div class="card border green mb-10">
                         <span class="title">Resolvidos</span>
                         <div id="ticket-closed">
                             <span class="number"></span>
@@ -51,8 +51,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-6 pl-20">
-                    <div class="card border blue">
+                <div class="col-md-3 col-6 pl-5 pl-md-15">
+                    <div class="card border blue mb-10">
                         <span class="title">Total</span>
                         <div id="ticket-total">
                             <span class="number"></span>

@@ -1158,8 +1158,8 @@ tbody td{
 }
 
 @media (max-width: 480px) {
-    .sirius-select-container .sirius-select-options {
-        max-width: 300px;
+    .sirius-select-container {
+        width: 100%;
     }
 }
 

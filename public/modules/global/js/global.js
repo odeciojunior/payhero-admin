@@ -736,10 +736,10 @@ $(document).ready(function () {
 
     $(document).on('click', '.sirius-select-text', function () {
         let $target = $(this);
-        $target.addClass('active');
+        $target.toggleClass('active');
         let $wrapper = $target.parent();
         let $options = $wrapper.find('.sirius-select-options');
-        $options.fadeIn();
+        $target.hasClass('active') ? $options.fadeIn() : $options.fadeOut();
     });
 
     $(document).on('click', '.sirius-select-options div', function () {
