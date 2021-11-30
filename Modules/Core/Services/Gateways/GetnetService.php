@@ -5,6 +5,7 @@ namespace Modules\Core\Services\Gateways;
 use App\Jobs\ProcessWithdrawal;
 use Carbon\Carbon;
 use Exception;
+use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
@@ -19,6 +20,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\SaleService;
@@ -461,5 +463,26 @@ class GetnetService implements Statement
             DB::rollBack();
             throw $ex;
         }
+    }
+
+    public function refundReceipt($hashSaleId,$transaction)
+    {
+        $company = (object)$transaction->company->toArray();
+        $company->subseller_getnet_id = CompanyService::getSubsellerId($company);
+        $getnetService = new GetnetBackOfficeService();
+        $result = $getnetService->setStatementSubSellerId($company->subseller_getnet_id)
+            ->setStatementSaleHashId($hashSaleId)
+            ->getStatement();
+        
+        if(empty($result) || empty($result->list_transactions)){
+            throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
+        }
+        
+        $result = json_decode($result);
+        $sale = end($result->list_transactions);
+        
+        $sale->flag = strtoupper($transaction->sale->flag) ?? null;
+
+        return PDF::loadView('sales::refundreceipt', compact('company', 'sale'));
     }
 }
