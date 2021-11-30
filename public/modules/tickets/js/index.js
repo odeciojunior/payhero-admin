@@ -726,15 +726,11 @@ $(() => {
             this.scrollLeft += e.originalEvent.deltaY;
         },
         'mousedown': function (e) {
-            $(this).addClass('scrolling')
-                .data('x', e.clientX)
-                .data('left', this.scrollLeft);
+            $(this).addClass('scrolling').data('x', e.clientX).data('left', this.scrollLeft);
         },
         'mouseup mouseleave': function (e) {
-            $(this).removeClass('scrolling')
-                .data('x', 0)
-                .data('left', 0);
-        },
+            $(this).removeClass('scrolling').data('x', 0).data('left', 0);
+        }
     });
     $(document).on('mousemove', '.filter-container.scrolling', function (e) {
         const dx = e.clientX - $(this).data('x');

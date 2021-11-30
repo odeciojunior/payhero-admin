@@ -1,7 +1,11 @@
+html, body {
+    position:relative;
+    overflow-x: hidden !important;
+}
+
 body {
     background-color: #F1F4F5;
     font-family: 'Muli', sans-serif !important;
-    overflow-x: hidden !important;
 }
 
 .popover {
@@ -1118,6 +1122,7 @@ tbody td{
 .sirius-select-container .sirius-select-text.active,
 .sirius-select-container .sirius-select-text:active {
     border: 1px solid #88bfff;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMSIgaGVpZ2h0PSI2IiBmaWxsPSJub25lIj48cGF0aCBmaWxsPSIjNjM2MzYzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0uMjE5IDQuNzc1IDQuOTcyLjIxYS43NjkuNzY5IDAgMCAxIDEuMDU2IDBsNC43NTMgNC41NjVhLjY5Ny42OTcgMCAwIDEgMCAxLjAxNS43NjkuNzY5IDAgMCAxLTEuMDU2IDBMNS41IDEuNzMyIDEuMjc1IDUuNzlhLjc2OS43NjkgMCAwIDEtMS4wNTYgMCAuNjk3LjY5NyAwIDAgMSAwLTEuMDE1WiIgY2xpcC1ydWxlPSJldmVub2RkIi8+PC9zdmc+Cg==)
 }
 
 .sirius-select-container .sirius-select-options {
@@ -1143,10 +1148,17 @@ tbody td{
     background: #FFFFFF;
     white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
     cursor: pointer;
 }
 
 .sirius-select-container .sirius-select-options div:hover {
     background: #F6F7F9;
+}
+
+@media (max-width: 480px) {
+    .sirius-select-container .sirius-select-options {
+        max-width: 300px;
+    }
 }
 

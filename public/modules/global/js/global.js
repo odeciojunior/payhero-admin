@@ -748,8 +748,8 @@ $(document).ready(function () {
         $wrapper.find('.sirius-select')
             .val($target.data('value'))
             .trigger('change');
-        console.log($target.data('value'))
         $wrapper.find('.sirius-select-text')
+            .removeClass('active')
             .text($target.text());
         $target.parent().fadeOut();
     });
