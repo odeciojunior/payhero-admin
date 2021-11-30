@@ -21,28 +21,6 @@ button:active {
     background-color: #ECECEC;
 }
 
-.sirius-select {
-    padding-right: 35px !important;
-    background-color: #FFFFFF;
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMSIgaGVpZ2h0PSI2IiBmaWxsPSJub25lIj48cGF0aCBmaWxsPSIjNjM2MzYzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMC43ODEgMS4yMjUgNi4wMjggNS43OWEuNzY5Ljc2OSAwIDAgMS0xLjA1NiAwTC4yMTkgMS4yMjVhLjY5Ny42OTcgMCAwIDEgMC0xLjAxNS43NjkuNzY5IDAgMCAxIDEuMDU2IDBMNS41IDQuMjY4IDkuNzI1LjIxYS43NjkuNzY5IDAgMCAxIDEuMDU2IDAgLjY5Ny42OTcgMCAwIDEgMCAxLjAxNVoiIGNsaXAtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPgo=);
-    background-repeat: no-repeat;
-    background-position: 93% center;
-    border: 1px solid #e0e7ee;
-    border-radius: 8px;
-    appearance: none;
-}
-
-.header-select {
-    width: auto;
-    margin-left: auto;
-    padding: 14px 35px 14px 16px !important;
-    border: 1px solid #cad1d8;
-}
-
-.header-select:active {
-    border: 1px solid #88bfff;
-}
-
 .card {
     padding: 16px 20px;
     font-size: 16px;
@@ -259,9 +237,14 @@ button:active {
 }
 
 .filter-badge-input input,
-.filter-badge-input select {
+.filter-badge-input select,
+.filter-badge-input .sirius-select-container {
     margin-right: 5px;
     font-size: 14px;
+}
+
+.filter-badge-input .sirius-select-container {
+    max-width: 178px !important;
 }
 
 .filter-badge-input button {
