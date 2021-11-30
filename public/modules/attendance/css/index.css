@@ -256,6 +256,10 @@ button:active {
     transition: opacity .3s ease-in-out;
 }
 
+.filter-badge-input#input-answer {
+    max-width: 300px;
+}
+
 .filter-badge-input.clean {
     max-width: none;
     padding: 0;
@@ -273,10 +277,6 @@ button:active {
 .filter-badge-input .sirius-select-container {
     margin-right: 5px;
     font-size: 14px;
-}
-
-.filter-badge-input .sirius-select-container {
-    max-width: 178px !important;
 }
 
 .filter-badge-input button {
