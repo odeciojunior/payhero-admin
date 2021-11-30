@@ -374,8 +374,7 @@ $(() => {
                 if (target.length) {
                     target.removeClass('show').find('input').val('');
                     if(btn.hasClass('dropdown')) {
-                        target.find('select').val('');
-                        target.find('.select3-option').removeClass('active');
+                        target.find('select').val('').clear();
                     }
                     index();
                 }
