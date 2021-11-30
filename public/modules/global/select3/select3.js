@@ -82,10 +82,14 @@ $.fn.select3 = function (options) {
                         } = config.ajax.processResults(res);
                         $hasMorePages = $searchInput.val() ? true : pagination.more;
 
-                        for (let option of results) {
-                            if (!$select.children(`option[value="${option.id}"]`).length) {
-                                $select.append(`<option value="${option.id}">${option.text}</option>`);
+                        if (results.length) {
+                            for (let option of results) {
+                                if (!$select.children(`option[value="${option.id}"]`).length) {
+                                    $select.append(`<option value="${option.id}">${option.text}</option>`);
+                                }
                             }
+                        } else {
+                            $empty.show()
                         }
 
                         if ($select.children().length <= 5 && $hasMorePages) {

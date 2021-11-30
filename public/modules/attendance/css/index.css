@@ -352,8 +352,8 @@ button:active {
 .input-select {
     position: relative;
     width: auto;
-    margin: 5px 0 0 5px;
-    padding: 0 5px 2px 0 !important;
+    margin: 6px 0 0 5px;
+    padding: 0 26px 3px 0 !important;
     border: none;
     border-bottom: 1px solid #676767;
     border-radius: 0;
