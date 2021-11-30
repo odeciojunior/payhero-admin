@@ -29,7 +29,7 @@
                 <div class="col-md-3 col-6 pr-5 pr-md-15">
                     <div class="card border orange mb-10">
                         <span class="title">Em aberto</span>
-                        <div id="ticket-open">
+                        <div class="tickets-resume"  id="ticket-open">
                             <span class="number"></span>
                             <span class="detail"></span>
                         </div>
@@ -38,7 +38,7 @@
                 <div class="col-md-3 col-6 pl-5 pl-md-15">
                     <div class="card border purple mb-10">
                         <span class="title">Em mediação</span>
-                        <div id="ticket-mediation">
+                        <div class="tickets-resume" id="ticket-mediation">
                             <span class="number"></span>
                             <span class="detail"></span>
                         </div>
@@ -47,7 +47,7 @@
                 <div class="col-md-3 col-6 pr-5 pr-md-15">
                     <div class="card border green mb-10">
                         <span class="title">Resolvidos</span>
-                        <div id="ticket-closed">
+                        <div class="tickets-resume"  id="ticket-closed">
                             <span class="number"></span>
                             <span class="detail"></span>
                         </div>
@@ -56,7 +56,7 @@
                 <div class="col-md-3 col-6 pl-5 pl-md-15">
                     <div class="card border blue mb-10">
                         <span class="title">Total</span>
-                        <div id="ticket-total">
+                        <div class="tickets-resume"  id="ticket-total">
                             <span class="number"></span>
                         </div>
                     </div>

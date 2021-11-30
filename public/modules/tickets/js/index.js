@@ -394,12 +394,12 @@ $(() => {
                 if (target.length) {
                     $('.filter-badge-input').not(target).removeClass('show');
                     const inputWidth = target.width();
-                    const colPadding = 15;
+                    const colPadding = 20;
                     let parent = target[0].parentNode;
                     let {left: parentLeft, width: parentWidth} = parent.getBoundingClientRect();
                     let maxLeft = parentWidth - inputWidth - (colPadding * 2);
                     let left = this.getBoundingClientRect().left - parentLeft - colPadding;
-                    left = left > maxLeft ? maxLeft : left;
+                    left = left > maxLeft ? maxLeft : left < 0 ? 0 : left;
                     target.css('margin-left', left + 'px')
                         .addClass('show');
                     target.find('input').focus();

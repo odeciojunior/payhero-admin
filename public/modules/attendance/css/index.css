@@ -37,13 +37,19 @@ button:active {
 }
 
 .card .title {
-    margin-bottom: 8px;
+    margin-bottom: 11px;
+}
+
+.card .tickets-resume {
+    display: flex;
+    align-items: flex-end;
 }
 
 .card .number {
     margin-right: 9px;
     font-size: 26px;
     font-weight: bold;
+    line-height: .8;
 }
 
 .card.orange {
@@ -983,10 +989,11 @@ button:active {
     }
 
     .card .title {
+        margin-bottom: 8px;
         font-size: 14px;
     }
 
     .card .detail {
-        display: none;
+        font-size: 10px;
     }
 }
