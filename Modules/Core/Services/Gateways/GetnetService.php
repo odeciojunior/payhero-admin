@@ -483,6 +483,6 @@ class GetnetService implements Statement
         
         $sale->flag = strtoupper($transaction->sale->flag) ?? null;
 
-        return PDF::loadView('sales::refundreceipt', compact('company', 'sale'));
+        return PDF::loadView('sales::refund_receipt_getnet', compact('company', 'sale'));
     }
 }

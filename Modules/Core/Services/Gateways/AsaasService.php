@@ -493,7 +493,8 @@ class AsaasService implements Statement
             $this->apiKey = $credential->gateway_api_key;
         }
 
-        $url = 'https://www.asaas.com/api/v3/payments/'.$transaction->sale->gateway_transaction_id;
+        $domainAsaas = 'https://www.asaas.com';
+        $url = $domainAsaas.'/api/v3/payments/'.$transaction->sale->gateway_transaction_id;
    
         $curl = curl_init($url);
 
@@ -527,8 +528,24 @@ class AsaasService implements Statement
             $result = curl_exec($curl);
             
             curl_close($curl);
+            
+            $of = [
+                'href="/assets',
+                'src="/assets',
+                '</head>',
+                'Cobrança intermediada por ASAAS - gerar boletos nunca foi tão fácil.'
+            ];
 
-            return PDF::loadHtml($result);
+            $to = [
+                'href="' .$domainAsaas.'/assets',
+                'src="'. $domainAsaas.'/assets',
+                '<style>#loading-backdrop{display:none !important}</style>',
+                ''
+            ];
+
+            $view = str_replace($of,$to,$result);
+
+            return PDF::loadHtml($view);
         }
 
         return PDF::loadHtml('<h2>Não foi possivel gerar o comprovante de estorno!.</h2>');
