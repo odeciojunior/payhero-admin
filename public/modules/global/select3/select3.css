@@ -58,11 +58,11 @@
     cursor: pointer;
 }
 
-.select3-container .select3-option-text {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
+/*.select3-container .select3-option-text {*/
+/*    white-space: nowrap;*/
+/*    text-overflow: ellipsis;*/
+/*    overflow: hidden;*/
+/*}*/
 
 .select3-container .select3-option .select3-checkbox {
     min-width: 24px;

@@ -264,10 +264,11 @@ $(() => {
         if (statusColor[ticket.ticket_status_enum] === 'closed') {
             $('.write-container .inputs-container').children().hide();
             $('#btn-send').hide();
+            $('.ticket-closed-info').show();
         } else {
-            $('.tickets-grid-right').removeClass('closed');
             $('.write-container .inputs-container').children().show();
             $('#btn-send').show();
+            $('.ticket-closed-info').hide();
         }
 
         $('.write-container').show();

@@ -174,6 +174,10 @@
                                     {{-- loaded via js --}}
                                 </div>
                                 <div class="write-container" style="display:none;">
+                                    <div class="ticket-closed-info" style="display:none;">
+                                        <b>Atendimento finalizado</b>
+                                        <span>Você não pode mais enviar mensagens nesse chat.</span>
+                                    </div>
                                     <div class="inputs-container">
                                         <input type="hidden" id="ticket-id">
                                         <div class="attachments-container" style="display:none"></div>
