@@ -572,6 +572,7 @@ $(() => {
 
     // Send Message
     function sendMessage() {
+        $('#btn-send').prop('disabled', true);
         let writeArea = $('#write-area');
         if (writeArea.val().length || attachments2send.length) {
             let data = new FormData();
@@ -594,6 +595,7 @@ $(() => {
                 },
                 error: resp => {
                     errorAjaxResponse(resp);
+                    $('#btn-send').prop('disabled', false);
                 },
                 success: resp => {
                     writeArea.val('');
@@ -605,6 +607,7 @@ $(() => {
                     container.scrollTop(function () {
                         return this.scrollHeight;
                     });
+                    $('#btn-send').prop('disabled', false);
                 }
             });
         }

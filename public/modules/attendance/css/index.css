@@ -892,6 +892,10 @@ button:active {
     border-bottom-right-radius: 20px;
 }
 
+#btn-send:disabled {
+    opacity: .5;
+}
+
 /* Responsive adjusts */
 
 @media (max-width: 768px) {
