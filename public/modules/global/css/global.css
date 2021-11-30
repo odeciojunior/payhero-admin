@@ -1091,7 +1091,6 @@ tbody td{
     font-weight: 700;
 }
 
-/* sirius select */
 .sirius-select-container {
     position: relative;
     width: 285px;
@@ -1112,6 +1111,10 @@ tbody td{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     cursor: pointer;
 }
 
@@ -1150,10 +1153,13 @@ tbody td{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     cursor: pointer;
 }
 
 .sirius-select-container .sirius-select-options div:hover {
     background: #F6F7F9;
 }
-
