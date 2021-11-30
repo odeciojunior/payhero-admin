@@ -1094,7 +1094,7 @@ tbody td{
 /* sirius select */
 .sirius-select-container {
     position: relative;
-    max-width: 285px;
+    width: 285px;
 }
 
 .sirius-select-container .sirius-select-text {
@@ -1129,6 +1129,7 @@ tbody td{
     display: none;
     position: absolute;
     top: 55px;
+    width: 100%;
     max-height: 185px;
     background: #FFFFFF;
     border: 1px solid #DEE2E6;
