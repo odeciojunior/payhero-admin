@@ -35,13 +35,14 @@ $.fn.select3 = function (options) {
             let $this = $(this);
             let text = $this.text();
             let searchValue = $searchInput.val().toLowerCase();
+            let value = $this.val();
 
             if (!searchValue || text.toLowerCase().includes(searchValue)) {
-                let option = `<div class="select3-option ${config.multiselect ? 'multiselect' : ''}"
-                          data-value="${$this.val()}" >
-                          ${config.multiselect ? '<span class="select3-checkbox"></span>' : ''}
-                          <span class="select3-option-text">${text}</span>
-                        </div>`;
+                let option = `<div class="select3-option ${config.multiselect ? 'multiselect' : ''} ${$this.is(':selected') && value ? 'active' : ''}"
+                                  data-value="${value}" >
+                                  ${config.multiselect ? '<span class="select3-checkbox"></span>' : ''}
+                                  <span class="select3-option-text">${text}</span>
+                                </div>`;
                 $options.append(option);
             }
         });
