@@ -216,7 +216,7 @@
         <script src="{{asset('modules/global/select3/select3.js?v=' . uniqid())}}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script
-            src="{{ asset('modules/global/jquery-daterangepicker/src/daterangepicker.js?v=' . uniqid()) }}"></script>
+            src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js?v=' . uniqid()) }}"></script>
         <script src="{{asset('/modules/tickets/js/emoji-button.min.js')}}"></script>
         <script src="{{asset('/modules/tickets/js/index.js?v=' . uniqid())}}"></script>
     @endpush

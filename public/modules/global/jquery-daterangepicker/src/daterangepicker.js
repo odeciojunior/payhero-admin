@@ -1396,8 +1396,8 @@
                     var leftIndent = Math.max(0, offset.left + box.outerWidth() - $('body').width() + 16);
                     var left = offset.left - containerOffset.left - leftIndent;
                     box.css({
-                        top: offset.top - containerOffset.top + $(self).outerHeight() + 4,
-                        left: left < 0 ? 0 : left,
+                        top: offset.top - containerOffset.top + $(opt.container).scrollTop() + $(self).outerHeight() + 4,
+                        left: left < 0 ? 5 : left,
                     });
                 } else {
                     if (offset.left < 460) //left to right
