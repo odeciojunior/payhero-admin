@@ -213,7 +213,7 @@
     @include('projects::empty')
 
     @push('scripts')
-        <script src="{{asset('modules/global/select3/select3.js')}}"></script>
+        <script src="{{asset('modules/global/select3/select3.js?v=1')}}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script
             src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js?v=' . uniqid()) }}"></script>
