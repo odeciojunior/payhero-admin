@@ -5,9 +5,31 @@
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/attendance/css/index.css?v=06') }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=100?v=02') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/select2.min.css')  }}"/>
         <style>
-            .card-left{
-                border-right:0 !important;
+            .select2-selection--single {
+                border: 1px solid #dddddd !important;
+                border-radius: .215rem !important;
+                height: 43px !important;
+            }
+            .select2-selection__rendered {
+                color: #707070 !important;
+                font-size: 16px !important;
+                font-family: 'Muli', sans-serif;
+                line-height: 43px !important;
+                padding-left: 14px !important;
+                padding-right: 38px !important;
+                width: 190px !important;
+            }
+            .select2-selection__arrow {
+                height: 43px !important;
+                right: 10px !important;
+            }
+            .select2-selection__arrow b {
+                border-color: #8f9ca2 transparent transparent transparent !important;
+            }
+            .select2-container--open .select2-selection__arrow b {
+                border-color: transparent transparent #8f9ca2 transparent !important;
             }
         </style>
     @endpush
@@ -22,7 +44,7 @@
                     <div class='col-12 col-lg-12'>
                         <div class="card p-20">
                             <div class='row'>
-                                <div class='col-12 col-md-3 col-lg-3'>
+                                <div class='col-sm-12 col-md'>
                                     <div class='form-group'>
                                         <label>Status</label>
                                         <select id='status-filter' class='form-control select-pad'>
@@ -33,7 +55,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class='col-12 col-md-3 col-lg-3'>
+                                <div class='col-sm-12 col-md'>
                                     <div class='form-group'>
                                         <label>Motivo</label>
                                         <select id='category-filter' class='form-control select-pad'>
@@ -44,13 +66,21 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class='col-12 col-md-3 col-lg-3'>
+                                <div class='col-sm-12 col-md'>
+                                    <div class="form-group form-icons">
+                                        <label for="date_range">Data</label>
+                                        <i style="right: 23px;bottom: 11px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                        <input name='date_range' id="date_range" class="form-control bg-white pr-30 input-pad"
+                                               placeholder="Clique para editar..." readonly>
+                                    </div>
+                                </div>
+                                <div class='col-sm-12 col-md'>
                                     <div class='form-group'>
                                         <label>Cliente</label>
                                         <input id='customer-filter' class='form-control input-pad' type='text' placeholder='Nome do cliente'>
                                     </div>
                                 </div>
-                                <div class='col-12 col-md-3 col-lg-3'>
+                                <div class='col-sm-12 col-md'>
                                     <div class='form-group'>
                                         <label>CPF do Cliente</label>
                                         <input id='cpf-filter' class='form-control input-pad' type='text' placeholder='CPF do cliente'>
@@ -59,22 +89,14 @@
                             </div>
                             <div class="collapse" id="bt_collapse">
                                 <div class="row">
-                                    <div class='col-12 col-md-3 col-lg-3'>
-                                        <div class="form-group form-icons">
-                                            <label for="date_range">Data</label>
-                                            <i style="right: 23px;bottom: 11px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
-                                            <input name='date_range' id="date_range" class="form-control bg-white pr-30 input-pad"
-                                                placeholder="Clique para editar..." readonly>
-                                        </div>
-                                    </div>
-                                    <div class='col-12 col-md-3 col-lg-3'>
+                                    <div class='col-sm-12 col-md'>
                                         <div class='form-group'>
                                             <label>Código do chamado</label>
                                             <input id='ticker-code-filter' class='form-control input-pad' type='text'
-                                                placeholder='Código do chamado'>
+                                                   placeholder='Código do chamado'>
                                         </div>
                                     </div>
-                                    <div class='col-12 col-md-3 col-lg-3'>
+                                    <div class='col-sm-12 col-md'>
                                         <div class='form-group'>
                                             <label>Respostas</label>
                                             <select id='answered' class='form-control select-pad'>
@@ -84,6 +106,21 @@
                                                 <option value="not-answered">Não respondidos</option>
                                             </select>
                                         </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md">
+                                        <label for="project">Projeto</label>
+                                        <select id="project" class="form-control select-pad">
+                                            <option value="">Todos projetos</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md">
+                                        <label for="plan">Plano</label>
+                                        <select id="plan" class="form-control select-pad" style="width:100%;" data-plugin="select2">
+                                            <option value="">Todos planos</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12 col-md">
                                     </div>
                                 </div>
                             </div>
@@ -137,6 +174,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div id='div-tickets' class='row' style='display:none;'>
                     {{-- js carrega... --}}
                 </div>
@@ -252,6 +290,7 @@
         <script src='{{asset('/modules/attendance/js/index.js?v=' . random_int(100, 10000))}}'></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
+        <script src="{{ asset('modules/global/js/select2.min.js') }}"></script>
     @endpush
 
 @endsection

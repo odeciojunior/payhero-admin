@@ -88,7 +88,7 @@ $(document).ready(function () {
 
     //create
     $('#btn-add-integration').on('click', function () {
-        $(".modal-title").html('Adicionar nova Integração com Unicodrop');
+        $(".modal-title").html('Nova integração com Unicodrop');
         $("#bt_integration").addClass('btn-save');
         $("#bt_integration").removeClass('btn-update');
         $("#bt_integration").text('Adicionar integração');
@@ -164,6 +164,9 @@ $(document).ready(function () {
 
                 $("#abandoned_cart_edit").val(response.data.abandoned_cart);
                 $("#abandoned_cart_edit").prop('checked', $("#abandoned_cart_edit").val() == '1');
+
+                $("#pix").val(response.data.pix);
+                $("#pix").prop('checked', $("#pix").val() == '1');
             }
         });
     });

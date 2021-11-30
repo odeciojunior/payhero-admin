@@ -30,6 +30,19 @@ const systemStatus = {
 }
 
 $(() => {
+    
+    $('.applySelect2').select2({
+        width:'100%',
+        multiple:true,
+        language: {
+            noResults: function () {
+                return "Nenhum resultado encontrado";
+            },
+            searching: function () {
+                return "Procurando...";
+            },
+        }
+    });
 
     $('#tracking-product-image').on('error', function () {
         $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg')
@@ -351,7 +364,6 @@ $(() => {
         }
 
         loadOnTable('#dados_tabela', '#tabela_trackings');
-
         $.ajax({
             method: 'GET',
             url: link,
@@ -713,4 +725,65 @@ $(() => {
             getResume();
         }
     });
+
+    //COMPORTAMENTO DO FILTRO MULTIPLO
+    function behaviorMultipleFilter(data, selectId){
+        var $select = $('#'+selectId);
+        var values = $select.val();
+
+        if($(`#${selectId}`).val()[0] == 'all' || $(`#${selectId}`).val()[0] == ''){
+            var valueToRemove = $(`#${selectId}`).val()[0]
+        }
+
+        if (data.id != valueToRemove) {
+            if (values) {
+                var i = values.indexOf(valueToRemove);
+
+                if (i >= 0) {
+                    values.splice(i, 1);
+                    $select.val(values).change();
+                }
+            }
+            } else {
+            if (values) {
+                values.splice(0, values.lenght);
+                $select.val(null).change();
+                
+                values.push(valueToRemove);
+                $select.val(valueToRemove).change();
+            }
+        }
+    }
+
+    //NAO PERMITI QUE O FILTRO FIQUE VAZIO
+    function deniedEmptyFilter(selectId){
+        let arrayValues = $(`#${selectId}`).val();
+        let valueAmount = $(`#${selectId}`).val().length;
+
+        if(valueAmount === 0){
+            if(selectId == 'project'){
+                arrayValues.push('all');
+                arrayValues = $(`#${selectId}`).val('all').trigger("change");
+
+            }else{
+                arrayValues.push('');
+                arrayValues = $(`#${selectId}`).val('').trigger("change");
+            }
+        }
+    }
+
+    $(".applySelect2").on("select2:select", function (evt) {
+        var data = evt.params.data;
+        var selectId = $(this).attr('id');
+        behaviorMultipleFilter(data, selectId);
+
+        $(`#${selectId}`).focus().scrollTop(0);
+        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    });
+
+    $(".applySelect2").on("change", function () {            
+        let idTarget = $(this).attr('id');
+        deniedEmptyFilter(idTarget);
+    });
+    // FIM DO COMPORTAMENTO DO FILTRO
 });

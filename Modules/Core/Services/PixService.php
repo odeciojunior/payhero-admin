@@ -32,19 +32,15 @@ class PixService
                     ['status', '=', Sale::STATUS_PENDING]
                 ]
             )
-                ->whereHas(
-                    'pixCharges',
-                    function ($querySale) {
-                        $querySale->where(
-                            'created_at',
-                            '<=',
-                            Carbon::now()->subHour()->toDateTimeString()
-                        );
-                    }
-                )
-                ->get();
+            ->whereHas(
+                'pixCharges',
+                function ($querySale) {
+                    $querySale->where('status', 'ATIVA');
+                    $querySale->where( 'created_at', '<=', Carbon::now()->subHour()->toDateTimeString());
+                }
+            );
 
-            foreach ($sales as $sale) {
+            foreach ($sales->cursor() as $sale) {
 
                 //consultar na Gerencianet para ver se não foi pago
                 $data = [
@@ -59,14 +55,16 @@ class PixService
                         [
                             ['payment_method', '=', Sale::PIX_PAYMENT],
                             ['status', '=', Sale::STATUS_APPROVED],
-                            ['customer_id', $sale->customer->id]
                         ]
                     )
+                    ->whereHas('customer', function($q) use($sale){
+                        $q->where('document', $sale->customer->document);
+                    })
                     ->whereDate('start_date', \Carbon\Carbon::parse($sale->start_date)->format("Y-m-d"))->first();
 
 
                     if(empty($saleModel)) {
-                        report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
+                        report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id . ' sale conflitante $saleModel = ' . $saleModel->id));
                         continue;
                     }
 

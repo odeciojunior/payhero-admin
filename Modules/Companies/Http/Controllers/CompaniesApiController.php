@@ -17,12 +17,14 @@ use Modules\Companies\Transformers\CompanyDocumentsResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
+use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\Project;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\CompanyServiceGetnet;
 use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\Gateways\Getnet\CompanyServiceGetnet;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -541,10 +543,11 @@ class CompaniesApiController extends Controller
         try {
             $user = auth()->user();
 
-            $hasSubsellerId = Company::whereNotNull('subseller_getnet_id')
-                ->whereGetNetStatus(1)
-                ->where('user_id', $user->account_owner_id)
-                ->exists();
+            $hasSubsellerId = GatewaysCompaniesCredential::where('gateway_id',Gateway::GETNET_PRODUCTION_ID)
+            ->where('gateway_status',GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED)
+            ->with('company',function($query)use($user){
+                $query->where('user_id', $user);
+            })->first()->exists();
 
             return response()->json(
                 [

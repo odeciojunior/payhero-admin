@@ -27,6 +27,7 @@ class CheckWithdrawalsReleased extends Command
     {
         try {
             $withdrawals = Withdrawal::with('transactions', 'transactions.sale', 'transactions.company')
+                ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
                 ->where('automatic_liquidation', true)
                 ->where('is_released', false)
                 ->whereIn('status', [Withdrawal::STATUS_LIQUIDATING, Withdrawal::STATUS_PARTIALLY_LIQUIDATED])
@@ -44,7 +45,8 @@ class CheckWithdrawalsReleased extends Command
 
                         $countTransactionsReleased = 0;
 
-                        foreach ($withdrawal->transactions as $transaction) {
+                        $transactions = $withdrawal->transactions()->whereNull('gateway_transferred_at')->get();
+                        foreach ($transactions as $transaction) {
                             if ($transaction->gateway_id != Gateway::GETNET_PRODUCTION_ID) {
                                 continue;
                             }
@@ -93,7 +95,7 @@ class CheckWithdrawalsReleased extends Command
                                         }
                                     }
                                     $this->warn($errorGetnet);
-                                    report(new Exception($errorGetnet));
+                                    //report(new Exception($errorGetnet));
                                 }
 
                                 $this->tryFixGatewayOrderIdAndGatewayTransactionId($sale);
