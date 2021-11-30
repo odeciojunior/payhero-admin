@@ -487,7 +487,7 @@ class AsaasService implements Statement
     public function refundReceipt($transaction)
     {
         $credential = DB::table('gateways_companies_credentials')->select('gateway_api_key')
-        ->where('company_id',$transaction->company->id)->where('gateway_id',$transaction->gateway_id)->first();
+        ->where('company_id',$transaction->company_id)->where('gateway_id',$transaction->gateway_id)->first();
 
         if(!empty($credential)){
             $this->apiKey = $credential->gateway_api_key;
