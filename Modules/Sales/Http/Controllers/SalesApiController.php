@@ -166,8 +166,9 @@ class SalesApiController extends Controller
             if ($result['status'] != 'success') {
                 return response()->json(['message' => $result['message']], 400);
             }
-
-            (new SaleService())->cancel($sale, $result['response'], $refundObservation);
+                        
+            ((new Gateway)->getServiceById($sale->gateway_id))
+            ->cancel($sale,$result['response'], $refundObservation);
 
             if (!empty($sale->shopify_order)) {
                 $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();

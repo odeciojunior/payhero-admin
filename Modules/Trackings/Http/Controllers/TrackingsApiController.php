@@ -42,8 +42,9 @@ class TrackingsApiController extends Controller
                 )->log('Visualizou tela todos os códigos de rastreios');
             }
             $trackingService = new TrackingService();
-
+            
             $data = $request->all();
+
 
             if (!empty($data["date_updated"])) {
                 $saleId = current(Hashids::connection('sale_id')->decode($data['sale']));

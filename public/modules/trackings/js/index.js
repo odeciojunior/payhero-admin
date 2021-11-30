@@ -364,7 +364,6 @@ $(() => {
         }
 
         loadOnTable('#dados_tabela', '#tabela_trackings');
-
         $.ajax({
             method: 'GET',
             url: link,

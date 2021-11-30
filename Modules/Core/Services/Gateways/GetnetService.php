@@ -13,10 +13,15 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\PendingDebtWithdrawal;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleLog;
+use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Modules\Core\Services\SaleService;
 use Modules\Transfers\Services\GetNetStatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
@@ -262,7 +267,7 @@ class GetnetService implements Statement
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
-        return $availableBalance > $transaction->value;
+        return $availableBalance >= $transaction->value;
     }
 
     public function updateAvailableBalance($saleId = null)
@@ -386,5 +391,75 @@ class GetnetService implements Statement
             'last_transaction' => $lastTransactionDate,
             'id' => 'w7YL9jZD6gp4qmv'
         ];
+    }
+
+    public function getGatewayId()
+    {
+        return FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID:Gateway::GETNET_SANDBOX_ID;
+    }
+
+    public function cancel($sale, $response, $refundObservation): bool
+    {
+        try {
+            DB::beginTransaction();
+            $responseGateway = $response->response ?? [];
+            $statusGateway = $response->status_gateway ?? '';
+
+            SaleRefundHistory::create(
+                [
+                    'sale_id' => $sale->id,
+                    'refunded_amount' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'date_refunded' => Carbon::now(),
+                    'gateway_response' => json_encode($responseGateway),
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'refund_observation' => $refundObservation,
+                    'user_id' => auth()->user()->account_owner_id,
+                ]
+            );
+
+            $refundTransactions = $sale->transactions;
+            $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
+
+            $saleService = new SaleService();
+            
+            foreach ($refundTransactions as $refundTransaction) {
+                $transactionRefundAmount = $refundTransaction->value;
+
+                $company = $refundTransaction->company;
+                if (!empty($company)) {
+                    $saleService->checkPendingDebt($sale, $company, $transactionRefundAmount);
+                }
+
+                $refundTransaction->status = 'refunded';
+                $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
+                $refundTransaction->is_waiting_withdrawal = 0;
+                $refundTransaction->save();
+            }
+
+            $sale->update(
+                [
+                    'status' => Sale::STATUS_REFUNDED,
+                    'gateway_status' => $statusGateway,
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'date_refunded' => Carbon::now(),
+                ]
+            );
+
+            SaleLog::create(
+                [
+                    'sale_id' => $sale->id,
+                    'status' => 'refunded',
+                    'status_enum' => Sale::STATUS_REFUNDED,
+                ]
+            );
+
+            DB::commit();
+
+            return true;
+        } catch (Exception $ex) {
+            report($ex);
+            DB::rollBack();
+            throw $ex;
+        }
     }
 }
