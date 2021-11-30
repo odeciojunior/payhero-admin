@@ -2327,7 +2327,7 @@
                 html += '</div>';
             }
 
-            var _colspan = opt.showWeekNumbers ? 7 : 6;
+            var _colspan = opt.showWeekNumbers ? 7 : 5;
 
             var arrowPrev = '<i class="material-icons">chevron_left</i>';
             if (opt.customArrowPrevSymbol) arrowPrev = opt.customArrowPrevSymbol;
@@ -2341,7 +2341,7 @@
                 '           <tr class="caption">' +
                 '               <th colspan="' + _colspan + '" class="month-name">' +
                 '               </th>' +
-                '               <th>' +
+                '               <th class="arrows" colspan="' + (7 - _colspan) + '" >' +
                 '                   <span class="prev">' +
                 arrowPrev +
                 '                   </span>' +

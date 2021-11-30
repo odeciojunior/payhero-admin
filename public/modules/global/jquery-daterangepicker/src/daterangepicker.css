@@ -94,6 +94,7 @@
   text-align: start !important;
   text-transform: capitalize;
   font-size: 18px;
+  padding-left: 5px !important;
 }
 
 .date-picker-wrapper .select-wrapper {
@@ -222,6 +223,10 @@
 
 .date-picker-wrapper table .caption {
   height: auto;
+}
+
+.date-picker-wrapper table .caption .arrows {
+    text-align: right;
 }
 
 .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {
@@ -488,6 +493,10 @@
         width: 30px;
         height: 30px;
         line-height: 30px;
+    }
+
+    .date-picker-wrapper table .caption .prev {
+        margin-right: 10px;
     }
 
     .date-picker-wrapper table .caption .next, .date-picker-wrapper table .caption .prev {
