@@ -496,15 +496,16 @@ $(() => {
 
     function showMessagesMobile() {
         if (isMobile()) {
-            $('.tickets-grid-left').css('grid-area', '1 / 2')
-            $('.tickets-grid-right').css('grid-area', '1 / 1')
+            $('.tickets-grid-left').css('grid-area', '1 / 2');
+            $('.tickets-grid-right').css('grid-area', '1 / 1');
+            $('.search-box').removeClass('show');
         }
     }
 
     function showTicketsMobile() {
         if (isMobile()) {
-            $('.tickets-grid-left').css('grid-area', '1 / 1')
-            $('.tickets-grid-right').css('grid-area', '1 / 2')
+            $('.tickets-grid-left').css('grid-area', '1 / 1');
+            $('.tickets-grid-right').css('grid-area', '1 / 2');
         }
     }
 
