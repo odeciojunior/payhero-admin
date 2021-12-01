@@ -470,9 +470,9 @@ class GetnetService implements Statement
         $company = (object)$transaction->company->toArray();
         $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
         $getnetService = new GetnetBackOfficeService();
-        $result = $getnetService->setStatementSubSellerId($company->subseller_getnet_id)
+        $result = json_decode($getnetService->setStatementSubSellerId($company->subseller_getnet_id)
             ->setStatementSaleHashId($hashSaleId)
-            ->getStatement();
+            ->getStatement());
         
         if(empty($result) || empty($result->list_transactions)){
             throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
