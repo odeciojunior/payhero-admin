@@ -478,7 +478,6 @@ class GetnetService implements Statement
             throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
         }
         
-        $result = json_decode($result);
         $sale = end($result->list_transactions);
         
         $sale->flag = strtoupper($transaction->sale->flag) ?? null;
