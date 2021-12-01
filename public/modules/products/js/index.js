@@ -17,8 +17,7 @@ $(document).ready(function () {
         3: "Recusado",
     };
 
-    // Comportamentos da tela
-    //VERIFICA SE HA FILTRO E PEGA O TIPO
+    //VERIFICA SE HA FILTRO E PEGA O TIPO 
     let storeTypeProduct = () => {
         if(localStorage.getItem("filtersApplied")){
             let getProductValue = JSON.parse(localStorage.getItem("filtersApplied"));
@@ -26,15 +25,9 @@ $(document).ready(function () {
 
         }else{
             return 0;
-
         }
     }
 
-    getProjects();
-    getTypeProducts();
-    //updateProducts(); //Funcao de update chamda pela 2x
-
-    
     //REGASTA O FILTRO E O APLICA
     function handleLocalStorage() {
         if (localStorage.getItem('filtersApplied') != null) {
@@ -46,6 +39,43 @@ $(document).ready(function () {
             $("#name").val(parseLocalStorage.getName);
             $("#btn-filtro").trigger("click");
         }
+    }
+
+    function getProjects() {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: "api/projects?select=true",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    if (verifyAccountFrozen()) {
+                        $("#div-create").hide();
+                    } else {
+                        $("#div-create").show();
+                    }
+                    //talvez verificar se ha filtro aqui
+                    updateProducts();
+
+                } else {
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                    $("#div-create").hide();
+                }
+
+                loadingOnScreenRemove();
+            },
+        });
     }
 
     function getTypeProducts() {
@@ -85,41 +115,6 @@ $(document).ready(function () {
         });
     }
 
-    function getProjects() {
-        loadingOnScreen();
-        $.ajax({
-            method: "GET",
-            url: "api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    if (verifyAccountFrozen()) {
-                        $("#div-create").hide();
-                    } else {
-                        $("#div-create").show();
-                    }
-                    updateProducts();
-                } else {
-                    $("#project-empty").show();
-                    $("#project-not-empty").hide();
-                    $("#div-create").hide();
-                }
-
-                loadingOnScreenRemove();
-            },
-        });
-    }
-
     function updateProducts(link = null) {
         pageCurrent = link
 
@@ -135,7 +130,9 @@ $(document).ready(function () {
 
         //GUARDA QUALQUER PAGINA DEPOIS DA 1
         if(link != null){
-            let getPage = {atualPage: pageCurrent}
+            let getPage = {
+                atualPage: pageCurrent
+            };
             localStorage.setItem("page", JSON.stringify(getPage));
         }
         
@@ -159,15 +156,15 @@ $(document).ready(function () {
         
         loadOnAny(".page-content");
 
-        let type = $("#type-products").val();
-        let project = $("#select-projects").val(); 
-        let name = $("#name").val();
+        let type = $("#type-products").val(existFilters().getTypeProducts);
+        let project = $("#select-projects").val(existFilters().getProject);
+        let name = $("#name").val(existFilters().getName);
 
         if (link == null) {
-            link ="/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
+            link = "/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
             
         } else {
-            link ="/api/products" + link + "&shopify=" + type + "&project=" + project + "&name=" + name;
+            link = "/api/products" + link + "&shopify=" + type + "&project=" + project + "&name=" + name;
         }
 
         $.ajax({
@@ -308,7 +305,7 @@ $(document).ready(function () {
                     $(".products-is-empty").hide();
                 } else {
 
-                    if(localStorage.getItem('filtersApplied') != null && localStorage.getItem('page')!= null){
+                    if(localStorage.getItem('filtersApplied') != null && localStorage.getItem('page') != null){
                         localStorage.removeItem('page');
                         $("#btn-filtro").trigger("click");
 
@@ -324,13 +321,14 @@ $(document).ready(function () {
         });
     }
 
+    //PRECIONAR ENTER ATIVA O "APLICAR FILTRO"
     $(document).on("keypress", function (e) {
         if (e.key == "Enter") {
-            
             $("#btn-filtro").trigger("click");
         }
     });
 
+    //EXIBI OU ESCONDE O CAMPO PROJETO
     $("#type-products").on("change", function () {
         const type = $(this).val();
         if (type === "1") {
@@ -344,10 +342,8 @@ $(document).ready(function () {
         }
     });
 
+    //SE ALGUM CAMPO FOR ALTERADO ZERA A PAGINA E GUARDA O NOVO FILTRO
     $("#btn-filtro").on("click", function () {
-        
-
-        //SE O TIPO FOR DIFERENTE ZERA A PAGINA
         if(storeTypeProduct().getTypeProducts != $("#type-products").val() || storeTypeProduct().getName != $('#name').val() || storeTypeProduct().getProject != $('#select-projects').val()){
 
             if(localStorage.getItem("page") != null){
@@ -369,7 +365,10 @@ $(document).ready(function () {
 
     $('#new-product-button').on('click', function (event) {
         event.preventDefault();
-
         $('#new-product-modal').show();
     });
+
+    getProjects();
+    getTypeProducts();
+    //updateProducts(); //Funcao de update chamda pela 2x
 });
