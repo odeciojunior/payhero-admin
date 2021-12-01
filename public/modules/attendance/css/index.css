@@ -41,7 +41,11 @@ button:active {
 }
 
 .card .tickets-resume {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: end;
+    -ms-flex-align: end;
     align-items: flex-end;
 }
 
@@ -311,12 +315,6 @@ button:active {
     background-color: #DFDFDF;
 }
 
-/* Select */
-.select2-container {
-    width: 1005;
-}
-
-
 /* Grid */
 
 .tickets-grid {
@@ -356,7 +354,7 @@ button:active {
     -ms-flex-align: center;
     align-items: center;
     padding: 10px 26px;
-    border-top-left-radius: 20px;
+    border-top-left-radius: 16px;
     border-bottom: 1px solid #ECECEC;
 }
 
@@ -379,6 +377,7 @@ button:active {
 
 .btn-search {
     position: absolute;
+    top: 0;
     right: 0;
     width: 49px;
     height: 49px;
@@ -504,6 +503,7 @@ button:active {
     overflow: hidden;
     word-break: break-all;
     font-size: 12px;
+    line-height: 12px;
     color: #8D8D8D;
 }
 
@@ -602,7 +602,7 @@ button:active {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    border-top-right-radius: 20px;
+    border-top-right-radius: 16px;
     border-bottom: 1px solid #ECECEC;
 }
 
@@ -616,7 +616,7 @@ button:active {
     align-items: center;
     width: 49px;
     height: 49px;
-    border-top-left-radius: 20px;
+    border-top-left-radius: 16px;
 }
 
 .ticket-customer {
@@ -797,9 +797,18 @@ button:active {
 }
 
 .ticket-closed-info {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
     width: 100%;
     height: 90px;
@@ -909,7 +918,7 @@ button:active {
     cursor: pointer;
 }
 
-.write-buttons button:hover i {
+.write-buttons button:active i {
     color: #2e85eb;
 }
 
@@ -928,11 +937,11 @@ button:active {
     -ms-flex-align: center;
     align-items: center;
     width: 54px;
-    border-bottom-right-radius: 20px;
-    cursor:pointer;
+    border-bottom-right-radius: 16px;
+    cursor: pointer;
 }
 
-#btn-send:hover i {
+#btn-send:active i {
     color: #2e85eb;
 }
 
@@ -962,7 +971,7 @@ button:active {
     }
 
     .btn-search {
-        border-top-right-radius: 20px;
+        border-top-right-radius: 16px;
     }
 
     .ticket-back,
@@ -1007,7 +1016,7 @@ button:active {
 
     .ticket-closed-info,
     .write-buttons {
-        border-bottom-left-radius: 20px;
+        border-bottom-left-radius: 16px;
     }
 
     .write-buttons button {

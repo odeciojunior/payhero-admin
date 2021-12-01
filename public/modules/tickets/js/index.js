@@ -137,7 +137,7 @@ $(() => {
             page,
         }
 
-        return new URLSearchParams(filters).toString();
+        return Object.entries(filters).map(([key, val]) => `${key}=${val}`).join('&');
     }
 
     function index(page = 1) {
