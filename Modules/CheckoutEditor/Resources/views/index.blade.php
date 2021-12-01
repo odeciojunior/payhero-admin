@@ -87,7 +87,7 @@
 
                                 <div class="switch-holder mb-3">
                                     <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="banner_top_flag" name="banner_top_flag" data-target="banner-top-content" data-preview=".preview-banner" class='check switch-checkout'>
+                                        <input type="checkbox" id="banner_top_flag" name="banner_top_flag" data-target="banner-top-content" data-preview=".preview-banner" class='check switch-checkout' checked>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -130,7 +130,7 @@
 
                                 <div class="switch-holder mb-3">
                                     <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="countdown_flag" name="countdown_flag" data-target="countdown-content" data-preview=".countdown-preview" class='check switch-checkout'>
+                                        <input type="checkbox" id="countdown_flag" name="countdown_flag" data-target="countdown-content" data-preview=".countdown-preview" class='check switch-checkout' checked>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -140,14 +140,14 @@
                                 <div class="input-container">
                                     <label for="countdown-time" class="checkout-label">Tempo</label>
                                     <div class="time-div">
-                                        <input class="time-input" type="number" id="countdown-time" name="countdown-time" min="1" max="99" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                        <input class="time-input" type="number" id="countdown-time" name="countdown-time" value="15" min="1" max="99" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                         <div class="min-input-label">min</div>
                                     </div>
                                 </div>
 
                                 <div class="input-container">
                                     <label for="countdown-time" class="checkout-label">Descrição <span class="observation-span">Opcional</span></label>
-                                    <textarea class="checkout-textarea" id="countdown-description" name="story" rows="3"></textarea>
+                                    <textarea class="checkout-textarea" id="countdown-description" name="story" rows="4">Aproveite o desconto extra ao comprar no Cartão ou pelo PIX! É por tempo limitado.</textarea>
                                     <div class="textarea-observation">
                                         <span class="dot"></span><span class="observation-span">Visível somente em desktop.</span>
                                     </div>
@@ -155,7 +155,7 @@
 
                                 <div class="input-container">
                                     <label for="timeout-message" class="checkout-label">Mensagem ao encerrar o tempo</label>
-                                    <textarea class="checkout-textarea" id="timeout-message" name="timeout-message" rows="3"></textarea>
+                                    <textarea class="checkout-textarea" id="timeout-message" name="timeout-message" rows="3">Seu tempo acabou! Você precisa finalizar sua compra agora para ganhar o desconto extra.</textarea>
                                 </div>
 
                             </div>
@@ -173,7 +173,7 @@
 
                                 <div class="switch-holder mb-3">
                                     <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="textbar_flag" name="textbar_flag" data-target="textbar-content" data-preview=".textbar-preview" class='check switch-checkout'>
+                                        <input type="checkbox" id="textbar_flag" name="textbar_flag" data-target="textbar-content" data-preview=".textbar-preview" class='check switch-checkout' checked>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -206,7 +206,7 @@
 
                                 <div class="switch-holder mb-3">
                                     <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="sales_notifications_flag" name="sales_notifications_flag" data-target="sales-notifications-content" class='check switch-checkout'>
+                                        <input type="checkbox" id="sales_notifications_flag" name="sales_notifications_flag" data-target="sales-notifications-content" class='check switch-checkout' checked>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -218,10 +218,10 @@
                                     <label for="notification-interval" class="checkout-label">Intervalo entre notificações</label>
 
                                     <div id="notification-interval" class="radio-group">
-                                        <input class="custom-radio" id="notification-interval-15" type="radio" name="notification-interval" value="15" checked />
+                                        <input class="custom-radio" id="notification-interval-15" type="radio" name="notification-interval" value="15"  />
                                         <label for="notification-interval-15">15 segundos</label>
 
-                                        <input class="custom-radio" id="notification-interval-30" type="radio" name="notification-interval" value="30" />
+                                        <input class="custom-radio" id="notification-interval-30" type="radio" name="notification-interval" value="30" checked/>
                                         <label for="notification-interval-30">30 segundos</label>
 
                                         <input class="custom-radio" id="notification-interval-45" type="radio" name="notification-interval" value="45" />
@@ -252,7 +252,7 @@
                                                 <tr style="height: 90px; max-height: 90px">
                                                     <td>
                                                         <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-item" type="checkbox" id="notification-select-1" value="619">
+                                                            <input class="selectable-item" type="checkbox" id="notification-select-1">
                                                             <label for="notification-select-1"></label>
                                                         </span>
                                                     </td>
@@ -261,7 +261,7 @@
                                                 <tr>
                                                     <td>
                                                         <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-item" type="checkbox" id="notification-select-2" value="620">
+                                                            <input class="selectable-item" type="checkbox" id="notification-select-2" checked>
                                                             <label for="notification-select-2"></label>
                                                         </span>
                                                     </td>
@@ -270,7 +270,7 @@
                                                 <tr>
                                                     <td>
                                                         <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-item" type="checkbox" id="notification-select-3" value="620">
+                                                            <input class="selectable-item" type="checkbox" id="notification-select-3" checked>
                                                             <label for="notification-select-3"></label>
                                                         </span>
                                                     </td>
@@ -279,7 +279,7 @@
                                                 <tr>
                                                     <td>
                                                         <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-item" type="checkbox" id="notification-select-4" value="620">
+                                                            <input class="selectable-item" type="checkbox" id="notification-select-4">
                                                             <label for="notification-select-4"></label>
                                                         </span>
                                                     </td>
@@ -350,7 +350,7 @@
 
                                 <div class="switch-holder mb-3">
                                     <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="social_proof_flag" name="social_proof_flag" data-target="social-proof-content" class='check switch-checkout'>
+                                        <input type="checkbox" id="social_proof_flag" name="social_proof_flag" data-target="social-proof-content" class='check switch-checkout' checked>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -359,7 +359,7 @@
                             <div class="social-proof-content">
                                 <div class="input-container">
                                     <label for="social-proof-message" class="checkout-label">Mensagem</label>
-                                    <textarea class="checkout-textarea" id="social_proof_message" name="social-proof-message" rows="1" ></textarea>
+                                    <textarea class="checkout-textarea" id="social_proof_message" name="social-proof-message" rows="1" >Outros {num-visitantes} estão finalizando esta compra nesse momento.</textarea>
                                 </div>
 
                                 <div>
@@ -373,7 +373,7 @@
 
                                 <div class="input-container">
                                     <label for="social-proof-message" class="checkout-label">Mínimo de vistantes</label>
-                                    <input type="number" class="min-visitors-input" id="social-proof-min-visitors" name="social-proof-min-visitors" min="1" max="999" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                    <input type="number" class="min-visitors-input" id="social-proof-min-visitors" name="social-proof-min-visitors" value="15" min="1" max="999" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                 </div>
 
                             </div>
@@ -448,7 +448,7 @@
                                 <label for="count_selector_flag">Seletor de Quantidade</label>
                                 <div class="switch-holder mb-3">
                                     <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="count_selector_flag" name="count_selector_flag" class='check switch-checkout'>
+                                        <input type="checkbox" id="count_selector_flag" name="count_selector_flag" class='check switch-checkout' checked>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -458,7 +458,7 @@
                                 <label for="count_selector_flag">Exigir e-mail no checkout</label>
                                 <div class="switch-holder mb-3">    
                                     <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="checkout_email_flag" name="checkout_email_flag" class='check switch-checkout'>
+                                        <input type="checkbox" id="checkout_email_flag" name="checkout_email_flag" class='check switch-checkout' checked>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -498,7 +498,7 @@
                                         <option value="9">9x</option>
                                         <option value="10">10x</option>
                                         <option value="11">11x</option>
-                                        <option value="12">12x</option>
+                                        <option value="12" selected>12x</option>
                                     </select>
                                 </div>
                             </div>
@@ -518,7 +518,7 @@
                                         <option value="9">9x</option>
                                         <option value="10">10x</option>
                                         <option value="11">11x</option>
-                                        <option value="12">12x</option>
+                                        <option value="12" selected>12x </option>
                                     </select>
                                 </div>
                             </div>
@@ -538,7 +538,7 @@
                                         <option value="9">9x</option>
                                         <option value="10">10x</option>
                                         <option value="11">11x</option>
-                                        <option value="12">12x</option>
+                                        <option value="12" selected>12x</option>
                                     </select>
                                 </div>
                             </div>
@@ -561,10 +561,10 @@
                         </div>
 
                         <div style="display: flex; gap: 20px;">
-                            <div class="input-container" style="flex: 1">
+                            <div class="input-container">
                                 <label for="company_billing" class="checkout-label">Dias para vencimento</label>
                                 <div class="tagged-input-div">
-                                    <input class="tagged-input" type="number" id="expiration_days" name="expiration_days" min="1" max="99" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                    <input class="tagged-input" type="number" id="expiration_days" name="expiration_days" value="3" min="1" max="99" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                     <div class=" input-tag">dias</div>
                                 </div>
                             </div>
@@ -595,23 +595,23 @@
                             <div class="input-container credit-card-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">Cartão de crédito</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="discount_applied_credit_card" name="discount_applied_credit_card" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                    <input class="tagged-input" type="number" id="discount_applied_credit_card" name="discount_applied_credit_card" value="5" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
 
-                            <div class="input-container bank-billet-container" style="flex: 1">
+                            <div class="input-container bank-billet-container" style="flex: 1"> 
                                 <label for="company_billing" class="checkout-label">Boleto</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="discount_applied_bank_billet" name="discount_applied_bank_billet" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                    <input class="tagged-input" type="number" id="discount_applied_bank_billet" name="discount_applied_bank_billet" value="5" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
 
-                            <div class="input-container pix_container" style="flex: 1">
+                            <div class="input-container pix-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">PIX</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="discount_applied_pix" name="discount_applied_pix" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                    <input class="tagged-input" type="number" id="discount_applied_pix" name="discount_applied_pix" value="5" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
@@ -647,7 +647,7 @@
 
                             <div class="switch-holder mb-3">
                                 <label class="switch" style='top:3px'>
-                                    <input type="checkbox" id="thanks_page_flag" name="thanks_page_flag" data-target="thanks-page-content" data-preview=".shop-message-preview" class='check switch-checkout'>
+                                    <input type="checkbox" id="thanks_page_flag" name="thanks_page_flag" data-target="thanks-page-content" data-preview=".shop-message-preview" class='check switch-checkout' checked>
                                     <span class="slider round"></span>
                                 </label>
                             </div>
@@ -682,7 +682,7 @@
 
                             <div class="switch-holder mb-3">
                                 <label class="switch" style='top:3px'>
-                                    <input type="checkbox" id="whatsapp_flag" name="whatsapp_flag" data-target="whatsapp-content" data-preview=".whatsapp-preview" class='check switch-checkout'>
+                                    <input type="checkbox" id="whatsapp_flag" name="whatsapp_flag" data-target="whatsapp-content" data-preview=".whatsapp-preview" class='check switch-checkout' checked>
                                     <span class="slider round"></span>
                                 </label>
                             </div>
@@ -694,7 +694,7 @@
 
                         <div class="whatsapp-content">
                             <label for="whatsapp_phone" class="checkout-label">Telefone do suporte <span class="observation-span">Opcional</span></label>
-                            <input type="text" class="checkout-input-text" id="whatsapp_phone" name="whatsapp_phone" style="margin-bottom: 15px;" placeholder="Digite o telefone com DDD do suporte" pattern="\([0-9]{2}\)[\s][0-9]{5}-[0-9]{4,5}"></input>
+                            <input type="text" class="checkout-input-text" id="whatsapp_phone" name="whatsapp_phone" placeholder="Digite o telefone com DDD do suporte" pattern="\([0-9]{2}\)[\s][0-9]{5}-[0-9]{4,5}"></input>
                             <div class="textarea-observation">
                                 <span class="dot"></span><span class="observation-span">Visível somente em desktop.</span>
                             </div>
@@ -747,84 +747,141 @@
                     <div class="title-buttons-group">
                         <div>
                             <h1 class="checkout-title">
-                                Prévia  | Visual
+                                Prévia
                             </h1>
                         </div>
 
-                        <div id="banner_type" class="radio-group">
-                            <input class="custom-icon-radio" id="preview_visual_computer" type="radio" name="preview-visual-type" checked />
+                        <div id="preview_type_visual" class="radio-group">
+                            <input class="custom-icon-radio desktop" id="preview_visual_computer" type="radio" name="preview-visual-type" data-target="preview_container_visual_desktop" data-toggle="preview_container_visual_mobile" checked />
                             <label for="preview_visual_computer"><img src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
 
-                            <input class="custom-icon-radio" id="preview_visual_tablet" type="radio" name="preview-visual-type" />
-                            <label for="preview_visual_tablet"><img src="{{ asset('/modules/checkouteditor/img/svg/tablet-icon.svg') }}"></label>
-
-                            <input class="custom-icon-radio" id="preview_visual_mobile" type="radio" name="preview-visual-type" />
+                            <input class="custom-icon-radio mobile" id="preview_visual_mobile" type="radio" name="preview-visual-type" data-target="preview_container_visual_mobile" data-toggle="preview_container_visual_desktop"/>
                             <label for="preview_visual_mobile"><img src="{{ asset('/modules/checkouteditor/img/svg/mobile-icon.svg') }}"></label>
                         </div>
                     </div>
 
+                    <!-- NOVAS DIVS --------------------------------------------- COMEÇO -->
                     <div class="preview-container">
+                        <!-- <div id="preview-desktop-visual" class="preview-content desktop">
 
-                        <div id="countdown_preview" class="header-colorbar secondary-color countdown-preview"> </div>
-                        <div id="textbar_preview" class="header-colorbar primary-color textbar-preview"> </div>
+                            <div class="preview-header">
+                                <div class="header-colorbar desktop secondary-color countdown-preview"></div>
+                                <div class="header-colorbar desktop primary-color textbar-preview"> </div>
 
-                        <div id="banner_preview" class="preview-banner wide">
-                            <img id="preview_banner_img" class="preview-banner-img">
-                        </div>
+                                <div class="preview-banner wide-banner desktop">
+                                    <img id="preview_banner_img_desktop" class="preview-banner-img"/>
+                                </div>    
+                            </div>
+                            
+                            <div class="preview-body desktop visual">
+                                
+                                <div class="checkout-step-type">
+                                    <div class="steps-lines">
+                                        <div class="step-one primary-color"></div>
+                                        <div class="step-two"></div>
+                                        <div class="step-three"></div>
+                                    </div>
+                                    
+                                    <div></div>
+                                    
+                                    <div class="steps-circle">
+                                        <div></div>
+                                        <div class="circle primary-color"></div>
+                                    </div>
+                                </div>
 
-                        <div class="preview-body visual">
+                                <div class="preview-body-visual-content desktop">
 
-                            <div class="checkout-step-type">
-                                <div id="three_steps_preview" class="steps-lines">
+                                    <div class="visual-content-left three-steps">
+                                        <div id="finish_button_preview_desktop_visual" class="finish-button desktop"></div>
+                                    </div>
+                                    
+                                    <div class="visual-content-right">
+
+                                        <div class="white-placeholder-content"></div>
+
+                                        <div class="list-placeholder-content desktop">
+                                            <div class="list-item-placeholder">
+                                                <div class="circle-placeholder"></div>
+                                                <div class="strip-placeholder"></div>
+                                            </div>
+
+                                            <div class="list-item-placeholder">
+                                                <div class="circle-placeholder"></div>
+                                                <div class="strip-placeholder"></div>
+                                            </div>
+
+                                            <div class="list-item-placeholder desktop">
+                                                <div class="circle-placeholder"></div>
+                                                <div class="strip-placeholder"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div id="preview-mobile-visual" class="preview-content mobile collapse" aria-expanded="false">
+                            <div class="preview-header">
+                                <div class="header-colorbar mobile secondary-color countdown-preview"></div>
+                                <div class="header-colorbar mobile primary-color textbar-preview"> </div>
+
+
+                                <div class="menu-bar-mobile">
+                                    <div class="logo-mobile">
+                                    </div>
+                                    
+                                    <div class="menu">
+                                        <div class="menu-circle-mobile"></div>
+                                        <img class="arrow-icon-mobile" src="{{ asset('/modules/checkouteditor/img/svg/menu-arrow.svg') }}">
+                                    </div>
+                                </div>
+
+                                <div class="preview-banner wide-banner mobile">
+                                    <img id="preview_banner_img_mobile" class="preview-banner-img"/>
+                                </div>   
+                            </div> 
+
+                            <div class="preview-body mobile visual">
+                                <div class="steps-lines mobile">
                                     <div class="step-one primary-color"></div>
                                     <div class="step-two"></div>
                                     <div class="step-three"></div>
                                 </div>
-                                
-                                <div></div>
-                                
-                                <div class="steps-circle">
-                                    <div></div>
-                                    <div class="circle primary-color"></div>
+
+                                <div class="preview-placeholder three-steps">
+                                    <div id="finish_button_preview_mobile_visual" class="finish-button mobile"></div>
                                 </div>
-                            </div>
 
-                            <div class="preview-body-visual-content desktop">
+                                <div class="list-placeholder-content mobile">
+                                    <div class="list-item-placeholder">
+                                        <div class="circle-placeholder"></div>
+                                        <div class="strip-placeholder"></div>
+                                    </div>
 
-                                <div class="visual-content-left three-steps">
-                                    <div id="finish_button_preview"class="finish-button-computer visual-desktop"></div>
-                                </div>
-                                
-                                <div class="visual-content-right">
+                                    <div class="list-item-placeholder">
+                                        <div class="circle-placeholder"></div>
+                                        <div class="strip-placeholder"></div>
+                                    </div>
 
-                                    <div class="white-placeholder-content"></div>
-
-                                    <div class="list-placeholder-content">
-                                        <div class="list-item-placeholder">
-                                            <div class="circle-placeholder"></div>
-                                            <div class="strip-placeholder"></div>
-                                        </div>
-
-                                        <div class="list-item-placeholder">
-                                            <div class="circle-placeholder"></div>
-                                            <div class="strip-placeholder"></div>
-                                        </div>
-
-                                        <div class="list-item-placeholder">
-                                            <div class="circle-placeholder"></div>
-                                            <div class="strip-placeholder"></div>
-                                        </div>
+                                    <div class="list-item-placeholder desktop">
+                                        <div class="circle-placeholder"></div>
+                                        <div class="strip-placeholder"></div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
-                    </div>
+                        
 
+                        <div class="expand-mobile-button-container">
+                            <a class="expand-mobile-button" role="button" class="collapsed" data-toggle="collapse" href="#preview-mobile-visual" aria-expanded="false" aria-controls="preview-mobile-visual"></a>
+                        </div>
+                    </div>
+                    <!-- NOVAS DUVS --------------------------------------------- FIM -->
 
                     <div class="preview-colors">
-                        
                         <div class="title-buttons-group">
                             <div>
                                 <h1 class="checkout-title" style="margin: 0;">
@@ -991,12 +1048,15 @@
                     <div class="title-buttons-group">
                         <div>
                             <h1 class="checkout-title">
-                                Prévia | Pagamento
+                                Prévia
                             </h1>
                         </div>
-                        <div id="preview_type" class="banner-type-group">
-                            <input class="custom-radio-banner" id="preview_type_computer" type="radio" name="preview_type" value="1" checked />
-                            <label for="preview_type_computer"><img src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
+                        <div id="preview_type_payment" class="radio-group">
+                            <input class="custom-icon-radio" id="preview_payment_computer" type="radio" name="preview-payment-type" checked />
+                            <label for="preview_payment_computer"><img src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
+
+                            <input class="custom-icon-radio" id="preview_payment_mobile" type="radio" name="preview-payment-type" />
+                            <label for="preview_payment_mobile"><img src="{{ asset('/modules/checkouteditor/img/svg/mobile-icon.svg') }}"></label>
                         </div>
                     </div>
 
@@ -1006,11 +1066,7 @@
                         <div id="countdown_preview" class="header-colorbar secondary-color countdown-preview"> </div>
                         <div id="textbar_preview" class="header-colorbar primary-color textbar-preview"> </div>
 
-                        <div id="banner_preview" class="preview-banner wide banner-preview">
-                            <img id="preview_banner_img" class="preview-banner-img">
-                        </div>
-
-                        <div class="preview-body payment">
+                        <div class="preview-body desktop payment">
                             <div class="preview-body-content-payment">
 
                                 <div class="preview-payment-cupom">
@@ -1065,30 +1121,36 @@
 
                                     </div>
 
-                                    <div class="finish-button-computer payment-desktop"></div>
+                                    <div class="finish-button desktop payment-desktop"></div>
 
 
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
+
                 </div>
 
                 <div id="preview_post_purchase" style="display: none;">
                     <div class="title-buttons-group">
                         <div>
                             <h1 class="checkout-title">
-                                Prévia | Pós-compra
+                                Prévia
                             </h1>
                         </div>
-                        <div id="preview_type" class="banner-type-group">
-                            <input class="custom-radio-banner" id="preview_type_computer" type="radio" name="preview_type" value="1" checked />
-                            <label for="preview_type_computer"><img src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
+                        <div id="preview_type_post_purchase" class="radio-group">
+                            <input class="custom-icon-radio" id="preview_post_purchase_computer" type="radio" name="preview-post-purchase-type" checked />
+                            <label for="preview_post_purchase_computer"><img src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
+
+                            <input class="custom-icon-radio" id="preview_post_purchase_mobile" type="radio" name="preview-post-purchase-type" />
+                            <label for="preview_post_purchase_mobile"><img src="{{ asset('/modules/checkouteditor/img/svg/mobile-icon.svg') }}"></label>
                         </div>
                     </div>
 
                     <div class="preview-container">
-                        <div class="preview-body post-purchase">
+                        <div class="preview-body desktop post-purchase">
                             <img src="{{ asset('/modules/checkouteditor/img/svg/barcode-icon.svg') }}" style="margin: 10px 0">
 
                             <div class="input-form-placeholder" style="margin: 10px 0"></div>
@@ -1179,23 +1241,31 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Imagem de fundo</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                    <h5 class="modal-title" id="modalLabel">Banner no topo</h5>
                 </div>
-                <div class="modal-body" style="display: flex; justify-content: center;">
+                <div class="molda-crop modal-body">
                     <div class="img-container">
                         <div class="row">
-                            <div class="container-crop" style="width: 500px; max-height: 300px; border: none; object-fit: cover; border-radius: 5px;">  
+                            <div class="container-crop" >  
                                 <img id="cropped_image">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer btn-group-crop" >
-                    <button type="button" class="btn btn-secondary btn-crop-outline" id="button-cancel-crop" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary btn-crop-filled" id="button-crop">Cortar</button>
+
+                    <div class='row-flex'>
+                        <button type="button" class="btn btn-secondary btn-crop-outline zoom" id="zoom-in">+</button>
+                        <input id="zoom-slide" type="range" min="0" max="1" step="0.1" value="0">
+                        <button type="button" class="btn btn-secondary btn-crop-outline zoom" id="zoom-out">-</button>
+                        <button type="button" class="btn btn-secondary btn-crop-outline" id="crop-reset">Reset</button>
+                    </div>
+                    
+                    <div id='slider'></div>
+                    <div>
+                        <button type="button" class="btn btn-secondary btn-crop-outline" id="button-cancel-crop" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary btn-crop-filled" id="button-crop">Cortar</button>
+                    </div>
                 </div>
             </div>
         </div>

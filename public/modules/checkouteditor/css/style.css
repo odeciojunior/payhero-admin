@@ -371,25 +371,18 @@ hr {
 /* ------------ Crop -------------- */
 
 .container-crop { 
-  background-color: black;
-  width: 100%;
-  max-height: 500px;
-  max-width: 500px;
-  border-radius: 5px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 100% !important;
 }
 
 #cropped_image {
   display: block;
-  max-height: 100%;
+  max-height: 300px;
 }
 
 .btn-group-crop {
   display: flex !important; 
-  justify-content: flex-end; 
+  justify-content: space-between !important; 
+  align-items: center !important;
   padding: 25px;
 }
 
@@ -398,6 +391,14 @@ hr {
   border-radius: 99px;
   background-color: #fff;
   color: #878787;
+}
+
+.btn-crop-outline.zoom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
 }
 
 .btn-crop-filled {
@@ -496,6 +497,20 @@ textarea:focus {
        -o-outline: 1px solid #2BB2FF;
           outline: 1px solid #2BB2FF;
   }
+
+.molda-crop {
+  display: flex !important; 
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0 !important;
+  margin: 0 10px 0 10px; 
+  background-color: black;
+  min-height: 250px;
+}
+
+#zoom-slide {
+  padding: 0 !important;
+}
 
 
 
