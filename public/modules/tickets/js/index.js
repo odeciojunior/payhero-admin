@@ -224,10 +224,10 @@ $(() => {
                     </div>`;
         } else if (message.type === 'file') {
             return `<div class="ticket-message file ${typeEnum[message.from]}">
-                        <div class="file-download" data-id="${message.id}">
+                        <a download="${message.content}"  href="${message.link}" target="_blank" class="file-download">
                            <span>${message.content}</span>
                            <i class="material-icons">file_download</i>
-                        </div>
+                        </a>
                         <div class="d-flex justify-content-between">
                             <div class="file-extension">${message.content.split('.')[1]}</div>
                             <div class="ticket-message-date">${message.created_at}</div>
@@ -551,34 +551,6 @@ $(() => {
             $('.attachments-container').hide();
         }
     })
-
-    $(document).on('click', '.file-download', function () {
-        let id = $(this).data('id');
-        $.ajax({
-            method: "GET",
-            url: '/api/tickets/file/' + id,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: resp => {
-                errorAjaxResponse(resp);
-            },
-            success: resp => {
-                if(isMobile() && isSafari()) {
-                    let a = document.createElement(`a`);
-                    a.style.display = `none`;
-                    a.href = resp.url
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                } else {
-                    window.open(resp.url, '_blank');
-                }
-            }
-        });
-    });
 
     // Send Message
     function sendMessage() {

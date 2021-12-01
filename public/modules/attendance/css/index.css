@@ -990,7 +990,7 @@ button:active {
 
     .ticket-closed-info,
     .write-buttons {
-        border-bottom-left-radius: 8px;
+        border-bottom-left-radius: 20px;
     }
 
     .write-buttons button {
