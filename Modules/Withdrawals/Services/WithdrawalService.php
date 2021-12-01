@@ -10,7 +10,7 @@ use Modules\Core\Entities\Withdrawal;
 class WithdrawalService
 {
 
-    public function isFirstUserWithdrawal($user): bool
+    public function isFirstUserWithdrawal($userId): bool
     {
         $withdrawalStatus = [
             Withdrawal::STATUS_IN_REVIEW,
@@ -20,8 +20,8 @@ class WithdrawalService
         ];
 
         $isFirstUserWithdrawal = false;
-        $userWithdrawal = Withdrawal::whereHas('company', function ($query) use ($user) {
-                $query->where('user_id', $user->account_owner_id);
+        $userWithdrawal = Withdrawal::whereHas('company', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
             })
             ->whereIn('status', $withdrawalStatus)
             ->exists();
