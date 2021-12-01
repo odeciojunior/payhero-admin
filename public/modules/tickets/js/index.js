@@ -649,12 +649,6 @@ $(() => {
         return window.innerWidth < 768;
     }
 
-    function isSafari() {
-        let chromeAgent = navigator.userAgent.indexOf('Chrome') > -1;
-        let safariAgent = navigator.userAgent.indexOf('Safari') > -1;
-        return !chromeAgent && safariAgent;
-    }
-
     // third party
 
     $('#plan-select').select3({
