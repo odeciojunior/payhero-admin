@@ -1004,7 +1004,7 @@ button:active {
 
 @media (max-width: 418px) {
     .card {
-        padding: 10px 12px;
+        padding: 16px;
     }
 
     .card .title {

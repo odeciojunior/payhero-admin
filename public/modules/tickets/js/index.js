@@ -509,6 +509,13 @@ $(() => {
         }
     }
 
+    $(window).resize(function () {
+        if(!isMobile()) {
+            $('.tickets-grid-left').css('grid-area', '1 / 1');
+            $('.tickets-grid-right').css('grid-area', '1 / 2');
+        }
+    });
+
     // Attachments
     $('#btn-file').on('click', function () {
         $('#input-file').click();
@@ -736,4 +743,4 @@ $(() => {
         const dx = e.clientX - $(this).data('x');
         this.scrollLeft = $(this).data('left') - dx;
     });
-})
+});
