@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\Transfer;
 
 class AsaasTransfersChargebacks extends Command
 {
@@ -37,6 +39,12 @@ class AsaasTransfersChargebacks extends Command
      */
     public function handle()
     {
-        
+        $transfers = Transfer::doesnthave('asaasTransfer')->where('reason','chargedback')
+        ->where('gateway_id',foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID)
+        ->get();
+
+        // foreach($transfers as $transfer){
+            
+        // }
     }
 }
