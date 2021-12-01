@@ -331,7 +331,7 @@ button:active {
     display: -ms-grid;
     display: grid;
     -ms-grid-rows: 50px auto 40px;
-    grid-template-rows: 50px auto 40px;
+    grid-template-rows: 50px 430px 40px;
     border-right: 1px solid #ECECEC;
 }
 
@@ -440,6 +440,12 @@ button:active {
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.tickets-container::-webkit-scrollbar {
+    width: 0;
 }
 
 .ticket-item {
@@ -899,9 +905,14 @@ button:active {
     width: 25px;
     height: 25px;
     font-size: 17px;
+    cursor: pointer;
 }
 
-.write-buttons i {
+.write-buttons button:hover i {
+    color: #2e85eb;
+}
+
+.write-buttons button i {
     font-size: 17px;
 }
 
@@ -917,6 +928,11 @@ button:active {
     align-items: center;
     width: 54px;
     border-bottom-right-radius: 20px;
+    cursor:pointer;
+}
+
+#btn-send:hover i {
+    color: #2e85eb;
 }
 
 #btn-send:disabled {
@@ -997,7 +1013,7 @@ button:active {
         margin-right: 5px;
     }
 
-    .write-buttons i {
+    .write-buttons button i {
         font-size: 20px;
     }
 }
