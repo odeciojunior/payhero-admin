@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CheckWoocommerceTrackingCodes extends Command
@@ -51,7 +52,7 @@ class CheckWoocommerceTrackingCodes extends Command
 
             $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
 
-            $service = new WooCommerceIntegration($integration->url_store, $integration->token_user, $integration->token_pass);
+            $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
 
             return $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
         }
