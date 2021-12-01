@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Services\Gateways\CheckoutGateway;
 
 class AsaasTransfersChargebacks extends Command
 {
@@ -13,7 +14,7 @@ class AsaasTransfersChargebacks extends Command
      *
      * @var string
      */
-    protected $signature = 'command:asaas-transfers-chargebacks';
+    protected $signature = 'asaas:transfers-chargebacks';
 
     /**
      * The console command description.
@@ -21,6 +22,8 @@ class AsaasTransfersChargebacks extends Command
      * @var string
      */
     protected $description = 'Command description';
+
+    protected $gatewayId = 0;
 
     /**
      * Create a new command instance.
@@ -30,6 +33,7 @@ class AsaasTransfersChargebacks extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->gatewayId = foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
     }
 
     /**
@@ -39,12 +43,27 @@ class AsaasTransfersChargebacks extends Command
      */
     public function handle()
     {
-        $transfers = Transfer::doesnthave('asaasTransfer')->where('reason','chargedback')
-        ->where('gateway_id',foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID)
+        $transfers = Transfer::doesnthave('asaasTransfer')
+        //->where('reason','chargedback')
+        ->where('gateway_id',$this->gatewayId)->limit(1)
         ->get();
 
-        // foreach($transfers as $transfer){
-            
-        // }
+        $total = count($transfers);
+
+        $this->comment("{$total} transfers para processar");
+
+        $checkoutGateway = new CheckoutGateway($this->gatewayId);
+
+        foreach($transfers as $transfer){
+            $response = $checkoutGateway->transferSubSellerToSeller(
+                $transfer->company_id, $transfer->value, $transfer->id
+            );
+
+            if($response->status=='error'){                
+                $this->error(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Error');
+            }else{
+                $this->line(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Done');
+            }            
+        }
     }
 }
