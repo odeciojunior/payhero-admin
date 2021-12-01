@@ -328,7 +328,7 @@ button:active {
 .tickets-grid-left {
     display: -ms-grid;
     display: grid;
-    -ms-grid-rows: 50px auto 40px;
+    -ms-grid-rows: 50px 430px 40px;
     grid-template-rows: 50px 430px 40px;
     border-right: 1px solid #ECECEC;
 }
