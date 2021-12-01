@@ -110,9 +110,9 @@ class GerencianetService implements Statement
         return true;
     }
 
-    public function createWithdrawal($withdrawalValue): bool
+    public function createWithdrawal($withdrawalValue)
     {
-        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
         try {
             DB::beginTransaction();
@@ -160,7 +160,7 @@ class GerencianetService implements Statement
             );
 
             DB::commit();
-            return true;
+            return $withdrawal;
         } catch (Exception $e) {
             DB::rollBack();
             report($e);

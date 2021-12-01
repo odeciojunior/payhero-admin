@@ -119,9 +119,9 @@ class GetnetService implements Statement
         return true;
     }
 
-    public function createWithdrawal($value): bool
+    public function createWithdrawal($value)
     {
-        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
         try {
             $withdrawal = Withdrawal::create(
@@ -143,7 +143,7 @@ class GetnetService implements Statement
 
             dispatch(new ProcessWithdrawal($withdrawal, $isFirstUserWithdrawal));
 
-            return true;
+            return $withdrawal;
         } catch (Exception $e) {
             report($e);
 

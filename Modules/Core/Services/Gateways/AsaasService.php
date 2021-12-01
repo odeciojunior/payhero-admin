@@ -125,7 +125,7 @@ class AsaasService implements Statement
         return true;
     }
 
-    public function createWithdrawal($value): bool
+    public function createWithdrawal($value)
     {
         try {
             DB::beginTransaction();
@@ -143,7 +143,7 @@ class AsaasService implements Statement
 
             if (empty($withdrawal)) {
 
-                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
                 $withdrawal = Withdrawal::create(
                     [
@@ -174,9 +174,7 @@ class AsaasService implements Statement
             return false;
         }
 
-        // event(new WithdrawalRequestEvent($withdrawal));
-
-        return true;
+        return $withdrawal;
     }
 
     public function updateAvailableBalance($saleId = null)
