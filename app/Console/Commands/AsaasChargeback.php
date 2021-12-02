@@ -15,7 +15,7 @@ class AsaasChargeback extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'asaas:chargeback';
 
     /**
      * The console command description.

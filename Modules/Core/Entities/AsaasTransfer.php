@@ -12,7 +12,7 @@ class AsaasTransfer extends Model
      */
     protected $fillable = [
         'withdrawal_id',
-        'transafer_id',
+        'transfer_id',
         'transaction_id',
         'value',
         'status',
@@ -37,7 +37,6 @@ class AsaasTransfer extends Model
     public function transfer()
     {
         return $this->belongsTo(Transfer::class);
-    }
-    
+    }    
 }
 
