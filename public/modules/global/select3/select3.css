@@ -1,9 +1,15 @@
 .select3-container {
+    display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
     max-width: 440px;
     min-width: 440px;
-    padding: 18px;
+    max-height: 470px;
+    padding: 18px 18px 0 18px;
     border: 1px solid #B1B1B1;
     border-radius: 8px;
     background: #FFFFFF;
@@ -41,7 +47,6 @@
 }
 
 .select3-container .select3-options-container {
-    max-height: 280px;
     overflow-y: auto;
     margin: 0 -18px;
     scrollbar-width: none;
@@ -52,26 +57,26 @@
 }
 
 .select3-container .select3-option {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     padding: 15px 20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
     cursor: pointer;
 }
 
-/*.select3-container .select3-option-text {*/
-/*    white-space: nowrap;*/
-/*    text-overflow: ellipsis;*/
-/*    overflow: hidden;*/
-/*}*/
-
 .select3-container .select3-option .select3-checkbox {
     min-width: 24px;
+    max-width: 24px;
     min-height: 24px;
+    max-height: 24px;
     margin-right: 14px;
     border-radius: 4px;
     border: 1px solid #DFDFDF;
 }
-
 
 .select3-container .select3-option:not(.multiselect).active {
     background-color: #F0F8FF;
@@ -85,16 +90,65 @@
     border-color: #2E85EC;
 }
 
+.select3-multi-controls {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin: 10px -18px 0 -18px;
+    padding: 18px;
+    border-top: 2px solid #E2E2E2;
+}
+
+.select3-multi-controls .select3-uncheck {
+    display:none;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #636363C2;
+    outline: 0;
+    cursor: pointer;
+}
+
+.select3-multi-controls .select3-apply {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    min-width: 122px;
+    margin-left: auto;
+    padding: 13px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    background: #0094FF;
+    color: #ffffff;
+    outline: 0;
+    cursor: pointer;
+}
+
 .select3-container .select3-searching {
+    padding: 9px 0 18px 0;
     background: #fff;
 }
 
 .select3-container .select3-empty {
+    padding: 9px 0 18px 0;
     background: #fff;
 }
 
 .select3-container .select3-loading {
-    padding-top: 18px;
+    padding: 18px 0;
 }
 
 @media (max-width: 480px) {
