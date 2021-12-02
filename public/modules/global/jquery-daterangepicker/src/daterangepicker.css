@@ -16,7 +16,7 @@
 
 .date-picker-wrapper {
   position: absolute;
-  z-index: 1;
+  z-index: 1100;
   padding: 0;
   border-radius: 8px;
   font-size: 12px;
