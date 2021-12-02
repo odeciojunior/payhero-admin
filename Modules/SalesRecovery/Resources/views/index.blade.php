@@ -36,7 +36,7 @@
 
                     <div class="row align-items-baseline">
 
-                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                             <label for="type_recovery">Tipo de Recuperação</label>
                             <select name='select_type_recovery' id="recovery_type" class="form-control select-pad">
                                 <option value="1" selected>Carrinho Abandonado</option>
@@ -46,21 +46,21 @@
                             </select>
                         </div>
 
-                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                             <label for="project">Projeto</label>
                             <select name='select_project' id="project" class="form-control select-pad applySelect2">
                                 <option value="all">Todos projetos</option>
                             </select>
                         </div>
 
-                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                             <label for="plan">Plano</label>
                             <select name='plan' id="plan" class="form-control select-pad applySelect2" style="width:100%;">
                                 <option value="all">Todos planos</option>
                             </select>
                         </div>
 
-                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                             <div class="form-group form-icons">
                                 <label for='date-range-sales-recovery'>Filtrar Data</label>
                                 <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
@@ -74,27 +74,27 @@
                         
                         <div class="row pt-15">
 
-                            <div class="col-sm-6 col-md-3 col-xl-3 col-12">
+                            <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                                 <label for="client-name">Nome do Cliente</label>
                                 <input name='cliente-name' id="client-name" value='' class="input-pad" type="text" placeholder="Nome">
                             </div>
 
-                            <div class="col-sm-6 col-md-3 col-xl-3 col-12">
+                            <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                                 <label for="client-cpf">CPF do Cliente</label>
                                 <input name='client-cpf' id="client-cpf" value='' class="input-pad" type="text" placeholder="CPF" data-mask="000.000.000-00">
                             </div>
 
                         </div>
                     </div>
-                    <div class="row" style="height: 30px">
+                    <div class="row mb-10 mb-sm-0" style="height: 30px">
                         <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
                             <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center" data-toggle="collapse" data-target="#bt_collapse" aria-expanded="false"aria-controls="bt_collapse">
                                 <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
-                                <span id="text-filtro">Filtros avançados</span>
+                                <div id="text-filtro" style="white-space: normal">Filtros avançados</div>
                             </div>
                         </div>
                         <div class="col-6 col-xl-3 mt-20">
-                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
                                 <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
                                 Aplicar filtros
                             </div>
