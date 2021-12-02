@@ -162,6 +162,6 @@ class AsaasHelper extends Command
     public function clientLoan(){
         $value = intval($this->ask('Informe valor inteiro [ex. 145 para 1,45]'));
         $companyId = $this->ask('Informe companyId');
-        VarDumper::dump($this->api->newCustomerLoan($companyId,$value)??[]);
+        VarDumper::dump($this->api->transferSellerToSubSeller($companyId,$value)??[]);
     }
 }

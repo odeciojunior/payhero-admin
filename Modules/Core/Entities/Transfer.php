@@ -154,4 +154,9 @@ class Transfer extends Model
     {
         return $this->belongsTo('Modules\Core\Entities\Customer');
     }
+
+    public function asaasTransfer()
+    {
+        return $this->hasMany(AsaasTransfer::class);
+    }
 }

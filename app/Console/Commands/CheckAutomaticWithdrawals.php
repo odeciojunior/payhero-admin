@@ -69,7 +69,9 @@ class CheckAutomaticWithdrawals extends Command
 
                     if ($withdrawalValue >= 10000) {
                         $withdrawal = $gatewayService->createWithdrawal($withdrawalValue);
-                        event(new WithdrawalRequestEvent($withdrawal));
+                        if($withdrawal){
+                            event(new WithdrawalRequestEvent($withdrawal));
+                        }
                     }
                 }
 

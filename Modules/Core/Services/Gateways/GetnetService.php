@@ -119,9 +119,9 @@ class GetnetService implements Statement
         return true;
     }
 
-    public function createWithdrawal($value): bool
+    public function createWithdrawal($value)
     {
-        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
         try {
             $withdrawal = Withdrawal::create(
@@ -143,7 +143,7 @@ class GetnetService implements Statement
 
             dispatch(new ProcessWithdrawal($withdrawal, $isFirstUserWithdrawal));
 
-            return true;
+            return $withdrawal;
         } catch (Exception $e) {
             report($e);
 
@@ -470,15 +470,14 @@ class GetnetService implements Statement
         $company = (object)$transaction->company->toArray();
         $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
         $getnetService = new GetnetBackOfficeService();
-        $result = $getnetService->setStatementSubSellerId($company->subseller_getnet_id)
+        $result = json_decode($getnetService->setStatementSubSellerId($company->subseller_getnet_id)
             ->setStatementSaleHashId($hashSaleId)
-            ->getStatement();
+            ->getStatement());
         
         if(empty($result) || empty($result->list_transactions)){
             throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
         }
         
-        $result = json_decode($result);
         $sale = end($result->list_transactions);
         
         $sale->flag = strtoupper($transaction->sale->flag) ?? null;

@@ -412,21 +412,5 @@ class SalesApiController extends Controller
                 400
             );
         }
-    }
-
-    public function teste(){
-        $curl = curl_init('https://www.asaas.com/comprovantes/4323404634387482');
-
-            curl_setopt($curl, CURLOPT_ENCODING, '');
-            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-
-            $result = curl_exec($curl);
-            
-            curl_close($curl);
-
-            $pdf = PDF::loadHtml(str_replace(['href="/assets','src="/assets','</head>'],
-            ['href="https://www.asaas.com/assets','src="https://www.asaas.com/assets','<style>#loading-backdrop{display:none !important}</style>'],$result));
-            return $pdf->stream('comprovante.pdf');
-    }
+    }  
 }
