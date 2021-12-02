@@ -106,6 +106,11 @@ function verifyWithdrawalIsValid(toTransfer, availableBalance) {
         return false;
     }
 
+    if(toTransfer <= 5000){
+        alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
+        return;
+    }
+
     return true;
 }
 
