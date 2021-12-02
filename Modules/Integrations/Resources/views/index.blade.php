@@ -7,7 +7,7 @@
     @endpush
     <div class="page new-layout">
         <div style="display: none" class="page-header container pb-0">
-            <div class="d-flex justify-content-between align-items-center mb-30">
+            <div class="d-flex justify-content-between align-items-center mb-45">
                 <div>
                     <h1 class="page-title my-10" style="min-height: 28px">
                         <img src="{{ asset('modules/global/img/svg/api-sirius.png') }}" style="height: 40px; width: auto;" alt="API Sirius">
@@ -16,49 +16,22 @@
                     <p id='text-info' style="margin-bottom: 0;">Use nosso checkout API ou faça integrações externas.</p>
                 </div>
                 <div>
-                    <button id="store-integrate" type="button" class="btn btn-floating btn-primary" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
+                    <button type="button" class="btn btn-floating btn-primary store-integrate" style="display: none; position: relative; float: right; box-shadow: none;">
                         <i class="o-add-1" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
-
-            <div class="" id='card-integration-data' style='display:none;'>
-                <div class="row justify-content-center">
-                    <div class="col-md-3 col-sm-12">
-                        <div class="card shadow p-20">
-                            <p class="title">Integrações cadastradas</p>
-                            <p id='integrations_stored' class="number"></p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-12">
-                        <div class="card shadow p-20">
-                            <p class="">Integrações ativas</p>
-                            <p id='integrations_active' class="number"></p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-12">
-                        <div class="card shadow p-20">
-                            <p class="">Posts recebidos</p>
-                            <p id='posts_received' class="number"></p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-12">
-                        <div class="card shadow p-20">
-                            <p class="">Posts enviados</p>
-                            <p id='posts_sent' class="number"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
         <div class="page-content container" id='page-integrates'>
-            <div id="content-error" class='' style='display:none;'>
-                <div class="content-modal-error text-center" style=''>
-                    <img src="modules/global/img/empty.svg" width="250px"/>
-                    <h4 class="big gray" style='width:100%'>Você ainda não cadastrou integrações!</h4>
+            <div id="content-error" class='' style='display: none;'>
+                <div class="content-modal-error text-center" style="padding-top: 100px;">
+                    <img src="modules/global/img/image-empty-state.svg" width="260px" style="margin-bottom: 32px;" />
+                    <h1 class="m-0" style="color: #636363; font-weight: normal; font-size: 24px; line-height: 30px;">Você ainda não cadastrou nenhuma integração!</h1>
+                    <p class="m-0">Use nossa checkout API ou faça uma integração externa para sua loja.</p>
+
+                    <button style="margin: 34px auto 0; box-shadow: none;" type="button" class="btn btn-floating btn-primary store-integrate">
+                        <i class="o-add-1" aria-hidden="true"></i>
+                    </button>
                 </div>
             </div>
 
@@ -73,8 +46,8 @@
                             </div>
                             <input type="text" class="form-control" id="input-url-antifraud" readonly>
                             <div class="input-group-append">
-                                <button class="btn btn-primary bg-white btnCopiarLinkAntifraud" type="button" data-toggle="tooltip" title="Copiar URL antifraud">
-                                    <span class="icon-copy-2"></span>
+                                <button class="btn btn-primary bg-white btnCopiarLinkAntifraud" type="button" data-toggle="tooltip" title="Copiar URL antifraud" style="width: 46px; border-left: 1px solid #F4F4F4;">
+                                    <img src="/modules/global/img/icon-copy-b.svg">
                                 </button>
                             </div>
                         </div>
@@ -124,7 +97,7 @@
                             <div class="row">
                                 <div class="form-group col-12">
                                     <label for="description">Nome da integração</label>
-                                    <input name="description" type="text" class="form-control form-control-lg" id="description" placeholder="Dê um nome para sua integração" value="Profitfy">
+                                    <input name="description" type="text" class="form-control form-control-lg" id="description" placeholder="Dê um nome para sua integração">
                                 </div>
                             </div>
                             <div class="row">
@@ -132,13 +105,13 @@
                                     <label for="token_type_enum">Tipo de Integração</label>
                                     <div id="enum-list">
                                         <select name="token_type_enum" class="form-control form-control-lg select-enum-list">
-                                            <option value="3">Profitfy (Integração Externa)</option>
-                                            <option value="4">Checkout API</option>
+                                            <option value="3">Integração Externa</option>
+                                            <option value="4" selected>Checkout API</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row companies-container d-none">
+                            <div class="row companies-container">
                                 <div class="form-group col-sm-12 col-md">
                                     <label for="empresa">Empresa</label>
                                     <select name="company_id" id="companies" class="form-control form-control-lg">
@@ -146,7 +119,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row postback-container d-none">
+                            <div class="row postback-container">
                                 <div class="form-group col-sm-12 col-md">
                                     <label for="postback">Postback</label>
                                     <input name="postback" type="text" class="form-control form-control-lg" id="postback" placeholder="Insira a URL de postback">
