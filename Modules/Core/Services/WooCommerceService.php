@@ -604,17 +604,21 @@ class WooCommerceService
 
     public function approvePix($woocommerce_order)
     {
-        $getOrder = $this->woocommerce->get('orders/'.$woocommerce_order);
-        if ($getOrder->status != 'processing') {
-            $data = [
-                'status' => 'processing',
-                'set_paid' => true
-            ];
+        try {
+            $getOrder = $this->woocommerce->get('orders/'.$woocommerce_order);
+            if ($getOrder->status != 'processing') {
+                $data = [
+                    'status' => 'processing',
+                    'set_paid' => true
+                ];
 
-            return $this->woocommerce->put('orders/'.$woocommerce_order, $data);
+                return $this->woocommerce->put('orders/'.$woocommerce_order, $data);
+            }
+
+            return false;
+        } catch (\Throwable $th) {
+            report($th);
         }
-
-        return false;
     }
 
     public function log_post_requests($data, $project_id = null, $method = null, $order = null, $sale_id = null)
