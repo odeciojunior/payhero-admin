@@ -156,21 +156,21 @@
             <div class="fixhalf"></div>
             <div id="" class="card shadow p-20">
                 <div class="row mb-xl-3">
-                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0">
                         <label for="project-select">Projeto</label>
                         <select name='project' id="project-select" class="form-control select-pad applySelect2">
                             <option value="">Todos projetos</option>
                         </select>
                     </div>
-                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0">
                         <label for="sale">Venda</label>
                         <input name='sale' id="sale" class="input-pad" placeholder="Digite o código da venda">
                     </div>
-                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0">
                         <label for="tracking_code">Código de rastreio</label>
                         <input name='tracking_code' id="tracking_code" class="input-pad" placeholder="Digite o código">
                     </div>
-                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                    <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0">
                         <label for="status">Status</label>
                         <select name='status' id="status" class="form-control select-pad applySelect2">
                             <option value="">Todos</option>
@@ -186,7 +186,7 @@
 
                 <div class="collapse" id="bt_collapse">
                     <div class="row pt-15">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0">
                             <label for="status_commission">Status da comissão</label>
                             <select name='status_commission' id="status_commission" class="form-control select-pad applySelect2">
                                 <option value="">Todos</option>
@@ -195,7 +195,7 @@
                                 <option value="blocked">Não transferido por falta de rastreio</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 form-icons">
+                        <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0 form-icons">
                             <label for="date_updated">Data de aprovação venda</label>
                             <i style="right: 30px; margin-top: 13px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-25"></i>
                             <input name='date_updated' id="date_updated" class="select-pad" placeholder="Clique para editar..." readonly>
@@ -209,15 +209,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" style="height: 30px">
+                <div class="row mb-10 mb-sm-0" style="height: 30px">
                     <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
                         <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center" data-toggle="collapse" data-target="#bt_collapse" aria-expanded="false" aria-controls="bt_collapse">
                             <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} " />
-                            <span id="text-filtro">Filtros avançados</span>
+                            <div id="text-filtro" style="white-space: normal">Filtros avançados</div>
                         </div>
                     </div>
                     <div class="col-6 col-xl-3 mt-20">
-                        <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                        <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
                             <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} " />
                             Aplicar filtros
                         </div>
