@@ -233,13 +233,21 @@ input, select, textarea {
 
 input, .input-pad {
     width: 100%;
-    border: 1px solid #CECECE;
+    border: 1px solid #e0e7ee;
     background: #fff;
     border-radius: 8px;
     padding: 8px 16px;
     color: #707070;
     font-size: 16px;
     font-family: 'Muli', sans-serif;
+}
+.input-pad:hover {
+    border: 1px solid #cad1d8;
+}
+
+.input-pad:focus {
+    border: 1px solid #88BFFF;
+    outline: 0;
 }
 
 .input-pad {
@@ -282,7 +290,7 @@ select, .select-pad {
     font-size: 16px;
     width: 100%;
     height: auto;
-    background: #fff;
+    background-color: #fff;
     border: 1px solid #CECECE;
     border-radius: 8px;
     padding: 8px 16px !important;

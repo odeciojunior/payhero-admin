@@ -15,6 +15,7 @@ use Modules\Core\Entities\AffiliateLink;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\CacheService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\PlanService;
@@ -448,35 +449,37 @@ class PlansApiController extends Controller
     {
         try {
             $data = $request->all();
-            $planModel = new Plan();
+
+            $plans = Plan::query();
+
             $projectId = current(Hashids::decode($data['project_id']));
             if ($projectId) {
-
-                $plans = $planModel->where('project_id', $projectId);
-
-                if (!empty($data['search'])) {
-                    $plans->where('name', 'like', '%' . $data['search'] . '%');
-                }
-
-                $groupByVariants = boolval($data['variants'] ?? 1);
-
-                if ($groupByVariants) {
-                    $plans->select('name',
-                        DB::raw("if(shopify_id is not null,(select p.id from plans p where p.shopify_id = plans.shopify_id and p.name = plans.name and p.deleted_at is null limit 1), group_concat(id)) as id"),
-                        DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
-                        ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
-                } else {
-                    $plans->select('id', 'name', 'description');
-                }
-
-                $plans = $plans->orderBy('name')->paginate(10);
-
-                return PlansSelectResource::collection($plans);
+                $plans->where('project_id', $projectId);
             } else {
-                return response()->json([
-                    'message' => 'Ocorreu um erro, ao buscar dados dos planos',
-                ], 400);
+                $userId = auth()->user()->account_owner_id;
+                $projects = UserProject::where('user_id', $userId)->pluck('project_id');
+                $plans->whereIn('project_id', $projects);
             }
+
+            if (!empty($data['search'])) {
+                $plans->where('name', 'like', '%' . $data['search'] . '%');
+            }
+
+            $groupByVariants = boolval($data['variants'] ?? 1);
+
+            if ($groupByVariants) {
+                $plans->select('name',
+                    DB::raw("min(id) as id"),
+                    DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
+                    ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
+            } else {
+                $plans->select('id', 'name', 'description');
+            }
+
+            $plans = $plans->orderBy('name')->paginate(10);
+
+            return PlansSelectResource::collection($plans);
+
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados dos planos (PlansApiController - getPlans)');
             report($e);

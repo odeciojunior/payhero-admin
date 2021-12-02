@@ -15,8 +15,8 @@ class CreateCheckoutApiPostbacksTable extends Migration
     {
         Schema::create('checkout_api_postbacks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('company_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedInteger('company_id');
+            $table->unsignedInteger('user_id');
             $table->json('sent_data')->nullable();
             $table->json('response')->nullable();
 

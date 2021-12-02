@@ -160,7 +160,7 @@ class CieloService implements Statement
 
             if (empty($withdrawal)) {
 
-                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
                 $withdrawal = Withdrawal::create(
                     [
@@ -191,9 +191,7 @@ class CieloService implements Statement
             return false;                
         }
 
-        // event(new WithdrawalRequestEvent($withdrawal));
-
-        return true;
+        return $withdrawal;
     }
 
     public function updateAvailableBalance($saleId = null)
