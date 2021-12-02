@@ -77,7 +77,7 @@ $(document).ready(function () {
             },
         });
     }
-
+    
     function getTypeProducts() {
         $.ajax({
             method: "GET",
@@ -153,12 +153,11 @@ $(document).ready(function () {
         }
 
         link = pageCurrent
-        
         loadOnAny(".page-content");
 
-        let type = $("#type-products").val(existFilters().getTypeProducts);
-        let project = $("#select-projects").val(existFilters().getProject);
-        let name = $("#name").val(existFilters().getName);
+        let type = existFilters() != null ? existFilters().getTypeProducts : $("#type-products").val();
+        let name = existFilters() != null ? existFilters().getName : $("#name").val();
+        let project = existFilters() != null ? existFilters().getProject : $("#select-projects").val();
 
         if (link == null) {
             link = "/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
