@@ -294,7 +294,7 @@ button:active {
     font-size: 14px;
 }
 
-.filter-badge-input button {
+.filter-badge-input:not(.clean) button {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
