@@ -44,8 +44,8 @@ class AsaasTransfersChargebacks extends Command
     public function handle()
     {
         $transfers = Transfer::doesnthave('asaasTransfer')
-        //->where('reason','chargedback')
-        ->where('gateway_id',$this->gatewayId)->limit(1)
+        ->where('reason','chargedback')
+        ->where('gateway_id',$this->gatewayId)
         ->get();
 
         $total = count($transfers);
