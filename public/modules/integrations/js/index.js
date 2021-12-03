@@ -40,11 +40,17 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
+                    $(".page-header").find('.store-integrate').css('display', 'none');
+                    $("#content-error").find('.store-integrate').css('display', 'block');
+
                     $("#content-error").css('display', 'block');
                     $("#content-script").css('display', 'none');
                     $("#card-table-integrate").css('display', 'none');
                     $("#card-integration-data").css('display', 'none');
                 } else {
+                    $(".page-header").find('.store-integrate').css('display', 'block');
+                    $("#content-error").find('.store-integrate').css('display', 'none');
+
                     $("#content-error").hide();
                     updateIntegrationTableData(response);
                     pagination(response, 'integrates');
@@ -92,10 +98,10 @@ $(document).ready(function () {
 
                 dados += '<td style="vertical-align: middle;">';
                     dados += '<div class="input-group input-group-lg">';
-                        dados += '<input type="text" class="form-control font-sm brr inptToken" id="inputToken-' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
+                        dados += '<input type="text" class="form-control font-sm brr inptToken" id="inputToken-' + value.id_code + '" value="' + value.access_token + '" disabled="disabled" style="background: #F1F1F1;">';
                         dados += '<div class="input-group-append">';
-                            dados += '<button class="btn btn-primary bg-white btnCopiarLink" data-code="' + value.id_code + '" type="button" data-placement="top" data-toggle="tooltip" title="Copiar token">';
-                                dados += '<img src="/modules/global/img/icon-copy-c.svg">';
+                            dados += '<button class="btn btn-primary bg-white btnCopiarLink" data-code="' + value.id_code + '" type="button" data-placement="top" data-toggle="tooltip" title="Copiar token" style="width: 46px;">';
+                                dados += '<img src="/modules/global/img/icon-copy-b.svg">';
                             dados += '</button>';
                         dados += '</div>';
                     dados += '</div>';
@@ -265,8 +271,8 @@ $(document).ready(function () {
 
     // Adiciona nova integração
     function createIntegration() {
-        $("#store-integrate").unbind();
-        $("#store-integrate").on('click', function () {
+        $(".store-integrate").unbind();
+        $(".store-integrate").on('click', function () {
             loadingOnScreenRemove();
             $("#btn-save-integration").unbind();
             $("#btn-save-integration").on('click', function () {
@@ -423,9 +429,9 @@ $(document).ready(function () {
             postbackContainer.addClass('d-flex').removeClass('d-none');
         } else {
             //type = 3 is Profitfy (External Integration)
-            if(type == 3) {
-                descriptionInput.val('Profitfy');
-            }
+            //if(type == 3) {
+                //descriptionInput.val('Profitfy');
+            //}
             companiesContainer.addClass('d-none').removeClass('d-flex');
             postbackContainer.addClass('d-none').removeClass('d-flex');
         }
