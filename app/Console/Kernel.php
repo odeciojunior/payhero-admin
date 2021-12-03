@@ -154,7 +154,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
 
         /** Check GatewayTax invitations Diogo */
-        $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
+        $schedule->command('check:gateway-tax-company-after-month')->dailyAt('06:30');
 
         $schedule->command('check:sales-refunded')->weeklyOn(1, '23:00');
 
