@@ -19,13 +19,7 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $promotional_taxes = PromotionalTax::where('old_tax', 'like', '%3.9%')
-            ->withTrashed()
-            ->get();
 
-        foreach ($promotional_taxes as $promotional_tax) {
-            (new UserService())->removePromotionalTax($promotional_tax);
-        }
     }
 
 }
