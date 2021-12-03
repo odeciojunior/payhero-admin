@@ -58,8 +58,8 @@ class AsaasTransfersChargebacks extends Command
             $response = $checkoutGateway->transferSubSellerToSeller(
                 $transfer->company_id, $transfer->value, $transfer->id
             );
-
-            if($response->status=='error'){                
+            
+            if(empty($response) || empty($response->status) || $response->status=='error'){                
                 $this->error(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Error');
             }else{
                 $this->line(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Done');

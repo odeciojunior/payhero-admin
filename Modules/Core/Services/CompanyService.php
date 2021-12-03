@@ -390,7 +390,7 @@ class CompanyService
         }
         return false;
     }
-    public function getCompanyType(Company $company) 
+    public function getCompanyType(Company $company)
     {
         $userDocument = foxutils()->onlyNumbers($company->user->document);
 
@@ -408,4 +408,17 @@ class CompanyService
         }
     }
 
+    public function getTax(int $gateway_release_money_days): float
+    {
+        switch ($gateway_release_money_days) {
+            case 2:
+                return Company::GATEWAY_TAX_2;
+            case 15:
+                return Company::GATEWAY_TAX_15;
+            case 30:
+                return Company::GATEWAY_TAX_30;
+            default:
+                return Company::GATEWAY_TAX_2;
+        }
+    }
 }
