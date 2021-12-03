@@ -154,7 +154,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
 
         /** Check GatewayTax invitations Diogo */
-        $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
+        $schedule->command('check:gateway-tax-company-after-month')->dailyAt('06:30');
 
         $schedule->command('check:sales-refunded')->weeklyOn(1, '23:00');
 
@@ -169,7 +169,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('anticipations:asaas-pending')->dailyAt('16:00');
 
         /** Sincronizar códigos de rastreio com WooCommerce */
-        $schedule->command('woocommerce:check-tracking-codes')->dailyAt('07:00');
+        $schedule->command('woocommerce:check-tracking-codes')->weekly()->sundays()->at('07:00');
     }
 
     protected function commands()
