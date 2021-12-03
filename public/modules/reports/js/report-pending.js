@@ -79,6 +79,7 @@ $(document).ready(function () {
             'date_type': $("#date_type").val(),
             'date_range': $("#date_range").val(),
             'statement': hasSale == false ? 'automatic_liquidation' : $("#type_statement").val(),
+            'acquirer':$("#acquirer").val(),
             'is_security_reserve': $('#is-security-reserve').is(':checked') ? 1: 0,
         };
 
@@ -123,6 +124,7 @@ $(document).ready(function () {
                     }
 
                     getProjects();
+                    getAcquirer();
                 }
             }
         });
@@ -160,6 +162,34 @@ $(document).ready(function () {
                     $("#project-not-empty").hide();
                     $("#project-empty").show();
                 }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
+
+    function getAcquirer() {
+        $.ajax({
+            method: "GET",
+            url: '/api/finances/acquirers/'+$('#company').val(),
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                $.each(response.data, function (i, acquirer) {
+                    $("#acquirer").append($('<option>', {
+                        value: acquirer,
+                        text: acquirer
+                    }));
+                });
+
+                atualizar();
 
                 loadingOnScreenRemove();
             }

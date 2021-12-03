@@ -87,4 +87,17 @@ class CompanyBalanceService
         return $gatewaysBalances;
     }
 
+    public function getAcquirers(){
+        $gatewayIds = [];
+        foreach($this->defaultGateways as $gatewayClass) {
+            $gatewayService = app()->make($gatewayClass);
+            $gatewayService->setCompany($this->company);
+            $gatewayAvailable = $gatewayService->getGatewayAvailable();
+            if(!empty($gatewayAvailable)) {                
+                $gatewayIds = array_merge($gatewayIds,$gatewayAvailable);                
+            }
+        }
+        return $gatewayIds;
+    }
+
 }

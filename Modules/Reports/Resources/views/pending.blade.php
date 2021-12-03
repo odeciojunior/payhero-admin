@@ -107,6 +107,12 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-sm-6 col-md-6 col-xl-3 col-12  pt-20">
+                                            <label for="acquirer">Adquirente</label>
+                                            <select name='select_acquirer' id="acquirer" class="form-control select-pad">
+                                                <option value="0">Todas os adquirentes</option>
+                                            </select>
+                                        </div>
                                         <div class='col-md-3 pt-30 d-flex align-items-center'>
                                             <label class="switch mr-2">
                                                 <input type="checkbox" id='is-security-reserve' name="cashback" class='check' value='0'>
