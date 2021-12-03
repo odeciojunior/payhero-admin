@@ -572,12 +572,9 @@ class WooCommerceService
 
     public function approveBillet($woocommerce_order, $project_id = null)
     {
-        if(empty($woocommerce_order)){
+        if(empty($woocommerce_order)) {
             return false;
-        }else{
-
-
-
+        } else {
             $data = [
                 'status' => 'processing',
                 'set_paid' => true
@@ -586,27 +583,41 @@ class WooCommerceService
             //$log_request_id = $this->log_post_requests($data, $project_id, 'approve_billet', $woocommerce_order);
 
             try {
-
                 $res = $this->woocommerce->put('orders/'.$woocommerce_order, $data);
 
-                // if(!empty($res->status) && $res->status == 'processing'){
+                // if(!empty($res->status) && $res->status == 'processing') {
                 //     $res = json_encode($res);
                 //     $this->update_post_request($log_request_id, 1, $res);
 
-                // }else{
+                // } else {
                 //     $this->update_post_request($log_request_id, 0, $res);
 
                 // }
 
-
                 return $res;
-
             } catch (\Throwable $th) {
-
                 //$this->update_post_request($log_request_id, 0, $th);
                 report($th);
             }
+        }
+    }
 
+    public function approvePix($woocommerce_order)
+    {
+        try {
+            $getOrder = $this->woocommerce->get('orders/'.$woocommerce_order);
+            if ($getOrder->status != 'processing') {
+                $data = [
+                    'status' => 'processing',
+                    'set_paid' => true
+                ];
+
+                return $this->woocommerce->put('orders/'.$woocommerce_order, $data);
+            }
+
+            return false;
+        } catch (\Throwable $th) {
+            report($th);
         }
     }
 
