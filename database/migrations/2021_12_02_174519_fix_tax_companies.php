@@ -16,7 +16,9 @@ class FixTaxCompanies extends Migration
      */
     public function up()
     {
-        $promotional_taxes = PromotionalTax::where('old_tax', 'like', '%3.9%')->get();
+        $promotional_taxes = PromotionalTax::where('old_tax', 'like', '%3.9%')
+            ->withTrashed()
+            ->get();
 
         foreach ($promotional_taxes as $promotional_tax) {
             (new UserService())->removePromotionalTax($promotional_tax);
