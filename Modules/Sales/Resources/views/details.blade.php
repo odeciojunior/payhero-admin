@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="modal-body p-0">
-                <div class="transition-details">
+                <div class="transition-details p-5">
                     <h3 id="sale-code" class=""></h3>
                     <p id="payment-type" class="sm-text text-muted">
                     </p>
