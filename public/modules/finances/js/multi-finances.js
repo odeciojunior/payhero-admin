@@ -254,7 +254,6 @@ $(document).ready(function(){
                                         return;
                                     }
 
-                                    console.log(withdrawalValue)
                                     if(withdrawalValue <= 5000){
                                         alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
                                         return;
@@ -271,7 +270,6 @@ $(document).ready(function(){
                                         return;
                                     }
 
-                                    console.log(withdrawalValue)
                                     if(withdrawalValue <= 5000){
                                         alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
                                         return;
