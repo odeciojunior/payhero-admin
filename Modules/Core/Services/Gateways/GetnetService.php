@@ -395,6 +395,14 @@ class GetnetService implements Statement
         ];
     }
 
+    public function getGatewayAvailable(){
+        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
+
+        return !empty($lastTransaction) ? ['Getnet']:[];
+    }
+
     public function getGatewayId()
     {
         return FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID:Gateway::GETNET_SANDBOX_ID;
