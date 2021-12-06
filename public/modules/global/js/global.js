@@ -311,8 +311,9 @@ function loadOnTable(whereToLoad, tableReference) {
 function loadOnAny(target, remove = false, options = {}) {
     //cleanup
     target = $(target);
-    $('.loader-any-container').fadeOut();
-    target.parent().find('.loader-any-container').remove();
+    target.parent()
+        .find('.loader-any-container')
+        .remove();
 
     if (!remove) {
 
@@ -794,6 +795,60 @@ $(document).ready(function () {
     $(document).on('hidden.bs.modal', function (e) {
         document.querySelector('body').style.overflowY = 'unset';
     });
+
+    // sirius select
+    $('.sirius-select').each(function () {
+        let $target = $(this);
+        let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
+        $target.wrap(`<div class="sirius-select-container"></div>`);
+        $target.hide();
+        $target.after(`<div class="sirius-select-options"></div>`);
+        $target.after(`<div class="sirius-select-text ${classes}"></div>`);
+
+        let $text = $target.next(`.sirius-select-text`);
+        $text.text($target.children(`option:selected`).eq(0).text());
+    });
+
+    $(document).on('mouseenter', '.sirius-select-text', function () {
+        let $target = $(this);
+        let $wrapper = $target.parent();
+        let $select = $wrapper.find('select');
+        let $options = $wrapper.find('.sirius-select-options');
+        $options.html('');
+        $select.children('option').each(function () {
+            let option = $(this);
+            $options.append(`<div data-value="${option.val()}">${option.text()}</div>`);
+        });
+        $target.text($select.children('option:selected').eq(0).text());
+    });
+
+    $(document).on('click', '.sirius-select-text', function () {
+        let $target = $(this);
+        $target.toggleClass('active');
+        let $wrapper = $target.parent();
+        let $options = $wrapper.find('.sirius-select-options');
+        $target.hasClass('active') ? $options.fadeIn() : $options.fadeOut();
+    });
+
+    $(document).on('click', '.sirius-select-options div', function () {
+        let $target = $(this);
+        let $wrapper = $target.parents('.sirius-select-container');
+        $wrapper.find('.sirius-select')
+            .val($target.data('value'))
+            .trigger('change');
+        $wrapper.find('.sirius-select-text')
+            .removeClass('active')
+            .text($target.text());
+        $target.parent().fadeOut();
+    });
+
+    $(document).on('click', function (e) {
+        let target = $(e.target);
+        if(!target.parents('.sirius-select-container').length) {
+            $('.sirius-select-container .sirius-select-text').removeClass('active');
+            $('.sirius-select-container .sirius-select-options').fadeOut();
+        }
+    });
 })
 
 function verifyAccountFrozen() {
@@ -816,4 +871,3 @@ function removeMoneyCurrency(string) {
     }
     return string.substring(3);
 }
-

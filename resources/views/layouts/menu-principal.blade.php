@@ -36,7 +36,7 @@
                 </li>
             </ul>
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-                @hasanyrole('account_owner|admin')                
+                @hasanyrole('account_owner|admin')
                     <li id="notifications_button" class="nav-item dropdown" disabled='true'>
                         <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
                             <img class="svg-menu" src="{{ asset('modules/global/img/svg/notificacao.svg') }}" alt="Notificacao">
@@ -103,8 +103,8 @@
 </nav>
 {{--SIDE BAR--}}
 <div class="site-menubar">
-    <ul class="site-menu" style="margin-top:10px">        
-        <!-- hasanyrole('account_owner|admin|finantial') -->        
+    <ul class="site-menu" style="margin-top:10px">
+        <!-- hasanyrole('account_owner|admin|finantial') -->
         @can('dashboard')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('dashboard.index') }}">
@@ -115,19 +115,19 @@
                 </a>
             </li>
         @endcan
-        
-        @hasanyrole('account_owner|admin')
-            <li class="site-menu-item has-sub disabled">
-                <a class="disabled" href="/dashboard">
-                    <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/vitrine.svg') }}" alt="Vitrine">
-                    </span>
-                    <span class="site-menu-title">Vitrine (em breve)</span>
-                </a>
-            </li>
-        @endhasanyrole
-        
-        <!-- hasanyrole('account_owner|admin|attendance|finantial') -->        
+
+{{--        @hasanyrole('account_owner|admin')--}}
+{{--            <li class="site-menu-item has-sub disabled">--}}
+{{--                <a class="disabled" href="/dashboard">--}}
+{{--                    <span class="bg-menu">--}}
+{{--                        <img src="{{ asset('modules/global/img/svg/vitrine.svg') }}" alt="Vitrine">--}}
+{{--                    </span>--}}
+{{--                    <span class="site-menu-title">Vitrine (em breve)</span>--}}
+{{--                </a>--}}
+{{--            </li>--}}
+{{--        @endhasanyrole--}}
+
+        <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
         @if(auth()->user()->hasAnyPermission(['sales','recovery','trackings','contestations']))
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="sales-link">
@@ -161,7 +161,7 @@
                             <span class="bg-menu"></span>
                             <span class="site-menu-title">Antifraude</span>
                         </a>
-                    </li> 
+                    </li>
                     --}}
                     @can('trackings')
                     <li class="site-menu-item">
@@ -182,8 +182,8 @@
                     @endcan
                 </ul>
             </li>
-        @endif         
-        
+        @endif
+
         <!-- hasanyrole('account_owner|admin') -->
         @can('projects')
             <li class="site-menu-item has-sub">
@@ -216,7 +216,7 @@
                     <span class="site-menu-title">Atendimento</span>
                 </a>
             </li>
-        @endcan        
+        @endcan
         <!-- unlessrole('attendance') -->
         @can('finances')
         @php
@@ -236,7 +236,7 @@
                 </a>
             </li>
 
-            @endcan   
+            @endcan
 
         <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
         @if(auth()->user()->hasAnyPermission(['report_sales','report_checkouts','report_coupons','report_pending','report_blockedbalance']))
@@ -258,7 +258,7 @@
                             </a>
                         </li>
                     @endcan
-                    
+
                     <!-- hasanyrole('account_owner|admin') -->
                     @can('report_checkouts')
                         <li class="site-menu-item">
@@ -268,7 +268,7 @@
                             </a>
                         </li>
                     @endcan
-                    
+
                     <!-- hasanyrole('account_owner|admin|attendance') -->
                     @can('report_coupons')
                         <li class="site-menu-item">
@@ -278,7 +278,7 @@
                             </a>
                         </li>
                     @endcan
-                    
+
                     <!-- hasanyrole('account_owner|admin|finantial') -->
                     @can('report_pending')
                         <li class="site-menu-item">
@@ -288,7 +288,7 @@
                             </a>
                         </li>
                     @endcan
-                    
+
                     @can('report_blockedbalance')
                         <li class="site-menu-item">
                             <a href="{{ route('reports.blockedbalance') }}">
@@ -300,7 +300,7 @@
                 </ul>
             </li>
         @endhasanyrole
-           
+
         <!-- hasanyrole('account_owner|admin') -->
         @can('affiliates')
             <li class="site-menu-item has-sub">
@@ -311,7 +311,7 @@
                     <span class="site-menu-title mb-5">Afiliados</span>
                 </a>
             </li>
-        @endcan        
+        @endcan
         <!-- hasanyrole('account_owner|admin') -->
         @can('apps')
             <li class="site-menu-item has-sub">
@@ -323,6 +323,16 @@
                 </a>
             </li>
         @endcan
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub">
+                <a href="{{ route('integrations.index') }}" id='api-sirius-link'>
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/api-sirius-menu.svg') }}" alt="API Sirius">
+                    </span>
+                    <span class="site-menu-title">API Sirius</span>
+                </a>
+            </li>
+        @endif
         <!-- hasanyrole('account_owner')         -->
         @can('invitations')
             <li class="site-menu-item has-sub">

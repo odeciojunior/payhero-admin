@@ -46,8 +46,7 @@ class AsaasHelper extends Command
         $this->comment("[5] Cloudfox Balance");
         $this->comment("[6] Company Anticipation");
         $this->comment("[7] Company Anticipations");
-        $this->comment("[8] Test webhook transfer");
-        $this->comment("[9] Setar url checkout local");
+        $this->comment("[8] New Customer Loan");
         $this->comment("[0] Sair");
         $this->comment("===========================");
         $this->comment("[2964,3442] - João, Dani");
@@ -79,11 +78,8 @@ class AsaasHelper extends Command
                 $this->getCompanyAntipations();
             break;
             case 8:
-                $this->simulateWebhookTransfer();
-            break;
-            case 9:
-                $this->api->setBaseUrl(getenv('CHECKOUT_URL')."/api/");
-            break;
+                $this->clientLoan();
+            break;           
             case 0:  
                 $this->info('Bye!');              
                 exit;
@@ -163,4 +159,9 @@ class AsaasHelper extends Command
         VarDumper::dump($this->api->simulateWebhookTransfer($data)??[]);
     }
 
+    public function clientLoan(){
+        $value = intval($this->ask('Informe valor inteiro [ex. 145 para 1,45]'));
+        $companyId = $this->ask('Informe companyId');
+        VarDumper::dump($this->api->transferSellerToSubSeller($companyId,$value)??[]);
+    }
 }

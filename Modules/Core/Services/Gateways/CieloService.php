@@ -14,6 +14,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
@@ -159,7 +160,7 @@ class CieloService implements Statement
 
             if (empty($withdrawal)) {
 
-                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
                 $withdrawal = Withdrawal::create(
                     [
@@ -190,9 +191,7 @@ class CieloService implements Statement
             return false;                
         }
 
-        // event(new WithdrawalRequestEvent($withdrawal));
-
-        return true;
+        return $withdrawal;
     }
 
     public function updateAvailableBalance($saleId = null)
@@ -217,9 +216,7 @@ class CieloService implements Statement
 
             if (!empty($saleId)) {
                 $transactions->where('sale_id', $saleId);
-            }
-
-            dd($transactions->count());
+            }            
 
             foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;
@@ -288,5 +285,23 @@ class CieloService implements Statement
             'last_transaction' => $lastTransactionDate,
             'id' => 'pM521rZJrZeaXoQ'
         ];
+    }
+
+    public function getGatewayAvailable()
+    {
+        if(!$this->company->user->show_old_finances) {
+            return [];
+        }
+
+        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
+
+        return !empty($lastTransaction) ? ['Cielo']:[];
+    }
+
+    public function getGatewayId()
+    {
+        return FoxUtils::isProduction() ? Gateway::CIELO_PRODUCTION_ID:Gateway::CIELO_SANDBOX_ID;
     }
 }

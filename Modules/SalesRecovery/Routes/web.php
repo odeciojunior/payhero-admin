@@ -8,7 +8,6 @@ Route::group(
         'middleware' => ['web', 'auth', 'permission:recovery'],
     ],
     function() {
-        Route::resource('recovery', 'SalesRecoveryController')->only('index')
-             ->names('recovery');
+        Route::resource('recovery', 'SalesRecoveryController')->only('index')->names('recovery');
     }
 );

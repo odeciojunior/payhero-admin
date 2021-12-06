@@ -26,7 +26,7 @@ Route::get('/termos', function () {
 Route::group(
     [
     ],
-    function() {
+    function() {        
         // rotas autenticadas
         // rotas para autenticação e registro de novos usuarios
         Route::get('/login', '\App\Http\Controllers\Auth\LoginController@showLoginForm')->name('login');

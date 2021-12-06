@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Exports\Reports;
 
+use Aws\ForecastService\ForecastServiceClient;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -52,34 +53,35 @@ class PixExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSize,
         }
 
         $salesExpired = $salesModel
-            ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
-                     'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
-            ->leftJoin('plans_sales as plan_sale', function($join) {
-                $join->on('plan_sale.sale_id', '=', 'sales.id');
-            })->leftJoin('checkouts as checkout', function($join) {
-                $join->on('sales.checkout_id', '=', 'checkout.id');
-            })->leftJoin('customers as customer', function($join) {
-                $join->on('sales.customer_id', '=', 'customer.id');
-            })->whereIn('sales.status', [5])->where([
-                                                        ['sales.payment_method', Sale::PIX_PAYMENT],
-                                                    ])->with([
-                                                                 'project',
-                                                                 'customer',
-                                                                 'project.domains' => function($query) {
-                                                                     $query->where('status', 3)//dominio aprovado
-                                                                           ->first();
-                                                                 },
-                                                             ]);
+        ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
+            'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
+        ->leftJoin('plans_sales as plan_sale', function($join) {
+            $join->on('plan_sale.sale_id', '=', 'sales.id');
+        })->leftJoin('checkouts as checkout', function($join) {
+            $join->on('sales.checkout_id', '=', 'checkout.id');
+        })->leftJoin('customers as customer', function($join) {
+            $join->on('sales.customer_id', '=', 'customer.id');
+        })->whereIn('sales.status', [5])->where([['sales.payment_method', Sale::PIX_PAYMENT],])->with([
+            'project',
+            'customer',
+            'project.domains' => function($query) {
+                $query->where('status', 3)//dominio aprovado
+                ->first();
+            },
+        ]);
 
-        if (!empty($this->filters['client'])) {
-            $customerSearch = $customerModel->where('name', 'like', '%' . $this->filters['client'] . '%')->pluck('id')
-                                            ->toArray();
+        if(!empty($this->filters['client'])) {
+            $customerSearch = $customerModel->where('name', 'like', '%' . $this->filters['client'] . '%')->pluck('id')->toArray();
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
 
-        if (!empty($this->filters['project']) && $this->filters['project'] !== "all") {
-            $projectId = FoxUtils::decodeHash($this->filters['project']);
-            $salesExpired->where('sales.project_id', $projectId);
+        $parseProjectIds = explode(',', $this->filters['project']);
+        $projectIds = [];
+        if (!empty($parseProjectIds) && !in_array("all", $parseProjectIds)) {
+            foreach($parseProjectIds as $projectId){
+                array_push($projectIds, FoxUtils::decodeHash($projectId));
+            }
+            $salesExpired->whereIn('sales.project_id', $projectIds);
         } else {
             $userProjects = UserProject::select('project_id')
                 ->where('user_id', $this->user->id)
@@ -94,12 +96,18 @@ class PixExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSize,
             $customerSearch = $customerModel->where('document', FoxUtils::onlyNumbers($this->filters['client_document']))->pluck('id');
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
-        if (!empty($this->filters['plan'])) {
-            $planId = current(Hashids::decode($this->filters['plan']));
-            $salesExpired->whereHas('plansSales', function ($query) use ($planId) {
-                $query->where('plan_id', $planId);
+
+        $parsePlanIds = explode(',', $this->filters['plan']);
+        $plansIds = [];
+        if (!empty($parsePlanIds) && !in_array("all", $parsePlanIds)) {
+            foreach($parsePlanIds as $planId){
+                array_push($plansIds, Hashids::decode($planId));
+            }
+            $salesExpired->whereHas('plansSales', function ($query) use ($plansIds) {
+                $query->whereIn('plan_id', $plansIds);
             });
         }
+
         if (!empty($startDate) && !empty($endDate)) {
             $salesExpired->whereBetween('sales.created_at', [$startDate, $endDate]);
         } else {

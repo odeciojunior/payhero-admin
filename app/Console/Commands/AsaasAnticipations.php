@@ -45,45 +45,32 @@ class AsaasAnticipations extends Command
     {
         try {
 
-            $day = date('D');
-            $week = array(
-                'Sun' => 'Domingo',
-                'Mon' => 'Segunda-Feira',
-                'Tue' => 'Terca-Feira',
-                'Wed' => 'Quarta-Feira',
-                'Thu' => 'Quinta-Feira',
-                'Fri' => 'Sexta-Feira',
-                'Sat' => 'Sábado'
-            );
-
             $service = new AsaasService();
 
-            $dayAfter = Carbon::now()->addDay();
+            $toDay = Carbon::now();
 
             $transactions = Transaction::with('sale')
                 ->whereHas('sale', function ($query)  {
                     $query->whereNull('anticipation_status');
+                    $query->where('payment_method', Sale::CREDIT_CARD_PAYMENT);
                 })
                 ->where('gateway_id', Gateway::ASAAS_PRODUCTION_ID)
-                ->where('status_enum', Transaction::STATUS_PAID);
+                ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
+                ->whereNotNull('company_id')
+                ->where('type', Transaction::TYPE_PRODUCER)
+                ->where('release_date', '<=', $toDay->addDays(3)->format("Y-m-d"));
 
-            if ($week["$day"] == 'Sexta-Feira'){
-                $transactions = $transactions->whereBetween('release_date', [$dayAfter->format("Y-m-d"), $dayAfter->addDays(2)->format("Y-m-d")]);
-            } else{
-                $transactions = $transactions->where('release_date',  $dayAfter->format("Y-m-d"));
-            }
+            foreach ($transactions->cursor() as $transaction) {
+                $sale = $transaction->sale;
+                $response = $service->makeAnticipation($sale);
 
-                foreach ($transactions->cursor() as $transaction) {
-                    $sale = $transaction->sale;
-                    $response = $service->makeAnticipation($sale);
-
-                    if (isset($response['status'])) {
-                        $sale->update([
-                            'anticipation_status' => $response['status'],
-                            'anticipation_id' => $response['id']
-                        ]);
-                    }
+                if (isset($response['status'])) {
+                    $sale->update([
+                        'anticipation_status' => $response['status'],
+                        'anticipation_id' => $response['id']
+                    ]);
                 }
+            }
         } catch (Exception $e) {
             report($e);
         }

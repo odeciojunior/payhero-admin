@@ -102,6 +102,24 @@ class CheckoutGateway extends GatewayAbstract
         return $response;
     }
 
+    public function transferSellerToSubSeller($companyId,int $amount){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'transferSellerToSubSeller',  
+            'variables'=>[$companyId],
+            'data' => ['amount'=>$amount]            
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
+    public function transferSubSellerToSeller($companyId,int $amount,$transferId){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'transferSubSellerToSeller',  
+            'variables'=>[$companyId],
+            'data' => ['amount'=>$amount,'transfer_id'=>$transferId]            
+        ]);
+        return json_decode($this->requestHttp($options));   
+    }
+
     public function setBaseUrl($newUrl){
         $this->baseUrl = $newUrl;
     }
@@ -143,7 +161,15 @@ class CheckoutGateway extends GatewayAbstract
             "simulateWebhookTransfer" => [
                 "route" => "postback/asaas",
                 "method" => "POST"
-            ]
+            ],
+            "transferSellerToSubSeller" => [
+                "route" => "withdrawal/transfer-seller-to-subseller-asaas/:companyId",
+                "method" => "POST"
+            ],
+            "transferSubSellerToSeller" => [
+                "route" => "withdrawal/transfer-subseller-to-seller-asaas/:companyId",
+                "method" => "POST"
+            ],            
         ];
     }
 

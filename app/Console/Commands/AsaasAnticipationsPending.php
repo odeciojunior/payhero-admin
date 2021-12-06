@@ -44,7 +44,7 @@ class AsaasAnticipationsPending extends Command
     {
         try {
 
-            if ((date( 'w' )%6) ) {
+            //if ((date( 'w' )%6) ) {
                 $service = new AsaasService();
                 $sales = Sale::where([
                                          'status' => Sale::STATUS_APPROVED,
@@ -62,7 +62,7 @@ class AsaasAnticipationsPending extends Command
                     }
                     //dump($response);
                 }
-            }
+            //}
 
         } catch (Exception $e) {
             report($e);

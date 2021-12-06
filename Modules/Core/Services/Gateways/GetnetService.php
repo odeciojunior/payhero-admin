@@ -5,6 +5,7 @@ namespace Modules\Core\Services\Gateways;
 use App\Jobs\ProcessWithdrawal;
 use Carbon\Carbon;
 use Exception;
+use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
@@ -13,10 +14,16 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\PendingDebtWithdrawal;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleLog;
+use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Modules\Core\Services\SaleService;
 use Modules\Transfers\Services\GetNetStatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
@@ -112,9 +119,9 @@ class GetnetService implements Statement
         return true;
     }
 
-    public function createWithdrawal($value): bool
+    public function createWithdrawal($value)
     {
-        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
         try {
             $withdrawal = Withdrawal::create(
@@ -136,7 +143,7 @@ class GetnetService implements Statement
 
             dispatch(new ProcessWithdrawal($withdrawal, $isFirstUserWithdrawal));
 
-            return true;
+            return $withdrawal;
         } catch (Exception $e) {
             report($e);
 
@@ -262,7 +269,7 @@ class GetnetService implements Statement
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
-        return $availableBalance > $transaction->value;
+        return $availableBalance >= $transaction->value;
     }
 
     public function updateAvailableBalance($saleId = null)
@@ -346,13 +353,16 @@ class GetnetService implements Statement
         }
 
         $filtersAndStatement = (new GetNetStatementService())->getFiltersAndStatement($this->company->id);
+
         $filters = $filtersAndStatement['filters'];
         $result = json_decode($filtersAndStatement['statement']);
 
         if (isset($result->errors)) {
             return response()->json($result->errors, 400);
         }
+        
         $data = (new GetNetStatementService())->performWebStatement($result, $filters, 1000);
+        
         return response()->json($data);
     }
 
@@ -383,5 +393,103 @@ class GetnetService implements Statement
             'last_transaction' => $lastTransactionDate,
             'id' => 'w7YL9jZD6gp4qmv'
         ];
+    }
+
+    public function getGatewayAvailable(){
+        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
+
+        return !empty($lastTransaction) ? ['Getnet']:[];
+    }
+
+    public function getGatewayId()
+    {
+        return FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID:Gateway::GETNET_SANDBOX_ID;
+    }
+
+    public function cancel($sale, $response, $refundObservation): bool
+    {
+        try {
+            DB::beginTransaction();
+            $responseGateway = $response->response ?? [];
+            $statusGateway = $response->status_gateway ?? '';
+
+            SaleRefundHistory::create(
+                [
+                    'sale_id' => $sale->id,
+                    'refunded_amount' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'date_refunded' => Carbon::now(),
+                    'gateway_response' => json_encode($responseGateway),
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'refund_observation' => $refundObservation,
+                    'user_id' => auth()->user()->account_owner_id,
+                ]
+            );
+
+            $refundTransactions = $sale->transactions;
+            $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
+
+            $saleService = new SaleService();
+            
+            foreach ($refundTransactions as $refundTransaction) {
+                $transactionRefundAmount = $refundTransaction->value;
+
+                $company = $refundTransaction->company;
+                if (!empty($company)) {
+                    $saleService->checkPendingDebt($sale, $company, $transactionRefundAmount);
+                }
+
+                $refundTransaction->status = 'refunded';
+                $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
+                $refundTransaction->is_waiting_withdrawal = 0;
+                $refundTransaction->save();
+            }
+
+            $sale->update(
+                [
+                    'status' => Sale::STATUS_REFUNDED,
+                    'gateway_status' => $statusGateway,
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'date_refunded' => Carbon::now(),
+                ]
+            );
+
+            SaleLog::create(
+                [
+                    'sale_id' => $sale->id,
+                    'status' => 'refunded',
+                    'status_enum' => Sale::STATUS_REFUNDED,
+                ]
+            );
+
+            DB::commit();
+
+            return true;
+        } catch (Exception $ex) {
+            report($ex);
+            DB::rollBack();
+            throw $ex;
+        }
+    }
+
+    public function refundReceipt($hashSaleId,$transaction)
+    {
+        $company = (object)$transaction->company->toArray();
+        $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
+        $getnetService = new GetnetBackOfficeService();
+        $result = json_decode($getnetService->setStatementSubSellerId($company->subseller_getnet_id)
+            ->setStatementSaleHashId($hashSaleId)
+            ->getStatement());
+        
+        if(empty($result) || empty($result->list_transactions)){
+            throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
+        }
+        
+        $sale = end($result->list_transactions);
+        
+        $sale->flag = strtoupper($transaction->sale->flag) ?? null;
+
+        return PDF::loadView('sales::refund_receipt_getnet', compact('company', 'sale'));
     }
 }

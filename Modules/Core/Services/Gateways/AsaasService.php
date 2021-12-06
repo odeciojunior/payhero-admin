@@ -4,6 +4,7 @@ namespace Modules\Core\Services\Gateways;
 
 use Carbon\Carbon;
 use Exception;
+use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\AsaasAnticipationRequests;
@@ -16,10 +17,16 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Entities\SaleGatewayRequest;
+use Modules\Core\Entities\SaleLog;
+use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
+
+use function Clue\StreamFilter\fun;
 
 class AsaasService implements Statement
 {
@@ -95,7 +102,7 @@ class AsaasService implements Statement
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
-        return $availableBalance > $transaction->value;
+        return $availableBalance >= $transaction->value;
     }
 
     public function getWithdrawals(): JsonResource
@@ -118,7 +125,7 @@ class AsaasService implements Statement
         return true;
     }
 
-    public function createWithdrawal($value): bool
+    public function createWithdrawal($value)
     {
         try {
             DB::beginTransaction();
@@ -136,7 +143,7 @@ class AsaasService implements Statement
 
             if (empty($withdrawal)) {
 
-                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+                $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
                 $withdrawal = Withdrawal::create(
                     [
@@ -167,9 +174,7 @@ class AsaasService implements Statement
             return false;
         }
 
-        // event(new WithdrawalRequestEvent($withdrawal));
-
-        return true;
+        return $withdrawal;
     }
 
     public function updateAvailableBalance($saleId = null)
@@ -256,6 +261,14 @@ class AsaasService implements Statement
         ];
     }
 
+    public function getGatewayAvailable(){
+        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
+
+        return !empty($lastTransaction) ? ['Asaas']:[];
+    }
+
     public function makeAnticipation(Sale $sale) {
         $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
 
@@ -266,7 +279,7 @@ class AsaasService implements Statement
         if($sale->installments_amount == 1) {
             $data["payment"] =$sale->gateway_transaction_id;
         } else {
-            $saleInstallmentId = $this->saleInstallmentId($sale->saleGatewayRequests()->first());
+            $saleInstallmentId = $this->saleInstallmentId($sale);
             $data["installment"] = $saleInstallmentId;
         }
 
@@ -334,14 +347,23 @@ class AsaasService implements Statement
 
     }
 
-    private function saleInstallmentId(SaleGatewayRequest $gatewayRequest): string
+    private function saleInstallmentId(Sale $sale): ?string
     {
+        $gatewayRequest = $sale->saleGatewayRequests()
+            ->where('gateway_result->status', Gateway::PAYMENT_STATUS_CONFIRMED)
+            ->latest()
+            ->first();
+
         $result = json_decode($gatewayRequest->gateway_result, true);
-        if (empty($result['installment'])) {
-            throw new Exception("Venda não tem o installment para estornar !");
+
+        if (isset($result['id']) and $sale->gateway_transaction_id == $result['id'] and !empty($result['installment'])) {
+            return $result['installment'];
         }
 
-        return $result['installment'];
+        if (empty($gatewayRequest)) {
+            throw new Exception("Venda não tem o installment para antecipar !");
+        }
+        return null;
     }
 
     private function saveRequests($url, $result, $httpStatus, $data, $saleId)
@@ -365,5 +387,173 @@ class AsaasService implements Statement
             ]
 
         );
+    }
+
+    public function getGatewayId()
+    {
+        return FoxUtils::isProduction() ? Gateway::ASAAS_PRODUCTION_ID:Gateway::ASAAS_SANDBOX_ID;
+    }
+
+    public function cancel($sale, $response, $refundObservation): bool
+    {
+        try {
+            DB::beginTransaction();
+            $responseGateway = $response->response ?? [];
+            $statusGateway = $response->status_gateway ?? '';
+
+            SaleRefundHistory::create(
+                [
+                    'sale_id' => $sale->id,
+                    'refunded_amount' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'date_refunded' => Carbon::now(),
+                    'gateway_response' => json_encode($responseGateway),
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'refund_observation' => $refundObservation,
+                    'user_id' => auth()->user()->account_owner_id,
+                ]
+            );
+
+            $refundTransactions = $sale->transactions;
+            $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
+
+            $saleService = new SaleService();
+            $saleTax = 0;
+            if(!empty($sale->anticipation_id)){
+                $saleTax = $saleService->getSaleTax($cloudfoxTransaction, $sale);
+            }
+
+            foreach ($refundTransactions as $refundTransaction) {
+                $transactionRefundAmount = (int)$refundTransaction->value;
+
+                $company = $refundTransaction->company;
+                if (!empty($company)) {
+
+                    if ($refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
+
+                        $refundValue = $refundTransaction->value;
+                        if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
+                            if (!empty($refundTransaction->sale->automatic_discount)) {
+                                $refundValue -= $refundTransaction->sale->automatic_discount;
+                            }
+                            $refundValue += $saleTax;
+                        }
+                        $transactionRefundAmount = $refundValue;
+
+                        Transfer::create([
+                            'transaction_id' => $refundTransaction->id,
+                            'user_id' => $refundTransaction->user_id,
+                            'company_id' => $refundTransaction->company_id,
+                            'gateway_id' => $sale->gateway_id,
+                            'value' => $transactionRefundAmount,
+                            'type' => 'out',
+                            'type_enum' => Transfer::TYPE_OUT,
+                            'reason' => 'refunded',
+                            'is_refunded_tax' => 0
+                        ]);
+
+                        $company->update([
+                            'asaas_balance' => $company->asaas_balance -= $transactionRefundAmount
+                        ]);
+                    }
+                }
+
+                $refundTransaction->status = 'refunded';
+                $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
+                $refundTransaction->is_waiting_withdrawal = 0;
+                $refundTransaction->save();
+            }
+
+            $sale->update(
+                [
+                    'status' => Sale::STATUS_REFUNDED,
+                    'gateway_status' => $statusGateway,
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'date_refunded' => Carbon::now(),
+                ]
+            );
+
+            SaleLog::create(
+                [
+                    'sale_id' => $sale->id,
+                    'status' => 'refunded',
+                    'status_enum' => Sale::STATUS_REFUNDED,
+                ]
+            );
+
+            DB::commit();
+
+            return true;
+        } catch (Exception $ex) {
+            report($ex);
+            DB::rollBack();
+            throw $ex;
+        }
+    }
+
+    public function refundReceipt($hashSaleId,$transaction)
+    {
+        $credential = DB::table('gateways_companies_credentials')->select('gateway_api_key')
+        ->where('company_id',$transaction->company_id)->where('gateway_id',$transaction->gateway_id)->first();
+
+        if(!empty($credential)){
+            $this->apiKey = $credential->gateway_api_key;
+        }
+
+        $domainAsaas = 'https://www.asaas.com';
+        $url = $domainAsaas.'/api/v3/payments/'.$transaction->sale->gateway_transaction_id;
+   
+        $curl = curl_init($url);
+
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            'Content-Type: multipart/form-data',
+            'access_token: ' . $this->apiKey,
+        ]);
+
+        $result = curl_exec($curl);
+        $httpStatus     = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        $response = json_decode($result);
+
+        if (($httpStatus < 200 || $httpStatus > 299) && (!isset($response->errors))) {
+            //report(new Exception('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus));
+            report('Erro ao consultar o status do pagamento' . $url . ' - code:' . $httpStatus);
+        }
+        
+        if(!empty($response) && !empty($response->status) && $response->status=='REFUNDED' && !empty($response->transactionReceiptUrl)){
+            
+            $curl = curl_init($response->transactionReceiptUrl);
+
+            curl_setopt($curl, CURLOPT_ENCODING, '');
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+
+            $result = curl_exec($curl);
+            
+            curl_close($curl);
+            
+            $of = [
+                'href="/assets',
+                'src="/assets',
+                '</head>',
+                'Cobrança intermediada por ASAAS - gerar boletos nunca foi tão fácil.'
+            ];
+
+            $to = [
+                'href="' .$domainAsaas.'/assets',
+                'src="'. $domainAsaas.'/assets',
+                '<style>#loading-backdrop{display:none !important}</style>',
+                ''
+            ];
+
+            $view = str_replace($of,$to,$result);
+
+            return PDF::loadHtml($view);
+        }
+
+        return PDF::loadHtml('<h2>Não foi possivel gerar o comprovante de estorno!.</h2>');
     }
 }

@@ -12,10 +12,14 @@ use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleLog;
+use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
@@ -106,9 +110,9 @@ class GerencianetService implements Statement
         return true;
     }
 
-    public function createWithdrawal($withdrawalValue): bool
+    public function createWithdrawal($withdrawalValue)
     {
-        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
         try {
             DB::beginTransaction();
@@ -156,7 +160,7 @@ class GerencianetService implements Statement
             );
 
             DB::commit();
-            return true;
+            return $withdrawal;
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
@@ -210,7 +214,7 @@ class GerencianetService implements Statement
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
-        return $availableBalance > $transaction->value;
+        return $availableBalance >= $transaction->value;
     }
 
     public function updateAvailableBalance($saleId = null)
@@ -292,5 +296,74 @@ class GerencianetService implements Statement
             'last_transaction' => $lastTransactionDate,
             'id' => 'oXlqv13043xbj4y'
         ];
+    }
+
+    public function getGatewayAvailable(){
+        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
+
+        return !empty($lastTransaction) ? ['Gerencianet']:[];
+    }
+
+    public function getGatewayId()
+    {
+        return FoxUtils::isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID:Gateway::GERENCIANET_SANDBOX_ID;
+    }
+
+    public function cancel($sale, $response, $refundObservation): bool
+    {
+        try {
+            DB::beginTransaction();
+            $responseGateway = $response->response ?? [];
+            $statusGateway = $response->status_gateway ?? '';
+
+            SaleRefundHistory::create(
+                [
+                    'sale_id' => $sale->id,
+                    'refunded_amount' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'date_refunded' => Carbon::now(),
+                    'gateway_response' => json_encode($responseGateway),
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'refund_observation' => $refundObservation,
+                    'user_id' => auth()->user()->account_owner_id,
+                ]
+            );
+
+            $refundTransactions = $sale->transactions;            
+           
+            foreach ($refundTransactions as $refundTransaction) {
+                
+                $refundTransaction->status = 'refunded';
+                $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
+                $refundTransaction->is_waiting_withdrawal = 0;
+                $refundTransaction->save();
+            }
+
+            $sale->update(
+                [
+                    'status' => Sale::STATUS_REFUNDED,
+                    'gateway_status' => $statusGateway,
+                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                    'date_refunded' => Carbon::now(),
+                ]
+            );
+
+            SaleLog::create(
+                [
+                    'sale_id' => $sale->id,
+                    'status' => 'refunded',
+                    'status_enum' => Sale::STATUS_REFUNDED,
+                ]
+            );
+
+            DB::commit();
+
+            return true;
+        } catch (Exception $ex) {
+            report($ex);
+            DB::rollBack();
+            throw $ex;
+        }
     }
 }

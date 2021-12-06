@@ -138,7 +138,7 @@ class BankService
 //            ['code' => '250', 'name' => 'Banco Schahin'],
 //            ['code' => '252', 'name' => 'Fininvest'],
 //            ['code' => '254', 'name' => 'Paraná Banco'],
-//            ['code' => '260', 'name' => 'Nubank Pagamentos S.A'],
+            ['code' => '260', 'name' => 'Nubank Pagamentos S.A'],
 //            ['code' => '263', 'name' => 'Banco Cacique'],
 //            ['code' => '265', 'name' => 'Banco Fator'],
 //            ['code' => '266', 'name' => 'Banco Cédula'],

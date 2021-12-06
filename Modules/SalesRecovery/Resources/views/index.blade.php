@@ -3,34 +3,9 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=' . random_int(100, 10000)) }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
-        <style>
-            .select2-selection--single {
-                border: 1px solid #dddddd !important;
-                border-radius: .215rem !important;
-                height: 43px !important;
-            }
-            .select2-selection__rendered {
-                color: #707070 !important;
-                font-size: 16px !important;
-                font-family: 'Muli', sans-serif;
-                line-height: 43px !important;
-                padding-left: 14px !important;
-                padding-right: 38px !important;
-            }
-            .select2-selection__arrow {
-                height: 43px !important;
-                right: 10px !important;
-            }
-            .select2-selection__arrow b {
-                border-color: #8f9ca2 transparent transparent transparent !important;
-            }
-            .select2-container--open .select2-selection__arrow b {
-                border-color: transparent transparent #8f9ca2 transparent !important;
-            }
-        </style>
     @endpush
 
     <!-- Page -->
@@ -58,8 +33,10 @@
         <div id='project-not-empty' style='display:none'>
             <div class="page-content container">
                 <div id="" class="card shadow p-20">
+
                     <div class="row align-items-baseline">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                             <label for="type_recovery">Tipo de Recuperação</label>
                             <select name='select_type_recovery' id="recovery_type" class="form-control select-pad">
                                 <option value="1" selected>Carrinho Abandonado</option>
@@ -68,36 +45,45 @@
                                 <option value="3">Cartão Recusado</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                             <label for="project">Projeto</label>
-                            <select name='select_project' id="project" class="form-control select-pad">
+                            <select name='select_project' id="project" class="form-control select-pad applySelect2">
                                 <option value="all">Todos projetos</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                             <label for="plan">Plano</label>
-                            <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
-                                <option value="">Todos planos</option>
+                            <select name='plan' id="plan" class="form-control select-pad applySelect2" style="width:100%;">
+                                <option value="all">Todos planos</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                             <div class="form-group form-icons">
                                 <label for='date-range-sales-recovery'>Filtrar Data</label>
                                 <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
                                 <input name='date-range-sales-recovery' id='date-range-sales-recovery' class='select-pad pr-30' placeholder='Clique para editar...' readonly>
                             </div>
                         </div>
+
                     </div>
-                    <div class="collapse" id="bt_collapse">
+
+                    <div id="bt_collapse" class="collapse">
+                        
                         <div class="row pt-15">
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                            <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                                 <label for="client-name">Nome do Cliente</label>
                                 <input name='cliente-name' id="client-name" value='' class="input-pad" type="text" placeholder="Nome">
                             </div>
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                            <div class="col-sm-6 col-md-3 col-xl-3 col-12">
                                 <label for="client-cpf">CPF do Cliente</label>
                                 <input name='client-cpf' id="client-cpf" value='' class="input-pad" type="text" placeholder="CPF" data-mask="000.000.000-00">
                             </div>
+
                         </div>
                     </div>
                     <div class="row" style="height: 30px">
@@ -348,7 +334,7 @@
 
         <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=' . uniqid()) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
+        <script src="{{asset('modules/global/js/daterangepicker.min.js')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush
