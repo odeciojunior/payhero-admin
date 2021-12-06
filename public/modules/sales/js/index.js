@@ -12,10 +12,7 @@ $(document).ready(function () {
         language: {
             noResults: function () {
                 return "Nenhum resultado encontrado";
-            },
-            searching: function () {
-                return "Procurando...";
-            },
+            }
         }
     });
     //checkbox
