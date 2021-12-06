@@ -255,6 +255,10 @@ class UserService
                 $tax = $res[1];
                 $company = Company::where('user_id', $promotionalTax->user_id)->where('id', $company_id)->first();
 
+                if ($tax == PromotionalTax::PROMOTIONAL_TAX) {
+                    $tax = (new CompanyService())->getTax($company->gateway_release_money_days);
+                }
+
                 if ($company) {
                     $company->gateway_tax = $tax;
                     $company->save();

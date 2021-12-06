@@ -298,6 +298,14 @@ class GerencianetService implements Statement
         ];
     }
 
+    public function getGatewayAvailable(){
+        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
+
+        return !empty($lastTransaction) ? ['Gerencianet']:[];
+    }
+
     public function getGatewayId()
     {
         return FoxUtils::isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID:Gateway::GERENCIANET_SANDBOX_ID;

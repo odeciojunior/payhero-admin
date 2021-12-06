@@ -99,4 +99,22 @@ class FinancesApiController extends Controller
         $companyService = new CompanyBalanceService($company);
         return response()->json($companyService->getResumes());
     }
+
+    public function getAcquirers($companyId=null)
+    {
+        $companies = null;        
+        if(empty($companyId)){
+            $companies = Company::with('user')->where('user_id', auth()->user()->account_owner_id)->get();
+        }else{
+            $companies = Company::where('id',$companyId)->get();
+        }
+        $gatewayIds = [];
+        
+        foreach($companies as $company){
+            $companyService = new CompanyBalanceService($company);
+            $gatewayIds = array_merge($gatewayIds,$companyService->getAcquirers());
+        }
+
+        return response()->json(['data'=>array_unique($gatewayIds)]);
+    }
 }
