@@ -55,7 +55,7 @@ class AsaasAnticipations extends Command
                     $query->where('payment_method', Sale::CREDIT_CARD_PAYMENT);
                 })
                 ->where('gateway_id', Gateway::ASAAS_PRODUCTION_ID)
-                ->where('status_enum', Transaction::STATUS_PAID)
+                ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
                 ->whereNotNull('company_id')
                 ->where('type', Transaction::TYPE_PRODUCER)
                 ->where('release_date', '<=', $toDay->addDays(3)->format("Y-m-d"));

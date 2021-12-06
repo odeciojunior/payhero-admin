@@ -261,6 +261,14 @@ class AsaasService implements Statement
         ];
     }
 
+    public function getGatewayAvailable(){
+        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
+
+        return !empty($lastTransaction) ? ['Asaas']:[];
+    }
+
     public function makeAnticipation(Sale $sale) {
         $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
 
