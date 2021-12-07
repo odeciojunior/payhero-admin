@@ -150,6 +150,7 @@ $(function () {
                     var curHeight = $(modal).find('.modal-body').height();
                     $(modal).find(find_stage).find('.box-products').append(append).promise().done(function() {
                         $('[data-toggle="tooltip"]').tooltip({
+                            container: '.page',
                             template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
                         });
 
@@ -258,6 +259,7 @@ $(function () {
                     var curHeight = $(modal).find('.modal-body').height();
                     $(modal).find(find_stage).find('.box-products').html(append).promise().done(function() {
                         $('[data-toggle="tooltip"]').tooltip({
+                            container: '.page',
                             template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
                         });
 
@@ -385,6 +387,7 @@ $(function () {
             var curHeight = $(modal).find('.modal-body').height();
             $(modal).find(find_stage).find('.box-products').html(append).promise().done(function() {
                 $('[data-toggle="tooltip"]').tooltip({
+                    container: '.page',
                     template: '<div class="tooltip product-details" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
                 });
 
@@ -1666,7 +1669,9 @@ $(function () {
 
                     var curHeight = $(modal).find('.modal-body').height();
                     $(modal).find('#tab_update_cost_block-panel').find('.box-plans').html(append).promise().done(function() {
-                        $('[data-toggle="tooltip"]').tooltip();
+                        $('[data-toggle="tooltip"]').tooltip({
+                            container: '.page',
+                        });
 
                         if (response.data.length > 4) {
                             scrollCustom(modal + ' #tab_update_cost_block-panel .box-plans');
@@ -1783,7 +1788,9 @@ $(function () {
 
                         var curHeight = $(modal).find('.modal-body').height();
                         $(modal).find('#tab_update_cost_block-panel').find('.box-plans').html(append).promise().done(function() {
-                            $('[data-toggle="tooltip"]').tooltip();
+                            $('[data-toggle="tooltip"]').tooltip({
+                                container: '.page',
+                            });
 
                             if (response.data.length > 4) {
                                 scrollCustom(modal + ' #tab_update_cost_block-panel .box-plans');
