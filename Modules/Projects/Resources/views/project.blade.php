@@ -5,8 +5,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=13') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=13') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=14') }}">
     <style>
         @font-face {
             font-family: raty;

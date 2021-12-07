@@ -280,11 +280,16 @@ $(function () {
                             });
                             appendProductsPlan += '</div>';
 
-                            $(modal).find('.box-photos-products').html(appendProductsPlan);
+                            $(modal).find('.box-photos-products').html(appendProductsPlan).promise().done(function() {
+                                $('[data-toggle="tooltip"]').tooltip({
+                                    container: '.page',
+                                    template: '<div class="tooltip product-details" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+                                });
+                            });
                         }
 
                         $(modal).find('.product-photo').on('error', function() {
-                            $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg')
+                            $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
                         });
 
                         $(modal).find('.product-photo').on('load', function() {

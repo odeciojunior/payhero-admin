@@ -1661,17 +1661,18 @@ input[type="checkbox"], input[type="radio"] {
 }
 
 #tab_plans-panel .input-group .form-control {
-    height: 48px !important;
-    border-radius: 8px 0 0 8px;
+    height: 40px !important;
+    border-radius: 4px 0 0 4px;
 }
 #tab_plans-panel .input-group-append .btn, .input-group-prepend .btn {
-    width: 48px;
-    border-radius: 0 8px 8px 0;
+    width: 40px;
+    border-radius: 0 4px 4px 0;
+    line-height: 1;
 }
 #tab_plans-panel .btn-holder a {
-    width: 46px;
-    height: 46px;
-    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
     box-shadow: none;
 }
 #tab_plans-panel .link-button-dependent {
@@ -1861,4 +1862,37 @@ tbody td{
 
 .sirius-select-container .sirius-select-options div:hover {
     background: #F6F7F9;
+}
+
+#pagination-plans .nav-btn {
+    background: #fff;
+    border: 1px solid #EBEBEB;
+    border-radius: 8px;
+    margin-right: 10px;
+    min-width: 40px;
+    height: 40px;
+    color: #3D4456;
+    font-weight: normal;
+    font-size: 16px;
+}
+#pagination-plans .nav-btn.active {
+    border-radius: 8px;
+    border: 1px solid #2E85EC !important;
+    background: #fff !important;
+    color: #2E85EC !important;
+}
+
+#table-plans > tbody > tr:nth-child(2n+2) > td,
+#table-plans > tbody > tr:nth-child(2n+2) > th,
+#table-plans thead > tr > td,
+#table-plans thead > tr > th {
+    background-color: #FBFBFB !important;
+}
+#table-plans thead > tr > td {
+    border-top: 1px solid #EDEDED !important;
+    border-bottom: 1px solid #EDEDED !important;
+}
+
+#config-cost-plan a {
+    background: none !important;
 }
