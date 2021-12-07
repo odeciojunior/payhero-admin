@@ -598,7 +598,9 @@ $(document).ready(function () {
                                 </tr>`;
 
                         $(function () {
-                            $('[data-toggle="tooltip"]').tooltip();
+                            $('[data-toggle="tooltip"]').tooltip({
+                                container: '.page'
+                            });
                         });
 
                         $("#dados_tabela").append(dados);
