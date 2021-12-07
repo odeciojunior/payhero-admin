@@ -6,8 +6,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=12') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=' . uniqid()) }}"> --}}
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=13') }}">
     <style>
         @font-face {
             font-family: raty;
@@ -293,7 +292,7 @@
                                         <i class="material-icons md-16">close</i>
                                     </a>
                                 </div>
-                                
+
 
                                 <div class="modal-body p-10 ">
                                     <div class='col-md-12 col-sm-12 col-12'>
@@ -304,17 +303,17 @@
                                     <div class='col-md-10 col-sm-12 col-12'>
                                         <label class="control-label"> Consumer key </label>
                                         <input class="form-control" id="consumer_k"  type='text'   class="form-control">
-                                        
+
                                     </div>
-                                
+
                                     <div class='col-md-10 col-sm-12 col-12 mt-20'>
                                         <label class="control-label"> Consumer secret </label>
                                         <input class="form-control" id="consumer_s"  type='text'   class="form-control">
-                                        
+
                                     </div>
                                 </div>
 
-                                
+
 
                                 <div class="modal-footer d-flex align-items-center justify-content-center">
                                         <button id="close-modal" type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">
@@ -325,11 +324,11 @@
                                         </button>
                                     </div>
 
-                            </div>               
-                        </div>               
-                    </div>               
-                    
-                    
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical"
                          id="modal-woocom-integration" aria-hidden="true" aria-labelledby="exampleModalTitle"
                          role="dialog" tabindex="-1">
@@ -351,21 +350,21 @@
 
                                 <div id="_loading" style="display:none">
                                     <div class="modal-body text-center p-10">
-                                        
+
                                         <h3 class="black" id="modal-title">
                                             Processando requisição.
                                         </h3>
                                     </div>
-                                    
+
                                 </div>
 
                                 <div id="_content">
 
                                     <div class="modal-body text-center p-10">
-                                        
+
                                         <h3 class="black" id="modal-title">Selecione as opções para sincronizar</h3>
                                         <p class="gray pt-10" id="modal-text">
-                                        
+
                                             <div class="switch-holder">
                                                 <label class="switch" style="top:3px">
                                                     <input type="checkbox" id="opt_prod" name="product_amount_selector" class="check" value="1">
@@ -392,7 +391,7 @@
                                                 <label class="text-left" for="opt_webhooks" style="margin-right:15px;margin-bottom: 3px; width:346px">
                                                     Sincronizar webhooks com WooCommerce</label>
                                             </div>
-                                            
+
                                         </p>
                                     </div>
                                     <div class="modal-footer d-flex align-items-center justify-content-center">
@@ -412,7 +411,7 @@
         </div>
     </div>
 
-    @push('scripts')    
+    @push('scripts')
 {{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script>
