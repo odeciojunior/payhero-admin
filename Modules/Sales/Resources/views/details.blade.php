@@ -6,7 +6,7 @@
         <div id='modal-saleDetails' class="modal-content detail-padding" style="width: 500px;">
             <div class="header-modal">
                 <div class="row justify-content-between align-items-center" style="width: 100%;">
-                    <div class="offset-2 col-8 text-center">
+                    <div class="offset-2 col-8 text-center mb-5">
                         <h4> Detalhes da venda</h4>
                     </div>
                     
