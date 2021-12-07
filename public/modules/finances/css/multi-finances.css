@@ -450,7 +450,7 @@ background-position: -24px -53px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 12px
+    font-size: 11px
 }
 .bg-light {
     background-color: white !important;
@@ -598,8 +598,10 @@ hr{
     transform: rotate(180deg);
 }
 @media (max-width: 991px) {
+    .new-title {
+        margin-left: 0;
+    }
     .badge {
-         /*width: unset;*/
          height: unset;
          padding: 8px 16px;;
          border: unset;
@@ -608,18 +610,10 @@ hr{
          white-space: unset;
     }
 
-    #gateway-redirection {
-        color: #FFF;
-        background-color: #107DFF;
-    }
     #gateway-redirection span {
         max-width: 7rem;
     }
-    #gateway-redirection i::before {
-        color: #FFF;
-    }
-
-    .card,.card-skeleton{
+    .card:not(div#card-history),.card-skeleton:not(div#card-history) {
         min-height: 150px;
     }
 
@@ -637,11 +631,14 @@ hr{
         padding-top: 0;
     }
 
+    [id*=container_info_] > h4:nth-child(3) {
+        padding-bottom: 18px;
+    }
+
     .card-gateway h4 {
         margin-top: 0;
         border-bottom: none;
         padding-bottom: 0;
-        /*margin-bottom: 0;*/
     }
 
     .card-gateway h4:last-child {

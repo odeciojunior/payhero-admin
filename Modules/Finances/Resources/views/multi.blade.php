@@ -68,9 +68,9 @@
         </div>
         <div class="page-content container">
             <div class="row" id="container-gateways">
-                <div class="col-md-12 col-lg-8">
+                <div class="col-md-12 col-xl-8">
                     <div class="row" id="gateway-skeleton">
-                        <div class="col-12 col-md-4">
+                        <div class="col-md-4 d-none d-md-block">
                             <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
                             <div class="card card-skeleton mb-0">
                                 <div class="card-body p-0 pt-20">
@@ -211,9 +211,9 @@
                     </div>
                     <div id="container-all-gateways"></div>
                 </div>
-                <div class="col-md-12 col-lg-4">
+                <div class="col-md-12 col-xl-4">
                     <div class="row" style="display: flex;justify-content: flex-end">
-                        <div class="col-md-12 col-lg-10 container-history" style="padding-top: 28px;">
+                        <div class="col-md-12 col-xl-10 container-history" style="padding-top: 28px;">
                             <div class="card card-skeleton mb-0" id="card-history">
                                 <div class="col-12 px-20 pt-25 mb-20">
                                     <p class="m-0"><b>Histórico de saques</b></p>

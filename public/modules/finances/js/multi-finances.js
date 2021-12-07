@@ -174,8 +174,8 @@ $(document).ready(function(){
                                                 <div style="padding: 0 15px;" class="row mb-25 d-flex align-items-center m-0">
                                                     <div class="col-6 p-0">${img_gateway}</div>
                                                     <div class="col-6 p-0 d-flex justify-content-end">
-                                                        <button id="gateway-redirection" class="img-gateway d-none d-md-block" href="${data.id}">
-                                                          <span>Acessar&nbsp&nbsp</span>
+                                                        <button id="gateway-redirection" class="img-gateway d-none d-md-block font-md-size-12 " href="${data.id}">
+                                                          <span class="d-none d-xl-inline-block">Acessar&nbsp&nbsp</span>
                                                           <i class="o-arrow-right-1 redirect"></i>
                                                         </button>
 
@@ -369,34 +369,34 @@ $(document).ready(function(){
 
                         $('#container-withdraw').append(`
                             <div class="row mx-0 py-20 px-md-20">
-                                <div class="col-6 col-md-3 col-lg-6
+                                <div class="col-6 col-md-3 col-xl-6
                                             px-20 px-md-0
                                             d-flex order-0
-                                            justify-content-start justify-content-md-center justify-content-lg-start
+                                            justify-content-start justify-content-md-center justify-content-xl-start
                                             align-items-center">
                                     ${img_gateway}
                                 </div>
-                                <div class="col-6 col-md-3 col-lg-6
+                                <div class="col-6 col-md-3 col-xl-6
                                             px-20 px-md-0 mt-sm-0 text-sm-right
-                                            d-flex order-1 order-md-2 order-lg-1
-                                            justify-content-center align-items-center">
+                                            d-flex order-1 order-md-2 order-xl-1
+                                            justify-content-end justify-content-md-center justify-content-xl-end
+                                            align-items-center">
                                     <span class="label label-warning">
                                         <span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated.trim()}</span>
                                     </span>
                                 </div>
-                                <div class="col-6 col-md-3 col-lg-6
+                                <div class="col-12 col-md-3 col-xl-6
                                             px-20 px-md-0 mt-10 mt-md-0
-                                            d-flex order-2 order-md-1 order-lg-2
+                                            d-flex order-2 order-md-1 order-xl-2
                                             align-items-center">
                                     <h4 style="margin-top:3px">
-                                        <span class="font-size-16 gray">R$</span>
-                                        <span class="font-size-18 bold">${removeMoneyCurrency(data.value)}</span>
+                                        <span class="font-size-18 bold">R$ ${removeMoneyCurrency(data.value)}</span>
                                     </h4>
                                 </div>
-                                <div class="col-6 col-md-3 col-lg-6
+                                <div class="col-12 col-md-3 col-xl-6
                                             px-20 px-md-0
                                             d-flex order-4
-                                            justify-content-start justify-content-md-center justify-content-lg-start
+                                            justify-content-start justify-content-md-center justify-content-xl-start
                                             align-items-center">
                                     <span class="overflow-bank-name">
                                         ${data.bank_name.replace('BANCO ', '')}
