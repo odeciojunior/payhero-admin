@@ -492,7 +492,7 @@ $(document).ready(function () {
                             cupomCode = `
                                     <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}"
                                         role="button" style='margin-left: 5px;' >
-                                            <img width="20px" src="/modules/global/img/coupon.svg" title="Cupom">
+                                            <img width="20px" src="/modules/global/img/coupon.svg">
                                     </a>`;
                         }
 
@@ -501,7 +501,7 @@ $(document).ready(function () {
                             upsell = `
                                     <a data-toggle="tooltip" title="Upsell"
                                         role="button" style='margin-left: 5px;' >
-                                            <img width="20px" src="/modules/global/img/upsell.svg" title="Upsell">
+                                            <img width="20px" src="/modules/global/img/upsell.svg">
                                     </a>`;
                         }
 
@@ -510,7 +510,7 @@ $(document).ready(function () {
                             has_order_bump = `
                                             <a data-toggle="tooltip" title="Order Bump"
                                                 role="button" style='margin-left: 5px;' >
-                                                    <img width="20px" src="/modules/global/img/order-bump.svg" title="Order Bump">
+                                                    <img width="20px" src="/modules/global/img/order-bump.svg">
                                             </a>`;
                         }
 
