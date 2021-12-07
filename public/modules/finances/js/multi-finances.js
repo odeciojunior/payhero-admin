@@ -174,7 +174,7 @@ $(document).ready(function(){
                                                 <div style="padding: 0 15px;" class="row mb-25 d-flex align-items-center m-0">
                                                     <div class="col-6 p-0">${img_gateway}</div>
                                                     <div class="col-6 p-0 d-flex justify-content-end">
-                                                        <button id="gateway-redirection" class="img-gateway d-none d-md-block font-md-size-12 " href="${data.id}">
+                                                        <button id="gateway-redirection" class="img-gateway d-none d-md-flex font-md-size-12 " href="${data.id}">
                                                           <span class="d-none d-xl-inline-block">Acessar&nbsp&nbsp</span>
                                                           <i class="o-arrow-right-1 redirect"></i>
                                                         </button>
@@ -187,7 +187,17 @@ $(document).ready(function(){
                                                     </div>
                                                 </div>
                                                 <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge green"></span>Saldo Disponível</h6>
-                                                <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span></h4>
+                                                <h4 class="row m-0 px-20">
+                                                    <div class="col-8 p-0 col-xl-12">
+                                                        <span class="font-size-16">R$</span>
+                                                        <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span>
+                                                    </div>
+                                                    <div class="col-4 p-0 d-flex justify-content-end d-md-none">
+                                                        <button id="gateway-redirection" class="img-gateway font-md-size-12 " href="${data.id}">
+                                                              <i class="o-arrow-right-1 redirect"></i>
+                                                        </button>
+                                                    </div>
+                                                </h4>
                                                 ${pendingDebt}
 
                                                 <div class="collapse multi-collapse-${data.name}" id="collapse-data-${data.name}">
