@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Affiliate;
@@ -1253,7 +1254,7 @@ class SaleService
                 $companyId = Hashids::decode($filters["company"]);
                 $transactions->where('company_id', $companyId);
             }
-
+/*
             if (!empty($filters['statement']) && $filters['statement'] == 'automatic_liquidation') {
                 $transactions->whereIn(
                     'transactions.gateway_id',
@@ -1267,6 +1268,58 @@ class SaleService
                     [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
                 );
             }
+*/
+
+            $transactions->whereNull('withdrawal_id');
+            if(!empty($filters['acquirer']))
+            {
+                $gatewayIds = $this->getGatewayIdsByFilter($filters['acquirer']);
+                if($filters['acquirer']<> 'Cielo'){
+                    $transactions->whereIn('transactions.gateway_id', $gatewayIds);
+                }
+
+                switch($filters['acquirer']){
+                    case 'Asaas';                        
+                        $transactions->where('transactions.created_at', '>', '2021-09-20');
+                    break;
+                    case 'Getnet':
+                        $transactions->where('is_waiting_withdrawal', 0);
+                        break;
+                    case 'Cielo':
+                        if(auth()->user()->show_old_finances){
+                            $transactions->where(function($query) use($gatewayIds) {
+                                $query->whereIn('transactions.gateway_id', $gatewayIds)
+                                ->orWhere(function($query) {
+                                    $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
+                                });
+                            });
+                        }
+                    break;                   
+                }
+            }else{
+                $transactions->where(function($qr){
+                    $qr->where(function($qr2){
+                        $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Asaas'))
+                        ->where('transactions.created_at', '>', '2021-09-20');
+                    })
+                    ->orWhere(function($qr2){
+                        $qr2->whereIn('transactions.gateway_id',$this->getGatewayIdsByFilter('Gerencianet'));
+                    }) 
+                    ->orWhere(function($qr3){
+                        $qr3->where('is_waiting_withdrawal', 0)
+                        ->whereIn('transactions.gateway_id',$this->getGatewayIdsByFilter('Getnet'));
+                    })                    
+                    ->orWhere(function($qr2){
+                        if(auth()->user()->show_old_finances){
+                            $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Cielo'))
+                            ->orWhere(function($query) {
+                                $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('transactions.created_at', '<', '2021-09');
+                            });
+                        }
+                    });
+                });
+            }
+
 
             // Filtros - INICIO
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
@@ -1467,5 +1520,32 @@ class SaleService
         } catch (Exception $e) {
             report($e);
         }
+    }
+
+    public function getGatewayIdsByFilter($nameGateway){
+        switch($nameGateway){
+            case 'Asaas';
+                return [
+                    Gateway::ASAAS_PRODUCTION_ID,
+                    Gateway::ASAAS_SANDBOX_ID
+                ];
+            case 'Getnet':
+                return [
+                    Gateway::GETNET_PRODUCTION_ID,
+                    Gateway::GETNET_SANDBOX_ID
+                ];
+            case 'Gerencianet':
+                return [
+                    Gateway::GERENCIANET_PRODUCTION_ID, 
+                    Gateway::GERENCIANET_SANDBOX_ID
+                ];
+            case 'Cielo':
+                return [
+                    Gateway::CIELO_PRODUCTION_ID,
+                    Gateway::CIELO_SANDBOX_ID
+                ];
+            break;
+        }
+        return [];
     }
 }

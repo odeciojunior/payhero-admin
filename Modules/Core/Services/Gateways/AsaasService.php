@@ -59,8 +59,6 @@ class AsaasService implements Statement
         return Transaction::where('company_id', $this->company->id)
                             ->where('status_enum', Transaction::STATUS_PAID)
                             ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('is_waiting_withdrawal', 0)
-                            ->whereNull('withdrawal_id')
                             ->where('created_at', '>', '2021-09-20')
                             ->sum('value');
     }
@@ -259,6 +257,14 @@ class AsaasService implements Statement
             'last_transaction' => $lastTransactionDate,
             'id' => 'NzJqoR32egVj5D6'
         ];
+    }
+
+    public function getGatewayAvailable(){
+        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
+
+        return !empty($lastTransaction) ? ['Asaas']:[];
     }
 
     public function makeAnticipation(Sale $sale) {

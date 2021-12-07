@@ -43,7 +43,9 @@ class AsaasTransfersChargebacks extends Command
      */
     public function handle()
     {
-        $transfers = Transfer::doesnthave('asaasTransfer')
+        $transfers = Transfer::whereDoesntHave('asaasTransfer',function($qr){
+            $qr->where('status','DONE');
+        })
         ->where('reason','chargedback')
         ->where('gateway_id',$this->gatewayId)
         ->get();
@@ -61,9 +63,10 @@ class AsaasTransfersChargebacks extends Command
             
             if(empty($response) || empty($response->status) || $response->status=='error'){                
                 $this->error(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Error');
-            }else{
-                $this->line(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Done');
-            }            
+                continue;
+            }
+
+            $this->line(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Done');                           
         }
     }
 }

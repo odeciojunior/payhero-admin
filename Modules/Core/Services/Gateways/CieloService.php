@@ -216,9 +216,7 @@ class CieloService implements Statement
 
             if (!empty($saleId)) {
                 $transactions->where('sale_id', $saleId);
-            }
-
-            dd($transactions->count());
+            }            
 
             foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;
@@ -287,6 +285,19 @@ class CieloService implements Statement
             'last_transaction' => $lastTransactionDate,
             'id' => 'pM521rZJrZeaXoQ'
         ];
+    }
+
+    public function getGatewayAvailable()
+    {
+        if(!$this->company->user->show_old_finances) {
+            return [];
+        }
+
+        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
+
+        return !empty($lastTransaction) ? ['Cielo']:[];
     }
 
     public function getGatewayId()
