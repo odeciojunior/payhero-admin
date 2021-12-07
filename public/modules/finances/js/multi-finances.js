@@ -253,11 +253,10 @@ $(document).ready(function(){
                                         return;
                                     }
 
-                                    console.log(withdrawalValue)
-                                    if(withdrawalValue <= 5000){
-                                        alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
-                                        return;
-                                    }
+                                    // if(withdrawalValue <= 5000){
+                                    //     alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
+                                    //     return;
+                                    // }
 
                                     customWithdrawal(data.id);
                                 });
@@ -270,11 +269,10 @@ $(document).ready(function(){
                                         return;
                                     }
 
-                                    console.log(withdrawalValue)
-                                    if(withdrawalValue <= 5000){
-                                        alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
-                                        return;
-                                    }
+                                    // if(withdrawalValue <= 5000){
+                                    //     alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
+                                    //     return;
+                                    // }
 
                                     defaultWithdrawal(data.id);
                                 });

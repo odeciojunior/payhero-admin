@@ -190,7 +190,7 @@ $(document).ready(function () {
             date_range = moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY")
         }
 
-        
+
         let data = {
             'project': $("#projeto").val(),
             'payment_method': $("#forma").val(),
@@ -535,7 +535,8 @@ $(document).ready(function () {
                                             ${cupomCode}
                                         </div>
                                     </td>
-                                    <td><strong class="bold-mobile">${value.product}</strong>
+                                    <td>
+                                    <strong class="bold-mobile">${value.product}</strong>
                                     ${
                                         value.affiliate != null &&
                                         value.user_sale_type == "producer"
@@ -543,6 +544,7 @@ $(document).ready(function () {
                                             : ""
                                     }
                                     <br> <small class="gray font-size-12">${value.project}</small></td>
+
                                     <td class='display-sm-none display-m-none display-lg-none'>${
                                         value.client
                                     }</td>
@@ -567,7 +569,7 @@ $(document).ready(function () {
                                       '"'
                                     : ""
                             }>${value.status_translate}</span>
-                                               
+
                                     </td>
                                     <td class='display-sm-none display-m-none text-left font-size-14'>${
                                         start_date
@@ -702,7 +704,7 @@ $(document).ready(function () {
             },
         });
     }
-    
+
     //COMPORTAMENTO DO FILTRO MULTIPLO
     function behaviorMultipleFilter(data, selectId){
         var $select = $(`#${selectId}`);
@@ -722,7 +724,7 @@ $(document).ready(function () {
             if (values) {
               values.splice(0, values.lenght);
               $select.val(null).change();
-              
+
               values.push('');
               $select.val('').change();
             }
@@ -749,13 +751,13 @@ $(document).ready(function () {
         $('.select2-selection.select2-selection--multiple').scrollTop(0);
     });
 
-    $(".applySelect2").on("change", function () {            
+    $(".applySelect2").on("change", function () {
         let idTarget = $(this).attr('id');
         deniedEmptyFilter(idTarget);
     });
     // FIM DO COMPORTAMENTO DO FILTRO
 
-    
+
     //LISTA PLANOS DE ACORDO COM O PROJETO(S)
     $("#projeto").on("change", function () {
         let value = $(this).val();
