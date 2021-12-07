@@ -188,11 +188,11 @@ $(document).ready(function(){
                                                 </div>
                                                 <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge green"></span>Saldo Disponível</h6>
                                                 <h4 class="row m-0 px-20">
-                                                    <div class="col-8 p-0 col-xl-12">
+                                                    <div class="col-9 p-0 col-md-12">
                                                         <span class="font-size-16">R$</span>
                                                         <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span>
                                                     </div>
-                                                    <div class="col-4 p-0 d-flex justify-content-end d-md-none">
+                                                    <div class="col-3 p-0 d-flex justify-content-end d-md-none">
                                                         <button id="gateway-redirection" class="img-gateway font-md-size-12 " href="${data.id}">
                                                               <i class="o-arrow-right-1 redirect"></i>
                                                         </button>
