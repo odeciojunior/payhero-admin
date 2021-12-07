@@ -1270,7 +1270,7 @@ class SaleService
             }
 */
 
-            $transactions->where('is_waiting_withdrawal', 0)->whereNull('withdrawal_id');
+            $transactions->whereNull('withdrawal_id');
             if(!empty($filters['acquirer']))
             {
                 $gatewayIds = $this->getGatewayIdsByFilter($filters['acquirer']);
@@ -1282,6 +1282,9 @@ class SaleService
                     case 'Asaas';                        
                         $transactions->where('transactions.created_at', '>', '2021-09-20');
                     break;
+                    case 'Getnet':
+                        $transactions->where('is_waiting_withdrawal', 0);
+                        break;
                     case 'Cielo':
                         if(auth()->user()->show_old_finances){
                             $transactions->where(function($query) use($gatewayIds) {
@@ -1300,9 +1303,11 @@ class SaleService
                         ->where('transactions.created_at', '>', '2021-09-20');
                     })
                     ->orWhere(function($qr2){
-                        $qr2->whereIn('transactions.gateway_id', 
-                            array_merge($this->getGatewayIdsByFilter('Getnet'),$this->getGatewayIdsByFilter('Gerencianet'))
-                        );
+                        $qr2->whereIn('transactions.gateway_id',$this->getGatewayIdsByFilter('Gerencianet'));
+                    }) 
+                    ->orWhere(function($qr3){
+                        $qr3->where('is_waiting_withdrawal', 0)
+                        ->whereIn('transactions.gateway_id',$this->getGatewayIdsByFilter('Getnet'));
                     })                    
                     ->orWhere(function($qr2){
                         if(auth()->user()->show_old_finances){
