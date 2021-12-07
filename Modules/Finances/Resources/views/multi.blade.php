@@ -40,7 +40,7 @@
                         <span class="new-title">Uma nova central para você controlar seus extratos em diferentes adquirentes.</span>
                     </p>
                 </div>
-                <div class="col-sm-6 order-3" id="container-available">
+                <div class="col-12 col-md-6 order-3" id="container-available">
                     <p class="m-0 color-default">Disponível para saque</p>
                     <div id="val-skeleton"><div class="skeleton skeleton-text mb-0 my-5" style="width:207px !important;height: 40px !important;border-radius:20px !important"></div></div>
                     <div id="container_val" style="display:none;">

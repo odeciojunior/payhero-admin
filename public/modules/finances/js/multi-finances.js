@@ -153,7 +153,7 @@ $(document).ready(function(){
                     $('.container-history').css('padding-top','28px');
                     let emptyStates = 3 - (Object.values(response).length - 1 );
                     $('#gateway-skeleton').hide();
-                    $('#container-all-gateways').html('<div class="owl-carousel owl-carousel-shortcode owl-loaded owl-drag"></div>');
+                    $('#container-all-gateways').html('<div id="all-gateways" class="owl-carousel owl-carousel-shortcode owl-loaded owl-drag"></div>');
                     $.each(response, function(index, data) {
                         if (data.name) {
                             let img_gateway = getGatewayImg(data.name.toLowerCase());
@@ -171,41 +171,54 @@ $(document).ready(function(){
                                     <div class="card card-gateway">
                                         <div class="card-body p-0 pt-20">
                                             <div class="col-sm-12 p-0" id="container_info_${data.name}">
-                                                <div class="row mb-25 d-flex align-items-center m-0" style="padding: 0 15px;">
+                                                <div style="padding: 0 15px;" class="row mb-25 d-flex align-items-center m-0">
                                                     <div class="col-6 p-0">${img_gateway}</div>
                                                     <div class="col-6 p-0 d-flex justify-content-end">
-                                                        <button id="gateway-redirection" class="img-gateway" href="${data.id}">
+                                                        <button id="gateway-redirection" class="img-gateway d-none d-md-block" href="${data.id}">
                                                           <span>Acessar&nbsp&nbsp</span>
                                                           <i class="o-arrow-right-1 redirect"></i>
                                                         </button>
+
+                                                       <i class="o-angle-down-1 d-md-none"
+                                                          data-toggle="collapse"
+                                                          data-target=".multi-collapse-${data.name}"
+                                                          aria-expanded="false"
+                                                          aria-controls="collapse-data-${data.name} collapse-withdrawal-${data.name}"></i>
                                                     </div>
                                                 </div>
-                                                <h6 class="font-size-16 m-0 px-20"><span class="radio-badge green"></span>Saldo Disponível</h6>
+                                                <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge green"></span>Saldo Disponível</h6>
                                                 <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span></h4>
                                                 ${pendingDebt}
-                                                <div id="balance-not-available-${data.name}">
-                                                    <h6 class="font-size-16 m-0 px-20"><span class="radio-badge orange"></span>Saldo Pendente</h6>
-                                                    <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
-                                                    <h6 class="font-size-16 m-0 px-20"><span class="radio-badge red"></span>Saldo Bloqueado</h6>
-                                                    <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.blocked_balance)}</span></h4>
-                                                    <h6 class="font-size-16 m-0 px-20"><span class="radio-badge blue"></span>Total</h6>
-                                                    <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.total_balance)}</span></h4>
+
+                                                <div class="collapse multi-collapse-${data.name}" id="collapse-data-${data.name}">
+                                                    <div id="balance-not-available-${data.name}">
+                                                        <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge orange"></span>Saldo Pendente</h6>
+                                                        <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
+                                                        <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge red"></span>Saldo Bloqueado</h6>
+                                                        <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.blocked_balance)}</span></h4>
+                                                        <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge blue"></span>Total</h6>
+                                                        <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.total_balance)}</span></h4>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div id="container-withdrawal-${data.name}" style="display:none">
-                                                <label class="ml-20" style="font-size:16px;color: #636363;">Valor a sacar</label>
-                                                <div class="input-group mb-3 withdrawal-value px-20">
-                                                    <div class="input-group-prepend">
-                                                        <div class="input-group-text">R$</div>
+                                            <div class="collapse multi-collapse-${data.name}" id="collapse-withdrawal-${data.name}">
+                                                <div id="container-withdrawal-${data.name}" style="display:none">
+                                                    <label class="ml-20" style="font-size:16px;color: #636363;">Valor a sacar</label>
+                                                    <div class="input-group mb-3 withdrawal-value px-20">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">R$</span>
+                                                        </div>
+                                                        <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque">
                                                     </div>
-                                                    <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque" placeholder="Digite o valor">
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 mb-10 pb-10">
-                                            <a href="#" class="col-12 btn-outline-success btn font-weight-bold" id="request-withdrawal-${data.id}" style="font-size:16px">Solicitar saque</a>
-                                            <a href="#" class="btn btn-saque font-weight-bold" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
-                                            <a href="#" class="btn btn-cancel" id="cancel-withdrawal-${data.name}" style="display:none;">Cancelar</a>
+                                        <div class="collapse multi-collapse-${data.name}" id="collapse-withdrawal-${data.name}">
+                                            <div class="col-sm-12 mb-10 pb-10">
+                                                <a href="#" class="col-12 btn-outline-success btn font-weight-bold" id="request-withdrawal-${data.id}" style="font-size:16px">Solicitar saque</a>
+                                                <a href="#" class="btn btn-saque font-weight-bold" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
+                                                <a href="#" class="btn btn-cancel" id="cancel-withdrawal-${data.name}" style="display:none;">Cancelar</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -310,23 +323,17 @@ $(document).ready(function(){
                         mouseDrag: false,
                         margin : 10,
                         navText : ["<i class='fa fa-chevron-left text-info'></i>","<i class='fa fa-chevron-right text-info'></i>"],
-                        // dots    : false,
                         responsive:{
-                            0:{
-                                items: 1,
-                                nav: false,
-                                // dots: true
-                            },
                             768:{
                                 items: 3,
                                 nav: true,
                             },
-                        }
+                        },
                     });
+                    createCarousel();
                 }
             }
         });
-
     }
      window.updateWithdrawals = function() {
         let companyId = $("#transfers_company_select").val()
@@ -476,4 +483,34 @@ $(document).ready(function(){
             $('#container-available').show();
         }
     });
+
+    function createCarousel() {
+        let checkWidth = $(window).width();
+        let owl = $("#all-gateways");
+        let gatewayCards = $("[class*=multi-collapse-]");
+        if (checkWidth < 767) {
+            if (typeof owl.data('owl.carousel') != 'undefined') {
+                owl.data('owl.carousel').destroy();
+            }
+            owl.removeClass('owl-carousel');
+            gatewayCards.addClass('collapse');
+        } else if (checkWidth > 768) {
+            owl.addClass('owl-carousel');
+            gatewayCards.removeClass('collapse');
+            owl.owlCarousel({
+                mouseDrag: false,
+                margin : 10,
+                navText : ["<i class='fa fa-chevron-left text-info'></i>","<i class='fa fa-chevron-right text-info'></i>"],
+                responsive:{
+                    768:{
+                        items: 3,
+                        nav: true,
+                    },
+                },
+            });
+        }
+    }
+
+    createCarousel();
+    $(window).resize(createCarousel);
 });
