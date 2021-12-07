@@ -3,7 +3,7 @@
 @endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-simple modal-sidebar modal-lg">
-        <div id='modal-saleDetails' class="modal-content p-0 " style="width: 500px;">
+        <div id='modal-saleDetails' class="modal-content detail-padding" style="width: 500px;">
             <div class="header-modal">
                 <div class="row justify-content-between align-items-center" style="width: 100%;">
                     <div class="col-lg-2"> &nbsp;</div>
