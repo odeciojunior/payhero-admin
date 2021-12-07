@@ -229,3 +229,13 @@ li.select2-selection__choice{
 .page-content {
     padding: 0 30px;
 }
+
+.detail-padding{
+    padding: 12px;
+}
+
+@media (min-width: 576px) {
+    .detail-padding{
+        padding: 18px;
+    }
+}

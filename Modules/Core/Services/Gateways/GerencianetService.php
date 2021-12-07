@@ -110,9 +110,9 @@ class GerencianetService implements Statement
         return true;
     }
 
-    public function createWithdrawal($withdrawalValue): bool
+    public function createWithdrawal($withdrawalValue)
     {
-        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
         try {
             DB::beginTransaction();
@@ -160,7 +160,7 @@ class GerencianetService implements Statement
             );
 
             DB::commit();
-            return true;
+            return $withdrawal;
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
@@ -296,6 +296,14 @@ class GerencianetService implements Statement
             'last_transaction' => $lastTransactionDate,
             'id' => 'oXlqv13043xbj4y'
         ];
+    }
+
+    public function getGatewayAvailable(){
+        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
+
+        return !empty($lastTransaction) ? ['Gerencianet']:[];
     }
 
     public function getGatewayId()

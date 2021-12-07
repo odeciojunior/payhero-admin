@@ -5,6 +5,7 @@ namespace Modules\Core\Services\Gateways;
 use App\Jobs\ProcessWithdrawal;
 use Carbon\Carbon;
 use Exception;
+use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
@@ -19,6 +20,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\SaleService;
@@ -117,9 +119,9 @@ class GetnetService implements Statement
         return true;
     }
 
-    public function createWithdrawal($value): bool
+    public function createWithdrawal($value)
     {
-        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal(auth()->user());
+        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
         try {
             $withdrawal = Withdrawal::create(
@@ -141,7 +143,7 @@ class GetnetService implements Statement
 
             dispatch(new ProcessWithdrawal($withdrawal, $isFirstUserWithdrawal));
 
-            return true;
+            return $withdrawal;
         } catch (Exception $e) {
             report($e);
 
@@ -393,6 +395,14 @@ class GetnetService implements Statement
         ];
     }
 
+    public function getGatewayAvailable(){
+        $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
+                                        ->where('company_id', $this->company->id)
+                                        ->orderBy('id', 'desc')->first();
+
+        return !empty($lastTransaction) ? ['Getnet']:[];
+    }
+
     public function getGatewayId()
     {
         return FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID:Gateway::GETNET_SANDBOX_ID;
@@ -461,5 +471,25 @@ class GetnetService implements Statement
             DB::rollBack();
             throw $ex;
         }
+    }
+
+    public function refundReceipt($hashSaleId,$transaction)
+    {
+        $company = (object)$transaction->company->toArray();
+        $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
+        $getnetService = new GetnetBackOfficeService();
+        $result = json_decode($getnetService->setStatementSubSellerId($company->subseller_getnet_id)
+            ->setStatementSaleHashId($hashSaleId)
+            ->getStatement());
+        
+        if(empty($result) || empty($result->list_transactions)){
+            throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
+        }
+        
+        $sale = end($result->list_transactions);
+        
+        $sale->flag = strtoupper($transaction->sale->flag) ?? null;
+
+        return PDF::loadView('sales::refund_receipt_getnet', compact('company', 'sale'));
     }
 }

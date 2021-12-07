@@ -45,8 +45,6 @@ class SalesController extends Controller
     {
         try {
 
-            $getnetService = new GetnetBackOfficeService();
-
             $id = current(Hashids::connection('sale_id')->decode($hashid));
             $transaction = Transaction::with([
                 'sale',
@@ -61,20 +59,10 @@ class SalesController extends Controller
             if(empty($transaction) || empty($transaction->company)){
                 throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
             }
-
-            $company = (object)$transaction->company->toArray();
-            $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
-
-            $result = $getnetService->setStatementSubSellerId($company->subseller_getnet_id)
-                ->setStatementSaleHashId($hashid)
-                ->getStatement();
-            $result = json_decode($result);
-            $sale = end($result->list_transactions);
-
-            $sale->flag = strtoupper($transaction->sale->flag) ?? null;
-
-            $pdf = PDF::loadView('sales::refundreceipt', compact('company', 'sale'));
-
+            
+            $service = (new Gateway)->getServiceById($transaction->gateway_id);
+            $pdf = $service->refundReceipt($hashid,$transaction);
+            
             return $pdf->stream('comprovante.pdf');
 
         } catch (\Exception $e) {

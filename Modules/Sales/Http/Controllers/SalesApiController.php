@@ -1,7 +1,7 @@
 <?php
 
 namespace Modules\Sales\Http\Controllers;
-
+use PDF;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -412,5 +412,5 @@ class SalesApiController extends Controller
                 400
             );
         }
-    }
+    }  
 }

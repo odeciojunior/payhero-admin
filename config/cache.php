@@ -70,7 +70,7 @@ return [
 
         'redis' => [
             'driver' => 'redis',
-            'connection' => 'redis-queries',
+            'connection' => 'default',
         ],
 
         'redis-cache' => [

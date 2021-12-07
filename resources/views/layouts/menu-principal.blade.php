@@ -314,6 +314,16 @@
                 </a>
             </li>
         @endcan
+        @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+            <li class="site-menu-item has-sub">
+                <a href="{{ route('integrations.index') }}" id='api-sirius-link'>
+                    <span class="bg-menu">
+                        <img src="{{ asset('modules/global/img/svg/api-sirius-menu.svg') }}" alt="API Sirius">
+                    </span>
+                    <span class="site-menu-title">API Sirius</span>
+                </a>
+            </li>
+        @endif
         <!-- hasanyrole('account_owner')         -->
         @can('invitations')
             <li class="site-menu-item has-sub">

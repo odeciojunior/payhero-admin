@@ -17,6 +17,8 @@ Route::group(
         Route::post('/finances/export', 'FinancesApiController@export')
             ->name('api.finances.export')
             ->middleware('permission:finances_manage');
+        
+        Route::get('/finances/acquirers/{companyId?}', 'FinancesApiController@getAcquirers')->name('api.finances.acquirers');
 
         /**
          * News routes after getnet

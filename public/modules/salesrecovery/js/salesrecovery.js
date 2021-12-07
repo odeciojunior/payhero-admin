@@ -227,34 +227,19 @@ $(document).ready(function () {
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
 
-                let recoveryType = $('#recovery_type').val();
+                let recoveryType = $('#recovery_type').children("option:selected").text().toLowerCase();
+                let image = $("#table_data").attr("img-empty");
                 if (response.data == "" && recoveryType) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
-                        "<tr><td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#table_data").attr("img-empty") +
-                        "'>Nenhum carrinho abandonado encontrado</td></tr>"
+                        `<tr>
+                            <td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'>
+                                <img style='width:124px;margin-right:12px;' src=${image}>
+                                Nenhum ${recoveryType} encontrado
+                            </td>
+                        </tr>`
                     );
-                } else if (
-                    response.data == "" &&
-                    recoveryType
-                ) {
-                    $("#pagination-salesRecovery").hide();
-                    $("#table_data").html(
-                        "<tr><td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#table_data").attr("img-empty") +
-                        "'>Nenhum boleto vencido encontrado</td></tr>"
-                    );
-                } else if (
-                    response.data == "" &&
-                    recoveryType
-                ) {
-                    $("#pagination-salesRecovery").hide();
-                    $("#table_data").html(
-                        "<tr><td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#table_data").attr("img-empty") +
-                        "'>Nenhum cartão recusado encontrado</td></tr>"
-                    );
+                
                 } else {
                     createHTMLTable(response);
                     $("#pagination-salesRecovery").show();
