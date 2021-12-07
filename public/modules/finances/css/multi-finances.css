@@ -590,13 +590,10 @@ hr{
 [id*=withdrawal-value-] {
     border-radius: 0 8px 8px 0;
 }
-
-.o-angle-down-1.d-md-none {
-    transform: rotate(0deg);
-}
-.o-angle-down-1.d-md-none.collapsed {
+[aria-expanded=true] {
     transform: rotate(180deg);
 }
+
 @media (max-width: 991px) {
     .new-title {
         margin-left: 0;

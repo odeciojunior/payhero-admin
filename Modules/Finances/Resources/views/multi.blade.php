@@ -70,6 +70,25 @@
             <div class="row" id="container-gateways">
                 <div class="col-md-12 col-xl-8">
                     <div class="row" id="gateway-skeleton">
+                        <div class="col-12 d-md-none">
+                            <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
+                            <div class="card card-skeleton mb-0">
+                                <div class="card-body p-0 pt-20">
+                                    <div class="col-sm-12 p-0">
+                                        <div class="px-20 py-0">
+                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                        </div>
+                                        <div class="px-20 py-0">
+                                            <div class="row align-items-center mx-0 py-10">
+                                                <div class="skeleton skeleton-circle"></div>
+                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                            </div>
+                                            <div class="skeleton skeleton-text"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-4 d-none d-md-block">
                             <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
                             <div class="card card-skeleton mb-0">
