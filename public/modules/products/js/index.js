@@ -1,4 +1,10 @@
 $(document).ready(function () {
+    let regexp = /http(s?):\/\/[\w.-]+\/products\/\w{15}\/edit/;
+    let lastPage = document.referrer;
+    if (!lastPage.match(regexp)) {
+        localStorage.clear();
+    }
+
     var pageCurrent;
     let badgeList = {
         1: "#2E85EC",
@@ -10,36 +16,68 @@ $(document).ready(function () {
         2: "Aprovado",
         3: "Recusado",
     };
-    // Comportamentos da tela
-    $("#type-products").on("change", function () {
-        if ($(this).val() === "1") {
-            $("#is-projects select")
-                .prop("disabled", false)
-                .removeClass("disabled");
-            $("#opcao-vazia").remove();
-        } else {
-            $("#is-projects select")
-                .prop("disabled", true)
-                .addClass("disabled")
-                .prepend(
-                    '<option value="0" id="opcao-vazia" selected></option>'
-                );
+
+    //VERIFICA SE HA FILTRO E PEGA O TIPO 
+    let storeTypeProduct = () => {
+        if(localStorage.getItem("filtersApplied")){
+            let getProductValue = JSON.parse(localStorage.getItem("filtersApplied"));
+            return getProductValue;
+
+        }else{
+            return 0;
         }
-    });
+    }
 
-    $("#btn-filtro").on("click", function () {
-        deleteCookie("filterProduct");
-        updateProducts();
-    });
+    //REGASTA O FILTRO E O APLICA
+    function handleLocalStorage() {
+        if (localStorage.getItem('filtersApplied') != null) {
+            let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApplied'));
 
-    $("#pagination-products").on("click", function () {
-        deleteCookie("filterProduct");
-    });
+            $("#type-products").val(parseLocalStorage.getTypeProducts).trigger("change");
 
-    getTypeProducts();
+            $("#select-projects").val(parseLocalStorage.getProject);
+            $("#name").val(parseLocalStorage.getName);
+            $("#btn-filtro").trigger("click");
+        }
+    }
 
-    updateProducts();
+    function getProjects() {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: "api/projects?select=true",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    if (verifyAccountFrozen()) {
+                        $("#div-create").hide();
+                    } else {
+                        $("#div-create").show();
+                    }
+                    //talvez verificar se ha filtro aqui
+                    updateProducts();
 
+                } else {
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                    $("#div-create").hide();
+                }
+
+                loadingOnScreenRemove();
+            },
+        });
+    }
+    
     function getTypeProducts() {
         $.ajax({
             method: "GET",
@@ -72,92 +110,60 @@ $(document).ready(function () {
                         '<option value="0" id="opcao-vazia" selected></option>'
                     );
                 }
-            },
-        });
-    }
-
-    getProjects();
-
-    function getProjects() {
-        loadingOnScreen();
-        $.ajax({
-            method: "GET",
-            url: "api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    if (verifyAccountFrozen()) {
-                        $("#div-create").hide();
-                    } else {
-                        $("#div-create").show();
-                    }
-                    updateProducts();
-                } else {
-                    $("#project-empty").show();
-                    $("#project-not-empty").hide();
-                    $("#div-create").hide();
-                }
-
-                loadingOnScreenRemove();
+                handleLocalStorage();
             },
         });
     }
 
     function updateProducts(link = null) {
-        if (link !== null) {
-            pageCurrent = link;
-            deleteCookie("filterProduct");
+        pageCurrent = link
+
+        //RETONA O FILTRO SE HOUVER SENAO RETORNA NULL
+        let existFilters = () => {
+            if(localStorage.getItem('filtersApplied') != null){
+                let getFilters = JSON.parse(localStorage.getItem('filtersApplied'))
+                return getFilters;
+            }else {
+                return null;
+            };
+        };
+
+        //GUARDA QUALQUER PAGINA DEPOIS DA 1
+        if(link != null){
+            let getPage = {
+                atualPage: pageCurrent
+            };
+            localStorage.setItem("page", JSON.stringify(getPage));
+        }
+        
+        //RESGATA PAGINA, SE HOUVER FILTRO SET PAGINA PARA NULL
+        if(localStorage.getItem("page") != null){
+            let parsePage = JSON.parse(localStorage.getItem("page"));
+
+            if(existFilters() != null && existFilters().getName != ""){
+                if(localStorage.getItem("page") != null){
+                    localStorage.setItem("page", JSON.stringify(parsePage));
+                }
+            }else{
+                pageCurrent = parsePage.atualPage;
+
+            }
+            parsePage = JSON.parse(localStorage.getItem("page"));
+            pageCurrent = parsePage.atualPage;
         }
 
+        link = pageCurrent
         loadOnAny(".page-content");
 
-        let type = "";
-        let project = "";
-        let name = "";
-
-        var cookie = getCookie("filterProduct");
-        if (cookie == "") {
-            type = $("#type-products").val();
-            project = $("#select-projects").val();
-            name = $("#name").val();
-        } else {
-            cookie = JSON.parse(cookie);
-            type = cookie.type;
-            project = cookie.project;
-            name = cookie.nameProduct;
-            link = cookie.page;
-
-            $("#type-products").val(type);
-        }
+        let type = existFilters() != null ? existFilters().getTypeProducts : $("#type-products").val();
+        let name = existFilters() != null ? existFilters().getName : $("#name").val();
+        let project = existFilters() != null ? existFilters().getProject : $("#select-projects").val();
 
         if (link == null) {
-            link =
-                "/api/products?shopify=" +
-                type +
-                "&project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
+            
         } else {
-            link =
-                "/api/products" +
-                link +
-                "&shopify=" +
-                type +
-                "&project=" +
-                project +
-                "&name=" +
-                name;
+            link = "/api/products" + link + "&shopify=" + type + "&project=" + project + "&name=" + name;
         }
 
         $.ajax({
@@ -188,7 +194,7 @@ $(document).ready(function () {
                                 </div>
                                 <img class="card-img-top product-image" src="${value.image}" alt="Imagem do produto" data-link="/products/${value.id}/edit">
                                 ${value.type_enum == 2
-                            ? `<span class="ribbon-inner ribbon-primary" style="background-color:${badgeList[value.status_enum]};border-radius: 0px 10px 10px 0px;"> ${statusList[value.status_enum]}
+                                ? `<span class="ribbon-inner ribbon-primary" style="background-color:${badgeList[value.status_enum]};border-radius: 0px 10px 10px 0px;"> ${statusList[value.status_enum]}
                                         </span>`
                                 : ""
                             }
@@ -297,8 +303,15 @@ $(document).ready(function () {
 
                     $(".products-is-empty").hide();
                 } else {
-                    $("#data-table-products, #pagination-products").html("");
-                    $(".products-is-empty").show();
+
+                    if(localStorage.getItem('filtersApplied') != null && localStorage.getItem('page') != null){
+                        localStorage.removeItem('page');
+                        $("#btn-filtro").trigger("click");
+
+                    }else {
+                        $("#data-table-products, #pagination-products").html("");
+                        $(".products-is-empty").show();
+                    }
                 }
                 setTimeout(() => {
                     loadOnAny(".page-content", true);
@@ -307,18 +320,54 @@ $(document).ready(function () {
         });
     }
 
+    //PRECIONAR ENTER ATIVA O "APLICAR FILTRO"
     $(document).on("keypress", function (e) {
-        if (e.keyCode == 13) {
-            deleteCookie("filterProduct");
-            updateProducts();
+        if (e.key == "Enter") {
+            $("#btn-filtro").trigger("click");
         }
+    });
+
+    //EXIBI OU ESCONDE O CAMPO PROJETO
+    $("#type-products").on("change", function () {
+        const type = $(this).val();
+        if (type === "1") {
+            $('#projects-list').removeClass('d-none');
+            $("#projects-list select").prop("disabled", false).removeClass("disabled");
+            $("#opcao-vazia").remove();
+
+        } else {
+            $("#projects-list select").prop("disabled", true).addClass("disabled");
+            $("#projects-list").addClass("d-none");
+        }
+    });
+
+    //SE ALGUM CAMPO FOR ALTERADO ZERA A PAGINA E GUARDA O NOVO FILTRO
+    $("#btn-filtro").on("click", function () {
+        if(storeTypeProduct().getTypeProducts != $("#type-products").val() || storeTypeProduct().getName != $('#name').val() || storeTypeProduct().getProject != $('#select-projects').val()){
+
+            if(localStorage.getItem("page") != null){
+                let getPageStored = JSON.parse(localStorage.getItem("page"));
+                getPageStored.atualPage = null;
+                localStorage.setItem("page", JSON.stringify(getPageStored));
+            }
+        }
+
+        //GUARDA O NOVO FILTRO
+        let filtersApplied = {
+            getTypeProducts: $("#type-products option:selected").val(),
+            getProject: $("#select-projects option:selected").val(),
+            getName: $("#name").val()
+        };
+        localStorage.setItem('filtersApplied', JSON.stringify(filtersApplied));
+        updateProducts();
     });
 
     $('#new-product-button').on('click', function (event) {
         event.preventDefault();
-
         $('#new-product-modal').show();
     });
 
-
+    getProjects();
+    getTypeProducts();
+    //updateProducts(); //Funcao de update chamda pela 2x
 });
