@@ -185,7 +185,8 @@
                                 </div>
                             </div>
 
-                            <div class="row row mb-10 mb-sm-0" style="height: 30px">
+                            <div class="row mb-10 mb-sm-0" style="height: 30px">
+
                                 <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
                                     <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
                                          data-toggle="collapse"
@@ -193,15 +194,18 @@
                                          aria-expanded="false"
                                          aria-controls="bt_collapse">
                                         <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
-                                        <div id="text-filtro" style="white-space: normal">Filtros avançados</div>
+                                        <div id="text-filtro" style="white-space: normal">Filtros <br class="d-flex d-sm-none"> avançados</div>
                                     </div>
                                 </div>
+
+
                                 <div class="col-6 col-xl-3 mt-20">
                                     <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
                                         <img class="hidden-xs-down" style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
-                                        Aplicar filtros
+                                        Aplicar <br class="d-flex d-sm-none"> filtros
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </form>
@@ -314,10 +318,6 @@
             @include('projects::empty')
         {{-- FIM projeto nao existem projetos--}}
         </div>
-
-
-
-
     <!-- Modal regerar boleto-->
     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_regerar_boleto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-lg d-flex justify-content-center">
