@@ -6,13 +6,11 @@
         <div id='modal-saleDetails' class="modal-content detail-padding" style="width: 500px;">
             <div class="header-modal">
                 <div class="row justify-content-between align-items-center" style="width: 100%;">
-                    <div class="col-lg-2"> &nbsp;</div>
-                    
-                    <div class="col-lg-8 text-center mb-5">
+                    <div class="offset-2 col-8 text-center">
                         <h4> Detalhes da venda</h4>
                     </div>
                     
-                    <div class="col-lg-2 text-right">
+                    <div class="col-2 text-right">
                         <a role="button" data-dismiss="modal">
                             <i class="material-icons pointer">close</i>
                         </a>

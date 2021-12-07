@@ -290,6 +290,7 @@
                                         <td class="table-title display-sm-none">Pagamento</td>
                                         <td class="table-title">Comissão</td>
                                         <td class="table-title" width="80px;"> &nbsp;</td>
+                                        <td class="table-title"></td>
                                     </tr>
                                     </thead>
                                     <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
