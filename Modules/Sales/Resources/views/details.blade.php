@@ -7,7 +7,7 @@
             <div class="header-modal">
                 <div class="row justify-content-between align-items-center" style="width: 100%;">
 
-                    <div class="d-flex col-8">
+                    <div class="d-flex col-8 pl-0">
                         <span>
                             <h3>Venda&nbsp;</h3>
                         </span>
