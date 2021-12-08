@@ -131,7 +131,7 @@ class CheckoutGateway extends GatewayAbstract
     public function loadEndpoints(){
         $this->endpoints = [
             "registerWebhookTransferAsaas" => [
-                "route" => "withdrawal/register-webhook-transfer-asaas",
+                "route" => "withdrawal/asaas/register-webhook-transfer",
                 "method" => "POST"
             ],
             "createAccount" => [
@@ -143,19 +143,19 @@ class CheckoutGateway extends GatewayAbstract
                 "method" => "GET"
             ],   
             "getAnticipationAsaas" => [
-                "route" => "withdrawal/anticipation-asaas/:companyId/:anticipationId",
+                "route" => "withdrawal/asaas/anticipation/:companyId/:anticipationId",
                 "method" => "GET"
             ],
             "getAnticipationsAsaas" => [
-                "route" => "withdrawal/anticipations-asaas/:companyId",
+                "route" => "withdrawal/asaas/anticipations/:companyId",
                 "method" => "GET"
             ],
             "getTransfersAsaas" => [
-                "route" => "withdrawal/transfers-asaas/:companyId",
+                "route" => "withdrawal/asaas/transfers/:companyId",
                 "method" => "GET"
             ],
             "getTransferAsaas" => [
-                "route" => "withdrawal/transfer-asaas/:companyId/:transferId",
+                "route" => "withdrawal/asaas/transfer/:companyId/:transferId",
                 "method" => "GET"
             ],
             "simulateWebhookTransfer" => [
@@ -163,11 +163,11 @@ class CheckoutGateway extends GatewayAbstract
                 "method" => "POST"
             ],
             "transferSellerToSubSeller" => [
-                "route" => "withdrawal/transfer-seller-to-subseller-asaas/:companyId",
+                "route" => "withdrawal/asaas/transfer-seller-to-subseller/:companyId",
                 "method" => "POST"
             ],
             "transferSubSellerToSeller" => [
-                "route" => "withdrawal/transfer-subseller-to-seller-asaas/:companyId",
+                "route" => "withdrawal/asaas/transfer-subseller-to-seller/:companyId",
                 "method" => "POST"
             ],            
         ];
