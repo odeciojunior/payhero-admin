@@ -819,6 +819,7 @@ $(document).ready(function () {
     $(".btn-light-1").on("click", function () {
         var collapse = $("#icon-filtro");
         var text = $("#text-filtro");
+        let remove;
 
         text.fadeOut(10);
         if (
@@ -826,7 +827,8 @@ $(document).ready(function () {
             collapse.css("transform") == "none"
         ) {
             collapse.css("transform", "rotate(180deg)");
-            text.text("Minimizar filtros").fadeIn();
+            text.html("Minimizar <br class='d-flex d-sm-none'> filtros").fadeIn();
+
         } else {
             collapse.css("transform", "rotate(0deg)");
             text.text("Filtros avançados").fadeIn();
