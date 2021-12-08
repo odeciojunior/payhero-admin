@@ -6,7 +6,6 @@
         <div id='modal-saleDetails' class="modal-content detail-padding" style="width: 500px;">
             <div class="header-modal">
                 <div class="row justify-content-between align-items-center" style="width: 100%;">
-
                     <div class="d-flex col-8 pl-0">
                         <span>
                             <h3 class="mb-0">Venda&nbsp;</h3>
@@ -14,15 +13,16 @@
                         <h3 id="sale-code" class="mb-0"></h3>
                     </div>
 
-                    
                     <div class="col-2 text-right">
                         <a role="button" data-dismiss="modal">
                             <i class="material-icons pointer">close</i>
                         </a>
                     </div>
-                    
                 </div>
             </div>
+
+            <div style="height: 10px; width: 100%">&nbsp;</div>
+
             <div class="modal-body p-0">
                 <div class="transition-details">
                     <p id="payment-type" class="sm-text text-muted">
@@ -54,11 +54,11 @@
                         <div class="col-lg-3"><p class="table-title"> Produto </p></div>
                         <div class="col-lg-9 text-right"><p class="text-muted"> Qtde </p></div>
                     </div>
-                    
+
                     <div id="table-product">
                         {{-- js carrega... --}}
                     </div>
-                    
+
                     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
                         <div class="col-sm-6 col-6 align-items-center">
                             <span class="text-muted ft-12"> Subtotal </span>
@@ -269,11 +269,11 @@
                             <a class="pointer btn-edit-client">
                                 <span class="o-edit-1"></span>
                             </a>
-                            
+
                             <a class="pointer btn-save-client" style="display:none;">
                                 <i class="material-icons font-size-18">save</i>
                             </a>
-                            
+
                             <a class="pointer btn-close-client ml-2" style="display:none;">
                                 <i class="material-icons font-size-18">close</i>
                             </a>
@@ -289,11 +289,11 @@
                             <a class="pointer btn-save-client" style="display:none;">
                                 <i class="material-icons font-size-18">save</i>
                             </a>
-                            
+
                             <a class="pointer btn-close-client ml-2" style="display:none;">
                                 <i class="material-icons font-size-18">close</i></a>
                         </div>
-                        
+
                         <span id="client-document" class="table-title gray"></span>
                         <div class="mt-15 mb-5" id="client-whatsapp-container">
                             <a class="pointer label d-inline-flex align-items-center pl-3 d-block" id="client-whatsapp"
