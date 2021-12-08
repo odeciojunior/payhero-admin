@@ -1546,6 +1546,11 @@ input[type="checkbox"], input[type="radio"] {
     border-top: solid 1px #C1C1C1;
     border-bottom: solid 1px #C1C1C1;
 }
+.input-number input::-webkit-outer-spin-button,
+.input-number input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 .input-number button:last-child {
     border-radius: 0 30px 30px 0;
     border-top: solid 1px #C1C1C1;
@@ -1660,9 +1665,13 @@ input[type="checkbox"], input[type="radio"] {
     font: 16px 'Muli' !important;
 }
 
-#tab_plans-panel .input-group .form-control {
+.input-group .form-control {
     height: 40px !important;
     border-radius: 4px 0 0 4px;
+}
+.box-description .input-group .form-control {
+    height: 48px !important;
+    border-radius: 8px 0 0 8px;
 }
 #tab_plans-panel .input-group-append .btn, .input-group-prepend .btn {
     width: 40px;
@@ -1865,21 +1874,15 @@ tbody td{
 }
 
 #pagination-plans .nav-btn {
-    background: #fff;
-    border: 1px solid #EBEBEB;
     border-radius: 8px;
     margin-right: 10px;
     min-width: 40px;
     height: 40px;
-    color: #3D4456;
-    font-weight: normal;
     font-size: 16px;
 }
 #pagination-plans .nav-btn.active {
     border-radius: 8px;
     border: 1px solid #2E85EC !important;
-    background: #fff !important;
-    color: #2E85EC !important;
 }
 
 #table-plans > tbody > tr:nth-child(2n+2) > td,

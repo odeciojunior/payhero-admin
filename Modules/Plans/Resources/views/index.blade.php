@@ -16,12 +16,12 @@
                     <div class="d-flex justify-content-end">
                         <div id="config-cost-plan" class="btn-holder d-flex align-items-center pointer" style="padding-right: 10px;border-right: 1px solid #EDEDED;margin-top: -20px;margin-bottom: -20px;margin-right: 20px;">
                             <span class="link-button-dependent">Configurar custos </span>
-                            <a class="ml-10 rounded-add pointer bg-secondary">
-                                <img src="/modules/global/img/icon-config-cost.svg">
+                            <a class="rounded-add pointer bg-secondary">
+                                <img src="{{ asset('modules/global/img/svg/settings.svg') }}" height="22">
                             </a>
                         </div>
                         <div id="add-plan" class="btn-holder d-flex align-items-center pointer">
-                            <span class="link-button-dependent blue">Adicionar plano </span>
+                            <span class="link-button-dependent blue">Adicionar </span>
                             <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
                                 <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
                             </a>

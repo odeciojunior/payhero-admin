@@ -183,7 +183,7 @@
                                 <span class="category-tabs">&nbsp;</span>
                                 <a id="tab_configuration" class="nav-link" data-toggle="tab"
                                    href="#tab_configuration_project"
-                                   aria-controls="tab_configuration_project" role="tab"> <img height="15" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
+                                   aria-controls="tab_configuration_project" role="tab"> <img height="22" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
                                 </a>
                             </li>
                         </ul>
