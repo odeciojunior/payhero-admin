@@ -13,12 +13,15 @@
                         </span>
                         <h3 id="sale-code" class="mb-0">Venda </h3>
                     </div>
+
                     
                     <div class="col-2 text-right">
                         <a role="button" data-dismiss="modal">
                             <i class="material-icons pointer">close</i>
                         </a>
                     </div>
+
+                    <div style="height: 10px; width: 100%"></div>
                 </div>
             </div>
             <div class="modal-body p-0">
