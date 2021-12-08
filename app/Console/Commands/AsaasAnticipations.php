@@ -47,7 +47,8 @@ class AsaasAnticipations extends Command
 
             $service = new AsaasService();
 
-            $toDay = Carbon::now();
+            $toDay = Carbon::now()->format("Y-m-d");
+            $afterThreeDays =  Carbon::now()->addDays(3)->format("Y-m-d");
 
             $transactions = Transaction::with('sale')
                 ->whereHas('sale', function ($query)  {
@@ -58,16 +59,27 @@ class AsaasAnticipations extends Command
                 ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
                 ->whereNotNull('company_id')
                 ->where('type', Transaction::TYPE_PRODUCER)
-                ->where('release_date', '<=', $toDay->addDays(3)->format("Y-m-d"));
+                ->where('release_date', '<=', $afterThreeDays)
+                ->where('created_at', '<', $toDay);
 
+            $cannotAnticipate = [];
             foreach ($transactions->cursor() as $transaction) {
                 $sale = $transaction->sale;
                 $response = $service->makeAnticipation($sale);
 
                 if (isset($response['status'])) {
                     $sale->update([
-                        'anticipation_status' => $response['status'],
-                        'anticipation_id' => $response['id']
+                                      'anticipation_status' => $response['status'],
+                                      'anticipation_id' => $response['id']
+                                  ]);
+                }
+
+                if(isset($response['errors'][0]['code'])
+                    and ($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
+                    and (str_contains($response['errors'][0]['description'], 'Este recebível já está reservado para a instituição') ) ) {
+
+                    $transaction->user->update([
+                        'asaas_alert' => true
                     ]);
                 }
             }
