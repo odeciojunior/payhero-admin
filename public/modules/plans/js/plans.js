@@ -632,7 +632,7 @@ $(function () {
             append += '</div>';
 
             products_plan.forEach(function(product) {
-                append += '<div class="row box-product body align-items-center">';
+                append += '<div class="row box-product body align-items-center" style="cursor: inherit;">';
                     append += '<div class="col-sm-6">';
                         append += '<div class="product d-flex align-items-center">';
                             append += '<div class="background-photo">';
@@ -675,7 +675,7 @@ $(function () {
                             }
 
                             append += '<div class="d-flex align-items-center">';
-                                append += '<a class="btn-customizations" data-product="' + product.id + '" type="button" style="' + (product.is_custom ? 'margin-right: 14px;' : '') + '">' + (product.is_custom ? 'Editar' : 'Adicionar') + '</a>';
+                                append += '<a class="btn-customizations" data-product="' + product.id + '" type="button" style="cursor: pointer; ' + (product.is_custom ? 'margin-right: 14px;' : '') + '">' + (product.is_custom ? 'Editar' : 'Adicionar') + '</a>';
                                 if (product.is_custom) {
                                     append += '<div class="switch-holder d-flex align-items-center">';
                                         append += '<label class="switch m-0">';
