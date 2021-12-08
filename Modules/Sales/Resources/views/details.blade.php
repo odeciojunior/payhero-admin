@@ -9,9 +9,9 @@
 
                     <div class="d-flex col-8 pl-0">
                         <span>
-                            <h3>Venda&nbsp;</h3>
+                            <h3 class="mb-0">Venda&nbsp;</h3>
                         </span>
-                        <h3 id="sale-code" class="">Venda </h3>
+                        <h3 id="sale-code" class="mb-0">Venda </h3>
                     </div>
                     
                     <div class="col-2 text-right">
