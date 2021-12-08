@@ -120,7 +120,7 @@ $(function () {
                         response.data.forEach(function(product) {
                             var index_product = selected_products.map(function(e) { return e.id; }).indexOf(product.id);
                             append += '<div class="col-sm-6">';
-                                append += '<div data-toggle="tooltip" data-placement="top" title="' + product.name + '" data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
+                                append += '<div ' + (product.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.name + '"' : '') + ' data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
                                     append += '<div class="d-flex align-items-center">';
                                         append += '<div class="background-photo">';
                                             append += '<img class="product-photo" src="' + product.photo + '">';
@@ -229,7 +229,7 @@ $(function () {
                         response.data.forEach(function(product) {
                             var index_product = selected_products.map(function(e) { return e.id; }).indexOf(product.id);
                             append += '<div class="col-sm-6">';
-                                append += '<div data-toggle="tooltip" data-placement="top" title="' + product.name + '" data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
+                                append += '<div ' + (product.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.name + '"' : '') + ' data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
                                     append += '<div class="d-flex align-items-center">';
                                         append += '<div class="background-photo">';
                                             append += '<img class="product-photo" src="' + product.photo + '">';
@@ -356,7 +356,7 @@ $(function () {
                                     },
                                     success: function success(response) {
                                         append += '<div class="product d-flex align-items-center" data-code="' + response.data.id + '">';
-                                            append += '<div class="div-product d-flex align-items-center" data-toggle="tooltip" data-placement="top" title="' + response.data.name + '">';
+                                            append += '<div class="div-product d-flex align-items-center" ' + (response.data.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + response.data.name + '"' : '') + '>';
                                                 append += '<div class="div-photo" data-type="' + type + '"><img class="product-photo" src="' + response.data.photo + '"></div>';
                                                 append += '<h1 class="title">' + response.data.name_short + '</h1>';
                                             append += '</div>';
@@ -1759,7 +1759,7 @@ $(function () {
                             response.data.forEach(function(plan) {
                                 var index_plan = selected_plans.map(function(e) { return e.id; }).indexOf(plan.id);
                                 append += '<div class="col-sm-6">';
-                                    append += '<div data-toggle="tooltip" data-placement="top" title="' + plan.name + '" data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center">';
+                                    append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center">';
                                         append += '<div class="d-flex align-items-center">';
                                             append += '<div class="background-photo">';
                                                 append += '<img class="product-photo" src="' + plan.photo + '">';

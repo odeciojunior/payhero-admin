@@ -77,14 +77,15 @@
                                         <p style="margin-bottom: 0; font-weight: bold; font-size: 16px; line-height: 20px; color: #636363;">Selecione um plano</p>
                                         <span style="font-weight: normal; font-size: 12px; line-height: 15px; color: #989898;">Selecione um ou mais planos para alterar os custos</span>
                                     </div>
+                                    {{--
                                     <div class="d-flex justify-content-between align-items-center select-all" id="select-all" data-selected="false" style="cursor: pointer;">
                                         <div class="mr-10" style="font-weight: bold; font-size: 16px; margin-top: -4px;">Selecionar todos</div>
                                         <div class="check"></div>
                                     </div>
+                                    --}}
                                 </div>
                             </div>
 
-                            <!--
                             <div class="input-group input-group-lg">
                                 <input class="form-control" type="text" id="search-plan" placeholder="Pesquisa por nome">
                                 <div class="input-group-append">
@@ -93,7 +94,6 @@
                                     </span>
                                 </div>
                             </div>
-                            -->
                         </div>
 
                         <div class="box-plans" style="max-height: 180px;">
