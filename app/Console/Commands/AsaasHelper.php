@@ -45,8 +45,7 @@ class AsaasHelper extends Command
         $this->comment("[4] Company Balance");
         $this->comment("[5] Cloudfox Balance");
         $this->comment("[6] Company Anticipation");
-        $this->comment("[7] Company Anticipations");
-        $this->comment("[8] New Customer Loan");
+        $this->comment("[7] Company Anticipations");        
         $this->comment("[0] Sair");
         $this->comment("===========================");
         $this->comment("[2964,3442] - João, Dani");
@@ -77,9 +76,7 @@ class AsaasHelper extends Command
             case 7:
                 $this->getCompanyAntipations();
             break;
-            case 8:
-                $this->clientLoan();
-            break;           
+            
             case 0:  
                 $this->info('Bye!');              
                 exit;
@@ -122,46 +119,5 @@ class AsaasHelper extends Command
         $companyId = $this->anticipate('Informe CompanyId', ['2964', '3442']);
         
         VarDumper::dump($this->api->getAnticipationsAsaas($companyId)??[]);
-    }
-
-    public function simulateWebhookTransfer(){
-        $data = [            
-            "event"=>"TRANSFER_PENDING",
-            "transfer"=>[
-                "object"=>"transfer",
-                "id"=>"777eb7c8-b1a2-4356-8fd8-a1b0644b5282",
-                "dateCreated"=>"2019-05-02",
-                "status"=>"PENDING",
-                "effectiveDate"=>null,
-                "type"=>"BANK_ACCOUNT",
-                "value"=>1000,
-                "netValue"=>1000,
-                "transferFee"=>0,
-                "scheduleDate"=>"2019-05-02",
-                "authorized"=>true,
-                "failReason"=>null,
-                "bankAccount"=>[
-                    "bank"=>[
-                        "code"=>"001",
-                        "name"=>"Banco do Brasil"
-                    ],
-                    "accountName"=>"Conta Banco do Brasil",
-                    "ownerName"=>"Marcelo Almeida",
-                    "cpfCnpj"=>"52233424611",
-                    "agency"=>"1263",
-                    "agencyDigit"=>"3",
-                    "account"=>"9999991",
-                    "accountDigit"=>"1"
-                    ],
-                "transactionReceiptUrl"=>null
-            ]
-        ];
-        VarDumper::dump($this->api->simulateWebhookTransfer($data)??[]);
-    }
-
-    public function clientLoan(){
-        $value = intval($this->ask('Informe valor inteiro [ex. 145 para 1,45]'));
-        $companyId = $this->ask('Informe companyId');
-        VarDumper::dump($this->api->transferSellerToSubSeller($companyId,$value)??[]);
-    }
+    }   
 }
