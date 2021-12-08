@@ -267,7 +267,7 @@ class AsaasService implements Statement
         return !empty($lastTransaction) ? ['Asaas']:[];
     }
 
-    public function makeAnticipation(Sale $sale) {
+    public function makeAnticipation(Sale $sale, $simulate = null) {
         $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
 
         $data = [
@@ -282,6 +282,8 @@ class AsaasService implements Statement
         }
 
         $url = 'https://www.asaas.com/api/v3/anticipations';
+        if($simulate) $url = 'https://www.asaas.com/api/v3/anticipations/simulate';
+
         $curl = curl_init($url);
 
         curl_setopt($curl, CURLOPT_ENCODING, '');
@@ -302,7 +304,7 @@ class AsaasService implements Statement
 
         if (($httpStatus < 200 || $httpStatus > 299) && (!isset($response->errors))) {
             //report(new Exception('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus));
-            report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus);
+            report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus . ' -- $sale->id = ' . $sale->id . ' -- ' . json_encode($response));
         }
 
         $this->saveRequests($url, $response, $httpStatus, $data, $sale->id);
@@ -499,7 +501,7 @@ class AsaasService implements Statement
 
         $domainAsaas = 'https://www.asaas.com';
         $url = $domainAsaas.'/api/v3/payments/'.$transaction->sale->gateway_transaction_id;
-   
+
         $curl = curl_init($url);
 
         curl_setopt($curl, CURLOPT_ENCODING, '');
@@ -520,9 +522,9 @@ class AsaasService implements Statement
             //report(new Exception('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus));
             report('Erro ao consultar o status do pagamento' . $url . ' - code:' . $httpStatus);
         }
-        
+
         if(!empty($response) && !empty($response->status) && $response->status=='REFUNDED' && !empty($response->transactionReceiptUrl)){
-            
+
             $curl = curl_init($response->transactionReceiptUrl);
 
             curl_setopt($curl, CURLOPT_ENCODING, '');
@@ -530,9 +532,9 @@ class AsaasService implements Statement
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 
             $result = curl_exec($curl);
-            
+
             curl_close($curl);
-            
+
             $of = [
                 'href="/assets',
                 'src="/assets',
