@@ -8,11 +8,11 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row" style="margin-bottom: 30px;">
             <div class="col-sm-12">
                 <div class="d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center product-custom">
                         <div class="background-photo"></div>
                         <div style="line-height: 1;">
                             <h1 class="name-product bold"></h1>
@@ -65,7 +65,7 @@
                     </div>
 
                     <div>
-                        <button style="width: 45px; height: 45px;" type="button" class="btn btn-plus" id="add-list-custom-product">                                                    
+                        <button style="width: 45px; height: 45px;" type="button" class="btn btn-plus" id="add-list-custom-product">
                             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M18 9.5H1M9.5 1V18V1Z" stroke="#41DC8F" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -86,10 +86,10 @@
                 <h5 class="bold mb-0" style="color: #636363;">Personalizações adicionadas</h5>
             </div>
         </div>
-        
+
         <div style="margin: 12px -30px 24px -30px; border-top: 1px solid #EBEBEB;"></div>
 
-        <div class="row">                                         
+        <div class="row">
             <div class="col-sm-12">
                 <div class="list-custom-products" id="list-custom-products">
                     {{-- JS carrega --}}

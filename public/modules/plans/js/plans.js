@@ -739,7 +739,18 @@ $(function () {
             var index_product_custom = '';
             index_product_custom = products_plan.map(function(p) { return p.id }).indexOf(product_ID);
 
+            $(modal).find('#stage2-customization').find('.product-custom').removeAttr('data-toggle').removeAttr('title');
+            $('.product-custom').tooltip('dispose');
+
             $(modal).find('#stage2-customization').find('.box-breadcrumbs').find('.title').html('Personalização de ' + products_plan[index_product_custom].product_name_short);
+            if (products_plan[index_product_custom].product_name_short_flag) {
+                $(modal).find('#stage2-customization').find('.product-custom').attr('data-toggle', 'tooltip').attr('title', products_plan[index_product_custom].product_name);
+
+                $('[data-toggle="tooltip"]').tooltip('enable', {
+                    container: '.page'
+                });
+            }
+
             $(modal).find('#stage2-customization').find('.background-photo').html('<img src="' + products_plan[index_product_custom].photo + '" class="product-photo">');
             $(modal).find('#stage2-customization').find('.name-product').html(products_plan[index_product_custom].product_name_short);
             $(modal).find('#stage2-customization').find('.qtd-product').html('Qtd: ' + products_plan[index_product_custom].amount);
@@ -1682,7 +1693,7 @@ $(function () {
                     var curHeight = $(modal).find('.modal-body').height();
                     $(modal).find('#tab_update_cost_block-panel').find('.box-plans').html(append).promise().done(function() {
                         $('[data-toggle="tooltip"]').tooltip({
-                            container: '.page',
+                            container: '.page'
                         });
 
                         if (response.data.length > 4) {
@@ -1769,6 +1780,8 @@ $(function () {
                         var append = '<div class="row">';
                         if (response.data.length > 0) {
                             response.data.forEach(function(plan) {
+                                console.log(plan);
+
                                 var index_plan = selected_plans.map(function(e) { return e.id; }).indexOf(plan.id);
                                 append += '<div class="col-sm-6">';
                                     append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center">';
@@ -1947,7 +1960,7 @@ $(function () {
         changeProductAmount($(this));
     });
 
-    $(document).on('click', '#update_cost_shopify', function (event) {
+    $('#tab-customizations_panel').on('click', '#update_cost_shopify', function (event) {
         alert('ok');
     });
 

@@ -1669,6 +1669,9 @@ input[type="checkbox"], input[type="radio"] {
     height: 40px !important;
     border-radius: 4px 0 0 4px;
 }
+#tab_convites_enviados .form-control {
+    height: 48px !important;
+}
 .box-description .input-group .form-control {
     height: 48px !important;
     border-radius: 8px 0 0 8px;
