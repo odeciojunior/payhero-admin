@@ -201,7 +201,7 @@
                                         <div class="data-holder b-bottom">
                                             <div class="row px-25 py-10 justify-content-between align-items-center">
                                                 <div class="col-lg-6 d-flex align-items-center">
-                                                    <span class="mr-10 o-iphone-1"></span> Mobile
+                                                    <span class="ml-5 mr-15 o-iphone-1"></span> Mobile
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <span class="money-td green" id='percent-mobile'>0</span>
