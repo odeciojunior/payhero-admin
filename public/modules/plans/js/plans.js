@@ -179,19 +179,21 @@ $(function () {
     }
 
     function getProducts(modal, type) {
+        $(modal).find('.modal-body').css('height', 'auto');
+
         var find_stage = type == 'create' ? '#stage1' : '#stage2';
 
         if (type == 'edit') {
             $(modal).find('.nav-tabs-horizontal').css('display', 'none');
 
-            $(modal).find('.modal-footer').removeAttr('style');
             $(modal).find('.modal-footer').html(
                 '<button id="btn-modal-plan-return" type="button" data-type="edit" class="btn btn-default btn-lg" role="button">Voltar</button>' +
                 '<button id="btn-modal-plan-next" type="button" data-type="edit" class="btn btn-primary btn-lg">Continuar</button>'
-            );
+            ).removeClass('justify-content-between');
 
             selected_products = [];
             products_plan.map(function(e) {
+                console.log(e);
                 selected_products.push({ id: e.product_id });
             });
         } else {
@@ -538,7 +540,7 @@ $(function () {
                     var append = '<div class="row">';
                     products.forEach(function(product) {
                         append += '<div class="col-sm-6">';
-                            append += '<div class="box-product d-flex justify-content-between align-items-center">';
+                            append += '<div ' + (product.product_name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.product_name + '"' : '') + ' class="box-product d-flex justify-content-between align-items-center" style="cursor: inherit;">';
                                 append += '<div class="d-flex align-items-center">';
                                     append += '<div class="background-photo"><img class="product-photo" src="' + product.photo + '"></div>';
                                     append += '<div>';
@@ -592,6 +594,11 @@ $(function () {
                         } else {
                             $(modal).find('.product-photo').on('load', function() {
                                 $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
+                                    $('[data-toggle="tooltip"]').tooltip({
+                                        container: '.page',
+                                        template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+                                    });
+
                                     $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
                                         $(modal).find('#stage1').addClass('show active').promise().done(function() {
                                             var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + (products.length > 2 ? 65 : 55);
@@ -633,7 +640,7 @@ $(function () {
 
             products_plan.forEach(function(product) {
                 append += '<div class="row box-product body align-items-center" style="cursor: inherit;">';
-                    append += '<div class="col-sm-6">';
+                    append += '<div class="col-sm-6" ' + (product.product_name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.product_name + '"' : '') + '>';
                         append += '<div class="product d-flex align-items-center">';
                             append += '<div class="background-photo">';
                                 append += '<img class="product-photo" src="' + product.photo + '">';
@@ -699,6 +706,11 @@ $(function () {
             $(modal).find('#stage1-customization').find('.box-products').html(append).promise().done(function() {
                 $(modal).find('.product-photo').on('load', function() {
                     $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
+                        $('[data-toggle="tooltip"]').tooltip({
+                            container: '.page',
+                            template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+                        });
+
                         $(modal).find('#tab-customizations_panel').addClass('show active').promise().done(function() {
                             $(modal).find('#stage1-customization').addClass('show active').promise().done(function() {
                                 var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + (products_plan.length > 2 ? 65 : 55);
@@ -1842,6 +1854,10 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                $('[data-toggle="tooltip"]').tooltip({
+                    container: '.modal',
+                });
+
                 if (response.data.shopify_id == null) {
                     $('#tab_update_cost_block').prop('disabled', true);
                 } else {
@@ -1929,6 +1945,10 @@ $(function () {
         if (value <= min) $(this).val(min)
         if (value > max) $(this).val(max)
         changeProductAmount($(this));
+    });
+
+    $(document).on('click', '#update_cost_shopify', function (event) {
+        alert('ok');
     });
 
     $(document).on('click', '.bt-update-cost-configs', function (event) {

@@ -18,11 +18,14 @@ class PlansDetailsResource extends JsonResource
                 }
             }
 
+            $limit_name = 24;
+
             $products[] = [
                 'id' => hashids_encode($productsPlan->id),
                 'product_id' => hashids_encode($productsPlan->product_id),
+                'product_name_short_flag'   => mb_strwidth($productsPlan->product->name, 'UTF-8') <= $limit_name ? false : true,
                 'product_name' => $productsPlan->product->name,
-                'product_name_short' => Str::limit($productsPlan->product->name, 24),
+                'product_name_short' => Str::limit($productsPlan->product->name, $limit_name),
                 'shopify_id' => $productsPlan->product->shopify_id,
                 'variant_id' => $productsPlan->product->shopify_variant_id,
                 'photo' => $photo,
