@@ -39,7 +39,7 @@
                                     <div class="mr-10">Moeda padrão</div>
                                     <i calss="pointer" data-toggle="tooltip" data-placement="top" title="Definir uma moeda padrão para a configuração dos seus planos. Configuração utilizada para emissão de notas fiscais." class="icon wb-info-circle" aria-hidden="true"></i>
                                 </label>
-                                <select name="cost_currency_type" class="form-control select-pad" id="cost_currency_type">
+                                <select name="cost_currency_type" class="sirius-select" id="cost_currency_type">
                                     <option value="BRL">R$ - Real Brasileiro (BRL)</option>
                                     <option value="USD">$ - Dólar Americano (USD)</option>
                                 </select>

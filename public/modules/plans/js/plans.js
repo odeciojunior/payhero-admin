@@ -490,7 +490,7 @@ $(function () {
 
         $(modal).find('.modal-title').html('Detalhes');
         $(modal).find('.modal-footer').html(
-            '<button id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">' +
+            '<button plan="' + plan_id + '" id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">' +
                 '<img class="mr-10" src="/modules/global/img/icon-trash.svg" alt="Icon Trash" />' +
                 '<span>Excluir plano</span>' +
             '</button>' +
@@ -1868,52 +1868,40 @@ $(function () {
         //let updateAllCurrency = $('#select-all').attr('data-selected');
         let cost = $('#cost_plan').val();
 
-        let select_all = $('#select-all').attr('data-selected');
-
-        if (selected_plans.length > 0 && cost !== '') {
-            $.ajax({
-                method: "POST",
-                url: '/api/plans/update-bulk-cost',
-                dataType: "json",
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                data: {
-                    project: projectId,
-                    costCurrency: costCurrency,
-                    updateCostShopify: updateCostShopify,
-                    cost: cost,
-                    plans: selected_plans
-                },
-                error: function (_error4) {
-                    function error(_x4) {
-                        return _error4.apply(this, arguments);
-                    }
-
-                    error.toString = function () {
-                        return _error4.toString();
-                    };
-
-                    return error;
-                }(function (response) {
-                    errorAjaxResponse(response);
-                }),
-                success: function success(data) {
-                    alertCustom('success', 'Configuração atualizada com sucesso');
-
-                    $('#modal_config_cost_plan').modal('hide');
+        $.ajax({
+            method: "POST",
+            url: '/api/plans/update-bulk-cost',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                project: projectId,
+                costCurrency: costCurrency,
+                updateCostShopify: updateCostShopify,
+                cost: cost,
+                plans: selected_plans
+            },
+            error: function (_error4) {
+                function error(_x4) {
+                    return _error4.apply(this, arguments);
                 }
-            });
-        } else {
-            if (selected_plans == 0) {
-                alertCustom('error', 'Selecione os planos para configuração');
-            }
 
-            if (cost == '') {
-                alertCustom('error', 'Insira o novo custo para configuração');
+                error.toString = function () {
+                    return _error4.toString();
+                };
+
+                return error;
+            }(function (response) {
+                errorAjaxResponse(response);
+            }),
+            success: function success(data) {
+                alertCustom('success', 'Configuração atualizada com sucesso');
+
+                $('#modal_config_cost_plan').modal('hide');
             }
-        }
+        });
     });
 
     function changeProductAmount(input) {
