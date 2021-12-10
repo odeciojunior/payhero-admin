@@ -69,6 +69,7 @@
     margin: 0;
     line-height: 1.5;
     font-size: 22px;
+    color: #636363;
 }
 
 .label-price {
@@ -129,6 +130,7 @@
 .sub-pad {
     font-size: 12px;
     color: #aaa;
+    color: #9E9E9E;
 }
 
 
@@ -268,7 +270,7 @@ strong span {
 
 .input-custom-transfer {
     background-color: #FFF;
-    border-radius: 12px;
+    border-radius: 8px;
     border: 1px solid #DDD !important;;
 }
 
@@ -387,6 +389,35 @@ select, .select-pad {
 
 .d-contents {
     display: contents;
+}
+
+.badge-money {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 9px 12px;
+    display: inline-flex;
+}
+
+#header h6, #header .available-balance{
+   color: #70707E;
+}
+#bt-withdrawal {
+    background-color: #1BE4A8;
+    border-radius: 8px;
+}
+
+.balance-resume .card-body{
+   padding: 18px 24px
+}
+
+.balance-resume h5{
+    margin-top: 0;
+    margin-bottom: 10px
+}
+
+.balance-resume h5{
+    margin-top: 0;
+    margin-bottom: 6px
 }
 
 @media (min-width: 768px) {
@@ -664,4 +695,6 @@ select, .select-pad {
 .page-title svg {
     width: auto;
     height: 20px;
+    margin-left: 10px;
+    margin-top: 5px;
 }

@@ -12,8 +12,7 @@ class WithdrawalResource extends JsonResource
     public function toArray($request): array
     {
         $bankName = (new BankService())->getBankName($this->bank);
-        $agency = 'Agência: ' . $this->agency . ' - Digito: ' . $this->agency_digit;
-        $account = ' - Conta: ' . $this->account . ' - Digito: ' . $this->account_digit;
+        $accountInformation = $this->accountInformation();
 
         $realeaseDate = '';
         $realeaseTime = '';
@@ -25,9 +24,9 @@ class WithdrawalResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'account_information_bank' => $bankName,
-            'account_information' => $agency . $account,
+            'account_information' => $accountInformation,
             'date_request' => $this->created_at->format('d/m/Y'),
-            'date_request_time' => $this->created_at->format('H:i:s'),
+            'date_request_time' => $this->created_at->format('H:i'),
             'date_release' => $realeaseDate,
             'date_release_time' => $realeaseTime,
             'value' => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
@@ -39,6 +38,21 @@ class WithdrawalResource extends JsonResource
             'tax_value' => $this->tax,
             'debt_pending_value' => 'R$ ' . number_format(intval($this->debt_pending_value) / 100, 2, ',', '.')
         ];
+    }
+
+    private function accountInformation(): string
+    {
+        $agency = "Agência: $this->agency";
+        if ($this->agency_digit) {
+            $agency .= "-$this->agency_digit";
+        }
+
+        $account = "Conta: $this->account";
+        if ($this->account_digit) {
+            $account .= "-$this->account_digit";
+        }
+
+        return "$agency - $account";
     }
 }
 

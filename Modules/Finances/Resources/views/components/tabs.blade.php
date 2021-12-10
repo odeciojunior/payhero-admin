@@ -5,7 +5,7 @@
                 Transferências
             </a>
             <a class="nav-item nav-link nav-link-finances-show-export" data-toggle="tab" href="#nav-statement" role="tab" aria-controls="nav-profile" aria-selected="true">
-                Extrato
+                Agenda Financeira
             </a>
         </div>
     </div>

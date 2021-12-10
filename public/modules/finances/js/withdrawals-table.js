@@ -52,17 +52,28 @@ window.loadWithdrawalsTable = function(link = null) {
             } else {
                 $.each(response.data, function (index, data) {
 
+                    console.log(data.date_request_time)
                     let tableData = '';
-                    tableData += '<tr>';
-                    tableData += "<td>#" + data.id + "</td>";
-                    tableData += '<td class="text-left font-size-14" style="grid-area: sale"> <strong>' + data.account_information + '</small> </td>';
-                    tableData += '<td class="text-left font-size-14" style="grid-area: date-start"> <strong class="bold-mobile">    ' + data.date_request + '</strong> <br> <small class="gray font-size-12">'+data.date_request_time+' </small></td>';
-                    tableData += '<td class="text-left font-size-14" style="grid-area: date-start"> <strong class="bold-mobile">    ' + data.date_release + '</strong> <br> <small class="gray font-size-12">'+data.date_release_time+' </small></td>';
-                    tableData += '<td class="shipping-status"><span class="badge badge-' + statusWithdrawals[data.status] + '">' + data.status_translated + '</span></td>';
+                    let dateRequest = data.date_release_time !== '' ? `ás ${data.date_release_time.replace(':', 'h')}` : ''
+                    tableData += `<tr>;
+                                <td class="text-center">#${data.id}</td>";
+                                <td class="text-left" style="grid-area: sale">
+                                    <div style="color: #636363;"> ${data.account_information_bank} </div>
+                                    <small style="color: #9E9E9E; font-size: 11px"> ${data.account_information} </small>
+                                </td>;
+                                <td class="text-left" style="grid-area: date-start">
+                                    <div class="bold-mobile"> ${data.date_request} </div>
+                                    <small style="color: #9E9E9E; font-size: 11px"> ás ${data.date_request_time.replace(':', 'h')}  </small>
+                                </td>;
+                                <td class="text-left" style="grid-area: date-start">
+                                    <div class="bold-mobile"> ${data.date_release} </div>
+                                    <small style="color: #9E9E9E; font-size: 11px"> ${dateRequest} </small>
+                                </td>;
+                                <td class="shipping-status text-center"><span class="badge badge-${statusWithdrawals[data.status]} "> ${data.status_translated} </span></td>`;
                     if (data.tax_value > 0) {
                         tableData += ' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + '</strong><br><small>(taxa de R$10,00)</small>';
                     } else {
-                        tableData +=' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + "</strong>";
+                        tableData +=' <td colspan="2" class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + "</strong>";
                     }
 
                     if (window.gatewayCode == 'w7YL9jZD6gp4qmv' && data.debt_pending_value != null && data.debt_pending_value != "R$ 0,00") {
