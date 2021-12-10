@@ -1,22 +1,30 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=001') }}">
 @endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-simple modal-sidebar modal-lg">
         <div id='modal-saleDetails' class="modal-content detail-padding" style="width: 500px;">
             <div class="header-modal">
                 <div class="row justify-content-between align-items-center" style="width: 100%;">
-                    <div class="col-lg-2"> &nbsp;</div>
-                    <div class="col-lg-8 text-center"><h4> Detalhes da venda</h4></div>
-                    <div class="col-lg-2 text-right">
+                    <div class="d-flex col-8 pl-0">
+                        <span>
+                            <h3 class="mb-0">Venda&nbsp;</h3>
+                        </span>
+                        <h3 id="sale-code" class="mb-0"></h3>
+                    </div>
+
+                    <div class="col-2 text-right">
                         <a role="button" data-dismiss="modal">
-                            <i class="material-icons pointer">close</i></a>
+                            <i class="material-icons pointer">close</i>
+                        </a>
                     </div>
                 </div>
             </div>
+
+            <div style="height: 10px; width: 100%">&nbsp;</div>
+
             <div class="modal-body p-0">
                 <div class="transition-details">
-                    <h3 id="sale-code" class=""></h3>
                     <p id="payment-type" class="sm-text text-muted">
                     </p>
                     <p id='release-date'></p>
@@ -46,11 +54,11 @@
                         <div class="col-lg-3"><p class="table-title"> Produto </p></div>
                         <div class="col-lg-9 text-right"><p class="text-muted"> Qtde </p></div>
                     </div>
-                    
+
                     <div id="table-product">
                         {{-- js carrega... --}}
                     </div>
-                    
+
                     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
                         <div class="col-sm-6 col-6 align-items-center">
                             <span class="text-muted ft-12"> Subtotal </span>
@@ -100,10 +108,10 @@
                         <div class="col-sm-6 col-6 text-right">
                             <h4 id="total-value" class="table-title"></h4>
                         </div>
-                        <div class='col-sm-8 col-8'>
+                        <div class='col-sm-8 col-6'>
                             <span id="cashback-label" class="text-muted ft-12 d-none">Cashback</span>
                         </div>
-                        <div class='col-sm-4 col-4 text-right'>
+                        <div class='col-sm-4 col-6 text-right'>
                             <span id="cashback-value" class="text-muted ft-12 d-none">R$ </span>
                         </div>
                     </div>
@@ -114,10 +122,10 @@
                         <div id="cambio-value" class='col-4 text-right' style="display:none">
                             <span class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-sm-8 col-8'>
+                        <div class='col-sm-8 col-7'>
                             <span id="taxas-label" class='text-muted ft-12'></span>
                         </div>
-                        <div class='col-sm-4 col-4 text-right'>
+                        <div class='col-sm-4 col-5 text-right'>
                             <span id="taxareal-value" class='text-muted ft-12'></span>
                         </div>
                         <div style="color: #2E85EC" class='col-sm-12 pointer mt-5' data-toggle="collapse" data-target="#taxas-detail" aria-expanded="false" aria-controls="taxas-detail">
@@ -255,26 +263,37 @@
                         <h4> Dados Pessoais </h4>
                         <span id="client-name" class="table-title gray"></span>
                         <br>
+
                         <div class="d-flex align-items-center">
-                            <label for="client-telephone" class="table-title gray mb-0">Telefone:</label>&nbsp;
-                            <input id="client-telephone" name="client-telephone"
-                                   class="detail-input mr-2 table-title gray fake-label" readonly>
-                            <a class="pointer btn-edit-client"><span class="o-edit-1"></span></a>
+                            <input id="client-telephone" name="client-telephone" class="detail-input mr-2 table-title gray fake-label" readonly>
+                            <a class="pointer btn-edit-client">
+                                <span class="o-edit-1"></span>
+                            </a>
+
                             <a class="pointer btn-save-client" style="display:none;">
-                                <i class="material-icons font-size-18">save</i></a>
+                                <i class="material-icons font-size-18">save</i>
+                            </a>
+
+                            <a class="pointer btn-close-client ml-2" style="display:none;">
+                                <i class="material-icons font-size-18">close</i>
+                            </a>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+
+                            <input id="client-email" type="email" name="client-email" class="detail-input mr-2 table-title gray fake-label" readonly>
+                            <a class="pointer btn-edit-client">
+                                <span class="o-edit-1"></span>
+                            </a>
+
+                            <a class="pointer btn-save-client" style="display:none;">
+                                <i class="material-icons font-size-18">save</i>
+                            </a>
+
                             <a class="pointer btn-close-client ml-2" style="display:none;">
                                 <i class="material-icons font-size-18">close</i></a>
                         </div>
-                        <div class="d-flex align-items-center">
-                            <label for="client-email" class="table-title gray mb-0">E-mail:</label>&nbsp;
-                            <input id="client-email" type="email" name="client-email"
-                                   class="detail-input mr-2 table-title gray fake-label" readonly>
-                            <a class="pointer btn-edit-client"><span class="o-edit-1"></span></a>
-                            <a class="pointer btn-save-client" style="display:none;">
-                                <i class="material-icons font-size-18">save</i></a>
-                            <a class="pointer btn-close-client ml-2" style="display:none;">
-                                <i class="material-icons font-size-18">close</i></a>
-                        </div>
+
                         <span id="client-document" class="table-title gray"></span>
                         <div class="mt-15 mb-5" id="client-whatsapp-container">
                             <a class="pointer label d-inline-flex align-items-center pl-3 d-block" id="client-whatsapp"

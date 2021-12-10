@@ -68,20 +68,19 @@ class CompanyBalanceService
             array_pop($this->defaultGateways);
         }
 
-        foreach($this->defaultGateways as $gatewayClass) {
+        $totalAvailable = 0;
+        foreach($this->defaultGateways as $gatewayClass) 
+        {
             $gatewayService = app()->make($gatewayClass);
             $gatewayService->setCompany($this->company);
+
             $gatewayResume = $gatewayService->getResume();
             if(!empty($gatewayResume)) {
                 $gatewaysBalances[] = $gatewayResume;
+                $totalAvailable += intval($gatewayResume['total_available']);
             }
         }
-
-        $totalAvailable = 0;
-        foreach($gatewaysBalances as $gatewaysBalance) {
-            $totalAvailable += foxutils()->onlyNumbers($gatewaysBalance['available_balance']);
-        }
-
+        
         $gatewaysBalances['total_gateways_available'] = foxutils()->formatMoney($totalAvailable / 100);
 
         return $gatewaysBalances;
