@@ -580,23 +580,23 @@ class WooCommerceService
                 'set_paid' => true
             ];
 
-            //$log_request_id = $this->log_post_requests($data, $project_id, 'approve_billet', $woocommerce_order);
+            //$log_request_id = $this->logPostRequests($data, $project_id, 'approve_billet', $woocommerce_order);
 
             try {
                 $res = $this->woocommerce->put('orders/'.$woocommerce_order, $data);
 
                 // if(!empty($res->status) && $res->status == 'processing') {
                 //     $res = json_encode($res);
-                //     $this->update_post_request($log_request_id, 1, $res);
+                //     $this->updatePostRequest($log_request_id, 1, $res);
 
                 // } else {
-                //     $this->update_post_request($log_request_id, 0, $res);
+                //     $this->updatePostRequest($log_request_id, 0, $res);
 
                 // }
 
                 return $res;
             } catch (\Throwable $th) {
-                //$this->update_post_request($log_request_id, 0, $th);
+                //$this->updatePostRequest($log_request_id, 0, $th);
                 report($th);
             }
         }
@@ -606,7 +606,7 @@ class WooCommerceService
     {
         try {
             $getOrder = $this->woocommerce->get('orders/'.$woocommerce_order);
-            if ($getOrder->status != 'processing') {
+            if ($getOrder->status == 'pending') {
                 $data = [
                     'status' => 'processing',
                     'set_paid' => true
@@ -621,7 +621,7 @@ class WooCommerceService
         }
     }
 
-    public function log_post_requests($data, $project_id = null, $method = null, $order = null, $sale_id = null)
+    public function logPostRequests($data, $project_id = null, $method = null, $order = null, $sale_id = null)
     {
         $model = new SaleWoocommerceRequests();
         $model->send_data = json_encode($data);
@@ -632,7 +632,7 @@ class WooCommerceService
         return $model->id;
     }
 
-    public function update_post_request($id, $status, $received_data)
+    public function updatePostRequest($id, $status, $received_data)
     {
         $model = SaleWoocommerceRequests::where('id', $id)->first();
 

@@ -254,6 +254,7 @@ class AsaasService implements Statement
             'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
             'blocked_balance' => foxutils()->formatMoney($blockedBalance / 100),
             'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+            'total_available' => $availableBalance,
             'last_transaction' => $lastTransactionDate,
             'id' => 'NzJqoR32egVj5D6'
         ];

@@ -254,7 +254,7 @@ $(document).ready(function () {
                         alertCustom("success", "Link copiado!");
                     });
 
-                    if (recoveryType == '5') {
+                    if ($('#recovery_type option:selected').val() == '5') {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
