@@ -15,9 +15,11 @@ class CreateCheckoutConfigsTable extends Migration
     {
         Schema::create('checkout_configs', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('project_id');
             $table->integer('checkout_type_enum');
             $table->string('checkout_logo')->nullable();
             $table->boolean('checkout_banner_enabled')->default(false);
+            $table->integer('checkout_banner_type')->default(1);
             $table->string('checkout_banner')->nullable();
             $table->boolean('countdown_enabled')->default(false);
             $table->integer('countdown_time')->default(15);
@@ -59,6 +61,7 @@ class CreateCheckoutConfigsTable extends Migration
             $table->text('post_purchase_message_content')->nullable();
             $table->boolean('whatsapp_enabled')->default(false);
             $table->string('support_phone')->nullable();
+            $table->integer('theme_enum')->default(1);
             $table->string('color_primary')->default('#5577a7');
             $table->string('color_secondary')->default('#313c52');
             $table->string('color_buy_button')->default('#23d07d');
