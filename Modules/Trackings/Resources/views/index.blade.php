@@ -279,7 +279,7 @@
                             <div id="posted" class="col-md-4 col-sm-6 col-xs-12 border-right border-bottom px-0 bg-white card-posted">
                                 <div class="card mb-0 rounded-0 card-posted">
                                     <div class="card-body">
-                                        <h6 class="font-size-16 gray-600 m-0" data-toggle="tooltip" data-html="true" data-placement="top" title="Postados">Postados </h6>
+                                        <h6 class="font-size-16 gray-600 m-0" data-toggle="tooltip" data-container=".page" data-placement="top" title="Postados">Postados </h6>
                                         <h4 id="percentual-posted" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
@@ -290,7 +290,7 @@
                             <div class="col-md-4 col-sm-6 col-xs-12 border-right border-bottom px-0 bg-white">
                                 <div class="card mb-0 rounded-0">
                                     <div class="card-body">
-                                        <h6 class="font-size-16 gray-600 m-0" data-toggle="tooltip" data-html="true" data-placement="top" title="Em trânsito">Em trânsito</h6>
+                                        <h6 class="font-size-16 gray-600 m-0" data-toggle="tooltip" data-container=".page" data-placement="top" title="Em trânsito">Em trânsito</h6>
                                         <h4 id="percentual-dispatched" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
@@ -301,7 +301,7 @@
                             <div class="col-md-4 col-sm-6 col-xs-12 border-bottom pl-0 pr-0 bg-white card-to-delivery">
                                 <div class="card mb-0 rounded-0 card-to-delivery">
                                     <div class="card-body">
-                                        <h6 class="font-size-16 gray-600 m-0 text-truncate" data-toggle="tooltip" data-html="true" data-placement="top" title="Saiu para entrega">Saiu para entrega</h6>
+                                        <h6 class="font-size-16 gray-600 m-0 text-truncate" data-toggle="tooltip" data-container=".page" data-placement="top" title="Saiu para entrega">Saiu para entrega</h6>
                                         <h4 id="percentual-out" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
@@ -312,7 +312,7 @@
                             <div class="col-md-4 col-sm-6 col-xs-12 border-right px-0 bg-white card-delivery-problem">
                                 <div class="card mb-0 rounded-0 card-delivery-problem">
                                     <div class="card-body">
-                                        <h6 class="font-size-16 gray-600 m-0 text-truncate" data-toggle="tooltip" data-html="true" data-placement="top" title="Problema na entrega">Problema na entrega</h6>
+                                        <h6 class="font-size-16 gray-600 m-0 text-truncate" data-toggle="tooltip" data-container=".page" data-placement="top" title="Problema na entrega">Problema na entrega</h6>
                                         <h4 id="percentual-exception" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
@@ -323,7 +323,7 @@
                             <div class="col-md-4 col-sm-6 col-xs-12 border-right px-0 bg-white">
                                 <div class="card mb-0 rounded-0">
                                     <div class="card-body">
-                                        <h6 class="font-size-16 gray-600 m-0 text-truncate" data-toggle="tooltip" data-html="true" data-placement="top" title="Não informado">Não informado</h6>
+                                        <h6 class="font-size-16 gray-600 m-0 text-truncate" data-toggle="tooltip" data-container=".page" data-placement="top" title="Não informado">Não informado</h6>
                                         <h4 id="percentual-unknown" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
@@ -334,7 +334,7 @@
                             <div class="col-md-4 col-sm-6 col-xs-12 pl-0 pr-0 bg-white card-delivered">
                                 <div class="card mb-0 rounded-0 card-delivered">
                                     <div class="card-body">
-                                        <h6 class="font-size-16 gray-600 m-0" data-toggle="tooltip" data-html="true" data-placement="top" title="Entregues">Entregues</h6>
+                                        <h6 class="font-size-16 gray-600 m-0" data-toggle="tooltip" data-container=".page" data-placement="top" title="Entregues">Entregues</h6>
                                         <h4 id="percentual-delivered" class="mt-12 mb-0 text-nowrap resume-number">
                                             <span class="resume-number">0</span>
                                         </h4>
