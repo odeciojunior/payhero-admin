@@ -34,7 +34,7 @@ class ProductService
             return $productModel
             ->with('productsPlans')
             ->where('user_id', auth()->user()->account_owner_id)
-            ->whereNull('shopify_variant_id')
+            ->where('shopify', 0)
             ->take(12)
             ->get();
         }

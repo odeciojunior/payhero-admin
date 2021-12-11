@@ -68,7 +68,7 @@ class ProductsApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos os produtos');
 
-            $productsSearch = $productsModel->where('user_id', auth()->user()->account_owner_id);
+            $productsSearch = $productsModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id);
 
             if (isset($filters['shopify'])) {
                 $productsSearch->where('shopify', $filters['shopify']);
@@ -331,6 +331,25 @@ class ProductsApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
+        }
+    }
+
+    public function updateCustom($id, Request $request)
+    {
+        try {
+            $productId = current(Hashids::decode($id));
+
+            $product = ProductPlan::find($productId);
+
+            $product->update([
+                'is_custom' => $request->productCustom
+            ]);
+
+            return response()->json(['message' => 'Configurações atualizadas com sucesso'], 200);
+        } catch(Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
         }
     }
 

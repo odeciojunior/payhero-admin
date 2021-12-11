@@ -652,9 +652,9 @@ $(function () {
                         append += '</div>';
                     append += '</div>';
                     append += '<div class="col-sm-6">';
-                        append += '<div class="d-flex ' + (product.is_custom ? 'justify-content-between' : 'justify-content-end') + ' align-items-center">';
-                            if (product.is_custom) {
-                                append += '<div class="d-flex">';
+                        append += '<div class="d-flex ' + (product.custom_configs.length > 0 ? 'justify-content-between' : 'justify-content-end') + ' align-items-center">';
+                            if (product.custom_configs.length > 0) {
+                                append += '<div class="d-flex customs">';
                                     if (product.custom_configs.map(function(e) { return e.type }).indexOf('Text') != -1) {
                                         append += '<div class="d-flex align-items-center">';
                                             append += '<div class="custom-type">';
@@ -682,11 +682,11 @@ $(function () {
                             }
 
                             append += '<div class="d-flex align-items-center">';
-                                append += '<a class="btn-customizations" data-product="' + product.id + '" type="button" style="cursor: pointer; ' + (product.is_custom ? 'margin-right: 14px;' : '') + '">' + (product.is_custom ? 'Editar' : 'Adicionar') + '</a>';
-                                if (product.is_custom) {
-                                    append += '<div class="switch-holder d-flex align-items-center">';
+                                append += '<a class="btn-customizations" data-product="' + product.id + '" type="button" style="cursor: pointer; ' + (product.custom_configs.length > 0 ? 'margin-right: 14px;' : '') + '">' + (product.custom_configs.length > 0 ? 'Editar' : 'Adicionar') + '</a>';
+                                if (product.custom_configs.length > 0) {
+                                    append += '<div class="switch-holder active_custom d-flex align-items-center">';
                                         append += '<label class="switch m-0">';
-                                            append += '<input type="checkbox" id="update_cost_shopify" name="check-values" class="check" value="' + (product.is_custom ? 1 : 0) + '" checked>';
+                                            append += '<input type="checkbox" data-product="' + product.id + '" name="check-values" class="check active_custom_product" value="' + product.is_custom + '" ' + (product.is_custom ? 'checked' : '') + '>';
                                             append += '<span class="slider round"></span>';
                                         append += '</label>';
                                     append += '</div>';
@@ -1960,8 +1960,48 @@ $(function () {
         changeProductAmount($(this));
     });
 
-    $('#tab-customizations_panel').on('click', '#update_cost_shopify', function (event) {
-        alert('ok');
+    $('#tab-customizations_panel').on('change', '.active_custom_product', function (event) {
+        var productId = $(this).attr('data-product');
+        var button = this;
+
+        if (button.checked) {
+            $(button).attr('checked', true).val(1);
+        } else {
+            $(button).removeAttr('checked').val(0);
+        }
+
+        var productCustom = $(button).val();
+
+        $.ajax({
+            method: "PUT",
+            url: '/api/products/' + productId + '/update-custom',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                productCustom: productCustom
+            },
+            error: function (_error4) {
+                function error(_x4) {
+                    return _error4.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error4.toString();
+                };
+
+                return error;
+            }(function (response) {
+                errorAjaxResponse(response);
+            }),
+            success: function success(data) {
+                getPlanData('modal_edit_plan', true);
+
+                alertCustom("success", "Customização do produto atualizada");
+            }
+        });
     });
 
     $(document).on('click', '.bt-update-cost-configs', function (event) {
@@ -2000,7 +2040,6 @@ $(function () {
                 $("#modal_config_cost_plan").modal('hide');
             }
         });
-
     });
 
     $(document).on('change', '#cost_currency_type', function (event) {
