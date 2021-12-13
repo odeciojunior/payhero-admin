@@ -202,7 +202,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
         } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1) {
 
             withdrawRequestValid = true;
-            $("#modal-body-withdrawal-custom").html("");
+            $("#modal-body-withdrawal-custom").html("").addClass('d-none');
             $("#text-description-debit-pending").html("");
 
             $("#modal-withdrawal-custom-title").text(
@@ -273,6 +273,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
         const htmlModal = optionsValuesWithdrawal(singleValue, dataWithdrawal);
 
         $("#modal-body-withdrawal-custom, #debit-pending-informations, #text-title-debit-pending,#text-description-debit-pending").html("");
+        $("#modal-body-withdrawal-custom").removeClass('d-none');
         $("#modal-withdrawal-custom-title").html("").html("Confirmar Saque");
 
         $("#modal-body-withdrawal-custom").html(`
