@@ -59,7 +59,7 @@
                     </button>
                 </div>
             </div>
-            <div class='row align-items-center justify-content-center my-20 py-20 d-md-none'
+            <div class='my-20 py-20 d-md-none'
                  style="position: relative;">
                 <div class="p-20">
                     <div class="col-md-12">
