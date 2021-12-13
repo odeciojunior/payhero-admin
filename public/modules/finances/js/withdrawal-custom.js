@@ -155,7 +155,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                                 <p style="color: #5A5A5A;">SALDO DISPONÍVEL</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
-                                <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #41DC8F;">
+                                <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #41DC8F;">
                                     <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">${formatMoney(removeFormatNumbers(currentBalance))}
                                     </span>
                                 </span>
@@ -166,7 +166,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                                 <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
-                                <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
+                                <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                     <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
                                         ${formatMoney(removeFormatNumbers(debitValue))}
                                     </span>
@@ -178,7 +178,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                                 <p style="color: #5A5A5A;" id="modal-text-amount-receivable">SALDO FINAL</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
-                                <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
+                                <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                     <span id="value-withdrawal-received" class="text-right" style="color: #5E5E5E;"></span>
                                 </span>
                             </div>
@@ -219,7 +219,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                                 <p style="color: #5A5A5A;">VALOR SOLICITADO</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
-                                <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #41DC8F;">
+                                <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #41DC8F;">
                                     <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">
                                         ${dataWithdrawal.bigger_value}
                                     </span>
@@ -231,7 +231,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                                 <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
-                                <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
+                                <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                     <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
                                         ${formatMoney(removeFormatNumbers(debitValue))}
                                     </span>
@@ -243,7 +243,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                                 <p style="color: #5A5A5A;" id="modal-text-amount-receivable">VALOR NEGATIVO</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
-                                <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
+                                <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                     <span id="value-withdrawal-received" class="text-right" style="color: #5E5E5E;"></span>
                                 </span>
                             </div>
@@ -307,7 +307,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                                 <p style="color: #5A5A5A;">VALOR SOLICITADO</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
-                                <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #41DC8F;">
+                                <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #41DC8F;">
                                     <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">
                                         ${dataWithdrawal.bigger_value}
                                     </span>
@@ -319,7 +319,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                                 <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
-                                <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
+                                <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                     <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
                                         ${formatMoney(removeFormatNumbers(debitValue))}
                                     </span>
@@ -331,7 +331,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                                 <p style="color: #5A5A5A;" id="modal-text-amount-receivable">VALOR A RECEBER</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
-                                <span class="currency" style="font: normal normal 300 19px/13px Roboto; color: #E61A1A;">
+                                <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                     <span id="value-withdrawal-received" class="text-right" style="color: #5E5E5E;"></span>
                                 </span>
                             </div>
