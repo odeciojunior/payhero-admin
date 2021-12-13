@@ -1908,3 +1908,8 @@ tbody td{
 #config-cost-plan a {
     background: none !important;
 }
+
+.box-description .form-control:focus,
+.box-description .form-control:focus + .input-group-append .input-group-text {
+    border: 1px solid #46BCFF;
+}
