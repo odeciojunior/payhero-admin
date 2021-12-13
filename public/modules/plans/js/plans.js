@@ -195,8 +195,10 @@ $(function () {
 
             selected_products = [];
             products_plan.map(function(e) {
-                console.log(e);
-                selected_products.push({ id: e.product_id });
+                selected_products.push({
+                    id: e.product_id,
+                    amount: e.amount
+                });
             });
         } else {
             $(modal).find('#btn-modal-plan-return').html('Voltar');
@@ -344,6 +346,8 @@ $(function () {
                     append += '<div class="row">';
                         append += '<div class="col-sm-12">';
                             selected_products.forEach(function(product) {
+                                console.log(product);
+
                                 var index_product = selected_products.map(function(p) { return p.id; }).indexOf(product.id);
 
                                 $.ajax({
@@ -443,6 +447,8 @@ $(function () {
                     });
                 });
             });
+
+            console.log(find_stage);
         });
     }
 
