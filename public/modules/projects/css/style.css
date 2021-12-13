@@ -45,7 +45,7 @@
     text-transform: none;
     font-weight: bold;
     border: none;
-    border-bottom: 2px solid #FAFAFA;
+    border-bottom: 0px solid #FAFAFA;
     background-color: #FAFAFA;
     padding: 15px;
     color: #9C9C9C;
@@ -83,7 +83,7 @@
     transition: all 0.3s;
 }
 .nav-tabs-line .nav-link.active, .nav-tabs-line .nav-link.active:focus {
-    border-bottom: 3px solid #2E85EC;
+    border-bottom: 2px solid #2E85EC;
 }
 
 #tab_configuration:hover > img, .nav-tabs .nav-link.active > img {
