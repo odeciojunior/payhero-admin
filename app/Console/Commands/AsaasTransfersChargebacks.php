@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\Gateways\CheckoutGateway;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class AsaasTransfersChargebacks extends Command
 {
@@ -52,11 +54,16 @@ class AsaasTransfersChargebacks extends Command
 
         $total = count($transfers);
 
-        $this->comment("{$total} transfers para processar");
+        $output = new ConsoleOutput();
+        $progress = new ProgressBar($output, $total);
+        $progress->start();
 
         $checkoutGateway = new CheckoutGateway($this->gatewayId);
 
         foreach($transfers as $transfer){
+
+            $progress->advance();
+
             $response = $checkoutGateway->transferSubSellerToSeller(
                 $transfer->company_id, $transfer->value, $transfer->id
             );
@@ -68,5 +75,10 @@ class AsaasTransfersChargebacks extends Command
 
             $this->line(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Done');                           
         }
+
+        $progress->finish();
     }
 }
+
+
+
