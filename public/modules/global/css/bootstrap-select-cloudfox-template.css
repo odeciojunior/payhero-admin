@@ -64,7 +64,7 @@
     max-width: 100%;
 }
 
-.dropdown.bootstrap-select.form-control.show .dropdown-toggle::after {
+.bootstrap-select.show > .dropdown-toggle::after {
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;
     transition: all 0.3s;

@@ -15,15 +15,15 @@
 
 @section('content')
     <div class="page">
-        <div class="page-header container" style="padding-bottom: 0">
+        <div class="page-header container px-25 px-md-30" style="padding-bottom: 0">
             <div class="row">
-                <div class="col-12 col-md-7 order-0" style="margin-top: 30px">
+                <div class="col-12 col-md-7 order-0 p-0 px-md-15" style="margin-top: 30px">
                     <h1 class="page-title d-flex">
                         Finanças
                         <span class="badge badge-info new-badge d-inline-block d-md-none ml-10">NOVO!</span>
                     </h1>
                 </div>
-                <div class="col-12 col-md-5 d-flex d-fall align-items-end justify-content-end order-2 order-md-1 mt-20">
+                <div class="col-12 col-md-5 d-flex d-fall align-items-end justify-content-end order-2 order-md-1 mt-20 p-0">
                     <div class="col-12 col-md-11 float-right px-0">
                         <div class="input-holder">
                             <select id="transfers_company_select" data-width="100%"> </select>
@@ -35,13 +35,13 @@
 {{--                        </div>--}}
 {{--                    </div>--}}
                 </div>
-                <div class="col-sm-12 order-1 order-md-2">
+                <div class="col-sm-12 order-1 order-md-2 p-0 px-md-15">
                     <p class="mt-10 mb-0">
                         <span class="badge badge-info new-badge d-none d-md-inline-block">NOVO!</span>
                         <span class="new-title">Uma nova central para você controlar seus extratos em diferentes adquirentes.</span>
                     </p>
                 </div>
-                <div class="col-12 col-md-6 order-3" id="container-available">
+                <div class="col-12 col-md-6 order-3 p-0 px-md-15" id="container-available">
                     <p class="m-0 color-default">Disponível para saque</p>
                     <div id="val-skeleton"><div class="skeleton skeleton-text mb-0 my-5" style="width:207px !important;height: 40px !important;border-radius:20px !important"></div></div>
                     <div id="container_val" style="display:none;">

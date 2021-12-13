@@ -498,6 +498,10 @@ hr{
     border-radius: 0 8px 8px 0;
 }
 [aria-expanded=true]:not(.btn) {
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+
     transform: rotate(180deg);
 }
 

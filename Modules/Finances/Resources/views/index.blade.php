@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/bootstrap-select-cloudfox-template.css?v=02')}}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/bootstrap-select-cloudfox-template.css?v='.uniqid())}}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v='.uniqid()) }}">
