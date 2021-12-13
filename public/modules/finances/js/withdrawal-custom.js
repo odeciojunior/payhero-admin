@@ -162,8 +162,8 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                             </div>
                         </div>
                         <div class="row" style="background-color:#F41C1C1A;">
-                            <div class='col-md-8 mt-10'>
-                                <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
+                            <div class='col-md-8 yt-10>
+                                <p style="color: #5A5A5A;" class="m-0" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
                                 <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
@@ -227,8 +227,8 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                             </div>
                         </div>
                         <div class="row" style="background-color:#F41C1C1A;">
-                            <div class='col-md-8 mt-10' >
-                                <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
+                            <div class='col-md-8 my-10'>
+                                <p style="color: #5A5A5A;" class="m-0" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
                                 <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
@@ -315,8 +315,8 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                             </div>
                         </div>
                         <div class="row" style="background-color:#F41C1C1A;">
-                            <div class='col-md-8 mt-10' >
-                                <p style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
+                            <div class='col-md-8 my-10'>
+                                <p style="color: #5A5A5A;" class="m-0" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                             </div>
                             <div class="col-md-4 mt-10 text-right">
                                 <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
