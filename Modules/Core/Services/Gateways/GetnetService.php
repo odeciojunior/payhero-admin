@@ -17,7 +17,6 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\CompanyService;
@@ -307,9 +306,9 @@ class GetnetService implements Statement
                         $saleIdEncoded = Hashids::connection('sale_id')->encode($sale->id);
 
                         if (foxutils()->isProduction()) {
-                            $subsellerId = $transaction->company->subseller_getnet_id;
+                            $subsellerId = $transaction->company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID);
                         } else {
-                            $subsellerId = $transaction->company->subseller_getnet_homolog_id;
+                            $subsellerId = $transaction->company->getGatewaySubsellerId(Gateway::GETNET_SANDBOX_ID);
                         }
 
                         $getnetService->setStatementSubSellerId($subsellerId)
