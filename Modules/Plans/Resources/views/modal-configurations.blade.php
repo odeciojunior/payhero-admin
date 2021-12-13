@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-6 div-cost_currency">
                                 <label for="cost_currency_type" class="d-flex align-items-center">
                                     <div class="mr-10">Moeda padrão</div>
                                     <i calss="pointer" data-toggle="tooltip" data-placement="top" title="Definir uma moeda padrão para a configuração dos seus planos. Configuração utilizada para emissão de notas fiscais." class="icon wb-info-circle" aria-hidden="true"></i>
@@ -45,7 +45,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-6 div-cost_shopify">
                                 <label for="update_cost_shopify" class="d-flex align-items-center">
                                     <div class="mr-10">Atualizar de acordo com Shopify</div>
                                     <i calss="pointer" data-toggle="tooltip" data-placement="top" title="Se ativado, os custos serão atualizados sempre que houver alteração no shopify." class="icon wb-info-circle" aria-hidden="true"></i>

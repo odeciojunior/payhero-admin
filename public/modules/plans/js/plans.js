@@ -1665,7 +1665,7 @@ $(function () {
                             let select_all = $('#select-all').attr('data-selected');
 
                             append += '<div class="col-sm-6">';
-                                append += '<div data-toggle="tooltip" data-placement="top" title="' + plan.name + '" data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center ' + (select_all == 'true' ? 'selected' : '') + '">';
+                                append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center ' + (select_all == 'true' ? 'selected' : '') + '">';
                                     append += '<div class="d-flex align-items-center">';
                                         append += '<div class="background-photo">';
                                             append += '<img class="product-photo" src="' + plan.photo + '">';
@@ -1784,8 +1784,6 @@ $(function () {
                         var append = '<div class="row">';
                         if (response.data.length > 0) {
                             response.data.forEach(function(plan) {
-                                console.log(plan);
-
                                 var index_plan = selected_plans.map(function(e) { return e.id; }).indexOf(plan.id);
                                 append += '<div class="col-sm-6">';
                                     append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center">';
@@ -1871,15 +1869,16 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                if (response.data.shopify_id == null) {
+                    $('.div-cost_currency').removeClass('col-sm-6').addClass('col-sm-12');
+                    $('.div-cost_currency').find('.sirius-select-container').css('width', '100%');
+                    $('.div-cost_shopify').remove();
+                }
+
                 $('[data-toggle="tooltip"]').tooltip({
                     container: '.modal',
                 });
 
-                if (response.data.shopify_id == null) {
-                    $('#tab_update_cost_block').prop('disabled', true);
-                } else {
-                    $('#tab_update_cost_block').prop('disabled', false);
-                }
                 const indexCurrency = (response.data.cost_currency_type == 'BRL') ? 0 : 1;
 
                 $('#cost_currency_type').prop('selectedIndex', indexCurrency);
