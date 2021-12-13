@@ -24,8 +24,10 @@ class PlanUpdateInformationsRequest extends FormRequest
     {
         return [
             'name.required'            => 'O campo Nome é obrigatório',
+            'name.max'                 => 'O campo Nome permite apenas 200 caracteres',
             'price.required'           => 'O campo Preço é obrigatório',
             'description.required'     => 'O campo Descrição é obrigatório',
+            'description.max'          => 'O campo Descrição permite apenas 200 caracteres',
         ];
     }
 
