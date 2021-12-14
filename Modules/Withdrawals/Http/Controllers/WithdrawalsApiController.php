@@ -288,9 +288,9 @@ class WithdrawalsApiController
                         'message' => 'success',
                         'data' => [
                             'user_documents_status' => 'pending',
+                            'route' => env('ACCOUNT_FRONT_URL') . "/personal-info"
                         ],
-                    ],
-                    200
+                    ]
                 );
             }
 
@@ -300,9 +300,9 @@ class WithdrawalsApiController
                         'message' => 'success',
                         'data' => [
                             'email_verified' => 'false',
+                            'route' => env('ACCOUNT_FRONT_URL') . "/personal-info"
                         ],
-                    ],
-                    200
+                    ]
                 );
             }
 
@@ -312,9 +312,9 @@ class WithdrawalsApiController
                         'message' => 'success',
                         'data' => [
                             'cellphone_verified' => 'false',
+                            'route' => env('ACCOUNT_FRONT_URL') . "/personal-info"
                         ],
                     ],
-                    200
                 );
             }
 
@@ -324,9 +324,9 @@ class WithdrawalsApiController
                         'message' => 'success',
                         'data' => [
                             'documents_status' => 'pending',
+                            'route' => env('ACCOUNT_FRONT_URL') . "/companies/company-detail/" . \hashids()->encode($company->id)
                         ],
-                    ],
-                    200
+                    ]
                 );
             }
 
