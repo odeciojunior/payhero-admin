@@ -170,7 +170,11 @@ class Kernel extends ConsoleKernel
 
         /** Sincronizar códigos de rastreio com WooCommerce */
         $schedule->command('woocommerce:check-tracking-codes')->sundays()->at('07:00');
+    
+        /** Transferir grana dos vendedores no asaas para conta Cloudfox */
+        $schedule->command('asaas:transfers-chargebacks')->dailyAt('00:20');
     }
+
 
     protected function commands()
     {
