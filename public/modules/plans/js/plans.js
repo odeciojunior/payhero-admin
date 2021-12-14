@@ -346,8 +346,6 @@ $(function () {
                     append += '<div class="row">';
                         append += '<div class="col-sm-12">';
                             selected_products.forEach(function(product) {
-                                console.log(product);
-
                                 var index_product = selected_products.map(function(p) { return p.id; }).indexOf(product.id);
 
                                 $.ajax({
@@ -447,8 +445,6 @@ $(function () {
                     });
                 });
             });
-
-            console.log(find_stage);
         });
     }
 
@@ -866,17 +862,12 @@ $(function () {
             });
         } else {
             $('.box-products .form-control').each(function() {
-                var product_ID = $(this).parent().parent().data('code');
+                var product_ID = $(this).parents('.product').attr('data-code');
 
                 var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
 
                 var name_input = $(this).attr('name');
-                if (name_input == 'amount') {
-                    var productID_ = $(this).parent().parent().parent().parent().attr('data-code');
-                    var product_selected_index_ = selected_products.map(function(p) { return p.id; }).indexOf(productID_);
-
-                    selected_products[product_selected_index_].amount = $(this).val();
-                }
+                if (name_input == 'amount') selected_products[product_selected_index].amount = $(this).val();
                 if (name_input == 'value') selected_products[product_selected_index].value = $(this).val();
                 if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
             });

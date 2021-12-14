@@ -560,7 +560,7 @@ class PlansApiController extends Controller
             }
 
 
-            if ($data['is_config']) {
+            if (!empty($data['is_config'])) {
                 $plans = $plans->orderBy('name')->take(10)->get();
             } else {
                 $plans = $plans->orderBy('name')->paginate(10);
