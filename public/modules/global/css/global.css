@@ -1665,7 +1665,7 @@ input[type="checkbox"], input[type="radio"] {
     font: 16px 'Muli' !important;
 }
 
-.input-group .form-control {
+.top-holder .input-group .form-control {
     height: 40px !important;
     border-radius: 4px 0 0 4px;
 }
