@@ -67,7 +67,7 @@
                     </div>
                 </div>
             </div>
-            <div id='modal-withdrawal-custom-footer' class="modal-footer mt-20">
+            <div id='modal-withdrawal-custom-footer' class="modal-footer mt-20 justify-content-center">
                 <!-- js .... -->
             </div>
         </div>

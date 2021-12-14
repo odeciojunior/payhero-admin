@@ -84,20 +84,20 @@ window.defaultWithdrawal = function(gatewayId) {
                         $('#modal_body').html(confirmationData);
 
                         $("#modal-withdraw-footer").html(`
-                            <div class="col-md-12 text-center">
+                            <div class="row justify-content-around w-p100">
                                 <button
                                     id="bt-cancel-withdrawal"
                                     class="btn col-5 s-btn-border"
                                     data-dismiss="modal"
                                     aria-label="Close"
-                                    style="font-size:20px; width:200px; border-radius: 12px; color:#818181;">
+                                    style="font-size:20px; border-radius: 12px; color:#818181;">
                                     Cancelar
                                 </button>
 
                                 <button
                                     id="bt-confirm-withdrawal"
-                                    class="btn btn-success col-5 btn-confirmation s-btn-border"
-                                    style="background-color: #41DC8F;font-size:20px; width:200px;">
+                                    class="btn btn-success col-6 btn-confirmation s-btn-border m-0"
+                                    style="background-color: #41DC8F;font-size:20px;">
                                     <strong>Confirmar</strong>
                                 </button>
                             </div>
@@ -372,7 +372,7 @@ window.customWithdrawal = function(gatewayId) {
 
                 $("#modal-withdrawal-custom-footer").html(`
                     <hr>
-                    <div class="col-md-12 text-center">
+                    <div class="row w-p100 justify-content-around">
                         <button class="btn col-5 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:180px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
                             Ok, entendi!
                         </button>
@@ -433,8 +433,8 @@ window.customWithdrawal = function(gatewayId) {
 
                 $("#modal-withdrawal-custom-footer").html(`
                     <hr>
-                    <div class="col-md-12 text-center">
-                        <button class="btn col-5 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:200px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
+                    <div class="row justify-content-around">
+                        <button class="btn col-5 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
                             Ok, entendi!
                         </button>
                     </div>
@@ -528,12 +528,12 @@ window.customWithdrawal = function(gatewayId) {
             }
 
             $("#modal-withdrawal-custom-footer").html(`
-                <div class="col-md-12 text-center">
-                    <button id="bt-cancel-withdrawal" class="btn col-5 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:200px; border-radius: 12px; color:#818181;">
+                <div class="row justify-content-around w-p100">
+                    <button id="bt-cancel-withdrawal" class="btn col-5 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; border-radius: 12px; color:#818181;">
                         Cancelar
                     </button>
 
-                    <button id="bt-confirm-withdrawal-modal-custom" class="btn btn-success col-5 btn-confirmation s-btn-border" style="background-color: #41DC8F;font-size:20px; width:200px;">
+                    <button id="bt-confirm-withdrawal-modal-custom" class="btn btn-success col-6 btn-confirmation s-btn-border m-0" style="background-color: #41DC8F; font-size:20px;">
                         <strong>Confirmar</strong>
                     </button>
                 </div>
@@ -616,13 +616,12 @@ window.customWithdrawal = function(gatewayId) {
 
         return `
             <div class="">
-                <div class="row justify-content-center">
-
-                    <div class="btn btn-primary mr-4 s-btn s-btn-border" id="lower-value" data-value="${dataWithdrawal.lower_value}">
+                <div class="row justify-content-around w-p100 m-0">
+                    <div class="col-12 mb-5 mb-md-0 col-md-5 btn btn-primary pr-4 s-btn s-btn-border" id="lower-value" data-value="${dataWithdrawal.lower_value}">
                         ${lowerValue}
                     </div>
 
-                        <div class="btn btn-primary s-btn s-btn-border green" id="bigger-value" data-value="${dataWithdrawal.bigger_value}">
+                    <div class="col-12 col-md-5 btn btn-primary s-btn s-btn-border green" id="bigger-value" data-value="${dataWithdrawal.bigger_value}">
                         ${biggerValue}
                     </div>
                 </div>
