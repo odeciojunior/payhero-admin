@@ -72,6 +72,9 @@ class CheckoutConfig extends Model
     use LogsActivity;
     use SoftDeletes;
 
+    public const CHECKOUT_TYPE_THREE_STEPS = 1;
+    public const CHECKOUT_TYPE_ONE_STEP = 2;
+
     public const CHECKOUT_BANNER_TYPE_FULL = 1;
     public const CHECKOUT_BANNER_TYPE_CENTER= 2;
 
