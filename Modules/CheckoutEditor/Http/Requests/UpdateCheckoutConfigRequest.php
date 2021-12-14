@@ -11,7 +11,7 @@ class UpdateCheckoutConfigRequest extends FormRequest
         return [
             'project_id' => 'required|integer',
             'checkout_type_enum' => 'required|integer',
-            'checkout_logo' => 'nullable|string',
+            'checkout_logo' => 'nullable|file',
             'checkout_banner_enabled' => 'required|boolean',
             'checkout_banner_type' => 'required_if:checkout_banner_enabled|integer',
             'checkout_banner' => 'required_if:checkout_banner_enabled|string',
