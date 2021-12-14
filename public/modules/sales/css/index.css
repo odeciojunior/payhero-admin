@@ -36,8 +36,9 @@
 /* and */
 
 /* ========= CONFIGURATIONS MULTIPLE SELECT 2 BOX ========= */
-.select2-container--default.select2-container--focus .select2-selection--multiple{
-    border: 1px solid #CECECE !important;
+.select2-dropdown--below{
+    border: 1px solid #b3d4fc !important;;
+    border-top: none !important;     
 }
 
 .select2-container--default .select2-selection--multiple{
@@ -64,6 +65,21 @@ span.select2-selection.select2-selection--multiple{
 }
 /* and */
 
+.select2-selection.select2-selection--multiple{
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+.select2-container{
+    border: 1px solid #e0e7ee;
+    border-radius: 8px;
+    /* focus #88BFFF */
+}
+
+.select2-container--open{
+    border-color: #88BFFF;
+}
+
 ::-webkit-scrollbar {
     width: 12px;
 }
@@ -89,6 +105,13 @@ li.select2-selection__choice{
     padding-top: 5px !important;
 }
 /* END CONFIGURATIONS MULTIPLE SELECT 2 */
+
+.default-border{
+    border : 1px solid #e0e7ee !important;
+}
+.default-border :focus{
+    border : 1px solid #88BFFF !important;
+}
 
 .table-warning-roll {
     color: #EB6707 !important;
