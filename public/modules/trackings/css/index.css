@@ -32,10 +32,33 @@ span.select2-selection.select2-selection--multiple{
 }
   
 ::-webkit-scrollbar-thumb {
-border: 4px solid rgba(0, 0, 0, 0);
-background-clip: padding-box;
-border-radius: 9999px;
-background-color: #AAAAAA;
+    border: 4px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    border-radius: 9999px;
+    background-color: #AAAAAA;
+}
+
+.select2-selection.select2-selection--multiple{
+    border: none !important;
+    border-radius: 8px !important;
+}
+
+.select2-container{
+    border: 1px solid #e0e7ee;
+    border-radius: 8px;
+    /* focus #88BFFF */
+}
+
+.select2-container--open{
+    border-color: #88BFFF;
+}
+
+.default-border{
+    outline: none;
+    border : 1px solid #e0e7ee ;
+}
+.default-border :focus{
+    border : 1px solid #88BFFF ;
 }
 
 li.select2-selection__choice{

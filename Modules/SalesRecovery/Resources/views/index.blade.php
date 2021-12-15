@@ -38,7 +38,7 @@
 
                         <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                             <label for="type_recovery">Tipo de Recuperação</label>
-                            <select name='select_type_recovery' id="recovery_type" class="form-control select-pad">
+                            <select name='select_type_recovery' id="recovery_type" class="form-control select-pad default-border">
                                 <option value="1" selected>Carrinho Abandonado</option>
                                 <option value="5">Boleto Vencido</option>
                                 <option value="4">PIX Vencido</option>
@@ -64,7 +64,7 @@
                             <div class="form-group form-icons">
                                 <label for='date-range-sales-recovery'>Filtrar Data</label>
                                 <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
-                                <input name='date-range-sales-recovery' id='date-range-sales-recovery' class='select-pad pr-30' placeholder='Clique para editar...' readonly>
+                                <input name='date-range-sales-recovery' id='date-range-sales-recovery' class='select-pad pr-30 default-border' placeholder='Clique para editar...' readonly>
                             </div>
                         </div>
 
