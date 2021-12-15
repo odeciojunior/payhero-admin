@@ -504,6 +504,12 @@ hr{
 
     transform: rotate(180deg);
 }
+.slider::before {
+    left: 2px;
+}
+input:checked + .slider::before {
+    left: -3px;
+}
 
 @media (max-width: 991px) {
     .new-title {

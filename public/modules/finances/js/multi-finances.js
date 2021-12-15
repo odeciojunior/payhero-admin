@@ -5,7 +5,7 @@ $(document).ready(function(){
         window.location.href ='/finances/'+id;
     });
 
-    let statusWithdrawals = {
+    const statusWithdrawals = {
         1: 'warning',
         2: 'primary',
         3: 'success',
@@ -16,6 +16,9 @@ $(document).ready(function(){
         8: "primary",
         9: "partially-liquidating",
     };
+
+    const GETNET = 'w7YL9jZD6gp4qmv';
+    const GERENCIA_NET = 'oXlqv13043xbj4y';
 
     function getCompanies() {
         loadingOnScreen();
@@ -268,7 +271,7 @@ $(document).ready(function(){
                                 }, 400)
                             });
 
-                            if(data.id == 'w7YL9jZD6gp4qmv' || data.id == 'oXlqv13043xbj4y') {
+                            if(data.id == GETNET || data.id == GERENCIA_NET) {
                                 $(document).off("click","#new-withdrawal-" + data.name);
                                 $(document).on("click","#new-withdrawal-" + data.name,function(){
                                     let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
