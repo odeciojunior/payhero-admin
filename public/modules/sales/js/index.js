@@ -16,9 +16,6 @@ $(document).ready(function () {
         }
     });
 
-    $(".default-border").focus( function () {
-        alert("clicou");
-    })
     //checkbox
     $(".check").on("click", function () {
         if ($(this).is(":checked")) {
