@@ -111,7 +111,7 @@ class CheckoutGateway extends GatewayAbstract
         return json_decode($this->requestHttp($options));
     }
 
-    public function transferSubSellerToSeller($companyId,int $amount,$transferId){
+    public function transferSubSellerToSeller($companyId,int $amount,$transferId=null){
         $options = new GatewayCurlOptions([
             'endpoint'=>'transferSubSellerToSeller',  
             'variables'=>[$companyId],
