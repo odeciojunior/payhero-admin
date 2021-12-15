@@ -1,8 +1,4 @@
 /* ========= CONFIGURATIONS MULTIPLE SELECT 2 BOX ========= */
-.select2-container--default.select2-container--focus .select2-selection--multiple{
-    border: 1px solid #CECECE !important;
-}
-
 .select2-container--default .select2-selection--multiple{
     border: 1px solid #CECECE !important;
     border-radius: 8px;
