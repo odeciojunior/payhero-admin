@@ -56,6 +56,9 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $post_purchase_message_content
  * @property boolean $whatsapp_enabled
  * @property string $support_phone
+ * @property string $support_phone_verified
+ * @property string $support_email
+ * @property string $support_email_verified
  * @property integer $theme_enum
  * @property string $color_primary
  * @property string $color_secondary
@@ -142,6 +145,9 @@ class CheckoutConfig extends Model
         'post_purchase_message_content',
         'whatsapp_enabled',
         'support_phone',
+        'support_phone_verified',
+        'support_email',
+        'support_email_verified',
         'color_primary',
         'color_secondary',
         'color_buy_button',

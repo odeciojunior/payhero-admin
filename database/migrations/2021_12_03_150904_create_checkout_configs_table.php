@@ -61,6 +61,9 @@ class CreateCheckoutConfigsTable extends Migration
             $table->text('post_purchase_message_content')->nullable();
             $table->boolean('whatsapp_enabled')->default(false);
             $table->string('support_phone')->nullable();
+            $table->boolean('support_phone_verified')->default(false);
+            $table->string('support_email')->nullable();
+            $table->boolean('support_email_verified')->default(false);
             $table->integer('theme_enum')->default(1);
             $table->string('color_primary')->default('#5577a7');
             $table->string('color_secondary')->default('#313c52');

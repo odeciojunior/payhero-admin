@@ -14,7 +14,7 @@ class CreateCheckoutConfigEachProject extends Migration
      */
     public function up()
     {
-        DB::statement("INSERT INTO checkout_configs (project_id, checkout_type_enum, checkout_logo, countdown_enabled, countdown_time, countdown_description, countdown_finish_message, notifications_enabled, notifications_interval, notification_buying_enabled, notification_buying_minimum, notification_bought_30_minutes_enabled, notification_bought_30_minutes_minimum, notification_bought_last_hour_enabled, notification_bought_last_hour_minimum, notification_just_bought_enabled, notification_just_bought_minimum, social_proof_enabled, social_proof_message, social_proof_minimum, invoice_description, company_id, credit_card_enabled, bank_slip_enabled, pix_enabled, quantity_selector_enabled, email_required, installments_limit, interest_free_installments, preselected_installment, bank_slip_due_days, automatic_discount_credit_card, automatic_discount_bank_slip, automatic_discount_pix, post_purchase_message_enabled, post_purchase_message_title, post_purchase_message_content, whatsapp_enabled, support_phone) (
+        DB::statement("INSERT INTO checkout_configs (project_id, checkout_type_enum, checkout_logo, countdown_enabled, countdown_time, countdown_description, countdown_finish_message, notifications_enabled, notifications_interval, notification_buying_enabled, notification_buying_minimum, notification_bought_30_minutes_enabled, notification_bought_30_minutes_minimum, notification_bought_last_hour_enabled, notification_bought_last_hour_minimum, notification_just_bought_enabled, notification_just_bought_minimum, social_proof_enabled, social_proof_message, social_proof_minimum, invoice_description, company_id, credit_card_enabled, bank_slip_enabled, pix_enabled, quantity_selector_enabled, email_required, installments_limit, interest_free_installments, preselected_installment, bank_slip_due_days, automatic_discount_credit_card, automatic_discount_bank_slip, automatic_discount_pix, post_purchase_message_enabled, post_purchase_message_title, post_purchase_message_content, whatsapp_enabled, support_phone, support_phone_verified, support_email, support_email_verified, created_at, updated_at) (
                              SELECT p.id                                                                                                 AS project_id,
                                     p.checkout_type                                                                                      AS checkout_type_enum,
                                     p.logo                                                                                               AS checkout_logo,
@@ -35,7 +35,7 @@ class CreateCheckoutConfigEachProject extends Migration
                                     ifnull(p.finalizing_purchase_configs->>'$.toogle',0) = 1                                             AS social_proof_enabled,
                                     p.finalizing_purchase_configs->>'$.text'                                                             AS social_proof_message,
                                     ifnull(p.finalizing_purchase_configs->>'$.min_value',1)                                              AS social_proof_minimum,
-                                    invoice_description,
+                                    p.invoice_description,
                                     up.company_id,
                                     p.credit_card                                                                                        AS credit_card_enabled,
                                     p.boleto                                                                                             AS bank_slip_enabled,
@@ -53,7 +53,12 @@ class CreateCheckoutConfigEachProject extends Migration
                                     p.custom_message_configs->>'$.title'                                                                 AS post_purchase_message_title,
                                     p.custom_message_configs->>'$.message'                                                               AS post_purchase_message_content,
                                     p.whatsapp_button                                                                                    AS whatsapp_enabled,
-                                    support_phone
+                                    p.support_phone,
+                                    p.support_phone_verified,
+                                    p.contact                                                                                            AS support_email,
+                                    p.contact_verified                                                                                   AS support_email_verified,
+                                    now()                                                                                                AS created_at,
+                                    now()                                                                                                AS updated_at
                              FROM projects AS p
                              JOIN users_projects AS up
                              ON up.project_id = p.id)");

@@ -3,12 +3,20 @@
 namespace Modules\CheckoutEditor\Http\Controllers;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cookie;
 use Modules\CheckoutEditor\Transformers\CheckoutConfigResource;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\AmazonFileService;
 use Intervention\Image\Facades\Image;
+use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\SmsService;
+use Modules\Products\Http\Requests\SendSupportEmailVerificationRequest;
+use Modules\Products\Http\Requests\SendSupportPhoneVerificationRequest;
 use Modules\Products\Http\Requests\UpdateCheckoutConfigRequest;
+use Modules\Products\Http\Requests\VerifySupportEmailRequest;
+use Modules\Products\Http\Requests\VerifySupportPhoneRequest;
+use Spatie\Activitylog\Models\Activity;
 
 class CheckoutEditorApiController extends Controller
 {
@@ -22,6 +30,7 @@ class CheckoutEditorApiController extends Controller
             return new CheckoutConfigResource($config);
 
         } catch (\Exception $e) {
+            report($e);
             return foxutils()->isProduction()
                 ? response()->json(['message' => 'Erro ao obter as configurações do checkout'])
                 : response()->json(['message' => $e->getMessage()]);
@@ -44,9 +53,9 @@ class CheckoutEditorApiController extends Controller
                 $amazonFileService->deleteFile($config->checkout_logo);
                 $img = Image::make($logo->getPathname());
 
-                $img->resize(null,300, function ($constraint) {
-                        $constraint->aspectRatio();
-                    });
+                $img->resize(null, 300, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
 
                 $img->save($logo->getPathname());
 
@@ -56,17 +65,165 @@ class CheckoutEditorApiController extends Controller
 
             $data['company_id'] = hashids_decode($data['company_id']);
 
-            if($data['company_id'] !== $config->company_id) {
+            if ($data['company_id'] !== $config->company_id) {
                 $company = Company::find($data['company_id']);
-                $data['pix_enabled'] = $company->has_pix_key &&  $company->pix_key_situation === 'VERIFIED' && $data['pix_enabled'];
+                $data['pix_enabled'] = $company->has_pix_key && $company->pix_key_situation === 'VERIFIED' && $data['pix_enabled'];
             }
 
             $config::update($data);
 
             return new CheckoutConfigResource($config);
         } catch (\Exception $e) {
+            report($e);
             return foxutils()->isProduction()
                 ? response()->json(['message' => 'Erro ao atualizar as configurações do checkout'])
+                : response()->json(['message' => $e->getMessage()]);
+        }
+    }
+
+    public function sendSupportPhoneVerification(SendSupportPhoneVerificationRequest $request)
+    {
+        try {
+            $data = $request->all();
+
+            $configId = hashids_decode($data['id']);
+            $supportPhone = foxutils()->getTelephone($data['support_phone']);
+
+            $config = CheckoutConfig::find($configId);
+
+            activity()->on($config)->tap(function (Activity $activity) use ($config) {
+                $activity->log_name = 'visualization';
+                $activity->subject_id = $config->id;
+            })->log('Enviou o código de verificação do telefone de suporte');
+
+            $config->support_phone = $supportPhone;
+            $config->save();
+
+            $verificationCode = random_int(100000, 999999);
+            $message = "Código de verificação Sirius: " . $verificationCode;
+            $smsService = new SmsService();
+            $smsService->sendSms($supportPhone, $message, '', 'aws-sns');
+
+            $cookieName = "supportphoneverificationcode_" . hashids_encode(auth()->id()) . "_" . hashids_encode($config->project_id);
+
+            return response()->json(["message" => "Mensagem enviada com sucesso!"])
+                ->withCookie($cookieName, $verificationCode, 15);
+
+        } catch (\Exception $e) {
+            report($e);
+            return foxutils()->isProduction()
+                ? response()->json(['message' => 'Ocorreu um erro ao enviar sms para o telefone informado!'])
+                : response()->json(['message' => $e->getMessage()]);
+        }
+    }
+
+    public function verifySupportPhone(VerifySupportPhoneRequest $request)
+    {
+        try {
+            $data = $request->all();
+
+            $configId = hashids_decode($data['id']);
+            $verificationCode = foxutils()->getTelephone($data['verification_code']);
+
+            $config = CheckoutConfig::find($configId);
+
+            activity()->on($config)->tap(function (Activity $activity) use ($config) {
+                $activity->log_name = 'updated';
+                $activity->subject_id = $config->id;
+            })->log('Verificação do código do telefone de suporte');
+
+            $cookieName = "supportphoneverificationcode_" . hashids_encode(auth()->id()) . "_" . hashids_encode($config->project_id);
+            $cookie = Cookie::get($cookieName);
+
+            if ($verificationCode !== $cookie) {
+                return response()->json(['message' => 'Código de verificação inválido!'], 400);
+            }
+
+            $config->update(["support_phone_verified" => true]);
+
+            return response()->json(["message" => "Telefone verificado com sucesso!"])
+                ->withCookie(Cookie::forget($cookieName));
+        } catch (\Exception $e) {
+            report($e);
+            return foxutils()->isProduction()
+                ? response()->json(['message' => 'Ocorreu um erro ao verificar código!'])
+                : response()->json(['message' => $e->getMessage()]);
+        }
+    }
+
+    public function sendSupportEmailVerification(SendSupportEmailVerificationRequest $request)
+    {
+        try {
+            $data = $request->all();
+
+            $configId = hashids_decode($data['id']);
+            $supportEmail = foxutils()->getTelephone($data['support_email']);
+
+            $config = CheckoutConfig::find($configId);
+
+            activity()->on($config)->tap(function (Activity $activity) use ($config) {
+                $activity->log_name = 'visualization';
+                $activity->subject_id = $config->id;
+            })->log('Enviou o código de verificação do e-mail de suporte');
+
+            $config->support_email = $supportEmail;
+            $config->save();
+
+            $verificationCode = random_int(100000, 999999);
+
+            $sendgridService = app(SendgridService::class);
+            $sendgridService->sendEmail(
+                'help@cloudfox.net',
+                'cloudfox',
+                $supportEmail,
+                auth()->user()->name,
+                "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
+                ['verify_code' => $verificationCode]
+            );
+
+            $cookieName = "supportemailverificationcode_" . hashids_encode(auth()->id()) . "_" . hashids_encode($config->project_id);
+
+            return response()->json(["message" => "E-mail enviado com sucesso!"])
+                ->withCookie($cookieName, $verificationCode, 15);
+
+        } catch (\Exception $e) {
+            report($e);
+            return foxutils()->isProduction()
+                ? response()->json(['message' => 'Erro ao enviar o e-mail com o código de verificação!'])
+                : response()->json(['message' => $e->getMessage()]);
+        }
+    }
+
+    public function verifySupportEmail(VerifySupportEmailRequest $request)
+    {
+        try {
+            $data = $request->all();
+
+            $configId = hashids_decode($data['id']);
+            $verificationCode = foxutils()->getTelephone($data['verification_code']);
+
+            $config = CheckoutConfig::find($configId);
+
+            activity()->on($config)->tap(function (Activity $activity) use ($config) {
+                $activity->log_name = 'updated';
+                $activity->subject_id = $config->id;
+            })->log('Verificação do código do e-mail de suporte');
+
+            $cookieName = "supportemailverificationcode_" . hashids_encode(auth()->id()) . "_" . hashids_encode($config->project_id);
+            $cookie = Cookie::get($cookieName);
+
+            if ($verificationCode !== $cookie) {
+                return response()->json(['message' => 'Código de verificação inválido!'], 400);
+            }
+
+            $config->update(["support_email_verified" => true]);
+
+            return response()->json(["message" => "E-mail verificado com sucesso!"])
+                ->withCookie(Cookie::forget($cookieName));
+        } catch (\Exception $e) {
+            report($e);
+            return foxutils()->isProduction()
+                ? response()->json(['message' => 'Ocorreu um erro ao verificar código!'])
                 : response()->json(['message' => $e->getMessage()]);
         }
     }

@@ -9,7 +9,7 @@ class UpdateCheckoutConfigRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => 'required|integer',
+            'project_id' => 'required|string',
             'checkout_type_enum' => 'required|integer',
             'checkout_logo' => 'nullable|file',
             'checkout_banner_enabled' => 'required|boolean',
@@ -35,7 +35,7 @@ class UpdateCheckoutConfigRequest extends FormRequest
             'social_proof_message' => 'required_if:social_proof_enabled|string',
             'social_proof_minimum' => 'required_if:social_proof_enabled|integer',
             'invoice_description' => 'nullable|string',
-            'company_id' => 'required|integer',
+            'company_id' => 'required|string',
             'cpf_enabled' => 'required|boolean',
             'cnpj_enabled' => 'required|boolean',
             'credit_card_enabled' => 'required|boolean',
