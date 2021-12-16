@@ -110,11 +110,11 @@ li.select2-selection__choice{
 /* END CONFIGURATIONS MULTIPLE SELECT 2 */
 
 .default-border{
-    border: 1px solid #e0e7ee !important;
+    border: 1px solid #e0e7ee;
 }
-.default-border :focus{
+/* .default-border :focus{
     border: 1px solid #88BFFF !important;
-}
+} */
 
 .table-warning-roll {
     color: #EB6707 !important;

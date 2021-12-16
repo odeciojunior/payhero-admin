@@ -11,7 +11,7 @@
         <style>
             .select2-selection--single {
                 border: 1px solid #dddddd !important;
-                border-radius: .215rem !important;
+                border-radius: 8px !important;
                 height: 43px !important;
             }
             .select2-selection__rendered {
@@ -71,58 +71,70 @@
                 <div class="fixhalf"></div>
                 <form id='filter_form'>
                     <div id="" class="card shadow p-20">
-                        <div class="row align-items-baseline">
-                            <div class="col-sm-6 col-md-2">
+                        <div class="row">
+                            
+                            <div class="col-sm-6 col-md-3">
                                 <label for="projeto">Projeto</label>
-                                <select name='select_project' id="projeto" class="form-control select-pad">
+                                <select name='select_project' id="projeto" class="form-control input-pad">
                                     <option value="">Todos projetos</option>
                                 </select>
                             </div>
+
                             <div class="col-sm-6 col-md-3">
                                 <label for="plan">Plano</label>
-                                <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
+                                <select name='plan' id="plan" class="form-control input-pad" style='width:100%;' data-plugin="select2">
                                     <option value="">Todos planos</option>
                                 </select>
                             </div>
+
                             <div class="col-sm-6 col-md-3">
                                 <label for="forma">Forma de pagamento</label>
-                                <select name='select_payment_method' id="forma" class="form-control select-pad">
+                                <select name='select_payment_method' id="forma" class="form-control input-pad">
                                     <option value="">Boleto e cartão de crédito</option>
                                     <option value="1">Cartão de crédito</option>
                                     <option value="2">Boleto</option>
                                     <option value="4">PIX</option>
                                 </select>
                             </div>
-                            <div class="col-sm-6 col-md-2">
+
+                            <div class="col-sm-6 col-md-3">
                                 <label for="status">Status</label>
-                                <select name='sale_status' id="status" class="form-control select-pad">
+                                <select name='sale_status' id="status" class="form-control input-pad">
                                     <option value="">Todos status</option>
                                     <option value="1">Aprovado</option>
                                     <option value="24">Em disputa</option>
                                 </select>
                             </div>
-                            <div class="col-sm-6 col-md-2">
-                                <label for="comprador">Transação</label>
-                                <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
-                            </div>
                         </div>
+
                         <div class="collapse" id="bt_collapse">
                             <div class="row mt-15">
+                                <div class="col-sm-6 col-md-3">
+                                    <label for="comprador">Transação</label>
+                                    <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
+                                </div>
+
                                 <div class="col-sm-6 col-md-3">
                                     <label for="comprador">Nome do cliente</label>
                                     <input name='client' id="comprador" class="input-pad" placeholder="cliente">
                                 </div>
+
                                 <div class="col-sm-6 col-md-3">
                                     <label for="customer_document">CPF do cliente</label>
                                     <input name='customer_document' id="customer_document" class="input-pad" placeholder="CPF" data-mask="000.000.000-00">
                                 </div>
+
                                 <div class="col-sm-6 col-md-3">
                                     <label for="date_type">Data</label>
-                                    <select name='date_type' id="date_type" class="form-control select-pad">
+                                    <select name='date_type' id="date_type" class="form-control input-pad">
                                         <option value="start_date">Data do pedido</option>
                                         <option value="end_date">Data do pagamento</option>
                                     </select>
                                 </div>
+
+                            </div>
+
+                            <div class="row">
                                 <div class="col-sm-6 col-md-3">
                                     <div class="form-group form-icons">
                                         <label for="date_range">&nbsp;</label>
