@@ -29,13 +29,18 @@ class ProductService
         $project = $projectModel->find($projectId);
 
         if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
-            return $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id)->where('project_id', $projectId)->take(12)->get();
+            return $productModel
+            ->with('productsPlans')
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->where('project_id', $projectId)
+            ->take(16)
+            ->get();
         } else {
             return $productModel
             ->with('productsPlans')
             ->where('user_id', auth()->user()->account_owner_id)
             ->where('shopify', 0)
-            ->take(12)
+            ->take(16)
             ->get();
         }
     }
@@ -52,14 +57,14 @@ class ProductService
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->where('project_id', $projectId)
                 ->where('name', 'like', '%'. $product .'%')
-                ->take(12)
+                ->take(16)
                 ->get();
             } else {
                 return $productModel
                 ->with('productsPlans')
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->where('project_id', $projectId)
-                ->take(12)
+                ->take(16)
                 ->get();
             }
         } else {
@@ -69,14 +74,14 @@ class ProductService
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->where('name', 'like', '%'. $product .'%')
                 ->where('shopify', 0)
-                ->take(12)
+                ->take(16)
                 ->get();
             } else {
                 return $productModel
                 ->with('productsPlans')
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->where('shopify', 0)
-                ->take(12)
+                ->take(16)
                 ->get();
             }
         }
