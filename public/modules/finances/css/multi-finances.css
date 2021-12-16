@@ -121,11 +121,13 @@ body {
     background: #FFFFFF;
     right: -35px !important;
     border: none;
+    opacity: unset;
 }
 .owl-carousel .owl-nav .owl-prev{
     left: -35px !important;
     border: none;
     background: #FFFFFF;
+    opacity: unset;
 }
 .owl-carousel .nav-btn{
     height: 47px;
@@ -138,8 +140,8 @@ body {
 .owl-carousel .owl-prev.disabled,
 .owl-carousel .owl-next.disabled{
     pointer-events: none;
-    opacity: 0.2;
-    background: #E3E3E3;
+    opacity: unset;
+    background: #FFF;
 }
 .owl-carousel .owl-prev.disabled::before,
 .owl-carousel .owl-next.disabled::before{

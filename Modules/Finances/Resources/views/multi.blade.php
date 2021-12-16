@@ -69,7 +69,7 @@
         </div>
         <div class="page-content container">
             <div class="row" id="container-gateways">
-                <div class="col-md-12 col-xl-8">
+                <div class="col-md-12 col-xl-9 pr-45">
                     <div class="row" id="gateway-skeleton">
                         <div class="col-12 d-md-none">
                             <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
@@ -231,33 +231,31 @@
                     </div>
                     <div id="container-all-gateways"></div>
                 </div>
-                <div class="col-md-12 col-xl-4">
-                    <div class="row" style="display: flex;justify-content: flex-end">
-                        <div class="col-md-12 col-xl-10 container-history" style="padding-top: 28px;">
-                            <div class="card card-skeleton mb-0" id="card-history">
-                                <div class="col-12 px-20 pt-25 mb-20">
-                                    <p class="m-0"><b>Histórico de saques</b></p>
-                                </div>
-                                <div class="list-linear-gradient-top" style="display: none"></div>
-                                <div id="container-withdraw" style="display:none;height: auto;max-height: 360px;"></div>
-                                <div class="list-linear-gradient-bottom"></div>
-                                    <div class="row justify-content-between skeleton-withdrawal p-20 mx-0" id="skeleton-withdrawal">
-                                        <div class="col-3 skeleton skeleton-gateway-logo" style="height: 30px"></div>
-                                        <div class="col-5 text-right skeleton skeleton-text" style="height: 30px"></div>
-                                        <div class="col-7 skeleton skeleton-text mb-0" style="height: 33px"></div>
-                                    </div>
-                                    <div class="row justify-content-between skeleton-withdrawal p-20 mx-0" id="skeleton-withdrawal2">
-                                        <div class="col-3 skeleton skeleton-gateway-logo" style="height: 30px"></div>
-                                        <div class="col-5 text-right skeleton skeleton-text" style="height: 30px"></div>
-                                        <div class="col-7 skeleton skeleton-text mb-0" style="height: 33px"></div>
-                                    </div>
-                                    <div class="row justify-content-between skeleton-withdrawal p-20 mx-0" id="skeleton-withdrawal3">
-                                        <div class="col-3 skeleton skeleton-gateway-logo" style="height: 30px"></div>
-                                        <div class="col-5 text-right skeleton skeleton-text" style="height: 30px"></div>
-                                        <div class="col-7 skeleton skeleton-text mb-0" style="height: 33px"></div>
-                                    </div>
-                                @include('finances::components.empty-history')
+                <div class="col-md-12 col-xl-3 p-0">
+                    <div class="container-history px-0" style="padding-top: 28px;">
+                        <div class="card card-skeleton mb-0" id="card-history">
+                            <div class="col-12 px-20 pt-25 mb-20">
+                                <p class="m-0"><b>Histórico de saques</b></p>
                             </div>
+                            <div class="list-linear-gradient-top" style="display: none"></div>
+                            <div id="container-withdraw" style="display:none;height: auto;max-height: 360px;"></div>
+                            <div class="list-linear-gradient-bottom"></div>
+                                <div class="row justify-content-between skeleton-withdrawal p-20 mx-0" id="skeleton-withdrawal">
+                                    <div class="col-3 skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                    <div class="col-5 text-right skeleton skeleton-text" style="height: 30px"></div>
+                                    <div class="col-7 skeleton skeleton-text mb-0" style="height: 33px"></div>
+                                </div>
+                                <div class="row justify-content-between skeleton-withdrawal p-20 mx-0" id="skeleton-withdrawal2">
+                                    <div class="col-3 skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                    <div class="col-5 text-right skeleton skeleton-text" style="height: 30px"></div>
+                                    <div class="col-7 skeleton skeleton-text mb-0" style="height: 33px"></div>
+                                </div>
+                                <div class="row justify-content-between skeleton-withdrawal p-20 mx-0" id="skeleton-withdrawal3">
+                                    <div class="col-3 skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                    <div class="col-5 text-right skeleton skeleton-text" style="height: 30px"></div>
+                                    <div class="col-7 skeleton skeleton-text mb-0" style="height: 33px"></div>
+                                </div>
+                            @include('finances::components.empty-history')
                         </div>
                     </div>
                 </div>
