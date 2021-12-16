@@ -173,6 +173,10 @@ class Kernel extends ConsoleKernel
     
         /** Transferir grana dos vendedores no asaas para conta Cloudfox */
         $schedule->command('asaas:transfers-chargebacks')->dailyAt('00:20');
+
+        /** transfere saldo excedente no asaas*/
+        $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('08:00');
+        
     }
 
 
