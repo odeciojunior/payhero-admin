@@ -566,6 +566,12 @@ $(function () {
 
                         $(modal).find('#name').val(response.data.name_short);
                         $(modal).find('#name').attr('data-short', response.data.name_short).attr('data', response.data.name);
+                        if (response.data.name_short_flag) {
+                            $(modal).find('#name').attr('data-toggle', 'tooltip').attr('title', response.data.name);
+                        } else {
+                            $(modal).find('#name').removeAttr('data-toggle').removeAttr('title');
+                            $(modal).find('#name').tooltip('dispose');
+                        }
 
                         $(modal).find('#price').val(response.data.price);
                         $(modal).find('#price').attr('data', response.data.price);
@@ -1175,6 +1181,9 @@ $(function () {
 
         if (!parent.find('.informations-data').hasClass('edit')) {
             setTimeout(function() {
+                $(parent).find('#name').tooltip('disable');
+                $('#btn-edit-products-plan').hide();
+
                 parent.find('.informations-data').addClass('edit');
                 parent.find('.informations-data').find('.form-control').attr('readonly', false);
                 parent.find('#price').val(function(index, value) {
@@ -1208,6 +1217,9 @@ $(function () {
     $("body").on('click', '#btn-cancel-update-informations-plan', function () {
         var parents = $(this).parents('.informations-edit');
         var curHeight = parents.find('.informations-data').height();
+
+        $('#btn-edit-products-plan').show();
+        $(parents).find('#name').tooltip('enable');
 
         parents.find('.informations-data').removeClass('edit');
         parents.find('.form-control').attr('readonly', true);
@@ -1462,10 +1474,16 @@ $(function () {
                 'Accept': 'application/json',
             },
             error: function (response) {
+                $(modal).find('#name').tooltip('show');
+                $('#btn-edit-products-plan').show();
+
                 loadOnModalRemove('#modal_edit_plan');
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                $(modal).find('#name').tooltip('enable');
+                $('#btn-edit-products-plan').show();
+
                 $(modal).find('.modal-title').html('Detalhes de ' + response.plan.name_short);
 
                 $(modal).find('#name').val(response.plan.name_short);
@@ -1569,7 +1587,7 @@ $(function () {
                         $.each(response.data, function (index, value) {
                             data = '';
                             data += '<tr>';
-                                data += '<td id="" class="" style="vertical-align: middle; line-height: 1;">' + value.name_short + '<div style="color: #8B8B8B; line-height: 1;"><small>com ' + (value.products_length > 1 ? value.products_length + ' produtos' : value.products_length + ' produto') + '</small></div></td>';
+                                data += '<td id="" class="" style="vertical-align: middle; line-height: 1;"><span ' + (value.name_short_flag ? 'data-toggle="tooltip" title="' + value.name + '"' : '') + '>' + value.name_short + '</span><div style="color: #8B8B8B; line-height: 1;"><small>com ' + (value.products_length > 1 ? value.products_length + ' produtos' : value.products_length + ' produto') + '</small></div></td>';
                                 data += '<td id="" class="" style="vertical-align: middle;">' + value.description + '</td>';
                                 data += '<td id="" class="" style="vertical-align: middle;">' + value.price + '</td>';
                                 data += '<td id="link" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; cursor:pointer;" link="' + value.code + '"><span class="display-sm-none display-m-none">Copiar </span><img src="/modules/global/img/icon-copy-c.svg"></td>';
@@ -1577,13 +1595,13 @@ $(function () {
                                 data += "<td class='mg-responsive text-center' style='line-height: 1;'>"
                                     data += "<div class='d-flex justify-content-end align-items-center'>";
                                         data += "<a title='Visualizar' class='mg-responsive pointer details-plan' plan='" + value.id + "' role='button'><span class='o-eye-1'></span></a>"
-                                        data += "<a title='Editar' class='mg-responsive pointer edit-plan' plan='" + value.id + "' role='button'><span class='o-edit-1'></span></a>"
+                                        //data += "<a title='Editar' class='mg-responsive pointer edit-plan' plan='" + value.id + "' role='button'><span class='o-edit-1'></span></a>"
                                         data += "<a title='Excluir' class='mr-0 mg-responsive pointer delete-plan' plan='" + value.id + "' role='button'><span class='o-bin-1'></span></a>";
                                     data += "</div>";
                                 data += "</td>";
                             data += '</tr>';
 
-                            $("#data-table-plan").append(data);
+                            $('#data-table-plan').append(data);
                             $('#table-plans').addClass('table-striped');
                             $('#currency_type_project').val(value.currency_project);
                         });
@@ -1594,6 +1612,9 @@ $(function () {
                         $('#table-plans').addClass('table-striped');
                     }
 
+                    $('[data-toggle="tooltip"]').tooltip({
+                        container: '.page'
+                    });
                 }
             }
         });
