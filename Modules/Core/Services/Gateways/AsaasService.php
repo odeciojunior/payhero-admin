@@ -268,7 +268,7 @@ class AsaasService implements Statement
         return !empty($lastTransaction) ? ['Asaas']:[];
     }
 
-    public function makeAnticipation(Sale $sale, $simulate = null) {
+    public function makeAnticipation(Sale $sale, $saveRequests = true, $simulate = false) {
         $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
 
         $data = [
@@ -303,12 +303,15 @@ class AsaasService implements Statement
         curl_close($curl);
         $response = json_decode($result, true);
 
-        if (($httpStatus < 200 || $httpStatus > 299) && (!isset($response->errors))) {
+        if(($httpStatus < 200 || $httpStatus > 299) && (!isset($response->errors))) {
             //report(new Exception('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus));
             report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus . ' -- $sale->id = ' . $sale->id . ' -- ' . json_encode($response));
         }
 
-        $this->saveRequests($url, $response, $httpStatus, $data, $sale->id);
+        if($saveRequests) {
+            $this->saveRequests($url, $response, $httpStatus, $data, $sale->id);
+        }
+
 
         return $response;
     }

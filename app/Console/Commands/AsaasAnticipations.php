@@ -26,6 +26,9 @@ class AsaasAnticipations extends Command
      */
     protected $description = 'Command description';
 
+    public $saveRequests = true;
+    public $simulate = false;
+
     /**
      * Create a new command instance.
      *
@@ -62,27 +65,61 @@ class AsaasAnticipations extends Command
                 ->where('release_date', '<=', $afterThreeDays)
                 ->where('created_at', '<', $toDay);
 
-            $cannotAnticipate = [];
             foreach ($transactions->cursor() as $transaction) {
                 $sale = $transaction->sale;
-                $response = $service->makeAnticipation($sale);
+                $response = $service->makeAnticipation($sale, $this->saveRequests, $this->simulate);
 
-                if (isset($response['status'])) {
+                if (!$this->simulate and isset($response['status'])) {
                     $sale->update([
-                                      'anticipation_status' => $response['status'],
-                                      'anticipation_id' => $response['id']
-                                  ]);
-                }
-
-                if(isset($response['errors'][0]['code'])
-                    and ($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
-                    and (str_contains($response['errors'][0]['description'], 'Este recebível já está reservado para a instituição') ) ) {
-
-                    $transaction->user->update([
-                        'asaas_alert' => true
+                        'anticipation_status' => $response['status'],
+                        'anticipation_id' => $response['id']
                     ]);
                 }
+
+                if(isset($response['errors'])) {
+
+                    $error = false;
+                    if(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
+                        and (str_contains($response['errors'][0]['description'], 'Este recebível já está reservado para a instituição') ) ) {
+                            $error = false;
+                            if(!$this->simulate) {
+                                $transaction->user->update([
+                                        'asaas_alert' => true
+                                    ]);
+                            }
+                    } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
+                        and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças já recebidas.') ) ) {
+                            $error = false;
+                            if(!$this->simulate) {
+                                $sale->update([
+                                        'anticipation_status' => 'ANTICIPATED_ASAAS'
+                                    ]);
+                            }
+                    } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
+                        and (str_contains($response['errors'][0]['description'], 'Para fazer antecipação, todas as parcelas devem estar confirmadas.') ) ) {
+                            $error = true;
+                    } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
+                        and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar parcelamentos que possuem parcelas estornadas.') ) ) {
+                            $error = true;
+                    } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
+                        and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças estornadas.') ) ) {
+                            $error = true;
+                    } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
+                        and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças desse cliente.') ) ) {
+                            $error = true;
+                    } elseif(isset($response['errors'][0]['code'])) {
+                        $error = true;
+                    }
+
+                    if($error) {
+
+                        report(new Exception("OwnerId:  " . $sale->owner_id . " SaleId:  " . $sale->id .
+                                             ' -- TransactionId ' . $transaction->id . ' -- ' . json_encode($response)));
+
+                    }
+                }
             }
+
         } catch (Exception $e) {
             report($e);
         }

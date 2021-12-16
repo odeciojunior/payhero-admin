@@ -7,6 +7,8 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class AsaasChargeback extends Command
 {
@@ -38,15 +40,27 @@ class AsaasChargeback extends Command
     {
         $getnetChargebacks = null;
 
-        // refatorar
-        // $getnetChargebacks = Sale::doesnthave('pendingDebts')
-        //                                 ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
-        //                                 ->where('status', Sale::STATUS_CHARGEBACK)
-        //                                 ->get();
-
+        $getnetChargebacks = Sale::whereDoesntHave('pendingDebts')
+                                ->whereHas('transactions', function($q) {
+                                    $q->whereDoesntHave('transfers', function($qu) {
+                                        $qu->where('reason', 'chargedback');
+                                    });
+                                    $q->whereNotNull('company_id');
+                                })
+                                ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
+                                ->where('status', Sale::STATUS_CHARGEBACK)
+                                ->with('saleLogs')
+                                ->get();
+        
         $totalValue = 0;
 
+        $output = new ConsoleOutput();
+        $progress = new ProgressBar($output, count($getnetChargebacks));
+        $progress->start();
+
         foreach($getnetChargebacks as $sale) {
+
+            $progress->advance();
 
             $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
             $saleTax = $this->getSaleTax($cloudfoxTransaction, $sale);
@@ -88,6 +102,8 @@ class AsaasChargeback extends Command
 
             $this->line($sale->id . ' - chargeback criado com sucesso');
         }
+
+        $progress->finish();
 
         $this->line("Valor total {$totalValue}");
     }
