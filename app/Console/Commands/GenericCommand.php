@@ -3,13 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\Gateway;
-use Modules\Core\Entities\PromotionalTax;
-use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Services\Gateways\AsaasService;
-use Modules\Core\Services\UserService;
 
 class GenericCommand extends Command
 {
