@@ -65,14 +65,14 @@ class AsaasTransfersSurplusBalance extends Command
         $amountTransfer = 0;
         $status = '';
 
-        Log::info(
-            str_pad("Company",15,' ',STR_PAD_RIGHT).
-            str_pad("Asaas Bal.",15,' ',STR_PAD_RIGHT).
-            str_pad("Company Bal.",15,' ',STR_PAD_RIGHT).
-            str_pad("Balance",15,' ',STR_PAD_RIGHT).
-            str_pad('Status',15,' ',STR_PAD_RIGHT).
-            "Usuário"
-        ); 
+        // Log::info(
+        //     str_pad("Company",15,' ',STR_PAD_RIGHT).
+        //     str_pad("Asaas Bal.",15,' ',STR_PAD_RIGHT).
+        //     str_pad("Company Bal.",15,' ',STR_PAD_RIGHT).
+        //     str_pad("Balance",15,' ',STR_PAD_RIGHT).
+        //     str_pad('Status',15,' ',STR_PAD_RIGHT).
+        //     "Usuário"
+        // ); 
         $this->comment('processando...');
         $output = new ConsoleOutput();
         $progress = new ProgressBar($output, count($companies));
@@ -122,14 +122,14 @@ class AsaasTransfersSurplusBalance extends Command
                 }
             }  
 
-            Log::info(
-                str_pad($company->id,15,' ',STR_PAD_RIGHT).
-                str_pad($asaasBalance,15,' ',STR_PAD_RIGHT).
-                str_pad($companyBalance,15,' ',STR_PAD_RIGHT).
-                str_pad($amountTransfer,15,' ',STR_PAD_RIGHT).
-                str_pad($status ,15,' ',STR_PAD_RIGHT).
-                $company->user->name 
-            );    
+            // Log::info(
+            //     str_pad($company->id,15,' ',STR_PAD_RIGHT).
+            //     str_pad($asaasBalance,15,' ',STR_PAD_RIGHT).
+            //     str_pad($companyBalance,15,' ',STR_PAD_RIGHT).
+            //     str_pad($amountTransfer,15,' ',STR_PAD_RIGHT).
+            //     str_pad($status ,15,' ',STR_PAD_RIGHT).
+            //     $company->user->name 
+            // );    
         }
 
         $progress->finish();
