@@ -390,6 +390,14 @@ class Sale extends Model
         return $this->hasMany(SaleInformation::class);
     }
 
+    /**
+     * @return HasMany
+     */
+    public function pendingDebts(): HasMany
+    {
+        return $this->hasMany(PendingDebt::class);
+    }
+
     public function products(): HasManyThrough
     {
         return $this->hasManyThrough(Product::class, ProductPlanSale::class, 'sale_id', 'id', 'id', 'product_id');

@@ -380,7 +380,7 @@ $(document).ready(function(){
                             <div style="height: 15px"></div>
                         `);
 
-                    if (response.data.length > 4) {
+                    if (response.data.length > 3) {
                         $('#container-withdraw').asScrollable();
                     }
 
