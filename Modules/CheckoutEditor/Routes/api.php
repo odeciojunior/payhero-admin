@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('checkouteditor', 'CheckoutEditorController')->only('show', 'update');
+Route::apiResource('checkouteditor', 'CheckoutEditorApiController')->only('show', 'update');
 
 Route::prefix('checkouteditor')->group(function() {
 
