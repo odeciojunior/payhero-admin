@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::apiResource('checkouteditor', 'CheckoutEditorController')->only('show', 'update');
+
 Route::prefix('checkouteditor')->group(function() {
-    Route::apiResource('checkouteditor', 'CheckoutEditorController')->only('show', 'update');
 
     Route::post('/sendsupportphoneverification', 'CheckoutEditorApiController@sendSupportPhoneVerification')
         ->middleware('role:account_owner|admin');
