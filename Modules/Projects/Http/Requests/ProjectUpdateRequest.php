@@ -31,7 +31,6 @@ class ProjectUpdateRequest extends FormRequest
             "automatic_affiliation" => 'nullable',
             "status_url_affiliates" => 'nullable|int|max:1',
             "commission_type_enum" => 'nullable|int|max:2',
-            "document_type_checkout" => 'nullable',
         ];
     }
 

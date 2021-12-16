@@ -32,6 +32,7 @@ class RemoveUnusedColumnsFromProjects extends Migration
                 'pix',
                 'product_amount_selector',
                 'required_email_checkout',
+                'document_type_checkout',
                 'installments_amount',
                 'installments_interest_free',
                 'pre_selected_installment',
@@ -82,6 +83,7 @@ class RemoveUnusedColumnsFromProjects extends Migration
             $table->integer('checkout_type')->default(1)->after('updated_at');
             $table->integer('pre_selected_installment')->default(12)->after('checkout_type');
             $table->boolean('required_email_checkout')->default(0)->after('pre_selected_installment');
+            $table->unsignedInteger('document_type_checkout')->default(3)->after('required_email_checkout');
             $table->boolean('product_amount_selector')->default(1)->after('document_type_checkout');
         });
     }

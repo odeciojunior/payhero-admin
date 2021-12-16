@@ -40,7 +40,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $cost_currency_type
  * @property string $discount_recovery_status
  * @property string $discount_recovery_value
- * @property string $document_type_checkout
  * @property string $reviews_config_icon_type
  * @property string $reviews_config_icon_color
  * @property string $notazz_configs
@@ -122,7 +121,6 @@ class Project extends Model
         'cost_currency_type',
         'discount_recovery_status',
         'discount_recovery_value',
-        'document_type_checkout',
         'reviews_config_icon_type',
         'reviews_config_icon_color',
         'notazz_configs',
