@@ -4,8 +4,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/bootstrap-select-cloudfox-template.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css')}}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
@@ -25,8 +23,9 @@
                 </div>
                 <div class="col-12 col-md-5 d-flex d-fall align-items-end justify-content-end order-2 order-md-1 mt-20 p-0">
                     <div class="col-12 col-md-11 float-right px-0">
+{{--                        <div class="skeleton skeleton-gateway-logo" style="height: 50px" id="skeleton-select"></div>--}}
                         <div class="input-holder">
-                            <select id="transfers_company_select" data-width="100%"> </select>
+                            <select class="sirius-select" id="transfers_company_select" data-width="100%"></select>
                         </div>
                     </div>
 {{--                    <div class="col-sm-12 float-right d-none d-sm-flex justify-content-end">--}}
@@ -406,7 +405,6 @@
 @include('finances::components.new-withdrawal-modal')
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>

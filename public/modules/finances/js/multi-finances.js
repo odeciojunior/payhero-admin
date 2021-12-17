@@ -54,7 +54,6 @@ $(document).ready(function(){
                     $("#statement_company_select").append(data);
                 });
 
-                $('#transfers_company_select').selectpicker();
                 updateStatements();
                 updateWithdrawals();
 
