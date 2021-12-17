@@ -17,6 +17,7 @@ class CreateCheckoutConfigsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('project_id');
             $table->integer('checkout_type_enum')->default(2);
+            $table->boolean('checkout_logo_enabled')->default(false);
             $table->string('checkout_logo')->nullable();
             $table->boolean('checkout_banner_enabled')->default(false);
             $table->integer('checkout_banner_type')->default(1);

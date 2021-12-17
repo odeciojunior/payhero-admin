@@ -12,6 +12,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property integer $id
  * @property integer $project_id
  * @property integer $checkout_type_enum
+ * @property boolean $checkout_logo_enabled
  * @property string $checkout_logo
  * @property boolean $checkout_banner_enabled
  * @property integer $checkout_banner_type
@@ -101,6 +102,7 @@ class CheckoutConfig extends Model
         'id',
         'project_id',
         'checkout_type_enum',
+        'checkout_logo_enabled',
         'checkout_logo',
         'checkout_banner_enabled',
         'checkout_banner_type',

@@ -13,6 +13,7 @@ class CheckoutConfigResource extends JsonResource
             'id' => hashids_encode($this->id),
             'project_id' => hashids_encode($this->project_id),
             'checkout_type_enum' => $this->checkout_type_enum,
+            'checkout_logo_enabled' => $this->checkout_logo_enabled,
             'checkout_logo' => $this->checkout_logo,
             'checkout_banner_enabled' => $this->checkout_banner_enabled,
             'checkout_banner_type' => $this->checkout_banner_type,
