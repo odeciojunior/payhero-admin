@@ -56,7 +56,7 @@ class WoocommerceRetryFailedRequests extends Command
 
                     if(!empty($res->status) && $res->status == 'processing'){
                         $res = json_encode($res);
-                        $service->update_post_request($request['id'], 1, $res);
+                        $service->updatePostRequest($request['id'], 1, $res);
                         
                         $this->line('sucesso: '.$request['id']);
                         
