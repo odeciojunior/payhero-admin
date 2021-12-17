@@ -721,17 +721,17 @@ $(document).ready(function () {
         $text.text($target.children(`option:selected`).eq(0).text());
     });
 
-    $(document).on('mouseenter', '.sirius-select-text', function () {
+    $(document).on('DOMSubtreeModified propertychange', '.sirius-select', function () {
         let $target = $(this);
         let $wrapper = $target.parent();
-        let $select = $wrapper.find('select');
+        let $text = $wrapper.find('.sirius-select-text');
         let $options = $wrapper.find('.sirius-select-options');
         $options.html('');
-        $select.children('option').each(function () {
+        $target.children('option').each(function () {
             let option = $(this);
             $options.append(`<div data-value="${option.val()}">${option.text()}</div>`);
         });
-        $target.text($select.children('option:selected').eq(0).text());
+        $text.text($target.children('option:selected').eq(0).text());
     });
 
     $(document).on('click', '.sirius-select-text', function () {
