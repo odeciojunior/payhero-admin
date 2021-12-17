@@ -444,7 +444,6 @@ $(document).ready(function () {
     //  ----------------- Crop Modal ----------------------
 
     var $dataZoom = $("#dataZoom");
-
     bs_modal
         .on("shown.bs.modal", function () {
             cropper = new Cropper(image, {
