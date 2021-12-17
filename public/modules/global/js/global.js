@@ -709,20 +709,8 @@ $(document).ready(function () {
     });
 
     // sirius select
-    $('.sirius-select').each(function () {
-        let $target = $(this);
-        let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
-        $target.wrap(`<div class="sirius-select-container"></div>`);
-        $target.hide();
-        $target.after(`<div class="sirius-select-options"></div>`);
-        $target.after(`<div class="sirius-select-text ${classes}"></div>`);
-
-        let $text = $target.next(`.sirius-select-text`);
-        $text.text($target.children(`option:selected`).eq(0).text());
-    });
-
-    $(document).on('DOMSubtreeModified propertychange', '.sirius-select', function () {
-        let $target = $(this);
+    function renderSiriusSelect(target) {
+        let $target = $(target);
         let $wrapper = $target.parent();
         let $text = $wrapper.find('.sirius-select-text');
         let $options = $wrapper.find('.sirius-select-options');
@@ -732,6 +720,21 @@ $(document).ready(function () {
             $options.append(`<div data-value="${option.val()}">${option.text()}</div>`);
         });
         $text.text($target.children('option:selected').eq(0).text());
+    }
+
+    $('.sirius-select').each(function () {
+        let $target = $(this);
+        let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
+        $target.wrap(`<div class="sirius-select-container"></div>`);
+        $target.hide();
+        $target.after(`<div class="sirius-select-options"></div>`);
+        $target.after(`<div class="sirius-select-text ${classes}"></div>`);
+
+        renderSiriusSelect(this);
+    });
+
+    $(document).on('DOMSubtreeModified propertychange', '.sirius-select', function () {
+        renderSiriusSelect(this);
     });
 
     $(document).on('click', '.sirius-select-text', function () {
