@@ -55,5 +55,6 @@
     "ApiSirius": true,
     "Melhorenvio": true,
     "HotBillet": true,
-    "AstronMembers": true
+    "AstronMembers": true,
+    "CheckoutEditor": true
 }
