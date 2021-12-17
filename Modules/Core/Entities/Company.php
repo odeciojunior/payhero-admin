@@ -37,13 +37,12 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $account_digit
  * @property string $support_email
  * @property string $support_telephone
- * @property int $balance
+ * @property int $cielo_balance
+ * @property int $asaas_balance
  * @property int $company_type
  * @property int $bank_document_status
  * @property int $address_document_status
  * @property int $contract_document_status
- * @property string $subseller_getnet_id
- * @property string $subseller_getnet_homolog_id
  * @property int $get_net_status
  * @property int $boleto_release_money
  * @property int $credit_card_release_money
@@ -113,14 +112,10 @@ class Company extends Model
     public const DOCUMENT_STATUS_APPROVED = 3;
     public const DOCUMENT_STATUS_REFUSED = 4;
 
-    public const GETNET_STATUS_APPROVED = 1;
-    public const GETNET_STATUS_REVIEW = 2;
-    public const GETNET_STATUS_REPROVED = 3;
-    public const GETNET_STATUS_APPROVED_GETNET = 4;
-    public const GETNET_STATUS_ERROR = 5;
-    public const GETNET_STATUS_PENDING = 6;
+    public const GATEWAY_TAX_2 = 6.9;
+    public const GATEWAY_TAX_15 = 5.9;
+    public const GATEWAY_TAX_30 = 4.9;
 
-    public const GATEWAY_TAX = 6.9;
 
     protected $presenter = CompanyPresenter::class;
     /**
@@ -148,7 +143,8 @@ class Company extends Model
         'account_digit',
         'support_email',
         'support_telephone',
-        'balance',
+        'cielo_balance',
+        'asaas_balance',
         'bank_document_status',
         'address_document_status',
         'contract_document_status',
@@ -257,5 +253,31 @@ class Company extends Model
     public function withdrawals(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\Withdrawal');
+    }
+
+    public function gatewayCompanyCredential(): HasMany
+    {
+        return $this->hasMany('Modules\Core\Entities\GatewaysCompaniesCredential');
+    }
+
+    public function gatewayCredential($gateway_id){
+        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()??null;
+    }
+
+    public function getGatewayStatus($gateway_id){
+        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_status??null;
+    }
+
+    public function getGatewaySubsellerId($gateway_id){
+        return $this->gatewayCompanyCredential->where('gateway_id',$gateway_id)->first()->gateway_subseller_id??null;
+    }
+
+    public function asaasBackofficeRequest(): HasMany
+    {
+        return $this->hasMany('Modules\Core\Entities\AsaasBackofficeRequest');
+    }
+
+    public function getGatewayApiKey($gatewayId){
+        return $this->gatewayCompanyCredential->where('gateway_id',$gatewayId)->first()->gateway_api_key ?? null;
     }
 }

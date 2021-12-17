@@ -23,6 +23,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
+use Modules\Core\Services\CacheService;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\TaskService;
@@ -104,9 +105,10 @@ class ProjectsApiController extends Controller
                 }
             )->log('Visualizou tela criar projeto');
 
-            $user = auth()->user()->load('companies');
+            $user = auth()->user();
+            $companies = Company::where('user_id',$user->account_owner_id)->get();
 
-            return response()->json(CompaniesSelectResource::collection($user->companies));
+            return response()->json(CompaniesSelectResource::collection($companies));
         } catch (Exception $e) {
             report($e);
 
@@ -341,7 +343,12 @@ class ProjectsApiController extends Controller
                 return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
             }
 
-            $project = $projectModel->find(current(Hashids::decode($id)));
+            $projectId = current(Hashids::decode($id));
+
+            CacheService::forget(CacheService::CHECKOUT_PROJECT, $projectId);
+            CacheService::forget(CacheService::SHIPPING_RULES, $projectId);
+
+            $project = $projectModel->find($projectId);
 
             if (!Gate::allows('update', [$project])) {
                 return response()->json(['message' => 'Sem permissão para atualizar o projeto'], 403);

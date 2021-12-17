@@ -155,7 +155,7 @@
                                                 <div class="data-holder b-bottom">
                                                     <div class="row justify-content-between align-items-center" style="padding: 15px 30px">
                                                         <div class="col-lg-6 col-sm-8 col-8">
-                                                            <span class="o-imac-screen-1"></span> Desktop
+                                                            <span class="mr-10 o-imac-screen-1"></span> Desktop
                                                         </div>
                                                         <div class="col-lg-6 col-sm-4 col-4">
                                                             <span class="money-td green" id='percent-desktop'>0</span>
@@ -167,7 +167,7 @@
                                                 <div class="data-holder b-bottom">
                                                     <div class="row justify-content-between align-items-center" style="padding: 15px 30px">
                                                         <div class="col-lg-6 col-sm-8 col-8">
-                                                            <span class="o-iphone-1"></span> Mobile
+                                                            <span class="ml-5 mr-15 o-iphone-1"></span> Mobile
                                                         </div>
                                                         <div class="col-lg-6 col-sm-4 col-4">
                                                             <span class="money-td green" id='percent-mobile'>0</span>

@@ -233,9 +233,9 @@ class InvitesApiController extends Controller
             $userIdInvites = $invitationModel->where('invite', auth()->user()->account_owner_id)
                 ->pluck('id')
                 ->toArray();
-            $commissionPaid = $transactionModel->whereIn('invitation_id', $userIdInvites)
+            $commissionPaid = $transactionModel->whereIn('invitation_id', $userIdInvites)->where('user_id', auth()->user()->account_owner_id)
                 ->where('status_enum', $transactionModel->present()->getStatusEnum('transfered'))->sum('value');
-            $commissionPending = $transactionModel->whereIn('invitation_id', $userIdInvites)
+            $commissionPending = $transactionModel->whereIn('invitation_id', $userIdInvites)->where('user_id', auth()->user()->account_owner_id)
                 ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))->sum('value');
 
             return response()->json(

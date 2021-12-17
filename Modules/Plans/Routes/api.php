@@ -6,22 +6,27 @@ Route::group(
     [
         'middleware' => ['auth:api', 'scopes:admin'],
     ],
-    function() {
-        //        project/{projectId}/plan
-          Route::apiResource('/project/{projectId}/plans', 'PlansApiController')
-          ->only('index', 'show', 'store', 'update', 'destroy')->names('api.plans');
+    function() {        
+        //   Route::apiResource('/project/{projectId}/plans', 'PlansApiController')
+        //   ->only('index', 'show', 'store', 'update', 'destroy')->names('api.plans');
+
+        Route::get('/project/{projectId}/plans', 'PlansApiController@index');
+        Route::post('/project/{projectId}/plans', 'PlansApiController@store')->middleware('permission:projects_manage');
+        Route::get('/project/{projectId}/plans/{planId}', 'PlansApiController@show');
+        Route::put('/project/{projectId}/plans/{planId}', 'PlansApiController@update')->middleware('permission:projects_manage');
+        Route::delete('/project/{projectId}/plans/{planId}', 'PlansApiController@destroy')->middleware('permission:projects_manage');
 
           Route::get('/plans/user-plans', 'PlansApiController@getPlans')
-          ->middleware('role:account_owner|admin|attendance');
+          ->middleware('permission:projects');
 
           Route::post('/plans/update-bulk-cost', 'PlansApiController@updateBulkCost')
-          ->middleware('role:account_owner|admin|attendance');
+          ->middleware('permission:projects_manage');
 
           Route::post('/plans/update-config-cost', 'PlansApiController@updateConfigCost')
-          ->middleware('role:account_owner|admin|attendance');
+          ->middleware('permission:projects_manage');
           
           Route::post('/plans/config-custom-product', 'PlansApiController@saveConfigCustomProducts')
-          ->middleware('role:account_owner|admin|attendance');
+          ->middleware('permission:projects_manage');
 
     }
 );

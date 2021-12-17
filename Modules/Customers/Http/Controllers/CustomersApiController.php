@@ -32,7 +32,7 @@ class CustomersApiController extends Controller
                     'message' => 'Ocorreu um erro, cliente não encontrado',
                 ], 400);
             }
-            if ($sale && $sale->status === Sale::STATUS_CANCELED_ANTIFRAUD) {
+            if ($sale && in_array($sale->status, [Sale::STATUS_IN_REVIEW, Sale::STATUS_CANCELED_ANTIFRAUD])) {
                 return new FraudsterCustomerResource($customer);
             }
             return new CustomerResource($customer);

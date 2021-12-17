@@ -5,14 +5,14 @@ var statusWithdrawals = {
     4: 'danger'
 }
 
-// updateWithdrawalsTable();
+// loadWithdrawalsTable();
 
 // $("#transfers_company_select").on("change", function () {
-//     updateWithdrawalsTable();
+//     loadWithdrawalsTable();
 // });
 
 //NAO CHAMAR - DUPLICADO E ERRADO
-function updateWithdrawalsTable(link = null, quemMeChamou = "ninguém") {
+function loadWithdrawalsTable(link = null, quemMeChamou = "ninguém") {
     loadOnTable('table-withdrawals-body', 'transfersTable');
     $("#table-withdrawals-body").html('');
     if (link == null) {
@@ -57,7 +57,7 @@ function updateWithdrawalsTable(link = null, quemMeChamou = "ninguém") {
                     cont++;
                     $('#withdrawalsTable').addClass('table-striped')
                 });
-                pagination(response, 'withdrawals', updateWithdrawalsTable);
+                pagination(response, 'withdrawals', loadWithdrawalsTable);
             }
 
         }

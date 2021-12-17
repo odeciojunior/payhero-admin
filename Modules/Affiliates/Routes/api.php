@@ -13,40 +13,40 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Route::group(
-    [
-        'middleware' => ['auth:api'],
-    ],
-    function() {
+     [
+          'middleware' => ['auth:api'],
+     ],
+     function () {
 
-        Route::get('/affiliates/getaffiliates', 'AffiliatesApiController@getAffiliates')
-             ->middleware('role:account_owner|admin');
+          Route::get('/affiliates/getaffiliates', 'AffiliatesApiController@getAffiliates')
+               ->middleware('permission:affiliates');
 
-        Route::get('/affiliates/getaffiliaterequests', 'AffiliatesApiController@getAffiliateRequests')
-             ->middleware('role:account_owner|admin');
+          Route::get('/affiliates/getaffiliaterequests', 'AffiliatesApiController@getAffiliateRequests')
+               ->middleware('permission:affiliates');
 
-        Route::post('/affiliates/evaluateaffiliaterequest', 'AffiliatesApiController@evaluateAffiliateRequest')
-             ->middleware('role:account_owner|admin');
+          Route::post('/affiliates/evaluateaffiliaterequest', 'AffiliatesApiController@evaluateAffiliateRequest')
+               ->middleware('permission:affiliates_manage');
 
-        Route::post('/affiliates/updateconfigaffiliate/{affiliateId}', 'AffiliatesApiController@updateConfigAffiliate')
-             ->middleware('role:account_owner|admin');
+          Route::post('/affiliates/updateconfigaffiliate/{affiliateId}', 'AffiliatesApiController@updateConfigAffiliate')
+               ->middleware('permission:affiliates_manage');
 
-        Route::apiResource('/affiliates', 'AffiliatesApiController')
-             ->only('index', 'show', 'store', 'update', 'destroy', 'edit')->names('api.affiliates')
-             ->middleware('role:account_owner|admin');
+          Route::get('/affiliates', 'AffiliatesApiController@index');
+          Route::get('/affiliates/{id}', 'AffiliatesApiController@show');
+          Route::get('/affiliates/{id}/edit', 'AffiliatesApiController@edit');
 
-        Route::apiResource('/affiliatelinks', 'AffiliateLinksApiController')
-             ->only('index', 'show', 'store', 'update', 'destroy', 'edit')->names('api.affiliatelinks')
-             ->middleware('role:account_owner|admin');
+          Route::apiResource('/affiliates', 'AffiliatesApiController')
+               ->only('store', 'update', 'destroy')->names('api.affiliates')
+               ->middleware('permission:affiliates_manage');
 
-        //        Route::get('/affiliates/getaffiliates/{projectId}', 'AffiliatesApiController@getAffiliates')
-        //             ->middleware('role:account_owner|admin');
-        //
-        //        Route::get('/affiliates/getaffiliaterequests/{projectId}', 'AffiliatesApiController@getAffiliateRequests')
-        //             ->middleware('role:account_owner|admin');
+          Route::get('/affiliatelinks', 'AffiliateLinksApiController@index');
+          Route::get('/affiliatelinks/{id}', 'AffiliateLinksApiController@show');
+          Route::get('/affiliatelinks/{id}/edit', 'AffiliateLinksApiController@edit');
 
-    }
+          Route::apiResource('/affiliatelinks', 'AffiliateLinksApiController')
+               ->only('store', 'update', 'destroy')->names('api.affiliatelinks')
+               ->middleware('permission:affiliates_manage');
+
+     }
 );
-//Route::middleware('auth:api')->get('/affiliates', function (Request $request) {
-//    return $request->user();
-//});

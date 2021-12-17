@@ -89,19 +89,17 @@
                             </div>
                         </div>
                     </div>
-                    @if(auth()->user()->id == 24)
-                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
-                            <div class="card app-integration" data-url="/apps/unicodrop" style='width: 270px;'>
-                                <a id="unicodrop-bt" href="/apps/unicodrop" class="add-btn">
-                                    <i id="unicodrop-icon" class="o-add-1" aria-hidden="true"></i></a>
-                                <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/unicodrop.png') !!}" alt="" align="middle">
-                                <div class="card-body">
-                                    <h5 class="card-title">Unicodrop</h5>
-                                    <p class="card-text sm">Integre seus projetos com Unicodrop </p>
-                                </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                        <div class="card app-integration" data-url="/apps/unicodrop" style='width: 270px;'>
+                            <a id="unicodrop-bt" href="/apps/unicodrop" class="add-btn">
+                                <i id="unicodrop-icon" class="o-add-1" aria-hidden="true"></i></a>
+                            <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/unicodrop.png') !!}" alt="" align="middle">
+                            <div class="card-body">
+                                <h5 class="card-title">Unicodrop</h5>
+                                <p class="card-text sm">Integre seus projetos com Unicodrop </p>
                             </div>
                         </div>
-                    @endif
+                    </div>
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration" data-url="/apps/smartfunnel" style='width: 270px;'>
                             <a id="smartfunnel-bt" href="/apps/smartfunnel" class="add-btn">
@@ -146,6 +144,19 @@
                             <div class="card-body">
                                 <h5 class="card-title">HotBillet</h5>
                                 <p class="card-text sm">Integre seus projetos com HotBillet </p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+                        <div class="card app-integration" data-url="/apps/astronmembers" style='width: 270px;'>
+                            <a id="astronmembers-bt" href="/apps/astronmembers" class="add-btn">
+                                <i id="astronmembers-icon" class="o-add-1" aria-hidden="true"></i></a>
+                            <img class="card-img-top card-img-controll  mt-100 " src="{!! asset('modules/global/img/astromembers.jpeg') !!}" alt="">
+                            <div class="card-body">
+                                <h5 class="card-title">Astron Members</h5>
+                                <p class="card-text sm">Integre seus projetos com Astron Members </p>
                             </div>
                         </div>
                     </div>

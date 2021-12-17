@@ -6,18 +6,23 @@ Route::group(
     [
         'middleware' => ['auth:api', 'scopes:admin'],
     ],
-    function() {
+    function () {
         Route::get('/projects/user-projects', 'ProjectsApiController@getProjects')
-             ->middleware('role:account_owner|admin|attendance');
+            ->middleware('permission:projects|apps');
+
+        //role:account_owner|admin|attendance|finantial
+        Route::get('/projects', 'ProjectsApiController@index');
+        Route::get('/projects/create', 'ProjectsApiController@create');
+        Route::get('/projects/{id}', 'ProjectsApiController@show');
+        Route::get('/projects/{id}/edit', 'ProjectsApiController@edit');
 
         Route::apiResource('/projects', 'ProjectsApiController')
-             ->only('index', 'create', 'store', 'edit', 'destroy', 'update', 'show')
-             ->middleware('role:account_owner|admin|attendance');
+            ->only('store', 'destroy', 'update')->middleware('permission:projects_manage');
 
         Route::post('/projects/updateorder', 'ProjectsApiController@updateOrder')
-             ->middleware('role:account_owner|admin');
+            ->middleware('permission:projects_manage');
 
         Route::post('/projects/updateconfig', 'ProjectsApiController@updateConfig')
-             ->middleware('role:account_owner|admin');
+            ->middleware('permission:projects_manage');
     }
 );

@@ -10,6 +10,14 @@
             </div>
         </div>
         <div class="row mt-20">
+            <div class="col-12">
+                <div class='form-group'>
+                    <label for="token">Token</label>
+                    <input type="text" class="input-pad addon" name="token" id="token" placeholder="Digite o token" value=''>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-20">
             <div class="col-6">
                 <div class="switch-holder">
                     <label for="token" class='mb-10'>Boleto gerado:</label>
@@ -54,12 +62,22 @@
             </div>
         </div>
         <div class="row mt-20">
-            <div class="col-12">
+            <div class="col-6">
                 <div class="switch-holder">
                     <label for="token" class='mb-10'>Cartão de crédito Recusado:</label>
                     <br>
                     <label class="switch">
                         <input type="checkbox" value='1' name="credit_card_refused" id="credit_card_refused" class='check' checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="switch-holder">
+                    <label for="token" class='mb-10'>PIX:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" value='1' name="pix" id="pix" class='check' checked>
                         <span class="slider round"></span>
                     </label>
                 </div>

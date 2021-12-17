@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+//role_or_permission:account_owner|admin|attendance|finantial|
 Route::group(
     [
-        'middleware' => ['web', 'auth', 'role:account_owner|admin|attendance'],
+        'middleware' => ['web', 'auth', 'permission:sales'],
     ],
     function() {
         Route::resource('/sales', 'SalesController')->only('index');

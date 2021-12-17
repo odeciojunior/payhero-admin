@@ -59,11 +59,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=21') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}"> --}}
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=22') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=49') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=25') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=55') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}"> --}}
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
@@ -121,7 +121,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=580') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=586') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
@@ -138,23 +138,25 @@
     <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=13') }}"></script>
     <script src="{{ asset('modules/global/js/notifications.js?v=13') }}"></script>
 
+    @if(\Auth::user())
+        <script>
+            function initFreshChat() {
+                window.fcWidget.init(@json(\Modules\Core\Services\ChatService::getData()));
+                window.fcWidget.user.setProperties(@json(\Modules\Core\Services\ChatService::getExtraData()));
+            }
 
-    <style>
-        .margin-chat-pagination {
-            display:block !important; height:20px  !important;
-        }
-    </style>
+            function initialize(i, t) {
+                var e;
+                i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e))
+            }
 
-    <script>
+            function initiateCall() {
+                initialize(document, "freshchat-js-sdk")
+            }
 
-        @if(\Auth::user())
-            (function(m,a,i,s,_i,_m){
-                m.addEventListener('load',function(){m.top.maisim||(function(){_m=a.createElement(i);
-                    i=a.getElementsByTagName(i)[0];_m.async=!0;_m.src=s;_m.id='maisim';_m.charset='utf-8';
-                    _m.setAttribute('data-token',_i);i.parentNode.insertBefore(_m,i)})()})
-            })(window,document,'script','https://app.mais.im/support/assets/js/core/embed.js','273c7ff74192d8dac2ef370dc930d643');
-        @endif
-    </script>
+            window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
+        </script>
+    @endif
 
 @endif
 

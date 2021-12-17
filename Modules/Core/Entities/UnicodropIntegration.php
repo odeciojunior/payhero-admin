@@ -20,6 +20,7 @@ use Modules\Core\Presenters\ReportanaIntegrationPresenter;
  * @property boolean $credit_card_refused
  * @property boolean $credit_card_paid
  * @property boolean $abandoned_cart
+ * @property boolean $pix
  * @property string $deleted_at
  * @property string $created_at
  * @property string $updated_at
@@ -50,6 +51,7 @@ class UnicodropIntegration extends Model
         'credit_card_refused',
         'credit_card_paid',
         'abandoned_cart',
+        'pix',
         'deleted_at',
         'created_at',
         'updated_at',

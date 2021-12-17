@@ -7,27 +7,25 @@ Route::group(
         'middleware' => ['auth:api', 'scopes:admin'],
     ],
     function() {
-        Route::apiResource('reports', 'ReportsApiController')->only('index')->middleware('role:account_owner|admin');
+        Route::get('reports', 'ReportsApiController@index')->middleware('permission:report_sales');
+        Route::get('reports/getsalesbyorigin', 'ReportsApiController@getSalesByOrigin')->middleware('permission:report_sales');
 
-        Route::get('/reports/checkouts', 'ReportsApiController@checkouts')->middleware('role:account_owner|admin');
-
-        Route::get('reports/getsalesbyorigin', 'ReportsApiController@getSalesByOrigin')->middleware('role:account_owner|admin');
-
-        Route::get('reports/getcheckoutsbyorigin', 'ReportsApiController@getCheckoutsByOrigin')->middleware('role:account_owner|admin');
+        Route::get('/reports/checkouts', 'ReportsApiController@checkouts')->middleware('permission:report_checkouts');
+        Route::get('reports/getcheckoutsbyorigin', 'ReportsApiController@getCheckoutsByOrigin')->middleware('permission:report_checkouts');
 
         Route::get('/reports/projections', 'ReportsApiController@projections')->middleware('role:account_owner|admin');
 
         Route::post('/reports/projectionsexport', 'ReportsApiController@projectionsExport')->middleware('role:account_owner|admin');
 
-        Route::get('/reports/coupons', 'ReportsApiController@coupons')->middleware('role:account_owner|admin|attendance');
+        Route::get('/reports/coupons', 'ReportsApiController@coupons')->middleware('permission:report_coupons');
 
-        Route::get('/reports/pending-balance', 'ReportsApiController@pendingBalance')->middleware('role:account_owner|admin');
+        Route::get('/reports/pending-balance', 'ReportsApiController@pendingBalance')->middleware('permission:report_pending');
 
-        Route::get('/reports/resume-pending-balance', 'ReportsApiController@resumePendingBalance')->middleware('role:account_owner|admin');
+        Route::get('/reports/resume-pending-balance', 'ReportsApiController@resumePendingBalance')->middleware('permission:report_pending');
 
-        Route::get('/reports/blockedbalance', 'ReportsApiController@blockedbalance')->middleware('role:account_owner|admin');
+        Route::get('/reports/blockedbalance', 'ReportsApiController@blockedbalance')->middleware('permission:report_blockedbalance');
 
-        Route::get('/reports/blockedresume', 'ReportsApiController@resumeBlockedBalance')->middleware('role:account_owner|admin');
+        Route::get('/reports/blockedresume', 'ReportsApiController@resumeBlockedBalance')->middleware('permission:report_blockedbalance');
 
     }
 );

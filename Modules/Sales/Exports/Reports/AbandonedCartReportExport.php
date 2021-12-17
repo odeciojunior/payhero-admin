@@ -48,15 +48,19 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             $startDate = $dateRange[0] . ' 00:00:00';
             $endDate = $dateRange[1] . ' 23:59:59';
         }
-
+        
         $abandonedCarts = $checkoutModel->whereIn('status_enum', [
             $checkoutModel->present()->getStatusEnum('recovered'),
             $checkoutModel->present()->getStatusEnum('abandoned cart'),
         ]);
 
-        if (!empty($this->filters['project']) && $this->filters['project'] !== "all") {
-            $projectId = FoxUtils::decodeHash($this->filters['project']);
-            $abandonedCarts->where('project_id', $projectId);
+        $parseProjectIds = explode(',', $this->filters['project']);
+        $projectIds = [];
+        if (!empty($parseProjectIds) && !in_array("all", $parseProjectIds)) {
+            foreach($parseProjectIds as $projectId){
+                array_push($projectIds, FoxUtils::decodeHash($projectId));
+            }
+            $abandonedCarts->whereIn('project_id', $projectIds);
         } else {
             $userProjects = UserProject::select('project_id')
                 ->where('user_id', $this->user->id)
@@ -78,13 +82,17 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             });
         }
 
-        if (!empty($this->filters['plan'])) {
-            $planId = current(Hashids::decode($this->filters['plan']));
-            $abandonedCarts->whereHas('checkoutPlans', function ($query) use ($planId) {
-                $query->where('plan_id', $planId);
+        $parsePlanIds = explode(',', $this->filters['plan']);
+        $planIds = [];
+        if (!empty($parsePlanIds) && !in_array("all", $parsePlanIds)) {
+            foreach($parsePlanIds as $planId){
+                array_push($planIds, Hashids::decode($planId));
+            }
+            $abandonedCarts->whereHas('checkoutPlans', function ($query) use ($planIds) {
+                $query->whereIn('plan_id', $planIds);
             });
         }
-
+        
         if (!empty($startDate) && !empty($endDate)) {
             $abandonedCarts->whereBetween('checkouts.created_at', [$startDate, $endDate]);
         } else {
@@ -113,6 +121,8 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             'date' => with(new Carbon($checkout->created_at))->format('d/m/Y H:i:s'),
             'project' => $checkout->project->name,
             'client' => $checkout->client_name,
+            'email' => $checkout->logs->whereNotIn('email', [null, ''])->first()->email ?? '',
+            'telephone' => $checkout->client_telephone,
             'status_translate' => $checkout->status == 'abandoned cart' ? 'Não recuperado' : 'Recuperado',
             'value' => number_format(intval(preg_replace("/[^0-9]/", "", $checkoutService->getSubTotal($checkout->checkoutPlans))) / 100, 2, ',', '.'),
             'link' => $checkout->present()->getCheckoutLink($checkout->project->domains->first()),
@@ -131,6 +141,8 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             'Data',
             'Projeto',
             'Cliente',
+            'Email',
+            'Telefone',
             'Status',
             'Valor',
             'Link',

@@ -33,7 +33,7 @@ class ProjectNotificationApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela de notificaçoes do projeto');
 
-            $userId = auth()->user()->id;
+            $userId = auth()->user()->account_owner_id;
 
             $projectNotifications = $projectNotificationModel->where('project_id', $projectId)
                                                              ->whereHas('userProject', function($q) use ($userId) {

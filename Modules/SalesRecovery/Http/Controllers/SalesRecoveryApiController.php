@@ -10,6 +10,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Modules\Checkouts\Transformers\CheckoutIndexResource;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
@@ -22,6 +23,7 @@ use Modules\Core\Services\SalesRecoveryService;
 use Modules\Sales\Exports\Reports\AbandonedCartReportExport;
 use Modules\Sales\Exports\Reports\BilletExpiredReportExport;
 use Modules\Sales\Exports\Reports\CardRefusedReportExport;
+use Modules\Sales\Exports\Reports\PixExpiredReportExport;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCartAbandonedDetailsResourceTransformer;
 use Modules\SalesRecovery\Transformers\SalesRecoverydetailsResourceTransformer;
@@ -119,15 +121,49 @@ class SalesRecoveryApiController extends Controller
         }
     }
 
+    public function getAbandonedCart(Request $request)
+    {
+        try {
+            $request->validate(
+                [
+                    'project' => 'nullable|string',
+                    'recovery_type' => 'required',
+                    'date_range' => 'required',
+                    'client' => 'nullable|string',
+                    'client_document' => 'nullable|string',
+                    'plan' => 'nullable|string',
+                ]
+            );
+
+            $checkouts = (new CheckoutService())->getAbandonedCart();
+
+            return CheckoutIndexResource::collection($checkouts);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],
+                400
+            );
+        }
+    }
+
     public function getCartRefused(Request $request)
     {
         try {
             $data                 = $request->all();
             $salesRecoveryService = new SalesRecoveryService();
 
-            $projectId = "";
-            if (!empty($data['project'])) {
-                $projectId = current(Hashids::decode($data['project']));
+            $projectIds = ['all'];
+            if ($data['project'] != 'all') {
+                $projectIds = [];
+                $projects = explode(',', $data['project']);
+
+                foreach($projects as $project){
+                    array_push($projectIds, current(Hashids::decode($project)));
+                }
             }
 
             $client = null;
@@ -140,9 +176,14 @@ class SalesRecoveryApiController extends Controller
                 $clientDocument = $data['client_document'];
             }
 
-            $plan = null;
-            if (!empty($data['plan'])) {
-                $plan = $data['plan'];
+            $plans = null;
+            if ($data['plan'] != 'all') {
+                $plans = [];
+                $parsePlans = explode(',', $data['plan']);
+
+                foreach($parsePlans as $plan){
+                    array_push($plans, $plan);
+                }
             }
 
             $dateStart = null;
@@ -157,7 +198,7 @@ class SalesRecoveryApiController extends Controller
             $paymentMethod = (new Sale())->present()->getPaymentType('credit_card');
             $status        = [3];
 
-            $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectId, $dateStart, $dateEnd, $client, $clientDocument, $plan);
+            $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectIds, $dateStart, $dateEnd, $client, $clientDocument, $plans);
 
             return SalesRecoveryCardRefusedResource::collection($sales);
         } catch (Exception $e) {
@@ -174,11 +215,18 @@ class SalesRecoveryApiController extends Controller
     {
         $data                 = $request->all();
         $salesRecoveryService = new SalesRecoveryService();
+        
+        $projectIds = ['all'];
 
-        $projectId = "all";
-        if (!empty($data['project'])) {
-            $projectId = current(Hashids::decode($data['project']));
+        if ($data['project'] != 'all') {
+            $projectIds = [];
+            $projects = explode(',', $data['project']);
+
+            foreach($projects as $project){
+                array_push($projectIds, current(Hashids::decode($project)));
+            }
         }
+
 
         $client = null;
         if (!empty($data['client'])) {
@@ -189,10 +237,15 @@ class SalesRecoveryApiController extends Controller
         if (!empty($data['client_document'])) {
             $clientDocument = $data['client_document'];
         }
+        
+        $plans = null;
+        if ($data['plan'] != 'all') {
+            $plans = [];
+            $parsePlans = explode(',', $data['plan']);
 
-        $plan = null;
-        if (!empty($data['plan'])) {
-            $plan = $data['plan'];
+            foreach($parsePlans as $plan){
+                array_push($plans, $plan);
+            }
         }
 
         $dateStart = null;
@@ -207,7 +260,7 @@ class SalesRecoveryApiController extends Controller
         $paymentMethod = (new Sale())->present()->getPaymentType('boleto');
         $status        = [5];
 
-        $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectId, $dateStart, $dateEnd, $client, $clientDocument, $plan);
+        $sales = $salesRecoveryService->getSaleExpiredOrRefused($paymentMethod, $status, $projectIds, $dateStart, $dateEnd, $client, $clientDocument, $plans);
 
         return SalesRecoveryCardRefusedResource::collection($sales);
     }
@@ -324,7 +377,7 @@ class SalesRecoveryApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao tentar regenerar Boleto (saleRecoveryApiController - regenerateSale)');
             report($e);
-
+            Log::info($e->getMessage());
             return response()->json([
                 'message' => "Ocorreu um erro, tente novamente mais tarde",
             ], 400);
@@ -337,17 +390,20 @@ class SalesRecoveryApiController extends Controller
             $dataRequest = $request->all();
             $user        = auth()->user();
 
-            if ($dataRequest['status'] == 1) {
+            if ($dataRequest['recovery_type'] == 1) {
                 $filename = 'report_abandoned_cart' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
-
                 (new AbandonedCartReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
-            } else if ($dataRequest['status'] == 3) {
-                $filename = 'report_card_refused' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
 
+            } else if ($dataRequest['recovery_type'] == 3) {
+                $filename = 'report_card_refused' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
                 (new CardRefusedReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+
+            } else if ($dataRequest['recovery_type'] == 4) {
+                $filename = 'report_pix_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+                (new PixExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+                
             } else {
                 $filename = 'report_billet_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
-
                 (new BilletExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
             }
 
@@ -355,7 +411,7 @@ class SalesRecoveryApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 400);
+            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'.$e->getMessage()], 400);
         }
     }
 
@@ -364,9 +420,15 @@ class SalesRecoveryApiController extends Controller
         $data                 = $request->all();
         $salesRecoveryService = new SalesRecoveryService();
 
-        $projectId = null;
-        if (!empty($data['project'])) {
-            $projectId = current(Hashids::decode($data['project']));
+        $projectIds = ['all'];
+
+        if ($data['project'] != 'all') {
+            $projectIds = [];
+            $projects = explode(',', $data['project']);
+
+            foreach($projects as $project){
+                array_push($projectIds, current(Hashids::decode($project)));
+            }
         }
 
         $client = null;
@@ -379,9 +441,14 @@ class SalesRecoveryApiController extends Controller
             $clientDocument = $data['client_document'];
         }
 
-        $plan = null;
-        if (!empty($data['plan'])) {
-            $plan = $data['plan'];
+        $plans = null;
+        if ($data['plan'] != 'all') {
+            $plans = [];
+            $parsePlans = explode(',', $data['plan']);
+
+            foreach($parsePlans as $plan){
+                array_push($plans, $plan);
+            }
         }
 
         $dateStart = null;
@@ -399,12 +466,12 @@ class SalesRecoveryApiController extends Controller
         $sales = $salesRecoveryService->getSaleExpiredOrRefused(
             $paymentMethod,
             $status,
-            $projectId,
+            $projectIds,
             $dateStart,
             $dateEnd,
             $client,
             $clientDocument,
-            $plan
+            $plans
         );
 
         return SalesRecoveryCardRefusedResource::collection($sales);

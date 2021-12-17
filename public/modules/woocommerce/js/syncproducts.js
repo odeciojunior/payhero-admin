@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    
+
     var projectId = $(window.location.pathname.split('/')).get(-1);
-    
+
     $.ajax({
         method: "POST",
         url: "/api/apps/woocommerce/keys/get?projectId="+projectId,
@@ -15,11 +15,11 @@ $(document).ready(function () {
             errorAjaxResponse(response);
         },
         success: function success(r) {
-            
+
             $('#consumer_k').attr('placeholder', r.consumer_k+'...')
-            $('#consumer_s').attr('placeholder', r.consumer_s+'...')    
-            
-            
+            $('#consumer_s').attr('placeholder', r.consumer_s+'...')
+
+
         }
     });
 
@@ -47,11 +47,11 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(r) {
-                
-                
+
+
                 $('#close-modal').click()
-                
-                
+
+
                 if(r.status == true){
                     alertCustom('success', 'Chaves de acesso atualizadas com sucesso!');
 
@@ -59,23 +59,23 @@ $(document).ready(function () {
                     alertCustom('error', 'Erro ao atualizar as chaves!');
 
                 }
-                
+
             }
         });
     })
-    
-    
-    
+
+
+
     $('#bt-modal-sync-woocommerce').click(function () {
-        
-        
-        
+
+
+
         var opt_prod = $('#opt_prod').is(':checked')
         var opt_track = $('#opt_track').is(':checked')
         var opt_webhooks = $('#opt_webhooks').is(':checked')
 
-        
-        
+
+
         if(!opt_prod && !opt_track && !opt_webhooks){
             alertCustom('error', 'Selecione uma ou mais categorias de dados para sincronizar!');
             $('#close-modal').click()
@@ -83,7 +83,7 @@ $(document).ready(function () {
             return false;
         }
 
-        
+
 
 
         $("#_content").hide();
@@ -104,10 +104,10 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(r) {
-                
-                
+
+
                 $('#close-modal').click()
-                
+
                 setTimeout(function(){
                     $("#_loading").hide();
                     $("#_content").show();
@@ -120,18 +120,18 @@ $(document).ready(function () {
                     alertCustom('error', 'Já existe uma sincronização de dados em andamento!');
 
                 }
-                
+
             }
         });
 
 
-        
+
 
 
     })
 
     function fun() {
-        
+
     }
 
 });

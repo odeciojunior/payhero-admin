@@ -187,7 +187,7 @@
                                 <div class="row">
                                     <div class="col-6 col-md-12 col-lg-12 ">
                                         <div class="data-holder b-bottom">
-                                            <div class="row wrap justify-content-between align-items-center">
+                                            <div class="row px-25 py-10 justify-content-between align-items-center">
                                                 <div class="col-lg-6 d-flex align-items-center">
                                                     <span class="mr-10 o-imac-screen-1"></span> Desktop
                                                 </div>
@@ -199,9 +199,9 @@
                                     </div>
                                     <div class="col-6 col-md-12 col-lg-12 ">
                                         <div class="data-holder b-bottom">
-                                            <div class="row wrap justify-content-between align-items-center">
+                                            <div class="row px-25 py-10 justify-content-between align-items-center">
                                                 <div class="col-lg-6 d-flex align-items-center">
-                                                    <span class="mr-10 o-iphone-1"></span> Mobile
+                                                    <span class="ml-5 mr-15 o-iphone-1"></span> Mobile
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <span class="money-td green" id='percent-mobile'>0</span>
@@ -378,7 +378,7 @@
                             </div>
                             <div style='height: 150px; '>
                                 <div class='card-body custom-table min-250'>
-                                    <div class='row'>
+                                    <div class='row align-items-center h-100'>
                                         <div class='col-lg-12 text-center'>
                                             <div class='data-holder text-center'>
                                                 <div class='row wrap justify-content-between text-center'>

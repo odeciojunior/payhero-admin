@@ -22,14 +22,27 @@ const statusEnum = {
 //ICONES DO STATUS //
 const systemStatus = {
     1: '',
-    2: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias">report_problem</i>`,
-    3: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" title="O código não foi reconhecido por nenhuma transportadora">report_problem</i>`,
-    4: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" title="A data de postagem da remessa é anterior a data da venda">report_problem</i>`,
-    5: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" title="Já existe uma venda com esse código de rastreio cadastrado">report_problem</i>`,
+    2: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código foi reconhecido pela transportadora mas, ainda não teve nenhuma movimentação. Essa informação pode ser atualizada nos próximos dias">report_problem</i>`,
+    3: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="O código não foi reconhecido por nenhuma transportadora">report_problem</i>`,
+    4: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="A data de postagem da remessa é anterior a data da venda">report_problem</i>`,
+    5: `<i class="material-icons ml-2 red-gradient" data-toggle="tooltip" data-container=".page" title="Já existe uma venda com esse código de rastreio cadastrado">report_problem</i>`,
     '': '',
 }
 
 $(() => {
+
+    $('.applySelect2').select2({
+        width:'100%',
+        multiple:true,
+        language: {
+            noResults: function () {
+                return "Nenhum resultado encontrado";
+            },
+            searching: function () {
+                return "Procurando...";
+            },
+        }
+    });
 
     $('#tracking-product-image').on('error', function () {
         $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg')
@@ -62,11 +75,11 @@ $(() => {
         row.find('.tracking-save, .tracking-close').show();
         row.find('.tracking-detail, .tracking-add').hide();
         $(this).hide();
-    });   
+    });
 
     $(document).on('click', '.tracking-close', function (event) {
         $(event.target).parent().prev().addClass('col-5');
-        
+
         let row = $(this).parent().parent();
         row.find('.input-tracking-code')
         .prop('readonly', true).blur()
@@ -323,17 +336,17 @@ $(() => {
             inicializeChart(chartDefaultColorsLabel, [posted, dispatched, out_for_delivery, exception, unknown, delivered]);
         }
         const formatTotal = '<div>Total:<br> <b>'+numberWithDecimal(total)+'</b> </div>';
-        
+
         $('#total-products').text(total > thousand ? `${parseFloat(numberWithDecimal(total)).toFixed(1)}K` : numberWithDecimal(total)).attr('data-original-title', formatTotal);
 
         $('#percentual-posted .resume-number').html(posted <= 0 ? posted = 0 : posted = numberWithDecimal(posted));
 
         $('#percentual-dispatched .resume-number').html(dispatched <= 0 ? dispatched = 0 : dispatched = numberWithDecimal(dispatched));
-        
+
         $('#percentual-out .resume-number').html(out_for_delivery <= 0 ? out_for_delivery = 0 : out_for_delivery = numberWithDecimal(out_for_delivery));
 
         $('#percentual-exception .resume-number').html(exception <= 0 ? exception = 0 : exception = numberWithDecimal(exception));
-        
+
         $('#percentual-unknown .resume-number').html(unknown <= 0 ? unknown = 0 : unknown = numberWithDecimal(unknown));
 
         $('#percentual-delivered .resume-number').html(delivered <= 0 ? delivered = 0 : delivered = numberWithDecimal(delivered));
@@ -351,7 +364,6 @@ $(() => {
         }
 
         loadOnTable('#dados_tabela', '#tabela_trackings');
-
         $.ajax({
             method: 'GET',
             url: link,
@@ -391,7 +403,7 @@ $(() => {
 
                     let htmlButtonAdd = `
                         <input maxlength="18" minlength="10" class="mr-10 col-sm-7 form-control font-weight-bold input-tracking-code fake-label" placeholder="Clique para adicionar" value="${tracking.tracking_code}" style="padding-bottom: 5px;border-radius: 8px;max-height:38px;">
-                        
+
                         <a class='tracking-add pointer mt-1 ml-10 px-0 default-buttons' title="Adicionar">
                             <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
                         </a>`
@@ -403,7 +415,7 @@ $(() => {
                             <a class='tracking-edit pointer default-buttons' title="Editar">
                                 <span class="text-right o-edit-1"></span>
                             </a>
-                            
+
                             <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
                                 <span class="o-eye-1"></span>
                             </a>
@@ -443,13 +455,13 @@ $(() => {
 
                             <td class="text-left mb-0" style="max-height:74px!important;">
                                 <div class="d-flex">
-                            
+
                                     ${tracking.tracking_status_enum ? `
                                     <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
                                     :htmlButtonAdd}
 
                                     <div class="save-close buttons d-flex px-0 col-5" style="max-height: 38px;">
-                                    
+
                                         <a id='pencil' class='o-checkmark-1 text-white tracking-save pointer mr-10 text-center default-buttons' title="Salvar" pps='${tracking.pps_id}'style="display:none"></a>
 
                                         <div class='tracking-close pointer' data-code='${tracking.tracking_code}' title="Fechar" style="display:none">
@@ -574,14 +586,14 @@ $(() => {
                 if (!isEmpty(response.data.tracking_status)) {
 
                     let tracking = response.data;
-                    
+
                     let td = btnSave.parent().parent();
                     let saveClose = td.find('.save-close')
 
                     td.find('.tracking-add, .edit-detail').remove();
 
                     td.find('.tracking-close').attr('data-code', response.data.tracking_code).trigger('click');
-                    
+
                     td.find('.input-tracking-code').removeClass('fake-label, border-danger');
 
                     let buttons = `
@@ -590,7 +602,7 @@ $(() => {
                             <a class='tracking-edit pointer' title="Editar">
                                 <span class="text-right o-edit-1"></span>
                             </a>
-                            
+
                             <a class='tracking-detail pointer' title="Visualizar" tracking='${tracking.id}'>
                                 <span class="o-eye-1"></span>
                             </a>
@@ -713,4 +725,65 @@ $(() => {
             getResume();
         }
     });
+
+    //COMPORTAMENTO DO FILTRO MULTIPLO
+    function behaviorMultipleFilter(data, selectId){
+        var $select = $('#'+selectId);
+        var values = $select.val();
+
+        if($(`#${selectId}`).val()[0] == 'all' || $(`#${selectId}`).val()[0] == ''){
+            var valueToRemove = $(`#${selectId}`).val()[0]
+        }
+
+        if (data.id != valueToRemove) {
+            if (values) {
+                var i = values.indexOf(valueToRemove);
+
+                if (i >= 0) {
+                    values.splice(i, 1);
+                    $select.val(values).change();
+                }
+            }
+            } else {
+            if (values) {
+                values.splice(0, values.lenght);
+                $select.val(null).change();
+
+                values.push(valueToRemove);
+                $select.val(valueToRemove).change();
+            }
+        }
+    }
+
+    //NAO PERMITI QUE O FILTRO FIQUE VAZIO
+    function deniedEmptyFilter(selectId){
+        let arrayValues = $(`#${selectId}`).val();
+        let valueAmount = $(`#${selectId}`).val().length;
+
+        if(valueAmount === 0){
+            if(selectId == 'project'){
+                arrayValues.push('all');
+                arrayValues = $(`#${selectId}`).val('all').trigger("change");
+
+            }else{
+                arrayValues.push('');
+                arrayValues = $(`#${selectId}`).val('').trigger("change");
+            }
+        }
+    }
+
+    $(".applySelect2").on("select2:select", function (evt) {
+        var data = evt.params.data;
+        var selectId = $(this).attr('id');
+        behaviorMultipleFilter(data, selectId);
+
+        $(`#${selectId}`).focus().scrollTop(0);
+        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    });
+
+    $(".applySelect2").on("change", function () {
+        let idTarget = $(this).attr('id');
+        deniedEmptyFilter(idTarget);
+    });
+    // FIM DO COMPORTAMENTO DO FILTRO
 });

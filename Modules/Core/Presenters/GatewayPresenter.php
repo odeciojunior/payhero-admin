@@ -3,6 +3,7 @@
 namespace Modules\Core\Presenters;
 
 use Laracasts\Presenter\Presenter;
+use Modules\Core\Entities\Gateway;
 
 /**
  * Class GatewayPresenter
@@ -45,4 +46,21 @@ class GatewayPresenter extends Presenter
             return '';
         }
     }
+
+    public function getName()
+    {
+        if(in_array($this->id,  [Gateway::GETNET_PRODUCTION_ID, Gateway::GETNET_SANDBOX_ID])) {
+            return 'Getnet';
+        }
+        elseif(in_array($this->id,  [Gateway::ASAAS_PRODUCTION_ID, Gateway::ASAAS_SANDBOX_ID])) {
+            return 'Asaas';
+        }
+        elseif(in_array($this->id,  [Gateway::GERENCIANET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID])) {
+            return 'Gerencianet';
+        }
+        else {
+            return 'Cielo';
+        }
+    }
+
 }

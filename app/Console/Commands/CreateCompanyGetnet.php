@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\CompanyService;
 
@@ -36,28 +39,21 @@ class CreateCompanyGetnet extends Command
     public function handle()
     {
         try {
-            $users = User::with([
-                'companies' => function ($q) {
-                    $q->where('bank_document_status', 3)
-                        ->where('address_document_status', 3)
-                        ->where('contract_document_status', 3)
-                        ->whereNull('subseller_getnet_id');
-                }
-            ])->get();
+            $companies = Company::whereDoesntHave('gatewayCompanyCredential', function($q){
+                $q->where('gateway_id',Gateway::GETNET_PRODUCTION_ID);
+            })
+            ->where('bank_document_status', 3)
+            ->where('address_document_status', 3)
+            ->where('contract_document_status', 3)->get();
 
             $companyService = new CompanyService();
-            foreach ($users as $user) {
-                $companies = $user->companies;
-                foreach ($companies as $company) {
-                    if ($companyService->verifyFieldsEmpty($company)) {
-                        $company->update([
-                            'get_net_status' => $company->present()->getStatusGetnet('pending'),
-                        ]);
-                    } elseif ($company->present()->getCompanyType($company->company_type) == 'physical person') {
-                        $companyService->createCompanyPfGetnet($company);
-                    } elseif ($company->present()->getCompanyType($company->company_type) == 'juridical person') {
-                        $companyService->createCompanyPjGetnet($company);
-                    }
+            foreach ($companies as $company) {
+                if ($companyService->verifyFieldsEmpty($company)) {
+                    $companyService->createRowCredential($company->id);
+                } elseif ($company->present()->getCompanyType($company->company_type) == 'physical person') {
+                    $companyService->createCompanyPfGetnet($company);
+                } elseif ($company->present()->getCompanyType($company->company_type) == 'juridical person') {
+                    $companyService->createCompanyPjGetnet($company);
                 }
             }
         } catch (Exception $e) {

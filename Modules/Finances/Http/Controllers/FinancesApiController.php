@@ -1,38 +1,38 @@
 <?php
 
-
 namespace Modules\Finances\Http\Controllers;
-
 
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\RemessaOnlineService;
+use Modules\Core\Entities\Gateway;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
-class FinancesApiController
+/**
+ * Class FinancesApiController
+ * @package Modules\Finances\Http\Controllers
+ */
+class FinancesApiController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function getBalances(Request $request): JsonResponse
     {
         try {
-
             if (empty($request->input('company'))) {
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
-            $company = Company::find(current(Hashids::decode($request->input('company'))));
+            $company = Company::find(hashids_decode($request->input('company')));
+            $gateway = Gateway::find(hashids_decode($request->input('gateway_id')));
 
-            if (empty($company)) {
+            if (empty($company) || empty($gateway)) {
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
@@ -40,40 +40,32 @@ class FinancesApiController
                 return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
             }
 
-            $companyService = new CompanyService();
+            $companyService = new CompanyBalanceService($company, $gateway->getService());
 
-            $pendingBalance = $companyService->getPendingBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
-
-            $availableBalance = $companyService->getAvailableBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
-
+            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
+            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
+            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE) - $blockedBalancePending;
+            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
             $totalBalance = $availableBalance + $pendingBalance;
-
-            $blockedBalance = $companyService->getBlockedBalance($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
-            $blockedBalancePending = $companyService->getBlockedBalancePending($company, CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE);
+            $availableBalance -= $blockedBalance;
             $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
-
-            $pendingDebtBalance = $companyService->getPendingDebtBalance($company);
-
+            $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
+            // dd($companyService);
             return response()->json(
                 [
-                    'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                    'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                    'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                    'blocked_balance' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
-                    'pending_debt_balance' => number_format(intval($pendingDebtBalance) / 100, 2, ',', '.'),
+                    'available_balance' => foxutils()->formatMoney($availableBalance / 100),
+                    'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+                    'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
+                    'blocked_balance' => foxutils()->formatMoney($blockedBalanceTotal / 100),
+                    'pending_debt_balance' => foxutils()->formatMoney($pendingDebtBalance / 100)
                 ]
             );
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Ocorreu algum erro, tente novamente!',], 400);
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function export(Request $request): JsonResponse
     {
         try {
@@ -91,11 +83,38 @@ class FinancesApiController
 
             (new ExtractReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
 
-            return response()->json(['message' => 'A exportação começou', 'email' => $user->email]);
+            $email = !empty($dataRequest['email']) ? $dataRequest['email'] : $user->email;
+
+            return response()->json(['message' => 'A exportação começou', 'email' => $email]);
         } catch (Exception $e) {
             report($e);
 
             return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
         }
+    }
+
+    public function getStatementResume(Request $request)
+    {
+        $company = Company::find(hashids_decode($request->company_id));
+        $companyService = new CompanyBalanceService($company);
+        return response()->json($companyService->getResumes());
+    }
+
+    public function getAcquirers($companyId=null)
+    {
+        $companies = null;        
+        if(empty($companyId)){
+            $companies = Company::with('user')->where('user_id', auth()->user()->account_owner_id)->get();
+        }else{
+            $companies = Company::where('id',$companyId)->get();
+        }
+        $gatewayIds = [];
+        
+        foreach($companies as $company){
+            $companyService = new CompanyBalanceService($company);
+            $gatewayIds = array_merge($gatewayIds,$companyService->getAcquirers());
+        }
+
+        return response()->json(['data'=>array_unique($gatewayIds)]);
     }
 }

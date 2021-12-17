@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\TicketMessage;
 use Modules\Core\Observers\CompanyObserver;
 use Modules\Core\Observers\SaleObserver;
+use Modules\Core\Observers\GatewaysCompaniesCredentialObserver;
 use Modules\Core\Observers\TicketMessageObserver;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
 
         Sale::observe(SaleObserver::class);
         Company::observe(CompanyObserver::class);
+        GatewaysCompaniesCredential::observe(GatewaysCompaniesCredentialObserver::class);
         TicketMessage::observe(TicketMessageObserver::class);
 
         Paginator::useBootstrap();

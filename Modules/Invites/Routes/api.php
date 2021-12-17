@@ -2,12 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['auth:api', 'scopes:admin']], function() {
-    Route::apiResource('invitations', 'InvitesApiController')->only('index', 'store','destroy')->names('api.invites')->middleware('role:account_owner');
+Route::group(['middleware' => ['auth:api', 'scopes:admin' ,'permission:invitations']], function() {
+    Route::get('invitations', 'InvitesApiController@index');
+    Route::apiResource('invitations', 'InvitesApiController')->only('store','destroy')->names('api.invites')->middleware('permission:invitations_manage');
 
     Route::get('/invitations/getinvitationdata', 'InvitesApiController@getInvitationData')
-         ->name('api.getinvitationdata')->middleware('role:account_owner');
+         ->name('api.getinvitationdata');
     Route::post('/invitations/resendinvitation', 'InvitesApiController@resendInvitation')
-         ->name('api.resendinvitation')->middleware('role:account_owner');
+         ->name('api.resendinvitation')->middleware('permission:invitations_manage');
 });
 

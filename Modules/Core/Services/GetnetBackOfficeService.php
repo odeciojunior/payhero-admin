@@ -11,10 +11,10 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
 
 /**
- * Class GetnetService
+ * Class GetnetBackOfficeService
  * @package Modules\Core\Services
  */
-class GetnetBackOfficeService extends GetnetService
+class GetnetBackOfficeService extends GetnetBaseService
 {
     use GetnetPrepareCompanyData;
 
@@ -389,9 +389,9 @@ class GetnetBackOfficeService extends GetnetService
             $response = json_decode($response);
 
             $adjustmentResponse = new AdjustmentResponse();
-            $adjustmentResponse->code = $response->cod;
-            $adjustmentResponse->errorMessage = $response->msg_Erro;
-            $adjustmentResponse->errorCode = $response->cod_Erro;
+            $adjustmentResponse->code = $response->cod ?? '';
+            $adjustmentResponse->errorMessage = $response->msg_Erro ?? '';
+            $adjustmentResponse->errorCode = $response->cod_Erro ?? '';
             $adjustmentResponse->isSuccess = is_null($response->msg_Erro);
 
             if (

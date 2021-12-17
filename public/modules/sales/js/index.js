@@ -3,6 +3,18 @@ var atualizar = null;
 var exportFormat = null;
 
 $(document).ready(function () {
+
+    //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
+    $('.applySelect2').select2({
+        //dropdownParent : $('#bt_collapse'),
+        width:'100%',
+        multiple:true,
+        language: {
+            noResults: function () {
+                return "Nenhum resultado encontrado";
+            }
+        }
+    });
     //checkbox
     $(".check").on("click", function () {
         if ($(this).is(":checked")) {
@@ -36,7 +48,6 @@ $(document).ready(function () {
     });
 
     // COMPORTAMENTOS DA JANELA
-
     $("#bt_get_csv").on("click", function () {
         $("#modal-export-sale").modal("show");
         exportFormat = "csv";
@@ -139,7 +150,6 @@ $(document).ready(function () {
 
     function hoverBilletPending() {
         if (verifyAccountFrozen() == true) {
-            console.log($("#accountStatus").val());
             $(document).on(
                 {
                     mouseenter: function () {
@@ -180,6 +190,7 @@ $(document).ready(function () {
             date_range = moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY")
         }
 
+
         let data = {
             'project': $("#projeto").val(),
             'payment_method': $("#forma").val(),
@@ -199,17 +210,23 @@ $(document).ready(function () {
             'order_bump': $("#order-bump").val(),
         };
 
+        Object.keys(data).forEach((value)=>{
+            if(Array.isArray(data[value])){
+                data[value] = data[value].filter((value) => value).join(',');
+            }
+        })
+
         if (urlParams) {
             let params = "";
             for (let param in data) {
                 params += "&" + param + "=" + data[param];
             }
+
             return encodeURI(params);
         } else {
             return data;
         }
     }
-
     // FIM - COMPORTAMENTOS DA JANELA
 
     getProjects();
@@ -472,7 +489,7 @@ $(document).ready(function () {
                             cupomCode = `
                                     <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}"
                                         role="button" style='margin-left: 5px;' >
-                                            <img width="20px" src="/modules/global/img/coupon.svg" title="Cupom">
+                                            <img width="20px" src="/modules/global/img/coupon.svg">
                                     </a>`;
                         }
 
@@ -481,7 +498,7 @@ $(document).ready(function () {
                             upsell = `
                                     <a data-toggle="tooltip" title="Upsell"
                                         role="button" style='margin-left: 5px;' >
-                                            <img width="20px" src="/modules/global/img/upsell.svg" title="Upsell">
+                                            <img width="20px" src="/modules/global/img/upsell.svg">
                                     </a>`;
                         }
 
@@ -490,7 +507,7 @@ $(document).ready(function () {
                             has_order_bump = `
                                             <a data-toggle="tooltip" title="Order Bump"
                                                 role="button" style='margin-left: 5px;' >
-                                                    <img width="20px" src="/modules/global/img/order-bump.svg" title="Order Bump">
+                                                    <img width="20px" src="/modules/global/img/order-bump.svg">
                                             </a>`;
                         }
 
@@ -518,7 +535,8 @@ $(document).ready(function () {
                                             ${cupomCode}
                                         </div>
                                     </td>
-                                    <td><strong class="bold-mobile">${value.product}</strong>
+                                    <td>
+                                    <strong class="bold-mobile">${value.product}</strong>
                                     ${
                                         value.affiliate != null &&
                                         value.user_sale_type == "producer"
@@ -526,6 +544,7 @@ $(document).ready(function () {
                                             : ""
                                     }
                                     <br> <small class="gray font-size-12">${value.project}</small></td>
+
                                     <td class='display-sm-none display-m-none display-lg-none'>${
                                         value.client
                                     }</td>
@@ -550,14 +569,7 @@ $(document).ready(function () {
                                       '"'
                                     : ""
                             }>${value.status_translate}</span>
-                                               ${
-                                                   value.is_chargeback_recovered &&
-                                                   value.status_translate ===
-                                                       "Aprovado"
-                                                       ? `
-                                                <img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
-                                                       : ""
-                                               }
+
                                     </td>
                                     <td class='display-sm-none display-m-none text-left font-size-14'>${
                                         start_date
@@ -583,7 +595,9 @@ $(document).ready(function () {
                                 </tr>`;
 
                         $(function () {
-                            $('[data-toggle="tooltip"]').tooltip();
+                            $('[data-toggle="tooltip"]').tooltip({
+                                container: '.page'
+                            });
                         });
 
                         $("#dados_tabela").append(dados);
@@ -692,16 +706,67 @@ $(document).ready(function () {
             },
         });
     }
+
+    //COMPORTAMENTO DO FILTRO MULTIPLO
+    function behaviorMultipleFilter(data, selectId){
+        var $select = $(`#${selectId}`);
+        var valueToRemove = '';
+        var values = $select.val();
+
+        if (data.id != '') {
+            if (values) {
+                var i = values.indexOf(valueToRemove);
+
+                if (i >= 0) {
+                    values.splice(i, 1);
+                    $select.val(values).change();
+                }
+            }
+         } else {
+            if (values) {
+              values.splice(0, values.lenght);
+              $select.val(null).change();
+
+              values.push('');
+              $select.val('').change();
+            }
+        }
+    }
+
+    //NAO PERMITI QUE O FILTRO FIQUE VAZIO
+    function deniedEmptyFilter(selectId){
+        let arrayValues = $(`#${selectId}`).val();
+        let valueAmount = $(`#${selectId}`).val().length;
+
+        if(valueAmount === 0){
+            arrayValues.push('');
+            arrayValues = $(`#${selectId}`).val('').trigger("change");
+        }
+    }
+
+    $(".applySelect2").on("select2:select", function (evt) {
+        var data = evt.params.data;
+        var selectId = $(this).attr('id');
+        behaviorMultipleFilter(data, selectId);
+
+        $(`#${selectId}`).focus();
+        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    });
+
+    $(".applySelect2").on("change", function () {
+        let idTarget = $(this).attr('id');
+        deniedEmptyFilter(idTarget);
+    });
+    // FIM DO COMPORTAMENTO DO FILTRO
+
+
+    //LISTA PLANOS DE ACORDO COM O PROJETO(S)
     $("#projeto").on("change", function () {
         let value = $(this).val();
         $("#plan").val(null).trigger("change");
     });
-    //Search plan
+
     $("#plan").select2({
-        placeholder: "Nome do plano",
-        // multiple: true,
-        allowClear: true,
-        dropdownParent: $(".align-items-baseline"),
         language: {
             noResults: function () {
                 return "Nenhum plano encontrado";
@@ -709,6 +774,9 @@ $(document).ready(function () {
             searching: function () {
                 return "Procurando...";
             },
+            errorLoading: function () {
+                return "Os resultados não puderam ser carregados";
+            }
         },
         ajax: {
             data: function (params) {
@@ -727,25 +795,31 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             processResults: function (res) {
+                result = $.map(res.data, function (obj) {
+                    return {
+                        id: obj.id,
+                        text: obj.name + (obj.description ? " - " + obj.description : ""),
+                    };
+                });
+
+                if(res.data.length > 0){
+                    result.splice(0, 0, {
+                        id: "",
+                        text: "Todos os Planos"
+                    });
+                }
+
                 return {
-                    results: $.map(res.data, function (obj) {
-                        return {
-                            id: obj.id,
-                            text:
-                                obj.name +
-                                (obj.description
-                                    ? " - " + obj.description
-                                    : ""),
-                        };
-                    }),
+                    results: result
                 };
             },
         },
     });
 
-    $(".btn-light-1").click(function () {
+    $(".btn-light-1").on("click", function () {
         var collapse = $("#icon-filtro");
         var text = $("#text-filtro");
+        let remove;
 
         text.fadeOut(10);
         if (
@@ -753,7 +827,8 @@ $(document).ready(function () {
             collapse.css("transform") == "none"
         ) {
             collapse.css("transform", "rotate(180deg)");
-            text.text("Minimizar filtros").fadeIn();
+            text.html("Minimizar <br class='d-flex d-sm-none'> filtros").fadeIn();
+
         } else {
             collapse.css("transform", "rotate(0deg)");
             text.text("Filtros avançados").fadeIn();

@@ -34,6 +34,7 @@ use App\Jobs\ProcessWooCommercePostbackTracking;
 use App\Jobs\ImportWooCommerceOrders;
 use App\Jobs\ProcessWooCommerceOrderNotes;
 use App\Jobs\ProcessWooCommerceSaveProductSku;
+use Modules\Core\Entities\SaleWoocommerceRequests;
 
 class WooCommerceService
 {
@@ -93,20 +94,20 @@ class WooCommerceService
             if($testWrite){
 
                 if(!empty($product)){
-    
+
                     $data = [
                         'name' => $product[0]->name
                     ];
-    
+
                     $this->woocommerce->post('products/'.$product[0]->id, $data);
-    
+
                     return true;
-    
-    
+
+
                 }else{
-    
+
                     return false;
-    
+
                 }
             }else{
                 return true;
@@ -127,12 +128,12 @@ class WooCommerceService
         $page = 1;
 
         ImportWooCommerceProducts::dispatch($projectId, $userId, $page);
-        
+
     }
 
     public function importProducts($projectId, $userId, $products)
     {
-        
+
         foreach($products as $_product){
 
             if($_product->status != 'publish') continue;
@@ -161,8 +162,8 @@ class WooCommerceService
                         'sku' => $_product->id.'-'.$hashedProjectId.'-'
                     ];
                     $this->woocommerce->post('products/'.$_product->id, $data);
-                    
-                
+
+
 
 
             }else{
@@ -199,15 +200,15 @@ class WooCommerceService
 
         $this->createProduct($projectId, $userId, $_product, $description, $variation->id);
 
-        
+
 
         $data = [
             'sku' => $_product->id.'-'.$hashedProjectId.'-'.str_replace(' ','',strtoupper($description))
         ];
-        
+
         ProcessWooCommerceSaveProductSku::dispatch($projectId, $_product->id, $variation->id, $data, 3);
-            
-          
+
+
 
 
     }
@@ -232,7 +233,7 @@ class WooCommerceService
             ->where('shopify_variant_id', $shopifyVariantId)->first();
 
         if(!empty($productExists)){
-            
+
             $newValues = false;
 
             //sync product
@@ -240,7 +241,7 @@ class WooCommerceService
                 $productExists->name = $_product->name;
                 $newValues = true;
             }
-            
+
             if($productExists->description != mb_substr($description, 0, 100) ){
                 $productExists->description = mb_substr($description, 0, 100);
                 $newValues = true;
@@ -250,22 +251,22 @@ class WooCommerceService
                 $productExists->price = $_product->price;
                 $newValues = true;
             }
-            
+
             if(!empty($_product->images)){
-    
+
                 if(gettype($_product->images[0])=='array'){
                     $src = $_product->images[0]['src'];
                 }else{
                     $src = $_product->images[0]->src;
                 }
-                
-                if($productExists->photo != $src){            
+
+                if($productExists->photo != $src){
                     $productExists->photo = $src;
                     $newValues = true;
                 }
             }
 
-            
+
             if($newValues == true){
                 $productExists->save();
             }
@@ -274,24 +275,24 @@ class WooCommerceService
             $newValues = false;
 
             $planExists = $planModel->where('shopify_variant_id', $shopifyVariantId)->first();
-            
+
             if(!empty($planExists)){
 
                 if($planExists->name != $_product->name){
                     $planExists->name = $_product->name;
                     $newValues = true;
                 }
-                
+
                 if($planExists->description != mb_substr($description, 0, 100) ){
                     $planExists->description = mb_substr($description, 0, 100);
                     $newValues = true;
                 }
-                
+
                 if($planExists->price != $_product->price){
                     $planExists->price = $_product->price;
                     $newValues = true;
                 }
-                
+
                 if($newValues == true){
                     $planExists->save();
                 }
@@ -310,7 +311,7 @@ class WooCommerceService
                     'guarantee' => '0',
                     'format' => 1,
                     'category_id' => '11',
-    
+
                     'price' => $_product->price,
                     'shopify_id' => $variationId,
                     'shopify_variant_id' => $shopifyVariantId,
@@ -318,8 +319,8 @@ class WooCommerceService
                     'project_id' => $projectId,
                 ]
             );
-    
-            
+
+
             $plan = $planModel->create(
                 [
                     'shopify_id' => $variationId,
@@ -333,18 +334,18 @@ class WooCommerceService
                 ]
             );
             $plan->update(['code' => Hashids::encode($plan->id)]);
-    
+
             $dataProductPlan = [
                 'product_id' => $product->id,
                 'plan_id' => $plan->id,
                 'amount' => '1',
             ];
-    
-    
+
+
             $productPlanModel->create($dataProductPlan);
-    
+
             if(!empty($_product->images)){
-    
+
                 if(gettype($_product->images[0])=='array'){
                     $src = $_product->images[0]['src'];
                 }else{
@@ -356,7 +357,7 @@ class WooCommerceService
             return $shopifyVariantId;
         }
 
-        
+
 
     }
 
@@ -386,7 +387,7 @@ class WooCommerceService
 
     public function createHooks($projectId)
     {
-        
+
         $decodedProjectId = Hashids::decode($projectId);
 
         //Order update.
@@ -426,17 +427,17 @@ class WooCommerceService
 
         $webhooks = $this->woocommerce->get('webhooks');
         $ids = array();
-        
-        
+
+
         foreach($webhooks as $webhook){
 
             if($webhook->name == 'cf-'.$hashedProjectId){
-        
+
 
                 $ids[] = $webhook->id;
 
             }
-            
+
             if($anyCloudFoxProject && strpos($webhook->name, 'cf-') === 0){
 
                 $ids[] = $webhook->id;
@@ -445,22 +446,22 @@ class WooCommerceService
         }
 
         if(!empty($ids)){
-            
+
             $data = [
                 'delete' => $ids
             ];
-            
+
             $this->woocommerce->post('webhooks/batch', $data);
         }
 
 
     }
 
-    
 
-    public function commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks){       
 
-        //starts to sync, freezes this action for 45 minutes 
+    public function commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks){
+
+        //starts to sync, freezes this action for 45 minutes
 
         $integration->synced_at = now();
         $integration->save();
@@ -469,25 +470,25 @@ class WooCommerceService
         $this->user = $integration->token_user;
         $this->pass = $integration->token_pass;
         $this->verifyPermissions();
-        
+
         if($doWebhooks == 'true'){
             $this->deleteHooks($projectId, true);
-    
+
             $hashedProjectId = Hashids::encode($projectId);
-    
+
             $this->createHooks($hashedProjectId);
         }
 
         if($doProducts == 'true'){
-            
-            
+
+
             $this->fetchProducts($projectId, $integration->user_id);
         }
 
         if($doTrackingCodes == 'true'){
             $this->fetchTrackingCodes($integration);
         }
-        
+
     }
 
     public function fetchTrackingCodes($integration)
@@ -497,7 +498,7 @@ class WooCommerceService
 
     public function importTrackingCodes($projectId, $orders)
     {
-        
+
         foreach($orders as $order){
 
             $data = array();
@@ -509,17 +510,27 @@ class WooCommerceService
                 ];
             }
 
+            //check for _aftership_tracking_number
+            if(!empty($order->meta_data)){
+                foreach ($order->meta_data as $meta) {
+                    if($meta->key == '_aftership_tracking_number'){
+                        if(!empty($meta->value))
+                            $order->correios_tracking_code = $meta->value;
+                    }
+                }
+            }
+
             if(!empty($order->correios_tracking_code)){
-                
-                
+
+
                 $data = [
                     'id'=>$order->id,
                     'correios_tracking_code' => $order->correios_tracking_code,
                     'line_items' => $line_items
                 ];
-                
+
                 ProcessWooCommercePostbackTracking::dispatch($projectId, $data);
-                
+
             }else{
 
                 // Check the notes for aliexpress codes
@@ -537,32 +548,97 @@ class WooCommerceService
 
     public function syncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks)
     {
-        
-        if(empty($integration->synced_at)){
+        if(empty($integration->synced_at)) {
 
             $this->commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
 
             return '{"status":true,"msg":""}';
 
-        }else{
+        } else {
             $start_date = strtotime($integration->synced_at);
             $diff = (time() - $start_date) / 60;
 
-            if($diff < 45){
-
+            if($diff < 45) {
                 return '{"status":false,"msg":""}';
-                // ! 
-
-            }else{
-
+                // !
+            } else {
                 $this->commitSyncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
 
                 return '{"status":true,"msg":""}';
-
             }
-            
-        }
 
+        }
+    }
+
+    public function approveBillet($woocommerce_order, $project_id = null)
+    {
+        if(empty($woocommerce_order)) {
+            return false;
+        } else {
+            $data = [
+                'status' => 'processing',
+                'set_paid' => true
+            ];
+
+            //$log_request_id = $this->logPostRequests($data, $project_id, 'approve_billet', $woocommerce_order);
+
+            try {
+                $res = $this->woocommerce->put('orders/'.$woocommerce_order, $data);
+
+                // if(!empty($res->status) && $res->status == 'processing') {
+                //     $res = json_encode($res);
+                //     $this->updatePostRequest($log_request_id, 1, $res);
+
+                // } else {
+                //     $this->updatePostRequest($log_request_id, 0, $res);
+
+                // }
+
+                return $res;
+            } catch (\Throwable $th) {
+                //$this->updatePostRequest($log_request_id, 0, $th);
+                report($th);
+            }
+        }
+    }
+
+    public function approvePix($woocommerce_order)
+    {
+        try {
+            $getOrder = $this->woocommerce->get('orders/'.$woocommerce_order);
+            if ($getOrder->status == 'pending') {
+                $data = [
+                    'status' => 'processing',
+                    'set_paid' => true
+                ];
+
+                return $this->woocommerce->put('orders/'.$woocommerce_order, $data);
+            }
+
+            return false;
+        } catch (\Throwable $th) {
+            report($th);
+        }
+    }
+
+    public function logPostRequests($data, $project_id = null, $method = null, $order = null, $sale_id = null)
+    {
+        $model = new SaleWoocommerceRequests();
+        $model->send_data = json_encode($data);
+        $model->method = $method;
+        $model->order = $order;
+        $model->project_id = $project_id;
+        $model->save();
+        return $model->id;
+    }
+
+    public function updatePostRequest($id, $status, $received_data)
+    {
+        $model = SaleWoocommerceRequests::where('id', $id)->first();
+
+        $model->status = $status;
+        $model->received_data = $received_data;
+        $model->save();
 
     }
 
