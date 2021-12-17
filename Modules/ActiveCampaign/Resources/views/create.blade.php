@@ -4,7 +4,7 @@
             <div class="col-12">
                 <div class='form-group'>
                     <label for="company">Selecione seu projeto</label>
-                    <select class="select-pad" id="project_id" name="project_id">
+                    <select class="input-pad" id="project_id" name="project_id">
                     </select>
                 </div>
             </div>
