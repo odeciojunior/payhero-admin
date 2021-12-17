@@ -81,7 +81,7 @@ class UpdateTransactionsReleaseDate extends Command
                         $transaction->save();
                     } else {
                         $statement = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
-                            ->setStatementSubSellerId($company->subseller_getnet_id)
+                            ->setStatementSubSellerId($company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID))
                             ->getStatement($sale->gateway_order_id);
 
                         $getnetSale = json_decode($statement);
@@ -120,7 +120,7 @@ class UpdateTransactionsReleaseDate extends Command
                         } else {
                             $getnetSale = $getnetService
                                 ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
-                                ->setStatementSubSellerId($company->subseller_getnet_id)
+                                ->setStatementSubSellerId($company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID))
                                 ->getStatement($sale->gateway_order_id);
 
                             $getnetTransaction = $getnetSale->list_transactions[0] ?? null;

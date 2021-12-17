@@ -202,12 +202,21 @@ $(document).ready(function () {
                                     ).attr("content"),
                                     Accept: "application/json",
                                 },
-                                error: function (response) {
-                                    errorAjaxResponse(response);
-
-                                    alertCustom("error", "Ocorreu algum erro");
+                                error: function (_error3) {
+                                    function error() {
+                                        return _error3.apply(this, arguments);
+                                    }
+                    
+                                    error.toString = function () {
+                                        return _error3.toString();
+                                    };
+                    
+                                    return error;
+                                }(function (response) {
                                     loadingOnScreenRemove();
-                                },
+                                    errorAjaxResponse(response);
+                    
+                                }),
                                 success: function (data) {
                                     loadingOnScreenRemove();
                                     getAffiliates();

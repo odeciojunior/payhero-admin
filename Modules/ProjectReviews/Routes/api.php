@@ -16,12 +16,12 @@ Route::group(
         'middleware' => ['auth:api', 'scopes:admin'],
     ],
     function () {
+        Route::get('/projectreviews', 'ProjectReviewsApiController@index');
+        Route::get('/projectreviews/{id}', 'ProjectReviewsApiController@show');
+        Route::get('/projectreviews/{id}/edit', 'ProjectReviewsApiController@edit');
+        
         Route::apiResource('/projectreviews', 'ProjectReviewsApiController')
-            ->only('index', 'store', 'destroy', 'update', 'show', 'edit')
-            ->middleware('role:account_owner|admin');
+        ->only('store', 'destroy', 'update')
+        ->middleware('permission:projects_manage');
     }
 );
-
-//Route::middleware('auth:api')->get('/projectreviews', function (Request $request) {
-//    return $request->user();
-//});

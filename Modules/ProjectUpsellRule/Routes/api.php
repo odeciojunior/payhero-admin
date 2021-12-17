@@ -17,9 +17,15 @@ Route::group(
         'middleware' => ['auth:api', 'scopes:admin'],
     ],
     function() {
+        Route::get('/projectupsellrule', 'ProjectUpsellRuleApiController@index');
+        Route::get('/projectupsellrule/{id}', 'ProjectUpsellRuleApiController@show');
+        Route::get('/projectupsellrule/{id}/edit', 'ProjectUpsellRuleApiController@edit');
+        
+
+        //role:account_owner|admin
         Route::apiResource('/projectupsellrule', 'ProjectUpsellRuleApiController')
-             ->only('index', 'store', 'destroy', 'update', 'show', 'edit')
-             ->middleware('role:account_owner|admin');
+        ->only('store', 'destroy', 'update')
+        ->middleware('permission:projects_manage');
     }
 );
 //Route::middleware('auth:api')->get('/projectupsellrule', function (Request $request) {

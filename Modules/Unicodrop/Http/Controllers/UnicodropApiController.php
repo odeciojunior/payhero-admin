@@ -26,23 +26,16 @@ class UnicodropApiController extends Controller
     public function index()
     {
         try {
-            $unicodropIntegrationModel = new UnicodropIntegration();
-            $userProjectModel          = new UserProject();
-            $projectModel              = new Project();
 
-            activity()->on($unicodropIntegrationModel)->tap(function(Activity $activity) {
-                $activity->log_name = 'visualization';
-            })->log('Visualizou tela todos as integrações Unicodrop');
+            $unicodropIntegrations = UnicodropIntegration::where('user_id', auth()->user()->account_owner_id)
+                                                               ->with('project')
+                                                               ->get();
 
-            $unicodropIntegrations = $unicodropIntegrationModel->where('user_id', auth()->user()->account_owner_id)
-                                                               ->with('project')->get();
-
-            $projects     = collect();
-            $userProjects = $userProjectModel->where('user_id', auth()->user()->account_owner_id)->get();
+            $projects = collect();
+            $userProjects = UserProject::where('user_id', auth()->user()->account_owner_id)->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    $project = $userProject->project()->where('status', $projectModel->present()->getStatus('active'))
-                                           ->first();
+                    $project = $userProject->project()->where('status', Project::STATUS_ACTIVE)->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
@@ -55,7 +48,6 @@ class UnicodropApiController extends Controller
                                     ]);
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
@@ -77,62 +69,53 @@ class UnicodropApiController extends Controller
     public function store(Request $request)
     {
         try {
-            $unicodropIntegrationModel = new UnicodropIntegration();
-            $data                      = $request->all();
-            $projectId                 = current(Hashids::decode($data['project_id']));
-            if (!empty($projectId)) {
-                $integration = $unicodropIntegrationModel->where('project_id', $projectId)->first();
-                if ($integration) {
-                    return response()->json([
-                                                'message' => 'Projeto já integrado',
-                                            ], 400);
-                }
-                if (empty($data['boleto_generated'])) {
-                    $data['boleto_generated'] = 0;
-                }
-                if (empty($data['boleto_paid'])) {
-                    $data['boleto_paid'] = 0;
-                }
-                if (empty($data['credit_card_paid'])) {
-                    $data['credit_card_paid'] = 0;
-                }
-                if (empty($data['credit_card_refused'])) {
-                    $data['credit_card_refused'] = 0;
-                }
-                if (empty($data['abandoned_cart'])) {
-                    $data['abandoned_cart'] = 0;
-                }
-                $integrationCreated = $unicodropIntegrationModel->create([
-                                                                             'token'               => $data['project_id'],
-                                                                             'billet_generated'    => $data['boleto_generated'],
-                                                                             'billet_paid'         => $data['boleto_paid'],
-                                                                             'credit_card_refused' => $data['credit_card_refused'],
-                                                                             'credit_card_paid'    => $data['credit_card_paid'],
-                                                                             'abandoned_cart'      => $data['abandoned_cart'],
-                                                                             'project_id'          => $projectId,
-                                                                             'user_id'             => auth()->user()->account_owner_id,
-                                                                         ]);
+            $data      = $request->all();
+            $projectId = hashids_decode($data['project_id']);
 
-                if ($integrationCreated) {
-                    return response()->json([
-                                                'message' => 'Integração criada com sucesso!',
-                                            ], 200);
-                } else {
-
-                    return response()->json([
-                                                'message' => 'Ocorreu um erro ao realizar a integração',
-                                            ], 400);
-                }
-            } else {
-
-                return response()->json([
-                                            'message' => 'Ocorreu um erro ao realizar a integração',
-                                        ], 400);
+            if (empty($projectId)) {
+                return response()->json(['message' => 'Ocorreu um erro ao realizar a integração',], 400);
             }
+
+            $integration = UnicodropIntegration::where('project_id', $projectId)->first();
+            if (!empty($integration)) {
+                return response()->json(['message' => 'Projeto já integrado',], 400);
+            }
+
+            if (empty($data['boleto_generated'])) {
+                $data['boleto_generated'] = 0;
+            }
+            if (empty($data['boleto_paid'])) {
+                $data['boleto_paid'] = 0;
+            }
+            if (empty($data['credit_card_paid'])) {
+                $data['credit_card_paid'] = 0;
+            }
+            if (empty($data['credit_card_refused'])) {
+                $data['credit_card_refused'] = 0;
+            }
+            if (empty($data['abandoned_cart'])) {
+                $data['abandoned_cart'] = 0;
+            }
+            if (empty($data['pix'])) {
+                $data['pix'] = 0;
+            }
+
+            UnicodropIntegration::create([
+                                            'token'               => $data['token'],
+                                            'billet_generated'    => $data['boleto_generated'],
+                                            'billet_paid'         => $data['boleto_paid'],
+                                            'credit_card_refused' => $data['credit_card_refused'],
+                                            'credit_card_paid'    => $data['credit_card_paid'],
+                                            'abandoned_cart'      => $data['abandoned_cart'],
+                                            'pix'                 => $data['pix'],
+                                            'project_id'          => $projectId,
+                                            'user_id'             => auth()->user()->account_owner_id,
+                                        ]);
+
+            return response()->json(['message' => 'Integração criada com sucesso!',], 200);
+
         } catch (Exception $e) {
             report($e);
-            Log::warning('Erro ao realizar integração  UnicodropApiController - store');
-
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
@@ -145,15 +128,7 @@ class UnicodropApiController extends Controller
     public function show($id)
     {
         try {
-            $unicodropIntegrationModel = new UnicodropIntegration();
-
-            $unicodropIntegration = $unicodropIntegrationModel->find(current(Hashids::decode($id)));
-
-            activity()->on($unicodropIntegrationModel)->tap(function(Activity $activity) use ($id) {
-                $activity->log_name   = 'visualization';
-                $activity->subject_id = current(Hashids::decode($id));
-            })
-                      ->log('Visualizou tela editar configurações de integração projeto ' . $unicodropIntegration->project->name . ' com Unicodrop');
+            $unicodropIntegration = UnicodropIntegration::find(current(Hashids::decode($id)));
 
             return new UnicodropResource($unicodropIntegration);
         } catch (Exception $e) {
@@ -161,52 +136,6 @@ class UnicodropApiController extends Controller
 
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //        try {
-        //            if (!empty($id)) {
-        //                $unicodropIntegrationModel = new UnicodropIntegration();
-        //
-        //                $projectService = new ProjectService();
-        //
-        //                activity()->on($unicodropIntegrationModel)->tap(function(Activity $activity) use ($id) {
-        //                    $activity->log_name   = 'visualization';
-        //                    $activity->subject_id = current(Hashids::decode($id));
-        //                })->log('Visualizou tela editar configurações da integração Unicodrop');
-        //
-        //                $projects = $projectService->getMyProjects();
-        //
-        //                $projectId   = current(Hashids::decode($id));
-        //                $integration = $unicodropIntegrationModel->where('project_id', $projectId)->first();
-        //
-        //                if ($integration) {
-        //                    return response()->json(['projects' => $projects, 'integration' => $integration]);
-        //                } else {
-        //                    return response()->json([
-        //                                                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-        //                                            ], 400);
-        //                }
-        //            } else {
-        //
-        //                return response()->json([
-        //                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-        //                                        ], 400);
-        //            }
-        //        } catch (Exception $e) {
-        //            Log::warning('Erro ao tentar acessar tela editar Integração Unicodrop (UnicodropApiController - edit)');
-        //            report($e);
-        //
-        //            return response()->json([
-        //                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
-        //                                    ], 400);
-        //        }
     }
 
     /**
@@ -218,11 +147,10 @@ class UnicodropApiController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            $data = $request->all();
+            $integrationId = hashids_decode($id);
+            $integration = UnicodropIntegration::find($integrationId);
 
-            $unicodropIntegrationModel = new UnicodropIntegration();
-            $data                      = $request->all();
-            $integrationId             = current(Hashids::decode($id));
-            $reportanaIntegration      = $unicodropIntegrationModel->find($integrationId);
             if (empty($data['boleto_generated'])) {
                 $data['boleto_generated'] = 0;
             }
@@ -241,29 +169,24 @@ class UnicodropApiController extends Controller
             if (empty($data['abandoned_cart'])) {
                 $data['abandoned_cart'] = 0;
             }
-
-            $integrationUpdated = $reportanaIntegration->update([
-                                                                    'billet_generated'    => $data['boleto_generated'],
-                                                                    'billet_paid'         => $data['boleto_paid'],
-                                                                    'credit_card_refused' => $data['credit_card_refused'],
-                                                                    'credit_card_paid'    => $data['credit_card_paid'],
-                                                                    'abandoned_cart'      => $data['abandoned_cart'],
-                                                                ]);
-            if ($integrationUpdated) {
-                return response()->json([
-                                            'message' => 'Integração atualizada com sucesso!',
-                                        ], 200);
+            if (empty($data['pix'])) {
+                $data['pix'] = 0;
             }
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro ao atualizar a integração',
-                                    ], 400);
+            $integration->update([
+                                    'token'               => $data['token'],
+                                    'billet_generated'    => $data['boleto_generated'],
+                                    'billet_paid'         => $data['boleto_paid'],
+                                    'credit_card_refused' => $data['credit_card_refused'],
+                                    'credit_card_paid'    => $data['credit_card_paid'],
+                                    'abandoned_cart'      => $data['abandoned_cart'],
+                                    'pix'                 => $data['pix'],
+                                ]);
+
+            return response()->json(['message' => 'Integração atualizada com sucesso',], 200);
         } catch (Exception $e) {
             report($e);
-
-            return response()->json([
-                                        'message' => 'Ocorreu um erro ao atualizar a integração',
-                                    ], 400);
+            return response()->json(['message' => 'Ocorreu um erro ao atualizar a integração',], 400);
         }
     }
 
@@ -275,32 +198,20 @@ class UnicodropApiController extends Controller
     public function destroy($id)
     {
         try {
-            $integrationId             = current(Hashids::decode($id));
-            $unicodropIntegrationModel = new UnicodropIntegration();
-            $integration               = $unicodropIntegrationModel->find($integrationId);
+            $integrationId = hashids_decode($id);
+            $integration = UnicodropIntegration::find($integrationId);
+
             if (empty($integration)) {
-                return response()->json([
-                                            'message' => 'Erro ao tentar remover Integração',
-                                        ], 400);
-            } else {
-                $integrationDeleted = $integration->delete();
-                if ($integrationDeleted) {
-                    return response()->json([
-                                                'message' => 'Integração Removida com sucesso!',
-                                            ], 200);
-                }
-
-                return response()->json([
-                                            'message' => 'Erro ao tentar remover Integração',
-                                        ], 400);
+                return response()->json(['message' => 'Erro ao tentar remover Integração',], 400);
             }
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar remover Integração Unicodrop (UnicodropApiController - destroy)');
-            report($e);
 
-            return response()->json([
-                                        'message' => 'Ocorreu um erro ao tentar remover, tente novamente mais tarde!',
-                                    ], 400);
+            $integration->delete();
+
+            return response()->json(['message' => 'Integração Removida com sucesso!',], 200);
+
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Ocorreu um erro ao tentar remover, tente novamente mais tarde!',], 400);
         }
     }
 }

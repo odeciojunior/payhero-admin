@@ -3,25 +3,20 @@
     @csrf
     @method('PUT')
     <div style="width:100%">
-        <div class='row'>
-            <div class='col-12'>
-                <label for='email'>Token
-                    <i class="fa-question-circle-o text-info" data-content="Copie o token e adicione no Unicodrop" data-toggle="popover" data-trigger="click"></i>
-                </label>
-            </div>
-            <div id='invite-link-select' class='input-group col-12'>
-                <input type='text' class='form-control' id='inputToken' value='' readonly>
-                <span class='input-group-btn'>
-                       <button id='btnCopyToken' class='btn btn-default' type='button'>Copiar</button>
-                 </span>
-            </div>
-        </div>
         <div class="row mt-20">
             <div class="col-12">
                 <div class='form-group'>
-                    <label for="company">Selecione seu projeto</label>
+                    <label for="company">Projeto</label>
                     <select class="select-pad" id="select_projects_edit" name="project_id" disabled> </select>
                 </div>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-12'>
+                <label for='email'>Token</label>
+            </div>
+            <div id='invite-link-select' class='input-group col-12'>
+                <input name="token" type='text' class='form-control' id='inputToken' value=''>
             </div>
         </div>
         <div class="row mt-20">
@@ -75,6 +70,16 @@
                     <br>
                     <label class="switch">
                         <input type="checkbox" name="credit_card_refused" id="credit_card_refused_edit" class='check' value='0'>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="switch-holder">
+                    <label for="pix" class='mb-10'>PIX:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" name="pix" id="pix_edit" class='check' value='0'>
                         <span class="slider round"></span>
                     </label>
                 </div>

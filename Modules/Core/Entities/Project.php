@@ -58,6 +58,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property Collection $sales
  * @property Collection $shippings
  * @property Collection $shopifyIntegrations
+ * @property Collection $woocommerceIntegrations
  * @property Collection $usersProjects
  * @property Collection $users
  * @property NotazzIntegration $notazzIntegration
@@ -204,6 +205,11 @@ class Project extends Model
     public function shopifyIntegrations(): HasMany
     {
         return $this->hasMany(ShopifyIntegration::class);
+    }
+
+    public function woocommerceIntegrations(): HasMany
+    {
+        return $this->hasMany(WooCommerceIntegration::class);
     }
 
     public function usersProjects(): HasMany

@@ -3,6 +3,8 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
@@ -13,8 +15,10 @@ use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\SaleService;
 use Redis;
 
-class UpdateSaleChargebackListener
+class UpdateSaleChargebackListener implements ShouldQueue
 {
+    use Queueable;
+
     public function handle(NewChargebackEvent $event)
     {
         DB::beginTransaction();

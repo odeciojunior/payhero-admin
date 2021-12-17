@@ -34,7 +34,7 @@
                     </h1>
 
                     <div id="checkout_type" class="radio-group">
-                        <input class="custom-radio" id="checkout_type_steps" type="radio" name="checkout_type_enum" value="0"/>
+                        <input class="custom-radio" id="checkout_type_steps" type="radio" name="checkout_type_enum" value="0" />
                         <label for="checkout_type_steps">Checkout de 3 passos</label>
 
                         <input class="custom-radio" id="checkout_type_unique" type="radio" name="checkout_type_enum" value="1" />
@@ -95,7 +95,7 @@
 
                             <div style=" display: flex; min-width: 140px; align-items: center;">
                                 <div id="banner_type" class="radio-group" style="justify-self: end;">
-                                    <input class="custom-icon-radio" id="banner_type_wide" type="radio" name="banner-type" value="0"/>
+                                    <input class="custom-icon-radio" id="banner_type_wide" type="radio" name="banner-type" value="0" />
                                     <label for="banner_type_wide"><img src="{{ asset('/modules/checkouteditor/img/svg/banner-wide.svg') }}"></label>
 
                                     <input class="custom-icon-radio" id="banner_type_square" type="radio" name="banner-type" value="1" />
@@ -770,7 +770,7 @@
                             </div>
 
                             <div id="preview_type_visual" class="radio-group">
-                                <input class="custom-icon-radio desktop preview-type" id="preview_visual_computer" type="radio" name="preview-visual-type" data-target="preview-desktop-visual" data-toggle="preview-mobile-visual" checked/>
+                                <input class="custom-icon-radio desktop preview-type" id="preview_visual_computer" type="radio" name="preview-visual-type" data-target="preview-desktop-visual" data-toggle="preview-mobile-visual" checked />
                                 <label for="preview_visual_computer"><img src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
 
                                 <input class="custom-icon-radio mobile preview-type" id="preview_visual_mobile" type="radio" name="preview-visual-type" data-target="preview-mobile-visual" data-toggle="preview-desktop-visual" />
@@ -917,7 +917,7 @@
                             <div class="theme-ready-content">
                                 <div id="theme_ready" class="radio-group theme-ready">
 
-                                    <input class="theme-radio" id="theme_spaceship" type="radio" name="theme_ready" value="1"/>
+                                    <input class="theme-radio" id="theme_spaceship" type="radio" name="theme_ready" value="1" />
                                     <label for="theme_spaceship">
                                         <div class="theme-primary-color" style="background: #4B8FEF;"></div>
                                         <div class="theme-secondary-color" style="background: #313C52;"></div>
@@ -1072,7 +1072,7 @@
                                 </h1>
                             </div>
                             <div class="radio-group">
-                                <input class="custom-icon-radio desktop preview-type" id="preview_payment_desktop" type="radio" name="preview-payment-type" data-target="preview-desktop-payment" data-toggle="preview-mobile-payment" checked/>
+                                <input class="custom-icon-radio desktop preview-type" id="preview_payment_desktop" type="radio" name="preview-payment-type" data-target="preview-desktop-payment" data-toggle="preview-mobile-payment" checked />
                                 <label for="preview_payment_desktop"><img src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
 
                                 <input class="custom-icon-radio mobile preview-type" id="preview_payment_mobile" type="radio" name="preview-payment-type" data-target="preview-mobile-payment" data-toggle="preview-desktop-payment" />
@@ -1203,7 +1203,7 @@
                             </div>
 
                             <div id="preview_type_post_purchase" class="radio-group">
-                                <input class="custom-icon-radio desktop preview-type" id="preview_postpurchase_desktop" type="radio" name="preview-post-purchase-type" data-target="preview-desktop-post-purchase" data-toggle="preview-mobile-post-purchase" checked/>
+                                <input class="custom-icon-radio desktop preview-type" id="preview_postpurchase_desktop" type="radio" name="preview-post-purchase-type" data-target="preview-desktop-post-purchase" data-toggle="preview-mobile-post-purchase" checked />
                                 <label for="preview_postpurchase_desktop"><img src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
 
                                 <input class="custom-icon-radio mobile preview-type" id="preview_postpurchase_mobile" type="radio" name="preview-post-purchase-type" data-target="preview-mobile-post-purchase" data-toggle="preview-desktop-post-purchase" />
@@ -1352,9 +1352,9 @@
                 <div class="modal-footer btn-group-crop">
 
                     <div class='row-flex'>
-                        <button type="button" class="btn btn-secondary btn-crop-outline zoom" id="zoom-in">+</button>
-                        <input id="zoom-slide" type="range" min="0" max="1" step="0.1" value="0">
                         <button type="button" class="btn btn-secondary btn-crop-outline zoom" id="zoom-out">-</button>
+                        <input id="zoom-slide" type="range" min="0" max="1" step="0.1" value="0">
+                        <button type="button" class="btn btn-secondary btn-crop-outline zoom" id="zoom-in">+</button>
                         <button type="button" class="btn btn-secondary btn-crop-outline" id="crop-reset">Reset</button>
                     </div>
 

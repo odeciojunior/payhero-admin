@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Facades\Agent;
 use Modules\Core\Entities\Cashback;
@@ -24,6 +25,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AchievementService;
 use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\ChargebackService;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\ReportService;
 use Modules\Core\Services\SaleService;
@@ -110,18 +112,18 @@ class DashboardApiController extends Controller
             $transactionModel = new Transaction();
             $companyId = current(Hashids::decode($companyHash));
             $company = $companyModel->find($companyId);
-            $companyService = new CompanyService();
+            $companyService = new CompanyBalanceService($company);
 
             if (empty($company)) {
                 return [];
             }
 
-            $blockedBalancePending = $companyService->getBlockedBalancePending($company);
+            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
 
-            $blockedBalance = $companyService->getBlockedBalance($company);
-            $pendingBalance = $companyService->getPendingBalance($company,CompanyService::STATEMENT_AUTOMATIC_LIQUIDATION_TYPE) + $companyService->getPendingBalance($company, CompanyService::STATEMENT_MANUAL_LIQUIDATION_TYPE);
+            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
+            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
 
-            $availableBalance = $companyService->getAvailableBalance($company) - $blockedBalance;
+            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE) - $blockedBalance;
             $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
             $blockedBalanceTotal = $blockedBalance + $blockedBalancePending;
             $statusArray = [
@@ -644,12 +646,9 @@ class DashboardApiController extends Controller
             $user = auth()->user();
 
             if (!($user->id == $user->account_owner_id)) {
-                return \response()->json(
-                    [
-                        'message' => 'Usuário não é o dono da conta'
-                    ],
-                    Response::HTTP_UNAUTHORIZED
-                );
+                return \response()->json([
+                    'message' => 'Usuário não é o dono da conta'
+                ]);
             }
 
             $dashboardNotifications = DashboardNotification::where([

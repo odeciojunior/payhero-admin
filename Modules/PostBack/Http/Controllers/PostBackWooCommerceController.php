@@ -283,6 +283,18 @@ class PostBackWooCommerceController extends Controller
                     ];
                 }
 
+                //check for _aftership_tracking_number
+                
+                if(!empty($request->meta_data)){
+                    foreach ($request->meta_data as $meta) {
+                        if($meta['key'] == '_aftership_tracking_number'){
+                            if(!empty($meta['value']))
+                                $request->correios_tracking_code = $meta['value'];
+                        }
+                    }
+                }
+
+                
 
                 if(!empty($request->correios_tracking_code)) {
                     

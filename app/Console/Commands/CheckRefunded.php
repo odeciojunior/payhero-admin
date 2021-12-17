@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\GetnetPaymentService;
@@ -27,7 +28,7 @@ class CheckRefunded extends Command
 
         $endDate = Carbon::yesterday()->format('Y-m-d');
 
-        $sales = Sale::where('gateway_id', $getnetPaymentService->getGatewayId())
+        $sales = Sale::where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
             ->where('status', Sale::STATUS_REFUNDED)
             ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
             ->whereDate('date_refunded', '>=', $endDate . ' 00:00:00')

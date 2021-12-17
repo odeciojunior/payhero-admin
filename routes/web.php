@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 //})->middleware('broadcast')->name('broadcast.auth');
 
 
-Route::get('/', '\App\Http\Controllers\Auth\LoginController@showLoginForm')->name('login');
+Route::get('/', '\App\Http\Controllers\Auth\LoginController@showLoginForm');
 
 Route::get('/termos', function () {
     return response()->file(public_path('terms-of-use.pdf'));
@@ -26,7 +26,7 @@ Route::get('/termos', function () {
 Route::group(
     [
     ],
-    function() {
+    function() {        
         // rotas autenticadas
         // rotas para autenticação e registro de novos usuarios
         Route::get('/login', '\App\Http\Controllers\Auth\LoginController@showLoginForm')->name('login');

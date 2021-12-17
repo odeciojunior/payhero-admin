@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Tracking;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Bus\Queueable;
@@ -19,58 +21,30 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $project;
+    private Project $project;
+    private ShopifyService $shopifyService;
+    private bool $restartWebhooks;
 
-    /**
-     * Create a new job instance.
-     *
-     * @param Project $project
-     */
-    public function __construct(Project $project)
+    public function __construct(Project $project, $restartWebhooks = true)
     {
+        $this->allOnQueue('low');
+
         $this->project = $project;
-        $this->allOnQueue('long');
+        $this->restartWebhooks = $restartWebhooks;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     * @throws \Exception
-     */
     public function handle()
     {
-        $project = $this->project;
-        $productService = new ProductService();
-        $trackingService = new TrackingService();
+        $integration = $this->project->shopifyIntegrations->first();
+        $this->shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
 
-        $integration = $project->shopifyIntegrations->first();
-        $shopifyService = new ShopifyService($integration->url_store, $integration->token, false);
-
-        $shopifyService->deleteShopWebhook();
-
-        $shopifyService->createShopWebhook([
-            "topic" => "products/create",
-            "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($project->id),
-            "format" => "json",
-        ]);
-
-        $shopifyService->createShopWebhook([
-            "topic" => "products/update",
-            "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($project->id),
-            "format" => "json",
-        ]);
-
-        $shopifyService->createShopWebhook([
-            "topic" => "orders/updated",
-            "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($project->id) . '/tracking',
-            "format" => "json",
-        ]);
+        $this->restartWebhooks();
 
         Sale::with([
             'productsPlansSale.tracking',
             'productsPlansSale.product',
-        ])->where('project_id', $project->id)
+            'productsSaleApi',
+        ])->where('project_id', $this->project->id)
             ->where('status', Sale::STATUS_APPROVED)
             ->whereNotNull('shopify_order')
             ->whereNotNull('delivery_id')
@@ -78,46 +52,83 @@ class ImportShopifyTrackingCodesJob implements ShouldQueue
                 $query->whereDoesntHave('tracking');
             })->whereHas('transactions', function ($query) {
                 $query->where('tracking_required', true);
-            })
-            ->chunk(100, function ($sales) use ($productService, $trackingService, $shopifyService) {
+            })->chunk(1000, function ($sales) {
                 foreach ($sales as $sale) {
                     try {
-                        $fulfillments = $shopifyService->findFulfillments($sale->shopify_order);
+                        $fulfillments = $this->shopifyService->findFulfillments($sale->shopify_order);
                         if (!empty($fulfillments)) {
-                            $saleProducts = $productService->getProductsBySale($sale);
-                            foreach ($fulfillments as $fulfillment) {
-                                $trackingCodes = $fulfillment->getTrackingNumbers();
-                                if (!empty($trackingCodes)) {
-                                    $lineItems = $fulfillment->getLineItems();
-                                    $fulfillmentWithMultipleTracking = count($trackingCodes) == count($lineItems);
-                                    foreach ($lineItems as $key => $lineItem) {
-                                        if ($fulfillmentWithMultipleTracking) {
-                                            $trackingCode = $trackingCodes[$key];
-                                        } else {
-                                            $trackingCode = $trackingCodes[0];
-                                        }
-                                        $products = $saleProducts
-                                            ->where('shopify_variant_id', $lineItem->getVariantId())
-                                            ->where('amount', $lineItem->getQuantity());
-                                        if (!$products->count()) {
-                                            $products = $saleProducts
-                                                ->where('name', $lineItem->getTitle())
-                                                ->where('description', $lineItem->getVariantTitle())
-                                                ->where('amount', $lineItem->getQuantity());
-                                        }
-                                        if ($products->count()) {
-                                            foreach ($products as $product) {
-                                                $trackingService->createOrUpdateTracking($trackingCode, $product->product_plan_sale_id);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            $this->checkFulfillment($sale, $fulfillments);
                         }
                     } catch (\Exception $e) {
                         report($e);
                     }
                 }
             });
+    }
+
+    private function restartWebhooks()
+    {
+        if ($this->restartWebhooks) {
+            $this->shopifyService->deleteShopWebhook();
+
+            $this->shopifyService->createShopWebhook([
+                "topic" => "products/create",
+                "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($this->project->id),
+                "format" => "json",
+            ]);
+
+            $this->shopifyService->createShopWebhook([
+                "topic" => "products/update",
+                "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($this->project->id),
+                "format" => "json",
+            ]);
+
+            $this->shopifyService->createShopWebhook([
+                "topic" => "orders/updated",
+                "address" => 'https://sirius.cloudfox.net/postback/shopify/' . Hashids::encode($this->project->id) . '/tracking',
+                "format" => "json",
+            ]);
+        }
+    }
+
+    private function checkFulfillment(Sale $sale, array $fulfillments)
+    {
+        $productService = new ProductService();
+        $trackingService = new TrackingService();
+
+        $saleProducts = $productService->getProductsBySale($sale);
+
+        foreach ($fulfillments as $fulfillment) {
+            $trackingCodes = $fulfillment->getTrackingNumbers();
+            if (!empty($trackingCodes)) {
+                $lineItems = $fulfillment->getLineItems();
+                $fulfillmentWithMultipleTracking = count($trackingCodes) === count($lineItems);
+                foreach ($lineItems as $key => $lineItem) {
+
+                    $trackingCode = $fulfillmentWithMultipleTracking ? $trackingCodes[$key] :$trackingCodes[0];
+
+                    $products = $saleProducts
+                        ->where('shopify_variant_id', $lineItem->getVariantId())
+                        ->where('amount', $lineItem->getQuantity());
+                    if (!$products->count()) {
+                        $products = $saleProducts
+                            ->where('name', $lineItem->getTitle())
+                            ->where('description', $lineItem->getVariantTitle())
+                            ->where('amount', $lineItem->getQuantity());
+                    }
+
+                    // Camila Monteiro
+                    if (!$products->count() && $sale->owner_id === 3933) {
+                        $products = $saleProducts;
+                    }
+
+                    if ($products->count()) {
+                        foreach ($products as $product) {
+                            $trackingService->createOrUpdateTracking($trackingCode, $product->product_plan_sale_id);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

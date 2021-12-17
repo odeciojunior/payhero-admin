@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
@@ -83,14 +84,13 @@ class CompanyResource extends JsonResource
             'user_address_document_status' => $presenter->getAddressDocumentStatus($user->address_document_status),
             'user_personal_document_status' => $presenter->getAddressDocumentStatus($user->personal_document_status),
             'account_type' => $this->account_type ?? '',
-            'document_issue_date' => !empty($this->document_issue_date) ? Carbon::parse($this->document_issue_date)
-                ->format('Y-m-d') : '',
+            'document_issue_date' => !empty($this->document_issue_date) ? Carbon::parse($this->document_issue_date)->format('Y-m-d') : '',
             'document_issuer' => $this->document_issuer ?? '',
             'document_issuer_state' => $this->document_issuer_state ?? '',
             'extra_document' => $this->extra_document ?? '',
             'active_flag' => $this->active_flag,
             'has_project' => !empty($project),
-            'capture_transaction_enabled' => $this->capture_transaction_enabled,
+            'capture_transaction_enabled' => $this->gatewayCredential(Gateway::GETNET_PRODUCTION_ID)->capture_transaction_enabled,
             'transaction_rate' => $this->transaction_rate,
             'gateway_tax' => $this->gateway_tax,
             'installment_tax' => $this->installment_tax,

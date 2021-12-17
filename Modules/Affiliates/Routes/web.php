@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['web', 'auth','permission:affiliates']], function() {
     Route::get('/affiliates/{projectId}', 'AffiliatesController@index')
         ->name('affiliates.index');
 

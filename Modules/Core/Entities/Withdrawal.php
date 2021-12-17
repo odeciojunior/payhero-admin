@@ -56,6 +56,8 @@ class Withdrawal extends Model
 
     protected $fillable = [
         'company_id',
+        'gateway_id',
+        'gateway_transfer_id',
         'value',
         'release_date',
         'status',
@@ -113,6 +115,11 @@ class Withdrawal extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo('Modules\Core\Entities\Company');
+    }
+
+    public function gateway(): BelongsTo
+    {
+        return $this->belongsTo('Modules\Core\Entities\Gateway');
     }
 
     public function pendingDebts(): BelongsToMany

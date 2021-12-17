@@ -61,6 +61,7 @@ use Modules\Core\Listeners\NotifyUserShopifyIntegrationReadyListener;
 use Modules\Core\Listeners\NotifyUserShopifyIntegrationStoreListener;
 use Modules\Core\Listeners\NotifyWithdrawalsExportedListener;
 use Modules\Core\Listeners\PixExpiredSendEmailListener;
+use Modules\Core\Listeners\PixExpiredUnicodropListener;
 use Modules\Core\Listeners\ReleasedBalanceNotifyUserListener;
 use Modules\Core\Listeners\ResetPasswordSendEmailListener;
 use Modules\Core\Listeners\Sak\SakPixExpiredListener;
@@ -188,6 +189,7 @@ class EventServiceProvider extends ServiceProvider
             PixExpiredSendEmailListener::class,
             HotBilletPixExpiredListener::class,
             SakPixExpiredListener::class,
+            PixExpiredUnicodropListener::class
         ],
         CheckTransactionReleasedEvent::class => [
             CheckTransactionReleasedListener::class,

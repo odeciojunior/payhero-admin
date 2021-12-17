@@ -1,3 +1,8 @@
+html, body {
+    position:relative;
+    overflow-x: hidden !important;
+}
+
 body {
     scroll-behavior: smooth;
     background-color: #F1F4F5;
@@ -698,7 +703,7 @@ a.label {
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
-    white-space: normal;
+    max-width: 100% !important;
 }
 
 #notification-amount {
@@ -708,13 +713,6 @@ a.label {
 .s-border-radius {
     border-radius: 16px;
 }
-.table td {
-    padding: 18px !important;
-}
-tbody td{
-    font-size:14px;
-}
-
 .panel-custom-product{
     background: #F8F8F8;
     border-radius: 8px !important;
@@ -807,7 +805,7 @@ img.border-icon{
     font-weight: 700;
     border-color: #2E85EC;
     border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px; 
+    border-bottom-left-radius: 8px;
 }
 .new-layout #content-script .input-group .form-control[readonly] {
     background-color: #ffffff;
@@ -817,7 +815,7 @@ img.border-icon{
 }
 .new-layout #content-script .input-group .btn {
     border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px; 
+    border-bottom-right-radius: 8px;
     padding-left: 8px;
     padding-right: 8px;
     color: #3D4456;
@@ -871,7 +869,7 @@ img.border-icon{
 }
 .new-layout .table td .input-group .form-control:not(:last-child) {
     border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px; 
+    border-bottom-left-radius: 8px;
     font-size: 16px;
 }
 .new-layout .table td .input-group .form-control {
@@ -881,8 +879,8 @@ img.border-icon{
     border: 1px solid #CECECE;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
     color: #3D4456;
 }
 .new-layout .table td .input-group .btn:hover {
@@ -900,7 +898,7 @@ img.border-icon{
 }
 
 .new-layout .table td .btn.pointer {
-    padding-left: .5rem; 
+    padding-left: .5rem;
     padding-right: .5rem;
 }
 
@@ -923,7 +921,7 @@ img.border-icon{
     .new-layout #content-script .form-control {
         border-top-left-radius: 8px;
         border-bottom-left-radius: 8px;
-    } 
+    }
 }
 
 .modal-new-layout .modal-content {
@@ -952,8 +950,6 @@ img.border-icon{
 }
 .modal-new-layout select.form-control {
     padding: .429rem 1rem !important;
-<<<<<<< Updated upstream
-=======
 }
 
 .modal-new-layout .modal-header {
@@ -1077,5 +1073,94 @@ img.border-icon{
 }
 .modal-plans .modal-footer .btn-primary {
     border: 1px solid #2E85EC;
->>>>>>> Stashed changes
+}
+.table td {
+    padding: 18px !important;
+}
+tbody td{
+    font-size:14px;
+}
+
+.badge-partially-liquidating {
+    background-color: #0D2C54;
+}
+/* badge config global */
+.badge{
+    color: white;
+    padding: 5px 15px;
+    border-radius: 16px;
+    font-weight: 700;
+}
+
+.sirius-select-container {
+    position: relative;
+    width: 285px;
+}
+
+.sirius-select-container .sirius-select-text {
+    padding: 10px 35px 12px 16px;
+    background-color: #FFFFFF;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMSIgaGVpZ2h0PSI2IiBmaWxsPSJub25lIj48cGF0aCBmaWxsPSIjNjM2MzYzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMC43ODEgMS4yMjUgNi4wMjggNS43OWEuNzY5Ljc2OSAwIDAgMS0xLjA1NiAwTC4yMTkgMS4yMjVhLjY5Ny42OTcgMCAwIDEgMC0xLjAxNS43NjkuNzY5IDAgMCAxIDEuMDU2IDBMNS41IDQuMjY4IDkuNzI1LjIxYS43NjkuNzY5IDAgMCAxIDEuMDU2IDAgLjY5Ny42OTcgMCAwIDEgMCAxLjAxNVoiIGNsaXAtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPgo=);
+    background-repeat: no-repeat;
+    background-position: 95% center;
+    border: 1px solid #e0e7ee;
+    border-radius: 8px;
+    font-size: 16px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.sirius-select-container .sirius-select-text:hover {
+    border: 1px solid #cad1d8;
+}
+
+.sirius-select-container .sirius-select-text.active,
+.sirius-select-container .sirius-select-text:active {
+    border: 1px solid #88bfff;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMSIgaGVpZ2h0PSI2IiBmaWxsPSJub25lIj48cGF0aCBmaWxsPSIjNjM2MzYzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0uMjE5IDQuNzc1IDQuOTcyLjIxYS43NjkuNzY5IDAgMCAxIDEuMDU2IDBsNC43NTMgNC41NjVhLjY5Ny42OTcgMCAwIDEgMCAxLjAxNS43NjkuNzY5IDAgMCAxLTEuMDU2IDBMNS41IDEuNzMyIDEuMjc1IDUuNzlhLjc2OS43NjkgMCAwIDEtMS4wNTYgMCAuNjk3LjY5NyAwIDAgMSAwLTEuMDE1WiIgY2xpcC1ydWxlPSJldmVub2RkIi8+PC9zdmc+Cg==)
+}
+
+.sirius-select-container .sirius-select-options {
+    display: none;
+    position: absolute;
+    top: 55px;
+    width: 100%;
+    max-height: 185px;
+    background: #FFFFFF;
+    border: 1px solid #DEE2E6;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 1px 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    font-size: 16px;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.sirius-select-container .sirius-select-options::-webkit-scrollbar {
+    width: 0;
+}
+
+.sirius-select-container .sirius-select-options div {
+    padding: 16px;
+    background: #FFFFFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+.sirius-select-container .sirius-select-options div:hover {
+    background: #F6F7F9;
 }

@@ -11,8 +11,12 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['web', 'auth','permission:apps']], function() {
+
+    Route::get('apps/reportana', 'ReportanaController@index');
+    Route::get('apps/reportana/{id}', 'ReportanaController@show');
+    Route::get('apps/reportana/{id}/edit', 'ReportanaController@edit');
 
     Route::Resource('apps/reportana', 'ReportanaController')
-         ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
+    ->only('create', 'store', 'update', 'destroy')->middleware('permission:apps_manage');
 });

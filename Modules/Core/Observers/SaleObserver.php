@@ -5,6 +5,7 @@ namespace Modules\Core\Observers;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Redis;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 
@@ -26,7 +27,8 @@ class SaleObserver
                 foreach ($sale->transactions as $transaction) {
 
                     if ($transaction->release_date <= Carbon::now()->format('Y-m-d')
-                        && $transaction->status_enum == (new Transaction())->present()->getStatusEnum('paid')
+                        && $transaction->status_enum == Transaction::STATUS_PAID
+                        && $transaction->gateway_id == Gateway::GETNET_PRODUCTION_ID
                     ) {
                         $transaction->update(
                             [

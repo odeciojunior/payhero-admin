@@ -96,7 +96,7 @@ $(() => {
             success: resp => {
 
                 $('#integration-'+id).remove();
-                if($('.integration-container').length === 0){
+                if($('#content').length === 0){
                     $('#no-integration-found').show();
                 }
 

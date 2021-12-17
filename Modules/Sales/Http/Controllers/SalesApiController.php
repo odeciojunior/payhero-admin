@@ -1,13 +1,12 @@
 <?php
 
 namespace Modules\Sales\Http\Controllers;
-
+use PDF;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
@@ -16,7 +15,6 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Services\CheckoutService;
-use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\EmailService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
@@ -25,12 +23,12 @@ use Modules\Core\Services\ShopifyService;
 use Modules\Plans\Transformers\PlansSelectResource;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
-use Modules\Sales\Transformers\SalesExternalResource;
 use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\WooCommerceService;
 
 class SalesApiController extends Controller
@@ -43,6 +41,7 @@ class SalesApiController extends Controller
                     $activity->log_name = 'visualization';
                 }
             )->log('Visualizou tela todas as vendas');
+
             $saleService = new SaleService();
             $data = $request->all();
             $sales = $saleService->getPaginatedSales($data);
@@ -81,6 +80,9 @@ class SalesApiController extends Controller
             if (!in_array(auth()->user()->account_owner_id, $users)) {
                 return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
             }
+            // if(!auth()->user()->hasAnyPermission('sales_manage','finances_manage','trackings_manage','report_pending')){
+            //     return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
+            // }
             return new SalesResource($sale);
         } catch (Exception $e) {
             report($e);
@@ -130,27 +132,44 @@ class SalesApiController extends Controller
         try {
             $saleIdDecoded = hashids_decode($saleId, 'sale_id');
             $sale = Sale::find($saleIdDecoded);
-            if (!in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID])) {
+            if (!in_array($sale->gateway_id, [
+                Gateway::GETNET_SANDBOX_ID, 
+                Gateway::GETNET_PRODUCTION_ID, 
+                Gateway::GERENCIANET_PRODUCTION_ID, 
+                Gateway::GERENCIANET_SANDBOX_ID,
+                Gateway::ASAAS_PRODUCTION_ID,
+                Gateway::ASAAS_SANDBOX_ID
+            ])) {
                 return response()->json(
                     ['status' => 'error', 'message' => 'Esta venda não pode mais ser estornada.'],
                     Response::HTTP_BAD_REQUEST
                 );
             }
+
             activity()->on((new Sale()))->tap(
                 function (Activity $activity) use ($saleIdDecoded) {
                     $activity->log_name = 'estorno';
                     $activity->subject_id = $saleIdDecoded;
                 }
             )->log('Tentativa estorno transação: #' . $saleId);
-            if (!(new CompanyService())->hasBalanceToRefund($sale)) {
+
+            $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
+            $gatewayService = $sale->gateway->getService();
+            $gatewayService->setCompany($producerCompany);
+
+            if (!$gatewayService->hasEnoughBalanceToRefund($sale)) {
                 return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], 400);
             }
+
             $refundObservation = $request->input('refund_observation') ?? null;
             $result = (new CheckoutService())->cancelPaymentCheckout($sale);
             if ($result['status'] != 'success') {
                 return response()->json(['message' => $result['message']], 400);
             }
-            (new SaleService())->cancel($sale, $result['response'], $refundObservation);
+                        
+            ((new Gateway)->getServiceById($sale->gateway_id))
+            ->cancel($sale,$result['response'], $refundObservation);
+
             if (!empty($sale->shopify_order)) {
                 $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
                 if (!empty($shopifyIntegration)) {
@@ -192,7 +211,8 @@ class SalesApiController extends Controller
     {
         try {
             $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
-            if (!(new CompanyService())->hasBalanceToRefund($sale)) {
+            $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
+            if (!(new CompanyBalanceService($producerCompany))->hasEnoughBalanceToRefund($sale)) {
                 return response()->json(
                     [
                         'message' => 'Saldo insuficiente para realizar o estorno'
@@ -307,25 +327,36 @@ class SalesApiController extends Controller
             $data = $request->all();
             $planModel = new Plan();
             $userProjectModel = new UserProject();
-            $projectId = current(Hashids::decode($data['project_id']));
-            if ($projectId) {
+
+            $projectIds = [];
+            foreach($data['project_id'] as $project){
+                array_push($projectIds, current(Hashids::decode($project)));
+            };
+
+            if (current($projectIds)) {
+                
                 $plans = null;
+
                 if (!empty($data['search'])) {
-                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')
-                        ->where('project_id', $projectId)->get();
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->whereIn('project_id', $projectIds)->get();
+
                 } else {
-                    $plans = $planModel->where('project_id', $projectId)->limit(10)->get();
+                    $plans = $planModel->whereIn('project_id', $projectIds)->limit(30)->get();
+                
                 }
                 return PlansSelectResource::collection($plans);
+            
             } else {
                 $userId = auth()->user()->account_owner_id;
                 $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
                 $plans = null;
+
                 if (!empty($data['search'])) {
-                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')
-                        ->whereIn('project_id', $userProjects)->get();
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->whereIn('project_id', $userProjects)->get();
+
                 } else {
-                    $plans = $planModel->whereIn('project_id', $userProjects)->limit(10)->get();
+                    $plans = $planModel->whereIn('project_id', $userProjects)->limit(30)->get();
+                    
                 }
                 return PlansSelectResource::collection($plans);
             }
@@ -381,5 +412,5 @@ class SalesApiController extends Controller
                 400
             );
         }
-    }
+    }  
 }

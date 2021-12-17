@@ -56,7 +56,7 @@ class ProcessGatewayPostbacksCommand extends Command
                 ->limit(100)
                 ->get();
             $url = getenv('CHECKOUT_URL') . '/api/postback/process/asaas';
-
+            $this->info(count($postbacks)." postbacks asaas a processar");
             foreach ($postbacks as $postback) {
                 $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback->id)]);
             }

@@ -3,6 +3,20 @@ var exportFormat = null;
 $(document).ready(function () {
     getProjects();
 
+    //APLICANDO FILTRO MULTIPLO EM ELEMENTOS COM A CLASS (applySelect2)
+    $('.applySelect2').select2({
+        width:'100%',
+        multiple:true,
+        language: {
+            noResults: function () {
+                return "Nenhum resultado encontrado";
+            },
+            searching: function () {
+                return "Procurando...";
+            },
+        }
+    });
+
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
         updateSalesRecovery();
@@ -148,37 +162,38 @@ $(document).ready(function () {
     function urlDataFormatted(link) {
         let url = "";
         if (link == null) {
-            url = `?project=${$("#project option:selected").val()}&status=${$(
-                "#type_recovery option:selected"
-            ).val()}&date_range=${$(
-                "#date-range-sales-recovery"
-            ).val()}&client=${$(
-                "#client-name"
-            ).val()}&date_type=created_at&client_document=${$(
-                "#client-cpf"
-            ).val()}&plan=${$("#plan").val()}`;
+            url = `?project=${$("#project").val()}&recovery_type=${$("#recovery_type option:selected")
+
+            .val()}&date_range=${$("#date-range-sales-recovery")
+
+            .val()}&client=${$("#client-name")
+
+            .val()}&date_type=created_at&client_document=${$("#client-cpf")
+
+            .val()}&plan=${$("#plan").val()}`;
+            
         } else {
-            url = `${link}&project=${$(
-                "#project option:selected"
-            ).val()}&status=${$(
-                "#type_recovery option:selected"
-            ).val()}&date_range=${$(
-                "#date-range-sales-recovery"
-            ).val()}&client=${$(
-                "#client-name"
-            ).val()}&date_type=created_at&client_document=${$(
-                "#client-cpf"
-            ).val()}&plan=${$("#plan").val()}`;
+            url = `${link}&project=${$("#project").val()}
+
+            &recovery_type=${$("#recovery_type option:selected").val()}
+            
+            &date_range=${$("#date-range-sales-recovery").val()}
+            
+            &client=${$("#client-name").val()}
+            
+            &date_type=created_at&client_document=${$("#client-cpf").val()}
+            
+            &plan=${$("#plan").val()}`;
         }
 
-        let typeRecoverySelected = $("#type_recovery option:selected").val();
-        if (typeRecoverySelected == 1) {
+        let recoveryTypeSelected = $("#recovery_type option:selected").val();
+        if (recoveryTypeSelected == 1) {
             return `/api/checkout${url}`;
-        } else if (typeRecoverySelected == 3) {
+        } else if (recoveryTypeSelected == 3) {
             return `/api/recovery/getrefusedcart${url}`;
-        } else if (typeRecoverySelected == 4) {
+        } else if (recoveryTypeSelected == 4) {
             return `/api/recovery/get-pix${url}`;
-        } else if (typeRecoverySelected == 5) {
+        } else if (recoveryTypeSelected == 5) {
             return `/api/recovery/getboleto${url}`;
         } else {
             return `/api/sales${url}`;
@@ -212,34 +227,19 @@ $(document).ready(function () {
                 $("#table_data").html("");
                 $("#carrinhoAbandonado").addClass("table-striped");
 
-                let typeRecovery = $('#type_recovery').val();
-                if (response.data == "" && typeRecovery) {
+                let recoveryType = $('#recovery_type').children("option:selected").text().toLowerCase();
+                let image = $("#table_data").attr("img-empty");
+                if (response.data == "" && recoveryType) {
                     $("#pagination-salesRecovery").hide();
                     $("#table_data").html(
-                        "<tr><td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#table_data").attr("img-empty") +
-                        "'>Nenhum carrinho abandonado encontrado</td></tr>"
+                        `<tr>
+                            <td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'>
+                                <img style='width:124px;margin-right:12px;' src=${image}>
+                                Nenhum ${recoveryType} encontrado
+                            </td>
+                        </tr>`
                     );
-                } else if (
-                    response.data == "" &&
-                    typeRecovery
-                ) {
-                    $("#pagination-salesRecovery").hide();
-                    $("#table_data").html(
-                        "<tr><td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#table_data").attr("img-empty") +
-                        "'>Nenhum boleto vencido encontrado</td></tr>"
-                    );
-                } else if (
-                    response.data == "" &&
-                    typeRecovery
-                ) {
-                    $("#pagination-salesRecovery").hide();
-                    $("#table_data").html(
-                        "<tr><td colspan='11' class='text-center' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#table_data").attr("img-empty") +
-                        "'>Nenhum cartão recusado encontrado</td></tr>"
-                    );
+                
                 } else {
                     createHTMLTable(response);
                     $("#pagination-salesRecovery").show();
@@ -254,7 +254,7 @@ $(document).ready(function () {
                         alertCustom("success", "Link copiado!");
                     });
 
-                    if (typeRecovery == '5') {
+                    if ($('#recovery_type option:selected').val() == '5') {
                         if (verifyAccountFrozen() == false) {
                             $(".sale_status").hover(
                                 function () {
@@ -687,14 +687,20 @@ $(document).ready(function () {
     }
     function getFilters(urlParams = false) {
         let data = {
-            project: $("#project option:selected").val(),
-            status: $("#type_recovery option:selected").val(),
+            project: $("#project").val(),
+            recovery_type: $("#recovery_type option:selected").val(),
             date_range: $("#date-range-sales-recovery").val(),
             client: $("#client-name").val(),
             client_document: $("#client-cpf").val(),
             plan: $("#plan").val(),
             date_type: "created_at",
         };
+
+        Object.keys(data).forEach((value)=>{
+            if(Array.isArray(data[value])){
+                data[value] = data[value].filter((value) => value).join(',');
+            }
+        })
 
         if (urlParams) {
             let params = "";
@@ -728,11 +734,61 @@ $(document).ready(function () {
             },
         });
     }
+    //COMPORTAMENTO DO FILTRO MULTIPLO
+    function behaviorMultipleFilter(data, selectId){
+        var $select = $(`#${selectId}`);
+        var valueToRemove = 'all';
+        var values = $select.val();
+
+        if (data.id != 'all' && data.id != '') {
+            if (values) {
+                var i = values.indexOf(valueToRemove);
+
+                if (i >= 0) {
+                    values.splice(i, 1);
+                    $select.val(values).change();
+                }
+            }
+         } else {
+            if (values) {
+              values.splice(0, values.lenght);
+              $select.val(null).change();
+              
+              values.push('all');
+              $select.val('all').change();
+            }
+        }
+    }
+
+    //NAO PERMITI QUE O FILTRO FIQUE VAZIO
+    function deniedEmptyFilter(selectId){
+        let arrayValues = $(`#${selectId}`).val();
+        let valueAmount = $(`#${selectId}`).val().length;
+
+        if(valueAmount === 0){
+            arrayValues.push('all');
+            arrayValues = $(`#${selectId}`).val('all').trigger("change");
+        }
+    }
+
+    $(".applySelect2").on("select2:select", function (evt) {
+        var data = evt.params.data;
+        var selectId = $(this).attr('id');
+        behaviorMultipleFilter(data, selectId);
+
+        $(`#${selectId}`).focus().scrollTop(0);
+        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    });
+
+    $(".applySelect2").on("change", function () {            
+        let idTarget = $(this).attr('id');
+        deniedEmptyFilter(idTarget);
+    });
+    // FIM DO COMPORTAMENTO DO FILTRO
+
+    
     //Search plan
     $("#plan").select2({
-        placeholder: "Nome do plano",
-        // multiple: true,
-        allowClear: true,
         language: {
             noResults: function () {
                 return "Nenhum plano encontrado";
@@ -758,17 +814,22 @@ $(document).ready(function () {
                 Accept: "application/json",
             },
             processResults: function (res) {
+                result = $.map(res.data, function (obj) {
+                    return {
+                        id: obj.id,
+                        text: obj.name + (obj.description ? " - " + obj.description : ""),
+                    };
+                });
+
+                if(res.data.length > 0){
+                    result.splice(0, 0, {
+                        id: "",
+                        text: "Todos os Planos"
+                    });
+                }
+
                 return {
-                    results: $.map(res.data, function (obj) {
-                        return {
-                            id: obj.id,
-                            text:
-                                obj.name +
-                                (obj.description
-                                    ? " - " + obj.description
-                                    : ""),
-                        };
-                    }),
+                    results: result
                 };
             },
         },

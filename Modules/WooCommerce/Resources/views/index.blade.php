@@ -47,9 +47,16 @@
                     <div class="w-200 mt-2" style="">
                             <div class="d-flex align-items-center">
                                 <span class="o-download-cloud-1 mr-2"></span>
-                                <a href="https://sirius.cloudfox.net/modules/woocommerce/plugins/plugin_cloudfox.zip" id="btn-s" type="button" class="btn btn-round btn-default btn-outline"
-                                        style="min-width: 118px;">Download plugin
-                                </a>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Download plugin
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                      
+                                      <a class="dropdown-item" href="https://sirius.cloudfox.net/modules/woocommerce/plugins/plugin_cloudfox.zip">Adiciona ao carrinho de compras</a>
+                                      <a class="dropdown-item" href="https://sirius.cloudfox.net/modules/woocommerce/plugins/plugin_cloudfox_skip_to_checkout.zip">Envia direto pro checkout</a>
+                                    </div>
+                                  </div>
                               
                             </div>
                         </div>

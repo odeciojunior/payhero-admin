@@ -36,14 +36,10 @@ class BilletPaidUnicodropListener
                                                         ->first();
 
             if (!empty($unicodropIntegration)) {
-                $unicodropService = new UnicodropService($unicodropIntegration->token, $unicodropIntegration->id);
-                $sale             = $event->sale;
-                $sale->setRelation('customer', $event->customer);
-                $sale->load('plansSales.plan', 'delivery');
+                $unicodropService = new UnicodropService($unicodropIntegration);
                 $unicodropService->boletoPaid($event->sale);
             }
         } catch (Exception $e) {
-            Log::warning('erro ao enviar notificação para Unicodrop na venda ' . $event->sale->id);
             report($e);
         }
     }

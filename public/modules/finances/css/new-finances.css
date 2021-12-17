@@ -321,7 +321,11 @@ strong span {
     margin-left: 15px;
 }
 
-#nav-home-tab {
+#modal_detalhes .nav-tabs .nav-link:first-of-type {
+    margin-left: 0;
+}
+
+#nav-transfers-tab {
     margin-left: 0px !important;
 }
 
@@ -631,4 +635,35 @@ select, .select-pad {
         margin-right: 10px;
         max-width: calc(50% - 10px);
     }
+}
+@media only screen and (min-width: 768px){
+    .col-md-4.card {
+        margin-right: 10px;
+        max-width: calc(33.3% - 10px);
+    }
+}
+.popover {
+    left: -50px !important;
+}
+
+.disableFields {
+    background-color: #f3f7f9;
+    opacity: 1;
+}
+
+.o-arrow-right-1::before {
+    transform: rotate(180deg);
+}
+
+.page-title a {
+    display: flex;
+    align-items: center;
+    color: #404040;
+}
+
+.page-title svg {
+    width: auto;
+    height: 20px;
+    margin-left: 10px;
+    margin-top: 5px;
 }

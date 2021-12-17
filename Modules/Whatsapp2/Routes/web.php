@@ -11,8 +11,12 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['web', 'auth','permission:apps']], function() {
 
+    Route::get('apps/whatsapp2', 'Whatsapp2Controller@index');
+    Route::get('apps/whatsapp2/{id}', 'Whatsapp2Controller@show');
+    Route::get('apps/whatsapp2/{id}/edit', 'Whatsapp2Controller@edit');
+    
     Route::Resource('apps/whatsapp2', 'Whatsapp2Controller')
-         ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
+    ->only('create', 'store', 'update', 'destroy');
 });

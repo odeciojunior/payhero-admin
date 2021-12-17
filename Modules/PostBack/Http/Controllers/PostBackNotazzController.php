@@ -44,14 +44,20 @@ class PostBackNotazzController extends Controller
                 ], 400);
             }
 
-            $externalId = preg_replace("/[^0-9]/", "", $requestData["external_id"]);
-            $notazzInvoice = $notazzInvoiceModel->find($externalId);
-
-            if (empty($notazzInvoice)) {
+            if(str_contains($requestData["external_id"],'cloudfox')){
+                $externalId = preg_replace("/[^0-9]/", "", $requestData["external_id"]);
+                $notazzInvoice = $notazzInvoiceModel->find($externalId);
+                if (empty($notazzInvoice)) {
+                    return response()->json([
+                        'message' => 'Invoice não encontrada',
+                    ], 400);
+                }
+            }else{
                 return response()->json([
-                    'message' => 'Invoice não encontrada',
+                    'message' => 'Invoice inválida',
                 ], 400);
             }
+
 
             /**
              * webhook referente ao evento do rastreio disponivel, apenas ignoramos.
