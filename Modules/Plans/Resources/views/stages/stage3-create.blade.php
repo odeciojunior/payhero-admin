@@ -40,7 +40,7 @@
         <div class="row">
             <div class="col-sm-12 form-group">
                 <label for="description">Descrição</label>
-                <textarea class="form-control form-control-lg" id="description" autocomplete="off" name="description" placeholder="Adicione uma descrição curta ao seu plano" rows="3"></textarea>
+                <textarea class="form-control form-control-lg" id="description" autocomplete="off" name="description" placeholder="Adicione uma descrição curta ao seu plano" rows="2"></textarea>
             </div>
         </div>
     </div>

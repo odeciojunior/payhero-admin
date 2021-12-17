@@ -202,6 +202,7 @@ $(function () {
             });
         } else {
             $(modal).find('#btn-modal-plan-return').html('Voltar');
+            $(modal).find('#btn-modal-plan-next').html('Continuar');
         }
 
         $(modal).find('.modal-body').css('height', 'auto');
@@ -381,7 +382,7 @@ $(function () {
                                             append += '</div>';
                                             append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + (selected_products[index_product].value ?? '') + '" type="text" name="value" placeholder="Valor un."></div>';
                                             append += '<div class="div-currency">';
-                                                append += '<select class="form-control form-control-lg" type="text" name="currency_type_enum">';
+                                                append += '<select class="sirius-select" type="text" name="currency_type_enum">';
                                                     append += '<option value="BRL" ' + (selected_products[index_product].currency_type_enum == 'BRL' ? 'selected' : '') + '>BRL (R$)</option>';
                                                     append += '<option value="USD" ' + (selected_products[index_product].currency_type_enum == 'USD' ? 'selected' : '') + '>USD ($)</option>';
                                                 append += '</select>';
@@ -1444,7 +1445,8 @@ $(function () {
             $(this).attr('data-open', '0');
         } else {
             var autoHeight = $(this).parent().find('.products-data').find('.row').height();
-            $(this).parent().find('.products-data').animate({height: autoHeight}, 500);
+            $(this).parent().find('.products-data').animate({height: autoHeight}, 500).css('max-height', autoHeight);
+            $('#modal_edit_plan').find('.modal-body').css('overflow', 'hidden');
             $(this).addClass('open');
             $(this).html('Ver menos <span class="fas fa-chevron-up"></span>');
 

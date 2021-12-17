@@ -1035,6 +1035,18 @@ img.border-icon{
 }
 
 /* MODAL PLANS - breadcrumbs */
+.modal-plans .form-control:focus,
+.modal-plans .sirius-select-text.active {
+    border: 1px solid #46BCFF;
+}
+.modal-plans .sirius-select-container .sirius-select-text {
+    line-height: 23px;
+    height: 3.2876666667rem !important;
+    border-color: #C1C1C1;
+}
+.modal-plans .sirius-select-container {
+    width: 100%;
+  }
 .modal-plans .box-stage div {
     width: auto;
 }
@@ -1044,8 +1056,8 @@ img.border-icon{
     height: 36px;
     text-align: center;
     line-height: 32.5px;
-    background: #EDEDED;
-    border-radius: 50%;
+    background: #F8F8F8;
+    border-radius: 8px;
 }
 
 .modal-plans .box-breadcrumbs .box-stage .icon img {
@@ -1054,7 +1066,8 @@ img.border-icon{
 
 .modal-plans .box-stage.active .icon,
 .modal-plans .conteudo_modal_edit .icon {
-    background: #D2E7FF;
+    background: #F8F8F8;
+    border: 1px solid #2E85EC;
 }
 .modal-plans .box-stage.finalized .icon {
     background: #2E85EC;
