@@ -650,6 +650,10 @@ $.fn.shake = function () {
  * Menu implementation
  */
 $(document).ready(function () {
+    window.onbeforeunload = function () {
+        window.scrollTo(0, 0);
+    }
+
     var bodyEl = $('body')
     var menuBarToggle = $('[data-toggle="menubar"]');
     var toggle = $('[data-toggle="menubar"].nav-link');

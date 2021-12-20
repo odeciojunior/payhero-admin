@@ -68,7 +68,7 @@
         </div>
         <div class="page-content container">
             <div class="row" id="container-gateways">
-                <div class="col-md-12 col-xl-9 pr-45">
+                <div class="col-md-12 col-xl-9 pr-xl-45">
                     <div class="row" id="gateway-skeleton">
                         <div class="col-12 d-md-none">
                             <div class="skeleton skeleton-text" style="margin-bottom: 15px !important;width:80%; height: 15px"></div>
@@ -230,8 +230,8 @@
                     </div>
                     <div id="container-all-gateways"></div>
                 </div>
-                <div class="col-md-12 col-xl-3 p-0">
-                    <div class="container-history px-0" style="padding-top: 28px;">
+                <div class="col-md-12 col-xl-3 px-xl-0">
+                    <div class="container-history" style="padding-top: 28px;">
                         <div class="card card-skeleton mb-0" id="card-history">
                             <div class="col-12 px-20 pt-25 mb-20">
                                 <p class="m-0"><b>Histórico de saques</b></p>
