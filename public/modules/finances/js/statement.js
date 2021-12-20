@@ -71,11 +71,19 @@ window.updateTransfersTable = function(link = null) {
             // loadOnAny('#available-in-period', true);
 
             if (response.data == '') {
-                $("#table-transfers-body").html(
-                    "<tr class='text-center'><td colspan='11' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#table-transfers-body").attr("img-empty") +
-                        "'>Nenhum dado encontrado</td></tr>"
-                );
+                $("#table-transfers-body").html(`
+                    <tr class='text-center bg-transparent'>
+                        <td style='height: 300px' colspan='11' >
+                            <div class="d-flex justify-content-center align-items-center h-p100">
+                                <div class="row m-0 row justify-content-center align-items-center h-p100 font-size-16">
+                                        <img style='width:124px; margin-right:12px;' alt=""
+                                        src='${$("#table-transfers-body").attr("img-empty")}'>
+                                    Nenhum dado encontrado
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `);
                 $("#pagination-transfers").html("");
             } else {
                 data = '';

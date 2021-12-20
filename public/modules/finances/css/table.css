@@ -19,3 +19,7 @@ thead {
 .table-striped > tbody > tr:nth-child(even) > td, .table-striped > tbody > tr:nth-child(even) > th {
     background-color: #FBFBFB !important;
 }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: transparent !important;
+}
