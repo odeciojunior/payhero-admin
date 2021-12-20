@@ -949,6 +949,10 @@ button:active {
     opacity: .5;
 }
 
+.sirius-select-container {
+    width: 285px;
+}
+
 /* Responsive adjusts */
 
 @media (max-width: 768px) {

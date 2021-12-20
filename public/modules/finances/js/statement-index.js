@@ -141,10 +141,6 @@ $(window).on("load", function(){
                     $("#statement_company_select").append(data);
                 });
 
-                $('#transfers_company_select').selectpicker();
-                $('#transfers_company_select_mobile').selectpicker();
-                $('#extract_company_select').selectpicker();
-                $('#statement_company_select').selectpicker();
                 checkBlockedWithdrawal();
                 updateBalances();
                 loadStatementTable();

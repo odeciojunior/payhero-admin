@@ -25,7 +25,7 @@
                     <div class="col-sm-6 col-md-3 col-lg-3">
                         <div class="input-holder form-group">
                             <label for="extract_company_select">Empresa</label>
-                            <select class="form-control select-pad" name="company" id="extract_company_select"> </select>
+                            <select class="sirius-select" name="company" id="extract_company_select"> </select>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-3">
@@ -37,7 +37,7 @@
                     <div class="col-sm-6 col-md-3 col-lg-3">
                         <div class="input-holder form-group">
                             <label for="date_type">Data</label>
-                            <select class="form-control select-pad" id="date_type">
+                            <select class="sirius-select" id="date_type">
                                 <option value="transfer_date">Data da transferência</option>
                                 <option value="sale_start_date">Data da venda</option>
                             </select>
@@ -66,7 +66,7 @@
                         <div class="col-sm-6 col-md-3 col-lg-3">
                             <div class="input-holder form-group">
                                 <label for="type">Tipo</label>
-                                <select class="form-control select-pad" id="type">
+                                <select class="sirius-select" id="type">
                                     <option value="">Todos</option>
                                     <option value="1">Entrada</option>
                                     <option value="2">Saída</option>
@@ -103,14 +103,14 @@
                     <div class="col-md-3">
                         <div class="input-holder form-group">
                             <label for="statement_company_select">Empresa</label>
-                            <select class="form-control select-pad" name="company" id="statement_company_select">
+                            <select class="sirius-select" name="company" id="statement_company_select">
                             </select>
                         </div>
                     </div>
                     <div class="col-md-3" style="display:none">
                         <div class="input-holder form-group">
                             <label for="statement_data_type_select">Data</label>
-                            <select class="form-control select-pad" name="statement_data_type_select" id="statement_data_type_select">
+                            <select class="sirius-select" name="statement_data_type_select" id="statement_data_type_select">
                                 <option value="schedule_date" selected>
                                     Data
                                 </option>
@@ -134,7 +134,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="payment_method">Forma de pagamento</label>
-                            <select name='payment_method' id="payment_method" class="form-control select-pad">
+                            <select name='payment_method' id="payment_method" class="sirius-select">
                                 <option value="ALL">Todos</option>
                                 <option value="CREDIT_CARD">Cartão de crédito</option>
                                 <option value="BANK_SLIP">Boleto</option>
@@ -160,7 +160,7 @@
                         <div class="col-md-3">
                             <div class="input-holder form-group">
                                 <label for="statement_status_select">Status</label>
-                                <select class="form-control select-pad" name="status" id="statement_status_select">
+                                <select class="sirius-select" name="status" id="statement_status_select">
                                     <option value="ALL">Todos</option>
                                     <option value="WAITING_FOR_VALID_POST">
                                         Aguardando postagem válida

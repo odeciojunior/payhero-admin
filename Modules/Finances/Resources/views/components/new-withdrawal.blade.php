@@ -34,7 +34,7 @@
                 <div class="col-sm-3">
                     <div class="input-holder">
                         <label for="transfers_company_select"> Empresa</label>
-                        <select style='border-radius: 8px' class="form-control"
+                        <select style='border-radius: 8px' class="sirius-select"
                                 name="company"
                                 id="transfers_company_select"> </select>
                     </div>
@@ -82,7 +82,7 @@
                         <div class="input-holder">
                             <label for="transfers_company_select_mobile"> Empresa</label>
                             <select style='border-radius: 8px'
-                                    class="form-control"
+                                    class="sirius-select"
                                     name="company"
                                     id="transfers_company_select_mobile"> </select>
                         </div>

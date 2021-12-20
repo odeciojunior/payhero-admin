@@ -719,6 +719,14 @@ $(document).ready(function () {
 
         let $text = $target.next(`.sirius-select-text`);
         $text.text($target.children(`option:selected`).eq(0).text());
+
+        // Load default options
+        let $wrapper = $target.parent();
+        let $options = $wrapper.find('.sirius-select-options');
+        $target.children('option').each(function () {
+            let option = $(this);
+            $options.append(`<div data-value="${option.val()}">${option.text()}</div>`);
+        });
     });
 
     $(document).on('DOMSubtreeModified propertychange', '.sirius-select', function () {
