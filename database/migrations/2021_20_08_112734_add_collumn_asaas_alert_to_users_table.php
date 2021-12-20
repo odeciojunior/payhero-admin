@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCollumnAsaasAlertToCompaniesTable extends Migration
+class AddCollumnAsaasAlertToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,13 @@ class AddCollumnAsaasAlertToCompaniesTable extends Migration
      */
     public function up()
     {
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('asaas_alert')->default(false)->after('mkt_information');;
+        });
+
         Schema::table('companies', function (Blueprint $table) {
-            $table->boolean('asaas_alert')->default(false);
+            $table->dropColumn('asaas_alert');
         });
     }
 
@@ -25,7 +30,7 @@ class AddCollumnAsaasAlertToCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('asaas_alert');
         });
     }

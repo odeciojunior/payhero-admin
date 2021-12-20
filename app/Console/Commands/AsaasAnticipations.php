@@ -79,43 +79,57 @@ class AsaasAnticipations extends Command
                 if(isset($response['errors'])) {
 
                     $error = false;
+                    $updateUser = false;
                     if(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Este recebível já está reservado para a instituição') ) ) {
                             $error = false;
-                            if(!$this->simulate) {
-                                $transaction->user->update([
-                                        'asaas_alert' => true
-                                    ]);
-                            }
+                            $updateUser = true;
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças já recebidas.') ) ) {
                             $error = false;
-                            if(!$this->simulate) {
-                                $sale->update([
-                                        'anticipation_status' => 'ANTICIPATED_ASAAS'
-                                    ]);
-                            }
+                            $updateUser = true;
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Para fazer antecipação, todas as parcelas devem estar confirmadas.') ) ) {
+                            $updateUser = true;
                             $error = true;
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar parcelamentos que possuem parcelas estornadas.') ) ) {
                             $error = true;
+                            $updateUser = true;
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças estornadas.') ) ) {
                             $error = true;
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças desse cliente.') ) ) {
                             $error = true;
+                            $updateUser = true;
+                    } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
+                        and (str_contains($response['errors'][0]['description'], 'excede seu limite atual') ) ) {
+                        $error = true;
+                        $updateUser = false;
                     } elseif(isset($response['errors'][0]['code'])) {
                         $error = true;
                     }
 
                     if($error) {
-
-                        report(new Exception("OwnerId:  " . $sale->owner_id . " SaleId:  " . $sale->id .
+                        report(new Exception("UserId:  " . $sale->owner_id . " SaleId:  " . $sale->id .
                                              ' -- TransactionId ' . $transaction->id . ' -- ' . json_encode($response)));
 
+                        if($this->simulate) {
+                            \Log::info(
+                                new Exception(
+                                    "UserId:  " . $sale->owner_id . " SaleId:  " . $sale->id .
+                                    ' -- TransactionId ' . $transaction->id . ' -- ' . print_r($response, true)
+                                )
+                            );
+                        }
+                    }
+                    if($updateUser and !$this->simulate) {
+                        $transaction->user->update(
+                            [
+                                'asaas_alert' => true
+                            ]
+                        );
                     }
                 }
             }
