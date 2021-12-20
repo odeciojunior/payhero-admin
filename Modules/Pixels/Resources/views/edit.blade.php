@@ -1,3 +1,6 @@
+@push('css')
+    <link rel="stylesheet" href="{!! asset('/modules/pixels/css/pixel-edit.css?v=10') !!}">
+@endpush
 <div style="display: none; width: 100%;" id="select-platform-edit-pixel">
     <div class="modal-content p-10 s-border-radius">
         <div class="modal-header simple-border-bottom mb-10">
@@ -174,12 +177,7 @@
                                         <label for="edit-plans" class="form-control-label">
                                             Plano(s) que executarão o pixel
                                         </label>
-                                        <select
-                                                name="edit_plans[]"
-                                                class="js-states form-control edit-plans apply_plans"
-                                                style='width:100%'
-                                                data-plugin="select2"
-                                                multiple='multiple'>
+                                        <select name="edit_plans[]" class="js-states form-control edit-plans apply_plans" style='width:100%' data-plugin="select2" multiple='multiple'>
                                             <option value='all'>Todos</option>
                                         </select>
                                     </div>

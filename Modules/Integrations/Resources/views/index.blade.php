@@ -4,6 +4,7 @@
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4546') }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
+        <link rel="stylesheet" href="{{ asset('modules/integrations/css/edit-integrations.css?v=001') }}">
     @endpush
     <div class="page new-layout">
         <div style="display: none" class="page-header container pb-0">
@@ -104,7 +105,7 @@
                                 <div class="form-group col-12">
                                     <label for="token_type_enum">Tipo de Integração</label>
                                     <div id="enum-list">
-                                        <select name="token_type_enum" class="form-control form-control-lg select-enum-list">
+                                        <select name="token_type_enum" class="form-control form-control-lg select-enum-list border-default">
                                             <option value="3">Integração Externa</option>
                                             <option value="4" selected>Checkout API</option>
                                         </select>
@@ -114,7 +115,7 @@
                             <div class="row companies-container">
                                 <div class="form-group col-sm-12 col-md">
                                     <label for="empresa">Empresa</label>
-                                    <select name="company_id" id="companies" class="form-control form-control-lg">
+                                    <select name="company_id" id="companies" class="form-control form-control-lg border-default">
                                         <option value="">Selecione a empresa</option>
                                     </select>
                                 </div>

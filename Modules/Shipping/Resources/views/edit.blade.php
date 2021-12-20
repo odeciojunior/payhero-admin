@@ -1,3 +1,7 @@
+@push('css')
+    <link rel="stylesheet" href="{{ asset('/modules/shipping/css/shipping-edit.css?v=001') }}">
+@endpush
+
 <form id='form-update-shipping' enctype="multipart/form-data">
     @method('PUT')
     <input type="hidden" class="shipping-id" value="">
