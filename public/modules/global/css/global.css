@@ -1899,6 +1899,7 @@ tbody td{
     height: 40px;
     font-weight: normal;
     font-size: 16px;
+    padding: 5px;
 }
 #pagination-plans .nav-btn.active {
     border-radius: 8px;
