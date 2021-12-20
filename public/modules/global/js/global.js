@@ -91,7 +91,6 @@ function loading(elementId, loaderClass) {
 }
 
 function loadingOnScreen() {
-    // $('.page').addClass('d-none')
     $('#loadingOnScreen').append(
         `<div class="sirius-loading">
             <img style="height: 125px; width: 125px" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
@@ -177,7 +176,6 @@ function loadOnAnyEllipsis(target, remove = false, options = {}) {
 
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
-        // $('.page').removeClass('d-none')
         $('#loadingOnScreen').fadeOut(function () {
             $(this).html('')
             $('body').css('overflow-y', 'unset')
@@ -650,10 +648,6 @@ $.fn.shake = function () {
  * Menu implementation
  */
 $(document).ready(function () {
-    window.onbeforeunload = function () {
-        window.scrollTo(0, 0);
-    }
-
     var bodyEl = $('body')
     var menuBarToggle = $('[data-toggle="menubar"]');
     var toggle = $('[data-toggle="menubar"].nav-link');
