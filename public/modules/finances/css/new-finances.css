@@ -269,7 +269,22 @@ strong span {
 .input-custom-transfer {
     background-color: #FFF;
     border-radius: 12px;
-    border: 1px solid #DDD !important;;
+    border: 1px solid #DDD;;
+}
+
+.input-custom-transfer:focus-within {
+    border-color: #88BFFF;
+}
+#custom-input-addon{
+    border-radius: 0 12px 12px 0;
+    border: none !important;
+    border-top:0px;
+    border-right:0px;
+    border-bottom:0px;
+    border-left:1px solid #DDD !important;
+}
+#custom-input-addon:focus{
+    border-left:1px solid #88BFFF !important;
 }
 
 .input-moeda {

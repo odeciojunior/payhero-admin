@@ -27,13 +27,13 @@
                                     <div class="row">
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                             <label for="projeto">Projeto</label>
-                                            <select name='select_project' id="projeto" class="form-control select-pad">
+                                            <select name='select_project' id="projeto" class="form-control input-pad">
                                                 <option value="">Todos projetos</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                             <label for="status">Status</label>
-                                            <select name='sale_status' id="status" class="form-control select-pad">
+                                            <select name='sale_status' id="status" class="form-control input-pad">
                                                 <option value="">Todos status</option>
                                                 <option value="1">Aprovado</option>
                                                 <option value="2">Aguardando pagamento</option>
@@ -48,7 +48,7 @@
                                             <div class="form-group form-icons">
                                                 <label for="date_range" >Data</label>
                                                 <i style="right: 25px;bottom: 9px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-20"></i>
-                                                <input name='date_range' id="date_range" class="select-pad pr-30" placeholder="Clique para editar..." readonly >
+                                                <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly >
                                             </div>
                                         </div>
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
