@@ -381,6 +381,7 @@
                     <h3 class="black"> Você tem certeza? </h3>
                     <p class="gray"> Após confirmada, essa operação não poderá ser desfeita!</p>
                 </div>
+                <div id="asaas_message" align="center"></div>
                 <div class="row d-none">
                     <div class="col-3"></div>
                     <div class="col-3">
