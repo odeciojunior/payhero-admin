@@ -4,11 +4,35 @@ namespace Modules\CheckoutEditor\Transformers;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Core\Entities\Company;
 
 class CheckoutConfigResource extends JsonResource
 {
     public function toArray($request)
     {
+        $companies = Company::select([
+            'id',
+            'fantasy_name as name',
+            'address_document_status',
+            'bank_document_status',
+            'contract_document_status'
+        ])->where('user_id', auth()->user()->account_owner_id)
+            ->get()
+            ->map(function ($company) {
+
+                $status = ($company->bank_document_status === 3 &&
+                    $company->address_document_status === 3 &&
+                    $company->contract_document_status === 3)
+                    ? Company::STATUS_APPROVED
+                    : Company::STATUS_PENDING;
+
+                return (object)[
+                    'id' => hashids_encode($company->id),
+                    'name' => $company->name,
+                    'status' => $status
+                ];
+            });
+
         return [
             'id' => hashids_encode($this->id),
             'project_id' => hashids_encode($this->project_id),
@@ -68,6 +92,7 @@ class CheckoutConfigResource extends JsonResource
             'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
             'updated_at' => Carbon::parse($this->updated_at)->toDateTimeString(),
             'deleted_at' => Carbon::parse($this->deleted_at)->toDateTimeString(),
+            'companies' => $companies
         ];
     }
 }
