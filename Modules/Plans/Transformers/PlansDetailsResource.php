@@ -38,6 +38,7 @@ class PlansDetailsResource extends JsonResource
         }
 
         $limit_name = 24;
+        $limit_description = 60;
 
         return [
             'id' => hashids_encode($this->id),
@@ -45,7 +46,8 @@ class PlansDetailsResource extends JsonResource
             'name_short' => Str::limit($this->name, $limit_name),
             'name_short_flag' => mb_strwidth($this->name, 'UTF-8') <= $limit_name ? false : true,
             'description' => $this->description,
-            'description_short' => Str::limit($this->description, 74),
+            'description_short' => Str::limit($this->description, $limit_description),
+            'description_short_flag'    => mb_strwidth($this->description, 'UTF-8') <= $limit_description ? false : true,
             'code' => isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Domínio não configurado',
             'price' => 'R$' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
             'status' => isset($this->project->domains[0]->name) ? 1 : 0,

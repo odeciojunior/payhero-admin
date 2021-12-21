@@ -23,14 +23,18 @@ class PlansSelectResource extends JsonResource
             }
         }
 
+        $limit_description = 60;
+
         return [
-            'id'                => Hashids::encode($this->id),
-            'name'              => $this->name,
-            'name_short'        => Str::limit($this->name, 14),
-            'name_short_flag'   => mb_strwidth($this->name, 'UTF-8') <= 14 ? false : true,
-            'description'       => $this->description,
-            'custo'             => 'R$' . number_format(intval(preg_replace("/[^0-9]/", "", $this->productsPlans[0]->cost)) / 100, 2, ',', '.'),
-            'photo'             => $photo
+            'id'                        => Hashids::encode($this->id),
+            'name'                      => $this->name,
+            'name_short'                => Str::limit($this->name, 14),
+            'name_short_flag'           => mb_strwidth($this->name, 'UTF-8') <= 14 ? false : true,
+            'description'               => $this->description,
+            'description_short'         => Str::limit($this->description, $limit_description),
+            'description_short_flag'    => mb_strwidth($this->description, 'UTF-8') <= $limit_description ? false : true,
+            'custo'                     => 'R$' . number_format(intval(preg_replace("/[^0-9]/", "", $this->productsPlans[0]->cost)) / 100, 2, ',', '.'),
+            'photo'                     => $photo
         ];
     }
 }

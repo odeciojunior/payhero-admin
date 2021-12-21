@@ -29,21 +29,24 @@ class PlansResource extends JsonResource
         $costCurrency = (!is_null($this->project->notazz_configs)) ? json_decode($this->project->notazz_configs) : null;
 
         $limit_name = 24;
+        $limit_description = 60;
 
         return [
-            'id'                => Hashids::encode($this->id),
-            'name'              => $this->name,
-            'name_short'        => Str::limit($this->name, $limit_name),
-            'name_short_flag'   => mb_strwidth($this->name, 'UTF-8') <= $limit_name ? false : true,
-            'description'       => $this->description == null ? '' : $this->description,
-            'code'              => $link,
-            'price'             => 'R$' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
-            'status'            => isset($this->project->domains[0]->status) ? 1 : 0,
-            'status_code'       => $this->status,
-            'status_translated' => isset($this->project->domains[0]->name) ? 'Ativo' : 'Desativado',
-            'document_status'   => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
-            'currency_project'  => $costCurrency->cost_currency_type ?? 1,
-            'products_length'   => count($this->productsPlans),
+            'id'                        => Hashids::encode($this->id),
+            'name'                      => $this->name,
+            'name_short'                => Str::limit($this->name, $limit_name),
+            'name_short_flag'           => mb_strwidth($this->name, 'UTF-8') <= $limit_name ? false : true,
+            'description'               => $this->description,
+            'description_short'         => Str::limit($this->description, $limit_description),
+            'description_short_flag'    => mb_strwidth($this->description, 'UTF-8') <= $limit_description ? false : true,
+            'code'                      => $link,
+            'price'                     => 'R$' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
+            'status'                    => isset($this->project->domains[0]->status) ? 1 : 0,
+            'status_code'               => $this->status,
+            'status_translated'         => isset($this->project->domains[0]->name) ? 'Ativo' : 'Desativado',
+            'document_status'           => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
+            'currency_project'          => $costCurrency->cost_currency_type ?? 1,
+            'products_length'           => count($this->productsPlans),
         ];
     }
 }

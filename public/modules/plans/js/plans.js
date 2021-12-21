@@ -598,6 +598,12 @@ $(function () {
 
                         $(modal).find('#description').val(response.data.description_short);
                         $(modal).find('#description').attr('data-short', response.data.description_short).attr('data', response.data.description);
+                        if (response.data.description_short_flag) {
+                            $(modal).find('#description').attr('data-toggle', 'tooltip').attr('title', response.data.description);
+                        } else {
+                            $(modal).find('#description').removeAttr('data-toggle').removeAttr('title');
+                            $(modal).find('#description').tooltip('dispose');
+                        }
 
                         if (products.length > 2) {
                             $(modal).find('#stage1').find('.products-edit').append('<a type="button" id="all-products" data-open="0">Ver todos os produtos <span class="fas fa-chevron-down"></span></a>');
@@ -1210,6 +1216,7 @@ $(function () {
         if (!parent.find('.informations-data').hasClass('edit')) {
             setTimeout(function() {
                 $(parent).find('#name').tooltip('disable');
+                $(parent).find('#description').tooltip('disable');
                 $('#btn-edit-products-plan').hide();
 
                 parent.find('.informations-data').addClass('edit');
@@ -1248,6 +1255,7 @@ $(function () {
 
         $('#btn-edit-products-plan').show();
         $(parents).find('#name').tooltip('enable');
+        $(parents).find('#description').tooltip('enable');
 
         parents.find('.informations-data').removeClass('edit');
         parents.find('.form-control').attr('readonly', true);
@@ -1503,7 +1511,8 @@ $(function () {
                 'Accept': 'application/json',
             },
             error: function (response) {
-                $(modal).find('#name').tooltip('show');
+                $(modal).find('#name').tooltip('enable');
+                $(modal).find('#description').tooltip('enable');
                 $('#btn-edit-products-plan').show();
 
                 loadOnModalRemove('#modal_edit_plan');
@@ -1511,6 +1520,7 @@ $(function () {
             },
             success: function success(response) {
                 $(modal).find('#name').tooltip('enable');
+                $(modal).find('#description').tooltip('enable');
                 $('#btn-edit-products-plan').show();
 
                 $(modal).find('.modal-title').html('Detalhes de ' + response.plan.name_short);
@@ -1617,7 +1627,7 @@ $(function () {
                             data = '';
                             data += '<tr>';
                                 data += '<td id="" class="" style="vertical-align: middle; line-height: 1;"><span ' + (value.name_short_flag ? 'data-toggle="tooltip" title="' + value.name + '"' : '') + '>' + value.name_short + '</span><div style="color: #8B8B8B; line-height: 1;"><small>com ' + (value.products_length > 1 ? value.products_length + ' produtos' : value.products_length + ' produto') + '</small></div></td>';
-                                data += '<td id="" class="" style="vertical-align: middle;">' + value.description + '</td>';
+                                data += "<td id='' class='' style='vertical-align: middle;'><span " + (value.description_short_flag ? "data-toggle='tooltip' title='" + value.description + "'" : "") + ">" + value.description_short + "</span></td>";
                                 data += '<td id="" class="" style="vertical-align: middle;">' + value.price + '</td>';
                                 data += '<td id="link" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; cursor:pointer;" link="' + value.code + '"><span class="display-sm-none display-m-none">Copiar </span><img src="/modules/global/img/icon-copy-c.svg"></td>';
                                 data += '<td id="" class="text-center"><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
