@@ -153,6 +153,14 @@ class SalesApiController extends Controller
                 }
             )->log('Tentativa estorno transação: #' . $saleId);
 
+
+            if(in_array($sale->gateway_id, [Gateway::ASAAS_PRODUCTION_ID,Gateway::ASAAS_SANDBOX_ID]) && $sale->anticipation_status == 'PENDING'){
+                return response()->json(
+                    ['status' => 'error', 'message' => 'Venda em processo de antecipação, tente novamente mais tarde'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }  
+
             $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
             $gatewayService = $sale->gateway->getService();
             $gatewayService->setCompany($producerCompany);
@@ -413,4 +421,5 @@ class SalesApiController extends Controller
             );
         }
     }  
+
 }

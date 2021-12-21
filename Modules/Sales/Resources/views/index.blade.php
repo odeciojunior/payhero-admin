@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=' . random_int(100, 10000)) }}">
+        {{-- <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=' . random_int(100, 10000)) }}"> --}}
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
@@ -69,7 +69,7 @@
 
                                 <div class="col-sm-12 col-md-3 mb-sm-0">
                                     <label for="date_type">Data</label>
-                                    <select name='date_type' id="date_type" class="form-control select-pad">
+                                    <select name='date_type' id="date_type" class="form-control select-pad default-border">
                                         <option value="start_date">Data do pedido</option>
                                         <option value="end_date">Data do pagamento</option>
                                     </select>
@@ -381,6 +381,7 @@
                     <h3 class="black"> Você tem certeza? </h3>
                     <p class="gray"> Após confirmada, essa operação não poderá ser desfeita!</p>
                 </div>
+                <div id="asaas_message" align="center"></div>
                 <div class="row d-none">
                     <div class="col-3"></div>
                     <div class="col-3">

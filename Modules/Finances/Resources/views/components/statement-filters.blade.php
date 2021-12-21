@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-3">
                         <div class="form-group">
-                            <input name="date_range" id="date_range" class="select-pad mt-30" placeholder="Clique para editar..." readonly>
+                            <input name="date_range" id="date_range" class="input-pad mt-30" placeholder="Clique para editar..." readonly>
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@
                         <div class="form-group form-icons">
                             <label for="date_range_statement">Período</label>
                             <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
-                            <input name="date_range_statement" id="date_range_statement" class="select-pad pr-30" placeholder="Clique para editar..." readonly>
+                            <input name="date_range_statement" id="date_range_statement" class="input-pad pr-30" placeholder="Clique para editar..." readonly>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -151,7 +151,7 @@
                                         data-original-title="Se for passado esse valor, o extrato vai listar as informações dessa transação independente do filtro de data">
                                 </i>
                             </label>
-                            <input name="statement_sale" id="statement_sale" class="select-pad" placeholder="Transação">
+                            <input name="statement_sale" id="statement_sale" class="input-pad" placeholder="Transação">
                         </div>
                     </div>
                 </div>

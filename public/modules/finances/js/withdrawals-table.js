@@ -41,7 +41,7 @@ window.loadWithdrawalsTable = function(link = null) {
                 const emptyImage = $("#withdrawals-table-data").attr("img-empty");
                 $("#withdrawals-table-data").html(
                 `<tr style='border-radius: 16px;'>
-                            <td colspan='6' class='text-center' style='vertical-align: middle;height:257px;'>
+                            <td colspan='6' class='text-center' style='vertical-align: middle;height:300px;'>
                                 <div class="row justify-content-center align-items-center h-p100 font-size-16">
                                     <img style="width: 124px;" src='${emptyImage}' alt="">Nenhum saque realizado até o momento
                                 </div>

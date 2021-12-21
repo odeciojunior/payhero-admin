@@ -13,6 +13,7 @@ use Modules\Core\Events\NewChargebackEvent;
 use Modules\Core\Services\AdjustmentRequest;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Modules\Core\Services\SaleService;
 
 class CreateChargebackDebitListener implements ShouldQueue
 {
@@ -28,8 +29,10 @@ class CreateChargebackDebitListener implements ShouldQueue
         try{
 
             $sale = $event->sale;
-            $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
-            $saleTax = $this->getSaleTax($cloudfoxTransaction, $sale);
+            
+            $saleService = new SaleService();
+            $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value:0;
+            $saleTax = $saleService->getSaleTax($sale,$cashbackValue);
 
             foreach ($sale->transactions as $transaction) {
                 if (empty($transaction->company)) {
@@ -123,24 +126,6 @@ class CreateChargebackDebitListener implements ShouldQueue
     //     }
     // }
 
-    private function getSaleTax($cloudfoxTransaction, $sale)
-    {
-        $saleTax = $cloudfoxTransaction->value;
-        if (!empty($sale->installment_tax_value)) {
-            $saleTax -= $sale->installment_tax_value;
-        } elseif ($sale->installments_amount > 1) {
-            $saleTax -= ($sale->original_total_paid_value -
-                (
-                    foxutils()->onlyNumbers($sale->sub_total) +
-                    foxutils()->onlyNumbers($sale->shipment_value)
-                ));
-            if (!empty(foxutils()->onlyNumbers($sale->shopify_discount))) {
-                $saleTax -= foxutils()->onlyNumbers($sale->shopify_discount);
-            }
-        }
-
-        return $saleTax;
-    }
 
     private function getnetKeys(): array
     {
