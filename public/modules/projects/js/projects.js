@@ -453,7 +453,7 @@ $(() => {
 
         $('.custom_message_box').hide('fast', 'linear');
         if(project.custom_message_configs &&  project.custom_message_configs.active){
-            $('[name=custom_message_switch]').prop('checked', project.custom_message_configs.active);            
+            $('[name=custom_message_switch]').prop('checked', project.custom_message_configs.active);
             $('[name=custom_message_title]').val(project.custom_message_configs.title);
             $('[name=custom_message_content]').val(project.custom_message_configs.message);
             $('.custom_message_box').show('fast', 'linear');
@@ -1193,7 +1193,7 @@ $(() => {
         }
     });
 
-    
+
 
     statusUrlAffiliatesColor()
 
@@ -1347,4 +1347,22 @@ $(() => {
     function setZetoToPixDiscount(element) {
         element.val(0);
     }
+
+    $('.nav-tabs-horizontal-custom').on('click', '.nav-link', function() {
+        $('.slick-slider').find('.nav-link').each(function() {
+            if ($(this).hasClass('show')) {
+                $(this).addClass('active');
+            }
+        });
+    });
+
+    $('.slick-slider').on('click', '.nav-link', function() {
+        let tabId = $(this).attr('id');
+
+        $('.slick-slider').find('.nav-link').each(function() {
+            if ($(this).attr('id') != tabId) {
+                $(this).removeClass('show');
+            }
+        });
+    });
 });
