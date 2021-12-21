@@ -243,3 +243,26 @@
         margin-bottom: calc(10% - 10px) !important;
     }
 }
+
+.product-chargeback{
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.product-alert-color{
+    background-color: #FCFCFC;
+}
+
+.tracking-sell{
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 0px;
+}
+
+.border-product-alert{
+    border-left: 1px solid #F1F1F1;
+}
+
