@@ -734,6 +734,20 @@ $.fn.shake = function () {
     }
 };
 
+// sirius select
+function renderSiriusSelect(target) {
+    let $target = $(target);
+    let $wrapper = $target.parent();
+    let $text = $wrapper.find('.sirius-select-text');
+    let $options = $wrapper.find('.sirius-select-options');
+    $options.html('');
+    $target.children('option').each(function () {
+        let option = $(this);
+        $options.append(`<div data-value="${option.val()}">${option.text()}</div>`);
+    });
+    $text.text($target.children('option:selected').eq(0).text());
+}
+
 /**
  * Menu implementation
  */
@@ -795,20 +809,6 @@ $(document).ready(function () {
     $(document).on('hidden.bs.modal', function (e) {
         document.querySelector('body').style.overflowY = 'unset';
     });
-
-    // sirius select
-    function renderSiriusSelect(target) {
-        let $target = $(target);
-        let $wrapper = $target.parent();
-        let $text = $wrapper.find('.sirius-select-text');
-        let $options = $wrapper.find('.sirius-select-options');
-        $options.html('');
-        $target.children('option').each(function () {
-            let option = $(this);
-            $options.append(`<div data-value="${option.val()}">${option.text()}</div>`);
-        });
-        $text.text($target.children('option:selected').eq(0).text());
-    }
 
     $('.sirius-select').each(function () {
         let $target = $(this);

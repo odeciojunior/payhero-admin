@@ -22,7 +22,7 @@
                 </div>
             </div>
 
-            <div class="modal-footer">
+            <div class="modal-footer border-on">
                 <button id="btn-modal-plan-return" type="button" data-type="create" class="btn btn-default btn-lg" role="button">Voltar</button>
                 <button id="btn-modal-plan-next" type="button" data-type="create" data-stage="1" class="btn btn-primary btn-lg">Continuar</button>
             </div>
