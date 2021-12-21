@@ -725,6 +725,7 @@ $(document).ready(function () {
     $('.sirius-select').each(function () {
         let $target = $(this);
         let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
+        $target.removeClass();
         $target.wrap(`<div class="sirius-select-container ${classes}"></div>`);
         $target.hide();
         $target.after(`<div class="sirius-select-options"></div>`);
