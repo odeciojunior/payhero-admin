@@ -3,3 +3,6 @@
     height: 300px;
     object-fit: cover;
 }
+.select2-dropdown.select2-dropdown--above{
+    border-color: #88BFFF;
+}

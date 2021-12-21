@@ -6,13 +6,13 @@
             <div class="col-12">
                 <div class='form-group'>
                     <label for="select_projects_create">Selecione seu projeto</label>
-                    <select class="select-pad" id="select_projects_create" name="select_projects_create"> </select>
+                    <select class="input-pad" id="select_projects_create" name="select_projects_create"> </select>
                 </div>
             </div>
             <div class="col-12">
                 <div class='form-group'>
                     <label for="select_invoice_type_create">Tipo de nota fiscal emitida para o projeto</label>
-                    <select class="select-pad" id="select_invoice_type_create" name="select_invoice_type_create">
+                    <select class="input-pad" id="select_invoice_type_create" name="select_invoice_type_create">
                         <option value='1'>Nota de Serviço (nfse)</option>
                         {{--                        <option value='2'>Nota de Produto (nfe)</option>--}}
                     </select>
@@ -50,7 +50,7 @@
             <div class='form-group col-12'>
                 <label for="url_store">Dias em espera</label>
                 <div class="d-flex input-group">
-                    <select class="select-pad" id="select_pending_days_create" name="select_pending_days_create">
+                    <select class="input-pad" id="select_pending_days_create" name="select_pending_days_create">
                         <option value='1'>1</option>
                         <option value='7'>7</option>
                         <option value='15'>15</option>

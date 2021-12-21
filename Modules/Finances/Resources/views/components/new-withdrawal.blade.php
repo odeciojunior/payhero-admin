@@ -40,8 +40,7 @@
                         <input id="custom-input-addon" type="text"
                                class="form-control input-pad withdrawal-value"
                                placeholder="Digite o valor" aria-label="Digite o valor"
-                               aria-describedby="basic-addon1"
-                               style='border-radius: 0 12px 12px 0; border: none !important; border-left:1px solid #DDD !important;'>
+                               aria-describedby="basic-addon1">
                     </div>
                 </div>
                 <div class="col-sm-3 pt-1">
