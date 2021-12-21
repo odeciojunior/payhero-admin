@@ -46,7 +46,8 @@ class RegisterWebhookAsaas extends Command
     {
         $credentials = GatewaysCompaniesCredential::where('gateway_id',$this->gatewayId)->whereNotNull('gateway_api_key')
         ->where(function($qr){
-            $qr->where('has_transfers_webhook','<>',1)->orWhere('has_charges_webhook','<>',1);
+            $qr->whereNull('has_transfers_webhook')->orWhere('has_transfers_webhook',0)
+            ->orWhereNull('has_charges_webhook')->orWhere('has_charges_webhook',0);
         })->get();
 
         $output = new ConsoleOutput();
@@ -54,13 +55,14 @@ class RegisterWebhookAsaas extends Command
         $progress->start();
 
         foreach($credentials as $credential){
-            $this->registerWebhook($credential);
+            $this->registerTransferWebhook($credential);
+            $this->registerChargeWebhook($credential);
             $progress->advance();
         }
         $progress->finish();
     }
 
-    public function registerWebhook(GatewaysCompaniesCredential $credential){
+    public function registerTransferWebhook(GatewaysCompaniesCredential $credential){
         try{
 
             if($credential->has_transfers_webhook <> 1){
@@ -73,7 +75,10 @@ class RegisterWebhookAsaas extends Command
         catch(Exception $ex) {            
             $credential->update(['has_transfers_webhook' => 0]);            
         }
+    }
 
+    public function registerChargeWebhook(GatewaysCompaniesCredential $credential)
+    {        
         try{
             if($credential->has_charges_webhook <> 1){
                 $response = $this->api->registerChargesWebhookAsaas($credential->company_id);            
