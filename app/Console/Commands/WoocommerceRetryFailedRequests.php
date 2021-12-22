@@ -52,17 +52,17 @@ class WoocommerceRetryFailedRequests extends Command
     
                     $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
 
-                    $res = $service->approveBillet($request['order'], $request['project_id']);
+                    $res = $service->approveBillet($request['order'], $request['project_id'], null, false);
 
                     if(!empty($res->status) && $res->status == 'processing'){
                         $res = json_encode($res);
                         $service->updatePostRequest($request['id'], 1, $res);
                         
-                        $this->line('sucesso: '.$request['id']);
+                        $this->line('sucesso -> status changed to paid on order: '.$request['order']);
                         
                     }else{
                         
-                        $this->line('fail: '.$request['id']);
+                        $this->line('fail -> requesId: '.$request['id']);
                     }
                 }
 
