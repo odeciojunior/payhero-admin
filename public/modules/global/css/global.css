@@ -1597,7 +1597,7 @@ input[type="checkbox"], input[type="radio"] {
     height: 36px
 }
 .placeholder-avatar {
-    border-radius: 50%;
+    border-radius: 8px;
     width: 36px;
     height: 36px;
 }
