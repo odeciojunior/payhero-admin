@@ -4,6 +4,11 @@ namespace Modules\CheckoutEditor\Http\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cookie;
+use Modules\CheckoutEditor\Http\Requests\SendSupportEmailVerificationRequest;
+use Modules\CheckoutEditor\Http\Requests\SendSupportPhoneVerificationRequest;
+use Modules\CheckoutEditor\Http\Requests\UpdateCheckoutConfigRequest;
+use Modules\CheckoutEditor\Http\Requests\VerifySupportEmailRequest;
+use Modules\CheckoutEditor\Http\Requests\VerifySupportPhoneRequest;
 use Modules\CheckoutEditor\Transformers\CheckoutConfigResource;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
@@ -11,11 +16,6 @@ use Modules\Core\Services\AmazonFileService;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
-use Modules\Products\Http\Requests\SendSupportEmailVerificationRequest;
-use Modules\Products\Http\Requests\SendSupportPhoneVerificationRequest;
-use Modules\Products\Http\Requests\UpdateCheckoutConfigRequest;
-use Modules\Products\Http\Requests\VerifySupportEmailRequest;
-use Modules\Products\Http\Requests\VerifySupportPhoneRequest;
 use Spatie\Activitylog\Models\Activity;
 
 class CheckoutEditorApiController extends Controller
