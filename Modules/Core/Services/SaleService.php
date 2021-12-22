@@ -408,8 +408,8 @@ class SaleService
         }
 
         $taxa = $totalTaxPercentage = $totalTax = $transactionRate = 0;
-        $totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
-        $totalToCalcTaxReal += $cashbackValue;
+        //$totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
+        $totalToCalcTaxReal = $total + $cashbackValue;
 
         if ($userTransaction->percentage_rate > 0) {
             $totalTaxPercentage = (int)($totalToCalcTaxReal * ($userTransaction->percentage_rate / 100));
