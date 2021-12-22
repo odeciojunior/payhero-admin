@@ -89,33 +89,31 @@
                             </a>
                         </div>
                         <div class="panel-collapse collapse" id="collapseSecond" aria-labelledby="headingSecond" role="tabpanel" style="">
-                            <div class="panel-body justify-content-center" style="overflow-x: auto;">
+                            <div class="panel-body justify-content-center position-relative" style="overflow-x: auto;">
                                 <span class="d-block mb-10">Preencha a coluna correspondente aos <strong>Códigos de Rastreio</strong></span>
-                                <table class="table table-striped" style="cursor: default;">
-                                    <thead style="font-size: 16px; background: #3e8ef7;">
-                                        <tr style="color: #fff;">
-                                            <td class="text-nowrap">Código da Venda</td>
-                                            <td class="text-nowrap">Código de Rastreio</td>
-                                            <td class="text-nowrap">Código do Produto</td>
+                                <table class="import-example-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Código da Venda</th>
+                                            <th>Código de Rastreio</th>
+                                            <th>Código do Produto</th>
                                         </tr>
                                     </thead>
-                                    <tbody style="font-size: 11px;">
-                                        <tr style="color: #000;">
+                                    <tbody>
+                                        <tr>
                                             <td>#x4S2ksh3</td>
                                             <td>AA123456789BR</td>
                                             <td>#mWspfhMRLCHLxke</td>
                                         </tr>
-                                        <tr style="color: #000;">
+                                        <tr>
                                             <td>#PhkZkf4W</td>
                                             <td>AA987654321BR</td>
                                             <td>#Ra1rm46WlzA09nB</td>
                                         </tr>
-                                        <tr style="color: #000;">
+                                        <tr>
                                             <td>#LAc8z7H9</td>
-                                            <td style="padding: 0 !important;">
-                                                <div class="cell-selected">
-                                                    <span class="caret">AA100833276BR</span>
-                                                </div>
+                                            <td class="cell-selected">
+                                                <span class="caret">AA100833276BR</span>
                                             </td>
                                             <td>#EQUZC43Kq2HLalK</td>
                                         </tr>
