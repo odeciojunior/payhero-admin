@@ -128,6 +128,14 @@ class CheckoutGateway extends GatewayAbstract
         return json_decode($this->requestHttp($options));   
     }
 
+    public function getPaymentInfo($saleId){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'getPaymentInfo',  
+            'variables'=>[$saleId]             
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
     public function setBaseUrl($newUrl){
         $this->baseUrl = $newUrl;
     }
@@ -181,7 +189,11 @@ class CheckoutGateway extends GatewayAbstract
             "transferSubSellerToSeller" => [
                 "route" => "withdrawal/asaas/transfer-subseller-to-seller/:companyId",
                 "method" => "POST"
-            ],            
+            ],  
+            "getPaymentInfo"=>[
+                "route" => "payment/info/:saleId",
+                "method" => "GET"
+            ]
         ];
     }
 

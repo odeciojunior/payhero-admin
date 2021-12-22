@@ -64,7 +64,7 @@ $(function () {
                 $('#modal-edit-project-notification .project-notification-title').val(response.data.title);
                 $('#modal-edit-project-notification .project-notification-subject').val(response.data.subject);
 
-                if (response.data.event_enum > 1) {
+                if (response.data.event_enum > 0) {
                     $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", response.data.event_enum - 1).change();
                 }
 
