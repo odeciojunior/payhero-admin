@@ -275,7 +275,7 @@ class TrackingService
                 ->whereIn('status', $saleStatus)
                 ->where('owner_id', $userId);
 
-            if (isset($filters['sale'])) {
+            if (!empty($filters['sale'])) {
                 $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));
                 $query->where('id', $saleId);
             }
@@ -341,7 +341,7 @@ class TrackingService
             });
         }
 
-        if (isset($filters['problem'])) {
+        if (!empty($filters['problem'])) {
             if ($filters['problem'] == 1) {
                 $productPlanSales->whereHas(
                     'tracking',
@@ -358,7 +358,7 @@ class TrackingService
             }
         }
 
-        if (isset($filters['tracking_code'])) {
+        if (!empty($filters['tracking_code'])) {
             $productPlanSales->whereHas(
                 'tracking',
                 function ($query) use ($filters) {

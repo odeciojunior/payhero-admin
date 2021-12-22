@@ -346,7 +346,7 @@ class ProjectsApiController extends Controller
             $projectId = current(Hashids::decode($id));
 
             CacheService::forget(CacheService::CHECKOUT_PROJECT, $projectId);
-            CacheService::forget(CacheService::SHIPPING_RULES, $projectId);
+            CacheService::forgetContainsUnique(CacheService::SHIPPING_RULES, $projectId);
 
             $project = $projectModel->find($projectId);
 

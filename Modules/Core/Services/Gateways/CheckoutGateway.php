@@ -43,9 +43,17 @@ class CheckoutGateway extends GatewayAbstract
         return json_decode($this->requestHttp($options));
     }
 
-    public function registerWebhookTransferAsaas($companyId){
+    public function registerTransfersWebhookAsaas($companyId){
         $options = new GatewayCurlOptions([
-            'endpoint'=>'registerWebhookTransferAsaas',            
+            'endpoint'=>'registerTransfersWebhookAsaas',            
+            'data'=>['company_id'=>$companyId]
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
+    public function registerChargesWebhookAsaas($companyId){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'registerChargesWebhookAsaas',            
             'data'=>['company_id'=>$companyId]
         ]);
         return json_decode($this->requestHttp($options));
@@ -130,10 +138,14 @@ class CheckoutGateway extends GatewayAbstract
 
     public function loadEndpoints(){
         $this->endpoints = [
-            "registerWebhookTransferAsaas" => [
-                "route" => "withdrawal/asaas/register-webhook-transfer",
+            "registerTransfersWebhookAsaas" => [
+                "route" => "withdrawal/asaas/register-transfers-webhook",
                 "method" => "POST"
             ],
+            "registerChargesWebhookAsaas" => [
+                "route" => "withdrawal/asaas/register-charges-webhook",
+                "method" => "POST"
+            ],            
             "createAccount" => [
                 "route" => "withdrawal/create-account/:gatewayId",
                 "method" => "POST"

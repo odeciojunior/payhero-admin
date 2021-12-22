@@ -21,7 +21,7 @@ class CacheService
     const CHECKOUT_LOG = 'checkout-log'; // unique: checkout_id
     const CHECKOUT_PRODUCER = 'checkout-producer'; // unique: project_id
     const CHECKOUT_ONLY_DIGITAL_PRODUCTS = 'checkout-only-digital-products'; // unique: plan_id
-    const SHIPPING_RULES = 'shipping-rules'; // unique: project_id
+    const SHIPPING_RULES = 'shipping-rules'; // unique: project_id:amount
     const SHIPPING_PLAN = 'shipping-plan'; // unique: plan_id
     const SHIPPING_OB_RULES = 'shipping-ob-rules'; // unique: order_bump_rule_id
     const SHIPPING_OB_PLANS = 'shipping-ob-plans'; // unique: plan_id
