@@ -103,7 +103,7 @@
                 </div>
 
                 <!-- Resumo do vendas -->
-                <div class="col d-flex card align-items-center justify-content-center">
+                <div class="card col d-flex align-items-center justify-content-center">
                            
                     <div class="align-self-start mb-35 ml-30">
                         <div class="d-flex">
@@ -138,8 +138,9 @@
                         <ul id="slick-tabs" class="nav nav-tabs nav-tabs-line col-9 col-md-11" role="tablist" style="color: #ee535e">
                             <li class="nav-item tab-domains" role="presentation">
                                 <span style="color: #2E85EC" id="first-category" class="category-tabs">PRINCIPAL</span>
-                                <a id="tab-domains" class="nav-link active" data-toggle="tab" href="#tab_domains"
-                                   aria-controls="tab-domains" role="tab">Domínios <span id="count-cupons" class=" d-none tab-counter"> 0 </span>
+                                <a id="tab-domains" class="nav-link active" data-toggle="tab" href="#tab_domains" aria-controls="tab-domains" role="tab">
+                                    Domínios
+                                    <span id="count-cupons" class=" d-none tab-counter"> 0 </span>
                                 </a>
                             </li>
                             <li class="nav-item tab_plans" role="presentation">
@@ -193,10 +194,9 @@
                             </li>
                         </ul>
                         <ul class="nav nav-tabs nav-tabs-line col-3 col-md-1">
-                            <li class="nav-item tab_configuration" role="presentation" style="margin-left: auto;margin-right: 10px">
+                            <li class="nav-item tab_configuration mr-0" role="presentation" style="margin-left: auto;margin-right: 10px">
                                 <span class="category-tabs">&nbsp;</span>
-                                <a id="tab_configuration" class="nav-link" data-toggle="tab"
-                                   href="#tab_configuration_project"
+                                <a id="tab_configuration" class="nav-link" data-toggle="tab" href="#tab_configuration_project"
                                    aria-controls="tab_configuration_project" role="tab"> <img height="15" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
                                 </a>
                             </li>
