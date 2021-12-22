@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Products\Http\Requests;
+namespace Modules\CheckoutEditor\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
