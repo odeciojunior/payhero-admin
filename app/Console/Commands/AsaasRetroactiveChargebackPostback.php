@@ -50,6 +50,7 @@ class AsaasRetroactiveChargebackPostback extends Command
                 ->where('status',Sale::STATUS_APPROVED)
                 ->where('payment_method',Sale::CREDIT_CARD_PAYMENT)
                 ->whereNotNull('gateway_transaction_id')
+                ->where('id','>',1380939)
                 ->get();
 
         $total = count($sales);
