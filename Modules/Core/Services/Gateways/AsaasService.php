@@ -435,9 +435,9 @@ class AsaasService implements Statement
 
                         $refundValue = $refundTransaction->value;
                         if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
-                            if (!empty($refundTransaction->sale->automatic_discount)) {
-                                $refundValue -= $refundTransaction->sale->automatic_discount;
-                            }
+                            // if (!empty($refundTransaction->sale->automatic_discount)) {
+                            //     $refundValue -= $refundTransaction->sale->automatic_discount;
+                            // }
                             $refundValue += $saleTax;
                         }
                    
@@ -478,9 +478,9 @@ class AsaasService implements Statement
                         ]);
 
                         $refundValue = $refundTransaction->value;                        
-                        if (!empty($refundTransaction->sale->automatic_discount)) {
-                            $refundValue -= $refundTransaction->sale->automatic_discount;
-                        }
+                        // if (!empty($refundTransaction->sale->automatic_discount)) {
+                        //     $refundValue -= $refundTransaction->sale->automatic_discount;
+                        // }
                         $refundValue += $saleTax;                    
                    
                         Transfer::create([

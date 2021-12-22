@@ -632,7 +632,7 @@ class SaleService
     public function getSaleTax($sale,$cashbackValue)
     {
         $foxValue = $sale->transactions->whereNull('company_id')->first()->value??0;
-        $inviteValue = $sale->transactions->whereNotNull('company_id')->where('type',1)->first()->value??0;
+        $inviteValue = $sale->transactions->whereNotNull('company_id')->where('type',3)->first()->value??0;
 
         $saleTax = $foxValue + $cashbackValue + $inviteValue;           
 
