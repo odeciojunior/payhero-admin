@@ -112,7 +112,7 @@ class PixService
 
                             $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
 
-                            $service->cancelOrder($sale, 'Pix');
+                            $service->cancelOrder($sale->woocommerce_order, 'Pix cancelado');
                         }
                     } catch (Exception $e) {
                         report($e);

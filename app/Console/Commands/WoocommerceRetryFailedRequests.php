@@ -45,12 +45,10 @@ class WoocommerceRetryFailedRequests extends Command
 
         foreach ($requests as $request) {
             try {
-
-                if($request['method']=='approve_billet'){
-
-                    $integration = WooCommerceIntegration::where('project_id', $request['project_id'])->first();
-    
-                    $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                $integration = WooCommerceIntegration::where('project_id', $request['project_id'])->first();
+                $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                
+                if($request['method']=='approve_billet' || $request['method']=='ApproveOrder'){
 
                     $res = $service->approveBillet($request['order'], $request['project_id'], null, false);
 
@@ -59,6 +57,22 @@ class WoocommerceRetryFailedRequests extends Command
                         $service->updatePostRequest($request['id'], 1, $res);
                         
                         $this->line('sucesso -> status changed to paid on order: '.$request['order']);
+                        
+                    }else{
+                        
+                        $this->line('fail -> requesId: '.$request['id']);
+                    }
+                }
+
+                if($request['method']=='CancelOrder' || $request['method']=='CancelOrderAntiFraud'){
+
+                    $res = $service->cancelOrder($request['order'], 'Cancelado por antifraud.');
+
+                    if(!empty($res->status) && $res->status == 'cancelled'){
+                        $res = json_encode($res);
+                        $service->updatePostRequest($request['id'], 1, $res);
+                        
+                        $this->line('sucesso -> status changed to cancelled -> order: '.$request['order']);
                         
                     }else{
                         

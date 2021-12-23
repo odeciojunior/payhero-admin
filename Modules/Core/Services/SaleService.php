@@ -863,7 +863,7 @@ class SaleService
                         $integration->token_pass
                     );
 
-                    $service->cancelOrder($sale, 'Estorno');
+                    $service->cancelOrder($sale->woocommerce_order, 'Estorno');
                 }
             } catch (Exception $e) {
                 report($e);
