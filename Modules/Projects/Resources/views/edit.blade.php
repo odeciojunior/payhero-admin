@@ -9,7 +9,7 @@
     </div>
 
     <div class="d-flex">
-        <div class="col-1 badge badge-primary font-size-14 mr-10">
+        <div class="badge badge-primary font-size-14 mr-10">
             NOVO
         </div>
 
@@ -37,7 +37,7 @@
 
             <div class='col-md-3 d-flex flex-column' id='div-img-project' style='position: relative;'>
                 <input name='photo' type='file' class='form-control' id='photoProject' style='display:none;' accept='image/*'>
-                <label for='photo' class="pl-30">Capa da loja</label>
+                <label for='photo' class="pl-15">Capa da loja</label>
 
                 <div style="width:100%" class="text-center">
                     <img id='previewimage' alt='Selecione a foto do projeto' src="{{asset('modules/global/img/projeto.svg')}}" style="min-width: 250px; max-width: 250px;margin: auto">
@@ -54,9 +54,7 @@
                     <label for='name'>Nome do projeto</label>
                     <input name='name' value="" type='text' class='input-pad' id='name' placeholder='Nome do Projeto' maxlength='40' required>
                     <span id='name-error' class='text-danger'></span>
-                    <p class='info pt-5' style='font-size: 10px;'>
-                        <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
-                    </p>
+                    <p class='info pt-5' style='font-size: 10px;'></p>
                 </div>
 
                 <div class='form-group col-lg-12'>
@@ -64,7 +62,8 @@
                     <textarea style='height:100px;' name='description' type='text' class='input-pad' id='description' placeholder='Fale um pouco sobre seu Projeto' required='' maxlength='100'></textarea>
                     <span id='description-error' class='text-danger'></span>
                     <p class='info pt-5' style='font-size: 10px;'>
-                        <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
+                        <i class='icon wb-info-circle' aria-hidden='true'></i>
+                        Recomendações: Imagem de 300x300px  |  Formatos: JPEG ou PNG
                     </p>
                 </div>
 
@@ -72,68 +71,55 @@
         </div>
     </div>
 
-    {{--Configurações--}}
+    <!-- AFILIACOES -->
     <div class="card mt-20" data-plugin="tabs">
-
         <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
-            <div class='my-30 mx-30'>
 
-                <div class='row'>
+            <!-- CABECALHO -->
+            <div class='row'>
 
-                    <div class='form-group col-md-6 col-sm-12'>
-                        <div class="switch-holder">
-                            <br>
-                            <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Habilitar
-                                link afiliação</label>
-                            <label class="switch" style='top:3px'>
-                                <input type="checkbox" id="status-url-affiliates" name="status-url-affiliates" class='check status-url-affiliates' value='0'>
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
+                <div class='col-md-12 d-flex py-10'>
+
+                    <div class="col-md-6 d-flex align-items-center pl-30">
+                        <label for='boleto_redirect' class="font-size-24 m-0">Afiliações</label>
                     </div>
 
-                    <div class='form-group col-md-6 col-sm-12 col-xs-12 div-url-affiliate'>
-                        <div class='form-group col-md-12 col-sm-12 col-xs-12'>
-                            <label for='url-affiliates'>Link afiliação</label>
-                            <div id="affiliate-link-select" class="input-group">
-                                <input type="text" class="form-control" id="url-affiliates" value="" readonly="">
-                                <span class="input-group-btn">
-                                    <button id="copy-link-affiliation" class="btn btn-default" type="button">Copiar</button>
-                                </span>
-                            </div>
-                        </div>
+                    <div class="col-md-6 d-flex justify-content-end align-items-center">
+                        <label class="switch">
+                            <input type="checkbox" id="status-url-affiliates" name="status-url-affiliates" class='check status-url-affiliates' value='0'>
+                            <span class="slider round"></span>
+                        </label>
                     </div>
-
+                    
                 </div>
+            </div>
 
-                <div class="div-url-affiliate">
+            <!-- LINHA CONTAINER GERAL -->
+            <div class="row div-url-affiliate">
 
-                    <div class='row'>
-                        <div class='form-group col-md-6 col-xs-12'>
-                            <label for='terms-affiliates'>Termos de Afiliação</label>
-                            <input type="hidden" name="terms_affiliates" id="terms_affiliates">
-                            <textarea class='input-pad' id='termsaffiliates' placeholder='Termos'></textarea>
-                            <span id='terms-affiliates-error' class='text-danger'></span>
-                            <p class='info pt-5' style='font-size: 10px;'>
-                                <i class='icon wb-info-circle' aria-hidden='true'></i> Termos exibidos na
-                                Vitrine para afiliação
-                            </p>
-                        </div>
+                <!-- CONTAINER 5 COL -->
+                <div class="col-md-5">
 
-                        <div class='form-group col-md-6 col-xs-12'>
-                            <div class='form-group col-md-12 col-sm-12 col-xs-12'>
-                                <label for='automatic-affiliation'>Afiliação automática</label>
-                                <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation' class='form-control select-pad'>
-                                    <option value='0'>Não</option>
-                                    <option value='1'>Sim</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Aprova
-                                    automaticamente as solicitações de afiliação
-                                </p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-12 pl-30 pr-0 form-group">
+                                <label for='url-affiliates font-size-16'>URL da página principal</label>
+                                <div id="affiliate-link-select" class="input-group">
+                                    <input type="text" class="form-control" id="url-affiliates" value="" readonly="">
+
+                                    {{-- <span class="input-group-btn">
+                                        <button id="copy-link-affiliation" class="btn btn-default" type="button">Copiar</button>
+                                    </span> --}}
+
+                                </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class='form-group col-md-12 col-sm-12'>
+                    <div class="row">
+                        <div class="col-md-12 d-flex">
+
+                            <div class='form-group col-md-6 pl-30 pr-0'>
                                 <label for="cookie-duration">Duração do cookie</label>
                                 <select class='cookie-duration form-control select-pad' name='cookie_duration'>
                                     <option value="0"> Eterno</option>
@@ -146,25 +132,86 @@
                                 </select>
                                 <span id='error-cookie-duration' class='text-danger' style='display: none'></span>
                             </div>
-
-                            <div class='form-group col-md-12 col-sm-12 col-xs-12'>
+    
+                            <div class='form-group col-md-6 pr-0'>
                                 <label for='percentage-affiliates'>Porcentagem</label>
                                 <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='text' min="0" max="100" maxlength="3">
                                 <span id='input-pad-error' class='text-danger'></span>
                             </div>
 
-                            <div class='form-group col-md-12 col-sm-12'>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 pl-30">
+                            <div class="col-12">
+                                <label for='commission-type-enum'>Tipo comissão</label>
+                            </div>
+
+                            <div class="d-flex col-md-12">
+                                <div class="col-md-12 d-flex justify-content-between px-0" id='commission_type_enum'>
+
+                                    <div class="col-md-6 pl-0">
+                                        <input type="radio" id="first-click" name="commission_type_enum" class="d-none" value="1" checked>
+                                        <label for="first-click" class="col-md-12 btn bg-light font-size-16 p-10 type-comission">Primiero Click</label>
+                                    </div>
+
+                                    <div class="col-md-6 pr-0">
+                                        <input type="radio" id="last-click" name="commission_type_enum" class="d-none" value="2">
+                                        <label for="last-click" class="col-md-12 btn bg-light font-size-16 p-10 type-comission">Ultimo Click</label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            {{-- <div class='form-group col-md-12 pr-0'>
                                 <label for='commission-type-enum'>Tipo comissão</label>
                                 <select class='commission-type-enum form-control select-pad' name='commission_type_enum' class='form-control select-pad'>
                                     <option value='1'>Primeiro clique</option>
                                     <option value='2'>Último clique</option>
                                 </select>
-                            </div>
+                            </div> --}}
+                            
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Container de 7 col -->
+                <div class="col-md-7">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class='form-group col-md-12'>
+                                <label for='terms-affiliates'>Termos de Afiliação</label>
+                                <input type="hidden" name="terms_affiliates" id="terms_affiliates">
+                                <textarea class='input-pad' id='termsaffiliates' placeholder='Termos'></textarea>
+                                <span id='terms-affiliates-error' class='text-danger'></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="div-url-affiliate">
+                <div class='row'>
+                    <div class='form-group col-md-6 col-xs-12'>
+                        <div class='form-group col-md-12 col-sm-12 col-xs-12'>
+                            <label for='automatic-affiliation'>Afiliação automática</label>
+                            <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation' class='form-control select-pad'>
+                                <option value='0'>Não</option>
+                                <option value='1'>Sim</option>
+                            </select>
+                            <p class='info pt-5' style='font-size: 10px;'>
+                                <i class='icon wb-info-circle' aria-hidden='true'></i> Aprova
+                                automaticamente as solicitações de afiliação
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
     {{--END Configurações--}}
