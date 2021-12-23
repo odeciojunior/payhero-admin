@@ -402,7 +402,8 @@ class ProductsApiController extends Controller
 
             $productService = new ProductService();
             $projectId = current(Hashids::decode($data['project']));
-            $products = $productService->getProductsMyProject($projectId);
+            $variants = !empty($data['variants']) ? $data['variants'] : false;
+            $products = $productService->getProductsMyProject($projectId, $variants);
 
             return ProductsSelectResource::collection($products);
         } catch (Exception $e) {
@@ -475,11 +476,12 @@ class ProductsApiController extends Controller
         try {
             $project = $request->input('project');
             $product = $request->input('product') ?? '';
+            $variants = $request->input('variants') ?? false;
 
             $projectId = current(Hashids::decode($project));
 
             $productService = new ProductService();
-            $products = $productService->getProductsFilter($projectId, $product);
+            $products = $productService->getProductsFilter($projectId, $product, $variants);
 
             return ProductsSelectResource::collection($products);
         } catch (Exception $e) {

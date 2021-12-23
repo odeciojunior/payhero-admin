@@ -1117,7 +1117,7 @@ img.border-icon{
     position: relative;
 }
 .modal-plans .box-plans {
-    max-height: 180px;
+    max-height: 222px;
 }
 .modal-plans .box-products:not(.customizations) .col-sm-6:nth-child(odd),
 .modal-plans .box-plans .col-sm-6:nth-child(odd) {

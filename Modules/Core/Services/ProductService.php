@@ -22,38 +22,55 @@ class ProductService
      * @return mixed
      * Retorna produtos
      */
-    public function getProductsMyProject(int $projectId)
+    public function getProductsMyProject(int $projectId, bool $variants = false)
     {
         $productModel = new Product();
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
 
-        if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
+        if ($variants == true) {
             return $productModel
-            ->with('productsPlans')
+            ->select('shopify_id')
+            ->distinct()
             ->where('user_id', auth()->user()->account_owner_id)
             ->where('project_id', $projectId)
             ->take(16)
             ->get();
         } else {
-            return $productModel
-            ->with('productsPlans')
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->where('shopify', 0)
-            ->take(16)
-            ->get();
+            if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
+                return $productModel
+                ->with('productsPlans')
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->where('project_id', $projectId)
+                ->take(16)
+                ->get();
+            } else {
+                return $productModel
+                ->with('productsPlans')
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->where('shopify', 0)
+                ->take(16)
+                ->get();
+            }
         }
     }
 
-    public function getProductsFilter(int $projectId, string $product)
+    public function getProducts()
+    {
+
+    }
+
+    public function getProductsFilter(int $projectId, string $product, bool $variants = false)
     {
         $productModel = new Product();
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
-        if (!empty($projectId) && ( !empty($project->shopify_id) || !empty($project->woocommerce_id) ) ) {
+
+        if ($variants == true) {
             if (!empty($product)) {
                 return $productModel
-                ->with('productsPlans')
+                ->select('shopify_id')
+                ->distinct()
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->where('project_id', $projectId)
                 ->where('name', 'like', '%'. $product .'%')
@@ -61,28 +78,48 @@ class ProductService
                 ->get();
             } else {
                 return $productModel
-                ->with('productsPlans')
+                ->select('shopify_id')
+                ->distinct()
                 ->where('user_id', auth()->user()->account_owner_id)
                 ->where('project_id', $projectId)
                 ->take(16)
                 ->get();
             }
         } else {
-            if (!empty($product)) {
-                return $productModel
-                ->with('productsPlans')
-                ->where('user_id', auth()->user()->account_owner_id)
-                ->where('name', 'like', '%'. $product .'%')
-                ->where('shopify', 0)
-                ->take(16)
-                ->get();
+            if (!empty($projectId) && ( !empty($project->shopify_id) || !empty($project->woocommerce_id) ) ) {
+                if (!empty($product)) {
+                    return $productModel
+                    ->with('productsPlans')
+                    ->where('user_id', auth()->user()->account_owner_id)
+                    ->where('project_id', $projectId)
+                    ->where('name', 'like', '%'. $product .'%')
+                    ->take(16)
+                    ->get();
+                } else {
+                    return $productModel
+                    ->with('productsPlans')
+                    ->where('user_id', auth()->user()->account_owner_id)
+                    ->where('project_id', $projectId)
+                    ->take(16)
+                    ->get();
+                }
             } else {
-                return $productModel
-                ->with('productsPlans')
-                ->where('user_id', auth()->user()->account_owner_id)
-                ->where('shopify', 0)
-                ->take(16)
-                ->get();
+                if (!empty($product)) {
+                    return $productModel
+                    ->with('productsPlans')
+                    ->where('user_id', auth()->user()->account_owner_id)
+                    ->where('name', 'like', '%'. $product .'%')
+                    ->where('shopify', 0)
+                    ->take(16)
+                    ->get();
+                } else {
+                    return $productModel
+                    ->with('productsPlans')
+                    ->where('user_id', auth()->user()->account_owner_id)
+                    ->where('shopify', 0)
+                    ->take(16)
+                    ->get();
+                }
             }
         }
     }
