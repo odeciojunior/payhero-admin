@@ -23,7 +23,7 @@ class PlansSelectResource extends JsonResource
             }
         }
 
-        $limit_description = 60;
+        $limit_description = 24;
 
         return [
             'id'                        => Hashids::encode($this->id),

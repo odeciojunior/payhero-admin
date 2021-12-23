@@ -402,8 +402,8 @@ class ProductsApiController extends Controller
 
             $productService = new ProductService();
             $projectId = current(Hashids::decode($data['project']));
-            $variants = !empty($data['variants']) ? $data['variants'] : false;
-            $products = $productService->getProductsMyProject($projectId, $variants);
+
+            $products = $productService->getProductsMyProject($projectId);
 
             return ProductsSelectResource::collection($products);
         } catch (Exception $e) {

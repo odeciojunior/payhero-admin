@@ -169,7 +169,7 @@ $(function () {
                         $(modal).find('.product-photo').on('load', function() {
                             $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                                 $(modal).find(find_stage).find('.box-products').find('.row').css('display', 'flex').promise().done(function() {
-                                    var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 40;
+                                    var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 20;
                                     $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
                                 });
                             });
@@ -197,7 +197,8 @@ $(function () {
             products_plan.map(function(e) {
                 selected_products.push({
                     id: e.product_id,
-                    amount: e.amount
+                    amount: e.amount,
+                    value: e.product_cost
                 });
             });
         } else {
@@ -1675,7 +1676,7 @@ $(function () {
     $('body').on('click', '#tab_update_cost_block', function() {
         if (!$(this).hasClass('active')) {
             let modal = '#modal_config_cost_plan';
-            getProductsConfig(modal);
+            getPlansConfig(modal);
         }
     });
 
@@ -1700,12 +1701,13 @@ $(function () {
 
         $(modal).find('.box-plans').html(loadingPlans).promise().done(function() {
             $.ajax({
-                method: "POST",
-                url: "/api/products/search",
+                method: "GET",
+                url: "/api/plans/user-plans",
                 data: {
-                    project: projectId,
-                    plan: plan,
-                    variants: true
+                    project_id: projectId,
+                    is_config: true,
+                    variants: true,
+                    search: plan
                 },
                 dataType: "json",
                 headers: {
@@ -1730,7 +1732,7 @@ $(function () {
                                         append += '</div>';
                                         append += '<div>';
                                             append += '<h1 class="title">' + plan.name_short + '</h1>';
-                                            append += '<p class="description">Custo: ' + plan.custo + '</p>';
+                                            append += '<p class="description">' + plan.description_short + '</p>';
                                         append += '</div>';
                                     append += '</div>';
                                     append += '<div class="check">';
@@ -1766,7 +1768,7 @@ $(function () {
 
                         $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                             $(modal).find('.tab-content').fadeIn('fast').promise().done(function() {
-                                var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 65;
+                                var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 18;
                                 $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
                             });
                         });
@@ -1818,16 +1820,17 @@ $(function () {
     });
 
     // Get Products Config Cost
-    function getProductsConfig(modal) {
+    function getPlansConfig(modal) {
         $(modal).find('.modal-body').css('height', 'auto').attr('style', 'padding-bottom: 0px !important');
 
         $(modal).find('.tab-content').fadeOut('fast').promise().done(function() {
             $(modal).find('.modal-body').append(loadingPlansConfigCost).promise().done(function() {
                 $.ajax({
-                    method: "POST",
-                    url: "/api/products/userproducts",
+                    method: "GET",
+                    url: "/api/plans/user-plans",
                     data: {
-                        project: projectId,
+                        project_id: projectId,
+                        is_config: true,
                         variants: true
                     },
                     dataType: "json",
@@ -1851,7 +1854,7 @@ $(function () {
                                             append += '</div>';
                                             append += '<div>';
                                                 append += '<h1 class="title">' + plan.name_short + '</h1>';
-                                                append += '<p class="description">Variantes: ' + plan.qtd_variants + '</p>';
+                                                append += '<p class="description">' + plan.description_short + '</p>';
                                             append += '</div>';
                                         append += '</div>';
                                         append += '<div class="check">';

@@ -668,7 +668,6 @@ class PlansApiController extends Controller
                         $planId = current(Hashids::decode($p['id']));
 
                         $plan = Plan::find($planId);
-
                         $planIds = Plan::where('name', $plan->name)->where('shopify_id', $plan->shopify_id)->get()->pluck('id');
                         $productPlans = ProductPlan::whereIn('plan_id', $planIds)->get();
 

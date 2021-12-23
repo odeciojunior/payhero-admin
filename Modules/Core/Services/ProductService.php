@@ -22,36 +22,26 @@ class ProductService
      * @return mixed
      * Retorna produtos
      */
-    public function getProductsMyProject(int $projectId, bool $variants = false)
+    public function getProductsMyProject(int $projectId)
     {
         $productModel = new Product();
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
 
-        if ($variants == true) {
+        if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
             return $productModel
-            ->select('shopify_id')
-            ->distinct()
+            ->with('productsPlans')
             ->where('user_id', auth()->user()->account_owner_id)
             ->where('project_id', $projectId)
             ->take(16)
             ->get();
         } else {
-            if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
-                return $productModel
-                ->with('productsPlans')
-                ->where('user_id', auth()->user()->account_owner_id)
-                ->where('project_id', $projectId)
-                ->take(16)
-                ->get();
-            } else {
-                return $productModel
-                ->with('productsPlans')
-                ->where('user_id', auth()->user()->account_owner_id)
-                ->where('shopify', 0)
-                ->take(16)
-                ->get();
-            }
+            return $productModel
+            ->with('productsPlans')
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->where('shopify', 0)
+            ->take(16)
+            ->get();
         }
     }
 
