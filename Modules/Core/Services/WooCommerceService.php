@@ -570,9 +570,9 @@ class WooCommerceService
         }
     }
 
-    public function approveBillet($woocommerce_order, $project_id = null)
+    public function approveBillet($woocommerceOrder, $projectId = null, $saleId = null, $logRequest = true)
     {
-        if(empty($woocommerce_order)) {
+        if(empty($woocommerceOrder)) {
             return false;
         } else {
             $data = [
@@ -580,24 +580,33 @@ class WooCommerceService
                 'set_paid' => true
             ];
 
-            //$log_request_id = $this->logPostRequests($data, $project_id, 'approve_billet', $woocommerce_order);
+            if($logRequest)
+                $requestId = $this->logPostRequests($data, $projectId, 'approve_billet', $woocommerceOrder, $saleId);
 
             try {
-                $res = $this->woocommerce->put('orders/'.$woocommerce_order, $data);
+                $result = $this->woocommerce->put('orders/'.$woocommerceOrder, $data);
 
-                // if(!empty($res->status) && $res->status == 'processing') {
-                //     $res = json_encode($res);
-                //     $this->updatePostRequest($log_request_id, 1, $res);
+                $res = json_encode($result);
 
-                // } else {
-                //     $this->updatePostRequest($log_request_id, 0, $res);
+                if(!empty($result->status) && $result->status == 'processing') {
+                    
+                    if($logRequest)
+                        $this->updatePostRequest($requestId, 1, $res);
 
-                // }
+                } else {
 
-                return $res;
+                    if($logRequest)
+                        $this->updatePostRequest($requestId, 0, $res);
+
+                }
+
+                return $result;
+
             } catch (\Throwable $th) {
-                //$this->updatePostRequest($log_request_id, 0, $th);
-                report($th);
+
+                if($logRequest)
+                    $this->updatePostRequest($requestId, 0, $th->getMessage());
+                //report($th);
             }
         }
     }
@@ -621,13 +630,14 @@ class WooCommerceService
         }
     }
 
-    public function logPostRequests($data, $project_id = null, $method = null, $order = null, $sale_id = null)
+    public function logPostRequests($data, $projectId = null, $method = null, $order = null, $saleId = null)
     {
         $model = new SaleWoocommerceRequests();
         $model->send_data = json_encode($data);
         $model->method = $method;
         $model->order = $order;
-        $model->project_id = $project_id;
+        $model->sale_id = $saleId;
+        $model->project_id = $projectId;
         $model->save();
         return $model->id;
     }

@@ -41,15 +41,19 @@ class CheckWoocommerceTrackingCodes extends Command
      */
     public function handle()
     {
-        $sales = Sale::whereNotNull('woocommerce_order')->where('has_valid_tracking', false)->where('status', Sale::STATUS_APPROVED)->get();
+        $sales = Sale::select('project_id')->whereNotNull('woocommerce_order')->where('has_valid_tracking', false)
+        ->where('status', Sale::STATUS_APPROVED)
+        ->groupBy('project_id')
+        ->get();
 
+        
         foreach($sales as $sale) {
+
             $projectId = $sale->project_id;
 
             $doProducts = false;
             $doTrackingCodes = true;
             $doWebhooks = false;
-
             $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
             if(!empty($integration)) {
                 $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
