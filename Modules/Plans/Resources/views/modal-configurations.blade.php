@@ -74,8 +74,8 @@
                             <div style="margin-bottom: 21px;">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <p style="margin-bottom: 0; font-weight: bold; font-size: 16px; line-height: 20px; color: #636363;">Selecione um plano</p>
-                                        <span style="font-weight: normal; font-size: 12px; line-height: 15px; color: #989898;">Selecione um ou mais planos para alterar os custos</span>
+                                        <p style="margin-bottom: 0; font-weight: bold; font-size: 16px; line-height: 20px; color: #636363;">Selecione um produto</p>
+                                        <span style="font-weight: normal; font-size: 12px; line-height: 15px; color: #989898;">Selecione um ou mais produtos para alterar os custos</span>
                                     </div>
                                     {{--
                                     <div class="d-flex justify-content-between align-items-center select-all" id="select-all" data-selected="false" style="cursor: pointer;">

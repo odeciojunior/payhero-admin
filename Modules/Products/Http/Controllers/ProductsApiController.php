@@ -3,11 +3,13 @@
 namespace Modules\Products\Http\Controllers;
 
 use Exception;
+use Google\Service\AdExchangeBuyer\Resource\Products;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
@@ -16,6 +18,8 @@ use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Category;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\CacheService;
 use Modules\Core\Services\FoxUtils;
@@ -388,6 +392,57 @@ class ProductsApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+        }
+    }
+
+    public function getProductsVariants(Request $request)
+    {
+        try {
+            $data = $request->all();
+
+            $projectId = current(Hashids::decode($data['project_id']));
+            $products = Product::query();
+            $projectModel = new Project();
+            $project = $projectModel->find($projectId);
+
+            if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
+                $products->where('project_id', $projectId);
+            } else {
+                $products
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->where('shopify', 0);
+            }
+
+            if (!empty($data['search'])) {
+                $products->where('name', 'like', '%' . $data['search'] . '%');
+            }
+
+            $groupByVariants = boolval($data['variants'] ?? 1);
+
+            if ($groupByVariants) {
+                $products->select('name',
+                    DB::raw("min(id) as id"),
+                    DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
+                    ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
+            } else {
+                $products->select('id', 'name', 'description');
+            }
+
+            if (!empty($data['is_config'])) {
+                $products = $products->orderBy('name')->take(10)->get();
+            } else {
+                $products = $products->orderBy('name')->paginate(10);
+            }
+
+            return ProductsSelectResource::collection($products);
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados dos produtos (ProductsApiController - getProductsVariants)');
+            report($e);
+
+            return response()->json([
+                'message' => 'Ocorreu um erro, ao buscar dados dos produtos',
+            ], 400);
         }
     }
 

@@ -206,7 +206,6 @@ $(function () {
             $(modal).find('#btn-modal-plan-next').html('Continuar');
         }
 
-        $(modal).find('.modal-body').css('height', 'auto');
         $(modal).find('.tab-pane').removeClass('show active');
         $(modal).find(find_stage).find('.box-products').html('').css({'max-height': '316px', 'padding-right': '0px'});
         $(modal).find(find_stage).find('#search-product').val('');
@@ -629,7 +628,7 @@ $(function () {
                         if (flag == true) {
                             getCustom(modal);
                         } else {
-                            $(modal).find('.product-photo').on('load', function() {
+                            //$(modal).find('.product-photo').on('load', function() {
                                 $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                                     $('[data-toggle="tooltip"]').tooltip({
                                         container: '.page',
@@ -638,12 +637,12 @@ $(function () {
 
                                     $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
                                         $(modal).find('#stage1').addClass('show active').promise().done(function() {
-                                            var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + (products.length > 2 ? 65 : 55);
+                                            var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 65;
                                             $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
                                         });
                                     });
                                 });
-                            });
+                            //});
                         }
                     });
                 }
@@ -741,7 +740,7 @@ $(function () {
 
             var curHeight = $(modal).find('.modal-body').height();
             $(modal).find('#stage1-customization').find('.box-products').html(append).promise().done(function() {
-                $(modal).find('.product-photo').on('load', function() {
+                //$(modal).find('.product-photo').on('load', function() {
                     $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                         $('[data-toggle="tooltip"]').tooltip({
                             container: '.page',
@@ -755,7 +754,7 @@ $(function () {
                             });
                         });
                     });
-                });
+                //});
             });
         });
     }
@@ -849,7 +848,7 @@ $(function () {
             }
 
             $(modal).find('#stage2-customization').find('.list-custom-products').html(append).promise().done(function() {
-                $(modal).find('.product-photo').on('load', function() {
+                //$(modal).find('.product-photo').on('load', function() {
                     $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                         $(modal).find('#tab-customizations_panel').addClass('show active').promise().done(function() {
                             $(modal).find('#stage2-customization').addClass('show active').promise().done(function() {
@@ -858,7 +857,7 @@ $(function () {
                             });
                         });
                     });
-                });
+                //});
             });
         });
     }
@@ -1701,8 +1700,8 @@ $(function () {
 
         $(modal).find('.box-plans').html(loadingPlans).promise().done(function() {
             $.ajax({
-                method: "GET",
-                url: "/api/plans/user-plans",
+                method: "POST",
+                    url: "/api/products/products-variants",
                 data: {
                     project_id: projectId,
                     is_config: true,
@@ -1732,7 +1731,7 @@ $(function () {
                                         append += '</div>';
                                         append += '<div>';
                                             append += '<h1 class="title">' + plan.name_short + '</h1>';
-                                            append += '<p class="description">' + plan.description_short + '</p>';
+                                            append += '<p class="description">' + plan.description + '</p>';
                                         append += '</div>';
                                     append += '</div>';
                                     append += '<div class="check">';
@@ -1765,6 +1764,10 @@ $(function () {
                         } else {
                             $(modal + ' #tab_update_cost_block-panel .box-plans').off('wheel');
                         }
+
+                        $(modal).find(".product-photo").on("error", function () {
+                            $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                        });
 
                         $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                             $(modal).find('.tab-content').fadeIn('fast').promise().done(function() {
@@ -1826,8 +1829,8 @@ $(function () {
         $(modal).find('.tab-content').fadeOut('fast').promise().done(function() {
             $(modal).find('.modal-body').append(loadingPlansConfigCost).promise().done(function() {
                 $.ajax({
-                    method: "GET",
-                    url: "/api/plans/user-plans",
+                    method: "POST",
+                    url: "/api/products/products-variants",
                     data: {
                         project_id: projectId,
                         is_config: true,
@@ -1854,7 +1857,7 @@ $(function () {
                                             append += '</div>';
                                             append += '<div>';
                                                 append += '<h1 class="title">' + plan.name_short + '</h1>';
-                                                append += '<p class="description">' + plan.description_short + '</p>';
+                                                append += '<p class="description">' + plan.description + '</p>';
                                             append += '</div>';
                                         append += '</div>';
                                         append += '<div class="check">';
@@ -1892,12 +1895,10 @@ $(function () {
                                 $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                             });
 
-                            $(modal).find('.product-photo').on('load', function() {
-                                $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
-                                    $(modal).find('.tab-content').fadeIn('fast').promise().done(function() {
-                                        var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 18;
-                                        $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
-                                    });
+                            $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
+                                $(modal).find('.tab-content').fadeIn('fast').promise().done(function() {
+                                    var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 18;
+                                    $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
                                 });
                             });
                         });
