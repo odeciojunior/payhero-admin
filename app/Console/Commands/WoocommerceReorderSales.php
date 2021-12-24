@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleWoocommerceRequests;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Modules\Core\Services\FoxUtils;
@@ -38,51 +39,99 @@ class WoocommerceReorderSales extends Command
     public function handle()
     {
         
-        $saleModel     = new Sale();
-        // $salePresenter = $saleModel->present();
-        // $date          = Carbon::now()->subDay()->toDateString();
-        $sales         = $saleModel->whereNull('woocommerce_order')
-                                    ->where('status',1)
-                                   //->whereDate('created_at', $date)
-                                   ->whereHas('project.woocommerceIntegrations', function($query) {
-                                       $query->where('status', 2);
-                                   })
-                                   ->get();
+        $model = new SaleWoocommerceRequests();
+        $requests = $model->where('status',0)->where('method','ProcessWooCommerceOrderCreate')->get();
 
-        foreach ($sales as $sale) {
+        foreach ($requests as $request) {
             try {
-                $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
+                    $integration = WooCommerceIntegration::where('project_id', $request['project_id'])->first();
+                    $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                    
+                    $data = json_decode($request['send_data'], true);
 
-                $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
-                
-                $preOrder = $this->prepareOrder($sale);
-                $data = $this->saveOrder($preOrder);
+                    $changeToPaidStatus = 0;
 
-                
-                
-                
+                    if($data['status'] == 'processing' && $data['set_paid'] == true){
+                        $data['status'] = 'pending';
+                        $data['set_paid'] = false;
+                        $changeToPaidStatus = 1;
+                    }
 
-                $result = $service->woocommerce->post('orders', $data);
+                    $result = $service->woocommerce->post('orders', $data);
 
-                $saleModel = Sale::where('id',$sale->id)->first();
-                $saleModel->woocommerce_order = $result->id;
-                $saleModel->save();
-                $this->line('gateway_status: '.$sale->gateway_status);
+                    if($result->id){
+                        $order = $result->id;
+                        $saleModel = Sale::where('id',$request['sale_id'])->first();
+                        $saleModel->woocommerce_order = $order;
+                        $saleModel->save();
+                        
+                        $result = json_encode($result);
+                        $service->updatePostRequest($request['id'], 1, $result, $order);
 
-                $this->line('sucesso: '.$sale->id.' - '.$integration->url_store);
+                        $this->line('success -> order generated: ' . $order);
 
-                //dd($result->id);
+                        if($changeToPaidStatus == 1){
+                            
+                            $result = $service->approveBillet($order, $request['project_id'], $request['sale_id']);
+
+                            if($result->status == 'processing')
+                                $this->line('success -> order status changed: ' . $order);
+
+                        }
+
+                    }
             } catch (Exception $e) {
 
                 $this->line('erro -> ' . $e->getMessage());
-                if(stristr($e->getMessage(),'Error')){
-                    $saleModel = Sale::where('id',$sale->id)->first();
-
-                    $saleModel->woocommerce_order = -1;
-                    $saleModel->save();
-                }
+                
             }
         }
+
+        // $saleModel     = new Sale();
+        // // $salePresenter = $saleModel->present();
+        // // $date          = Carbon::now()->subDay()->toDateString();
+        // $sales         = $saleModel->whereNull('woocommerce_order')
+        //                             ->where('status',1)
+        //                            //->whereDate('created_at', $date)
+        //                            ->whereHas('project.woocommerceIntegrations', function($query) {
+        //                                $query->where('status', 2);
+        //                            })
+        //                            ->get();
+
+        // foreach ($sales as $sale) {
+        //     try {
+        //         $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
+
+        //         $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                
+        //         $preOrder = $this->prepareOrder($sale);
+        //         $data = $this->saveOrder($preOrder);
+
+                
+                
+                
+
+        //         $result = $service->woocommerce->post('orders', $data);
+
+        //         $saleModel = Sale::where('id',$sale->id)->first();
+        //         $saleModel->woocommerce_order = $result->id;
+        //         $saleModel->save();
+        //         $this->line('gateway_status: '.$sale->gateway_status);
+
+        //         $this->line('sucesso: '.$sale->id.' - '.$integration->url_store);
+
+        //         //dd($result->id);
+        //     } catch (Exception $e) {
+
+        //         $this->line('erro -> ' . $e->getMessage());
+        //         if(stristr($e->getMessage(),'Error')){
+        //             $saleModel = Sale::where('id',$sale->id)->first();
+
+        //             $saleModel->woocommerce_order = -1;
+        //             $saleModel->save();
+        //         }
+        //     }
+        // }
     }
 
 

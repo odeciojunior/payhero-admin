@@ -268,14 +268,20 @@ class TrackingService
             'product',
         ]);
 
-        $productPlanSales->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId, $productPlanSales) {
+
+        $projects = explode(',', $filters['project']);
+        $projectsIds = collect($projects)->map(function ($project) {
+            return current(Hashids::decode($project)) ?: '';
+        })->toArray();
+
+        $productPlanSales->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId, $projectsIds) {
             //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
             $query->whereBetween('end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
                 ->whereIn('status', $saleStatus)
                 ->where('owner_id', $userId);
 
-            if (isset($filters['sale'])) {
+            if (!empty($filters['sale'])) {
                 $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));
                 $query->where('id', $saleId);
             }
@@ -320,6 +326,11 @@ class TrackingService
                     ->whereNull('withdrawal_id');
                 });
             }
+
+            if (!empty($projectsIds) && !in_array('', $projectsIds))
+            {
+                $query->whereIn('project_id', $projectsIds);               
+            }
             
         });
 
@@ -341,7 +352,7 @@ class TrackingService
             });
         }
 
-        if (isset($filters['problem'])) {
+        if (!empty($filters['problem'])) {
             if ($filters['problem'] == 1) {
                 $productPlanSales->whereHas(
                     'tracking',
@@ -358,25 +369,11 @@ class TrackingService
             }
         }
 
-        if (isset($filters['tracking_code'])) {
+        if (!empty($filters['tracking_code'])) {
             $productPlanSales->whereHas(
                 'tracking',
                 function ($query) use ($filters) {
                     $query->where('tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
-                }
-            );
-        }
-
-        $projects = explode(',', $filters['project']);
-        $projectsIds = collect($projects)->map(function ($project) {
-            return current(Hashids::decode($project)) ?: '';
-        })->toArray();
-
-        if (!empty($projectsIds) && !in_array('', $projectsIds)) {
-            $productPlanSales->whereHas(
-                'product',
-                function ($query) use ($projectsIds) {
-                    $query->whereIn('project_id', $projectsIds);
                 }
             );
         }

@@ -425,6 +425,7 @@ class AsaasService implements Statement
                 $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value:0;
                 $saleTax = $saleService->getSaleTaxRefund($sale,$cashbackValue);
             }
+            $totalSale = $saleService->getSaleTotalValue($sale);
 
             foreach ($refundTransactions as $refundTransaction) {
                 
@@ -432,15 +433,16 @@ class AsaasService implements Statement
                 if (!empty($company)) {
 
                     if ($refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
-
+                        
                         $refundValue = $refundTransaction->value;
                         if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
-                            if (!empty($refundTransaction->sale->automatic_discount)) {
-                                $refundValue -= $refundTransaction->sale->automatic_discount;
-                            }
                             $refundValue += $saleTax;
                         }
-                   
+                        
+                        if($refundValue > $totalSale){
+                            $refundValue = $totalSale;
+                        }
+
                         Transfer::create([
                             'transaction_id' => $refundTransaction->id,
                             'user_id' => $refundTransaction->user_id,
@@ -477,11 +479,11 @@ class AsaasService implements Statement
                             'asaas_balance' => $company->asaas_balance += $refundTransaction->value
                         ]);
 
-                        $refundValue = $refundTransaction->value;                        
-                        if (!empty($refundTransaction->sale->automatic_discount)) {
-                            $refundValue -= $refundTransaction->sale->automatic_discount;
+                        $refundValue = $refundTransaction->value + $saleTax;                        
+                        
+                        if($refundValue > $totalSale){
+                            $refundValue = $totalSale;
                         }
-                        $refundValue += $saleTax;                    
                    
                         Transfer::create([
                             'transaction_id' => $refundTransaction->id,
