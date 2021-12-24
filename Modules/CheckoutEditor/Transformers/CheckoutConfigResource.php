@@ -13,22 +13,22 @@ class CheckoutConfigResource extends JsonResource
         $companies = Company::select([
             'id',
             'fantasy_name as name',
+            'active_flag',
             'address_document_status',
             'bank_document_status',
             'contract_document_status'
         ])->where('user_id', auth()->user()->account_owner_id)
             ->get()
             ->map(function ($company) {
-
                 $status = ($company->bank_document_status === 3 &&
                     $company->address_document_status === 3 &&
                     $company->contract_document_status === 3)
-                    ? Company::STATUS_APPROVED
-                    : Company::STATUS_PENDING;
-
+                    ? 'approved'
+                    : 'pending';
                 return (object)[
                     'id' => hashids_encode($company->id),
                     'name' => $company->name,
+                    'active_flag' => $company->active_flag,
                     'status' => $status
                 ];
             });
