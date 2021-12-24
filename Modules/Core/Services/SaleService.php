@@ -658,6 +658,23 @@ class SaleService
         return $saleTax;
     }
 
+    public function getSaleTotalValue($sale){
+        $total = foxutils()->onlyNumbers($sale->sub_total); 
+        
+        if (!empty(foxutils()->onlyNumbers($sale->shipment_value))) {
+            $total += foxutils()->onlyNumbers($sale->shipment_value);        
+        }
+
+        if (!empty(foxutils()->onlyNumbers($sale->installment_tax_value))) {
+            $total -= foxutils()->onlyNumbers($sale->installment_tax_value);        
+        }
+
+        if (!empty(foxutils()->onlyNumbers($sale->automatic_discount))) {
+            $total -= foxutils()->onlyNumbers($sale->automatic_discount);        
+        }
+        return $total;
+    }
+
     public function saleIsGetnet(Sale $sale): bool
     {
         if (in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])) {
@@ -863,7 +880,7 @@ class SaleService
                         $integration->token_pass
                     );
 
-                    $service->cancelOrder($sale, 'Estorno');
+                    $service->cancelOrder($sale->woocommerce_order, 'Estorno');
                 }
             } catch (Exception $e) {
                 report($e);

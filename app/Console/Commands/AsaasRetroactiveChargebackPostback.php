@@ -50,8 +50,8 @@ class AsaasRetroactiveChargebackPostback extends Command
                 ->where('status',Sale::STATUS_APPROVED)
                 ->where('payment_method',Sale::CREDIT_CARD_PAYMENT)
                 ->whereNotNull('gateway_transaction_id')
-                ->where('id','>',1380939)
-                ->get();
+                ->where('id','>',1383880)
+                ->get(); 
 
         $total = count($sales);
 
@@ -71,7 +71,7 @@ class AsaasRetroactiveChargebackPostback extends Command
             $saleId = Hashids::encode($sale->id);
             $response = $checkoutService->getPaymentInfo($saleId);
             
-            if(!empty($response) && $response->status =='success' && str_contains($response->data->status,'CHARGEBACK')){
+            if(!empty($response->status) && $response->status =='success' && str_contains($response->data->status,'CHARGEBACK')){
                 Log::info(
                     str_pad($sale->id,15,' ',STR_PAD_RIGHT).
                     str_pad($response->data->id,25,' ',STR_PAD_RIGHT).

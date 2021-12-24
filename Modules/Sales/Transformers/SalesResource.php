@@ -131,6 +131,9 @@ class SalesResource extends JsonResource
             $data['affiliate'] = $affiliate->user->name;
         }
 
+        $data['total_parcial'] = foxutils()->onlyNumbers($data['total']) + foxutils()->onlyNumbers($data['cashback_value']);
+        $data['total_parcial'] = FoxUtils::formatMoney($data['total_parcial'] / 100);
+
         return $data;
     }
 

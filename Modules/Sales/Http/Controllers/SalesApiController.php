@@ -201,7 +201,7 @@ class SalesApiController extends Controller
                         $integration->token_pass
                     );
 
-                    $service->cancelOrder($sale, 'Estorno');
+                    $service->cancelOrder($sale->woocommerce_order, 'Estorno');
                 }
             }
             if ( !$sale->api_flag ) {

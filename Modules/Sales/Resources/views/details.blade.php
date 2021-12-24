@@ -115,7 +115,7 @@
                             <span id="cashback-value" class="text-muted ft-12 d-none">R$ </span>
                         </div>
                     </div>
-                    <div class="row" style="border-top: 1px solid #e2e2e2; padding-top: 10px; margin-top: 10px;">
+                    <div class="row" style="border-top: 1px solid #e2e2e2; padding-top: 10px; margin-top: 10px;" id="comission-details">
                         <div id="cambio-label" class='col-8' style="display:none">
                             <span class='text-muted ft-12'></span>
                         </div>
@@ -170,13 +170,6 @@
                                         <td><div id="tax-comission-value" style="color: black !important;" class="text-right text-muted ft-12"></div></td>
                                     </tr>
                                 </tbody>
-
-{{--                                <div id="tax-subtotal" class="col-6 ft-12"></div><div id="tax-subtotal-value" class=" text-right text-muted ft-12 col-6"></div>--}}
-{{--                                <div id="tax-cashback" class="col-6 ft-12"></div><div id="tax-cashback-value" class=" text-right text-muted ft-12 col-6"></div>--}}
-{{--                                <div id="tax-total" class="col-6 ft-12"></div><div id="tax-total-value" class=" text-right text-muted ft-12 col-6"></div>--}}
-{{--                                <div id="tax-percentage" class="col-6 ft-12"></div><div id="tax-percentage-value" class=" text-right text-muted ft-12 col-6"></div>--}}
-{{--                                <div id="tax-fixed" class="col-6 ft-12"></div><div id="tax-fixed-value" class=" text-right text-muted ft-12 col-6"></div>--}}
-{{--                                <div id="tax-comission" class="col-6 ft-12"></div><div id="tax-comission-value" class=" text-right text-muted ft-12 col-6"></div>--}}
                             </table>
                         </div>
                         <div class='col-sm-8 col-8'>

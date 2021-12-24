@@ -362,7 +362,7 @@ class WooCommerceService
     }
 
 
-    public function cancelOrder($sale, $note = null)
+    public function cancelOrder($order, $note = null)
     {
         try {
 
@@ -370,15 +370,17 @@ class WooCommerceService
                 'status' => 'cancelled'
             ];
 
-            $this->woocommerce->post('orders/'.$sale->woocommerce_order, $data);
+            $result = $this->woocommerce->post('orders/'.$order, $data);
 
             if(!empty($note)){
                 $data = [
                     'note' => $note
                 ];
 
-                $this->woocommerce->post('orders/'.$sale->woocommerce_order.'/notes', $data);
+                $this->woocommerce->post('orders/'.$order.'/notes', $data);
             }
+
+            return $result;
 
         } catch (Exception $e) {
             report($e);
