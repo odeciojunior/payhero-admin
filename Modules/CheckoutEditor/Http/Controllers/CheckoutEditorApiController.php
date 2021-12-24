@@ -70,7 +70,7 @@ class CheckoutEditorApiController extends Controller
                 $data['pix_enabled'] = $company->has_pix_key && $company->pix_key_situation === 'VERIFIED' && $data['pix_enabled'];
             }
 
-            $config::update($data);
+            $config->update($data);
 
             return new CheckoutConfigResource($config);
         } catch (\Exception $e) {
