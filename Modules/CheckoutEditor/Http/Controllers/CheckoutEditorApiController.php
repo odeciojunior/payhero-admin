@@ -45,7 +45,6 @@ class CheckoutEditorApiController extends Controller
             $id = hashids_decode($id);
 
             $data = $request->all();
-            $data['project_id'] = hashids_decode($data['project_id']);
             $data['company_id'] = hashids_decode($data['company_id']);
 
             $config = CheckoutConfig::find($id);
