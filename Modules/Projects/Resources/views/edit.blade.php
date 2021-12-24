@@ -75,7 +75,7 @@
     <div class="card mt-20" data-plugin="tabs">
         <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
 
-            <!-- CABECALHO -->
+            <!-- CABECALHO ON/OFF-->
             <div class='row'>
 
                 <div class='col-md-12 d-flex py-10'>
@@ -98,7 +98,7 @@
             <div class="row div-url-affiliate">
 
                 <!-- CONTAINER 5 COL -->
-                <div class="col-md-5">
+                <div class="col-md-5 form-group">
 
                     <div class="row">
                         <div class="col-md-12">
@@ -106,11 +106,6 @@
                                 <label for='url-affiliates font-size-16'>URL da página principal</label>
                                 <div id="affiliate-link-select" class="input-group">
                                     <input type="text" class="form-control" id="url-affiliates" value="" readonly="">
-
-                                    {{-- <span class="input-group-btn">
-                                        <button id="copy-link-affiliation" class="btn btn-default" type="button">Copiar</button>
-                                    </span> --}}
-
                                 </div>
                             </div>
                         </div>
@@ -177,7 +172,7 @@
                 </div>
 
                 <!-- Container de 7 col -->
-                <div class="col-md-7">
+                <div class="col-md-7 form-group">
                     <div class="row">
                         <div class="col-md-12">
                             <div class='form-group col-md-12'>
@@ -190,28 +185,37 @@
                     </div>
                 </div>
 
-            </div>
 
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12 d-flex">
+                            <div class="col-md-2 pl-30 pr-20 d-flex align-items-center border-top border-right" name='automatic_affiliation'>
+                                <input type="checkbox" id="auto-afiliation" class="col-1 h-20 mr-10">
+                                <label for="auto-afiliation" class="m-0">Afiliação automática</label>
+                            </div>
 
+                            {{-- <div class="col-md-2 pl-30 pr-0">
+                                <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation' class='form-control select-pad'>
+                                    <option value='0'>Não</option>
+                                    <option value='1'>Sim</option>
+                                </select>
+                            </div> --}}
+    
+                            <div class="col-md-9 d-flex pl-0 pr-0 align-items-center border-top border-right">
+                                <span class="col-7 text-right font-weight-bold pr-0">Convide afiliados:</span>
+                                <input type="text" class="text-right pl-0 pr-10 border-0" id="url-affiliates" readonly>
+                            </div>
 
-            <div class="div-url-affiliate">
-                <div class='row'>
-                    <div class='form-group col-md-6 col-xs-12'>
-                        <div class='form-group col-md-12 col-sm-12 col-xs-12'>
-                            <label for='automatic-affiliation'>Afiliação automática</label>
-                            <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation' class='form-control select-pad'>
-                                <option value='0'>Não</option>
-                                <option value='1'>Sim</option>
-                            </select>
-                            <p class='info pt-5' style='font-size: 10px;'>
-                                <i class='icon wb-info-circle' aria-hidden='true'></i> Aprova
-                                automaticamente as solicitações de afiliação
-                            </p>
+                            <div class="col-md-1 p-5 border-top">
+                                <button id="copy-link-affiliation" class="btn btn-default mx-10" type="button">Copiar</button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
-            </div>
 
+
+            </div>
         </div>
     </div>
     {{--END Configurações--}}
