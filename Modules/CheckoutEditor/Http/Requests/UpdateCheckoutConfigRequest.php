@@ -11,10 +11,11 @@ class UpdateCheckoutConfigRequest extends FormRequest
         return [
             'project_id' => 'required|string',
             'checkout_type_enum' => 'required|integer',
-            'checkout_logo' => 'nullable|file',
+            'checkout_logo_enabled' => 'required|boolean',
+            'checkout_logo' => 'required_if:checkout_logo_enabled,1|file',
             'checkout_banner_enabled' => 'required|boolean',
             'checkout_banner_type' => 'required_if:checkout_banner_enabled,1|integer',
-            'checkout_banner' => 'required_if:checkout_banner_enabled,1|string',
+            'checkout_banner' => 'required_if:checkout_banner_enabled,1|file',
             'countdown_enabled' => 'required|boolean',
             'countdown_time' => 'required_if:countdown_enabled,1|integer',
             'countdown_description' => 'required_if:countdown_enabled,1|string',

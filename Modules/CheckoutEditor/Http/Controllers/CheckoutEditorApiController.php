@@ -45,25 +45,26 @@ class CheckoutEditorApiController extends Controller
             $id = hashids_decode($id);
 
             $data = $request->all();
+            $data['project_id'] = hashids_decode($data['project_id']);
+            $data['company_id'] = hashids_decode($data['company_id']);
 
             $config = CheckoutConfig::find($id);
 
-            $logo = $request->file('logo');
+            $userId = hashids_encode(auth()->user()->account_owner_id);
+
+            $logo = $request->file('checkout_logo');
             if (!empty($logo)) {
                 $amazonFileService->deleteFile($config->checkout_logo);
-                $img = Image::make($logo->getPathname());
-
-                $img->resize(null, 300, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-
-                $img->save($logo->getPathname());
-
-                $amazonPathLogo = $amazonFileService->uploadFile('uploads/user/' . hashids_encode(auth()->user()->account_owner_id) . '/public/projects/' . hashids_encode($id) . '/logo', $logo);
+                $amazonPathLogo = $amazonFileService->uploadFile('uploads/user/' . $userId . '/public/projects/' . hashids_encode($id) . '/logo', $logo);
                 $data['checkout_logo'] = $amazonPathLogo;
             }
 
-            $data['company_id'] = hashids_decode($data['company_id']);
+            $banner = $request->file('checkout_banner');
+            if (!empty($banner)) {
+                $amazonFileService->deleteFile($config->checkout_banner);
+                $amazonPathBanner = $amazonFileService->uploadFile('uploads/user/' . $userId . '/public/projects/' . hashids_encode($id) . '/logo', $banner);
+                $data['checkout_banner'] = $amazonPathBanner;
+            }
 
             if ($data['company_id'] !== $config->company_id) {
                 $company = Company::find($data['company_id']);
