@@ -539,5 +539,31 @@ textarea:focus {
   content: 'Desativado';
 }
 
+.verify-button {
+  background: #41DC8F;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  width: 200px;
+  padding: 5px;
+}
+
+.modal-body.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.code-input-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.code-input {
+  width: 56px;
+  height: 56px;
+}
+
 
 

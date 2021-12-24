@@ -38,9 +38,7 @@ $(document).ready(function () {
 
     $(".accept-payment-type").on("change", function () {
         const form = document.querySelector("#checkout_editor");
-        const checkboxes = form.querySelectorAll(
-            "input[name=accept_payment_type]"
-        );
+        const checkboxes = form.querySelectorAll(".accept-payment-type");
         const checkboxLength = checkboxes.length;
         var oneChecked = false;
 
@@ -55,9 +53,7 @@ $(document).ready(function () {
 
     $(".accept-payment-method").on("change", function () {
         const form = document.querySelector("#checkout_editor");
-        const checkboxes = form.querySelectorAll(
-            "input[name=accept_payment_method]"
-        );
+        const checkboxes = form.querySelectorAll(".accept-payment-method");
         const checkboxLength = checkboxes.length;
         var oneChecked = false;
 
@@ -163,18 +159,10 @@ $(document).ready(function () {
                 $("." + $(this).attr("data-target")).slideUp("slow", "swing");
                 $("." + $(this).attr("data-toggle")).slideDown("slow", "swing");
 
-                var primaryColor = $(
-                    'label[for="' +
-                        $("input[name=theme_ready]:checked").attr("id") +
-                        '"]'
-                )
+                var primaryColor = $('label[for="' + $("input[name=theme_ready]:checked").attr("id") +'"]')
                     .children(".theme-primary-color")
                     .css("background-color");
-                var secondaryColor = $(
-                    'label[for="' +
-                        $("input[name=theme_ready]:checked").attr("id") +
-                        '"]'
-                )
+                var secondaryColor = $('label[for="' + $("input[name=theme_ready]:checked").attr("id") +'"]')
                     .children(".theme-secondary-color")
                     .css("background-color");
 
@@ -213,28 +201,7 @@ $(document).ready(function () {
     $("#whatsapp_phone").mask("(00) 00000-0000");
 
     // ----------------- Editor de Texto --------------------
-    var formats = [
-        // "background",
-        "bold",
-        // "font",
-        // "code",
-        "italic",
-        // "link",
-        // "size",
-        // "strike",
-        // "script",
-        "underline",
-        // "blockquote",
-        // "header",
-        // "indent",
-        // "list",
-        // "align",
-        // "direction",
-        // "code-block",
-        // "formula",
-        // 'image'
-        // 'video'
-    ];
+    var formats = ["bold","italic", "underline"];
 
     var quillTextbar = new Quill("#topbar_content", {
         modules: {
@@ -291,19 +258,21 @@ $(document).ready(function () {
         $("#changing_container").fadeIn("slow", "swing");
     });
 
-    $("#changing_container").on("click", function (e) {
-        e.preventDefault();
+    
 
-        $(this).fadeOut("slow", "swing");
+    // $("#changing_container").on("click", function (e) {
+    //     e.preventDefault();
 
-        // Save form...
+    //     $(this).fadeOut("slow", "swing");
 
-        $("#done").fadeIn("slow", "swing");
+    //     // Save form...
 
-        setTimeout(function () {
-            $("#done").fadeOut("slow", "swing");
-        }, 5000);
-    });
+    //     $("#done").fadeIn("slow", "swing");
+
+    //     setTimeout(function () {
+    //         $("#done").fadeOut("slow", "swing");
+    //     }, 5000);
+    // });
 
     $("input[name=number]").on("input", () => {
         $(this).attr(
@@ -329,53 +298,6 @@ $(document).ready(function () {
             $("#" + $(this).attr("data-label")).addClass("active");
         } else {
             $("#" + $(this).attr("data-label")).removeClass("active");
-        }
-    });
-
-    var drEventLogo = $("#logo_upload").dropify({
-        messages: {
-            default: "",
-            replace: "",
-            remove: "Remover",
-            error: "",
-        },
-        error: {
-            fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
-            minWidth: "",
-            maxWidth: "A imagem deve ter largura menor que 300px.",
-            minHeight: "",
-            maxHeight: "A imagem deve ter altura menor que 300px.",
-            fileExtension:
-                "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
-        },
-        tpl: {
-            message:
-                '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">Clique ou arraste e solte aqui</span></p></div>',
-            clearButton:
-                '<button type="button" class="dropify-clear o-bin-1"></button>',
-        },
-        imgFileExtensions: ["png", "jpg", "jpeg", "svg"],
-    });
-
-    var logo = document.getElementById("logo_preview");
-
-    drEventLogo.on("dropify.fileReady", function (event, element) {
-        var files = event.target.files;
-        var done = function (url) {
-            logo.src = url;
-        };
-        if (files && files.length > 0) {
-            file = files[0];
-
-            if (URL) {
-                done(URL.createObjectURL(file));
-            } else if (FileReader) {
-                reader = new FileReader();
-                reader.onload = function (e) {
-                    done(reader.result);
-                };
-                reader.readAsDataURL(file);
-            }
         }
     });
 
@@ -507,6 +429,27 @@ $(document).ready(function () {
     $("#button-cancel-crop").on("click", function () {
         $("#checkout_banner").parent().find(".dropify-clear").trigger("click");
     });
+
+    $("#verify_phone").on('click', () => {
+        $('#modal_verify_phone').modal("show");
+    })
+
+    $("#checkout_editor").on('submit', function (e) {
+        e.preventDefault();
+        console.log("Form");
+        let myForm = document.getElementById("checkout_editor");
+        console.log(myForm);
+        let formData = new FormData(myForm);
+        console.log(formData);
+    });
+
+    $("#checkout_editor input[type=checkbox]").on('change', function(){
+        if($(this).is(':checked')){
+            $(this).val(1);
+        }else{
+            $(this).val(0);
+        }
+    })
 });
 
 // -------------------------- Funções de Scroll -----------------------
@@ -561,3 +504,20 @@ function replacePreview(name, src, fname = "") {
     );
     preview.fadeIn();
 }
+
+const inputElements = [...document.querySelectorAll('input.code-input')]
+
+inputElements.forEach((ele,index)=>{
+  ele.addEventListener('keydown',(e)=>{
+    if(e.keyCode === 8 && e.target.value==='') inputElements[Math.max(0,index-1)].focus()
+  })
+  ele.addEventListener('input',(e)=>{
+    const [first,...rest] = e.target.value
+    e.target.value = first ?? ''
+    if(index!==inputElements.length-1 && first!==undefined) {
+      inputElements[index+1].focus()
+      inputElements[index+1].value = rest.join('')
+      inputElements[index+1].dispatchEvent(new Event('input'))
+    }
+  })
+})
