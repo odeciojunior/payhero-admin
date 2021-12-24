@@ -14,6 +14,7 @@ class CheckoutConfigResource extends JsonResource
             'id',
             'fantasy_name as name',
             'active_flag',
+            'capture_transaction_enabled',
             'address_document_status',
             'bank_document_status',
             'contract_document_status'
@@ -29,6 +30,7 @@ class CheckoutConfigResource extends JsonResource
                     'id' => hashids_encode($company->id),
                     'name' => $company->name,
                     'active_flag' => $company->active_flag,
+                    'capture_transaction_enabled' => $company->capture_transaction_enabled,
                     'status' => $status
                 ];
             });
@@ -62,7 +64,7 @@ class CheckoutConfigResource extends JsonResource
             'social_proof_message' => $this->social_proof_message,
             'social_proof_minimum' => $this->social_proof_minimum,
             'invoice_description' => $this->invoice_description,
-            'company_id' => $this->company_id,
+            'company_id' => hashids_encode($this->company_id),
             'cpf_enabled' => $this->cpf_enabled,
             'cnpj_enabled' => $this->cnpj_enabled,
             'credit_card_enabled' => $this->credit_card_enabled,
