@@ -178,32 +178,7 @@ class SalesApiController extends Controller
             ((new Gateway)->getServiceById($sale->gateway_id))
             ->cancel($sale,$result['response'], $refundObservation);
 
-            if (!empty($sale->shopify_order)) {
-                $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
-                if (!empty($shopifyIntegration)) {
-                    $shopifyService = new ShopifyService(
-                        $shopifyIntegration->url_store,
-                        $shopifyIntegration->token,
-                        false
-                    );
-                    $shopifyService->refundOrder($sale);
-                    $shopifyService->saveSaleShopifyRequest();
-                }
-            }
-
-            //WooCommerce
-            if (!empty($sale->woocommerce_order)) {
-                $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
-                if (!empty($integration)) {
-                    $service = new WooCommerceService(
-                        $integration->url_store,
-                        $integration->token_user,
-                        $integration->token_pass
-                    );
-
-                    $service->cancelOrder($sale->woocommerce_order, 'Estorno');
-                }
-            }
+            
             if ( !$sale->api_flag ) {
                 event(new SaleRefundedEvent($sale));
             }

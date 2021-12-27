@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Listeners\IntegrationOrderCancelListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
@@ -97,9 +98,11 @@ class EventServiceProvider extends ServiceProvider
         SaleRefundedEvent::class => [
             SaleRefundedWhatsapp2Listener::class,
             SaleRefundedSendEmailListener::class,
+            IntegrationOrderCancelListener::class,
         ],
         BilletRefundedEvent::class => [
             BilletRefundedSendEmailListener::class,
+            IntegrationOrderCancelListener::class,
         ],
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
@@ -189,7 +192,8 @@ class EventServiceProvider extends ServiceProvider
             PixExpiredSendEmailListener::class,
             HotBilletPixExpiredListener::class,
             SakPixExpiredListener::class,
-            PixExpiredUnicodropListener::class
+            PixExpiredUnicodropListener::class,
+            IntegrationOrderCancelListener::class,
         ],
         CheckTransactionReleasedEvent::class => [
             CheckTransactionReleasedListener::class,
