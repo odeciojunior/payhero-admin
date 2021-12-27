@@ -23,7 +23,7 @@
 }
 .badge {
     color: white;
-    padding: 5px 15px !important;
+    padding: 5px 15px;
     border-radius: 16px;
     font-weight: 700;
 }
@@ -86,7 +86,7 @@ span.select2-selection.select2-selection--single{
 ::-webkit-scrollbar {
     width: 12px;
 }
-  
+
 ::-webkit-scrollbar-thumb {
 border: 4px solid rgba(0, 0, 0, 0);
 background-clip: padding-box;
@@ -97,7 +97,7 @@ background-color: #AAAAAA;
 li.select2-selection__choice{
     min-height: 32px;
     height: auto !important;
-    text-overflow: ellipsis !important; 
+    text-overflow: ellipsis !important;
     display: block !important;
     overflow: hidden !important;
     white-space: nowrap !important;

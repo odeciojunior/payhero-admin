@@ -23,3 +23,10 @@ thead {
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: transparent !important;
 }
+
+@media (max-width: 767px) {
+    table.unify tr {
+        padding: 0;
+        background-color: #FBFBFB;
+    }
+}

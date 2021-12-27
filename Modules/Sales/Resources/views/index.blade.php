@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=' . random_int(100, 10000)) }}"> --}}
+        <link rel="stylesheet" href='{{asset('/modules/sales/css/index.css?v=' . uniqid())}}'>
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
@@ -145,14 +145,14 @@
                                 </div>
 
                                 <div class="row mb-md-15 d-flex justify-content-between">
-                                    
+
                                     <div class="col-sm-12 col-md-3">
                                         <label for="email_cliente">Email do cliente</label>
                                         <input name="email_client" id="email_cliente" class="input-pad" placeholder="Email">
                                     </div>
 
                                     <div class="col-sm-12 col-md-8 mt-20 pr-0 pl-20" style="flex-grow: 2.134 !important;">
-                                    
+
                                         <div class="row pt-15 d-flex justify-content-end mr-0">
 
                                             <div class='col-sm-4 col-md-3 mb-10 mb-sm-0 d-flex align-items-center justify-content-sm-center justify-content-md-start'>

@@ -22,8 +22,8 @@
                 <td class="headCenter table-title">Valor</td>
             </tr>
         </thead>
-        <tbody id="table-statement-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}" class="custom-t-body table-statement-body-class">
-        </tbody>
+        <tbody id="table-statement-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}"
+               class="custom-t-body table-statement-body-class s-table table-finance-transfers"></tbody>
     </table>
 </div>
 

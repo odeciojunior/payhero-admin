@@ -52,24 +52,25 @@ window.loadWithdrawalsTable = function(link = null) {
             } else {
                 $.each(response.data, function (index, data) {
 
-                    console.log(data.date_request_time)
                     let tableData = '';
                     let dateRequest = data.date_release_time !== '' ? `ás ${data.date_release_time.replace(':', 'h')}` : ''
-                    tableData += `<tr>;
-                                <td class="text-center">#${data.id}</td>";
-                                <td class="text-left" style="grid-area: sale">
-                                    <div style="color: #636363;"> ${data.account_information_bank} </div>
-                                    <small style="color: #9E9E9E; font-size: 11px"> ${data.account_information} </small>
+                    tableData += `<tr class="s-table table-finance-transfers">;
+                                <td class="text-center" style="grid-area: sale">#${data.id}</td>";
+                                <td class="text-left truncate" style="grid-area: bank">
+                                    <div style="color: #636363;" class="truncate"> ${data.account_information_bank} </div>
+                                    <small style="color: #9E9E9E; font-size: 11px;"> ${data.account_information} </small>
                                 </td>;
                                 <td class="text-left" style="grid-area: date-start">
                                     <div class="bold-mobile"> ${data.date_request} </div>
                                     <small style="color: #9E9E9E; font-size: 11px"> ás ${data.date_request_time.replace(':', 'h')}  </small>
                                 </td>;
-                                <td class="text-left" style="grid-area: date-start">
+                                <td class="text-left" style="grid-area: date-end">
                                     <div class="bold-mobile"> ${data.date_release} </div>
                                     <small style="color: #9E9E9E; font-size: 11px"> ${dateRequest} </small>
                                 </td>;
-                                <td class="shipping-status text-center"><span class="badge badge-${statusWithdrawals[data.status]} "> ${data.status_translated} </span></td>`;
+                                <td class="shipping-status text-center" style="grid-area: status">
+                                    <span class="badge badge-${statusWithdrawals[data.status]} "> ${data.status_translated} </span>
+                                </td>`;
                     if (data.tax_value > 0) {
                         tableData += ' <td class="text-left" style="grid-area: value"> <strong class="font-md-size-20">' + data.value + '</strong><br><small>(taxa de R$10,00)</small>';
                     } else {

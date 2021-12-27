@@ -258,7 +258,7 @@ window.updateAccountStatementData = function() {
             };
 
             items.forEach(function (item) {
-                let dataTable = `<tr class="s-table table-finance-schedule"><td style="vertical-align: middle; grid-area: sale;">`;
+                let dataTable = `<tr class="s-table table-finance-schedule"><td style="vertical-align: middle;">`;
 
                 if (item.order && item.order.hashId) {
                     dataTable += `Transação`;
@@ -266,13 +266,13 @@ window.updateAccountStatementData = function() {
                     if (item.isInvite) {
                         dataTable += `
                             <a>
-                                <span class="bold">#${item.order.hashId}</span>
+                                <span class="bold" style="grid-area: sale;">#${item.order.hashId}</span>
                             </a>
                         `;
                     } else {
                         dataTable += `
                              <a class="detalhes_venda disabled pointer-md" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
-                                <span class="bold">#${item.order.hashId}</span>
+                                <span class="bold" style="grid-area: sale;">#${item.order.hashId}</span>
                             </a>
                         `;
                     }

@@ -137,6 +137,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
         let debitVerify = removeFormatNumbers(currentBalance) - removeFormatNumbers(debitValue);
 
         if (debitVerify < 1) {
+            $("#modal-body-withdrawal-custom").html("").addClass('d-none');
             totalBalanceNegative = true;
 
             $("#modal-withdrawal-custom-title").text(
@@ -193,8 +194,8 @@ function manipulateModalWithdrawal(dataWithdrawal) {
 
             $("#modal-withdrawal-custom-footer").html(`
                 <hr>
-                <div class="col-md-12 text-center">
-                    <button class="btn col-12 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:180px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
+                <div class="row w-p100 justify-content-around">
+                    <button class="btn col-8 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:180px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
                         Ok, entendi!
                     </button>
                 </div>
@@ -254,8 +255,8 @@ function manipulateModalWithdrawal(dataWithdrawal) {
 
             $("#modal-withdrawal-custom-footer").html(`
                 <hr>
-                <div class="col-md-12 text-center">
-                    <button class="btn col-12 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:200px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
+                <div class="row w-p100 justify-content-around">
+                    <button class="btn col-8 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:200px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
                         Ok, entendi!
                     </button>
                 </div>

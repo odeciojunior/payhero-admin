@@ -454,7 +454,7 @@ select, .select-pad {
         width: 10px;
         height: 10px;
 
-        padding: .5rem;
+        padding: .5rem !important;
 
         border: 2px solid white;
         box-shadow: 0 3px 6px #00000029;
@@ -483,8 +483,8 @@ select, .select-pad {
     .s-table.table-finance-transfers {
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-areas: "sale sale status"
-                             "date-start date-end value"
-                             "codigo codigo codigo";
+                             "bank bank value"
+                             "date-start date-end ."
     }
 
     table.unify tr {
@@ -573,10 +573,6 @@ select, .select-pad {
         font-size: 14px !important
     }
 
-    .font-md-size-20 {
-        font-size: 10px !important
-    }
-
     .btn-light-1, .btn-primary-1, .btn-success-1 {
         font-size: 12px !important;
         flex-wrap: wrap;
@@ -595,21 +591,6 @@ select, .select-pad {
     .weekdays-container .btn, .day-container .btn {
         width: 30% !important;
         margin: 2px 5px !important;
-    }
-}
-
-/*MOBILE XS*/
-@media (max-width: 420px) {
-    .bold-mobile {
-        font-size: 9px;
-    }
-
-    small.gray {
-        font-size: 9px;
-    }
-
-    .font-md-size-20 {
-        font-size: 9px !important
     }
 }
 
