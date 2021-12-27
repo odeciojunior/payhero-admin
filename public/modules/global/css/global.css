@@ -1165,3 +1165,7 @@ tbody td{
 .sirius-select-container .sirius-select-options div:hover {
     background: #F6F7F9;
 }
+
+.sirius-select-options{
+    border-color: #88BFFF !important;
+}
