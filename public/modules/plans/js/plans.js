@@ -514,6 +514,8 @@ $(function () {
         $(modal).find('.nav-tabs-horizontal').css('display', 'block');
         $(modal).find('#tab-general-data_panel').removeClass('show active');
 
+        $(modal).find('.products-data').css('height', '74px');
+
         $(modal).find('.modal-title').html('Detalhes');
         $(modal).find('.modal-footer').html(
             '<button plan="' + plan_id + '" id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">' +
@@ -1218,6 +1220,7 @@ $(function () {
                 $(parent).find('#name').tooltip('disable');
                 $(parent).find('#description').tooltip('disable');
                 $('#btn-edit-products-plan').hide();
+                $('#btn-edit-informations-plan').hide();
 
                 parent.find('.informations-data').addClass('edit');
                 parent.find('.informations-data').find('.form-control').attr('readonly', false);
@@ -1254,6 +1257,7 @@ $(function () {
         var curHeight = parents.find('.informations-data').height();
 
         $('#btn-edit-products-plan').show();
+        $('#btn-edit-informations-plan').show();
         $(parents).find('#name').tooltip('enable');
         $(parents).find('#description').tooltip('enable');
 
@@ -1514,6 +1518,7 @@ $(function () {
                 $(modal).find('#name').tooltip('enable');
                 $(modal).find('#description').tooltip('enable');
                 $('#btn-edit-products-plan').show();
+                $('#btn-edit-informations-plan').show();
 
                 loadOnModalRemove('#modal_edit_plan');
                 errorAjaxResponse(response);
@@ -1522,6 +1527,7 @@ $(function () {
                 $(modal).find('#name').tooltip('enable');
                 $(modal).find('#description').tooltip('enable');
                 $('#btn-edit-products-plan').show();
+                $('#btn-edit-informations-plan').show();
 
                 $(modal).find('.modal-title').html('Detalhes de ' + response.plan.name_short);
 
