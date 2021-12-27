@@ -31,20 +31,20 @@
 
         <div class="page-content container page-project" style="display: none">
             <!-- Painel de informações gerais -->
-            <div class="tab-pane active d-flex" id="tab_info_geral" role="tabpanel">
+            <div class="tab-pane active d-flex no-gutters" id="tab_info_geral" role="tabpanel">
                 
                 <div class="card col-9 mr-30 px-0">
 
                     <div class="row no-gutters">
                         <!-- Imagem do produto -->
                         <div class="col-md-3 pl-0">
-                            <img id="show-photo" class="card-img my-15" src="" alt="">
+                            <img id="show-photo" class="card-img" src="" alt="">
                         </div>
 
                         <!-- Especificacoes do projeto -->
                         <div class="col-md-9 d-flex flex-column justify-content-between pl-25 pr-25">
-                            <div alt="titulo">
-                                <div class="row row-flex row-title justify-content-between pt-25">
+                            <div alt="titulo" class="pt-25">
+                                <div class="row row-flex row-title justify-content-between pt-0">
                                     <h4 class="title-pad mr-5 s-title"></h4>
                                     <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill mr-10"></span>
                                 </div>
@@ -53,7 +53,7 @@
 
                             </div>
 
-                            <div class="my-20 s-control-magin">
+                            <div class="my-20">
                                 <h5 style="line-height: unset" class="sm-title s-title-description mb-5"><strong> Descrição </strong></h5>
                                 <p id="show-description" class="card-text sm s-description"></p>
                             </div>
@@ -62,7 +62,10 @@
                             <div class="row no-gutters">
                                 <!-- DIV CHARGEBACK -->
                                 <div class="col-md-4 d-flex alert m-0 product-chargeback product-alert-color">
-                                    <img class="control-img ml-25" src="{{ asset('/modules/global/img/svg/chamados-abertos.svg') }}">
+                                    <div class="d-flex pl-20">
+                                        <img class="arrow-chargeback" src="{{ asset('/modules/global/img/projects/arrow.svg') }}">
+                                        <img class="bodyArrow-chargeback" src="{{ asset('/modules/global/img/projects/bodyArrow.svg') }}">
+                                    </div>
 
                                     <span class="s-data-project-values pl-10" id="value-chargeback"></span>
 
@@ -74,7 +77,7 @@
 
                                 <!-- DIV CHAMADOS ABERTOS -->
                                 <div class="col-md-4 d-flex alert m-0 rounded-0 product-alert-color border-product-alert">
-                                    <img class="control-img ml-25" src="{{ asset('/modules/global/img/svg/atendimentos-abertos.svg') }}">
+                                    <img class="control-img ml-25" src="{{ asset('/modules/global/img/projects/fallowUp.svg') }}">
 
                                     <span class="s-data-project-values pl-10" id="value-open-tickets"></span>
 
@@ -86,7 +89,7 @@
                                 
                                 <!-- DIV VENDAS S/ RASTREIO -->
                                 <div class="col-md-4 d-flex alert m-0 tracking-sell product-alert-color border-product-alert">
-                                    <img class="control-img ml-25" src="{{ asset('/modules/global/img/svg/vendas-rastreio.svg') }}">
+                                    <img class="control-img ml-25" src="{{ asset('/modules/global/img/projects/trackCar.svg') }}">
 
                                     <span class="s-data-project-values pl-10" id="value-without-tracking"></span>
 
@@ -102,24 +105,30 @@
 
                 </div>
 
-                <!-- Resumo do vendas -->
-                <div class="card col d-flex align-items-center justify-content-center">
+                <!-- RESUMO DE VENDAS -->
+                <div class="card col">
                            
-                    <div class="align-self-start mb-35 ml-30">
+                    <div class="ml-30 mt-45 mb-10">
+
                         <div class="d-flex">
-                            <img class="control-img mr-5" src="{{ asset('/modules/global/img/svg/store-sales.svg') }}">
-                            <span class="font-size-14"> Vendas Aprovadas </span>
+                            <div class="p-5 resume-sales mr-10">
+                                <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">
+                            </div>
+                            <span class="d-flex align-items-center font-size-14"> Vendas Aprovadas </span>
                         </div>
+
                         <div>
                             <strong style="color: #707070" class="font-size-24" id="total-approved">0</strong>
                         </div>
                     </div>
 
-                    <div class="align-self-start mb-20 ml-30">
+                    <div class="ml-30">
 
                         <div class="d-flex pt-10">
-                            <img class="control-img mr-5" src="{{ asset('/modules/global/img/svg/store-coin.svg') }}">
-                            <span class="font-size-14">Total em receita</span>
+                            <div class="p-5 resume-sales mr-10">
+                                <img class="mr-5" src="{{ asset('/modules/global/img/projects/arrowBalance.svg') }}">
+                            </div>
+                            <span class="d-flex align-items-center font-size-14">Total em receita</span>
                         </div>
 
                         <div style="color: #707070">

@@ -250,6 +250,12 @@
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
+.arrow-chargeback{
+    margin-right: -6px;
+}
+.bodyArrow-chargeback{
+    padding-bottom: 6px;
+}
 
 .product-alert-color{
     background-color: #FCFCFC;
@@ -268,4 +274,8 @@
 
 .type-comission{
     border-radius: 60px;
+}
+
+.resume-sales{
+    background-color: #FAFAFA
 }

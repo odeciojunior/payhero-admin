@@ -37,7 +37,7 @@
 
             <div class='col-md-3 d-flex flex-column' id='div-img-project' style='position: relative;'>
                 <input name='photo' type='file' class='form-control' id='photoProject' style='display:none;' accept='image/*'>
-                <label for='photo' class="pl-15">Capa da loja</label>
+                <label for='photo' class="pl-20 mb-3">Capa da loja</label>
 
                 <div style="width:100%" class="text-center">
                     <img id='previewimage' alt='Selecione a foto do projeto' src="{{asset('modules/global/img/projeto.svg')}}" style="min-width: 250px; max-width: 250px;margin: auto">
@@ -48,7 +48,7 @@
                 <input type='hidden' id='photo_w' name='photo_w'><input id='photo_h' type='hidden' name='photo_h'>
             </div>
 
-            <div class="col-md-9">
+            <div class="col-md-9 pl-0">
 
                 <div class='form-group col-md-12'>
                     <label for='name'>Nome do projeto</label>
@@ -61,7 +61,7 @@
                     <label for='description'>Descrição</label>
                     <textarea style='height:100px;' name='description' type='text' class='input-pad' id='description' placeholder='Fale um pouco sobre seu Projeto' required='' maxlength='100'></textarea>
                     <span id='description-error' class='text-danger'></span>
-                    <p class='info pt-5' style='font-size: 10px;'>
+                    <p class='info pt-25 mb-0' style='font-size: 10px;'>
                         <i class='icon wb-info-circle' aria-hidden='true'></i>
                         Recomendações: Imagem de 300x300px  |  Formatos: JPEG ou PNG
                     </p>
@@ -214,24 +214,41 @@
                     </div>
                 </div>
 
-
             </div>
         </div>
     </div>
     {{--END Configurações--}}
-    <div class="mt-30">
+
+    <div class="row">
+        <div class="col-12">
+            <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete-project" style="float: left;">
+                <span class='orion-icon-lixo'></span>
+                <span class="gray">Excluir projeto</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="card mt-25 bg-primary">
         <div class="row">
-            <div class="col-6">
-                <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete-project" style="float: left;">
-                    <span class='orion-icon-lixo'></span>
-                    <span class="gray"> Deletar projeto</span>
-                </a>
+
+            <div class="col-md-6 d-flex align-items-center">
+
+                <div class="col-md-12 pl-0">
+                    <span class="pl-30">Você tem alterações que <b>não estão salvas</b> </span>
+                </div>
+
             </div>
-            <div class="col-6">
-                <button id="bt-update-project" type="button" class="btn btn-success" style="float: right;">
-                    Atualizar
-                </button>
+
+            <div class="col-md-6 d-flex justify-content-end align-items-center">
+
+                <div class="col-md-12 d-flex justify-content-end pt-25 pb-20 pr-30">
+                    <button type="button" class="btn btn-primary border border-white mr-25 px-40">Cancelar</button>
+
+                    <button type="button" id="bt-update-project" class="btn btn-light text-primary px-40">Salvar alteração</button>
+                </div>
+
             </div>
+            
         </div>
     </div>
 </form>
