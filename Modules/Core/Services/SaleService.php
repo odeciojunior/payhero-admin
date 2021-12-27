@@ -408,8 +408,8 @@ class SaleService
         }
 
         $taxa = $totalTaxPercentage = $totalTax = $transactionRate = 0;
-        $totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
-        $totalToCalcTaxReal += $cashbackValue;
+        //$totalToCalcTaxReal = ($sale->present()->getStatus() == 'refunded') ? $total + $sale->refund_value : $total;
+        $totalToCalcTaxReal = $total + $cashbackValue;
 
         if ($userTransaction->percentage_rate > 0) {
             $totalTaxPercentage = (int)($totalToCalcTaxReal * ($userTransaction->percentage_rate / 100));
@@ -632,7 +632,7 @@ class SaleService
     public function getSaleTax($sale,$cashbackValue)
     {
         $foxValue = $sale->transactions->whereNull('company_id')->first()->value??0;
-        $inviteValue = $sale->transactions->whereNotNull('company_id')->where('type',1)->first()->value??0;
+        $inviteValue = $sale->transactions->whereNotNull('company_id')->where('type',3)->first()->value??0;
 
         $saleTax = $foxValue + $cashbackValue + $inviteValue;           
 
@@ -656,6 +656,23 @@ class SaleService
         }
 
         return $saleTax;
+    }
+
+    public function getSaleTotalValue($sale){
+        $total = foxutils()->onlyNumbers($sale->sub_total); 
+        
+        if (!empty(foxutils()->onlyNumbers($sale->shipment_value))) {
+            $total += foxutils()->onlyNumbers($sale->shipment_value);        
+        }
+
+        if (!empty(foxutils()->onlyNumbers($sale->installment_tax_value))) {
+            $total -= foxutils()->onlyNumbers($sale->installment_tax_value);        
+        }
+
+        if (!empty(foxutils()->onlyNumbers($sale->automatic_discount))) {
+            $total -= foxutils()->onlyNumbers($sale->automatic_discount);        
+        }
+        return $total;
     }
 
     public function saleIsGetnet(Sale $sale): bool
@@ -842,33 +859,7 @@ class SaleService
             ]
         );
 
-        if (!empty($sale->shopify_order)) {
-            try {
-                $shopifyIntegration = $sale->project->shopifyIntegrations->first();
-                if (!empty($shopifyIntegration)) {
-                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-                    $shopifyService->cancelOrder($sale);
-                }
-            } catch (Exception $e) {
-            }
-        }
-
-        if (!empty($sale->woocommerce_order)) {
-            try {
-                $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
-                if (!empty($integration)) {
-                    $service = new WooCommerceService(
-                        $integration->url_store,
-                        $integration->token_user,
-                        $integration->token_pass
-                    );
-
-                    $service->cancelOrder($sale, 'Estorno');
-                }
-            } catch (Exception $e) {
-                report($e);
-            }
-        }
+        
 
         if ( !$sale->api_flag ) {
             event(new BilletRefundedEvent($sale));
