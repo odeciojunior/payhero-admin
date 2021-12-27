@@ -475,7 +475,7 @@ $(document).ready(function(){
             iconEye.addClass('d-none')
             iconNoEye.removeClass('d-none')
         } else {
-            availableBalance.fadeOut().removeClass('hide-withdraw').css('color', '#636363')
+            availableBalance.removeClass('hide-withdraw').css('color', '#636363')
 
             iconEye.removeClass('d-none')
             iconNoEye.addClass('d-none')
