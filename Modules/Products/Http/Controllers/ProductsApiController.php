@@ -422,8 +422,9 @@ class ProductsApiController extends Controller
             if ($groupByVariants) {
                 $products->select('name',
                     DB::raw("min(id) as id"),
-                    DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
-                    ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
+                    DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"),
+                    'photo')
+                    ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'), 'photo');
             } else {
                 $products->select('id', 'name', 'description');
             }

@@ -630,11 +630,10 @@ class PlansApiController extends Controller
     {
         try {
             $costCurrency = $request->input('costCurrency');
-            $updateAllCurrency = $request->input('updateAllCurrency');
             $updateCostShopify = $request->input('updateCostShopify');
             $projectId = current(Hashids::decode($request->input('project')));
             $cost = FoxUtils::onlyNumbers($request->input('cost'));
-            $plansSelected = $request->input('plans');
+            $productsSelected = $request->input('products');
 
             $projectModel = new Project;
             $project = $projectModel->find($projectId);
@@ -652,33 +651,18 @@ class PlansApiController extends Controller
 
             $project->update(['notazz_configs' => json_encode($configs)]);
 
-            if (!empty($plansSelected) && !empty($cost)) {
-                if ($updateAllCurrency == 'true') {
-                    $plans = Plan::where('project_id', $projectId)->get()->pluck('id');
-                    $productPlans = ProductPlan::whereIn('plan_id', $plans)->get();
-
-                    foreach ($productPlans as $productPlan) {
-                        $productPlan->update([
-                            'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
-                            'cost' => $cost
-                        ]);
-                    }
-                } else {
-                    foreach ($plansSelected as $p) {
-                        $planId = current(Hashids::decode($p['id']));
-
-                        $plan = Plan::find($planId);
-                        $planIds = Plan::where('name', $plan->name)->where('shopify_id', $plan->shopify_id)->get()->pluck('id');
-                        $productPlans = ProductPlan::whereIn('plan_id', $planIds)->get();
-
-                        foreach ($productPlans as $productPlan) {
-                            $productPlan->update([
-                                'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
-                                'cost' => $cost
-                            ]);
-                        }
-                    }
+            if (!empty($productsSelected) && !empty($cost)) {
+                foreach ($productsSelected as $p) {
+                    $productId = current(Hashids::decode($p['id']));
+                    ProductPlan::where('product_id', $productId)->update([
+                        'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
+                        'cost' => $cost
+                    ]);
                 }
+            } else {
+                return response()->json([
+                    'message' => 'Erro ao atualizar configurações',
+                ], 400);
             }
 
             return response()->json([
@@ -688,7 +672,7 @@ class PlansApiController extends Controller
         } catch (Exception $e) {
             report($e);
             return response()->json([
-                'message' => $e->getMessage(),
+                'message' => 'Erro ao atualizar configurações',
             ], 400);
         }
     }

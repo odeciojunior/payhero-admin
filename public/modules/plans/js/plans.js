@@ -1719,6 +1719,8 @@ $(function () {
                 success: function success(response) {
                     var append = '<div class="row">';
                     if (response.data.length > 0) {
+                        $(modal).find('.modal-body').find('.box-plans').css('height', 'auto').css('max-height', '222px');
+
                         response.data.forEach(function(plan) {
                             var index_plan = selected_plans.map(function(e) { return e.id; }).indexOf(plan.id);
                             let select_all = $('#select-all').attr('data-selected');
@@ -1744,6 +1746,8 @@ $(function () {
                         });
                     } else {
                         $('.tooltip').remove();
+
+                        $(modal).find('.modal-body').find('.box-plans').css('height', '274px').css('max-height', '274px');
 
                         append += '<div class="col-sm-12">';
                             append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
@@ -1771,8 +1775,10 @@ $(function () {
 
                         $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                             $(modal).find('.tab-content').fadeIn('fast').promise().done(function() {
-                                var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 18;
-                                $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
+                                $(modal).find('.product-photo').on('load', function() {
+                                    var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 18;
+                                    $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
+                                });
                             });
                         });
                     });
@@ -1983,7 +1989,7 @@ $(function () {
                 costCurrency: costCurrency,
                 updateCostShopify: updateCostShopify,
                 cost: cost,
-                plans: selected_plans
+                products: selected_plans
             },
             error: function (_error4) {
                 function error(_x4) {
@@ -1999,7 +2005,7 @@ $(function () {
                 errorAjaxResponse(response);
             }),
             success: function success(data) {
-                alertCustom('success', 'Configuração atualizada com sucesso');
+                alertCustom('success', data.message);
 
                 $('#modal_config_cost_plan').modal('hide');
             }
