@@ -1777,12 +1777,14 @@ input[type="checkbox"], input[type="radio"] {
     font-size: 0.8rem;
     top: -4px !important;
 }
+/*
 .tooltip.product-select .tooltip-inner {
     max-width: 279px !important;
 }
 .tooltip.product-details .tooltip-inner {
     max-width: 223px !important;
 }
+*/
 .bs-tooltip-auto[x-placement^="top"] .arrow::before, .bs-tooltip-top .arrow::before {
     top: 4px;
     border-width: 6px 6px 0;
@@ -1927,4 +1929,8 @@ tbody td{
 .box-description .form-control:focus,
 .box-description .form-control:focus + .input-group-append .input-group-text {
     border: 1px solid #46BCFF;
+}
+
+.tooltip .tooltip-inner {
+    text-align: left;
 }

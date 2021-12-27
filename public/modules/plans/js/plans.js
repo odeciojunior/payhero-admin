@@ -380,7 +380,11 @@ $(function () {
                                                     append += '</div>';
                                                 append += '</div>';
                                             append += '</div>';
-                                            append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + (selected_products[index_product].value ?? '') + '" type="text" name="value" placeholder="Valor un."></div>';
+                                            if (type == 'create') {
+                                                append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + response.data.cost + '" type="text" name="value" placeholder="Valor un."></div>';
+                                            } else {
+                                                append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + (selected_products[index_product].value ?? '') + '" type="text" name="value" placeholder="Valor un."></div>';
+                                            }
                                             append += '<div class="div-currency">';
                                                 append += '<select class="sirius-select" type="text" name="currency_type_enum">';
                                                     append += '<option value="BRL" ' + (selected_products[index_product].currency_type_enum == 'BRL' ? 'selected' : '') + '>BRL (R$)</option>';
@@ -1957,8 +1961,12 @@ $(function () {
                     $('.div-cost_shopify').remove();
                 }
 
+                $('.div-cost_currency').find('.icon').attr('data-toggle', 'tooltip').attr('data-original-title', 'Definir uma moeda padrão para a configuração dos seus planos. Configuração utilizada para emissão de notas fiscais.');
+
+                $('.div-cost_shopify').find('.icon').attr('data-toggle', 'tooltip').attr('data-original-title', 'Se configurado como sim, os custos serão atualizados sempre que houver alteração no shopify.');
+
                 $('[data-toggle="tooltip"]').tooltip({
-                    container: '.modal',
+                    container: '.page',
                 });
 
                 const indexCurrency = (response.data.cost_currency_type == 'BRL') ? 0 : 1;
