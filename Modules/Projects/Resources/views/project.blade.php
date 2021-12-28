@@ -31,114 +31,123 @@
 
         <div class="page-content container page-project" style="display: none">
             <!-- Painel de informações gerais -->
-            <div class="tab-pane active d-flex no-gutters" id="tab_info_geral" role="tabpanel">
-                
-                <div class="card col-9 mr-30 px-0">
+            <div class="row" id="tab_info_geral" role="tabpanel">
+
+                <div class="col-md-12">
 
                     <div class="row no-gutters">
-                        <!-- Imagem do produto -->
-                        <div class="col-md-3 pl-0">
-                            <img id="show-photo" class="card-img" src="" alt="">
-                        </div>
 
-                        <!-- Especificacoes do projeto -->
-                        <div class="col-md-9 d-flex flex-column justify-content-between pl-25 pr-25">
-                            <div alt="titulo" class="pt-25">
-                                <div class="row row-flex row-title justify-content-between pt-0">
-                                    <h4 class="title-pad mr-5 s-title"></h4>
-                                    <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill mr-10"></span>
-                                </div>
+                        <div class="col-md-9 card mr-0 mr-sm-30 px-0">
 
-                                <div style="color: #C8C8C8" class="card-text gray font-size-10" id="created_at"></div>
-
-                            </div>
-
-                            <div class="my-20">
-                                <h5 style="line-height: unset" class="sm-title s-title-description mb-5"><strong> Descrição </strong></h5>
-                                <p id="show-description" class="card-text sm s-description"></p>
-                            </div>
-
-                            <!-- Informacoes de compras -->
                             <div class="row no-gutters">
-                                <!-- DIV CHARGEBACK -->
-                                <div class="col-md-4 d-flex alert m-0 product-chargeback product-alert-color">
-                                    <div class="d-flex pl-20">
-                                        <img class="arrow-chargeback" src="{{ asset('/modules/global/img/projects/arrow.svg') }}">
-                                        <img class="bodyArrow-chargeback" src="{{ asset('/modules/global/img/projects/bodyArrow.svg') }}">
+
+                                <div class="col-md-3">
+                                    <div class="pl-0">
+                                        <img id="show-photo" class="card-img" src="" alt="">
                                     </div>
-
-                                    <span class="s-data-project-values pl-10" id="value-chargeback"></span>
-
-                                    <div class="pl-5 font-size-10">
-                                        <small> CHARGEBACKS </small>
-                                    </div>
-
                                 </div>
 
-                                <!-- DIV CHAMADOS ABERTOS -->
-                                <div class="col-md-4 d-flex alert m-0 rounded-0 product-alert-color border-product-alert">
-                                    <img class="control-img ml-25" src="{{ asset('/modules/global/img/projects/fallowUp.svg') }}">
-
-                                    <span class="s-data-project-values pl-10" id="value-open-tickets"></span>
-
-                                    <div class="pl-5 font-size-10">
-                                        <small> CHAMADOS ABERTOS </small>
+                                <div class="col-md-9 d-flex flex-column justify-content-between pl-25 pr-25">
+                                    <div alt="titulo" class="pt-25 mr-20">
+                                        <!-- TITULO CRIADO EM -->
+                                        <div class="row row-title justify-content-between pt-0">
+                                            <h4 class="title-pad mr-5 s-title"></h4>
+                                            <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill mr-10"></span>
+                                        </div>
+                                        <div style="color: #C8C8C8" class="card-text gray font-size-10" id="created_at"></div>
                                     </div>
 
+                                    <!-- DESCRISAO PRODUTO -->
+                                    <div class="my-20">
+                                        <h5 style="line-height: unset" class="sm-title s-title-description mb-5"><strong> Descrição </strong></h5>
+                                        <p id="show-description" class="card-text sm s-description"></p>
+                                    </div>
+
+                                    <!-- RODA PE -->
+                                    <div class="row no-gutters">
+                                        <!-- CHARGEBACK -->
+                                        <div class="col-md-4 d-flex alert m-0 product-chargeback product-alert-color">
+                                            <div class="d-flex pl-0 pl-sm-20">
+                                                <img class="arrow-chargeback" src="{{ asset('/modules/global/img/projects/arrow.svg') }}">
+                                                <img class="bodyArrow-chargeback" src="{{ asset('/modules/global/img/projects/bodyArrow.svg') }}">
+                                            </div>
+        
+                                            <span class="s-data-project-values pl-10" id="value-chargeback"></span>
+                                            <div class="pl-5 font-size-10">
+                                                <small> CHARGEBACKS </small>
+                                            </div>
+                                        </div>
+        
+                                        <!-- CHAMADOS ABERTOS -->
+                                        <div class="col-md-4 d-flex alert m-0 rounded-0 product-alert-color border-product-alert">
+                                            <div class="d-flex pl-0 pl-sm-20">
+                                                <img class="control-img" src="{{ asset('/modules/global/img/projects/fallowUp.svg') }}">
+                                            </div>
+
+                                            <span class="s-data-project-values pl-10" id="value-open-tickets"></span>
+                                            <div class="pl-5 font-size-10">
+                                                <small> CHAMADOS ABERTOS </small>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- VENDAS S/ RASTREIO -->
+                                        <div class="col-md-4 d-flex alert m-0 tracking-sell product-alert-color border-product-alert">
+                                            <div class="d-flex pl-0 pl-sm-20">
+                                                <img class="control-img" src="{{ asset('/modules/global/img/projects/trackCar.svg') }}">
+                                            </div>
+                                            
+                                            <span class="s-data-project-values pl-10" id="value-without-tracking"></span>
+                                            <div class="pl-5 font-size-10">
+                                                <small> VENDAS S/ RASTREIO </small>
+                                            </div>
+        
+                                        </div>
+        
+                                    </div>
                                 </div>
                                 
-                                <!-- DIV VENDAS S/ RASTREIO -->
-                                <div class="col-md-4 d-flex alert m-0 tracking-sell product-alert-color border-product-alert">
-                                    <img class="control-img ml-25" src="{{ asset('/modules/global/img/projects/trackCar.svg') }}">
+                            </div>
+                        </div>
 
-                                    <span class="s-data-project-values pl-10" id="value-without-tracking"></span>
+                        <!-- RESUMO VENDAS -->
+                        <div class="row d-content">
+                            <div class="card col px-0">
 
-                                    <div class="pl-5 font-size-10">
-                                        <small> VENDAS S/ RASTREIO </small>
+                                <!-- VENDAS APROVADAS -->
+                                <div class="pl-0 pl-sm-30 pt-15 pt-sm-40 pb-10 pb-sm-10">
+                                    <div class="d-flex">
+                                        <div class="p-5 resume-sales mr-10">
+                                            <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">
+                                        </div>
+                                        <span class="d-flex align-items-center font-size-14"> Vendas Aprovadas </span>
                                     </div>
-
+            
+                                    <div>
+                                        <strong style="color: #707070" class="font-size-24" id="total-approved">0</strong>
+                                    </div>
                                 </div>
-
+    
+                                <!-- RECEITA TOTAL -->
+                                <div class="pl-0 pl-sm-30 pb-10 pb-sm-10">
+                                    <div class="d-flex pt-10">
+                                        <div class="p-5 resume-sales mr-10">
+                                            <img class="mr-5" src="{{ asset('/modules/global/img/projects/arrowBalance.svg') }}">
+                                        </div>
+                                        <span class="d-flex align-items-center font-size-14">Total em receita</span>
+                                    </div>
+            
+                                    <div style="color: #707070">
+                                        <small> R$ </small>
+                                        <strong class="font-size-24" id="total-approved-value">0</strong>
+                                    </div>
+                                
+                                </div>
                             </div>
                         </div>
+                        
                     </div>
 
                 </div>
-
-                <!-- RESUMO DE VENDAS -->
-                <div class="card col">
-                           
-                    <div class="ml-30 mt-45 mb-10">
-
-                        <div class="d-flex">
-                            <div class="p-5 resume-sales mr-10">
-                                <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">
-                            </div>
-                            <span class="d-flex align-items-center font-size-14"> Vendas Aprovadas </span>
-                        </div>
-
-                        <div>
-                            <strong style="color: #707070" class="font-size-24" id="total-approved">0</strong>
-                        </div>
-                    </div>
-
-                    <div class="ml-30">
-
-                        <div class="d-flex pt-10">
-                            <div class="p-5 resume-sales mr-10">
-                                <img class="mr-5" src="{{ asset('/modules/global/img/projects/arrowBalance.svg') }}">
-                            </div>
-                            <span class="d-flex align-items-center font-size-14">Total em receita</span>
-                        </div>
-
-                        <div style="color: #707070">
-                            <small> R$ </small>
-                            <strong class="font-size-24" id="total-approved-value">0</strong>
-                        </div>
-                    
-                    </div>
-                </div>
-
             </div>
 
             <div>

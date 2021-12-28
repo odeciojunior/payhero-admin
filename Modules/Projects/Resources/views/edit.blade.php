@@ -2,13 +2,13 @@
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=05') }}">
 @endpush
 
-<div class='card shadow p-30 rounded-top'>
+<div class='row card no-gutters p-30 rounded-top'>
 
-    <div class="col-2 font-size-24 pl-0 mb-10">
+    <div class="col-12 font-size-24 pl-0 mb-10">
         Configuracoes
     </div>
 
-    <div class="d-flex">
+    <div class="col-md-12">
         <div class="badge badge-primary font-size-14 mr-10">
             NOVO
         </div>
@@ -219,37 +219,54 @@
     </div>
     {{--END Configurações--}}
 
-    <div class="row">
-        <div class="col-12">
-            <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete-project" style="float: left;">
-                <span class='orion-icon-lixo'></span>
-                <span class="gray">Excluir projeto</span>
-            </a>
+    <div class="row mt-60">
+        <div class="col-md-12">
+            <div class="row no-gutters">
+
+                <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/trash.svg') }}">
+    
+                <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete-project" style="float: left;">
+                    <span class='orion-icon-lixo'></span>
+                    <span class="gray">Excluir projeto</span>
+                </a>
+            </div>
         </div>
     </div>
 
-    <div class="card mt-25 bg-primary">
-        <div class="row">
+    <div class="row">
+        <div class="container position-fixed pr-5 pr-sm-45" style="bottom: 0;">
 
-            <div class="col-md-6 d-flex align-items-center">
+            <div class="row mt-25">
 
-                <div class="col-md-12 pl-0">
-                    <span class="pl-30">Você tem alterações que <b>não estão salvas</b> </span>
+                <div class="col-md-12">
+
+                    <div class="row bg-primary no-gutters final-card">
+
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="row">
+                                <div class="col-md-12 pl-0">
+                                    <span class="pl-30">Você tem alterações que <b>não estão salvas</b> </span>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="row">
+                                <div class="col-md-12 d-flex justify-content-end pt-25 pb-20 pr-0 pr-md-30">
+                                    <button type="button" class="btn btn-primary border border-white mr-25 px-15 px-sm-40">Cancelar</button>
+                
+                                    <button type="button" id="bt-update-project" class="btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alteração</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-
-            </div>
-
-            <div class="col-md-6 d-flex justify-content-end align-items-center">
-
-                <div class="col-md-12 d-flex justify-content-end pt-25 pb-20 pr-30">
-                    <button type="button" class="btn btn-primary border border-white mr-25 px-40">Cancelar</button>
-
-                    <button type="button" id="bt-update-project" class="btn btn-light text-primary px-40">Salvar alteração</button>
-                </div>
-
             </div>
             
         </div>
     </div>
+
+
 </form>
 

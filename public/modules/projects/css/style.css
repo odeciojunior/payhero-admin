@@ -279,3 +279,14 @@
 .resume-sales{
     background-color: #FAFAFA
 }
+
+/* cardfixed bottom */
+
+.final-card{
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.d-content{
+    display: contents;
+}
