@@ -32,6 +32,7 @@ use Modules\Products\Transformers\EditProductResource;
 use Modules\Products\Transformers\ProductsResource;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Products\Transformers\ProductsSelectResource;
+use Modules\Products\Transformers\ProductVariantResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -422,9 +423,8 @@ class ProductsApiController extends Controller
             if ($groupByVariants) {
                 $products->select('name',
                     DB::raw("min(id) as id"),
-                    DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"),
-                    'photo')
-                    ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'), 'photo');
+                    DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
+                    ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
             } else {
                 $products->select('id', 'name', 'description');
             }
@@ -435,7 +435,7 @@ class ProductsApiController extends Controller
                 $products = $products->orderBy('name')->paginate(10);
             }
 
-            return ProductsSelectResource::collection($products);
+            return ProductVariantResource::collection($products);
 
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados dos produtos (ProductsApiController - getProductsVariants)');

@@ -299,7 +299,7 @@ $(function () {
                             $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
                         });
 
-                        //$(modal).find('.product-photo').on('load', function() {
+                        $(modal).find(find_stage).find('.product-photo').on('load', function() {
                             $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                                 $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
                                     $(modal).find(find_stage).addClass('show active').promise().done(function() {
@@ -308,7 +308,7 @@ $(function () {
                                     });
                                 });
                             });
-                        //});
+                        });
                     });
                 }
             });
