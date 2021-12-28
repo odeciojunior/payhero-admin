@@ -38,7 +38,7 @@ class WithdrawalService
         return (new Withdrawal())
                 ->where('company_id', $companyId)
                 ->where('gateway_id', $gatewayId)
-                ->whereDate('created_at', now())
+                ->whereDate('created_at', Date('Y-m-d'))
                 ->exists();
     }
 
