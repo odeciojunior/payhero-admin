@@ -490,22 +490,18 @@ $(function () {
                 if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
             });
 
-            setTimeout(function() {
-                var curHeight = $(modal).find('.modal-body').height();
-                $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
-                    $('input[name="price"]').mask('#.##0,00', {reverse: true});
+            var curHeight = $(modal).find('.modal-body').height();
+            $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
+                $('input[name="price"]').mask('#.##0,00', {reverse: true});
 
-                    $(modal).find('.costs-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(calculateCostsPlan()));
-                    $(modal).find('.box-review').find('.tax').html(gateway_tax);
+                $(modal).find('.costs-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(calculateCostsPlan()));
+                $(modal).find('.box-review').find('.tax').html(gateway_tax);
 
-                    $(modal).find('#stage3').addClass('show active').promise().done( function() {
-                        setTimeout(function() {
-                            var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 60;
-                            $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
-                        }, 0);
-                    });
+                $(modal).find('#stage3').addClass('show active').promise().done( function() {
+                    var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 60;
+                    $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
                 });
-            }, 450);
+            });
         });
     }
 
@@ -788,7 +784,7 @@ $(function () {
             if (products_plan[index_product_custom].product_name_short_flag) {
                 $(modal).find('#stage2-customization').find('.product-custom').attr('data-toggle', 'tooltip').attr('title', products_plan[index_product_custom].product_name);
 
-                $('[data-toggle="tooltip"]').tooltip('enable', {
+                $('[data-toggle="tooltip"]').tooltip({
                     container: '.page'
                 });
             }
@@ -1923,6 +1919,10 @@ $(function () {
             });
         });
     }
+
+    $('.div-cost_shopify').find('.label-text').on('click', function(e) {
+        e.preventDefault();
+    });
 
     // Button custom config plan
     $(document).on('click', '#config-cost-plan', function () {

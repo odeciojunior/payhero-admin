@@ -46,7 +46,7 @@
                             </div>
 
                             <div class="form-group col-sm-6 div-cost_shopify">
-                                <label for="update_cost_shopify" class="d-flex align-items-center">
+                                <label for="update_cost_shopify" class="d-flex align-items-center label-text">
                                     <div class="mr-10">Atualizar de acordo com Shopify</div>
                                     <span class="icon"><img src="/modules/global/img/icon-info.svg"></span>
                                 </label>
