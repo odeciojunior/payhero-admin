@@ -166,14 +166,14 @@ $(function () {
                             $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg')
                         });
 
-                        $(modal).find('.product-photo').on('load', function() {
+                        //$(modal).find('.product-photo').on('load', function() {
                             $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                                 $(modal).find(find_stage).find('.box-products').find('.row').css('display', 'flex').promise().done(function() {
                                     var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 20;
                                     $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
                                 });
                             });
-                        });
+                        //});
                     });
                 }
             });
@@ -299,7 +299,7 @@ $(function () {
                             $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
                         });
 
-                        $(modal).find('.product-photo').on('load', function() {
+                        //$(modal).find('.product-photo').on('load', function() {
                             $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                                 $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
                                     $(modal).find(find_stage).addClass('show active').promise().done(function() {
@@ -308,7 +308,7 @@ $(function () {
                                     });
                                 });
                             });
-                        });
+                        //});
                     });
                 }
             });
@@ -450,7 +450,7 @@ $(function () {
                     $(modal).find('.modal-footer').find('#btn-modal-plan-next').html('Finalizar');
                 }
 
-                $(modal).find('.product-photo').on('load', function() {
+                //$(modal).find('.product-photo').on('load', function() {
                     $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                         $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
                             $(modal).find(find_stage).addClass('show active').promise().done( function() {
@@ -459,7 +459,7 @@ $(function () {
                             });
                         });
                     });
-                });
+                //});
             });
         });
     }
@@ -1148,7 +1148,6 @@ $(function () {
             }
         } else if (type == 'edit') {
             if (stage == 'stage2') {
-                $(modal).find('.modal-body').css('height', 'auto');
                 getPlanData(modal);
             } else if (stage == 'stage3') {
                 getProducts(modal, type);
@@ -1775,16 +1774,16 @@ $(function () {
                             $(modal + ' #tab_update_cost_block-panel .box-plans').off('wheel');
                         }
 
-                        $(modal).find(".product-photo").on("error", function () {
+                        $(modal).find('.tab-pane.show.active').find(".product-photo").on("error", function () {
                             $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                         });
 
                         $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                             $(modal).find('.tab-content').fadeIn('fast').promise().done(function() {
-                                $(modal).find('.product-photo').on('load', function() {
+                                //$(modal).find('.product-photo').on('load', function() {
                                     var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 18;
                                     $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
-                                });
+                                //});
                             });
                         });
                     });
@@ -1903,7 +1902,7 @@ $(function () {
                                 $(modal + ' #tab_update_cost_block-panel .box-plans').off('wheel');
                             }
 
-                            $(modal).find(".product-photo").on("error", function () {
+                            $(modal).find('.tab-pane.show.active').find(".product-photo").on("error", function () {
                                 $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                             });
 
