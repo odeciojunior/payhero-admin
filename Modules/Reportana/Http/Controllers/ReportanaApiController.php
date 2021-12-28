@@ -89,12 +89,6 @@ class ReportanaApiController extends Controller
 
             $projectId = current(Hashids::decode($data['project_id']));
             if (!empty($projectId)) {
-                $integration = $reportanaIntegrationModel->where('project_id', $projectId)->first();
-                if ($integration) {
-                    return response()->json([
-                                                'message' => 'Projeto já integrado',
-                                            ], 400);
-                }
                 if (empty($data['url_api'])) {
                     return response()->json(['message' => 'URl API é obrigatório!'], 400);
                 }
@@ -113,16 +107,24 @@ class ReportanaApiController extends Controller
                 if (empty($data['credit_card_refused'])) {
                     $data['credit_card_refused'] = 0;
                 }
+                if (empty($data['pix_generated'])) {
+                    $data['pix_generated'] = 0;
+                }
+                if (empty($data['pix_paid'])) {
+                    $data['pix_paid'] = 0;
+                }
                 if (empty($data['abandoned_cart'])) {
                     $data['abandoned_cart'] = 0;
                 }
 
-                $integrationCreated = $reportanaIntegrationModel->create([
+                $integrationCreated = $reportanaIntegrationModel->firstOrCreate([
                     'url_api'             => $data['url_api'],
                     'billet_generated'    => $data['boleto_generated'],
                     'billet_paid'         => $data['boleto_paid'],
                     'credit_card_refused' => $data['credit_card_refused'],
                     'credit_card_paid'    => $data['credit_card_paid'],
+                    'pix_generated'       => $data['pix_generated'],
+                    'pix_paid'            => $data['pix_paid'],
                     'abandoned_cart'      => $data['abandoned_cart'],
                     'project_id'          => $projectId,
                     'user_id'             => auth()->user()->account_owner_id,
@@ -231,8 +233,11 @@ class ReportanaApiController extends Controller
             if (empty($data['credit_card_refused'])) {
                 $data['credit_card_refused'] = 0;
             }
-            if (empty($data['abandoned_cart'])) {
-                $data['abandoned_cart'] = 0;
+            if (empty($data['pix_generated'])) {
+                $data['pix_generated'] = 0;
+            }
+            if (empty($data['pix_paid'])) {
+                $data['pix_paid'] = 0;
             }
             if (empty($data['abandoned_cart'])) {
                 $data['abandoned_cart'] = 0;
@@ -244,6 +249,8 @@ class ReportanaApiController extends Controller
                                                                     'billet_paid'         => $data['boleto_paid'],
                                                                     'credit_card_refused' => $data['credit_card_refused'],
                                                                     'credit_card_paid'    => $data['credit_card_paid'],
+                                                                    'pix_generated'       => $data['pix_generated'],
+                                                                    'pix_paid'            => $data['pix_paid'],
                                                                     'abandoned_cart'      => $data['abandoned_cart'],
                                                                 ]);
             if ($integrationUpdated) {

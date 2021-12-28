@@ -37,31 +37,21 @@ class UserProject extends Model
     public const TYPE_PRODUCER_ENUM = 1;
     public const TYPE_PARTNER_ENUM = 2;
 
-    /**
-     * The table associated with the model.
-     * @var string
-     */
+    public const STATUS_FLAG_INACTIVE = 0;
+    public const STATUS_FLAG_ACTIVE = 1;
+
     protected $table = 'users_projects';
-    /**
-     * @var string
-     */
+
     protected $presenter = UserProjectsPresenter::class;
-    /**
-     * The "type" of the auto-incrementing ID.
-     * @var string
-     */
+
     protected $keyType = 'integer';
-    /**
-     * @var array
-     */
+
     protected $dates = [
         'created_at',
         'updated_at',
         'deleted_at',
     ];
-    /**
-     * @var array
-     */
+
     protected $fillable = [
         'user_id',
         'project_id',

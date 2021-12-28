@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -72,9 +73,10 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property int $is_chargeback_recovered
  * @property int $has_valid_tracking
  * @property int $has_order_bump
+ * @property string|null $anticipation_status
+ * @property string|null $anticipation_id
  * @property string|null $observation
  * @property string|null $antifraud_warning_level
- * @property string|null $antifraud_observation
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -219,6 +221,7 @@ class Sale extends Model
         'boleto_due_date',
         'cupom_code',
         'shopify_order',
+        'woocommerce_order',
         'shopify_discount',
         'dolar_quotation',
         'first_confirmation',
@@ -240,7 +243,8 @@ class Sale extends Model
         'observation',
         'original_total_paid_value',
         'antifraud_warning_level',
-        'antifraud_observation',
+        'anticipation_status',
+        'anticipation_id'
     ];
 
     public function checkout(): BelongsTo
@@ -301,6 +305,11 @@ class Sale extends Model
     public function productsPlansSale(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\ProductPlanSale');
+    }
+
+    public function productsSaleApi(): HasMany
+    {
+        return $this->hasMany(ProductSaleApi::class);
     }
 
     public function gateway(): BelongsTo
@@ -371,6 +380,27 @@ class Sale extends Model
     public function pixCharges(): HasMany
     {
         return $this->hasMany(PixCharge::class, 'sale_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function saleInformations(): HasMany
+    {
+        return $this->hasMany(SaleInformation::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function pendingDebts(): HasMany
+    {
+        return $this->hasMany(PendingDebt::class);
+    }
+
+    public function products(): HasManyThrough
+    {
+        return $this->hasManyThrough(Product::class, ProductPlanSale::class, 'sale_id', 'id', 'id', 'product_id');
     }
 
     public function getHashIdAttribute()

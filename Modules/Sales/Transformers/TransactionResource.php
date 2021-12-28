@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -15,14 +16,30 @@ class TransactionResource extends JsonResource
     {
         $sale = $this->sale;
 
+        if (!$sale->api_flag) {
+            $project = !empty($sale->project) ? $sale->project->name : '';
+            $product = (count($sale->getRelation('plansSales')) > 1) ? 'Carrinho' : (!empty($sale->plansSales->first()->plan->name) ? $sale->plansSales->first()->plan->name : '');
+        } else {
+            $project = 'Integração';
+            $product = 'Checkout api';
+        }
+
+        $customerName = $sale->customer->name;
+        if (in_array($sale->status, [Sale::STATUS_IN_REVIEW, Sale::STATUS_CANCELED_ANTIFRAUD])) {
+            $name = explode(' ', $customerName);
+            $customerName = $name[0];
+            array_shift($name);
+            $customerName .= ' ' . preg_replace('/\S/', '*', implode(' ', $name));
+        }
+
         $data = [
             'sale_code'               => '#' . Hashids::connection('sale_id')->encode($sale->id),
             'id'                      => Hashids::connection('sale_id')->encode($sale->id),
             'id_default'              => Hashids::encode($this->sale->id),
             'upsell'                  => Hashids::connection('sale_id')->encode($this->sale->upsell_id),
-            'project'                 => $sale->project->name,
-            'product'                 => (count($sale->getRelation('plansSales')) > 1) ? 'Carrinho' : (!empty($sale->plansSales->first()->plan->name) ? $sale->plansSales->first()->plan->name : ''),
-            'client'                  => $sale->customer->name,
+            'project'                 => $project,
+            'product'                 => $product,
+            'client'                  => $customerName??'',
             'method'                  => $sale->payment_method,
             'status'                  => $sale->status,
             'status_translate'        => Lang::get('definitions.enum.sale.status.' . $sale->present()
@@ -43,7 +60,11 @@ class TransactionResource extends JsonResource
             'has_order_bump'          => $sale->has_order_bump,
             'has_contestation'        => $sale->contestations->count() ? true : false,
         ];
-        $shopifyIntegrations = $sale->project->shopifyIntegrations->where('status', 2);
+
+        $shopifyIntegrations = [];
+        if(!empty($sale->project)) {
+            $shopifyIntegrations = $sale->project->shopifyIntegrations->where('status', 2);
+        }
 
         if (count($shopifyIntegrations) > 0) {
             $data['has_shopify_integration'] = true;
@@ -80,5 +101,3 @@ class TransactionResource extends JsonResource
         return $data;
     }
 }
-
-

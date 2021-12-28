@@ -63,6 +63,8 @@ return [
                 'taboola' => 'Taboola',
                 'outbrain' => 'Outbrain',
                 'pinterest' => 'Pinterest',
+                'uol_ads' => 'UOL Ads',
+                'tiktok' => 'TikTok'
             ],
         ],
         "discount_coupon" => [
@@ -132,6 +134,7 @@ return [
                 "refunded" => "Estornado",
                 "partial_refunded" => "Estorno Parcial",
                 "in_review" => "Revisão Antifraude",
+                "canceled_antifraud"   => "Cancelado Antifraude",
                 "system_error" => "Erro de sistema",
                 "billet_refunded" => "Estornado",
                 "chargeback_recovered" => "Recuperado",

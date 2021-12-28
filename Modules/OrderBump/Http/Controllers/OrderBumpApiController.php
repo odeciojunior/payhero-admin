@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\OrderBumpRule;
 use Modules\Core\Entities\Plan;
+use Modules\Core\Services\CacheService;
 use Modules\OrderBump\Http\Requests\OrderBumpRequest;
 use Modules\OrderBump\Transformers\OrderBumpResource;
 use Modules\OrderBump\Transformers\OrderBumpShowResource;
@@ -44,6 +45,8 @@ class OrderBumpApiController extends Controller
             $data = $request->getData();
 
             $orderBumpModel->create($data);
+
+            CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_RULES, $data['project_id']);
 
             return response()->json(['message' => 'Nova regra de order bump criada com succeso!']);
         } catch (\Exception $e) {
@@ -92,8 +95,12 @@ class OrderBumpApiController extends Controller
             $data = $request->getData();
             $id = current(Hashids::decode($id));
 
-            $orderBumpModel->find($id)
-                ->update($data);
+            $rule = $orderBumpModel->find($id);
+            $rule->update($data);
+
+            CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_RULES, $rule->project_id);
+            CacheService::forget(CacheService::CHECKOUT_OB_RULE_PLANS, $rule->id);
+            CacheService::forgetContainsUnique(CacheService::SHIPPING_OB_RULES, $rule->id);
 
             return response()->json(['message' => 'Regra order bump atualizada com succeso!']);
         } catch (\Exception $e) {
@@ -108,8 +115,13 @@ class OrderBumpApiController extends Controller
 
             $id = current(Hashids::decode($id));
 
-            $orderBumpModel->find($id)
-                ->delete();
+            $rule = $orderBumpModel->find($id);
+            $projectId = $rule->project_id;
+            $rule->delete();
+
+            CacheService::forgetContainsUnique(CacheService::CHECKOUT_OB_RULES, $projectId);
+            CacheService::forget(CacheService::CHECKOUT_OB_RULE_PLANS, $id);
+            CacheService::forgetContainsUnique(CacheService::SHIPPING_OB_RULES, $id);
 
             return response()->json(['message' => 'Regra order bump excluída com succeso!']);
         } catch (\Exception $e) {

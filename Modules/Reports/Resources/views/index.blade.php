@@ -24,7 +24,7 @@
                 <div class="row align-items-center justify-content-between">
                     <div class="col-sm-6 col-m-3 col-lg-3">
                         <div class="">
-                            <select id='select_projects' class="form-control select-pad">
+                            <select id='select_projects' class="form-control input-pad">
                                 {{-- JS carrega.. --}}
                             </select>
                         </div>
@@ -32,7 +32,7 @@
                     <div class="col-sm-6 col-m-3 col-lg-3">
                         <div class="row align-items-center form-icons">
                             <i style="right:10%;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
-                            <input id="date-filter" type="text" name="daterange" class="select-pad text-center pr-30 font-size-14 ml-5" style="width: 92%" value="" readonly>
+                            <input id="date-filter" type="text" name="daterange" class="input-pad text-center pr-30 font-size-14 ml-5" style="width: 92%" value="" readonly>
                         </div>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
                                 <div class="row">
                                     <div class="col-6 col-md-12 col-lg-12 ">
                                         <div class="data-holder b-bottom">
-                                            <div class="row wrap justify-content-between align-items-center">
+                                            <div class="row px-25 py-10 justify-content-between align-items-center">
                                                 <div class="col-lg-6 d-flex align-items-center">
                                                     <span class="mr-10 o-imac-screen-1"></span> Desktop
                                                 </div>
@@ -199,9 +199,9 @@
                                     </div>
                                     <div class="col-6 col-md-12 col-lg-12 ">
                                         <div class="data-holder b-bottom">
-                                            <div class="row wrap justify-content-between align-items-center">
+                                            <div class="row px-25 py-10 justify-content-between align-items-center">
                                                 <div class="col-lg-6 d-flex align-items-center">
-                                                    <span class="mr-10 o-iphone-1"></span> Mobile
+                                                    <span class="ml-5 mr-15 o-iphone-1"></span> Mobile
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <span class="money-td green" id='percent-mobile'>0</span>
@@ -378,7 +378,7 @@
                             </div>
                             <div style='height: 150px; '>
                                 <div class='card-body custom-table min-250'>
-                                    <div class='row'>
+                                    <div class='row align-items-center h-100'>
                                         <div class='col-lg-12 text-center'>
                                             <div class='data-holder text-center'>
                                                 <div class='row wrap justify-content-between text-center'>

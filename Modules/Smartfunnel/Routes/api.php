@@ -17,9 +17,13 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::group(['middleware' => ['auth:api']], function() {
+Route::group(['middleware' => ['auth:api','permission:apps']], function() {
+
+    Route::get('apps/smartfunnel', 'SmartfunnelApiController@index');
+    Route::get('apps/smartfunnel/{id}', 'SmartfunnelApiController@show');
+    Route::get('apps/smartfunnel/{id}/edit', 'SmartfunnelApiController@edit');
 
     Route::apiResource('apps/smartfunnel', 'SmartfunnelApiController')
-         ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
+    ->only('create', 'store', 'update','destroy')->middleware('permission:apps_manage');
 
 });

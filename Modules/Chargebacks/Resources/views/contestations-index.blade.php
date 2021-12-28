@@ -84,7 +84,7 @@
                             <div class="col-sm-12 col-md mt-10">
                                 <label for="is_expired">Expiração</label>
                                 <br>
-                                <select name='is_expired' id="is_expired" class="form-control select-pad">
+                                <select name='is_expired' id="is_expired" class="form-control input-pad">
                                     <option value="0">Ambos</option>
                                     <option value="1">Expirado</option>
                                     <option value="2" selected>Não expirado</option>
@@ -93,7 +93,7 @@
 
                             <div class="col-sm-12 col-md mt-10">
                                 <label for="date_type">Data</label>
-                                <select name='date_type' id="date_type" class="form-control select-pad">
+                                <select name='date_type' id="date_type" class="form-control input-pad">
                                     <option value="expiration_date">Data da expiração</option>
                                     <option value="transaction_date">Data da compra</option>
                                     <option value="adjustment_date">Data da contestação</option>
@@ -114,7 +114,7 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md mt-10">
                                     <label for="project">Projeto</label><br>
-                                    <select name='project' id="project" class="form-control select-pad">
+                                    <select name='project' id="project" class="form-control input-pad">
                                         <option value="">Todos projetos</option>
                                     </select>
                                 </div>
@@ -122,7 +122,7 @@
                                 <div class="col-sm-12 col-md mt-10">
                                     <label for="is_contested">Concluído</label>
                                     <br>
-                                    <select name='is_contested' id="is_contested" class="form-control select-pad">
+                                    <select name='is_contested' id="is_contested" class="form-control input-pad">
                                         <option value="0">Ambos</option>
                                         <option value="1">Concluído</option>
                                         <option value="2">Não concluído</option>

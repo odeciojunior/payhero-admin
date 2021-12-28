@@ -2,11 +2,15 @@
 
 namespace Modules\Core\Listeners;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\NewChargebackEvent;
 use Modules\Core\Services\EmailService;
 
-class SendChargebackNotificationsListener
+class SendChargebackNotificationsListener implements ShouldQueue
 {
+    use Queueable;
+
     public function __construct()
     {
         //

@@ -49,6 +49,8 @@ class ReportanaIntegration extends Model
         'billet_paid',
         'credit_card_refused',
         'credit_card_paid',
+        'pix_generated',
+        'pix_paid',
         'abandoned_cart',
         'deleted_at',
         'created_at',

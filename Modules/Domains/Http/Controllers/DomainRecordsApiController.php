@@ -3,6 +3,7 @@
 namespace Modules\Domains\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -76,7 +77,7 @@ class DomainRecordsApiController extends Controller
         }
     }
 
-    public function store(DomainRecordsRequest $request)
+    public function store(DomainRecordsRequest $request): JsonResponse
     {
         try {
             $domainModel = new Domain();
@@ -203,7 +204,7 @@ class DomainRecordsApiController extends Controller
         }
     }
 
-    public function destroy($project, $domain, $record)
+    public function destroy($project, $domain, $record): JsonResponse
     {
         try {
             if (empty($project) || empty($domain) || empty($record)) {
@@ -256,44 +257,30 @@ class DomainRecordsApiController extends Controller
         }
     }
 
-    public function update(
-        Request $request,
-        $project,
-        $domain,
-        $domainRecord
-    ) {
+    public function update(Request $request, $project, $domain, $domainRecord): JsonResponse
+    {
         try {
-            $domainModel = new Domain();
-            $domainRecordModel = new DomainRecord();
-            $cloudFlareService = new CloudFlareService();
-
-            $domain = $domainModel->find(current(Hashids::decode($domain)));
-            $domainRecord = $domainRecordModel->find(current(Hashids::decode($domainRecord)));
+            $domain = Domain::find(hashids_decode($domain));
+            $domainRecord = DomainRecord::find(hashids_decode($domainRecord));
 
             if (empty($domain) || empty($domainRecord) || !Gate::allows('edit', [$domainRecord->domain->project])) {
-                return response()->json(
-                    [
-                        'message' => 'Sem permissão para remover a entrada',
-                    ],
-                    400
-                );
+                return response()->json([
+                    'message' => 'Sem permissão para remover a entrada',
+                ], 400);
             }
 
             if ($domainRecord->system_flag) {
-                return response()->json(
-                    [
-                        'message' => 'Você não tem permissão para alterar este proxy',
-                    ],
-                    400
-                );
+                return response()->json([
+                    'message' => 'Você não tem permissão para alterar este proxy',
+                ], 400);
             }
 
             $proxy = true;
-            if ($domainRecord->type == 'MX' || $domainRecord->type == 'TXT' || $request->input('proxy') != '1') {
+            if (($domainRecord->type == 'A' || $domainRecord->type == 'MX' || $domainRecord->type == 'TXT') && $request->input('proxy') != '1') {
                 $proxy = false;
             }
 
-            if ($domainRecord->type == 'CNAME' && $domainRecord->name === 'www' && $domainRecord->content == 'shops.myshopify.com'){
+            if ($domainRecord->type == 'CNAME' && $domainRecord->name === 'www' && $domainRecord->content == 'shops.myshopify.com') {
                 $proxy = false;
             }
 
@@ -304,46 +291,32 @@ class DomainRecordsApiController extends Controller
                 'proxied' => $proxy,
             ];
 
-            $response = $cloudFlareService->updateRecordDetails(
+            $response = (new CloudFlareService())->updateRecordDetails(
                 $domain->cloudflare_domain_id,
                 $domainRecord->cloudflare_record_id,
                 $data
             );
 
             if ($response) {
-                $domainRecord->update(
-                    [
-                        'proxy' => $data['proxied'],
-                    ]
-                );
+                $domainRecord->update([
+                    'proxy' => $data['proxied'],
+                ]);
 
-                return response()->json(
-                    [
-                        'message' => 'Proxy atualizado com sucesso!',
-                        'data' => [
-                            'domain' => $domain->id_code,
-                        ],
-                    ],
-                    200
-                );
+                return response()->json([
+                    'message' => 'Proxy atualizado com sucesso!',
+                    'data' => ['domain' => $domain->id_code]
+                ], 200);
             }
 
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+            return response()->json([
+                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+            ], 400);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+            return response()->json([
+                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+            ], 400);
         }
     }
 }

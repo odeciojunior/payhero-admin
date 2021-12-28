@@ -2,6 +2,7 @@
 
 namespace Modules\Shipping\Http\Controllers;
 
+use Composer\Cache;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
+use Modules\Core\Services\CacheService;
 use Modules\Shipping\Http\Requests\ShippingStoreRequest;
 use Modules\Shipping\Http\Requests\ShippingUpdateRequest;
 use Modules\Shipping\Transformers\ShippingResource;
@@ -131,6 +133,7 @@ class ShippingApiController extends Controller
 
                     $shippingCreated = $shippingModel->create($shippingValidated);
                     if ($shippingCreated) {
+                        CacheService::forgetContainsUnique(CacheService::SHIPPING_RULES, $shippingValidated['project_id']);
                         return response()->json(['message' => 'Frete cadastrado com sucesso!'], 200);
                     }
 
@@ -298,6 +301,9 @@ class ShippingApiController extends Controller
                     }
 
                     if (Str::contains($requestValidated['type'], 'melhorenvio')) {
+                        $hashid = str_replace('melhorenvio-', '', $requestValidated['type']);
+                        $melhorenvioId = hashids_decode($hashid);
+                        $requestValidated['melhorenvio_integration_id'] = $melhorenvioId;
                         $requestValidated['type'] = 'melhorenvio';
                     }
 
@@ -331,6 +337,8 @@ class ShippingApiController extends Controller
                             $sh->update(['status' => 1]);
                             $mensagem = 'É obrigatório deixar um frete ativado';
                         }
+
+                        CacheService::forgetContainsUnique(CacheService::SHIPPING_RULES, $shipping->project_id);
 
                         return response()->json([
                             'message' => $mensagem,

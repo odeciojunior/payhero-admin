@@ -17,6 +17,7 @@ use Modules\Core\Entities\Category;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Services\AmazonFileService;
+use Modules\Core\Services\CacheService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProductService;
 use Modules\Products\Http\Requests\CreateProductRequest;
@@ -319,6 +320,10 @@ class ProductsApiController extends Controller
                 } catch (Exception $e) {
                     report($e);
                 }
+            }
+
+            if (!empty($product->shopify_variant_id)) {
+                CacheService::forget(CacheService::CHECKOUT_CART_PRODUCT, $product->shopify_variant_id);
             }
 
             return response()->json(['message' => 'Produto Atualizado com sucesso!', 'digital_product_url' => $product->digital_product_url], 200);

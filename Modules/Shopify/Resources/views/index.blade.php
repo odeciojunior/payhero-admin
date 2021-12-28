@@ -13,7 +13,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div style="display: none" class="page-header container">
+        <div style="display: none !important;" class="page-header container">
             <div class="row jusitfy-content-between" style="min-height:56px">
                 <div class="col-lg-8  align-items-center">
                     <h1 class="page-title my-10" style="min-height: 28px">

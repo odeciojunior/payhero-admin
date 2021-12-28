@@ -66,6 +66,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property Collection $sales
  * @property Collection $shippings
  * @property Collection $shopifyIntegrations
+ * @property Collection $woocommerceIntegrations
  * @property Collection $usersProjects
  * @method ProjectPresenter present()
  */
@@ -166,10 +167,15 @@ class Project extends Model
         'product_amount_selector',
         'finalizing_purchase_configs',
         'checkout_notification_configs',
+        'custom_message_configs',
         'notazz_configs',
         'created_at',
         'updated_at',
         'deleted_at',
+    ];
+
+    protected $casts= [
+        'custom_message_configs'=>'array'
     ];
 
     public function tapActivity(Activity $activity, string $eventName)
@@ -247,6 +253,11 @@ class Project extends Model
     public function shopifyIntegrations(): HasMany
     {
         return $this->hasMany(ShopifyIntegration::class);
+    }
+
+    public function woocommerceIntegrations(): HasMany
+    {
+        return $this->hasMany(WooCommerceIntegration::class);
     }
 
     public function usersProjects(): HasMany

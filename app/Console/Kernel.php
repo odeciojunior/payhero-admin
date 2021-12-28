@@ -11,26 +11,25 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
  */
 class Kernel extends ConsoleKernel
 {
-    /**
-     * @var array
-     */
     protected $commands = [
         //
     ];
 
-    /**
-     * @param Schedule $schedule
-     */
     protected function schedule(Schedule $schedule)
     {
         setlocale(LC_ALL, 'pt_BR');
 
-        /** Manager */
+        $schedule->command('antifraudpostbacks:process')->withoutOverlapping()->everyMinute();
+
+        $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
+
         $schedule->command('check:systems')->everyTenMinutes();
 
         $schedule->command('check:underattack')->everyThirtyMinutes();
 
-        $schedule->command('getnet:release-get-faster')->everyThirtyMinutes();
+        $schedule->command('withdrawals:release-get-faster')->withoutOverlapping()->everyThirtyMinutes();
+
+        $schedule->command('updateTransactionsReleaseDate')->hourly();
 
         $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
 
@@ -62,9 +61,6 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
-        /** End Manager */
-
-        /** checkout */
 
         /** sirius */
         // snapshot for horizon metrics
@@ -106,6 +102,12 @@ class Kernel extends ConsoleKernel
         //Reorder shopify
         $schedule->command('command:ShopifyReorderSales')->dailyAt('03:00');
 
+        //Reorder woocommerce
+        $schedule->command('command:WoocommerceReorderSales')->dailyAt('03:45');
+
+        //Retry woocommerce requests
+        $schedule->command('command:WoocommerceRetryFailedRequests')->dailyAt('04:15');
+
         //checks the trackings that have been recognized by the carrier but has no movement yet
         $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');
 
@@ -115,10 +117,12 @@ class Kernel extends ConsoleKernel
         //check invites expired
         $schedule->command('verify:inviteexpired')->dailyAt('01:00');
 
+        $schedule->command('check:menv-tracking')->dailyAt('17:00');
+
         //Remove temporary files in regiter
         $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
 
-        $schedule->command('check:automatic-liquidation-transactions')->dailyAt('06:15');
+        $schedule->command('available-balance:update')->dailyAt('06:15');
 
         $schedule->command('redis:update-sale-tracking')->hourly();
 
@@ -146,19 +150,36 @@ class Kernel extends ConsoleKernel
         $schedule->command('achievements:update')->dailyAt('09:00');
         $schedule->command('achievements:update')->dailyAt('21:00');
 
-        /** Pix Expired */
-        $schedule->command('change:pixpending')->everyMinute();
+        /** Pix Canceled */
+        $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
 
         /** Check GatewayTax invitations Diogo */
-        $schedule->command('check:GatewayTaxCompanyAfterMonth')->dailyAt('06:30');
+        $schedule->command('check:gateway-tax-company-after-month')->dailyAt('06:30');
 
-        $schedule->command('check:sales-refunded')->dailyAt('16:00');
+        $schedule->command('check:sales-refunded')->weeklyOn(1, '23:00');
+
+        /** Libera o dinheiro da azx */
+        $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00');
+        /** Confirma a transferencia do dinheiro da azx */
+        $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30');
+
+        /** Antecipações Asaas */
+        $schedule->command('anticipations:asaas')->dailyAt('4:00');
+        $schedule->command('anticipations:asaas-pending')->dailyAt('14:00');
+        $schedule->command('anticipations:asaas-pending')->dailyAt('16:00');
+
+        /** Sincronizar códigos de rastreio com WooCommerce */
+        $schedule->command('woocommerce:check-tracking-codes')->sundays()->at('07:00');
+    
+        /** Transferir grana dos vendedores no asaas para conta Cloudfox */
+        $schedule->command('asaas:transfers-chargebacks')->dailyAt('00:20');
+
+        /** transfere saldo excedente no asaas*/
+        $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('08:00');
+        
     }
 
-    /**
-     * Register the commands for the application.
-     * @return void
-     */
+
     protected function commands()
     {
         $this->load(__DIR__ . '/Commands');

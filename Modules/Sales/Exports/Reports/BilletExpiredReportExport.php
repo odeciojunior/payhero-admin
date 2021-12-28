@@ -60,45 +60,52 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             })->leftJoin('customers as customer', function($join) {
                 $join->on('sales.customer_id', '=', 'customer.id');
             })->whereIn('sales.status', [5])->where([
-                                                        ['sales.payment_method', 2],
-                                                    ])->with([
-                                                                 'project',
-                                                                 'customer',
-                                                                 'project.domains' => function($query) {
-                                                                     $query->where('status', 3)//dominio aprovado
-                                                                           ->first();
-                                                                 },
-                                                             ]);
+                ['sales.payment_method', Sale::BOLETO_PAYMENT],
+                ])->with([
+                    'project',
+                    'customer',
+                    'project.domains' => function($query) {
+                    $query->where('status', 3)//dominio aprovado
+                        ->first();
+                    },
+                ]);
 
         if (!empty($this->filters['client'])) {
             $customerSearch = $customerModel->where('name', 'like', '%' . $this->filters['client'] . '%')->pluck('id')
-                                            ->toArray();
+            ->toArray();
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
 
-        if (!empty($this->filters['project'])) {
-            $projectId = FoxUtils::decodeHash($this->filters['project']);
-            $salesExpired->where('sales.project_id', $projectId);
+        $parseProjectIds = explode(',', $this->filters['project']);
+        $projectIds = [];
+        if (!empty($parseProjectIds) && !in_array("all", $parseProjectIds)) {
+            foreach($parseProjectIds as $projectId){
+                array_push($projectIds, FoxUtils::decodeHash($projectId));
+            }
+            $salesExpired->whereIn('sales.project_id', $projectIds);
         } else {
-            $userProjects = $userProjectsModel->where([
-                                                          ['user_id', $this->user->account_owner_id],
-                                                          [
-                                                              'type_enum',
-                                                              $userProjectsModel->present()
-                                                                                ->getTypeEnum('producer'),
-                                                          ],
-                                                      ])->pluck('project_id')->toArray();
-
+            $userProjects = UserProject::select('project_id')
+                ->where('user_id', $this->user->id)
+                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
+                ->get()
+                ->pluck('project_id')
+                ->toArray();
             $salesExpired->whereIn('sales.project_id', $userProjects);
         }
+
         if (!empty($this->filters['client_document'])) {
             $customerSearch = $customerModel->where('document', FoxUtils::onlyNumbers($this->filters['client_document']))->pluck('id');
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
-        if (!empty($this->filters['plan'])) {
-            $planId = current(Hashids::decode($this->filters['plan']));
-            $salesExpired->whereHas('plansSales', function ($query) use ($planId) {
-                $query->where('plan_id', $planId);
+
+        $parsePlanIds = explode(',', $this->filters['plan']);
+        $planIds = [];
+        if (!empty($parsePlanIds) && !in_array("all", $parsePlanIds)) {
+            foreach($parsePlanIds as $planId){
+                array_push($planIds, Hashids::decode($planId));
+            }
+            $salesExpired->whereHas('plansSales', function ($query) use ($planIds) {
+                $query->whereIn('plan_id', $planIds);
             });
         }
         if (!empty($startDate) && !empty($endDate)) {
@@ -139,15 +146,10 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 'sale_code'                  => '#' . Hashids::connection('sale_id')->encode($sale->id),
                 'shopify_order'              => strval($sale->shopify_order),
                 'payment_form'               => $sale->present()->getPaymentForm(),
-                'installments_amount'        => $sale->installments_amount ?? '',
-                'flag'                       => $sale->flag ?? '',
                 'boleto_link'                => $sale->boleto_link ?? '',
                 'boleto_digitable_line'      => $sale->boleto_digitable_line ?? '',
-                'boleto_due_date'            => $sale->boleto_due_date,
                 'start_date'                 => $sale->start_date . ' ' . $sale->hours,
-                'end_date'                   => $sale->end_date ? Carbon::parse($sale->end_date)
-                                                                        ->format('d/m/Y H:i:s') : '',
-                'status'                     => $sale->present()->getStatus(),
+                'boleto_due_date'            => $sale->boleto_due_date,
                 'total_paid'                 => $sale->total_paid_value ?? '',
                 'subtotal'                   => $sale->sub_total,
                 'shipping'                   => $sale->shipping->name ?? '',
@@ -186,7 +188,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
 
             //remove caracteres indesejados em todos os campos
             $saleData[] = array_map(function($item) {
-                return preg_replace('/[^\p{Latin}[:alnum:][:punct:]\s_-]/u', '', $item);
+                return preg_replace('/[^\w\s\p{P}\p{Latin}$]+/u', "", $item);
             }, $data);
         }
 
@@ -200,14 +202,10 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             'Código da Venda',
             'Pedido do Shopify',
             'Forma de Pagamento',
-            'Número de Parcelas',
-            'Bandeira do Cartão',
             'Link do Boleto',
             'Linha Digitavel do Boleto',
-            'Data de Vencimento do Boleto',
             'Data Inicial do Pagamento',
-            'Data Final do Pagamento',
-            'Status',
+            'Data de Vencimento do Boleto',
             'Valor Total Venda',
             'Subtotal',
             'Frete',
@@ -281,7 +279,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 }
                 $sendGridService = new SendgridService();
                 $userName        = $this->user->name;
-                $userEmail       = $this->user->email;
+                $userEmail       = $this->email;
                 $downloadLink    = getenv('APP_URL') . "/sales/download/" . $this->filename;
 
                 $data = [

@@ -19,12 +19,15 @@ $(() => {
             },
             success: (response) => {
                 if (verifyAccountFrozen()) {
-                    $("#btn-config").css({ visibility: "hidden" });
+                    $("#btn-config").css({visibility: "hidden"});
                 } else {
-                    $("#btn-config").css({ visibility: "visible" });
+                    $("#btn-config").css({visibility: "visible"});
                 }
                 if (response.data.length) {
+
                     $("#project-empty").hide();
+                    $("#company-empty").hide();
+
                     $.each(response.data, (key, project) => {
                         if (verifyAccountFrozen()) {
                             linkProject = "";
@@ -44,28 +47,28 @@ $(() => {
 
 
                                             ${
-                                                project.shopify_id != null &&
-                                                !project.affiliated
-                                                    ? '<div class="ribbon"><span>Shopify <a class="ribbon-shopify-default"></a></span></div>'
-                                                    : ""
-                                            }
+                            project.shopify_id != null &&
+                            !project.affiliated
+                                ? '<div class="ribbon"><span>Shopify <a class="ribbon-shopify-default"></a></span></div>'
+                                : ""
+                        }
                                             ${
-                                                project.affiliated
-                                                    ? '<div class="ribbon-left"><span>Afiliado</span></div>'
-                                                    : ""
-                                            }
+                            project.affiliated
+                                ? '<div class="ribbon-left"><span>Afiliado</span></div>'
+                                : ""
+                        }
                                             <img class="card-img-top" onerror="this.src = '/modules/global/img/projeto.svg'" src="${
-                                                project.photo
-                                                    ? project.photo
-                                                    : "/modules/global/img/projeto.svg"
-                                            }" alt="${project.name}">
+                            project.photo
+                                ? project.photo
+                                : "/modules/global/img/projeto.svg"
+                        }" alt="${project.name}">
                                             <div class="card-body">
                                                 <h5 class="card-title">${
-                                                    project.name
-                                                }</h5>
+                            project.name
+                        }</h5>
                                                 <p class="card-text sm">Criado em ${
-                                                    project.created_at
-                                                }</p>
+                            project.created_at
+                        }</p>
                                                 ${linkProject}
                                             </div>
                                         </div>
@@ -94,7 +97,7 @@ $(() => {
                                     method: "POST",
                                     url: "/api/projects/updateorder",
                                     dataType: "json",
-                                    data: { order: orderProjects },
+                                    data: {order: orderProjects},
                                     headers: {
                                         Authorization: $(
                                             'meta[name="access-token"]'
@@ -113,15 +116,21 @@ $(() => {
                     );
                 } else {
                     $("#data-table-projects").hide();
-                    $("#project-empty").show();
-                    // $("#project-empty").removeClass('d-none').addClass('show-empty');
-                    $("#btn-config").css({ visibility: "hidden" });
+                    $("#btn-config").css({visibility: "hidden"});
+                    if (response.no_company) {
+                        $("#company-empty").show();
+                        $("#project-empty").hide();
+                    } else {
+                        $("#project-empty").show();
+                        $("#company-empty").hide();
+                    }
                 }
 
                 loadingOnScreenRemove();
             },
         });
     }
+
     $("#btn-config").on("click", function () {
         $("#modal_config").modal("show");
         if ($("#deleted_project_filter").val() == 1) {

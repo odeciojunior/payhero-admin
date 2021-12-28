@@ -3,7 +3,6 @@
 namespace Modules\Domains\Http\Controllers;
 
 use Exception;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -67,11 +66,7 @@ class DomainsApiController extends Controller
         }
     }
 
-    /**
-     * @param DomainStoreRequest $request
-     * @return JsonResponse
-     */
-    public function store(DomainStoreRequest $request)
+    public function store(DomainStoreRequest $request): JsonResponse
     {
         try {
             $domainModel = new Domain();
@@ -115,7 +110,7 @@ class DomainsApiController extends Controller
             $requestData['name'] = 'http://' . $requestData['name'];
             $requestData['name'] = parse_url($requestData['name'], PHP_URL_HOST);
 
-            if ($domainModel->where('name', 'like', '%' . $requestData['name'] . '%')->count() > 0) {
+            if ($domainModel->where('name', $requestData['name'])->count() > 0) {
                 DB::rollBack();
 
                 return response()->json(['message' => 'Domínio já está sendo utilizado'], 400);
@@ -317,45 +312,40 @@ class DomainsApiController extends Controller
         }
     }
 
-    /**
-     * @param DomainDestroyRequest $request
-     * @return JsonResponse
-     */
-    public function destroy(DomainDestroyRequest $request)
+    public function destroy(DomainDestroyRequest $request): JsonResponse
     {
         try {
-            $domainModel = new Domain();
-            $domainRecordModel = new DomainRecord();
             $sendgridService = new SendgridService();
             $cloudFlareService = new CloudFlareService();
 
             $requestData = $request->validated();
 
-            $domain = $domainModel->with('domainsRecords', 'project', 'project.shopifyIntegrations')
-                ->find(current(Hashids::decode($requestData['domain'])));
+            $domain = Domain::with('domainsRecords', 'project', 'project.shopifyIntegrations')
+                ->find(hashids_decode($requestData['domain']));
+
+            if (empty($domain)) {
+                return response()->json(['message' => 'Projeto não encontrado!'], 400);
+            }
 
             if (empty($domain->project) && !Gate::allows('edit', [$domain->project])) {
                 return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
             }
 
             if (empty($domain->cloudflare_domain_id)) {
-                $domainRecordModel->where('domain_id', $domain->id)->delete();
+                DomainRecord::where('domain_id', $domain->id)->delete();
                 $domainDeleted = $domain->delete();
 
                 if ($domainDeleted) {
-                    return response()->json(['message' => 'Dominio removido com sucesso!'], 200);
+                    return response()->json(['message' => 'Domínio removido com sucesso!'], 200);
                 }
                 return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
             }
 
-            if ($cloudFlareService->deleteZoneById($domain->cloudflare_domain_id)
-                || empty($cloudFlareService->getZones($domain->name))
-            ) {
-                //zona deletada
+            if ($cloudFlareService->deleteZoneById($domain->cloudflare_domain_id) || empty($cloudFlareService->getZones($domain->name))) {
                 $sendgridService->deleteLinkBrand($domain->name);
                 $sendgridService->deleteZone($domain->name);
 
-                $domainRecordModel->where('domain_id', $domain->id)->delete();
+                DomainRecord::where('domain_id', $domain->id)->delete();
                 $domainDeleted = $domain->delete();
 
                 if (empty($domainDeleted)) {
@@ -363,12 +353,9 @@ class DomainsApiController extends Controller
                 }
 
                 if (!empty($domain->project->shopify_id)) {
-                    //se for shopify, voltar as integraçoes ao html padrao
                     try {
                         foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
-                            $shopify = new ShopifyService(
-                                $shopifyIntegration->url_store, $shopifyIntegration->token
-                            );
+                            $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                             $shopify->setThemeByRole('main');
                             if (!empty($shopifyIntegration->theme_html)) {
@@ -390,22 +377,15 @@ class DomainsApiController extends Controller
                 }
 
                 return response()->json(['message' => 'Domínio removido com sucesso'], 200);
-            } else {
-                //erro ao deletar zona
-                return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
             }
+
+            return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
         } catch (Exception $e) {
             $message = CloudflareErrorsService::formatErrorException($e);
             return response()->json(['message' => $message], 400);
         }
     }
 
-    /**
-     * @param $project
-     * @param $domain
-     * @return JsonResponse
-     * @throws GuzzleException
-     */
     public function recheckOnly($project, $domain): JsonResponse
     {
         try {
@@ -419,12 +399,9 @@ class DomainsApiController extends Controller
             }
 
             if (!Gate::allows('edit', [$domain->project])) {
-                return response()->json(
-                    [
-                        'message' => 'Sem permissão para validar domínio',
-                    ],
-                    403
-                );
+                return response()->json([
+                    'message' => 'Sem permissão para validar domínio',
+                ], 403);
             }
 
             activity()->on((new Domain()))->tap(
@@ -434,19 +411,12 @@ class DomainsApiController extends Controller
                 }
             )->log('Verificação domínio: ' . $domain->name);
 
-            if (!$cloudFlareService->checkHtmlMetadata(
-                'https://checkout.' . $domain->name,
-                'checkout-cloudfox',
-                '1'
-            )) {
+            if (!$cloudFlareService->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
                 $domain->update(['status' => Domain::STATUS_PENDING]);
 
-                return response()->json(
-                    [
-                        'message' => 'A verificação falhou, atualização de nameservers pendentes',
-                    ],
-                    400
-                );
+                return response()->json([
+                    'message' => 'A verificação falhou, atualização de nameservers pendentes',
+                ], 400);
             }
 
 
@@ -551,33 +521,26 @@ class DomainsApiController extends Controller
                 //template ajax
                 $htmlCart = $shopify->getTemplateHtml($shopify::templateAjaxKeyName);
 
-                $shopifyIntegration->update(
-                    [
-                        'theme_type' => ShopifyIntegration::SHOPIFY_AJAX_THEME,
-                        'theme_name' => $shopify->getThemeName(),
-                        'theme_file' => $shopify::templateAjaxKeyName,
-                        'theme_html' => $htmlCart,
-                    ]
-                );
+                $shopifyIntegration->update([
+                    'theme_type' => ShopifyIntegration::SHOPIFY_AJAX_THEME,
+                    'theme_name' => $shopify->getThemeName(),
+                    'theme_file' => $shopify::templateAjaxKeyName,
+                    'theme_html' => $htmlCart,
+                ]);
 
-                $shopify->updateTemplateHtml(
-                    $templateKeyName,
-                    $htmlCart,
-                    $domain->name,
-                    true
-                );
+                if (!empty($htmlCart)) {
+                    $shopify->updateTemplateHtml($templateKeyName, $htmlCart, $domain->name, true);
+                }
+
                 return response()->json(['message' => 'Domínio validado com sucesso'], 200);
             } catch (Exception $e) {
                 report($e);
 
                 $domain->update(['status' => Domain::STATUS_PENDING]);
 
-                return response()->json(
-                    [
-                        'message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'
-                    ],
-                    400
-                );
+                return response()->json([
+                    'message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'
+                ], 400);
             }
         } catch (Exception $e) {
             $message = CloudflareErrorsService::formatErrorException($e);
@@ -586,7 +549,7 @@ class DomainsApiController extends Controller
         }
     }
 
-    public function show($project, $domain)
+    public function show($project, $domain): JsonResponse
     {
         try {
             $domainModel = new Domain();

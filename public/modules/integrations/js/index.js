@@ -1,13 +1,13 @@
 $(document).ready(function () {
     let integrationTypeEnum = {
-        admin: 'Admin',
-        personal: 'Acesso Pessoal',
-        external: 'Integração Externa',
+        external: 'Profitfy',
+        checkout_api: 'Checkout API'
     };
     let integrationTypeEnumBadge = {
         admin: 'default',
-        personal: 'primary',
-        external: 'warning',
+        personal: 'default',
+        external: 'success',
+        checkout_api: 'primary'
     };
     let status = {
         active: 'Ativo',
@@ -21,6 +21,7 @@ $(document).ready(function () {
 
     refreshIntegrations();
     createIntegration();
+    getCompanies();
 
     function refreshIntegrations(page = 1) {
         loadingOnScreen();
@@ -39,14 +40,23 @@ $(document).ready(function () {
             },
             success: (response) => {
                 if (isEmpty(response.data)) {
+                    $(".page-header").find('.store-integrate').css('display', 'none');
+                    $("#content-error").find('.store-integrate').css('display', 'block');
+
                     $("#content-error").css('display', 'block');
+                    $("#content-script").css('display', 'none');
                     $("#card-table-integrate").css('display', 'none');
                     $("#card-integration-data").css('display', 'none');
                 } else {
+                    $(".page-header").find('.store-integrate').css('display', 'block');
+                    $("#content-error").find('.store-integrate').css('display', 'none');
+
                     $("#content-error").hide();
                     updateIntegrationTableData(response);
                     pagination(response, 'integrates');
                 }
+
+                getIntegration();
                 refreshToken();
                 deleteIntegration();
                 loadingOnScreenRemove();
@@ -56,7 +66,7 @@ $(document).ready(function () {
 
     // Atualiza tabela de dados com a lista de integrações
     function updateIntegrationTableData(response) {
-
+        $("#content-script").css('display', 'block');
         $("#card-table-integrate").css('display', 'block');
         $("#card-integration-data").css('display', 'block');
 
@@ -64,34 +74,45 @@ $(document).ready(function () {
         $("#card-table-integrate").css('display', 'block');
         $("#table-body-integrates").html('');
 
+        if (response.data.length > 0 && (response.data.findIndex((e) => e.integration_type == 'checkout_api') != -1)) {
+            $("#content-script").show();
+            $("#input-url-antifraud").val(response.data[0].antifraud_url);
+        } else {
+            $("#content-script").hide();
+            $("#input-url-antifraud").val('');
+        }
+
         $.each(response.data, function (index, value) {
             let disabled = ('active' !== value.status) ? ' disabled' : '';
             dados = '';
             dados += '<tr>';
-            dados += '<td class="" style="vertical-align: middle;">';
-            dados += '<strong class="mr-1">' + value.description + '</strong>';
-            dados += '<br><small class="text-muted">Criada em: ' + value.register_date + '</small>';
-            dados += '</td>';
-            dados += '<td>';
-            dados += '<span class="badge badge-' + integrationTypeEnumBadge[value.integration_type] + ' text-center">' + integrationTypeEnum[value.integration_type] + '</span>';
-            dados += '</td>';
-            dados += '<td>';
-            dados += '<span class="badge badge-' + statusBadge[value.status] + ' text-center mt-1">' + status[value.status] + '</span>';
-            dados += '</td>';
-            //-----------------------------------
-            //Access Token
-            dados += '<td style="vertical-align: middle;">';
-            dados += '<div class="input-group mb-2 mr-sm-2 mt-2">';
-            dados += '<div class="input-group"><input type="text" class="form-control font-sm brr inptToken" id="inputToken' + value.id_code + '" value="' + value.access_token + '" disabled="disabled">';
-            dados += '<div class="input-group-append"><div class="input-group-text p-1 p-lg-2">';
-            dados += '<a href="#" class="btnCopiarLink" data-toggle="tooltip" title="Copiar token">';
-            dados += '<span class="o-copy-1"></span>'
-            dados += '</a></div></div></div>';
-            dados += '</div>';
-            //-----------------------------------
-            dados += '</td>';
-            dados += '<td class="text-center"><button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><span class="o-reload-1"></span></button>';
-            dados += '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><span class="o-bin-1"></span></button></td>';
+
+                dados += '<td class="" style="vertical-align: middle;">';
+                    dados += '<p class="description mb-0 mr-1">' + value.description + '</p>';
+                    dados += '<small class="text-muted">Criada em ' + value.register_date + '</small>';
+                dados += '</td>';
+
+                dados += '<td class="text-center">';
+                    dados += '<span class="badge badge-' + integrationTypeEnumBadge[value.integration_type] + ' text-center">' + integrationTypeEnum[value.integration_type] + '</span>';
+                dados += '</td>';
+
+                dados += '<td style="vertical-align: middle;">';
+                    dados += '<div class="input-group input-group-lg">';
+                        dados += '<input type="text" class="form-control font-sm brr inptToken" id="inputToken-' + value.id_code + '" value="' + value.access_token + '" disabled="disabled" style="background: #F1F1F1;">';
+                        dados += '<div class="input-group-append">';
+                            dados += '<button class="btn btn-primary bg-white btnCopiarLink" data-code="' + value.id_code + '" type="button" data-placement="top" data-toggle="tooltip" title="Copiar token" style="width: 46px;">';
+                                dados += '<img src="/modules/global/img/icon-copy-b.svg">';
+                            dados += '</button>';
+                        dados += '</div>';
+                    dados += '</div>';
+                dados += '</td>';
+
+                dados += '<td class="text-center">';
+                    dados += '<button class="btn pointer edit-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Editar integração"><span class="o-edit-1"></span></button>';
+                    //dados += '<button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><span class="o-reload-1"></span></button>';
+                    dados += '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><span class="o-bin-1"></span></button>';
+                dados += '</td>';
+
             dados += '</tr>';
             $("#table-body-integrates").append(dados);
         });
@@ -100,6 +121,84 @@ $(document).ready(function () {
         $("#integrations_active").html('' + response.resume.active + '');
         $("#posts_received").html('' + response.resume.received + '');
         $("#posts_sent").html('' + response.resume.sent + '');
+    }
+
+    // Obtem os dados da integração
+    function getIntegration() {
+        $('.edit-integration').unbind('click');
+        $('.edit-integration').on('click', function () {
+            $('#modal-edit-integration').find('input[name="description"]').val('');
+            $('#modal-edit-integration').find('input[name="postback"]').val('');
+
+            let integration_id = $(this).attr('integration');
+            $('#modal-edit-integration').modal('show');
+            $.ajax({
+                method: "GET",
+                url: "/api/integrations/" + integration_id,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: function error(response) {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    if (!isEmpty(response)) {
+                        if (response.token_type_enum == 4) {
+                            $('#modal-edit-integration').find('input[name="postback"]').val(response.postback);
+                            $('#modal-edit-integration').find('.postback-container').show();
+                        } else {
+                            $('#modal-edit-integration').find('.postback-container').hide();
+                            $('#modal-edit-integration').find('input[name="postback"]').val('');
+                        }
+
+                        $('#modal-edit-integration').find('input[name="description"]').val(response.description);
+                        $('#modal-edit-integration').find('input[name="token_type_enum"]').val(response.token_type_enum);
+
+                        editIntegration(integration_id);
+                    } else {
+                        alertCustom('error', 'Erro ao obter dados da integração');
+                    }
+                }
+            });
+        });
+    }
+
+    // Edita os dados da integração
+    function editIntegration(integration_id) {
+        $('#btn-edit-integration').unbind('click');
+        $('#btn-edit-integration').on('click', function () {
+            let description = $('#modal-edit-integration').find('input[name="description"]').val();
+            let token_type_enum = $('#modal-edit-integration').find('input[name="token_type_enum"]').val();
+            let postback = $('#modal-edit-integration').find('input[name="postback"]').val();
+
+            loadingOnScreen();
+            $.ajax({
+                method: "PUT",
+                url: 'api/integrations/' + integration_id,
+                data: {
+                    description: description,
+                    postback: postback,
+                    token_type_enum: token_type_enum
+                },
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: (response) => {
+                    loadingOnScreenRemove();
+                    errorAjaxResponse(response);
+                },
+                success: (response) => {
+                    $(".close").click();
+                    loadingOnScreenRemove();
+                    refreshIntegrations();
+                    alertCustom('success', response.message);
+                }
+            });
+        });
     }
 
     // Regerar token integração
@@ -172,32 +271,39 @@ $(document).ready(function () {
 
     // Adiciona nova integração
     function createIntegration() {
-        $("#store-integrate").unbind();
-        $("#store-integrate").on('click', function () {
+        $(".store-integrate").unbind();
+        $(".store-integrate").on('click', function () {
             loadingOnScreenRemove();
             $("#btn-save-integration").unbind();
             $("#btn-save-integration").on('click', function () {
-                let description = $("#description").val();
+                let description = $("#modal-integrate").find("input[name='description']").val();
                 let tokenTypeEnum = $(".select-enum-list").val();
+                let postback = $("#modal-integrate").find("input[name='postback']").val();
+                let companyHash = $("#companies").val();
                 if (description == '') {
                     alertCustom('error', 'O campo Descrição é obrigatório');
+                } else if (!companyHash && tokenTypeEnum == 4) {
+                    alertCustom('error', 'O campo Empresa é obrigatório para a integração Checkout API');
+                } else if (tokenTypeEnum == 4 && postback == '') {
+                    alertCustom('error', 'O campo Postback é obrigatório para a integração Checkout API');
                 } else {
                     loadingOnScreen();
-                    storeIntegration(description, tokenTypeEnum);
-                    ''
+                    storeIntegration(description, tokenTypeEnum, postback, companyHash);
                 }
             });
             $("#modal-integrate").modal('show');
         });
     }
 
-    function storeIntegration(description, tokenTypeEnum) {
+    function storeIntegration(description, tokenTypeEnum, postback, companyHash) {
         $.ajax({
             method: "POST",
             url: "/api/integrations",
             data: {
                 description: description,
                 token_type_enum: tokenTypeEnum,
+                postback: postback,
+                company_id: companyHash
             },
             dataType: "json",
             headers: {
@@ -205,12 +311,10 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: (response) => {
-                // console.log(response);
                 loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                // console.log(response);
                 $(".close").click();
                 alertCustom('success', 'Integração criada com sucesso!');
                 loadingOnScreenRemove();
@@ -218,15 +322,29 @@ $(document).ready(function () {
             }
         });
     }
+
     //Botao de copiar
     $(document).on("click", '.btnCopiarLink', function () {
         var tmpInput = $("<input>");
         $("body").append(tmpInput);
-        var copyText = $(this).parent().parent().parent().find('.inptToken').val();
+
+        var btn_code = $(this).data('code');
+        var copyText = $('#inputToken-' + btn_code).val();
         tmpInput.val(copyText).select();
         document.execCommand("copy");
         tmpInput.remove();
         alertCustom('success', 'Token copiado!');
+    });
+
+    //Botao de copiar URL Antifraud
+    $(document).on("click", '.btnCopiarLinkAntifraud', function () {
+        var tmpInput = $("<input>");
+        $("body").append(tmpInput);
+        var copyText = $('#input-url-antifraud').val();
+        tmpInput.val(copyText).select();
+        document.execCommand("copy");
+        tmpInput.remove();
+        alertCustom('success', 'Antifraud URL copiada!');
     });
 
     function pagination(response, model) {
@@ -295,5 +413,67 @@ $(document).ready(function () {
                 });
             }
         }
+    }
+
+    function handleIntegrationTypeChange(e) {
+        let type = e.target.value;
+        let companiesContainer = $('.companies-container');
+        let postbackContainer = $('.postback-container');
+        let descriptionInput =  $('#description');
+
+        descriptionInput.val('')
+
+        // type = 4 is Checkout API type
+        if (type == 4) {
+            companiesContainer.addClass('d-flex').removeClass('d-none');
+            postbackContainer.addClass('d-flex').removeClass('d-none');
+        } else {
+            //type = 3 is Profitfy (External Integration)
+            //if(type == 3) {
+                //descriptionInput.val('Profitfy');
+            //}
+            companiesContainer.addClass('d-none').removeClass('d-flex');
+            postbackContainer.addClass('d-none').removeClass('d-flex');
+        }
+    }
+
+    $('.select-enum-list').on('change', handleIntegrationTypeChange);
+
+    // Obtem os campos dos filtros
+    function getCompanies() {
+        loadingOnScreen();
+
+        $.ajax({
+            method: "GET",
+            url: "/api/companies?select=true",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $.each(response.data, function (i, company) {
+                        if (company.capture_transaction_enabled) {
+                            $("#companies").append($('<option>', {
+                                value: company.id,
+                                text: company.name
+                            }));
+                        }
+                    });
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
+
+    //opens the creation modal automatically if it comes with the parameter in the url
+    if (window.location.href.includes('#add_checkout_api')) {
+        $('select[name="token_type_enum"]').val(4).change()
+        $('#modal-integrate').modal('show');
     }
 });

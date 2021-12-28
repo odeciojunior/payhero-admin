@@ -31,7 +31,7 @@ class GetAllStatementChargebacks extends Command
             $start_day = Carbon::parse($latest_chargeback->created_at);
 
             //filtros que retorna tudo
-            $startDateFilter = $start_day->addDay()->format('Y-m-d') . ' 00:00:00';
+            $startDateFilter = $start_day->subDays(5)->format('Y-m-d') . ' 00:00:00';
             $endDateFilter = $start_day->addDays(20)->format('Y-m-d') . ' 23:59:59';
 
             $filters = [
@@ -66,6 +66,9 @@ class GetAllStatementChargebacks extends Command
                             }
 
                             if (!in_array($gateway_order_id, $sale_gateway_order_ids_news)) {
+
+                                $this->line($chargeback->adjustment_reason);
+
                                 $sale_gateway_order_ids_news[] = $gateway_order_id;
 
                                 $userProject = UserProject::with('company')

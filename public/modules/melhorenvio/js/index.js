@@ -96,7 +96,7 @@ $(() => {
             success: resp => {
 
                 $('#integration-'+id).remove();
-                if($('.integration-container').length === 0){
+                if($('#content').length === 0){
                     $('#no-integration-found').show();
                 }
 
@@ -111,10 +111,8 @@ $(() => {
     $('#btn-save').on('click', function () {
 
         let name = $('#name').val();
-        let client_id = $('#client-id').val();
-        let client_secret = $('#client-secret').val();
 
-        if (name && client_id && client_secret) {
+        if (name) {
 
             loadingOnScreen();
 
@@ -127,8 +125,6 @@ $(() => {
                 },
                 data: {
                     name,
-                    client_id,
-                    client_secret,
                 },
                 success: resp => {
                     window.location.href = resp.url;

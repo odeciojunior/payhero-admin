@@ -41,8 +41,8 @@ class MelhorenvioService
     {
         if ($integration) {
             $this->setIntegration($integration)
-                ->setClientId($integration->client_id)
-                ->setClientSecret($integration->client_secret)
+                ->setClientId(env('MELHORENVIO_CLIENT_ID'))
+                ->setClientSecret(env('MELHORENVIO_CLIENT_SECRET'))
                 ->setAccessToken($integration->access_token)
                 ->setRefreshToken($integration->refresh_token);
         }

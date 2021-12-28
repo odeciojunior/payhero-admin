@@ -22,16 +22,27 @@ class ContestationService
 
     public function getTotalValueContestations($filters)
     {
+        $qrConstestations = $this->getQuery($filters)->where('sale_contestations.status', SaleContestation::STATUS_WIN);
+        $total = $qrConstestations->sum('sales.sub_total');//transactions.value -- sales.sub_total
+        $shipment_value = $qrConstestations->sum('sales.shipment_value');
+        $shopify_discount = $qrConstestations->sum('sales.shopify_discount');
+        $automatic_discount = $qrConstestations->sum('sales.automatic_discount');
 
-        $qty_total_paid_value = $this->getQuery($filters)->where('sale_contestations.status', SaleContestation::STATUS_WIN)->sum('transactions.value');
+        $total += $shipment_value;
 
-        return trim(str_replace("R$", "", FoxUtils::formatMoney($qty_total_paid_value / 100)));
+        if ($shopify_discount > 0) {
+            $total -= $shopify_discount;
+        }
 
+        $total -= $automatic_discount/100;
+
+        return trim(str_replace("R$", "", FoxUtils::formatMoney($total)));// transactions.value/100
     }
 
     function getQuery($filters)
     {
-        $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name', 'sales.total_paid_value')
+        $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name',
+        'sales.total_paid_value','sales.sub_total','sales.shipment_value',\DB::Raw("CAST(sales.shopify_discount as DECIMAL) AS shopify_discount"))
             ->selectRaw(\DB::raw("(CASE WHEN expiration_date > '". Carbon::now()->addDay(2)->endOfDay()."' THEN 1 ELSE 0 END) as custom_expired"))
             ->join('sales', 'sales.id', 'sale_contestations.sale_id')
             ->leftJoin('users', 'users.id', '=', 'sales.owner_id')

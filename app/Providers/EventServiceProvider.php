@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Listeners\IntegrationOrderCancelListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
@@ -61,6 +62,7 @@ use Modules\Core\Listeners\NotifyUserShopifyIntegrationReadyListener;
 use Modules\Core\Listeners\NotifyUserShopifyIntegrationStoreListener;
 use Modules\Core\Listeners\NotifyWithdrawalsExportedListener;
 use Modules\Core\Listeners\PixExpiredSendEmailListener;
+use Modules\Core\Listeners\PixExpiredUnicodropListener;
 use Modules\Core\Listeners\ReleasedBalanceNotifyUserListener;
 use Modules\Core\Listeners\ResetPasswordSendEmailListener;
 use Modules\Core\Listeners\Sak\SakPixExpiredListener;
@@ -96,9 +98,11 @@ class EventServiceProvider extends ServiceProvider
         SaleRefundedEvent::class => [
             SaleRefundedWhatsapp2Listener::class,
             SaleRefundedSendEmailListener::class,
+            IntegrationOrderCancelListener::class,
         ],
         BilletRefundedEvent::class => [
             BilletRefundedSendEmailListener::class,
+            IntegrationOrderCancelListener::class,
         ],
         ShopifyIntegrationReadyEvent::class => [
             NotifyUserShopifyIntegrationReadyListener::class,
@@ -188,6 +192,8 @@ class EventServiceProvider extends ServiceProvider
             PixExpiredSendEmailListener::class,
             HotBilletPixExpiredListener::class,
             SakPixExpiredListener::class,
+            PixExpiredUnicodropListener::class,
+            IntegrationOrderCancelListener::class,
         ],
         CheckTransactionReleasedEvent::class => [
             CheckTransactionReleasedListener::class,

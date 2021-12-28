@@ -15,6 +15,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property integer $transaction_id
  * @property int $user_id
  * @property int $company_id
+ * @property int $gateway_id
  * @property int $anticipation_id
  * @property string $value
  * @property string $type
@@ -32,6 +33,9 @@ use Spatie\Activitylog\Models\Activity;
 class Transfer extends Model
 {
     use FoxModelTrait, PresentableTrait, LogsActivity;
+
+    const TYPE_IN = 1;
+    const TYPE_OUT = 2;
 
     /**
      * The "type" of the auto-incrementing ID.
@@ -56,6 +60,7 @@ class Transfer extends Model
         'transaction_id',
         'user_id',
         'company_id',
+        'gateway_id',
         'customer_id',
         'anticipation_id',
         'value',
@@ -137,8 +142,21 @@ class Transfer extends Model
     /**
      * @return BelongsTo
      */
+    public function gateway()
+    {
+        return $this->belongsTo('Modules\Core\Entities\Gateway');
+    }
+
+    /**
+     * @return BelongsTo
+     */
     public function customer()
     {
         return $this->belongsTo('Modules\Core\Entities\Customer');
+    }
+
+    public function asaasTransfer()
+    {
+        return $this->hasMany(AsaasTransfer::class);
     }
 }

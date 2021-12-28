@@ -18,7 +18,7 @@ $(document).ready(function () {
     }
 
     var financesSettingsForm = $('#finances-settings-form')
-    var withdrawalCompanySelect = financesSettingsForm.find('settings_company_select')
+    var companySelect = $('#transfers_company_select')
     var withdrawalByPeriod = $('#withdrawal_by_period')
     var frequencyContainer = $('.frequency-container')
     var frequencyButtons = frequencyContainer.find('.btn')
@@ -29,59 +29,18 @@ $(document).ready(function () {
     var withdrawalByAmount = $('#withdrawal_by_value')
     var withdrawalAmount = $('#withdrawal_amount')
 
-    //Get companies list
-    function getCompanies() {
-        loadingOnScreen();
-
-        $.ajax({
-            method: "GET",
-            url: "/api/companies?select=true",
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: (response) => {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                if (isEmpty(response.data)) {
-                    loadingOnScreenRemove();
-                    return;
-                }
-
-                let dataHtml = '';
-                $(response.data).each(function (index, value) {
-                    dataHtml += `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
-                });
-                $("#settings_company_select").append(dataHtml);
-
-                //Company withdrawal settings
-                getSettings($("#settings_company_select").val())
-                loadingOnScreenRemove();
-                if(verifyAccountFrozen()) {
-                    $('#nav-settings-tab').hide();
-                } else {
-                    $('#nav-settings-tab').show();
-                }
-            }
-        });
-    }
-
     var getSettings = function (companyId, settingsId = null, notify = false) {
         clearSettingsForm()
         $.ajax({
             method: "GET",
             url: '/api/withdrawals/settings/' + companyId + (settingsId ? '/' + settingsId : ''),
-            //data: data,
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
             error: response => {
                 if (notify) {
-                    alertCustom('error', 'Nenhuma configuração de saque automático encontrada para a empresa selecionada')
+                    alertCustom('warning', 'Nenhuma configuração de saque automático encontrada para a empresa selecionada')
                 }
                 clearSettingsForm()
             },
@@ -95,9 +54,8 @@ $(document).ready(function () {
     var saveSettings = function (data) {
 
         settingsData = Object.assign(settingsData, {
-            company_id: financesSettingsForm.find('#settings_company_select').val(),
+            company_id: companySelect.val(),
             amount: withdrawalAmount.val(),
-            //day: dayContainer.find('select').val()
         })
 
         if (!validateSettingsData(data)) {
@@ -207,7 +165,7 @@ $(document).ready(function () {
 
     var clearSettingsForm = function () {
         settingsData = {
-            company_id: financesSettingsForm.find('#settings_company_select').val(),
+            company_id: companySelect.val(),
             rule: null,
             frequency: null,
             weekday: null,
@@ -220,8 +178,8 @@ $(document).ready(function () {
         onWithdrawalByAmountChange()
     }
 
-    financesSettingsForm.find('#settings_company_select').on('change', function () {
-        getSettings($(this).val(), null, true)
+    companySelect.on('change', function () {
+        getSettings($(this).val())
     })
 
     frequencyButtons.on('click', function () {
@@ -330,19 +288,15 @@ $(document).ready(function () {
         return false;
     })
 
-    getCompanies();
     withdrawalAmount.maskMoney({thousands: '.', decimal: ',', allowZero: true});
     frequencyButtons.removeClass('active')
-    if (withdrawalCompanySelect.val()) {
-        getSettings(withdrawalCompanySelect.val())
-    } else {
-        onWithdrawalByAmountChange()
-        onWithdrawalByPeriodChange()
-    }
 
-    $('#nav-settings-tab').on('click', function () {
-        setTimeout(function () {
-            if (settingsData.rule == SETTINGS_RULE_AMOUNT) withdrawalAmount.focus()
-        }, 1500)
-    })
+    setTimeout(() => {
+        if (companySelect.val()) {
+            getSettings(companySelect.val())
+        } else {
+            onWithdrawalByAmountChange()
+            onWithdrawalByPeriodChange()
+        }
+    }, 1000)
 });

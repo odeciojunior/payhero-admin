@@ -27,6 +27,13 @@ class PixelService
             ];
         }
 
+        if(str_contains($dataValidated['code'],'script')){
+            return [
+                'message' => 'Informe somente o código do Pixel',
+                'status' => 400
+            ];
+        }
+
         $applyPlanEncoded = json_encode(foxutils()->getApplyPlans($dataValidated['add_pixel_plans']));
 
         if ($dataValidated['platform'] == 'google_adwords') {
@@ -97,6 +104,12 @@ class PixelService
         }
 
         $project = $pixel->project;
+        if(str_contains($dataValidated['code'],'script')){
+            return [
+                'message' => 'Informe somente o código do Pixel',
+                'status' => 400
+            ];
+        }
 
         $affiliateId = !empty($pixel->affiliate_id) ? $pixel->affiliate_id : 0;
 

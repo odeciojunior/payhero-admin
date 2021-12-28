@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
@@ -28,31 +29,47 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
 
     public function __construct($filters, $user, $filename)
     {
-        $this->filters  = $filters;
-        $this->user     = $user;
+        $this->filters = $filters;
+        $this->user = $user;
         $this->filename = $filename;
-        $this->email    = !empty($filters['email']) ? $filters['email'] : $user->email;
+        $this->email = !empty($filters['email']) ? $filters['email'] : $user->email;
     }
 
     public function query()
     {
         $checkoutModel = new Checkout();
-        $domainModel   = new Domain();
+        $domainModel = new Domain();
 
-        $projectId = FoxUtils::decodeHash($this->filters['project']);
         $dateRange = FoxUtils::validateDateRange($this->filters['date_range']);
         $startDate = null;
-        $endDate   = null;
+        $endDate = null;
 
         if (!empty($dateRange) && $dateRange) {
             $startDate = $dateRange[0] . ' 00:00:00';
-            $endDate   = $dateRange[1] . ' 23:59:59';
+            $endDate = $dateRange[1] . ' 23:59:59';
         }
-
+        
         $abandonedCarts = $checkoutModel->whereIn('status_enum', [
             $checkoutModel->present()->getStatusEnum('recovered'),
             $checkoutModel->present()->getStatusEnum('abandoned cart'),
-        ])->where('project_id', $projectId);
+        ]);
+
+        $parseProjectIds = explode(',', $this->filters['project']);
+        $projectIds = [];
+        if (!empty($parseProjectIds) && !in_array("all", $parseProjectIds)) {
+            foreach($parseProjectIds as $projectId){
+                array_push($projectIds, FoxUtils::decodeHash($projectId));
+            }
+            $abandonedCarts->whereIn('project_id', $projectIds);
+        } else {
+            $userProjects = UserProject::select('project_id')
+                ->where('user_id', $this->user->id)
+                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
+                ->get()
+                ->pluck('project_id')
+                ->toArray();
+            $abandonedCarts->whereIn('project_id', $userProjects);
+        }
 
         if (!empty($this->filters['client'])) {
             $abandonedCarts->where('client_name', 'like', '%' . $this->filters['client'] . '%');
@@ -60,18 +77,22 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
 
         if (!empty($this->filters['client_document'])) {
             $document = $this->filters['client_document'];
-            $abandonedCarts->whereHas('logs', function($query) use ($document) {
+            $abandonedCarts->whereHas('logs', function ($query) use ($document) {
                 $query->where('document', $document);
             });
         }
 
-        if (!empty($this->filters['plan'])) {
-            $planId = current(Hashids::decode($this->filters['plan']));
-            $abandonedCarts->whereHas('checkoutPlans', function($query) use ($planId) {
-                $query->where('plan_id', $planId);
+        $parsePlanIds = explode(',', $this->filters['plan']);
+        $planIds = [];
+        if (!empty($parsePlanIds) && !in_array("all", $parsePlanIds)) {
+            foreach($parsePlanIds as $planId){
+                array_push($planIds, Hashids::decode($planId));
+            }
+            $abandonedCarts->whereHas('checkoutPlans', function ($query) use ($planIds) {
+                $query->whereIn('plan_id', $planIds);
             });
         }
-
+        
         if (!empty($startDate) && !empty($endDate)) {
             $abandonedCarts->whereBetween('checkouts.created_at', [$startDate, $endDate]);
         } else {
@@ -84,27 +105,34 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
         }
 
         return $abandonedCarts->with([
-                                         'project.domains' => function($query) use ($domainModel) {
-                                             $query->where('status', $domainModel->present()->getStatus('approved'));
-                                         },
-                                         'checkoutPlans.plan',
-                                     ])->orderBy('id', 'DESC');
+            'project.domains' => function ($query) use ($domainModel) {
+                $query->where('status', $domainModel->present()->getStatus('approved'));
+            },
+            'checkoutPlans.plan',
+        ])->orderBy('id', 'DESC');
     }
 
     public function map($row): array
     {
-        $checkout        = $row;
+        $checkout = $row;
         $checkoutService = new CheckoutService();
 
-        return [
-            'date'             => with(new Carbon($checkout->created_at))->format('d/m/Y H:i:s'),
-            'project'          => $checkout->project->name,
-            'client'           => $checkout->client_name,
+        $cart = [
+            'date' => with(new Carbon($checkout->created_at))->format('d/m/Y H:i:s'),
+            'project' => $checkout->project->name,
+            'client' => $checkout->client_name,
+            'email' => $checkout->logs->whereNotIn('email', [null, ''])->first()->email ?? '',
+            'telephone' => $checkout->client_telephone,
             'status_translate' => $checkout->status == 'abandoned cart' ? 'Não recuperado' : 'Recuperado',
-            'value'            => number_format(intval(preg_replace("/[^0-9]/", "", $checkoutService->getSubTotal($checkout->checkoutPlans))) / 100, 2, ',', '.'),
-            'link'             => $checkout->present()->getCheckoutLink($checkout->project->domains->first()),
-            'whatsapp_link'    => "https://api.whatsapp.com/send?phone=+55" . preg_replace('/[^0-9]/', '', $checkout->client_telephone) . '&text=Olá ' . explode(' ', $checkout->name)[0],
+            'value' => number_format(intval(preg_replace("/[^0-9]/", "", $checkoutService->getSubTotal($checkout->checkoutPlans))) / 100, 2, ',', '.'),
+            'link' => $checkout->present()->getCheckoutLink($checkout->project->domains->first()),
+            'whatsapp_link' => "https://api.whatsapp.com/send?phone=+55" . preg_replace('/[^0-9]/', '', $checkout->client_telephone) . '&text=Olá ' . explode(' ', $checkout->name)[0],
         ];
+
+        //remove caracteres indesejados em todos os campos
+        return array_map(function($item) {
+            return preg_replace('/[^\w\s\p{P}\p{Latin}$]+/u', "", $item);
+        }, $cart);
     }
 
     public function headings(): array
@@ -113,6 +141,8 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             'Data',
             'Projeto',
             'Cliente',
+            'Email',
+            'Telefone',
             'Status',
             'Valor',
             'Link',
@@ -123,20 +153,20 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event) {
                 $cellRange = 'A1:AS1'; // All headers
                 $event->sheet->getDelegate()->getStyle($cellRange)
-                             ->getFill()
-                             ->setFillType('solid')
-                             ->getStartColor()
-                             ->setRGB('E16A0A');
+                    ->getFill()
+                    ->setFillType('solid')
+                    ->getStartColor()
+                    ->setRGB('E16A0A');
                 $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->applyFromArray([
-                                                                                                  'color' => ['rgb' => 'ffffff'],
-                                                                                                  'size'  => 16,
-                                                                                              ]);
+                    'color' => ['rgb' => 'ffffff'],
+                    'size' => 16,
+                ]);
 
-                $lastRow  = $event->sheet->getDelegate()->getHighestRow();
-                $setGray  = false;
+                $lastRow = $event->sheet->getDelegate()->getHighestRow();
+                $setGray = false;
                 $lastSale = null;
                 for ($row = 2; $row <= $lastRow; $row++) {
                     $currentSale = $event->sheet->getDelegate()->getCellByColumnAndRow(1, $row)->getValue();
@@ -145,27 +175,28 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                     }
                     if ($setGray) {
                         $event->sheet->getDelegate()
-                                     ->getStyle('A' . $row . ':AS' . $row)
-                                     ->getFill()
-                                     ->setFillType('solid')
-                                     ->getStartColor()
-                                     ->setRGB('e5e5e5');
+                            ->getStyle('A' . $row . ':AS' . $row)
+                            ->getFill()
+                            ->setFillType('solid')
+                            ->getStartColor()
+                            ->setRGB('e5e5e5');
                     }
                     $lastSale = $currentSale;
                 }
 
                 $sendGridService = new SendgridService();
-                $userName        = $this->user->name;
-                $userEmail       = $this->user->email;
-                $downloadLink    = getenv('APP_URL') . "/sales/download/" . $this->filename;
+                $userName = $this->user->name;
+                $userEmail = $this->email;
+                $downloadLink = getenv('APP_URL') . "/sales/download/" . $this->filename;
 
                 $data = [
-                    'name'          => $userName,
-                    'report_name'   => 'Relatório de Recuperação',
+                    'name' => $userName,
+                    'report_name' => 'Relatório de Recuperação',
                     'download_link' => $downloadLink,
                 ];
 
                 $sendGridService->sendEmail('help@cloudfox.net', 'CloudFox', $userEmail, $userName, 'd-2279bf09c11a4bf59b951e063d274450', $data);
+
             },
         ];
     }

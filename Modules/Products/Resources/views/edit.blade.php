@@ -8,7 +8,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div style="display: none" class="page-header container">
+        <div style="display:none !important;" class="page-header container">
             <h1 class="page-title">Editar produto</h1>
             <p class="desc mt-10"> Preencha os dados sobre seu produto atentamente. </p>
             <div class="page-header-actions">
@@ -176,7 +176,7 @@
                 <div class="modal-dialog  modal-dialog-centered  modal-simple">
                     <div class="modal-content">
                         <div class="modal-header text-center">
-                            <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="close-modal-delete">
+                            <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="close-modal-delete">
                                 <i class="material-icons md-16">close</i>
                             </a>
                         </div>

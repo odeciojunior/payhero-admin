@@ -8,7 +8,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header container">
+        <div class="page-header container" style="display:none !important;">
             <div class="row jusitfy-content-between" style="min-height:56px">
                 <div class="col-lg-8  align-items-center">
                     <h1 class="page-title my-10" style="min-height: 28px">
@@ -61,25 +61,6 @@
                             <div class="d-flex input-group">
                                 <input type="text" class="input-pad" name="name" id="name"
                                        placeholder="Ex.: MelhorEnvio #1">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-30">
-                        <div class="input-group col-12">
-                            <label for="client-id">Client ID</label>
-                            <div class="d-flex input-group">
-                                <input type="text" class="input-pad" name="client_id"
-                                       id="client-id"
-                                       placeholder="Client ID (fornecido após cadastro do app)">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-30">
-                        <div class="input-group col-12">
-                            <label for="client_id">Client Secret</label>
-                            <div class="d-flex input-group">
-                                <input type="text" class="input-pad" id="client-secret"
-                                       placeholder="Client Secret (fornecido após cadastro do app)">
                             </div>
                         </div>
                     </div>

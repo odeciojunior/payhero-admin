@@ -10,7 +10,7 @@
 @endpush
 @section('content')
     <div class='page'>
-        <div style="" class="page-header container">
+        <div class="page-header container" style="display:none !important;">
             <div class="row justify-content-between">
                 <div class="col-lg-8">
                     <h1 class="page-title my-10" style="min-height: 28px">
@@ -55,7 +55,7 @@
             </div>
             {{-- End Modal  --}}
         </div>
-        <div id="no-integration-found" class='justify-content-center' style="display:none;
+        <div id="no-integration-found" class='justify-content-center' style="display:none !important;
                                                                 height: 100%; 
                                                                 width: 100%; 
                                                                 position: absolute;
@@ -102,7 +102,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/notazz/js/index.js?v=s2')}}"></script>
+        <script src="{{asset('modules/notazz/js/index.js?v='.uniqid()) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     @endpush
 @endsection

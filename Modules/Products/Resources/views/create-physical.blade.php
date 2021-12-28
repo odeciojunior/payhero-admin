@@ -8,7 +8,7 @@
     @endpush
 
     <!-- Page -->
-    <div class="page p-50" style="margin-bottom: 0 !important;">
+    <div class="page p-50" style="margin-bottom: 0 !important; display:none !important;">
         <div class="page-header container">
             <h1 class="page-title" style="color: #707070;">Novo produto físico</h1>
             <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>
@@ -111,7 +111,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create-physical.js?v=14') }}"></script>
+        <script src="{{ asset('modules/products/js/create-physical.js?v='.uniqid()) }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

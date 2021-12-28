@@ -2,11 +2,14 @@
 
 namespace Modules\Sales\Transformers;
 
+use Google\Service\ShoppingContent\Amount;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\SaleService;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -23,7 +26,7 @@ class SalesResource extends JsonResource
     {
         $user = auth()->user();
         $userPermissionRefunded = false;
-        if ($user->hasRole('admin') || $user->hasRole('account_owner') || $user->hasPermissionTo('refund')) {
+        if ($user->hasAnyPermission(['sales_manage','finances_manage'])) {
             $userPermissionRefunded = true;
         }
 
@@ -31,97 +34,114 @@ class SalesResource extends JsonResource
         $thankLabelText = 'Link página de obrigado:';
         if (isset($this->project->domains[0]->name)) {
             $urlCheckout = "https://checkout.{$this->project->domains[0]->name}/order/";
-            if(config('app.env')=='homolog'){
+            if (config('app.env') == 'homolog') {
                 $urlCheckout = "https://checkout-test.cloudfox.net/order/";
             }
             $thankPageUrl = $urlCheckout . Hashids::connection('sale_id')->encode($this->id);
         }
-        if($this->payment_method==4 && $this->status <> Sale::STATUS_APPROVED){
+        if ($this->payment_method == 4 && $this->status <> Sale::STATUS_APPROVED) {
             $thankLabelText = 'Link página de Qrcode:';
         }
 
-        //dd($this->details->has_withdrawal);
-        //dd(!empty($this->trasaction->withdrawal_id));
-
         $data = [
-            //hide ids
-            'id'                       => Hashids::connection('sale_id')->encode($this->id),
-            'upsell'                   => Hashids::connection('sale_id')->encode($this->upsell_id),
-            'delivery_id'              => Hashids::encode($this->delivery_id),
-            'checkout_id'              => Hashids::encode($this->checkout_id),
-            'client_id'                => Hashids::encode($this->customer_id),
+            'id' => hashids_encode($this->id, 'sale_id'),
+            'upsell' => hashids_encode($this->upsell_id, 'sale_id'),
+            'delivery_id' => hashids_encode($this->delivery_id),
+            'checkout_id' => hashids_encode($this->checkout_id),
+            'client_id' => hashids_encode($this->customer_id),
             //sale
-            'payment_method'           => $this->payment_method,
-            'flag'                     => !empty($this->flag)?$this->flag:$this->present()->getPaymentFlag(),
-            'start_date'               => $this->start_date,
-            'hours'                    => $this->hours,
-            'status'                   => $this->status,
-            'status_name'              => $this->present()->getStatus($this->status),
-            'dolar_quotation'          => $this->dolar_quotation,
-            'installments_amount'      => $this->installments_amount,
-            'boleto_link'              => $this->boleto_link,
-            'boleto_digitable_line'    => $this->boleto_digitable_line,
-            'boleto_due_date'          => $this->boleto_due_date,
-            'attempts'                 => $this->attempts,
-            'shipment_value'           => FoxUtils::formatMoney(FoxUtils::onlyNumbers($this->shipment_value) / 100),
-            'cupom_code'               => $this->cupom_code,
+            'payment_method' => $this->payment_method,
+            'flag' => !empty($this->flag) ? $this->flag : $this->present()->getPaymentFlag(),
+            'start_date' => $this->start_date,
+            'hours' => $this->hours,
+            'status' => $this->status,
+            'status_name' => $this->present()->getStatus($this->status),
+            'dolar_quotation' => $this->dolar_quotation,
+            'installments_amount' => $this->installments_amount,
+            'boleto_link' => $this->boleto_link,
+            'boleto_digitable_line' => $this->boleto_digitable_line,
+            'boleto_due_date' => $this->boleto_due_date,
+            'attempts' => $this->attempts,
+            'shipment_value' => FoxUtils::formatMoney(FoxUtils::onlyNumbers($this->shipment_value) / 100),
+            'cupom_code' => $this->cupom_code,
             //invoices
-            'invoices'                 => $this->details->invoices ?? null,
+            'invoices' => $this->details->invoices ?? null,
             //transaction
-            'transaction_rate'         => $this->details->transaction_rate ?? null,
-            'percentage_rate'          => $this->details->percentage_rate ?? null,
+            'transaction_rate' => $this->details->transaction_rate ?? null,
+            'percentage_rate' => $this->details->percentage_rate ?? null,
             //extra info
-            'total'                    => $this->details->total ?? null,
-            'subTotal'                 => $this->details->subTotal ?? null,
-            'discount'                 => $this->details->discount ?? null,
-            'comission'                => $this->details->comission ?? 0 + ($this->cashback->value ?? 0),
-            'convertax_value'          => $this->details->convertax_value ?? null,
-            'taxa'                     => $this->details->taxa ?? null,
-            'taxaReal'                 => $this->details->taxaReal ?? null,
-            'taxaDiscount'             => $this->details->taxaDiscount ?? null,
-            'totalTax'                 => $this->details->totalTax ?? null,
-            'installment_tax_value'    => FoxUtils::formatMoney($this->installment_tax_value / 100,),
-            'release_date'             => $this->details->release_date,
-            'affiliate_comission'      => $this->details->affiliate_comission,
-            'shopify_order'            => $this->shopify_order ?? null,
-            'automatic_discount'       => $this->details->automatic_discount ?? 0,
-            'refund_value'             => $this->details->refund_value ?? '0,00',
-            'value_anticipable'        => $this->details->value_anticipable ?? null,
-            'total_paid_value'         => $this->details->total_paid_value,
-            'userPermissionRefunded'   => $userPermissionRefunded,
-            'refund_observation'       => $this->details->refund_observation,
+            'total' => $this->details->total ?? null,
+            'subTotal' => $this->details->subTotal ?? null,
+            'discount' => $this->details->discount ?? null,
+            'comission' => $this->details->comission ?? 0 + ($this->cashback->value ?? 0),
+            'convertax_value' => $this->details->convertax_value ?? null,
+            'taxa' => $this->details->taxa ?? null,
+            'taxaReal' => $this->details->taxaReal ?? null,
+            'taxaDiscount' => $this->details->taxaDiscount ?? null,
+            'totalTax' => $this->details->totalTax ?? null,
+            'installment_tax_value' => FoxUtils::formatMoney($this->installment_tax_value / 100,),
+            'release_date' => $this->details->release_date,
+            'affiliate_comission' => $this->details->affiliate_comission,
+            'shopify_order' => $this->shopify_order ?? null,
+            'automatic_discount' => $this->details->automatic_discount ?? 0,
+            'refund_value' => $this->details->refund_value ?? '0,00',
+            'value_anticipable' => $this->details->value_anticipable ?? null,
+            'total_paid_value' => $this->details->total_paid_value,
+            'userPermissionRefunded' => $userPermissionRefunded,
+            'refund_observation' => $this->details->refund_observation,
             'user_changed_observation' => $this->details->user_changed_observation,
-            'is_chargeback_recovered'  => $this->is_chargeback_recovered,
-            'observation'              => $this->observation,
-            'thank_page_url'           => $thankPageUrl,
-            'thank_label_text'         => $thankLabelText,
-            'company_name'             => $this->details->company_name,
-            'has_order_bump'           => $this->has_order_bump,
-            'has_contestation'         => $this->contestations->count() ? true : false,
-            'cashback_value'           => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
-            'has_cashback'             => $this->cashback->value ?? false,
-            'has_withdrawal'           => !empty($this->details->has_withdrawal)
+            'is_chargeback_recovered' => $this->is_chargeback_recovered,
+            'observation' => $this->observation,
+            'thank_page_url' => $thankPageUrl,
+            'thank_label_text' => $thankLabelText,
+            'company_name' => $this->details->company_name,
+            'has_order_bump' => $this->has_order_bump,
+            'has_contestation' => $this->contestations->count() ? true : false,
+            'cashback_value' => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
+            'has_cashback' => $this->cashback->value ?? false,
+            'api_flag' => $this->api_flag,
+            'has_withdrawal' => !empty($this->details->has_withdrawal),                  
         ];
-        $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
-        if (count($shopifyIntegrations) > 0) {
-            $data['has_shopify_integration'] = true;
-        } else {
-            $data['has_shopify_integration'] = null;
+
+        $shopifyIntegrations = [];
+        if(!empty($this->project)){
+            $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
         }
 
-        if ($this->owner_id == auth()->user()->account_owner_id) {
-            $data['user_sale_type'] = 'producer';
-        } else {
+        $data['asaas_amount_refund'] = '';
+        if(in_array($this->gateway_id,[Gateway::ASAAS_PRODUCTION_ID,Gateway::ASAAS_SANDBOX_ID]) && !empty($this->anticipation_status))
+        {
+            $data['asaas_amount_refund'] = $this->getSalesTaxesChargeback();
+        }
+        
+        $data['has_shopify_integration'] = null;
+        if (count($shopifyIntegrations) > 0)
+        {
+            $data['has_shopify_integration'] = true;
+        }
+
+        $data['user_sale_type'] = 'producer';
+        if ($this->owner_id <> auth()->user()->account_owner_id) {
             $data['user_sale_type'] = 'affiliate';
         }
 
+        $data['affiliate'] = null;
         if (!empty($this->affiliate_id)) {
             $affiliate = Affiliate::withTrashed()->find($this->affiliate_id);
             $data['affiliate'] = $affiliate->user->name;
-        } else {
-            $data['affiliate'] = null;
         }
 
+        $data['total_parcial'] = foxutils()->onlyNumbers($data['total']) + foxutils()->onlyNumbers($data['cashback_value']);
+        $data['total_parcial'] = FoxUtils::formatMoney($data['total_parcial'] / 100);
+
         return $data;
+    }
+
+    public function getSalesTaxesChargeback()
+    {        
+        $cashbackValue = !empty($this->cashback) ? $this->cashback->value:0;
+        $saleTax = (new SaleService)->getSaleTaxRefund($this,$cashbackValue);
+
+        return FoxUtils::formatMoney(($saleTax + foxutils()->onlyNumbers($this->details->comission)) / 100); 
     }
 }

@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['web', 'auth','permission:apps']], function() {
     Route::Resource('apps/shopify', 'ShopifyController')
          ->only('index');
 

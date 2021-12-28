@@ -1,7 +1,7 @@
 $(() => {
     // COMPORTAMENTOS DA JANELA
 
-    $("#discount_value").mask("00%", { reverse: true });
+    $("#discount_value").mask("00%", {reverse: true});
 
     $("#apply_discount").on("click", function () {
         if ($("#div_discount").is(":visible")) {
@@ -13,11 +13,11 @@ $(() => {
             $("#discount_type").on("change", function () {
                 if ($("#discount_type").val() == "value") {
                     $("#discount_value")
-                        .mask("#.###,#0", { reverse: true })
+                        .mask("#.###,#0", {reverse: true})
                         .removeAttr("maxlength");
                     $("#label_discount_value").html("Valor (ex: 20,00)");
                 } else {
-                    $("#discount_value").mask("00%", { reverse: true });
+                    $("#discount_value").mask("00%", {reverse: true});
                     $("#label_discount_value").html("Valor (ex: 20%)");
                 }
             });
@@ -179,9 +179,19 @@ $(() => {
         let sale = $(this).attr("venda");
         loadOnAny("#modal-saleDetails");
 
+        $("#nav-home-tab").addClass("active");
+        $("#nav-home-tab").addClass("show");
+        $("#nav-home").addClass("active");
+        $("#nav-home").addClass("show");
+
+        $("#nav-profile-tab").removeClass("active");
+        $("#nav-profile-tab").removeClass("show");
+        $("#nav-profile").removeClass("active");
+        $("#nav-profile").removeClass("show");
+
         $("#modal_detalhes").modal("show");
-        $("#refundAmount").mask("##.###,#0", { reverse: true });
-        $("#refundBilletAmount").mask("##.###,#0", { reverse: true });
+        $("#refundAmount").mask("##.###,#0", {reverse: true});
+        $("#refundBilletAmount").mask("##.###,#0", {reverse: true});
 
         $.ajax({
             method: "GET",
@@ -202,36 +212,40 @@ $(() => {
                 $("#refundBilletAmount").text(response.data.total);
                 $(".btn_refund_transaction").unbind("click");
                 $(".btn_refund_transaction").on("click", function () {
-                    var sale = $(this).attr("sale");
-                    $("#modal-refund-transaction").modal("show");
+                    $('#refund_observation').val('');
+
+                    let sale = $(this).attr("sale");
                     $("#modal_detalhes").modal("hide");
+                    $("#modal-refund-transaction").modal("show");
+
+                    $('#asaas_message').html('');
+                    if(response.data.asaas_amount_refund!= ''){
+                        $('#asaas_message').html(`<p class="gray"> Esta venda já foi antecipada, o valor a ser debitado no extrato será de <strong>${response.data.asaas_amount_refund}</strong></p>`)   
+                    }
+
                     $("#radioTotalRefund").on("click", function () {
                         $(".value-partial-refund").hide();
                     });
+
                     $("#radioPartialRefund").on("click", function () {
                         $(".value-partial-refund").show();
                     });
 
                     $(".btn-confirm-refund-transaction").unbind("click");
-                    $(".btn-confirm-refund-transaction").on(
-                        "click",
-                        function () {
-                            var partial = 0;
-                            if (
-                                document.getElementById("radioPartialRefund")
-                                    .checked
-                            ) {
-                                var partial = 1;
-                            }
-                            var refunded_value = $("#refundAmount").val();
-                            refundedClick(
-                                sale,
-                                refunded_value,
-                                partial,
-                                $("#refund_observation").val()
-                            );
+                    $(".btn-confirm-refund-transaction").on("click", function () {
+                        let partial = 0;
+                        if (document.getElementById("radioPartialRefund").checked) {
+                            partial = 1;
                         }
-                    );
+
+                        let refunded_value = $("#refundAmount").val();
+                        refundedClick(
+                            sale,
+                            refunded_value,
+                            partial,
+                            $("#refund_observation").val()
+                        );
+                    });
                 });
 
                 $(".btn_refund_billet").unbind("click");
@@ -278,15 +292,21 @@ $(() => {
     function getSale(sale) {
         renderSale(sale);
 
-        getClient(sale.client_id);
-
         getProducts(sale);
+
+        getClient(sale.client_id, sale.id);
 
         if (sale.delivery_id != "") {
             getDelivery(sale.delivery_id);
         }
 
-        getCheckout(sale.checkout_id);
+        if (!sale.api_flag) {
+            $(".dados-checkout").css("display", "block");
+
+            getCheckout(sale.checkout_id);
+        } else {
+            $(".dados-checkout").css("display", "none");
+        }
 
         getNotazz(sale.invoices);
     }
@@ -304,6 +324,8 @@ $(() => {
         } else {
             paymentMethod = 'Boleto';
         }
+
+        $('#comission-details').css('display','flex');
 
         $('#sale-code').text(sale.id);
         if (!!sale.upsell) {
@@ -339,8 +361,8 @@ $(() => {
         status.html("");
         status.append(
             '<img style="width: 50px;" src="/modules/global/img/cartoes/' +
-                sale.flag +
-                '.png">'
+            sale.flag +
+            '.png">'
         );
 
         switch (sale.status) {
@@ -384,6 +406,11 @@ $(() => {
                     "<span class='ml-2 badge badge-antifraude'>Revisão Antifraude</span>"
                 );
                 break;
+            case 21:
+                status.append(
+                    "<span class='ml-2 badge badge-danger'>Cancelado Antifraude</span>"
+                );
+                break;
             case 22:
                 status.append(
                     "<span class='ml-2 badge badge-danger'>Estornado</span>"
@@ -402,8 +429,8 @@ $(() => {
             default:
                 status.append(
                     "<span class='ml-2 badge badge-primary'>" +
-                        sale.status +
-                        "</span>"
+                    sale.status +
+                    "</span>"
                 );
                 break;
         }
@@ -455,11 +482,18 @@ $(() => {
         $("#automatic-discount-value").html("");
 
         if (parseInt(sale.automatic_discount.replace(/[^\d]/g, "")) > 0) {
-            if (sale.payment_method == 2) {
-                $(".text-discount").html("Desconto automático boleto");
-            } else {
-                $(".text-discount").html("Desconto automático cartão");
+            switch (sale.payment_method) {
+                case 2:
+                    $(".text-discount").html("Desconto automático boleto");
+                break;
+                case 4:
+                    $(".text-discount").html("Desconto automático pix");
+                break;
+                default:
+                    $(".text-discount").html("Desconto automático cartão");
+                break;
             }
+
             $(".automatic-discount-value").show();
             $(".text-discount").show();
             $("#automatic-discount-value").html(sale.automatic_discount).show();
@@ -483,14 +517,18 @@ $(() => {
             $("#partial-refund-value").hide();
         }
 
+        if (sale.status_name == 'refunded') {
+            $('#comission-details').css('display','none');
+        }
+
         // Taxas detalhadas
         $("#taxas-label").html(
             sale.percentage_rate
                 ? "Taxas (" +
-                      sale.percentage_rate +
-                      "% + " +
-                      sale.transaction_rate +
-                      "): "
+                sale.percentage_rate +
+                "% + " +
+                sale.transaction_rate +
+                "): "
                 : "Taxas"
         );
         $("#taxareal-value").html(sale.taxaReal ? sale.taxaReal : "");
@@ -498,9 +536,9 @@ $(() => {
         $("#tax-value-total").html(`Valor total: `);
 
         if (sale.status_name != 'refunded') {
-            $("#tax-value-total-value").html(sale.total);
+            $("#tax-value-total-value").html(sale.total_parcial);
         } else {
-            $("#tax-value-total-value").html(` <del style="color: #F41C1C !important;">${sale.total}</del>`);
+            $("#tax-value-total-value").html(` <del style="color: #F41C1C !important;">${sale.total_parcial}</del>`);
         }
 
 
@@ -607,8 +645,8 @@ $(() => {
                     .show()
                     .html(
                         "<h4 class='table-title'>Venda realizada pelo afiliado " +
-                            sale.affiliate +
-                            "</h4>"
+                        sale.affiliate +
+                        "</h4>"
                     );
                 $(".div-user-type-comission-value")
                     .show()
@@ -703,13 +741,11 @@ $(() => {
 
         $("#checkout-attempts").hide();
         if (sale.payment_method === 1) {
-            $("#checkout-attempts")
-                .text("Quantidade de tentativas: " + sale.attempts)
-                .show();
+            $("#checkout-attempts").text("Quantidade de tentativas: " + sale.attempts).show();
         }
 
         if (
-            (sale.payment_method == 1 || sale.payment_method == 3 || (sale.payment_method == 4 && !sale.has_withdrawal) ) &&
+            (sale.payment_method == 1 || sale.payment_method == 3 || (sale.payment_method == 4 && !sale.has_withdrawal)) &&
             (sale.status == 1 || sale.status == 8 || sale.status == 24) &&
             sale.userPermissionRefunded
         ) {
@@ -720,8 +756,8 @@ $(() => {
             } else {
                 $("#div_refund_transaction").html(
                     '<button class="btn btn-danger btn-sm btn_refund_transaction" sale=' +
-                        sale.id +
-                        ">Estornar transação</button>"
+                    sale.id +
+                    ">Estornar transação</button>"
                 );
             }
         } else {
@@ -737,23 +773,34 @@ $(() => {
         }
 
         if (sale.status == 2 || sale.status == 1) {
-            $("#saleReSendEmail").show();
+            if ( !sale.api_flag ) {
+                $("#saleReSendEmail").show();
+            } else {
+                $("#saleReSendEmail").hide();
+            }
         } else {
             $("#saleReSendEmail").hide();
         }
-        if (
-            sale.payment_method == 2 &&
-            sale.status == 1 &&
-            sale.userPermissionRefunded
-        ) {
-            /*$("#div_refund_billet").html(
-                '<button class="btn btn-secondary btn-sm btn_refund_billet float-right" sale=' +
-                    sale.id +
-                    ">Estornar boleto</button>"
-            );*/
+
+        if ( !sale.api_flag ) {
+            $("#details-api").hide();
         } else {
-            $("#div_refund_billet").html("");
+            $("#details-api").show();
         }
+
+//        if (
+//            sale.payment_method == 2 &&
+//            sale.status == 1 &&
+//            sale.userPermissionRefunded
+//        ) {
+//            $("#div_refund_billet").html(
+//                '<button class="btn btn-danger btn-sm btn_refund_billet" sale=' +
+//                    sale.id +
+//                    ">Estornar boleto</button>"
+//            );
+//        } else {
+            $("#div_refund_billet").html("");
+//        }
         if (sale.refund_observation != null) {
             $(".div-refund-observation").show();
             $("#refund-observation")
@@ -856,8 +903,8 @@ $(() => {
                     : "Enviado para Notazz";
                 let link = invoice.pdf
                     ? "<a href='" +
-                      invoice.pdf +
-                      "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='material-icons icon-copy-1'> content_copy </span></a>"
+                    invoice.pdf +
+                    "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='material-icons icon-copy-1'> content_copy </span></a>"
                     : "";
                 let data = `<tr>
                                 <td>
@@ -933,8 +980,8 @@ $(() => {
             if (invoice.date_canceled) {
                 let link = invoice.pdf
                     ? "<a href='" +
-                      invoice.pdf +
-                      "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='material-icons icon-copy-1'> content_copy </span></a>"
+                    invoice.pdf +
+                    "' class='copy_link' style='cursor:pointer;' target='_blank'><span class='material-icons icon-copy-1'> content_copy </span></a>"
                     : "";
                 let data = `<tr>
                                 <td>
@@ -969,10 +1016,10 @@ $(() => {
         }
     }
 
-    function getClient(client) {
+    function getClient(client, sale) {
         $.ajax({
             method: "GET",
-            url: "/api/customers/" + client,
+            url: "/api/customers/" + client + '/' + sale,
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -993,13 +1040,23 @@ $(() => {
         $("#client-telephone")
             .val(client.telephone)
             .attr("client", client.code)
-            .mask("+0#");
+            .mask('+00 (00) 00000-0000');
         $("#client-email").val(client.email).attr("client", client.code);
         $("#client-document").text("CPF: " + client.document);
-        $("#client-whatsapp").attr("href", client.whatsapp_link);
+        if(client.fraudster) {
+            $("#client-whatsapp-container").hide();
+            $('.btn-edit-client').hide();
+        }else{
+            $('.btn-edit-client').show();
+            $("#client-whatsapp-container").show();
+            $("#client-whatsapp").attr("href", client.whatsapp_link);
+        }
     }
 
     function getProducts(sale) {
+        $("#table-product").html("");
+        $("#data-tracking-products").html("");
+
         $.ajax({
             method: "GET",
             url: "/api/products/saleproducts/" + sale.id,
@@ -1012,17 +1069,40 @@ $(() => {
                 errorAjaxResponse(response);
             },
             success: (response) => {
-                renderProducts(response.data, sale);
+                if (!sale.api_flag) {
+                    renderProducts(response.data, sale);
+                } else {
+                    renderProductsApi(response.data);
+                }
             },
         });
     }
 
-    function renderProducts(products, sale) {
-        $("#table-product").html("");
-        $("#data-tracking-products").html("");
+    function renderProductsApi(products) {
         let div = "";
-        let photo = "/modules/global/img/produto.png";
-        console.log(products);
+        $.each(products, function (index, value) {
+            div += '<div class="row align-items-baseline justify-content-between mb-15">';
+                div += '<div class="col-lg-2">';
+                    div += '<img src="/modules/global/img/produto.svg" width="50px" style="border-radius: 6px;">';
+                div += '</div>';
+                div += '<div class="col-md-5 col-lg-6">';
+                    div += '<h4 class="table-title mb-0">' + value.name + '</h4>';
+                    div += '<small>' + value.description + '</small>';
+                div += '</div>';
+                div += '<div class="col-md-3 col-lg-2 text-right">';
+                    div += '<p class="sm-text text-muted">' + value.amount + 'x</p>';
+                div += '</div>';
+            div += '</div>';
+
+            $("#table-product").html(div);
+        });
+
+        loadOnAny("#modal-saleDetails", true);
+    }
+
+    function renderProducts(products, sale) {
+        let div = "";
+        let photo = "/modules/global/img/produto.svg";
         $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;
@@ -1039,8 +1119,9 @@ $(() => {
                             <p class="sm-text text-muted">${value.amount}x</p>
                         </div>
                     </div>`;
-            if(typeof value.custom_products != 'undefined' && value.custom_products.length>0){
-                div+= `<!-- Customer additional information -->
+
+            if (typeof value.custom_products != 'undefined' && value.custom_products.length > 0) {
+                div += `<!-- Customer additional information -->
                     <div class="panel-group my-30" aria-multiselectable="true" role="tablist">
                         <div class="panel panel-custom-product">
                             <div class="panel-heading" id="sale-custom-product-accordion-${value.sale_id}${value.id}${index}" role="tab">
@@ -1053,22 +1134,22 @@ $(() => {
                             <div class="panel-collapse collapse" id="sale-custom-product-${value.sale_id}${value.id}${index}"
                                 aria-labelledby="sale-custom-product-accordion-${value.sale_id}${value.id}${index}" role="tabpanel" style="">
                                 <div class="panel-body">`;
-                                var file_name = null;
-                                    line_temp = 0;
-                                    $.each(value.custom_products, function (index2,custom) {
-                                        if(line_temp != custom.line){
-                                            div+=`<hr/>`;
-                                            line_temp = custom.line;
-                                        }
-                                        div+=`<div class="row mt-2">`;
+                var file_name = null;
+                line_temp = 0;
+                $.each(value.custom_products, function (index2, custom) {
+                    if (line_temp != custom.line) {
+                        div += `<hr/>`;
+                        line_temp = custom.line;
+                    }
+                    div += `<div class="row mt-2">`;
 
-                                        if(typeof custom.type_enum != 'undefined'){
-                                            if(custom.type_enum!='Text'){
-                                                file_name = custom.file_name.substr(-20);
-                                            }
-                                            switch(custom.type_enum){
-                                                case 'Text':
-                                                    div+=`
+                    if (typeof custom.type_enum != 'undefined') {
+                        if (custom.type_enum != 'Text') {
+                            file_name = custom.file_name.substr(-20);
+                        }
+                        switch (custom.type_enum) {
+                            case 'Text':
+                                div += `
                                                         <div class="col-md-3">
                                                             <img src="/modules/global/img/custom-product/icon_text.svg" class="img-fluid border-icon">
                                                         </div>
@@ -1080,9 +1161,9 @@ $(() => {
                                                                 <span class="material-icons icon-copy-1"> content_copy </span>
                                                             </a>
                                                         </div>`;
-                                                break;
-                                                case 'File':
-                                                    div+=`
+                                break;
+                            case 'File':
+                                div += `
                                                     <div class="col-md-3">
                                                         <img src="/modules/global/img/custom-product/icon_attachment.svg" class="img-fluid border-icon" />
                                                     </div>
@@ -1094,9 +1175,9 @@ $(() => {
                                                             <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" />
                                                         </a>
                                                     </div>`;
-                                                break;
-                                                case 'Image':
-                                                    div+=`
+                                break;
+                            case 'Image':
+                                div += `
                                                     <div class="col-md-3">
                                                         <img src="/modules/global/img/custom-product/icon_image.svg" class="img-fluid border-icon">
                                                     </div>
@@ -1108,16 +1189,16 @@ $(() => {
                                                             <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" />
                                                         </a>
                                                     </div>`;
-                                                break;
-                                            }
+                                break;
+                        }
 
-                                        }
+                    }
 
-                                        div+=`</div>`;
+                    div += `</div>`;
 
-                                    });
+                });
 
-                div+= `
+                div += `
                                 </div>
                             </div>
                         </div>
@@ -1154,6 +1235,8 @@ $(() => {
                 $("#div_tracking_code").css("display", "none");
             }
         });
+
+        loadOnAny("#modal-saleDetails", true);
     }
 
     function getDelivery(deliveryId) {
@@ -1248,13 +1331,13 @@ $(() => {
                 Accept: "application/json",
             },
             error: (response) => {
-                loadingOnChartRemove("#modal-refund");
+                loadingOnChartRemove(".sirius-loading");
                 $("#modal-refund-transaction").modal('toggle')
                 errorAjaxResponse(response);
                 atualizar(currentPage);
             },
             success: (response) => {
-                loadingOnChartRemove("#modal-refund");
+                loadingOnChartRemove(".sirius-loading");
                 $("#modal-refund-transaction").modal('toggle')
                 alertCustom("success", response.message);
                 $("#refund_observation").val("");
@@ -1270,7 +1353,7 @@ $(() => {
         $.ajax({
             method: "POST",
             url: "/api/sales/refund/billet/" + sale,
-            data: { refunded_value: refunded_value },
+            data: {refunded_value: refunded_value},
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -1326,7 +1409,7 @@ $(() => {
                 method: "POST",
                 url: "/api/sales/saleresendemail",
                 dataType: "json",
-                data: { sale: sale },
+                data: {sale: sale},
                 headers: {
                     Authorization: $('meta[name="access-token"]').attr(
                         "content"
@@ -1351,8 +1434,8 @@ $(() => {
 
     /* $('#').on('submit', function (e) {
          // validation code here
-         if (!valid) {
-             e.preventDefault();
-         }
-     });*/
+        if (!valid) {
+            e.preventDefault();
+        }
+    });*/
 });

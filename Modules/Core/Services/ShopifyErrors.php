@@ -22,4 +22,39 @@ class ShopifyErrors
 
         return null;
     }
+
+    public function FormatDataInvalidShopifyIntegration($e): string
+    {
+        $message = 'Dados do shopify inválidos, revise os dados informados';
+        if (method_exists($e, 'getCode')) {
+            switch ($e->getCode()) {
+                case 401:
+                    $message = 'Dados do shopify inválidos, revise os dados informados';
+                    break;
+                case 402:
+                    $message = 'Pagamento pendente na sua loja do Shopify';
+                    break;
+                case 403:
+                    $message = 'Verifique as permissões de seu aplicativo no Shopify';
+                    break;
+                case 404:
+                    $message = 'Url da loja não encontrada, revise os dados informados';
+                    break;
+                case 423:
+                    $message = 'Loja bloqueada, entre em contato com o suporte do Shopify';
+                    break;
+                case 429:
+                    $message = 'Limite de requisiçoes atingido, tente novamente';
+                    break;
+                default:
+                    $message = 'Dados do shopify inválidos, revise os dados informados';
+            }
+        }
+
+        if (method_exists($e, 'getMessage') && strpos($e->getMessage(), 'Shop name should be') !== false) {
+            $message = 'Url inválida, revise os dados informados';
+        }
+
+        return $message;
+    }
 }

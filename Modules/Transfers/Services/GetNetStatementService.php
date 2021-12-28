@@ -5,7 +5,8 @@ namespace Modules\Transfers\Services;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Redis;
-use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
@@ -465,20 +466,20 @@ class GetNetStatementService
 
     private function preparesDatabasePixWithSaleSearch(): void
     {
-
         $companyId = $this->filters['company_id'];
 
-        $pix_sales = Sale::select('transactions.value as transaction_value', 'transactions.status as transaction_status',
+        $pixSales = Sale::select('transactions.value as transaction_value', 'transactions.status as transaction_status',
             'transactions.release_date', 'transactions.withdrawal_id',
             'sales.start_date', 'sales.end_date', 'sales.has_valid_tracking', 'sales.id', 'sales.delivery_id', 'transactions.gateway_released_at')
             ->join('transactions', 'transactions.sale_id', '=', 'sales.id')
             ->where('payment_method', Sale::PIX_PAYMENT)
             ->where('transactions.type', Transaction::TYPE_PRODUCER)
             ->where('sales.status', Sale::STATUS_APPROVED)
+            ->whereNotNull('transactions.withdrawal_id')
             ->whereCompanyId($companyId);
 
         if (array_key_exists('sale_id', $this->filters) && !empty($this->filters['sale_id'])) {
-            $pix_sales->where('sales.id', $this->filters['sale_id']);
+            $pixSales->where('sales.id', $this->filters['sale_id']);
         }
 
         if(request('dateRange')) {
@@ -486,13 +487,13 @@ class GetNetStatementService
             $dates = explode(' - ', request('dateRange') ?? '');
             $startDate = Carbon::createFromFormat('d/m/Y', $dates[0]);
             $endDate = Carbon::createFromFormat('d/m/Y', $dates[1]);
-            $pix_sales->whereDate('sales.start_date', '>=', $startDate->format('Y-m-d'));
-            $pix_sales->whereDate('sales.end_date', '<=', $endDate->format('Y-m-d'));
+            $pixSales->whereDate('sales.start_date', '>=', $startDate->format('Y-m-d'));
+            $pixSales->whereDate('sales.end_date', '<=', $endDate->format('Y-m-d'));
         }
 
-        $pix_sales = $pix_sales->get();
+        $pixSales = $pixSales->get();
 
-        foreach ($pix_sales as $pix_sale) {
+        foreach ($pixSales as $pix_sale) {
             $details = new Details();
 
             if (!empty($pix_sale->delivery_id)) {
@@ -678,22 +679,17 @@ class GetNetStatementService
         ];
     }
 
-    public function getFiltersAndStatement()
+    public function getFiltersAndStatement($companyId)
     {
+        $credential = GatewaysCompaniesCredential::where('company_id',$companyId)
+                                ->where('gateway_id',FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID)
+                                ->where('gateway_status',GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED)        
+                                ->with('company',function($qr){            
+                                    $qr->where('user_id', auth()->user()->account_owner_id);
+                                })->first();
 
-        $companyGetNet = Company::whereNotNull('subseller_getnet_id')
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->whereGetNetStatus(1)
-            ->whereId(current(Hashids::decode(request()->get('company'))))
-            ->first();
-
-        if (empty($companyGetNet)) {
+        if (empty($credential)) {
             return response()->json([]);
-        }
-
-        $subseller = $companyGetNet->subseller_getnet_homolog_id;
-        if (FoxUtils::isProduction()) {
-            $subseller = $companyGetNet->subseller_getnet_id;
         }
 
         try {
@@ -710,16 +706,20 @@ class GetNetStatementService
             $endDate = $today;
         }
 
-        if (request('statement_data_type') == 'schedule_date') {
-            $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_SCHEDULE;
-        } elseif (request('statement_data_type') == 'liquidation_date') {
-            $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_LIQUIDATION;
-        } else {
-            $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_TRANSACTION;
+        switch(request('statement_data_type')){
+            case 'schedule_date':
+                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_SCHEDULE;
+            break;
+            case 'liquidation_date':
+                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_LIQUIDATION;
+            break;
+            default:
+                $statementDateField = GetnetBackOfficeService::STATEMENT_DATE_TRANSACTION;
+            break;
         }
 
         $getNetBackOfficeService = new GetnetBackOfficeService();
-        $getNetBackOfficeService->setStatementSubSellerId($subseller)
+        $getNetBackOfficeService->setStatementSubSellerId($credential->gateway_subseller_id)
             ->setStatementStartDate($startDate)
             ->setStatementEndDate($endDate)
             ->setStatementDateField($statementDateField);
@@ -740,7 +740,7 @@ class GetNetStatementService
 
         $filters['start_date'] = $startDate;
         $filters['end_date'] = $endDate;
-        $filters['company_id'] = $companyGetNet->id;
+        $filters['company_id'] = $credential->company_id;
         $filters['status'] = request()->get('status');
         $filters['payment_method'] = request()->get('payment_method');
         $filters['withdrawal_id'] = current(Hashids::decode(request()->get('withdrawal_id')));;

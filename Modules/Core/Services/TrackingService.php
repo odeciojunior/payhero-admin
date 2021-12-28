@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use App\Jobs\RevalidateTrackingDuplicateJob;
+use Google\Service\PolyService\Format;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -170,6 +171,7 @@ class TrackingService
             $logging ? activity()->enableLogging() : activity()->disableLogging();
 
             $trackingCode = preg_replace('/[^a-zA-Z0-9]/', '', $trackingCode);
+            $trackingCode = strtoupper($trackingCode);
 
             $productPlanSale = ProductPlanSale::select([
                 DB::raw('products_plans_sales.*'),
@@ -214,7 +216,7 @@ class TrackingService
                     event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
                 }
 
-                if ($oldTrackingCode != $trackingCode) {
+                if (strtoupper($oldTrackingCode) != strtoupper($trackingCode)) {
                     //verifica se existem duplicatas do antigo código
                     $duplicates = Tracking::select('product_plan_sale_id as id')
                         ->where('tracking_code', $oldTrackingCode)
@@ -246,7 +248,10 @@ class TrackingService
     {
         $trackingModel = new Tracking();
         $productPlanSaleModel = new ProductPlanSale();
-
+        $filters['status'] =  is_array($filters['status']) ? implode(',', $filters['status']) : $filters['status'];
+        $filters['project'] =  is_array($filters['project']) ? implode(',', $filters['project']) : $filters['project'];
+        $filters['transaction_status'] =  is_array($filters['transaction_status']) ? implode(',', $filters['transaction_status']) : $filters['transaction_status'];
+        
         if (!$userId) {
             $userId = auth()->user()->account_owner_id;
         }
@@ -263,57 +268,91 @@ class TrackingService
             'product',
         ]);
 
-        $productPlanSales->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId, $productPlanSales) {
+
+        $projects = explode(',', $filters['project']);
+        $projectsIds = collect($projects)->map(function ($project) {
+            return current(Hashids::decode($project)) ?: '';
+        })->toArray();
+
+        $productPlanSales->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId, $projectsIds) {
             //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
             $query->whereBetween('end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
                 ->whereIn('status', $saleStatus)
                 ->where('owner_id', $userId);
 
-            if (isset($filters['sale'])) {
+            if (!empty($filters['sale'])) {
                 $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));
                 $query->where('id', $saleId);
             }
 
+
             //filtro transactions
-            if (isset($filters['transaction_status'])) {
-                $query->whereHas('transactions', function ($queryTransaction) use ($filters) {
+            if (!empty($filters['transaction_status'])) {
+                $filterTransaction = explode(',', $filters['transaction_status']);
+                $query->whereHas('transactions', function ($qrTransaction) use ($filterTransaction) 
+                {
                     $transactionPresenter = (new Transaction())->present();
-                    if ($filters['transaction_status'] != 'blocked') {
-                        $statusEnum = $transactionPresenter->getStatusEnum($filters['transaction_status']);
-                        $queryTransaction->where('status_enum', $statusEnum);
-                    } else {
-                        $queryTransaction->where(function ($query) {
-                            $query->where('transactions.release_date', '>', '2020-05-25') //data que começou a bloquear
-                            ->orWhereHas('sale', function ($query) {
-                                $query->where('is_chargeback_recovered', true);
-                            });
-                        })->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))
-                            ->where('tracking_required', true);
+                    $statusEnum = [];
+                    foreach($filterTransaction as $item){
+                        if($item <> 'blocked'){
+                            $statusEnum[] = $transactionPresenter->getStatusEnum($item);
+                        }
                     }
-                    $queryTransaction->where('type', Transaction::TYPE_PRODUCER)
-                        ->whereNull('invitation_id');
+
+                    if(in_array('blocked',$filterTransaction))
+                    {
+                        $qrTransaction->where(function ($qr) use ($statusEnum) {
+                            $qr->where(function ($query) {
+                                $query->where('transactions.release_date', '>', '2020-05-25') //data que começou a bloquear
+                                ->orWhereHas('sale', function ($query) {
+                                    $query->where('is_chargeback_recovered', true);
+                                });
+                            })->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))                                                   
+                            ->where('tracking_required', true);  
+                            
+                            if(count($statusEnum)>0){
+                                $qr->orWhereIn('status_enum', $statusEnum);
+                            }
+                        });
+                        
+                    }else{
+                        $qrTransaction->whereIn('status_enum', $statusEnum);
+                    }
+
+                    $qrTransaction->where('type', Transaction::TYPE_PRODUCER)
+                    ->whereNull('invitation_id')
+                    ->where('is_waiting_withdrawal', 0)
+                    ->whereNull('withdrawal_id');
                 });
             }
+
+            if (!empty($projectsIds) && !in_array('', $projectsIds))
+            {
+                $query->whereIn('project_id', $projectsIds);               
+            }
+            
         });
 
-        if (isset($filters['status'])) {
-            if ($filters['status'] === 'unknown') {
-                $productPlanSales->doesntHave('tracking');
-            } else {
-                $productPlanSales->whereHas(
-                    'tracking',
-                    function ($query) use ($trackingModel, $filters) {
-                        $query->where(
-                            'tracking_status_enum',
-                            $trackingModel->present()->getTrackingStatusEnum($filters['status'])
-                        );
-                    }
-                );
-            }
+        if (!empty($filters['status'])) {
+            $filterStatus = explode(',', $filters['status']);
+            $productPlanSales->where(function ($query) use ($filterStatus) {
+                $statusArray = array_reduce($filterStatus, function ($carry, $item) {
+                    if ($item !== 'unknown') $carry[] = (new Tracking())->present()->getTrackingStatusEnum($item);
+                    return $carry;
+                }, []);
+                
+                $query->whereHas('tracking', function ($trackingQuery) use ($statusArray) {
+                    $trackingQuery->whereIn('tracking_status_enum', $statusArray);
+                });
+                
+                if (in_array('unknown', $filterStatus)) {
+                    $query->orDoesntHave('tracking');
+                }
+            });
         }
 
-        if (isset($filters['problem'])) {
+        if (!empty($filters['problem'])) {
             if ($filters['problem'] == 1) {
                 $productPlanSales->whereHas(
                     'tracking',
@@ -330,20 +369,11 @@ class TrackingService
             }
         }
 
-        if (isset($filters['tracking_code'])) {
+        if (!empty($filters['tracking_code'])) {
             $productPlanSales->whereHas(
                 'tracking',
                 function ($query) use ($filters) {
                     $query->where('tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
-                }
-            );
-        }
-
-        if (isset($filters['project'])) {
-            $productPlanSales->whereHas(
-                'product',
-                function ($query) use ($filters) {
-                    $query->where('project_id', current(Hashids::decode($filters['project'])));
                 }
             );
         }
@@ -380,12 +410,12 @@ class TrackingService
             ])
             ->leftJoin('trackings', 'products_plans_sales.id', '=', 'trackings.product_plan_sale_id')
             ->selectRaw("COUNT(*) as total,
-                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as posted,
-                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as dispatched,
-                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as delivered,
-                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as out_for_delivery,
-                                   SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as exception,
-                                   SUM(CASE WHEN trackings.tracking_status_enum is null THEN 1 ELSE 0 END) as unknown",
+                                SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as posted,
+                                SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as dispatched,
+                                SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as delivered,
+                                SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as out_for_delivery,
+                                SUM(CASE WHEN trackings.tracking_status_enum = ? THEN 1 ELSE 0 END) as exception,
+                                SUM(CASE WHEN trackings.tracking_status_enum is null THEN 1 ELSE 0 END) as unknown",
                 $status)
             ->first();
 

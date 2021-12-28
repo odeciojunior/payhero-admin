@@ -12,6 +12,7 @@ Route::group(
         // rotas autenticadas
         Route::get('/', 'FinancesController@index')->name('finances');
         Route::get('/getbalances', 'FinancesController@getBalances')->name('finances.balances');
+        // Route::get('/get-statement-resumes', 'FinancesApiController@getResumes')->name('finances.statement-resumes');
     }
 
 );

@@ -3,11 +3,13 @@
 namespace Modules\Sales\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Modules\Core\Entities\Gateway;
 use PDF;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
@@ -43,30 +45,24 @@ class SalesController extends Controller
     {
         try {
 
-            $getnetService = new GetnetBackOfficeService();
-
             $id = current(Hashids::connection('sale_id')->decode($hashid));
             $transaction = Transaction::with([
                 'sale',
                 'company'
             ])->where('sale_id', $id)
-                ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
+                ->whereIn('gateway_id', [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
                 ->where('type', (new Transaction())->present()->getType('producer'))
                 ->whereHas('sale', function ($query) {
                     $query->where('payment_method', 1);
                 })->first();
 
-            $company = (object)$transaction->company->toArray();
-            $result = $getnetService->setStatementSubSellerId($company->subseller_getnet_id)
-                ->setStatementSaleHashId($hashid)
-                ->getStatement();
-            $result = json_decode($result);
-            $sale = end($result->list_transactions);
-
-            $sale->flag = strtoupper($transaction->sale->flag) ?? null;
-
-            $pdf = PDF::loadView('sales::refundreceipt', compact('company', 'sale'));
-
+            if(empty($transaction) || empty($transaction->company)){
+                throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
+            }
+            
+            $service = (new Gateway)->getServiceById($transaction->gateway_id);
+            $pdf = $service->refundReceipt($hashid,$transaction);
+            
             return $pdf->stream('comprovante.pdf');
 
         } catch (\Exception $e) {

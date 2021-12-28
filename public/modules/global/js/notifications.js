@@ -127,7 +127,7 @@ $(document).ready(function () {
                 iconBackgroundColor = 'background: #E2FFF1;';
                 link      = '/sales';
                 break;
-                case 'DomainApprovedNotification' :
+            case 'DomainApprovedNotification' :
                 message   = data.message;
                 iconClass = 'o-clouds-1'; // 'cloud-success';
                 iconColor = 'color:#5EE2A1;';

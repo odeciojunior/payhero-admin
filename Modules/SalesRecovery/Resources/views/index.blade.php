@@ -3,34 +3,9 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=05') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=' . random_int(100, 10000)) }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
-        <style>
-            .select2-selection--single {
-                border: 1px solid #dddddd !important;
-                border-radius: .215rem !important;
-                height: 43px !important;
-            }
-            .select2-selection__rendered {
-                color: #707070 !important;
-                font-size: 16px !important;
-                font-family: 'Muli', sans-serif;
-                line-height: 43px !important;
-                padding-left: 14px !important;
-                padding-right: 38px !important;
-            }
-            .select2-selection__arrow {
-                height: 43px !important;
-                right: 10px !important;
-            }
-            .select2-selection__arrow b {
-                border-color: #8f9ca2 transparent transparent transparent !important;
-            }
-            .select2-container--open .select2-selection__arrow b {
-                border-color: transparent transparent #8f9ca2 transparent !important;
-            }
-        </style>
     @endpush
 
     <!-- Page -->
@@ -40,7 +15,7 @@
                 <div class="col-6">
                     <h1 class="page-title">Recuperação de vendas</h1>
                 </div>
-                @if(auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin'))
+                @can('recovery')                
                     <div class="col-6 text-right">
                         <div class="justify-content-end align-items-center" id="export-excel">
                             <div class="p-2 d-flex justify-content-end align-items-center">
@@ -52,67 +27,74 @@
                             </div>
                         </div>
                     </div>
-                @endif
+                @endcan
             </div>
         </div>
         <div id='project-not-empty' style='display:none'>
             <div class="page-content container">
                 <div id="" class="card shadow p-20">
+
                     <div class="row align-items-baseline">
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                             <label for="type_recovery">Tipo de Recuperação</label>
-                            <select name='select_type_recovery' id="type_recovery" class="form-control select-pad">
+                            <select name='select_type_recovery' id="recovery_type" class="form-control input-pad default-border">
                                 <option value="1" selected>Carrinho Abandonado</option>
                                 <option value="5">Boleto Vencido</option>
                                 <option value="4">PIX Vencido</option>
                                 <option value="3">Cartão Recusado</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                             <label for="project">Projeto</label>
-                            <select name='select_project' id="project" class="form-control select-pad">
+                            <select name='select_project' id="project" class="form-control select-pad applySelect2">
                                 <option value="all">Todos projetos</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                             <label for="plan">Plano</label>
-                            <select name='plan' id="plan" class="form-control select-pad" style='width:100%;' data-plugin="select2">
-                                <option value="">Todos planos</option>
+                            <select name='plan' id="plan" class="form-control select-pad applySelect2" style="width:100%;">
+                                <option value="all">Todos planos</option>
                             </select>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                        <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                             <div class="form-group form-icons">
                                 <label for='date-range-sales-recovery'>Filtrar Data</label>
                                 <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
-                                <input name='date-range-sales-recovery' id='date-range-sales-recovery' class='select-pad pr-30' placeholder='Clique para editar...' readonly>
+                                <input name='date-range-sales-recovery' id='date-range-sales-recovery' class='input-pad pr-30 default-border' placeholder='Clique para editar...' readonly>
                             </div>
                         </div>
+
                     </div>
-                    <div class="collapse" id="bt_collapse">
+
+                    <div id="bt_collapse" class="collapse">
+                        
                         <div class="row pt-15">
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                            <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                                 <label for="client-name">Nome do Cliente</label>
                                 <input name='cliente-name' id="client-name" value='' class="input-pad" type="text" placeholder="Nome">
                             </div>
-                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+
+                            <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                                 <label for="client-cpf">CPF do Cliente</label>
                                 <input name='client-cpf' id="client-cpf" value='' class="input-pad" type="text" placeholder="CPF" data-mask="000.000.000-00">
                             </div>
+
                         </div>
                     </div>
-                    <div class="row" style="height: 30px">
+                    <div class="row mb-10 mb-sm-0" style="height: 30px">
                         <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
-                            <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center"
-                                 data-toggle="collapse"
-                                 data-target="#bt_collapse"
-                                 aria-expanded="false"
-                                 aria-controls="bt_collapse">
+                            <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center" data-toggle="collapse" data-target="#bt_collapse" aria-expanded="false"aria-controls="bt_collapse">
                                 <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
-                                <span id="text-filtro">Filtros avançados</span>
+                                <div id="text-filtro" style="white-space: normal">Filtros avançados</div>
                             </div>
                         </div>
                         <div class="col-6 col-xl-3 mt-20">
-                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                            <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
                                 <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
                                 Aplicar filtros
                             </div>
@@ -348,7 +330,7 @@
 
         <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=' . uniqid()) }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
+        <script src="{{asset('modules/global/js/daterangepicker.min.js')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     @endpush

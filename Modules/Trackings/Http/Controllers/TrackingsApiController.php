@@ -42,10 +42,19 @@ class TrackingsApiController extends Controller
                 )->log('Visualizou tela todos os códigos de rastreios');
             }
             $trackingService = new TrackingService();
-
+            
             $data = $request->all();
 
+
             if (!empty($data["date_updated"])) {
+                $saleId = current(Hashids::connection('sale_id')->decode($data['sale']));
+
+                $saleModel = new Sale();
+                $sale = $saleModel->find($saleId);
+                if ( !empty($sale) && $sale->api_flag ) {
+                    return response()->json(['message' => 'Venda por api não contém códigos de rastreio'], 400);
+                }
+                
                 $trackings = $trackingService->getPaginatedTrackings($data);
 
                 return TrackingResource::collection($trackings);
@@ -204,60 +213,6 @@ class TrackingsApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Erro ao exibir resumo dos rastreamentos'], 400);
-        }
-    }
-
-    /**
-     * @return JsonResponse
-     */
-    public function getBlockedBalance()
-    {
-        try {
-            $salesModel = new Sale();
-            $companiesModel = new Company();
-
-            $userAccountOwnerId = auth()->user()->account_owner_id;
-
-            $userCompanies = $companiesModel->where('user_id', $userAccountOwnerId)
-                ->pluck('id')
-                ->toArray();
-
-            $blockedBalance = $salesModel->select(
-                DB::raw('sum(transactions.value) / 100 as total'),
-                DB::raw('count(distinct transactions.sale_id) as sales')
-            )->join('transactions', 'transactions.sale_id', '=', 'sales.id')
-                ->where('sales.owner_id', $userAccountOwnerId)
-                ->where('sales.status', $salesModel->present()->getStatus('approved'))
-                ->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))
-                ->whereNull('transactions.invitation_id')
-                ->whereIn('transactions.company_id', $userCompanies)
-                ->where(function ($query) {
-                    $query->whereHas('tracking', function ($trackingsQuery) {
-                        $trackingPresenter = (new Tracking)->present();
-                        $status = [
-                            $trackingPresenter->getSystemStatusEnum('unknown_carrier'),
-                            $trackingPresenter->getSystemStatusEnum('no_tracking_info'), //não está bloqueado, está pendente, não transferiu pq aguarda a atualização do código
-                            $trackingPresenter->getSystemStatusEnum('posted_before_sale'),
-                            $trackingPresenter->getSystemStatusEnum('duplicated'),
-                        ];
-                        $trackingsQuery->whereIn('system_status_enum', $status);
-                    })->orDoesntHave('tracking');
-                })
-                ->first();
-
-            return response()->json(
-                [
-                    'total' => number_format($blockedBalance->total, 2, ',', '.'),
-                    'sales' => $blockedBalance->sales,
-                ]
-            );
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(
-                ['message' => 'Erro ao obter saldo bloqueado por códigos de rasteio não informados'],
-                400
-            );
         }
     }
 

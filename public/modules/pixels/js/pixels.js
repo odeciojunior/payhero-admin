@@ -11,6 +11,8 @@ const srcPlatforms = {
     'outbrain': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/outbrain',
     'taboola': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/taboola',
     'pinterest': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/pixel/pinterest',
+    'uol_ads': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/uol-ads',
+    'tiktok': 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/tiktok'
 }
 
 $(function () {
@@ -157,6 +159,7 @@ $(function () {
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 const pixel = response.data;
+                console.log(pixel);
                 pixelEdit = pixel;
                 renderModalPixelEdit(pixel);
                 openModalEditPixel();
@@ -406,25 +409,40 @@ $(function () {
         switch (value) {
             case "facebook":
                 inputPlatform.attr("placeholder", '52342343245553');
+                inputPlatform.parent().parent().find('label').html('Código');
                 break;
             case "google_adwords":
                 inputAW.html('AW-').show();
                 inputPlatform.attr("placeholder", '8981445741-4/AN7162ASNSG');
+                inputPlatform.parent().parent().find('label').html('Código');
                 break;
             case "google_analytics":
                 inputPlatform.attr("placeholder", 'UA-8984567741-3');
+                inputPlatform.parent().parent().find('label').html('Código');
                 break;
             case "google_analytics_four":
                 inputPlatform.attr("placeholder", 'G-KZSV4LMBAC');
+                inputPlatform.parent().parent().find('label').html('Código');
                 break;
             case "taboola":
                 inputPlatform.attr("placeholder", '1010100');
+                inputPlatform.parent().parent().find('label').html('Código');
                 break;
             case "outbrain":
                 inputPlatform.attr("placeholder", '00de2748d47f2asdl39877mash');
+                inputPlatform.parent().parent().find('label').html('Código');
+                break;
+            case 'uol_ads':
+                inputPlatform.attr("placeholder", 'hutu27');
+                inputPlatform.parent().parent().find('label').html('Código');
+                break;
+            case 'tiktok':
+                inputPlatform.attr("placeholder", 'C5OSDKKVNBDLN9M5C6UG');
+                inputPlatform.parent().parent().find('label').html('ID');
                 break;
             default:
                 inputPlatform.attr("placeholder", 'Código');
+                inputPlatform.parent().parent().find('label').html('Código');
         }
     }
 
@@ -655,6 +673,7 @@ $(function () {
             },
             success: function success(response) {
                 alertCustom("success", response.message);
+                $("#modal-config-pixel").modal('hide');
             }
         });
     });

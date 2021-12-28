@@ -23,14 +23,14 @@
             <div id="reports-content" class="page-content container">
                 <div class="row align-items-center justify-content-between">
                     <div class="col-sm-6 col-m-3 col-lg-3">
-                        <select id='select_projects' class="form-control select-pad">
+                        <select id='select_projects' class="form-control input-pad">
                             {{-- JS carrega.. --}}
                         </select>
                     </div>
                     <div class="col-sm-6 col-m-3 col-lg-3">
                             <div class="row align-items-center form-icons">
                                 <i class="form-control-icon form-control-icon-right o-agenda-1 font-size-18" style="right: 10%;"></i>
-                                <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 pr-30 ml-5" 
+                                <input id="date-filter" type="text" name="daterange" class="input-pad text-center font-size-14 pr-30 ml-5" 
                                 value="" readonly style="width: 92%">
                             </div>
                         {{-- <div class="row align-items-center">
@@ -155,7 +155,7 @@
                                                 <div class="data-holder b-bottom">
                                                     <div class="row justify-content-between align-items-center" style="padding: 15px 30px">
                                                         <div class="col-lg-6 col-sm-8 col-8">
-                                                            <span class="o-imac-screen-1"></span> Desktop
+                                                            <span class="mr-10 o-imac-screen-1"></span> Desktop
                                                         </div>
                                                         <div class="col-lg-6 col-sm-4 col-4">
                                                             <span class="money-td green" id='percent-desktop'>0</span>
@@ -167,7 +167,7 @@
                                                 <div class="data-holder b-bottom">
                                                     <div class="row justify-content-between align-items-center" style="padding: 15px 30px">
                                                         <div class="col-lg-6 col-sm-8 col-8">
-                                                            <span class="o-iphone-1"></span> Mobile
+                                                            <span class="ml-5 mr-15 o-iphone-1"></span> Mobile
                                                         </div>
                                                         <div class="col-lg-6 col-sm-4 col-4">
                                                             <span class="money-td green" id='percent-mobile'>0</span>

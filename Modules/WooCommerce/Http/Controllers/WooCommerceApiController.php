@@ -322,6 +322,8 @@ class WooCommerceApiController extends Controller
 
         }catch(Exception $e){
             
+            report($e);
+            
             return '{"status":false}';
         }
 

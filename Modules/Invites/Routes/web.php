@@ -31,8 +31,11 @@ Route::group(
 /**
  * Private Rote
  */
-Route::group(['middleware' => ['web', 'auth']], function() {
-    Route::Resource('invitations', 'InvitesController')->only('index', 'create', 'store')->names('invitations')->middleware('role:account_owner');
+Route::group(['middleware' => ['web', 'auth','permission:invitations']], function() {
+    Route::get('invitations', 'InvitesController@index')->name('invitations.index');
+    Route::Resource('invitations', 'InvitesController')
+    ->only('create', 'store')->names('invitations')
+    ->middleware('permission:invitations_manage');
 });
 
 Route::group(

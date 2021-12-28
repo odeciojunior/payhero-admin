@@ -7,12 +7,12 @@ use App\Jobs\ImportShopifyTrackingCodesJob;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
@@ -32,15 +32,8 @@ use Modules\Shopify\Transformers\ShopifyResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class ShopifyApiController
- * @package Modules\Shopify\Http\Controllers
- */
 class ShopifyApiController extends Controller
 {
-    /**
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function index()
     {
         try {
@@ -72,53 +65,34 @@ class ShopifyApiController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         try {
-            $companyService = new CompanyService();
-            $userService = new UserService();
-
             $dataRequest = $request->all();
 
-            if (strlen($dataRequest['token']) < 10 || strlen($dataRequest['token']) > 100) {
+            if (0 === preg_match('/^([a-zA-Z0-9_]{10,100})$/', $dataRequest['token'])) {
                 return response()->json(['message' => 'O token deve ter entre 10 e 100 letras e números!'], 400);
             }
 
-            $companyDocumentPending = $companyService->haveAnyDocumentPending();
-            $userDocumentPending = $userService->haveAnyDocumentPending();
-            if ($companyDocumentPending || $userDocumentPending) {
+            if (empty($dataRequest['company'])) {
+                return response()->json([
+                    'message' => 'A empresa precisa estar aprovada transacionar para realizar a integração!'
+                ], 400);
+            }
+
+            if ((new CompanyService())->haveAnyDocumentPending() || (new UserService())->haveAnyDocumentPending()) {
                 return response()->json(['message' => 'Finalize seu cadastro para integrar com Shopify'], 400);
             }
 
-            $projectModel = new Project();
-            $userProjectModel = new UserProject();
-            $shopifyIntegrationModel = new ShopifyIntegration();
-            $shippingModel = new Shipping();
-
-
-            if (empty($dataRequest['company'])) {
-                return response()->json(
-                    [
-                        'message' => 'A empresa precisa estar aprovada transacionar para realizar a integração!'
-                    ],
-                    400
-                );
-            }
-
-            //tratamento parcial do dominio
             $dataRequest['url_store'] = str_replace("http://", "", $dataRequest['url_store']);
             $dataRequest['url_store'] = str_replace("https://", "", $dataRequest['url_store']);
 
-            $shopifyIntegration = $shopifyIntegrationModel
-                ->where('url_store', $dataRequest['url_store'] . '.myshopify.com')
-                ->orWhere('token', $dataRequest['token'])->first();
+            $shopifyIntegration = ShopifyIntegration::where('url_store', $dataRequest['url_store'] . '.myshopify.com')
+                ->orWhere('token', $dataRequest['token'])
+                ->first();
 
             if ($shopifyIntegration) {
-                if ($shopifyIntegration->status == 1) {
+                if ($shopifyIntegration->status == ShopifyIntegration::STATUS_PENDING) {
                     return response()->json(['message' => 'Integração em andamento'], 400);
                 }
 
@@ -134,47 +108,14 @@ class ShopifyApiController extends Controller
                 $shopifyService = new ShopifyService($urlStore . '.myshopify.com', $dataRequest['token']);
 
                 if (empty($shopifyService->getClient())) {
-                    return response()->json(
-                        [
-                            'message' => 'Dados do shopify inválidos, revise os dados informados'
-                        ],
-                        400
-                    );
+                    return response()->json([
+                        'message' => 'Dados do shopify inválidos, revise os dados informados'
+                    ], 400);
                 }
             } catch (Exception $e) {
-                if (method_exists($e, 'getCode')) {
-                    if ($e->getCode() == 401) {
-                        return response()->json(
-                            ['message' => 'Dados do shopify inválidos, revise os dados informados'],
-                            400
-                        );
-                    } elseif ($e->getCode() == 402) {
-                        return response()->json(['message' => 'Pagamento pendente na sua loja do Shopify'], 400);
-                    } elseif ($e->getCode() == 403) {
-                        return response()->json(
-                            ['message' => 'Verifique as permissões de seu aplicativo no Shopify'],
-                            400
-                        );
-                    } elseif ($e->getCode() == 404) {
-                        return response()->json(
-                            ['message' => 'Url da loja não encontrada, revise os dados informados'],
-                            400
-                        );
-                    } elseif ($e->getCode() == 423) {
-                        return response()->json(
-                            ['message' => 'Loja bloqueada, entre em contato com o suporte do Shopify'],
-                            400
-                        );
-                    } elseif ($e->getCode() == 429) {
-                        return response()->json(['message' => 'Limite de requisiçoes atingido, tente novamente'], 400);
-                    }
-                }
-                if (strpos($e->getMessage(), 'Shop name should be') !== false) {
-                    return response()->json(['message' => 'Url inválida, revise os dados informados'], 400);
-                }
-                report($e);
-
-                return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
+                return response()->json([
+                    'message' => (new ShopifyErrors())->FormatDataInvalidShopifyIntegration($e)
+                ], 400);
             }
 
             $tokenPermissions = $shopifyService->verifyPermissions();
@@ -183,12 +124,15 @@ class ShopifyApiController extends Controller
             }
 
             $shopifyName = $shopifyService->getShopName();
-            $company = Company::find(current(Hashids::decode($dataRequest['company'])));
+
+            $company = Company::find(hashids_decode($dataRequest['company']));
+
             $has_pix_key = ($company && $company->has_pix_key == true) ? 1 : 0;
-            $projectCreated = $projectModel->create(
+
+            $projectCreated = Project::create(
                 [
                     'name' => $shopifyName,
-                    'status' => $projectModel->present()->getStatus('active'),
+                    'status' => Project::STATUS_ACTIVE,
                     'visibility' => 'private',
                     'pix' => $has_pix_key,
                     'percentage_affiliates' => '0',
@@ -200,7 +144,7 @@ class ShopifyApiController extends Controller
                     'boleto' => '1',
                     'installments_amount' => '12',
                     'installments_interest_free' => '1',
-                    'checkout_type' => 2, // checkout de 1 passo
+                    'checkout_type' => Checkout::CHECKOUT_ONE_STEP,
                     'notazz_configs' => json_encode(
                         [
                             'cost_currency_type' => 1,
@@ -214,14 +158,14 @@ class ShopifyApiController extends Controller
                 return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
             }
 
-            $shippingCreated = $shippingModel->create(
+            $shippingCreated = Shipping::create(
                 [
                     'project_id' => $projectCreated->id,
                     'name' => 'Frete gratis',
                     'information' => 'de 15 até 30 dias',
                     'value' => '0,00',
                     'type' => 'static',
-                    'type_enum' => $shippingModel->present()->getTypeEnum('static'),
+                    'type_enum' => Shipping::TYPE_STATIC_ENUM,
                     'status' => '1',
                     'pre_selected' => '1',
                     'apply_on_plans' => '["all"]',
@@ -232,80 +176,62 @@ class ShopifyApiController extends Controller
             if (empty($shippingCreated)) {
                 $projectCreated->delete();
 
-                return response()->json(
-                    [
-                        'message' => 'Problema ao criar integração, tente novamente mais tarde'
-                    ],
-                    400
-                );
+                return response()->json([
+                    'message' => 'Problema ao criar integração, tente novamente mais tarde'
+                ], 400);
             }
 
-            $shopifyIntegrationCreated = $shopifyIntegrationModel->create(
-                [
-                    'token' => $dataRequest['token'],
-                    'shared_secret' => '',
-                    'url_store' => $urlStore . '.myshopify.com',
-                    'user_id' => auth()->user()->account_owner_id,
-                    'project_id' => $projectCreated->id,
-                    'status' => 1,
-                ]
-            );
+            $shopifyIntegrationCreated = ShopifyIntegration::create([
+                'token' => $dataRequest['token'],
+                'shared_secret' => '',
+                'url_store' => $urlStore . '.myshopify.com',
+                'user_id' => auth()->user()->account_owner_id,
+                'project_id' => $projectCreated->id,
+                'status' => ShopifyIntegration::STATUS_PENDING,
+            ]);
 
             if (empty($shopifyIntegrationCreated)) {
                 $shippingCreated->delete();
                 $projectCreated->delete();
 
-                return response()->json(
-                    [
-                        'message' => 'Problema ao criar integração, tente novamente mais tarde'
-                    ],
-                    400
-                );
+                return response()->json([
+                    'message' => 'Problema ao criar integração, tente novamente mais tarde'
+                ], 400);
             }
 
-            $userProjectCreated = $userProjectModel->create(
-                [
-                    'user_id' => auth()->user()->account_owner_id,
-                    'project_id' => $projectCreated->id,
-                    'company_id' => current(Hashids::decode($dataRequest['company'])),
-                    'type' => 'producer',
-                    'type_enum' => $userProjectModel->present()->getTypeEnum('producer'),
-                    'shipment_responsible' => true,
-                    'access_permission' => true,
-                    'edit_permission' => true,
-                    'status' => 'active',
-                    'status_flag' => $userProjectModel->present()->getStatusFlag('active'),
-                ]
-            );
+            $userProjectCreated = UserProject::create([
+                'user_id' => auth()->user()->account_owner_id,
+                'project_id' => $projectCreated->id,
+                'company_id' => $company->id,
+                'type' => 'producer',
+                'type_enum' => UserProject::TYPE_PRODUCER_ENUM,
+                'shipment_responsible' => true,
+                'access_permission' => true,
+                'edit_permission' => true,
+                'status' => 'active',
+                'status_flag' => UserProject::STATUS_FLAG_ACTIVE,
+            ]);
 
             if (empty($userProjectCreated)) {
                 $shopifyIntegrationCreated->delete();
                 $shippingCreated->delete();
                 $projectCreated->delete();
 
-                return response()->json(
-                    [
-                        'message' => 'Problema ao criar integração, tente novamente mais tarde'
-                    ],
-                    400
-                );
+                return response()->json([
+                    'message' => 'Problema ao criar integração, tente novamente mais tarde'
+                ], 400);
             }
 
-            $projectNotificationService = new ProjectNotificationService();
-            $projectService = new ProjectService();
-            $projectNotificationService->createProjectNotificationDefault($projectCreated->id);
-            $projectService->createUpsellConfig($projectCreated->id);
+            (new ProjectNotificationService())->createProjectNotificationDefault($projectCreated->id);
+            (new ProjectService())->createUpsellConfig($projectCreated->id);
 
             dispatch((new ImportShopifyProductsStore($shopifyIntegrationCreated, auth()->user()->account_owner_id)));
 
             TaskService::setCompletedTask(auth()->user(), Task::find(Task::TASK_CREATE_FIRST_STORE));
 
-            return response()->json(
-                [
-                    'message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'
-                ],
-                200
-            );
+            return response()->json([
+                'message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'
+            ], 200);
         } catch (Exception $e) {
             report($e);
 
@@ -393,7 +319,7 @@ class ShopifyApiController extends Controller
         }
     }
 
-    public function reIntegration(Request $request)
+    public function reIntegration(Request $request): JsonResponse
     {
         try {
             $requestData = $request->all();
@@ -428,6 +354,11 @@ class ShopifyApiController extends Controller
 
                 //puxa todos os produtos
                 foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                    if (0 === preg_match('/^([a-zA-Z0-9_]{10,100})$/', $shopifyIntegration->token)) {
+                        return response()->json(['message' => 'O token deve ter entre 10 e 100 letras e números!'],
+                            400);
+                    }
+
                     $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
                     $shopify->importShopifyStore($projectId, auth()->user()->account_owner_id);
                 }
@@ -548,7 +479,6 @@ class ShopifyApiController extends Controller
                 return response()->json(['message' => 'Projeto não encontrado'], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
-            Log::warning('ShopifyController - reIntegration - Erro ao refazer integracao');
             report($e);
 
             return response()->json(
@@ -579,6 +509,9 @@ class ShopifyApiController extends Controller
                     Response::HTTP_BAD_REQUEST
                 );
             }
+            if (0 === preg_match('/^([a-zA-Z0-9_]{10,100})$/', $shopifyIntegration->token)) {
+                return response()->json(['message' => 'O token deve ter entre 10 e 100 letras e números!'], 400);
+            }
 
             dispatch((new ImportShopifyProductsStore($shopifyIntegration, auth()->user()->account_owner_id)));
 
@@ -596,7 +529,7 @@ class ShopifyApiController extends Controller
         }
     }
 
-    public function synchronizeTrackings(Request $request)
+    public function synchronizeTrackings(Request $request): JsonResponse
     {
         try {
             $requestData = $request->all();
@@ -680,6 +613,10 @@ class ShopifyApiController extends Controller
 
             try {
                 foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                    if (0 === preg_match('/^([a-zA-Z0-9_]{10,100})$/', $shopifyIntegration->token)) {
+                        return response()->json(['message' => 'O token deve ter entre 10 e 100 letras e números!'],
+                            400);
+                    }
                     $shopify = new ShopifyService(
                         $shopifyIntegration->url_store, $shopifyIntegration->token
                     );
@@ -877,84 +814,58 @@ class ShopifyApiController extends Controller
         }
     }
 
-    public function verifyPermission(Request $request)
+    public function verifyPermission(Request $request): JsonResponse
     {
         $data = $request->all();
-        $shopifyIntegrationModel = new ShopifyIntegration();
-        $projectModel = new Project();
 
-        if (!empty($data['project_id'])) {
-            $projectId = current(Hashids::decode($data['project_id']));
-            $project = $projectModel->find($projectId);
-
-            activity()->on($shopifyIntegrationModel)->tap(
-                function (Activity $activity) {
-                    $activity->log_name = 'visualization';
-                }
-            )->log('Verificação de permissões do token de integração do shopify para o projeto: ' . $project->name);
-
-            if ($projectId) {
-                $integration = $shopifyIntegrationModel->where('project_id', $projectId)->first();
-
-                try {
-                    $shopify = new ShopifyService($integration->url_store, $integration->token);
-                    if (empty($shopify->getClient())) {
-                        return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
-                    }
-                } catch (Exception $e) {
-                    if (method_exists($e, 'getCode')) {
-                        if ($e->getCode() == 401) {
-                            return response()->json(['message' => 'Token inválido'], 400);
-                        } elseif ($e->getCode() == 402) {
-                            return response()->json(['message' => 'Pagamento pendente na sua loja do Shopify'], 400);
-                        } elseif ($e->getCode() == 403) {
-                            return response()->json(['message' => 'Erro nas permissões de seu aplicativo'], 400);
-                        } elseif ($e->getCode() == 404) {
-                            return response()->json(['message' => 'Url da loja não encontrada'], 400);
-                        } elseif ($e->getCode() == 423) {
-                            return response()->json(['message' => 'Loja bloqueada no Shopify'], 400);
-                        } elseif ($e->getCode() == 429) {
-                            return response()->json(['message' => 'Limite de requisiçoes atingido'], 400);
-                        }
-                    }
-                    report($e);
-
-                    return response()->json(['message' => 'Token inválido'], 400);
-                }
-
-                $permissions = $shopify->verifyPermissions();
-
-                if ($permissions['status'] == 'error') {
-                    return response()->json(
-                        [
-                            'message' => $permissions['message'],
-                        ],
-                        400
-                    );
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Todas as permissões estão funcionando corretamente',
-                        ],
-                        200
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro ao verificar permissões, tente novamente mais tarde',
-                    ],
-                    400
-                );
-            }
-        } else {
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro ao verificar permissões, tente novamente mais tarde',
-                ],
-                400
-            );
+        if (empty($data['project_id'])) {
+            return response()->json([
+                'message' => 'Ocorreu um erro ao verificar permissões, tente novamente mais tarde'
+            ], 400);
         }
+
+        $project = Project::find(hashids_decode($data['project_id']));
+
+        if (empty($project)) {
+            return response()->json([
+                'message' => 'Ocorreu um erro ao verificar permissões, tente novamente mais tarde'
+            ], 400);
+        }
+
+        activity()->on((new ShopifyIntegration))->tap(
+            function (Activity $activity) {
+                $activity->log_name = 'visualization';
+            }
+        )->log('Verificação de permissões do token de integração do shopify para o projeto: ' . $project->name);
+
+        $integration = ShopifyIntegration::where('project_id', $project->id)->first();
+
+        if (0 === preg_match('/^([a-zA-Z0-9_]{10,100})$/', $integration->token)) {
+            return response()->json(['message' => 'O token deve ter entre 10 e 100 letras e números!'], 400);
+        }
+
+        try {
+            $shopify = new ShopifyService($integration->url_store, $integration->token);
+            if (empty($shopify->getClient())) {
+                return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => (new ShopifyErrors())->FormatDataInvalidShopifyIntegration($e)
+            ], 400);
+        }
+
+        $permissions = $shopify->verifyPermissions();
+
+        if ($permissions['status'] == 'error') {
+            return response()->json([
+                'message' => $permissions['message']
+            ], 400);
+        }
+
+        return response()->json([
+            'message' => 'Todas as permissões estão funcionando corretamente'
+        ], 200);
     }
 
     public function setSkipToCart(Request $request): JsonResponse
@@ -973,6 +884,10 @@ class ShopifyApiController extends Controller
             $project = Project::with(['domains', 'shopifyIntegrations'])->find(hashids_decode($data['project_id']));
 
             $integration = $project->shopifyIntegrations->first();
+
+            if (0 === preg_match('/^([a-zA-Z0-9_]{10,100})$/', $integration->token)) {
+                return response()->json(['message' => 'O token deve ter entre 10 e 100 letras e números!'], 400);
+            }
 
             $shopify = new ShopifyService($integration->url_store, $integration->token);
 

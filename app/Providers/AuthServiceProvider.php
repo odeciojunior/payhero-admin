@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Carbon;
 use Laravel\Passport\Passport;
 use Modules\Core\Entities\ApiToken;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -30,5 +30,8 @@ class AuthServiceProvider extends ServiceProvider
         $expireAt = now()->addDays(1);
         Passport::personalAccessTokensExpireIn($expireAt);
 
+        Gate::after(function ($user, $ability) {
+            return $user->hasRole('admin') ? true : null;
+        });
     }
 }

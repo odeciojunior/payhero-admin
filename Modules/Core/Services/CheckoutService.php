@@ -29,12 +29,16 @@ class CheckoutService
     public function getAbandonedCart(): LengthAwarePaginator
     {
         $projectIds = [];
+
         if (request('project') == 'all') {
-            $projectIds = UserProject::where('user_id', auth()->user()->account_owner_id)
-                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
-                ->pluck('project_id')->toArray();
+            $projectIds = UserProject::where('user_id', auth()->user()->account_owner_id)->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)->pluck('project_id')->toArray();
+                
         } else {
-            $projectIds[] = hashids_decode(request('project'));
+            $projects = explode(',', request('project'));
+            foreach($projects as $project){
+                array_push($projectIds, hashids_decode($project));
+            }
+
         }
 
         $dateRange = FoxUtils::validateDateRange(request('date_range'));
@@ -44,6 +48,17 @@ class CheckoutService
             Checkout::STATUS_ABANDONED_CART
         ];
 
+        $plansIds = [];
+        if (request('plan') == 'all') {
+            $plansIds = '';
+                
+        } else {
+            $plans = explode(',', request('plan'));
+            foreach($plans as $plan){
+                array_push($plansIds, hashids_decode($plan));
+            }
+
+        }
 
         $abandonedCarts = Checkout::with(
             [
@@ -52,8 +67,9 @@ class CheckoutService
                 },
                 'checkoutPlans.plan',
             ]
-        )
-            ->whereIn('status_enum', $abandonedCartsStatus)
+        )->whereHas('checkoutPlans', function ($query) {
+            $query->whereHas('plan');
+        })->whereIn('status_enum', $abandonedCartsStatus)
             ->whereIn('project_id', $projectIds)
             ->whereBetween('created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
             ->when(
@@ -74,12 +90,12 @@ class CheckoutService
                 }
             )
             ->when(
-                !empty(request('plan')),
-                function ($query) {
+                !empty($plansIds),
+                function ($query) use ($plansIds) {
                     $query->whereHas(
                         'checkoutPlans',
-                        function ($query) {
-                            $query->where('plan_id', request('plan'));
+                        function ($query) use ($plansIds){
+                            $query->whereIn('plan_id', $plansIds);
                         }
                     );
                 }
@@ -126,9 +142,9 @@ class CheckoutService
             } else {
                 $urlCancelPayment = env('CHECKOUT_URL') . "/api/payment/cancel/{$idEncoded}";
             }
-
+            
             $response = $this->runCurl($urlCancelPayment, 'POST');
-
+            
             if (($response->status ?? '') != 'success') {
                 return [
                     'status' => 'error',
@@ -204,9 +220,9 @@ class CheckoutService
             ];
 
             $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
-            if ($response->status == 'success' && $response->response->status == 'success') {
+            if (!empty($response) && $response->status == 'success' && $response->response->status == 'success') {
                 // $saleModel  = new Sale();
-                $dataUpdate = (array)$response->response->response;
+                $dataUpdate = (array)$response->response;
                 // if (!empty($dataUpdate['gateway_received_date'])) {
                 //     unset($dataUpdate['gateway_received_date']);
                 // }
@@ -225,7 +241,7 @@ class CheckoutService
                         'billet_due_date' => $dataUpdate['boleto_due_date'],
                         'gateway_transaction_id' => $dataUpdate['gateway_transaction_id'],
                         'gateway_billet_identificator' => $dataUpdate['gateway_billet_identificator'] ?? null,
-                        'gateway_id' => $dataUpdate['gateway_id'],
+                        'gateway_id' => $sale->gateway_id,
                         'owner_id' => $sale->owner_id,
                     ]
                 );
@@ -371,4 +387,33 @@ class CheckoutService
 
         return $this->runCurl($url, 'POST', $data);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function releaseCloudfoxPaymentGetnet($data)
+    {
+        if (foxutils()->isProduction()) {
+            $url = 'https://checkout.cloudfox.net/api/payment/releasecloudfoxpaymentgetnet';
+        } else {
+            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/releasecloudfoxpaymentgetnet';
+        }
+
+        return $this->runCurl($url, 'POST', $data);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function checkPaymentPix($data)
+    {
+        if (foxutils()->isProduction()) {
+            $url = 'https://checkout.cloudfox.net/api/payment/check-payment-pix';
+        } else {
+            $url = env('CHECKOUT_URL', 'http://dev.checkout.com.br') . '/api/payment/check-payment-pix';
+        }
+
+        return $this->runCurl($url, 'POST', $data);
+    }
+
 }

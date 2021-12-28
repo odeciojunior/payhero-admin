@@ -195,14 +195,23 @@ class LoginController extends Controller
 
             auth()->loginUsingId($user->id);
 
-
-            if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
+            if (auth()->user()->can('dashboard')) {
                 return response()->redirectTo('/dashboard');
-            } else {
+            }elseif (auth()->user()->can('sales')) {
                 return response()->redirectTo('/sales');
+            }else{
+                $permissions =  auth()->user()->permissions->pluck('name');
+                foreach($permissions as $permission){
+                    $route = explode('_',$permission);
+                    $redirect = $route['0'];
+                    if(count($route) > 1){
+                        if($route['0']=='report'){
+                            $redirect= $route['0'].'s/'.$route['1'];
+                        }
+                    }
+                    return response()->redirectTo("/{$redirect}");
+                }
             }
-
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Não foi possivel autenticar o usuário.',
@@ -217,10 +226,22 @@ class LoginController extends Controller
      */
     protected function redirectTo()
     {
-        if (auth()->user()->hasRole('account_owner') || auth()->user()->hasRole('admin')) {
+        if (auth()->user()->can('dashboard')) {
             return '/dashboard';
-        } else {
+        }elseif (auth()->user()->can('sales')) {
             return '/sales';
+        }else{
+            $permissions =  auth()->user()->permissions->pluck('name');
+            foreach($permissions as $permission){
+                $route = explode('_',$permission);
+                $redirect = $route['0'];
+                if(count($route) > 1){
+                    if($route['0']=='report'){
+                        $redirect= $route['0'].'s/'.$route['1'];
+                    }
+                }
+                return "/{$redirect}";
+            }
         }
     }
 }

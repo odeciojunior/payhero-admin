@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Invitation;
+use Modules\Core\Entities\PromotionalTax;
+use Modules\Core\Services\CompanyService;
 
 /**
  * Class checkInvitationGatewayTaxCompanyAfterMonth
@@ -18,7 +20,7 @@ class CheckInvitationGatewayTaxCompanyAfterMonth extends Command
      *
      * @var string
      */
-    protected $signature = 'check:GatewayTaxCompanyAfterMonth';
+    protected $signature = 'check:gateway-tax-company-after-month';
 
     /**
      * The console command description.
@@ -55,19 +57,13 @@ class CheckInvitationGatewayTaxCompanyAfterMonth extends Command
             $create = Carbon::parse($invite->created_at)->addMonth();
 
             if(Carbon::now()->gt($create)) {
-                $company = Company::where(
-                    [
-                        'user_id' => $invite->user_invited,
-                        'gateway_tax' => 3.9
-                    ]
-                )->first();
+                $company = Company::where([
+                    'user_id' => $invite->user_invited,
+                    'gateway_tax' => PromotionalTax::PROMOTIONAL_TAX
+                ])->first();
 
                 if (!empty($company)) {
-                    $company->update(
-                        [
-                            'gateway_tax', Company::GATEWAY_TAX
-                        ]
-                    );
+                    $company->update(['gateway_tax', (new CompanyService())->getTax($company->gateway_release_money_days)]);
                 }
             }
         }

@@ -74,6 +74,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property bool $ignore_automatic_benefits_updates
  * @property int $total_commission_value
  * @property int $attendance_average_response_time
+ * @property string $mkt_information
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
  * @property Collection $companies
@@ -101,13 +102,17 @@ class User extends Authenticable
     use Notifiable;
     use PresentableTrait;
     use SoftDeletes;
-    public const STATUS_ACTIVE=1;
-    public const STATUS_WITHDRAWAL_BLOCKED=2;
-    public const STATUS_ACCOUNT_BLOCKED=3;
-    public const STATUS_ACCOUNT_FROZEN=4;
-    /**
-     * @var string
-     */
+
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_WITHDRAWAL_BLOCKED = 2;
+    public const STATUS_ACCOUNT_BLOCKED = 3;
+    public const STATUS_ACCOUNT_FROZEN = 4;
+
+    public const DOCUMENT_STATUS_PENDING = 1;
+    public const DOCUMENT_STATUS_ANALYZING = 2;
+    public const DOCUMENT_STATUS_APPROVED = 3;
+    public const DOCUMENT_STATUS_REFUSED = 4;
+
     protected $presenter = UserPresenter::class;
     /**
      * @var array
@@ -161,6 +166,8 @@ class User extends Authenticable
         'ignore_automatic_benefits_updates',
         'total_commission_value',
         'show_old_finances',
+        'mkt_information',
+        'asaas_alert',
         'created_at',
         'updated_at',
         'deleted_at',

@@ -1,114 +1,308 @@
-@extends('layouts.auth')
-@section('title', '- Login')
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-@section('content')
+    <title>Sirius - Login</title>
 
-    <div class="container d-flex justify-content-center">
-        <div class="content-holder">
-            <div class="page-content d-flex flex-column justify-content-center">
-                <div class="logobar text-center">
-                    <img src="{{ asset('modules/global/adminremark/assets/images/logo-oficial.svg') }}" alt="CloudFox">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/img/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/favicon-16x16.png') }}">
+    <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <meta name="theme-color" content="#FF9000">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap"
+          rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,400;0,600;0,700;1,400&amp;display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            outline: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 14px Poppins, sans-serif;
+            color: #2e2e2e;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .img-container {
+            flex: 1;
+            background: url("https://accounts.cloudfox.net/static/media/book.10242ce7.jpg") center center / cover no-repeat;
+        }
+
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            align-items: center;
+            flex: 1;
+            max-width: 700px;
+            background-color: #FFFFFF;
+        }
+
+        .content-logo {
+            display: block;
+            margin-top: 80px;
+            margin-bottom: 55px;
+        }
+
+        .form-container {
+            width: 60%;
+            padding: 10px;
+        }
+
+        #form-forgot {
+            display: none;
+        }
+
+        .form-container form {
+            font-family: Mulish, sans-serif;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .input-pad {
+            position: relative;
+            padding: 8px 0 0;
+            margin-top: 35px;
+            width: 100%;
+            height: 20px;
+        }
+
+        .input-pad input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #2e2e2e;
+            padding: 9px 0 4px;
+            font-family: Roboto, sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            font-style: italic;
+            transition: border-color 0.2s ease 0s;
+        }
+
+        .input-pad input::placeholder {
+            color: transparent;
+        }
+
+        .input-pad label {
+            position: absolute;
+            top: 20px;
+            display: block;
+            font-family: Roboto, sans-serif;
+            font-weight: normal;
+            font-size: 10px;
+            opacity: 0.4;
+            transition: all 0.2s ease 0s;
+        }
+
+        .input-pad input:focus {
+            border-bottom: 2px solid #2e2e2e;
+        }
+
+        .input-pad input:focus + label,
+        .input-pad input:not(:placeholder-shown) + label {
+            top: 0;
+            font-size: 12px;
+            opacity: 1;
+        }
+
+        .input-pad .btn-show {
+            position: absolute;
+            top: 12px;
+            right: 0;
+            width: 20px;
+            height: 20px;
+            background-color: transparent;
+            background-image: url("https://accounts.cloudfox.net/static/media/eye.62517b9b.svg");
+            background-size: 20px;
+            opacity: 0.5;
+            border: none;
+            cursor: pointer;
+        }
+
+        .invalid-feedback {
+            display: none;
+            margin-top: 4px;
+            font-size: 12px;
+            color: #dd2f14;
+        }
+
+        .input-pad.error input {
+            border-color: #dd2f14;
+        }
+
+        .input-pad.error input + label {
+            opacity: 1 !important;
+            color: #dd2f14;
+        }
+
+        .input-pad.error .invalid-feedback {
+            display: block;
+        }
+
+        .links-container {
+            text-align: center;
+        }
+
+        .btn-primary {
+            height: 40px;
+            width: 100%;
+            padding: 10px 20px;
+            margin: 60px 0 33px;
+            border: 1px solid #FFFFFF;
+            border-radius: 4px;
+            text-transform: uppercase;
+            background: #FF6D00;
+            color: #FFFFFF;
+        }
+
+        .btn-link-secondary {
+            border: none;
+            background-color: transparent;
+            font-size: 14px;
+            color: #BCBCBC;
+            cursor: pointer;
+        }
+
+        .btn-link-secondary:hover {
+            color: #808080;
+        }
+
+        .btn-link-primary {
+            border: none;
+            background-color: transparent;
+            font-size: 14px;
+            color: #FF6D00;
+            cursor: pointer;
+        }
+
+        .btn-signup {
+            display: block;
+            margin-top: 18px;
+            text-decoration: none;
+            color: #FF6D00;
+        }
+
+        @media (max-width: 768px) {
+            .img-container {
+                display:none;
+            }
+
+            .form-container {
+                width: 100%;
+                padding: 20px;
+            }
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="img-container"></div>
+    <div class="login-container">
+        <img class="content-logo" src="{{ asset('modules/global/img/logo-secundary.svg') }}" alt=""
+             width="300">
+        <div class="form-container" id="form-login">
+            <p class="title">Acessar conta</p>
+            <p>Insira seus dados para continuar</p>
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <div class="input-pad @if($errors->has('email')) error @endif">
+                    <input id="email" name="email" type="email" placeholder="Email">
+                    <label for="email">Email</label>
+                    <div class="invalid-feedback">{{ $errors->first('email') }}</div>
                 </div>
-                <div class="toggle d-flex justify-content-center">
-                    <div class="row align-items-center">
-                        <div id="login" class="col-6 toggle-text active" style='cursor:pointer;'>LOGIN</div>
-                        <div id="cadastro" class="col-6 toggle-text" style='cursor:pointer;' onclick="window.open('https://cloudfox.net/','_blank');">SIGN UP</div>
-                    </div>
+                <div class="input-pad @if($errors->has('password')) error @endif">
+                    <input id="password" name="password" type="password" placeholder="Senha">
+                    <label for="password">Senha</label>
+                    <button class="btn-show" type="button"></button>
+                    <div class="invalid-feedback">{{ $errors->first('password') }}</div>
                 </div>
-                <div class="clearfix"></div>
-                <div class="panel">
-                    <div id="panel-login">
-                        <h3 class="text-center"> Access your account </h3>
-
-                        @if($errors->any())
-                            <strong><h4 style="color: red">{{$errors->first()}}</h4></strong>
-                        @endif
-
-                        <form autocomplete="off" method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
-                            @csrf
-                            <div class="input-holder">
-                                <input type="email" name="email" class="{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail') }}" required autofocus>
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                            <div class="input-holder">
-                                <input type="password" placeholder="{{ __('Password') }}" class="{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-                                @if ($errors->has('password'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                            <div class="input-holder d-flex justify-content-between">
-                                <div class="switch-holder d-flex align-items-center">
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider round"></span>
-                                    </label>
-                                    <span class="sm-text gray">Remember me</span>
-                                </div>
-                                <div class="forgot-pass d-flex text-right">
-                                    <a id="forgotClick" role="button" class="sm-text d-flex align-items-center">
-                                        <i class="material-icons md-18 mr-">fingerprint</i> Forgot my password
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                            <button type="submit" value="Entrar com e-mail" class="btn btn-primary orange"> Sign in</button>
-                            <div class="btnfix"></div>
-                        </form>
-                    </div>
-                    <div id="panel-recover" style="display:none;">
-                        <h3 class="text-center"> Recover your password </h3>
-                        <form id='form_recovery_password' method="POST" action="{{ route('password.email') }}" aria-label="{{ __('Reset Password') }}">
-                            @csrf
-                            <div class="input-holder">
-                                <input type="email" name="email" class="{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail') }}" required autofocus></span>
-                            </div>
-                            <div class="password-alert text-center">
-                                We will send a recover link to your e-mail address.
-                            </div>
-                            <div class="clearfix"></div>
-                            <button type="submit" value="Entrar com e-mail" class="btn btn-primary orange"> Send recover link</button>
-                        </form>
-                        <div class="btnfix"></div>
-                        <div class="text-left">
-                            <a id="backLogin" role="button" class="sm-text d-flex align-items-center">
-                                <i class="material-icons md-18">keyboard_arrow_left</i> Back to Login
-                            </a>
-                        </div>
-                    </div>
+                <button type="submit" class="btn-primary">Acessar</button>
+            </form>
+            <div class="links-container">
+                <button id="btn-forgot-password" class="btn-link-secondary">Esqueci minha senha</button>
+                <a class="btn-signup" href="https://cloudfox.net/sirius"><p>Não tem conta? CADASTRE-SE</p></a>
+            </div>
+        </div>
+        <div class="form-container" id="form-forgot">
+            <p class="title">Esqueceu a senha?</p>
+            <p>Não tem problema! Só precisamos do email que você usou ao criar seu cadastro na Cloudfox.</p>
+            <form method="POST" action="{{ route('password.email') }}">
+                @csrf
+                <div class="input-pad @if($errors->has('email')) error @endif">
+                    <input id="email-forgot" name="email" type="email" placeholder="Email">
+                    <label for="email-forgot">Email</label>
+                    <div class="invalid-feedback">{{ $errors->first('email') }}</div>
                 </div>
-                <div class="hr"></div>
-{{--                <div class="d-flex justify-content-center align-items-center">--}}
-{{--                    <a class="linkfooter" target="_blank" href="https://cloudfox.net/terms" style="font-size: 11px"> Terms & Conditions</a>--}}
-{{--                    <div class="oval"></div>--}}
-{{--                    <a class="linkfooter" href="#" style="font-size: 11px"> Support</a>--}}
-{{--                </div>--}}
-                <div class="clearfix"></div>
+                <button type="submit" class="btn-primary">Enviar</button>
+            </form>
+            <div class="links-container">
+                <button class="btn-link-primary" id="btn-signin">Fazer login</button>
             </div>
         </div>
     </div>
+</div>
+<script>
+    window.onload = () => {
 
-    <script>
-        $(document).ready(function () {
-            $("#forgotClick").click(function () {
-                $("#panel-login").slideUp("800").delay("250").fadeOut("800").hide();
-                $("#panel-recover").slideDown("800").delay("250").fadeIn("800").show();
+        Array.from(document.querySelectorAll('.input-pad input'))
+            .forEach(elem => {
+                elem.onclick = () => {
+                    Array.from(document.querySelectorAll('.input-pad.error'))
+                        .forEach(elem => {
+                            elem.classList.remove('error');
+                        });
+                }
             });
 
-            $("#backLogin").click(function () {
-                $("#panel-recover").slideUp("800").delay("250").fadeOut("800").hide();
-                $("#panel-login").slideDown("800").delay("250").fadeIn("800").show();
+        Array.from(document.querySelectorAll('.input-pad .btn-show'))
+            .forEach(elem => {
+                elem.onclick = function() {
+                    let input = this.parentNode.querySelector('input');
+                    input.setAttribute('type', input.type === "password" ? "text" : "password");
+                }
             });
-        });
-    </script>
 
+        document.querySelector('#btn-forgot-password').onclick = () => {
+            document.querySelector('#form-login').style.display = 'none';
+            document.querySelector('#form-forgot').style.display = 'block';
+        }
 
-    @push('scripts')
-        <script src="{{ asset('/modules/auth/js/reset.js?v=1') }}"></script>
-    @endpush
-@endsection
+        document.querySelector('#btn-forgot-password').onclick = () => {
+            document.querySelector('#form-login').style.display = 'none';
+            document.querySelector('#form-forgot').style.display = 'block';
+        }
+
+        document.querySelector('#btn-signin').onclick = () => {
+            document.querySelector('#form-login').style.display = 'block';
+            document.querySelector('#form-forgot').style.display = 'none';
+        }
+    }
+</script>
+</body>
+</html>

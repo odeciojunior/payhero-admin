@@ -465,6 +465,32 @@
                                     carrinho.
                                     <b>Nota:</b> Esta opção não se aplica à planos que possuem mais de um produto.
                                 </p>
+                            </div>                            
+                        </div>
+                        <div class="row">
+                            <div class='col'>
+                                <div class="switch-holder">
+                                    <label for='custom_message_switch' style='margin-right:15px;margin-bottom: 3px'>
+                                        Mensagem personalizada na tela de obrigado</label>
+                                    <label class="switch" style='top:3px'>
+                                        <input type="checkbox" id="custom_message_switch" name="custom_message_switch" class='check' value='1'>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <p class="info mt-5" style="font-size: 10px;">
+                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Se esta opção estiver habilitada,
+                                    o checkout mostrará a mensagem configurada na tela de obrigado.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row custom_message_box">                            
+                            <div class='form-group col-md-6 col-sm-12'>
+                                <label for="custom_message_title">Título da mensagem personalizada</label>
+                                <input type="text" name='custom_message_title' class='form-control input-pad' id="custom_message_title">                                
+                            </div>
+                            <div class='form-group col-sm-12'>
+                                <label for="custom_message_content">Mensagem personalizada</label>
+                                <input type="text" name='custom_message_content' class='form-control input-pad' id="custom_message_content">                                
                             </div>
                         </div>
                         <div class='row'>
@@ -939,7 +965,7 @@
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                    <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
                         <i class="material-icons md-16">close</i>
                     </a>
                 </div>

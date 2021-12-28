@@ -2,54 +2,16 @@
 
 namespace Modules\Withdrawals\Services;
 
-use Exception;
-use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
-use Modules\Core\Entities\PendingDebt;
-use Modules\Core\Entities\PendingDebtWithdrawal;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Withdrawal;
-use PDOException;
 
 class WithdrawalService
 {
 
-    private int $biggerValue, $lowerValue, $currentValue;
-
-    public function requestWithdrawal($company, $withdrawalValue): Withdrawal
+    public function isFirstUserWithdrawal($userId): bool
     {
-        $withdrawalModel = new Withdrawal();
-        $isFirstUserWithdrawal = $this->isFirstUserWithdrawal($company->user);
-
-        $withdrawal = $withdrawalModel->create(
-            [
-                'value' => $withdrawalValue,
-                'company_id' => $company->id,
-                'bank' => $company->bank,
-                'agency' => $company->agency,
-                'agency_digit' => $company->agency_digit,
-                'account' => $company->account,
-                'account_digit' => $company->account_digit,
-                'status' => $withdrawalModel->present()->getStatus($isFirstUserWithdrawal ? 'in_review' : 'pending'),
-                'tax' => 0,
-                'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                'automatic_liquidation' => true,
-            ]
-        );
-
-        $transactionsAmount = $this->setWaitingTransactionsToWithdrawal($withdrawalValue, $withdrawal);
-        if ($transactionsAmount != Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')) {
-            throw new \Exception('O valor total da operação difere do valor solicitado');
-        }
-        //$withdrawal->update(['value' => Transaction::where('withdrawal_id', $withdrawal->id)->sum('value')]);
-
-        return $withdrawal;
-    }
-
-    public function isFirstUserWithdrawal($user): bool
-    {
-        $withdrawalModel = new Withdrawal();
         $withdrawalStatus = [
             Withdrawal::STATUS_IN_REVIEW,
             Withdrawal::STATUS_LIQUIDATING,
@@ -58,12 +20,9 @@ class WithdrawalService
         ];
 
         $isFirstUserWithdrawal = false;
-        $userWithdrawal = $withdrawalModel->whereHas(
-            'company',
-            function ($query) use ($user) {
-                $query->where('user_id', $user->account_owner_id);
-            }
-        )
+        $userWithdrawal = Withdrawal::whereHas('company', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
             ->whereIn('status', $withdrawalStatus)
             ->exists();
 
@@ -74,182 +33,13 @@ class WithdrawalService
         return $isFirstUserWithdrawal;
     }
 
-    public function setWaitingTransactionsToWithdrawal($withdrawalValue, $withdrawal)
+    public function isNotFirstWithdrawalToday($companyId, $gatewayId)
     {
-        $currentValue = 0;
-        $withdrawal->company->transactions()
-            ->whereIn(
-                'gateway_id',
-                [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]
-            )
-            ->where('is_waiting_withdrawal', 1)
-            ->whereNull('withdrawal_id')
-            ->orderBy('id')
-            ->chunkById(
-                2000,
-                function ($transactions) use (&$currentValue, $withdrawalValue, $withdrawal) {
-                    foreach ($transactions as $transaction) {
-                        $currentValue += $transaction->value;
-                        if ($currentValue <= $withdrawalValue) {
-                            $transaction->update(
-                                [
-                                    'withdrawal_id' => $withdrawal->id,
-                                    'is_waiting_withdrawal' => false
-                                ]
-                            );
-                        }
-                    }
-                }
-            );
-
-        return $currentValue;
+        return (new Withdrawal())
+                ->where('company_id', $companyId)
+                ->where('gateway_id', $gatewayId)
+                ->whereDate('created_at', Date('Y-m-d'))
+                ->exists();
     }
 
-    public function valueWithdrawalIsValid($withdrawalValue, $availableBalance, $pendingDebtsSum): bool
-    {
-        if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance || $pendingDebtsSum > $withdrawalValue || $pendingDebtsSum > $availableBalance) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function createWithdrawal($withdrawalValue, Company $company): bool
-    {
-        $withdrawalModel = new Withdrawal();
-        $isFirstUserWithdrawal = $this->isFirstUserWithdrawal(auth()->user());
-
-        try {
-            DB::beginTransaction();
-            $withdrawal = $withdrawalModel->create(
-                [
-                    'value' => $withdrawalValue,
-                    'company_id' => $company->id,
-                    'bank' => $company->bank,
-                    'agency' => $company->agency,
-                    'agency_digit' => $company->agency_digit,
-                    'account' => $company->account,
-                    'account_digit' => $company->account_digit,
-                    'status' => $withdrawalModel->present()->getStatus(
-                        $isFirstUserWithdrawal ? 'in_review' : 'pending'
-                    ),
-                    'tax' => 0,
-                    'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                    'automatic_liquidation' => true,
-                ]
-            );
-
-            $transactionsSum = $company->transactions()
-                ->whereIn(
-                    'gateway_id',
-                    [
-                        Gateway::GETNET_SANDBOX_ID,
-                        Gateway::GETNET_PRODUCTION_ID,
-                        Gateway::GERENCIANET_PRODUCTION_ID
-                    ]
-                )
-                ->where('is_waiting_withdrawal', 1)
-                ->whereNull('withdrawal_id')
-                ->orderBy('id');
-
-            $currentValue = 0;
-
-            $transactionsSum->chunkById(
-                2000,
-                $test = function ($transactions) use (
-                    $currentValue,
-                    $withdrawalValue,
-                    $withdrawal
-                ) {
-                    foreach ($transactions as $transaction) {
-                        $currentValue += $transaction->value;
-
-                        if ($currentValue <= $withdrawalValue) {
-                            $transaction->update(
-                                [
-                                    'withdrawal_id' => $withdrawal->id,
-                                    'is_waiting_withdrawal' => false
-                                ]
-                            );
-                        }
-                    }
-                }
-            );
-
-            $pendingDebts = PendingDebt::doesntHave('withdrawals')
-                ->where('company_id', $company->id)
-                ->whereNull('confirm_date')
-                ->get(['id', 'value']);
-
-            $pendingDebtsSum = 0;
-            foreach ($pendingDebts as $pendingDebt) {
-                $pendingDebtsSum += $pendingDebt->value;
-                PendingDebtWithdrawal::create(
-                    [
-                        'pending_debt_id' => $pendingDebt->id,
-                        'withdrawal_id' => $withdrawal->id
-                    ]
-                );
-            }
-
-            $withdrawal->update(
-                [
-                    'debt_pending_value' => $pendingDebtsSum
-                ]
-            );
-
-
-            DB::commit();
-            return true;
-        } catch (Exception $e) {
-            DB::rollBack();
-            report($e);
-
-            return false;
-        }
-    }
-
-    public function isNotFirstWithdrawalToday(Company $company)
-    {
-        return (new Withdrawal())->where('company_id', $company->id)
-            ->whereDate('created_at', now())
-            ->exists();
-    }
-
-    public function getLowerAndBiggerAvailableValues(Company $company, int $withdrawalValueRequested): array
-    {
-        $gateways = [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID];
-
-        $transactionsSum = $company->transactions()
-            ->whereIn('gateway_id', $gateways)
-            ->where('is_waiting_withdrawal', 1)
-            ->whereNull('withdrawal_id')
-            ->orderBy('id');
-
-        $this->currentValue = 0;
-        $this->lowerValue = 0;
-        $this->biggerValue = 0;
-
-        $transactionsSum->chunk(
-            2000,
-            function ($transactions) use ($withdrawalValueRequested) {
-                foreach ($transactions as $transaction) {
-                    $this->currentValue += $transaction->value;
-                    if ($this->currentValue >= $withdrawalValueRequested) {
-                        $this->lowerValue = $this->currentValue - $transaction->value;
-                        $this->biggerValue = $this->currentValue;
-
-                        return;
-                    }
-                }
-            }
-        );
-
-        return [
-            'data' => [
-                'lower_value' => $this->lowerValue,
-                'bigger_value' => $this->biggerValue,
-            ]
-        ];
-    }
 }

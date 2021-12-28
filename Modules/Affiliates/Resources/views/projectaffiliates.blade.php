@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-            <div id="project-not-empty">
+            <div id="project-not-empty" style="display:none !important;">
                 <div class="page-content container">
                     <div class="mb-15">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
@@ -22,8 +22,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a id="tab-affiliates-request" class="nav-link" data-toggle="tab" href="#tab_affiliates_request_panel"
-                                       aria-controls="tab_affiliates_request" role="tab">Solicitações de Afiliação
+                                    <a id="tab-affiliates-request" class="nav-link" data-toggle="tab" href="#tab_affiliates_request_panel" aria-controls="tab_affiliates_request" role="tab">Solicitações de Afiliação
                                     </a>
                                 </li>
                             </ul>
@@ -40,7 +39,7 @@
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Projeto</label>
-                                                <select class="form-control select-pad" id="project-affiliate" data-name="projects">
+                                                <select class="form-control input-pad" id="project-affiliate" data-name="projects">
                                                     <option value="0">Todos projetos</option>
                                                 </select>
                                             </div>
@@ -93,7 +92,7 @@
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Projeto</label>
-                                                <select class="form-control select-pad" id="project-affiliate-request" data-name="projects">
+                                                <select class="form-control input-pad" id="project-affiliate-request" data-name="projects">
                                                     <option value="0">Todos projetos</option>
                                                 </select>
                                             </div>

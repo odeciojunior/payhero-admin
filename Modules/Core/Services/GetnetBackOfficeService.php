@@ -11,10 +11,10 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Traits\GetnetPrepareCompanyData;
 
 /**
- * Class GetnetService
+ * Class GetnetBackOfficeService
  * @package Modules\Core\Services
  */
-class GetnetBackOfficeService extends GetnetService
+class GetnetBackOfficeService extends GetnetBaseService
 {
     use GetnetPrepareCompanyData;
 
@@ -232,7 +232,7 @@ class GetnetBackOfficeService extends GetnetService
 
     public function checkPfCompanyRegister(string $cpf, $companyId)
     {
-        $url = 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . $cpf;
+        $url = 'v1/mgm/pf/callback/' . $this->getMerchantId() . '/' . FoxUtils::onlyNumbers($cpf);
 
         return $this->sendCurl($url, 'GET', null, $companyId);
     }
@@ -292,14 +292,14 @@ class GetnetBackOfficeService extends GetnetService
 
     public function checkComplementPjCompanyRegister($cnpj)
     {
-        $url = 'v1/mgm/pj/consult/' . $this->getMerchantId() . '/' . $cnpj;
+        $url = 'v1/mgm/pj/consult/' . $this->getMerchantId() . '/' . FoxUtils::onlyNumbers($cnpj);
 
         return $this->sendCurl($url, 'GET');
     }
 
     public function checkPjCompanyRegister($cnpj, $companyId)
     {
-        $url = 'v1/mgm/pj/callback/' . $this->getMerchantId() . '/' . $cnpj;
+        $url = 'v1/mgm/pj/callback/' . $this->getMerchantId() . '/' . FoxUtils::onlyNumbers($cnpj);
 
         return $this->sendCurl($url, 'GET', null, $companyId);
     }
@@ -389,9 +389,9 @@ class GetnetBackOfficeService extends GetnetService
             $response = json_decode($response);
 
             $adjustmentResponse = new AdjustmentResponse();
-            $adjustmentResponse->code = $response->cod;
-            $adjustmentResponse->errorMessage = $response->msg_Erro;
-            $adjustmentResponse->errorCode = $response->cod_Erro;
+            $adjustmentResponse->code = $response->cod ?? '';
+            $adjustmentResponse->errorMessage = $response->msg_Erro ?? '';
+            $adjustmentResponse->errorCode = $response->cod_Erro ?? '';
             $adjustmentResponse->isSuccess = is_null($response->msg_Erro);
 
             if (

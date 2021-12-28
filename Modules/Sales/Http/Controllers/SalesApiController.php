@@ -1,13 +1,12 @@
 <?php
 
 namespace Modules\Sales\Http\Controllers;
-
+use PDF;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
@@ -16,7 +15,6 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Services\CheckoutService;
-use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\EmailService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
@@ -25,12 +23,12 @@ use Modules\Core\Services\ShopifyService;
 use Modules\Plans\Transformers\PlansSelectResource;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleIndexRequest;
-use Modules\Sales\Transformers\SalesExternalResource;
 use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\WooCommerceIntegration;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\WooCommerceService;
 
 class SalesApiController extends Controller
@@ -43,9 +41,11 @@ class SalesApiController extends Controller
                     $activity->log_name = 'visualization';
                 }
             )->log('Visualizou tela todas as vendas');
+
             $saleService = new SaleService();
             $data = $request->all();
             $sales = $saleService->getPaginatedSales($data);
+
             return TransactionResource::collection($sales);
         } catch (Exception $e) {
             report($e);
@@ -62,9 +62,10 @@ class SalesApiController extends Controller
             activity()->on((new Sale()))->tap(
                 function (Activity $activity) use ($id) {
                     $activity->log_name = 'visualization';
-                    $activity->subject_id = current(Hashids::connection('sale_id')->decode($id));
+                    $activity->subject_id = hashids_decode($id, 'sale_id');
                 }
             )->log('Visualizou detalhes da venda #' . $id);
+
             $sale = (new SaleService())->getSaleWithDetails($id);
             if (!empty($sale->affiliate)) {
                 $users = [
@@ -79,6 +80,9 @@ class SalesApiController extends Controller
             if (!in_array(auth()->user()->account_owner_id, $users)) {
                 return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
             }
+            // if(!auth()->user()->hasAnyPermission('sales_manage','finances_manage','trackings_manage','report_pending')){
+            //     return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
+            // }
             return new SalesResource($sale);
         } catch (Exception $e) {
             report($e);
@@ -128,54 +132,57 @@ class SalesApiController extends Controller
         try {
             $saleIdDecoded = hashids_decode($saleId, 'sale_id');
             $sale = Sale::find($saleIdDecoded);
-            if (!in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID])) {
+            if (!in_array($sale->gateway_id, [
+                Gateway::GETNET_SANDBOX_ID, 
+                Gateway::GETNET_PRODUCTION_ID, 
+                Gateway::GERENCIANET_PRODUCTION_ID, 
+                Gateway::GERENCIANET_SANDBOX_ID,
+                Gateway::ASAAS_PRODUCTION_ID,
+                Gateway::ASAAS_SANDBOX_ID
+            ])) {
                 return response()->json(
                     ['status' => 'error', 'message' => 'Esta venda não pode mais ser estornada.'],
                     Response::HTTP_BAD_REQUEST
                 );
             }
+
             activity()->on((new Sale()))->tap(
                 function (Activity $activity) use ($saleIdDecoded) {
                     $activity->log_name = 'estorno';
                     $activity->subject_id = $saleIdDecoded;
                 }
             )->log('Tentativa estorno transação: #' . $saleId);
-            if (!(new CompanyService())->hasBalanceToRefund($sale)) {
+
+
+            if(in_array($sale->gateway_id, [Gateway::ASAAS_PRODUCTION_ID,Gateway::ASAAS_SANDBOX_ID]) && $sale->anticipation_status == 'PENDING'){
+                return response()->json(
+                    ['status' => 'error', 'message' => 'Venda em processo de antecipação, tente novamente mais tarde'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }  
+
+            $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
+            $gatewayService = $sale->gateway->getService();
+            $gatewayService->setCompany($producerCompany);
+
+            if (!$gatewayService->hasEnoughBalanceToRefund($sale)) {
                 return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], 400);
             }
+
             $refundObservation = $request->input('refund_observation') ?? null;
             $result = (new CheckoutService())->cancelPaymentCheckout($sale);
             if ($result['status'] != 'success') {
                 return response()->json(['message' => $result['message']], 400);
             }
-            (new SaleService())->cancel($sale, $result['response'], $refundObservation);
-            if (!empty($sale->shopify_order)) {
-                $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
-                if (!empty($shopifyIntegration)) {
-                    $shopifyService = new ShopifyService(
-                        $shopifyIntegration->url_store,
-                        $shopifyIntegration->token,
-                        false
-                    );
-                    $shopifyService->refundOrder($sale);
-                    $shopifyService->saveSaleShopifyRequest();
-                }
-            }
+                        
+            ((new Gateway)->getServiceById($sale->gateway_id))
+            ->cancel($sale,$result['response'], $refundObservation);
+
             
-            //WooCommerce
-            if (!empty($sale->woocommerce_order)) {
-                $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
-                if (!empty($integration)) {
-                    $service = new WooCommerceService(
-                        $integration->url_store,
-                        $integration->token_user,
-                        $integration->token_pass
-                    );
-                    
-                    $service->cancelOrder($sale, 'Estorno');
-                }
+            if ( !$sale->api_flag ) {
+                event(new SaleRefundedEvent($sale));
             }
-            event(new SaleRefundedEvent($sale));
+
             return response()->json(['message' => $result['message']], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
@@ -187,7 +194,8 @@ class SalesApiController extends Controller
     {
         try {
             $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
-            if (!(new CompanyService())->hasBalanceToRefund($sale)) {
+            $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
+            if (!(new CompanyBalanceService($producerCompany))->hasEnoughBalanceToRefund($sale)) {
                 return response()->json(
                     [
                         'message' => 'Saldo insuficiente para realizar o estorno'
@@ -264,110 +272,11 @@ class SalesApiController extends Controller
                     $activity->subject_id = $saleId;
                 }
             )->log('Reenviou email para a venda: #' . $request->input('sale'));
-            EmailService::clientSale(
-                $sale->customer,
-                $sale,
-                $sale->project
-            );
+            EmailService::clientSale( $sale->customer, $sale, $sale->project );
             return response()->json(['message' => 'Email enviado'], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao reenviar email.'], Response::HTTP_BAD_REQUEST);
-        }
-    }
-
-    public function indexExternal()
-    {
-        try {
-            $salesModel = new Sale();
-            $saleService = new SaleService();
-            $companiesModel = new Company();
-            //Conta as  requisições diárias da Profitfy
-            $log = settings()->group('profitfy_requests')->get(now()->format('Y-m-d'), true);
-            settings()->group('profitfy_requests')->set(now()->format('Y-m-d'), ($log ?? 0) + 1);
-            $user = auth()->user();
-            if (!empty($user)) {
-                $userId = $user->account_owner_id;
-                $saleStatus = [
-                    $salesModel->present()->getStatus('approved'),
-                    $salesModel->present()->getStatus('pending'),
-                ];
-                $sales = $salesModel->with(
-                    [
-                        'transactions',
-                        'productsPlansSale.product',
-                    ]
-                )->where('owner_id', $userId)
-                    ->whereDate('start_date', '>=', now()->subDays(30))
-                    ->whereIn('status', $saleStatus)
-                    ->paginate(100);
-                $userCompanies = $companiesModel->where('user_id', $userId)->pluck('id');
-                foreach ($sales as $sale) {
-                    $saleService->getDetails($sale, $userCompanies);
-                    $products = [];
-                    foreach ($sale->productsPlansSale as $productPlanSale) {
-                        $product = $productPlanSale->product;
-                        $products[] = [
-                            'id' => $product->shopify_id,
-                            'variant_id' => $product->shopify_variant_id,
-                            'quantity' => $productPlanSale->amount,
-                        ];
-                    }
-                    $sale->products = $products;
-                }
-                return SalesExternalResource::collection($sales);
-            } else {
-                return response()->json(['error' => 'Usuário não autenticado'], 401);
-            }
-        } catch (Exception $e) {
-            report($e);
-            return response()->json(['error' => 'Erro ao obter vendas'], 400);
-        }
-    }
-
-    public function showExternal($saleId)
-    {
-        try {
-            $salesModel = new Sale();
-            $saleService = new SaleService();
-            $companiesModel = new Company();
-            //Conta as  requisições diárias da Profitfy
-            $log = settings()->group('profitfy_requests')->get(now()->format('Y-m-d'), true);
-            settings()->group('profitfy_requests')->set(now()->format('Y-m-d'), ($log ?? 0) + 1);
-            $user = auth()->user();
-            if (!empty($user)) {
-                $saleId = current(Hashids::connection('sale_id')->decode($saleId));
-                $sale = $salesModel->with(
-                    [
-                        'transactions',
-                        'productsPlansSale.product',
-                    ]
-                )->where('id', $saleId)
-                    ->where('owner_id', $user->account_owner_id)
-                    ->first();
-                if (!empty($sale)) {
-                    $userCompanies = $companiesModel->where('user_id', $sale->owner_id)->pluck('id');
-                    $saleService->getDetails($sale, $userCompanies);
-                    $products = [];
-                    foreach ($sale->productsPlansSale as $productPlanSale) {
-                        $product = $productPlanSale->product;
-                        $products[] = [
-                            'id' => $product->shopify_id,
-                            'variant_id' => $product->shopify_variant_id,
-                            'quantity' => $productPlanSale->amount,
-                        ];
-                    }
-                    $sale->products = $products;
-                    return new SalesExternalResource($sale);
-                } else {
-                    return response()->json(['error' => 'A venda não foi encontrada'], 404);
-                }
-            } else {
-                return response()->json(['error' => 'Usuário não autenticado'], 401);
-            }
-        } catch (Exception $e) {
-            report($e);
-            return response()->json(['error' => 'Erro ao obter venda'], 400);
         }
     }
 
@@ -401,25 +310,36 @@ class SalesApiController extends Controller
             $data = $request->all();
             $planModel = new Plan();
             $userProjectModel = new UserProject();
-            $projectId = current(Hashids::decode($data['project_id']));
-            if ($projectId) {
+
+            $projectIds = [];
+            foreach($data['project_id'] as $project){
+                array_push($projectIds, current(Hashids::decode($project)));
+            };
+
+            if (current($projectIds)) {
+                
                 $plans = null;
+
                 if (!empty($data['search'])) {
-                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')
-                        ->where('project_id', $projectId)->get();
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->whereIn('project_id', $projectIds)->get();
+
                 } else {
-                    $plans = $planModel->where('project_id', $projectId)->limit(10)->get();
+                    $plans = $planModel->whereIn('project_id', $projectIds)->limit(30)->get();
+                
                 }
                 return PlansSelectResource::collection($plans);
+            
             } else {
                 $userId = auth()->user()->account_owner_id;
                 $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
                 $plans = null;
+
                 if (!empty($data['search'])) {
-                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')
-                        ->whereIn('project_id', $userProjects)->get();
+                    $plans = $planModel->where('name', 'like', '%' . $data['search'] . '%')->whereIn('project_id', $userProjects)->get();
+
                 } else {
-                    $plans = $planModel->whereIn('project_id', $userProjects)->limit(10)->get();
+                    $plans = $planModel->whereIn('project_id', $userProjects)->limit(30)->get();
+                    
                 }
                 return PlansSelectResource::collection($plans);
             }
@@ -475,5 +395,6 @@ class SalesApiController extends Controller
                 400
             );
         }
-    }
+    }  
+
 }

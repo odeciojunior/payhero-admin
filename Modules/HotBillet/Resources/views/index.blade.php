@@ -1,16 +1,31 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/hotbillet/css/index.css') }}">
+    
+    <link rel="stylesheet" href="{{ asset('modules/convertax/css/index.css') }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
     <style>
         .gray:hover{
             color:#a1a1a1 !important;
         }
     </style>
+
+     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+     <style>
+        .o-arrow-right-1 {
+            font-size: 30px;
+        }
+
+        .o-arrow-right-1::before {
+            transform: rotate(180deg);
+        }
+        .gray:hover{
+            color:#a1a1a1 !important;
+        }
+     </style>
 @endpush
 @section('content')
     <div class='page'>
-        <div style="display: none" class="page-header container">
+        <div style="display: none !important;" class="page-header container">
             <div class="row jusitfy-content-between">
                 <div class="col-lg-8">
                     <h1 class="page-title my-10" style="min-height: 28px">
@@ -75,7 +90,7 @@
             </div>
         </div>
         
-        <div id="no-integration-found" class='row justify-content-center' style="display:none">
+        <div id="no-integration-found" class='row justify-content-center' style="display:none !important;">
             <div class="content-error text-center">
                 <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>

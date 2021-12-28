@@ -138,10 +138,9 @@ class EmailService
     /**
      * @param Customer $customer
      * @param Sale $sale
-     * @param Project $project
      * @return bool
      */
-    public static function clientSale(Customer $customer, Sale $sale, Project $project)
+    public static function clientSale(Customer $customer, Sale $sale, $project)
     {
         try {
             $domainModel = new Domain();
@@ -198,14 +197,14 @@ class EmailService
                     'products' => $productsSale,
                     'shipment_value' => $shipmentValue,
                     'subtotal' => $subTotal,
-                    'store_logo' => $project->logo,
+                    'store_logo' => $project->logo ?? null,
                     'discount' => $discount,
-                    'project_contact' => $project->contact,
+                    'project_contact' => $project->contact ?? null,
                     'sale_code' => $saleCode,
                 ];
                 $sendEmail->sendEmail(
                     'noreply@' . $domain->name,
-                    $project->name,
+                    $project->name ?? null,
                     $customer->email,
                     $customer->present()
                         ->getFirstName(),
@@ -220,15 +219,15 @@ class EmailService
                     'products' => $productsSale,
                     'shipment_value' => $sale->shipment_value,
                     'subtotal' => $subTotal,
-                    'store_logo' => $project->logo,
+                    'store_logo' => $project->logo ?? null,
                     'discount' => $discount,
-                    'project_contact' => $project->contact,
+                    'project_contact' => $project->contact ?? null,
                     'sale_code' => $saleCode,
                 ];
 
                 $sendEmail->sendEmail(
                     'noreply@' . $domain->name,
-                    $project->name,
+                    $project->name ?? null,
                     $customer->email,
                     $customer->present()->getFirstName(),
                     'd-b80c0854a9d342428532d8d4b0e2f654',

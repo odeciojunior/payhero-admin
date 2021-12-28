@@ -443,12 +443,21 @@ $(() => {
         //     $('#credit_card .credit_card_no').attr('selected', true);
         // }
 
+        //inicializando switchs
         $('[name=countdown_timer_flag]').prop('checked', !!(project.countdown_timer_flag))
         $('[name=countdown_timer_color]').val(project.countdown_timer_color)
         $('[name=countdown_timer_time]').val(project.countdown_timer_time)
         $('[name=countdown_timer_description]').val(project.countdown_timer_description)
         $('[name=countdown_timer_finished_message]').val(project.countdown_timer_finished_message || 'Seu tempo acabou! Você precisa finalizar sua compra imediatamente.')
         $('.color-options').find('[data-color="' + project.countdown_timer_color + '"]').addClass('active');
+
+        $('.custom_message_box').hide('fast', 'linear');
+        if(project.custom_message_configs &&  project.custom_message_configs.active){
+            $('[name=custom_message_switch]').prop('checked', project.custom_message_configs.active);            
+            $('[name=custom_message_title]').val(project.custom_message_configs.title);
+            $('[name=custom_message_content]').val(project.custom_message_configs.message);
+            $('.custom_message_box').show('fast', 'linear');
+        }
 
         let is_checked_finalizing_purchase_config = !!(project.finalizing_purchase_config_toogle)
         let is_checked_checkout_notification_config = !!(project.checkout_notification_config_toogle)
@@ -766,6 +775,7 @@ $(() => {
         formData.append('pix_discount', discountPix);
         formData.set('countdown_timer_flag', $('[name=countdown_timer_flag]').is(':checked') ? '1' : '0');
         formData.set('product_amount_selector', $('#product_amount_selector').is(':checked') ? '1' : '0');
+        formData.set('custom_message_switch', $('[name=custom_message_switch]').is(':checked') ? '1' : '0');
 
         formData.set('finalizing_purchase_config_toogle', $('[name=finalizing_purchase_config_toogle]').is(':checked') ? '1' : '0');
         formData.set('checkout_notification_config_toogle', $('[name=checkout_notification_config_toogle]').is(':checked') ? '1' : '0');
@@ -1173,6 +1183,17 @@ $(() => {
             $('.countdown-config').hide('fast', 'linear')
         }
     });
+
+    $('#custom_message_switch').off().on('click', function () {
+        let checked = $('[name=custom_message_switch]').prop('checked');
+        if (checked) {
+            $('.custom_message_box').show('fast', 'linear')
+        } else {
+            $('.custom_message_box').hide('fast', 'linear')
+        }
+    });
+
+    
 
     statusUrlAffiliatesColor()
 

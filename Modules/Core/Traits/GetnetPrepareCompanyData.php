@@ -4,6 +4,7 @@ namespace Modules\Core\Traits;
 
 use Carbon\Carbon;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Services\FoxUtils;
 
 trait GetnetPrepareCompanyData
@@ -92,7 +93,7 @@ trait GetnetPrepareCompanyData
     {
         return [
             'merchant_id' => $this->getMerchantId(),
-            'subseller_id' => FoxUtils::isProduction() ? $company->subseller_getnet_id : $company->subseller_getnet_homolog_id,
+            'subseller_id' => FoxUtils::isProduction() ? $company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID) : $company->getGatewaySubsellerId(Gateway::GETNET_SANDBOX_ID),
             'legal_document_number' => FoxUtils::onlyNumbers($company->document),
         ];
     }
@@ -156,7 +157,7 @@ trait GetnetPrepareCompanyData
     {
         return [
             'merchant_id' => $this->getMerchantId(),
-            'subseller_id' => $company->subseller_getnet_id,
+            'subseller_id' => $company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID),
             'legal_document_number' => $company->document,
             "working_hours" => [
                 "start_day" => "mon",
@@ -180,7 +181,7 @@ trait GetnetPrepareCompanyData
     {
         return [
             'merchant_id' => $this->getMerchantId(),
-            'subseller_id' => FoxUtils::isProduction() ? $company->subseller_getnet_id : $company->subseller_getnet_homolog_id,
+            'subseller_id' => FoxUtils::isProduction() ? $company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID) : $company->getGatewaySubsellerId(Gateway::GETNET_SANDBOX_ID),
             'legal_document_number' => $company->document,
         ];
     }

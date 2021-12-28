@@ -27,7 +27,7 @@ class DeliveryResource extends JsonResource
     {
         return [
             'code'         => $this->id_code,
-            'zip_code'     => $this->zip_code,
+            'zip_code'     => foxutils()->getCep($this->zip_code),
             'country'      => $this->country,
             'state'        => $this->state,
             'city'         => $this->city,

@@ -3,15 +3,22 @@
 namespace Modules\Core\Listeners;
 
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Events\NewChargebackEvent;
 use Modules\Core\Services\AdjustmentRequest;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Modules\Core\Services\SaleService;
 
-class CreateChargebackDebitListener
+class CreateChargebackDebitListener implements ShouldQueue
 {
+    use Queueable;
+
     public function __construct()
     {
         //
@@ -19,73 +26,106 @@ class CreateChargebackDebitListener
 
     public function handle(NewChargebackEvent $event)
     {
-        $sale = $event->sale;
-        $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
-        $inviteTransaction = $sale->transactions()->whereNotNull('invitation_id')->first();
-        $saleTax = $this->getSaleTax($cloudfoxTransaction, $sale);
+        try{
 
-        foreach ($sale->transactions as $transaction) {
-            if (empty($transaction->company)) {
-                continue;
-            }
+            $sale = $event->sale;
+            
+            $saleService = new SaleService();
+            $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value:0;
+            $saleTax = $saleService->getSaleTax($sale,$cashbackValue);
 
-            $chargebackValue = $transaction->value;
-            if ($transaction->type == Transaction::TYPE_PRODUCER) {
-                if (!empty($transaction->sale->automatic_discount)) {
-                    $chargebackValue -= $transaction->sale->automatic_discount;
+            foreach ($sale->transactions as $transaction) {
+                if (empty($transaction->company)) {
+                    continue;
                 }
-                $chargebackValue += $saleTax;
-                if (!empty($inviteTransaction)) {
-                    $chargebackValue += $inviteTransaction->value;
+
+                $chargebackValue = $transaction->value;
+                if ($transaction->type == Transaction::TYPE_PRODUCER) {
+                    if (!empty($transaction->sale->automatic_discount)) {
+                        $chargebackValue -= $transaction->sale->automatic_discount;
+                    }
+                    $chargebackValue += $saleTax;
                 }
-            }
 
-            $company = $transaction->company;
-            $getnetKeys = $this->getnetKeys();
-            $merchantId = $getnetKeys['merchantId'];
-            $sellerId = $getnetKeys['sellerId'];
+                $company = $transaction->company;
 
-            $hasPendingDebt = PendingDebt::where('sale_id', $sale->id)
-                ->where('company_id', $company->id)
-                ->count();
+                $company->update([
+                    'asaas_balance' => $company->asaas_balance -= $chargebackValue
+                ]);
 
-            if ($hasPendingDebt >= 1) {
-                $e = new Exception('Já existe debito pendente para esta venda: ' . $sale->id);
-                report($e);
-            } else {
-                $adjustment = new AdjustmentRequest();
-                $adjustment->setAmount($chargebackValue)
-                    ->setSaleId($sale->id)
-                    ->setCompanyId($company->id)
-                    ->setDescription('Chargeback da venda #' . hashids_encode($sale->id, 'sale_id'))
-                    ->setMerchantId($merchantId)
-                    ->setSellerId($sellerId)
-                    ->setSubSellerId(CompanyService::getSubsellerId($company))
-                    ->setTypeAdjustment(AdjustmentRequest::DEBIT_ADJUSTMENT);
+                Transfer::create(
+                    [
+                        'user_id' => $company->user_id,
+                        'company_id' => $company->id,
+                        'transaction_id' => $transaction->id,
+                        'value' => $chargebackValue,
+                        'type' => 'out',
+                        'type_enum' => Transfer::TYPE_OUT,
+                        'reason' => 'chargedback',
+                        'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID,
+                    ]
+                );
 
-                (new GetnetBackOfficeService())->requestAdjustment($adjustment);
             }
         }
-    }
-
-    private function getSaleTax($cloudfoxTransaction, $sale)
-    {
-        $saleTax = $cloudfoxTransaction->value;
-        if (!empty($sale->installment_tax_value)) {
-            $saleTax -= $sale->installment_tax_value;
-        } elseif ($sale->installments_amount > 1) {
-            $saleTax -= ($sale->original_total_paid_value -
-                (
-                    foxutils()->onlyNumbers($sale->sub_total) +
-                    foxutils()->onlyNumbers($sale->shipment_value)
-                ));
-            if (!empty(foxutils()->onlyNumbers($sale->shopify_discount))) {
-                $saleTax -= foxutils()->onlyNumbers($sale->shopify_discount);
-            }
+        catch(Exception $e) {
+            report($e);
         }
 
-        return $saleTax;
     }
+
+
+    // public function handle(NewChargebackEvent $event)    GETNET
+    // {
+    //     $sale = $event->sale;
+    //     $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
+    //     $inviteTransaction = $sale->transactions()->whereNotNull('invitation_id')->first();
+    //     $saleTax = $this->getSaleTax($cloudfoxTransaction, $sale);
+
+    //     foreach ($sale->transactions as $transaction) {
+    //         if (empty($transaction->company)) {
+    //             continue;
+    //         }
+
+    //         $chargebackValue = $transaction->value;
+    //         if ($transaction->type == Transaction::TYPE_PRODUCER) {
+    //             if (!empty($transaction->sale->automatic_discount)) {
+    //                 $chargebackValue -= $transaction->sale->automatic_discount;
+    //             }
+    //             $chargebackValue += $saleTax;
+    //             if (!empty($inviteTransaction)) {
+    //                 $chargebackValue += $inviteTransaction->value;
+    //             }
+    //         }
+
+    //         $company = $transaction->company;
+    //         $getnetKeys = $this->getnetKeys();
+    //         $merchantId = $getnetKeys['merchantId'];
+    //         $sellerId = $getnetKeys['sellerId'];
+
+    //         $hasPendingDebt = PendingDebt::where('sale_id', $sale->id)
+    //             ->where('company_id', $company->id)
+    //             ->count();
+
+    //         if ($hasPendingDebt >= 1) {
+    //             $e = new Exception('Já existe debito pendente para esta venda: ' . $sale->id);
+    //             report($e);
+    //         } else {
+    //             $adjustment = new AdjustmentRequest();
+    //             $adjustment->setAmount($chargebackValue)
+    //                 ->setSaleId($sale->id)
+    //                 ->setCompanyId($company->id)
+    //                 ->setDescription('Chargeback da venda #' . hashids_encode($sale->id, 'sale_id'))
+    //                 ->setMerchantId($merchantId)
+    //                 ->setSellerId($sellerId)
+    //                 ->setSubSellerId(CompanyService::getSubsellerId($company))
+    //                 ->setTypeAdjustment(AdjustmentRequest::DEBIT_ADJUSTMENT);
+
+    //             (new GetnetBackOfficeService())->requestAdjustment($adjustment);
+    //         }
+    //     }
+    // }
+
 
     private function getnetKeys(): array
     {

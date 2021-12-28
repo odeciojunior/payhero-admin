@@ -20,8 +20,8 @@ class ProductsSaleResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'          => $this->id_code,
-            'photo' => $this->photo,
+            'id' => $this->id_code ?? null,
+            'photo' => $this->photo ?? null,
             'name' => $this->name,
             'description' => !empty($this->description) ? Str::limit($this->description, 23) : '',
             'sale_status' => $this->sale_status ?? null,

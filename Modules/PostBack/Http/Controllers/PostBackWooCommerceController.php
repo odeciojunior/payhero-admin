@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use App\Jobs\ProcessWooCommercePostbackTracking;
 use App\Jobs\ProcessWooCommerceOrderNotes;
 use App\Jobs\ProcessWooCommerceProductCreatePostBack;
+use Exception;
 
 /**
  * Class PostBackWooCommerceController
@@ -99,13 +100,18 @@ class PostBackWooCommerceController extends Controller
                 'sku' => $tmpSku
             ];
             $productId = explode('-',$tmpSku);
-            if(empty($product->parent_id)){
+            
+            try {
+                if(empty($product->parent_id)){
 
-                $wooCommerceService->woocommerce->put('products/' . $productId[0], $data);
-            }else{
+                    $wooCommerceService->woocommerce->post('products/' . $productId[0], $data);
+                }else{
+                    
+                    $wooCommerceService->woocommerce->post('products/'.$product->id.'/variations/'.$productId[0].'/', $data);
+    
+                }
+            } catch (Exception $e) {
                 
-                $wooCommerceService->woocommerce->put('products/'.$product->id.'/variations/'.$productId[0].'/', $data);
-
             }
             
             return response()->json(
@@ -277,6 +283,18 @@ class PostBackWooCommerceController extends Controller
                     ];
                 }
 
+                //check for _aftership_tracking_number
+                
+                if(!empty($request->meta_data)){
+                    foreach ($request->meta_data as $meta) {
+                        if($meta['key'] == '_aftership_tracking_number'){
+                            if(!empty($meta['value']))
+                                $request->correios_tracking_code = $meta['value'];
+                        }
+                    }
+                }
+
+                
 
                 if(!empty($request->correios_tracking_code)) {
                     
