@@ -859,33 +859,7 @@ class SaleService
             ]
         );
 
-        if (!empty($sale->shopify_order)) {
-            try {
-                $shopifyIntegration = $sale->project->shopifyIntegrations->first();
-                if (!empty($shopifyIntegration)) {
-                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-                    $shopifyService->cancelOrder($sale);
-                }
-            } catch (Exception $e) {
-            }
-        }
-
-        if (!empty($sale->woocommerce_order)) {
-            try {
-                $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
-                if (!empty($integration)) {
-                    $service = new WooCommerceService(
-                        $integration->url_store,
-                        $integration->token_user,
-                        $integration->token_pass
-                    );
-
-                    $service->cancelOrder($sale, 'Estorno');
-                }
-            } catch (Exception $e) {
-                report($e);
-            }
-        }
+        
 
         if ( !$sale->api_flag ) {
             event(new BilletRefundedEvent($sale));

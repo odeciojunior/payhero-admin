@@ -362,23 +362,33 @@ class WooCommerceService
     }
 
 
-    public function cancelOrder($sale, $note = null)
+    public function cancelOrder($sale, $note = null, $logRequest = true)
     {
         try {
+            $order = $sale->woocommerce_order;
 
             $data = [
                 'status' => 'cancelled'
             ];
 
-            $this->woocommerce->post('orders/'.$sale->woocommerce_order, $data);
+            if($logRequest) $requestId = $this->logPostRequests($data, $sale->project_id, 'CancelOrder', $sale->woocommerce_order, $sale->id);
+
+            $result = $this->woocommerce->post('orders/'.$order, $data);
+
+            if($logRequest && $result->status == 'cancelled'){
+                $result = json_encode($result);
+                $this->updatePostRequest($requestId, 1, $result);
+            }
 
             if(!empty($note)){
                 $data = [
                     'note' => $note
                 ];
 
-                $this->woocommerce->post('orders/'.$sale->woocommerce_order.'/notes', $data);
+                $this->woocommerce->post('orders/'.$order.'/notes', $data);
             }
+
+            return $result;
 
         } catch (Exception $e) {
             report($e);
