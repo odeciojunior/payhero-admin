@@ -196,19 +196,7 @@
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
-                                <h5 class="font-size-16 text-muted">Disputas ganhas</h5>
-                                <h4 class="total-number">
-                                    <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestations-won-val"></span>
-                                    <span id="total-contestations-won-tax" class="text-muted"></span>
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="card shadow" style='display:block;'>
-                            <div class="card-body">
-                                <h5 class="font-size-16 text-muted">Total recuperado</h5>
+                                <h5 class="font-size-16 text-muted">Total</h5>
                                 <h4 class="total-number">
                                     <span class="text-muted">R$ </span>
                                     <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestation-value"></span>
@@ -217,6 +205,8 @@
                             <div class="s-border-right green"></div>
                         </div>
                     </div>
+
+                    <div class="col-md-3"></div>
                 </div>
 
                 <div class="alert alert-light alert-dismissible fade show text-primary border border-primary alert-contestation" role="alert" style="border-radius: 12px">
