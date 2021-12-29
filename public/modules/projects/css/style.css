@@ -286,7 +286,11 @@
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
 }
+.f-grow{
+    flex-grow: 1;
+}
 
-.d-content{
-    display: contents;
+.percent-border{
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
 }
