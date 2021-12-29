@@ -6,7 +6,9 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\GatewayPostback;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleGatewayRequest;
 use Modules\Core\Services\Gateways\CheckoutGateway;
 use Vinkla\Hashids\Facades\Hashids;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -50,7 +52,7 @@ class AsaasRetroactiveChargebackPostback extends Command
                 ->where('status',Sale::STATUS_APPROVED)
                 ->where('payment_method',Sale::CREDIT_CARD_PAYMENT)
                 ->whereNotNull('gateway_transaction_id')
-                ->where('id','>',1383880)
+                ->where('id','>',1426315)
                 ->get(); 
 
         $total = count($sales);
@@ -79,9 +81,32 @@ class AsaasRetroactiveChargebackPostback extends Command
                     $response->data->paymentDate
                 ); 
             }
+            Log::info('SaleId: '.$sale->id);
             $progress->advance();
         }
 
         $progress->finish();
+    }
+
+    public function createPostback($saleId,$status)
+    {
+        $saleGatewayRequest = SaleGatewayRequest::where('sale_id',$saleId)->last();
+        if(!empty($saleGatewayRequest)){
+            $data = json_decode($saleGatewayRequest->gateway_result,true);
+
+            if(!empty($data['status'])){
+
+                $data['status'] = 'CHARGEBACK_REQUESTED';
+                $data = ['event'=>'PAYMENT_CHARGEBACK_REQUESTED','payment'=>$data];
+    
+                GatewayPostback::create([
+                    'data' => json_encode($data),
+                    'gateway_id' => $this->gatewayId,
+                    'gateway_enum' => GatewayPostback::GATEWAY_ASAAS_ENUM,
+                    'processed_flag' => false,
+                    'postback_valid_flag' => false,
+                ]);
+            }
+        }        
     }
 }
