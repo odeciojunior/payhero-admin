@@ -26,8 +26,7 @@ class ProductVariantResource extends JsonResource
             'type_enum'         => $this->type_enum,
             'status_enum'       => $this->status_enum,
             'cost'              => 'R$ '.number_format(($this->productsPlans->first()->cost ?? 0) / 100, 2, '.', ','),
-            'photo'             => !empty($this->photo) ? $this->photo : 'https://cloudfox-digital-products.s3.amazonaws.com/public/global/img/produto.svg',
-            'qtd_variants'      => count($this->variants)
+            'photo'             => !empty($this->photo) ? $this->photo : 'https://cloudfox-digital-products.s3.amazonaws.com/public/global/img/produto.svg'
         ];
     }
 }

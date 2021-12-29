@@ -31,6 +31,10 @@ Route::group(
         ->name('api.products.verifyproductinplan')
         ->middleware('permission:projects_manage|sales_manage');
 
+        Route::post('/products/verifyproductinplansale', 'ProductsApiController@verifyProductInPlanSale')
+        ->name('api.products.verifyproductinplansale')
+        ->middleware('permission:projects_manage|sales_manage');
+
         //role:account_owner|admin|attendance|finantial
         Route::post('/products/search', 'ProductsApiController@getProductFilter')
         ->name('api.products.filterproducts')

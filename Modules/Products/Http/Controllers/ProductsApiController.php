@@ -18,6 +18,7 @@ use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Category;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
+use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
@@ -524,6 +525,31 @@ class ProductsApiController extends Controller
             $productInPlan = $productPlanModel->where('product_id', $productId)->exists();
 
             return response()->json(['product_in_plan' => $productInPlan], 200);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao verificar produto'], 400);
+        }
+    }
+
+    public function verifyProductInPlanSale(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+            $productPlanSaleModel = new ProductPlanSale();
+
+            $productId = current(Hashids::decode($requestData['product_id']));
+            $plan_id = current(Hashids::decode($requestData['plan_id']));
+
+            if (empty($productId)) {
+                return response()->json(['message' => 'Produto não encontrado'], 400);
+            }
+
+            $productInPlanSale = $productPlanSaleModel
+                                ->where('product_id', $productId)
+                                ->where('plan_id', $plan_id)
+                                ->exists();
+
+            return response()->json(['product_in_plan_sale' => $productInPlanSale], 200);
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao verificar produto'], 400);

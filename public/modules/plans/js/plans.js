@@ -987,7 +987,6 @@ $(function () {
                     alertCustom("success", "Configurações do plano atualizado com sucesso");
                 }
             });
-
         });
     }
 
@@ -1047,6 +1046,7 @@ $(function () {
 
     // Select products
     $('body').on('click', '.box-product', function() {
+        var box_product = this;
         var product_id = $(this).data('code');
         var tabID = $(this).parents('.tab-content').attr('id');
         var stageID = $(this).parents('.tab-pane').attr('id');
@@ -1057,10 +1057,32 @@ $(function () {
                 $(this).find('.check').append('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
                 selected_products.push({'id': product_id});
             } else {
-                $(this).removeClass('selected');
-                $(this).find('.check img').remove();
-                var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
-                selected_products.splice(index_selected_products, 1);
+                $.ajax({
+                    method: "POST",
+                    url: '/api/products/verifyproductinplansale',
+                    dataType: "json",
+                    data: {
+                        product_id: product_id,
+                        plan_id: plan_id
+                    },
+                    headers: {
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'application/json',
+                    },
+                    error: function (response) {
+                        errorAjaxResponse(response);
+                    },
+                    success: function success(response) {
+                        if (!response.product_in_plan_sale) {
+                            $(box_product).removeClass('selected');
+                            $(box_product).find('.check img').remove();
+                            var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
+                            selected_products.splice(index_selected_products, 1);
+                        } else {
+                            alertCustom('error', 'Não é possível remover o produto, possui vendas associadas a este plano.')
+                        }
+                    }
+                });
             }
         }
     });
@@ -1069,18 +1091,52 @@ $(function () {
     $('body').on('click', '.box-products .div-photo', function() {
         var product_id = $(this).parent().parent().data('code');
         var type = $(this).attr('data-type');
-        var modal = '';
+        var modal = '#modal_add_plan';
         var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
 
-        selected_products.splice(index_selected_products, 1);
+        if (type == 'edit') {
+            $.ajax({
+                method: "POST",
+                url: '/api/products/verifyproductinplansale',
+                dataType: "json",
+                data: {
+                    product_id: product_id,
+                    plan_id: plan_id
+                },
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    console.log(response.product_in_plan_sale);
 
-        if (type == 'create') {
-            modal = '#modal_add_plan';
-        } else {
+                    if (!response.product_in_plan_sale) {
+                        selected_products.splice(index_selected_products, 1);
+                        if (selected_products.length > 0) {
+                            $('.tooltip').remove();
+                            getDetailsProducts(modal, type);
+                        } else {
+                            getProducts(modal, type);
+                        }
+                    } else {
+                        alertCustom('error', 'Não é possível remover o produto, possui vendas associadas a este plano.')
+                    }
+                }
+            });
+
             modal = '#modal_edit_plan';
+        } else {
+            selected_products.splice(index_selected_products, 1);
+            if (selected_products.length > 0) {
+                $('.tooltip').remove();
+                getDetailsProducts(modal, type);
+            } else {
+                getProducts(modal, type);
+            }
         }
-
-        getDetailsProducts(modal, type);
     });
 
     // All values products
