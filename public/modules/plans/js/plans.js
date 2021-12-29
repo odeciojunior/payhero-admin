@@ -90,6 +90,8 @@ $(function () {
     }
 
     function searchProducts(product, modal, type) {
+        $(modal).find('.product-photo').unbind('load');
+
         var find_stage = type == 'create' ? '#stage1' : '#stage2';
 
         $(modal).find('.modal-body').css('height', 'auto');
@@ -181,6 +183,8 @@ $(function () {
     }
 
     function getProducts(modal, type) {
+        $(modal).find('.product-photo').unbind('load');
+
         $(modal).find('.modal-body').css('height', 'auto').attr('style', 'padding-bottom: 0px !important');
 
         var find_stage = type == 'create' ? '#stage1' : '#stage2';
@@ -316,6 +320,8 @@ $(function () {
     }
 
     function getDetailsProducts(modal, type) {
+        $(modal).find('.product-photo').unbind('load');
+
         var find_stage = type == 'create' ? '#stage2' : '#stage3';
 
         $(modal).find('.modal-body').css('height', 'auto');
@@ -465,6 +471,8 @@ $(function () {
     }
 
     function getPlanInformations(modal) {
+        $(modal).find('.product-photo').unbind('load');
+
         $(modal).find('.modal-body').css('height', 'auto');
         $(modal).find('#btn-modal-plan-next').html('Finalizar');
 
@@ -506,6 +514,8 @@ $(function () {
     }
 
     function getPlanData(modal, flag = false) {
+        $(modal).find('.product-photo').unbind('load');
+
         $(modal).find('.modal-body').css('height', 'auto');
 
         $(modal).find('#tab-customizations').removeClass('show active').addClass('disabled');
