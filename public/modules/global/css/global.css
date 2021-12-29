@@ -1934,3 +1934,7 @@ tbody td{
 .tooltip .tooltip-inner {
     text-align: left;
 }
+
+.sirius-select-options {
+    border-color: #88BFFF !important;
+}

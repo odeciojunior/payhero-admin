@@ -429,10 +429,13 @@ class ProductsApiController extends Controller
                 $products->select('id', 'name', 'description');
             }
 
-            if (!empty($data['is_config'])) {
-                $products = $products->orderBy('name')->take(10)->get();
-            } else {
-                $products = $products->orderBy('name')->paginate(10);
+            $products = $products->orderBy('name')->take(10)->get();
+            foreach($products as $p) {
+                $product = Product::find($p->id);
+                $p->photo = $product->photo;
+                $p->type_enum = $product->type_enum;
+                $p->status_enum = $product->status_enum;
+                $p->cost = $product->cost;
             }
 
             return ProductVariantResource::collection($products);

@@ -325,7 +325,7 @@ $(function () {
         var find_stage = type == 'create' ? '#stage2' : '#stage3';
 
         $(modal).find('.modal-body').css('height', 'auto');
-        $(modal).find(find_stage).find('.box-products').html('').css({'max-height': 'unset', 'padding-right': '0px'});
+        $(modal).find(find_stage).find('.box-products').html('').css({'overflow': 'unset', 'max-height': 'unset', 'padding-right': '0px'});
         $(modal).find(find_stage).find('.box-review').html('');
         $(modal).find('#btn-modal-plan-return').html('Voltar');
         if (type == 'create') {
@@ -413,7 +413,7 @@ $(function () {
                     template: '<div class="tooltip product-details" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
                 });
 
-                $('.sirius-select').each(function () {
+                $(modal).find('.sirius-select').each(function () {
                     let $target = $(this);
                     let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
                     $target.wrap(`<div class="sirius-select-container"></div>`);
@@ -447,7 +447,7 @@ $(function () {
                             </label>
                             <label for="product_amount_selector" style="margin: 0;">Todos os produtos têm o mesmo custo</label>
                         </div>`
-                    );
+                    ).css({'margin-top': '25px'});
                 } else {
                     $(modal).find(find_stage).find('.box-review').html('');
                 }
