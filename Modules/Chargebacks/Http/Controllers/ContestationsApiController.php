@@ -41,13 +41,12 @@ class ContestationsApiController extends Controller
 
     public function getContestations(Request $request)
     {
-
         try {
             $contestationService = new ContestationService();
             $request->request->add(['from_contestation' => true]);
             $getnetChargebacks = $contestationService->getQuery($request->all());
-            return ContestationResource::collection($getnetChargebacks->paginate(10));
 
+            return ContestationResource::collection($getnetChargebacks->paginate(10));
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
@@ -63,6 +62,7 @@ class ContestationsApiController extends Controller
 
             $contestationService = new ContestationService();
             $chargebackService = new ChargebackService();
+            
             $totalContestationValue = $contestationService->getTotalValueContestations($requestValidated);
             $totalSalesApproved = $contestationService->getTotalApprovedSales($requestValidated);
             $totalContestations = $contestationService->getTotalContestations($requestValidated);
@@ -70,6 +70,7 @@ class ContestationsApiController extends Controller
             $totalSalesApprovedChargeback = $chargebackService->getTotalApprovedSales($requestValidated);
             $totalChargebacks = $chargebackService->getTotalChargebacks($requestValidated);
 
+            $totalContestationsWon = $contestationService->getTotalWonContestations($requestValidated);
 
             return response()->json([
                 'total_contestation' => $totalContestations,
@@ -79,8 +80,9 @@ class ContestationsApiController extends Controller
                 'total_chargeback'           => $totalChargebacks,
                 'total_chargeback_value'     => $totalChargebackValue,
                 'total_sale_approved_chargeback'  => $totalSalesApprovedChargeback,
-                'total_chargeback_tax'       => $chargebackService->getChargebackTax($totalChargebacks, $totalContestations)
-
+                'total_chargeback_tax'       => $chargebackService->getChargebackTax($totalChargebacks, $totalContestations),
+                'total_contestations_won'   => $totalContestationsWon,
+                'total_contestations_won_tax' => $contestationService->getWonContestationsTax($totalContestations, $totalContestationsWon)
             ]);
 
         } catch (Exception $e) {

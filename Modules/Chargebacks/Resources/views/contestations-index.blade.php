@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
+        <link rel="stylesheet" href="{{ asset('modules/chargebacks/css/contestations-index.css?v=12') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
             .select2-selection--single {
@@ -61,8 +62,8 @@
     @endpush
 
     <!-- Page -->
-    <div class="page mb-0">
-        <div style="display: none" class="page-header container" id="page_header">
+    <div class="page" style="margin-bottom: 0 !important;">
+        <div style="display: none" class="page-header container pt-35" id="page_header">
             <div class="row align-items-center justify-content-between">
                 <div class="col-md-6">
                     <h1 class="page-title">Contestações</h1>
@@ -71,18 +72,16 @@
         </div>
         <div id="project-not-empty" style="display:none">
             <div class="page-content container">
-                <div class="fixhalf"></div>
                 <form id='filter_form' action='{{ route('contestations.getchargebacks') }}' method='GET'>
                     @csrf
-                    <div id="" class="card shadow p-20">
-                        <div class="row align-items-baseline mb-md-15">
-
-                            <div class="col-sm-12 col-md">
+                    <div id="filter-contestations" class="card">
+                        <div class="row align-items-baseline">
+                            <div class="col-sm-12 col-md mt-10">
                                 <label for="transaction">Transação</label>
-                                <input name="transaction" id="transaction" class="input-pad" placeholder="Transação">
+                                <input name="transaction" id="transaction" class="form-control input-pad" placeholder="Transação">
                             </div>
 
-                            <div class="col-sm-12 col-md">
+                            <div class="col-sm-12 col-md mt-10">
                                 <label for="is_expired">Expiração</label>
                                 <br>
                                 <select name='is_expired' id="is_expired" class="form-control input-pad">
@@ -92,8 +91,7 @@
                                 </select>
                             </div>
 
-
-                            <div class="col-sm-12 col-md">
+                            <div class="col-sm-12 col-md mt-10">
                                 <label for="date_type">Data</label>
                                 <select name='date_type' id="date_type" class="form-control input-pad">
                                     <option value="expiration_date">Data da expiração</option>
@@ -102,26 +100,26 @@
                                 </select>
                             </div>
 
-                            <div class="col-sm-12 col-md">
+                            <div class="col-sm-12 col-md mt-10">
                                 <div class="form-group form-icons">
                                     <label for="date_type">&nbsp;</label>
-                                    <i style="right: 24px;top: 41px;"
-                                       class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-20"></i>
-                                    <input name='date_range' id="date_range" class="input-pad pr-30"
+                                    <i style="right: 24px;top: 35px;"
+                                       class="form-control-icon form-control-icon-right o-agenda-1 mt-15 font-size-20"></i>
+                                    <input name='date_range' id="date_range" class="form-control input-pad pr-30"
                                            placeholder="Clique para editar..." readonly style="">
                                 </div>
                             </div>
                         </div>
                         <div class="collapse" id="bt_collapse">
-
                             <div class="row">
-                                <div class="col-sm-12 col-md">
+                                <div class="col-sm-12 col-md mt-10">
                                     <label for="project">Projeto</label><br>
                                     <select name='project' id="project" class="form-control input-pad">
                                         <option value="">Todos projetos</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-12 col-md">
+
+                                <div class="col-sm-12 col-md mt-10">
                                     <label for="is_contested">Concluído</label>
                                     <br>
                                     <select name='is_contested' id="is_contested" class="form-control input-pad">
@@ -131,34 +129,19 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md">
-                                    <label for="status">Status</label>
-                                    <select name='sale_status' id="status" class="form-control input-pad">
-                                        <option value="0">Todos status</option>
-                                        <option value="1">Aprovado</option>
-                                        <option value="2">Aguardando pagamento</option>
-                                        <option value="3">Recusado</option>
-                                        <option value="4">ChargeBack</option>
-                                        {{--                                <option value="6">Em análise</option>--}}
-                                        <option value="7">Estornado</option>
-                                        <option value="5">Cancelada</option>
-                                        <option value="10">BlackList</option>
-                                        <option value="20">Revisão Antifraude</option>
-                                        <option value="21">Cancelada antifraude</option>
-                                        <option value="chargeback_recovered">Chargeback recuperado</option>
-                                        <option value="99">Erro Sistema</option>
-                                        <option value='24'>Em Disputa</option>
-                                        <option value='6'>Em Processo</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-12 col-md">
-                                    <label for='customer'>Cliente</label>
-                                    <select id="customer" name="customer" class="form-control select-pad"
-                                            style='width:100%;height:100%' data-plugin="select2">
-                                        <option value="">Selecione</option>
+                                <div class="col-sm-12 col-md mt-10">
+                                    <label for="contestation_situation">Situação</label>
+                                    <select name='contestation_situation' id="contestation_situation" class="form-control select-pad">
+                                        <option value="0">Ambos</option>
+                                        <option value="1">Ganha</option>
+                                        <option value="2">Perdida</option>
                                     </select>
                                 </div>
 
+                                <div class="col-sm-12 col-md mt-10">
+                                    <label for='customer'>Cliente</label>
+                                    <input id="customer" name="customer" class="form-control select-pad" placeholder="Nome do cliente">
+                                </div>
                             </div>
                         </div>
 
@@ -170,19 +153,14 @@
                                     data-target="#bt_collapse"
                                     aria-expanded="false"
                                     aria-controls="bt_collapse">
-                                    <img id="icon-filtro"
-                                         class="hidden-xs-down"
-                                         src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
-                                    <span id="text-filtro">Filtros avançados</span>
+                                    <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                    <span id="text-filtro" class="text-break">Filtros avançados</span>
                                 </div>
                             </div>
                             <div class="col-6 col-xl-3 mt-20">
-                                <div id="bt_filtro"
-                                     class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                    <img style="height: 12px; margin-right: 4px"
-                                         class="hidden-xs-down"
-                                         src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
-                                    Aplicar filtros
+                                <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
+                                    <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                    <span class="text-break">Aplicar filtros</span>
                                 </div>
                             </div>
                         </div>
@@ -190,15 +168,15 @@
                 </form>
                 <div class="fixhalf"></div>
 
-                <div class="row justify-content-center">
+                <div class="row justify-content-center mt-10">
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body ">
-                                <h5 class="font-size-14 gray-600 ">N° de contestações</h5>
-                                <h4 class="total-number"><span class="font-size-30 bold "
-                                                               id="total-contestation"></span><span
-                                        id="total-contestation-tax" style="color:#959595"></span></h4>
-
+                                <h5 class="font-size-16 text-muted">N° de contestações</h5>
+                                <h4 class="total-number">
+                                    <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestation"></span>
+                                    <span id="total-contestation-tax" class="text-muted"></span>
+                                </h4>
                             </div>
                         </div>
                     </div>
@@ -206,11 +184,11 @@
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
-                                <h5 class="font-size-14 gray-600">Resultantes em chargeback</h5>
-                                <h4 class="total-number"><span class="font-size-30 bold "
-                                                               id="total-chargeback-tax-val"></span>
-                                    <span id="total-chargeback-tax" style="color:#959595"></span></h4>
-
+                                <h5 class="font-size-16 text-muted">Resultantes em chargeback</h5>
+                                <h4 class="total-number">
+                                    <span class="font-size-30 bold" style="color:#5A5A5A" id="total-chargeback-tax-val"></span>
+                                    <span id="total-chargeback-tax" class="text-muted"></span>
+                                </h4>
                             </div>
                         </div>
                     </div>
@@ -218,39 +196,42 @@
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
                             <div class="card-body">
-                                <h5 class="font-size-14 gray-600">Total</h5>
-                                <h4 class="total-number" style=""><span style="color:#959595">R$ </span><span class="font-size-30 bold"
-                                                                           id="total-contestation-value"></span></h4>
+                                <h5 class="font-size-16 text-muted">Total</h5>
+                                <h4 class="total-number">
+                                    <span class="text-muted">R$ </span>
+                                    <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestation-value"></span>
+                                </h4>
                             </div>
-                            <div class="s-border-right yellow"></div>
+                            <div class="s-border-right green"></div>
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div style="display:block;">
-                            <div>
-                                <h5 class="font-size-14 gray-600"> O que são contestações? </h5>
-                                <p>
-                                    São ocorrências enviadas pelas operadoras de crédito
-                                    após contestações do titular do cartão.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
+                    <div class="col-md-3"></div>
                 </div>
+
+                <div class="alert alert-light alert-dismissible fade show text-primary border border-primary alert-contestation" role="alert" style="border-radius: 12px">
+                    <img src="{{ asset('modules/chargebacks/svg/info-contestation.svg') }}" alt="Informação sobre contestação">
+                    <span class="alert-text">
+                        <span class="bold">Contestações</span>
+                        são ocorrências enviadas pelas operadoras de crédito após contestação de alguma compra pelo titular do cartão.
+                    </span>
+                    <button type="button" class="close text-primary" data-dismiss="alert" aria-label="Close" style="opacity: 1">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="fixhalf"></div>
 
                 <div class="card shadow" style="min-height: 300px">
                     <div class="page-invoice-table table-responsive">
-                        <table id="chargebacks-table" class="table-vendas table table-striped unify mb-0"
+                        <table id="chargebacks-table" class="table-vendas table table-striped unify"
                                style="width:100%;">
                             <thead>
                             <tr class="">
                                 <td class="table-title">Transação</td>
                                 <td class="table-title" style="min-width: 200px; text-align:left">Empresa</td>
                                 <td class="table-title">Compra</td>
-                                <td class="table-title" style="min-width: 150px;">Status</td>
-                                <td class="table-title" style="min-width: 170px;">Prazo para recurso</td>
+                                <td class="table-title text-center" style="min-width: 100px;">Status</td>
+                                <td class="table-title">Situação</td>
                                 <td class="table-title">Motivo</td>
                                 {{--                            <td class="table-title">Valor</td>--}}
                                 <td class="table-title" style="min-width: 100px;"></td>
@@ -263,8 +244,8 @@
                     </div>
 
                 </div>
-                <div class="row justify-content-center justify-content-md-end">
-                    <ul id="pagination" class="pl-5 pr-md-15 mb-25">
+                <div class="row justify-content-center justify-content-md-end pb-60">
+                    <ul id="pagination" class="pl-5 pr-md-15 mb-10">
                         {{-- js carrega... --}}
                     </ul>
                 </div>
