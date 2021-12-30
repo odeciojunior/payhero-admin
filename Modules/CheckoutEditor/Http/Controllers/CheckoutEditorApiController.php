@@ -87,7 +87,7 @@ class CheckoutEditorApiController extends Controller
             $data = $request->all();
 
             $configId = hashids_decode($data['id']);
-            $supportPhone = foxutils()->getTelephone($data['support_phone']);
+            $supportPhone = $data['support_phone'];
 
             $config = CheckoutConfig::find($configId);
 
