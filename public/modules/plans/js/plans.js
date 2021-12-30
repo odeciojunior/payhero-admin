@@ -220,7 +220,7 @@ $(function () {
 
             $.ajax({
                 method: "POST",
-                url: "/api/products/userproducts",
+                url: "/api/products/topselling",
                 data: { project: projectId },
                 dataType: "json",
                 headers: {

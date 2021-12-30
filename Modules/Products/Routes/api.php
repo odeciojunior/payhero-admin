@@ -23,6 +23,10 @@ Route::group(
         ->name('api.products.getproducts')
         ->middleware('permission:projects_manage|sales_manage');
 
+        Route::post('/products/topselling', 'ProductsApiController@getTopSellingProducts')
+        ->name('api.products.topselling')
+        ->middleware('permission:projects_manage|sales_manage');
+
         Route::post('/products/getsignedurl', 'ProductsApiController@getSignedUrl')
         ->name('api.products.getsignedurl')
         ->middleware('permission:projects_manage|sales_manage');

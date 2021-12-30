@@ -4,8 +4,10 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
@@ -45,9 +47,35 @@ class ProductService
         }
     }
 
-    public function getProducts()
+    public function getTopSellingProducts(int $projectId)
     {
+        $productModel = new Product();
+        $projectModel = new Project();
+        $project = $projectModel->find($projectId);
 
+        if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
+            return $productModel
+            ->with('productsPlanSales')
+            ->with('productsPlans')
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->where('project_id', $projectId)
+            ->take(16)
+            ->get()
+            ->sortByDesc(function($query) {
+                return $query->productsPlanSales->count();
+            });
+        } else {
+            return $productModel
+            ->with('productsPlanSales')
+            ->with('productsPlans')
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->where('shopify', 0)
+            ->take(16)
+            ->get()
+            ->sortByDesc(function($query) {
+                return $query->productsPlanSales->count();
+            });
+        }
     }
 
     public function getProductsFilter(int $projectId, string $product, bool $variants = false)

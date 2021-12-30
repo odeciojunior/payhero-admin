@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Category;
+use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\ProductPlanSale;
@@ -448,6 +449,28 @@ class ProductsApiController extends Controller
             return response()->json([
                 'message' => 'Ocorreu um erro, ao buscar dados dos produtos',
             ], 400);
+        }
+    }
+
+    public function getTopSellingProducts(Request $request)
+    {
+        try {
+            $data = $request->all();
+
+            if (empty($data['project'])) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
+            }
+
+            $productService = new ProductService();
+            $projectId = current(Hashids::decode($data['project']));
+
+            $products = $productService->getTopSellingProducts($projectId);
+
+            return ProductsSelectResource::collection($products);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
         }
     }
 
