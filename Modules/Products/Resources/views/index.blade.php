@@ -28,7 +28,7 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="mb-10">
                             <label for="type-products">Tipo</label>
-                            <select class="form-control select-pad" id='type-products'>
+                            <select class="form-control input-pad" id='type-products'>
                                 <option value="0">Meus Produtos</option>
                                 <option value="1">Produtos Shopify</option>
                             </select>
@@ -43,7 +43,7 @@
                     <div class="col-lg-3 col-md-6">
                         <div id="projects-list" class="mb-10 d-none">
                             <label id="select-projects-label" for="select-projects">Projeto</label>
-                            <select id='select-projects' class="form-control select-pad disabled" disabled>
+                            <select id='select-projects' class="form-control input-pad disabled" disabled>
                                 <option>Carregando...</option>
                             </select>
                         </div>

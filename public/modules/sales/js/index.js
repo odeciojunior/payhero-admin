@@ -15,6 +15,7 @@ $(document).ready(function () {
             }
         }
     });
+
     //checkbox
     $(".check").on("click", function () {
         if ($(this).is(":checked")) {
@@ -756,6 +757,10 @@ $(document).ready(function () {
     $(".applySelect2").on("change", function () {
         let idTarget = $(this).attr('id');
         deniedEmptyFilter(idTarget);
+    });
+
+    $(document).on('focusout', '.select2-selection__rendered', function () {
+        $('.select2-selection.select2-selection--multiple').scrollTop(0);
     });
     // FIM DO COMPORTAMENTO DO FILTRO
 

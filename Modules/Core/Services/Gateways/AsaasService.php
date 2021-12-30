@@ -418,47 +418,90 @@ class AsaasService implements Statement
             );
 
             $refundTransactions = $sale->transactions;
-            $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
-
+            
             $saleService = new SaleService();
             $saleTax = 0;
-            if(!empty($sale->anticipation_id)){
-                $saleTax = $saleService->getSaleTax($cloudfoxTransaction, $sale);
+            if(!empty($sale->anticipation_status)){
+                $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value:0;
+                $saleTax = $saleService->getSaleTaxRefund($sale,$cashbackValue);
             }
+            $totalSale = $saleService->getSaleTotalValue($sale);
 
             foreach ($refundTransactions as $refundTransaction) {
-                $transactionRefundAmount = (int)$refundTransaction->value;
-
+                
                 $company = $refundTransaction->company;
                 if (!empty($company)) {
 
                     if ($refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
-
+                        
                         $refundValue = $refundTransaction->value;
                         if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
-                            if (!empty($refundTransaction->sale->automatic_discount)) {
-                                $refundValue -= $refundTransaction->sale->automatic_discount;
-                            }
                             $refundValue += $saleTax;
                         }
-                        $transactionRefundAmount = $refundValue;
+                        
+                        if($refundValue > $totalSale){
+                            $refundValue = $totalSale;
+                        }
 
                         Transfer::create([
                             'transaction_id' => $refundTransaction->id,
                             'user_id' => $refundTransaction->user_id,
                             'company_id' => $refundTransaction->company_id,
                             'gateway_id' => $sale->gateway_id,
-                            'value' => $transactionRefundAmount,
+                            'value' => $refundValue,
                             'type' => 'out',
                             'type_enum' => Transfer::TYPE_OUT,
                             'reason' => 'refunded',
                             'is_refunded_tax' => 0
                         ]);
+                   
+                        $company->update([
+                            'asaas_balance' => $company->asaas_balance -= $refundValue
+                        ]);
+
+                    } elseif(!empty($sale->anticipation_status))
+                    {
+                        if ($refundTransaction->type <> Transaction::TYPE_PRODUCER) continue;
+                        
+                        Transfer::create(
+                            [
+                                'transaction_id' => $refundTransaction->id,
+                                'user_id' => $company->user_id,
+                                'company_id' => $company->id,
+                                'type_enum' => Transfer::TYPE_IN,
+                                'value' => $refundTransaction->value,
+                                'type' => 'in',
+                                'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
+                            ]
+                        );
 
                         $company->update([
-                            'asaas_balance' => $company->asaas_balance -= $transactionRefundAmount
+                            'asaas_balance' => $company->asaas_balance += $refundTransaction->value
+                        ]);
+
+                        $refundValue = $refundTransaction->value + $saleTax;                        
+                        
+                        if($refundValue > $totalSale){
+                            $refundValue = $totalSale;
+                        }
+                   
+                        Transfer::create([
+                            'transaction_id' => $refundTransaction->id,
+                            'user_id' => $refundTransaction->user_id,
+                            'company_id' => $refundTransaction->company_id,
+                            'gateway_id' => $sale->gateway_id,
+                            'value' => $refundValue,
+                            'type' => 'out',
+                            'type_enum' => Transfer::TYPE_OUT,
+                            'reason' => 'refunded',
+                            'is_refunded_tax' => 0
+                        ]);
+                   
+                        $company->update([
+                            'asaas_balance' => $company->asaas_balance -= $refundValue
                         ]);
                     }
+
                 }
 
                 $refundTransaction->status = 'refunded';

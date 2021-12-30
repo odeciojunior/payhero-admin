@@ -153,6 +153,14 @@ class SalesApiController extends Controller
                 }
             )->log('Tentativa estorno transação: #' . $saleId);
 
+
+            if(in_array($sale->gateway_id, [Gateway::ASAAS_PRODUCTION_ID,Gateway::ASAAS_SANDBOX_ID]) && $sale->anticipation_status == 'PENDING'){
+                return response()->json(
+                    ['status' => 'error', 'message' => 'Venda em processo de antecipação, tente novamente mais tarde'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }  
+
             $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
             $gatewayService = $sale->gateway->getService();
             $gatewayService->setCompany($producerCompany);
@@ -170,32 +178,7 @@ class SalesApiController extends Controller
             ((new Gateway)->getServiceById($sale->gateway_id))
             ->cancel($sale,$result['response'], $refundObservation);
 
-            if (!empty($sale->shopify_order)) {
-                $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
-                if (!empty($shopifyIntegration)) {
-                    $shopifyService = new ShopifyService(
-                        $shopifyIntegration->url_store,
-                        $shopifyIntegration->token,
-                        false
-                    );
-                    $shopifyService->refundOrder($sale);
-                    $shopifyService->saveSaleShopifyRequest();
-                }
-            }
-
-            //WooCommerce
-            if (!empty($sale->woocommerce_order)) {
-                $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
-                if (!empty($integration)) {
-                    $service = new WooCommerceService(
-                        $integration->url_store,
-                        $integration->token_user,
-                        $integration->token_pass
-                    );
-
-                    $service->cancelOrder($sale, 'Estorno');
-                }
-            }
+            
             if ( !$sale->api_flag ) {
                 event(new SaleRefundedEvent($sale));
             }
@@ -413,4 +396,5 @@ class SalesApiController extends Controller
             );
         }
     }  
+
 }

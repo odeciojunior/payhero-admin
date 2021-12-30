@@ -23,14 +23,14 @@
             <div id="reports-content" class="page-content container">
                 <div class="row align-items-center justify-content-between">
                     <div class="col-sm-6 col-m-3 col-lg-3">
-                        <select id='select_projects' class="form-control select-pad">
+                        <select id='select_projects' class="form-control input-pad">
                             {{-- JS carrega.. --}}
                         </select>
                     </div>
                     <div class="col-sm-6 col-m-3 col-lg-3">
                             <div class="row align-items-center form-icons">
                                 <i class="form-control-icon form-control-icon-right o-agenda-1 font-size-18" style="right: 10%;"></i>
-                                <input id="date-filter" type="text" name="daterange" class="select-pad text-center font-size-14 pr-30 ml-5" 
+                                <input id="date-filter" type="text" name="daterange" class="input-pad text-center font-size-14 pr-30 ml-5" 
                                 value="" readonly style="width: 92%">
                             </div>
                         {{-- <div class="row align-items-center">

@@ -4,9 +4,6 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\AsaasBackofficeRequest;
-use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Services\Gateways\CheckoutGateway;
@@ -49,7 +46,8 @@ class RegisterWebhookAsaas extends Command
     {
         $credentials = GatewaysCompaniesCredential::where('gateway_id',$this->gatewayId)->whereNotNull('gateway_api_key')
         ->where(function($qr){
-            $qr->whereNull('has_webhook')->orWhere('has_webhook',0);
+            $qr->whereNull('has_transfers_webhook')->orWhere('has_transfers_webhook',0)
+            ->orWhereNull('has_charges_webhook')->orWhere('has_charges_webhook',0);
         })->get();
 
         $output = new ConsoleOutput();
@@ -57,23 +55,40 @@ class RegisterWebhookAsaas extends Command
         $progress->start();
 
         foreach($credentials as $credential){
-            $this->registerWebhook($credential);
+            $this->registerTransferWebhook($credential);
+            $this->registerChargeWebhook($credential);
             $progress->advance();
         }
         $progress->finish();
     }
 
-    public function registerWebhook(GatewaysCompaniesCredential $credential){
+    public function registerTransferWebhook(GatewaysCompaniesCredential $credential){
         try{
 
-            $response = $this->api->registerWebhookTransferAsaas($credential->company_id);            
-            if($response->status =='success'){
-                $credential->update(['has_webhook' => 1]);
+            if($credential->has_transfers_webhook <> 1){
+                $response = $this->api->registerTransfersWebhookAsaas($credential->company_id);            
+                if($response->status =='success'){
+                    $credential->update(['has_transfers_webhook' => 1]);
+                }
             }
         }
-        catch(Exception $ex) {
-            Log::info($ex->getMessage());
-            $credential->update(['has_webhook' => 0]);
+        catch(Exception $ex) {            
+            $credential->update(['has_transfers_webhook' => 0]);            
+        }
+    }
+
+    public function registerChargeWebhook(GatewaysCompaniesCredential $credential)
+    {        
+        try{
+            if($credential->has_charges_webhook <> 1){
+                $response = $this->api->registerChargesWebhookAsaas($credential->company_id);            
+                if($response->status =='success'){
+                    $credential->update(['has_charges_webhook' => 1]);
+                }
+            }
+        }
+        catch(Exception $ex) {            
+            $credential->update(['has_charges_webhook' => 0]);
         }
     }
 

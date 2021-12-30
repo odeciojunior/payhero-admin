@@ -50,7 +50,7 @@
             <div class='form-group col-12'>
                 <label for="url_store">Dias em espera</label>
                 <div class="d-flex input-group">
-                    <select class="select-pad" id="select_pending_days_edit" name="select_pending_days_edit">
+                    <select class="input-pad" id="select_pending_days_edit" name="select_pending_days_edit">
                         <option value='1'>1</option>
                         <option value='7'>7</option>
                         <option value='15'>15</option>

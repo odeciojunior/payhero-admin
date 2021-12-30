@@ -24,24 +24,24 @@ class ContestationService
     {
         $qrConstestations = $this->getQuery($filters);
         $total = $qrConstestations->sum('sales.sub_total');//transactions.value -- sales.sub_total
-        $shipment_value = $qrConstestations->sum('sales.shipment_value');
-        $shopify_discount = $qrConstestations->sum('sales.shopify_discount');
-        $automatic_discount = $qrConstestations->sum('sales.automatic_discount');
+        $shipmentValue = $qrConstestations->sum('sales.shipment_value');
+        $shopifyDiscount = $qrConstestations->sum('sales.shopify_discount');
+        $automaticDiscount = $qrConstestations->sum('sales.automatic_discount');
 
-        $total += $shipment_value;
-        
-        if ($shopify_discount > 0) {
-            $total -= $shopify_discount;
+        $total += $shipmentValue;
+
+        if ($shopifyDiscount > 0) {
+            $total -= $shopifyDiscount;
         }
 
-        $total -= $automatic_discount/100;
+        $total -= $automaticDiscount/100;
 
         return trim(str_replace("R$", "", FoxUtils::formatMoney($total)));// transactions.value/100
     }
 
     function getQuery($filters)
     {
-        $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name', 
+        $contestations = SaleContestation::select('sale_contestations.*', 'sales.start_date', 'customers.name as customer_name',
         'sales.total_paid_value','sales.sub_total','sales.shipment_value',\DB::Raw("CAST(sales.shopify_discount as DECIMAL) AS shopify_discount"))
             ->selectRaw(\DB::raw("(CASE WHEN expiration_date > '". Carbon::now()->addDay(2)->endOfDay()."' THEN 1 ELSE 0 END) as custom_expired"))
             ->join('sales', 'sales.id', 'sale_contestations.sale_id')
@@ -87,19 +87,14 @@ class ContestationService
             return $query->where('sale_contestations.sale_id', $sale_id[0]);
         });
 
-        $contestations->when(request('status'), function ($query, $status) {
-            if (in_array($status, [1, 2, 3, 4, 5, 6, 7, 10, 20, 21, 22, 24, 99])) {
-                if ($status == 7) {
-                    return $query->whereIn('sales.status', [7, 22]);
-                } else {
-                    return $query->where('sales.status', $status);
-                }
-            } else {
-                if ($status == 'chargeback_recovered')
-                    return $query->where('sales.is_chargeback_recovered', true)->where('sales.status', 1);
-                if ($status == '')
-                    return $query->where('sales.status', null);
-            }
+        $contestations->when(request('contestation_situation'), function ($query, $situation) {
+            $situationStatus = [
+                '0' => null,
+                '1' => SaleContestation::STATUS_WIN,
+                '2' => SaleContestation::STATUS_LOST
+            ];
+
+            return $query->where('sale_contestations.status', $situationStatus[$situation]);
         });
 
         $contestations->when(request('is_contested'), function ($query, $val) {
@@ -161,7 +156,7 @@ class ContestationService
         });
 
         $contestations->when(request('customer'), function ($query, $search) {
-            return $query->where('sales.customer_id', $search);
+            return $query->where('customers.name', 'like', '%' . $search . '%');
         });
 
         $contestations->when(request('customer_document'), function ($query, $search) {
@@ -182,6 +177,21 @@ class ContestationService
 
         $getnetChargebacks = $this->getQuery($filters);
         return $getnetChargebacks->count();
+    }
+
+    public function getTotalWonContestations($filters)
+    {
+        $wonContestations = $this->getQuery($filters)->where('sale_contestations.status', SaleContestation::STATUS_WIN);
+        return $wonContestations->count();
+    }
+
+    public function getWonContestationsTax($totalContestations, $totalWonContestations)
+    {
+        if ($totalWonContestations == 0)
+            return '0,00%';
+
+        $totalContestationsTax = $totalWonContestations > 0 ? number_format(($totalWonContestations * 100) / $totalContestations, 2, ',', '.') . '%' : '0,00%';
+        return $totalContestationsTax;
     }
 
     public function getTotalApprovedSales($filters)
