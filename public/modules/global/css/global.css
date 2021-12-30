@@ -1938,3 +1938,8 @@ tbody td{
 .sirius-select-options {
     border-color: #88BFFF !important;
 }
+
+#btn-modal-plan-delete:hover * {
+    color: #F10800 !important;
+    stroke: #F10800 !important;
+}
