@@ -59,7 +59,9 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
         }
 
         $saleData = [];
-        foreach ($sale->products as $product) {
+        foreach ($sale->products as $key => $product) {
+
+            $firstLine = $key === 0;
 
             $productName = $product->name . ($product->description ? ' (' . $product->description . ')' : '');
 
@@ -77,12 +79,12 @@ class SaleReportExport implements FromQuery, WithHeadings, ShouldAutoSize, WithE
                 'end_date' => $sale->end_date ? Carbon::parse($sale->end_date)
                     ->format('d/m/Y H:i:s') : '',
                 'status' => $sale->present()->getStatus(),
-                'total_paid' => $sale->total_paid_value ?? '',
-                'subtotal' => $sale->sub_total,
+                'total_paid' => $firstLine ? $sale->total_paid_value : '',
+                'subtotal' => $firstLine ? $sale->sub_total : '',
                 'shipping' => $sale->shipping->name ?? '',
-                'shipping_value' => 'R$' . ($sale->shipment_value ?? 0),
-                'fee' => $sale->details->taxaReal,
-                'comission' => $sale->details->comission,
+                'shipping_value' => $firstLine ? $sale->shipment_value : '',
+                'fee' => $firstLine ? foxutils()->stringToMoney($sale->details->taxaReal) : '',
+                'comission' => $firstLine ? foxutils()->stringToMoney($sale->details->comission) : '',
                 //plan
                 'project_name' => $sale->project->name ?? '',
                 'plan' => $product->plan_name,

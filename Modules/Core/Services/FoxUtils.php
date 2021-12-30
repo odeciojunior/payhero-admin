@@ -379,6 +379,15 @@ class FoxUtils
         return preg_replace("/[^0-9]/", "", $value);
     }
 
+
+    public static function stringToMoney(string $value) : float
+    {
+        $value = self::onlyNumbers($value) / 100;
+        $value  = number_format($value, 2, '.', '');
+        return floatval($value);
+    }
+
+
     public static function formatCellPhoneGetNet($number)
     {
         $number = self::onlyNumbers($number);

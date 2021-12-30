@@ -488,9 +488,6 @@ $(document).ready(function () {
                 $("#total-chargeback-tax-val").html(addZeroLeft(response.total_chargeback));
                 $("#total-chargeback-tax").html(" (" + response.total_chargeback_tax + ")");
 
-                $("#total-contestations-won-val").html(addZeroLeft(response.total_contestations_won));
-                $("#total-contestations-won-tax").html(" (" + response.total_contestations_won_tax + ")");
-
                 $("#total-contestation-value").html(response.total_contestation_value);
             },
         });

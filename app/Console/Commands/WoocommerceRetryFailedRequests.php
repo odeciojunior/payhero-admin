@@ -59,7 +59,7 @@ class WoocommerceRetryFailedRequests extends Command
                         $res = json_encode($res);
                         $service->updatePostRequest($request['id'], 1, $res);
 
-                        $this->line('sucesso -> status changed to paid on order: ' . $request['order']);
+                        $this->line('sucess -> status changed to paid on order: ' . $request['order']);
                     } else {
 
                         $this->line('fail -> requesId: ' . $request['id']);
@@ -74,12 +74,29 @@ class WoocommerceRetryFailedRequests extends Command
                         $res = json_encode($res);
                         $service->updatePostRequest($request['id'], 1, $res);
 
-                        $this->line('sucesso -> status changed to cancelled -> order: ' . $request['order']);
+                        $this->line('sucess -> status changed to cancelled -> order: ' . $request['order']);
                     } else {
 
                         $this->line('fail -> requesId: ' . $request['id']);
                     }
                 }
+
+                if ($request['method'] == 'AddItemsToOrder') {
+                    $res = $service->addItemsToOrder($request['sale_id'], null, false);
+                    
+                    if (!empty($res->id) && $res->id == $request['order']) {
+                        $res = json_encode($res);
+                        $service->updatePostRequest($request['id'], 1, $res);
+
+                        $this->line('sucess -> item added -> order: ' . $request['order']);
+                    } else {
+
+                        $this->line('fail -> requesId: ' . $request['id']);
+                    }
+                }
+
+
+
             } catch (Exception $e) {
 
                 $this->line('erro -> ' . $e->getMessage());
