@@ -2,11 +2,14 @@
 
 namespace Modules\Sales\Transformers;
 
+use Google\Service\ShoppingContent\Amount;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\SaleService;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -97,33 +100,48 @@ class SalesResource extends JsonResource
             'cashback_value' => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
             'has_cashback' => $this->cashback->value ?? false,
             'api_flag' => $this->api_flag,
-            'has_withdrawal' => !empty($this->details->has_withdrawal)
+            'has_withdrawal' => !empty($this->details->has_withdrawal),                  
         ];
 
         $shopifyIntegrations = [];
         if(!empty($this->project)){
             $shopifyIntegrations = $this->project->shopifyIntegrations->where('status', 2);
         }
+
+        $data['asaas_amount_refund'] = '';
+        if(in_array($this->gateway_id,[Gateway::ASAAS_PRODUCTION_ID,Gateway::ASAAS_SANDBOX_ID]) && !empty($this->anticipation_status))
+        {
+            $data['asaas_amount_refund'] = $this->getSalesTaxesChargeback();
+        }
         
-        if (count($shopifyIntegrations) > 0) {
+        $data['has_shopify_integration'] = null;
+        if (count($shopifyIntegrations) > 0)
+        {
             $data['has_shopify_integration'] = true;
-        } else {
-            $data['has_shopify_integration'] = null;
         }
 
-        if ($this->owner_id == auth()->user()->account_owner_id) {
-            $data['user_sale_type'] = 'producer';
-        } else {
+        $data['user_sale_type'] = 'producer';
+        if ($this->owner_id <> auth()->user()->account_owner_id) {
             $data['user_sale_type'] = 'affiliate';
         }
 
+        $data['affiliate'] = null;
         if (!empty($this->affiliate_id)) {
             $affiliate = Affiliate::withTrashed()->find($this->affiliate_id);
             $data['affiliate'] = $affiliate->user->name;
-        } else {
-            $data['affiliate'] = null;
         }
 
+        $data['total_parcial'] = foxutils()->onlyNumbers($data['total']) + foxutils()->onlyNumbers($data['cashback_value']);
+        $data['total_parcial'] = FoxUtils::formatMoney($data['total_parcial'] / 100);
+
         return $data;
+    }
+
+    public function getSalesTaxesChargeback()
+    {        
+        $cashbackValue = !empty($this->cashback) ? $this->cashback->value:0;
+        $saleTax = (new SaleService)->getSaleTaxRefund($this,$cashbackValue);
+
+        return FoxUtils::formatMoney(($saleTax + foxutils()->onlyNumbers($this->details->comission)) / 100); 
     }
 }

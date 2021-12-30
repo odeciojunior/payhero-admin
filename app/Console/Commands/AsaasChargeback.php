@@ -7,6 +7,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Services\SaleService;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
@@ -58,12 +59,14 @@ class AsaasChargeback extends Command
         $progress = new ProgressBar($output, count($getnetChargebacks));
         $progress->start();
 
+        $saleService = new SaleService();
+
         foreach($getnetChargebacks as $sale) {
 
             $progress->advance();
 
-            $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
-            $saleTax = $this->getSaleTax($cloudfoxTransaction, $sale);
+            $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value:0;
+            $saleTax = $saleService->getSaleTax($sale,$cashbackValue);
 
             foreach ($sale->transactions as $transaction) {
                 if (empty($transaction->company)) {
@@ -108,23 +111,5 @@ class AsaasChargeback extends Command
         $this->line("Valor total {$totalValue}");
     }
 
-    private function getSaleTax($cloudfoxTransaction, $sale)
-    {
-        $saleTax = $cloudfoxTransaction->value;
-        if (!empty($sale->installment_tax_value)) {
-            $saleTax -= $sale->installment_tax_value;
-        } elseif ($sale->installments_amount > 1) {
-            $saleTax -= ($sale->original_total_paid_value -
-                (
-                    foxutils()->onlyNumbers($sale->sub_total) +
-                    foxutils()->onlyNumbers($sale->shipment_value)
-                ));
-            if (!empty(foxutils()->onlyNumbers($sale->shopify_discount))) {
-                $saleTax -= foxutils()->onlyNumbers($sale->shopify_discount);
-            }
-        }
-
-        return $saleTax;
-    }
 
 }

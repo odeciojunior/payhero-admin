@@ -455,7 +455,7 @@ $(document).ready(function () {
                         <div class="row align-items-center">
                             <!-- Target -->
                             <input id="copy-data-${index}"
-                                   class="col-8 mr-1" 
+                                   class="col-8 mr-1 input-pad" 
                                    data-toggle="tooltip" 
                                    data-placement="left"  
                                    title="${value.content_complete}" 

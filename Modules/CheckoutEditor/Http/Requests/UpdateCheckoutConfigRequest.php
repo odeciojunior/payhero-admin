@@ -9,7 +9,6 @@ class UpdateCheckoutConfigRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => 'required|string',
             'checkout_type_enum' => 'required|integer',
             'checkout_logo_enabled' => 'required|boolean',
             'checkout_logo' => 'required_if:checkout_logo_enabled,1|file',

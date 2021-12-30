@@ -218,6 +218,11 @@ $(() => {
                     $("#modal_detalhes").modal("hide");
                     $("#modal-refund-transaction").modal("show");
 
+                    $('#asaas_message').html('');
+                    if(response.data.asaas_amount_refund!= ''){
+                        $('#asaas_message').html(`<p class="gray"> Esta venda já foi antecipada, o valor a ser debitado no extrato será de <strong>${response.data.asaas_amount_refund}</strong></p>`)   
+                    }
+
                     $("#radioTotalRefund").on("click", function () {
                         $(".value-partial-refund").hide();
                     });
@@ -319,6 +324,8 @@ $(() => {
         } else {
             paymentMethod = 'Boleto';
         }
+
+        $('#comission-details').css('display','flex');
 
         $('#sale-code').text(sale.id);
         if (!!sale.upsell) {
@@ -510,6 +517,10 @@ $(() => {
             $("#partial-refund-value").hide();
         }
 
+        if (sale.status_name == 'refunded') {
+            $('#comission-details').css('display','none');
+        }
+
         // Taxas detalhadas
         $("#taxas-label").html(
             sale.percentage_rate
@@ -525,9 +536,9 @@ $(() => {
         $("#tax-value-total").html(`Valor total: `);
 
         if (sale.status_name != 'refunded') {
-            $("#tax-value-total-value").html(sale.total);
+            $("#tax-value-total-value").html(sale.total_parcial);
         } else {
-            $("#tax-value-total-value").html(` <del style="color: #F41C1C !important;">${sale.total}</del>`);
+            $("#tax-value-total-value").html(` <del style="color: #F41C1C !important;">${sale.total_parcial}</del>`);
         }
 
 
