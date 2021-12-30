@@ -33,7 +33,7 @@ class PlansSelectResource extends JsonResource
             'description'               => $this->description,
             'description_short'         => Str::limit($this->description, $limit_description),
             'description_short_flag'    => mb_strwidth($this->description, 'UTF-8') <= $limit_description ? false : true,
-            'custo'                     => 'R$' . number_format(intval(preg_replace("/[^0-9]/", "", $this->productsPlans[0]->cost)) / 100, 2, ',', '.'),
+            'custo'                     => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->productsPlans[0]->cost)) / 100, 2, ',', '.'),
             'photo'                     => $photo
         ];
     }

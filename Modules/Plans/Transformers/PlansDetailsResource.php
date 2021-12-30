@@ -50,7 +50,7 @@ class PlansDetailsResource extends JsonResource
             'description_short' => Str::limit($this->description, $limit_description),
             'description_short_flag'    => mb_strwidth($this->description, 'UTF-8') <= $limit_description ? false : true,
             'code' => isset($this->project->domains[0]->name) ? 'https://checkout.' . $this->project->domains[0]->name . '/' . $this->code : 'Domínio não configurado',
-            'price' => 'R$' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
+            'price' => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
             'status' => isset($this->project->domains[0]->name) ? 1 : 0,
             'status_translated' => isset($this->project->domains[0]->name) ? 'Ativo' : 'Desativado',
             'products' => $products,

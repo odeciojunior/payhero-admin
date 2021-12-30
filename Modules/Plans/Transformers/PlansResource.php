@@ -40,7 +40,7 @@ class PlansResource extends JsonResource
             'description_short'         => Str::limit($this->description, $limit_description),
             'description_short_flag'    => mb_strwidth($this->description, 'UTF-8') <= $limit_description ? false : true,
             'code'                      => $link,
-            'price'                     => 'R$' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
+            'price'                     => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
             'status'                    => isset($this->project->domains[0]->status) ? 1 : 0,
             'status_code'               => $this->status,
             'status_translated'         => isset($this->project->domains[0]->name) ? 'Ativo' : 'Desativado',

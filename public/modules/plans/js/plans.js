@@ -555,7 +555,7 @@ $(function () {
                         });
                     });
 
-                    var price = parseFloat(response.data.price.replace('R$', '')).toFixed(2);
+                    var price = parseFloat(response.data.price.replace('R$', '').replace('$ ', '').replace('.', '').replace(',', '.')).toFixed(2);
 
                     var tax = (price * gateway_tax / 100).toFixed(2);
                     var costs = calculateCostsPlan();
@@ -1287,7 +1287,7 @@ $(function () {
                 parent.find('.informations-data').addClass('edit');
                 parent.find('.informations-data').find('.form-control').attr('readonly', false);
                 parent.find('#price').val(function(index, value) {
-                    return value.replace('R$', '');
+                    return value.replace('R$ ', '');
                 });
                 parent.find('#price').mask('#.##0,00', { reverse: true });
                 parent.find('.informations-data').append(
