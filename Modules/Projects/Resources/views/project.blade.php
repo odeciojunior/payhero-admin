@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=10') }}">
+    <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
     <style>
         @font-face {
             font-family: raty;
@@ -465,6 +466,8 @@
         <script src="{{asset('modules/projectreviews/js/index.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
         <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>

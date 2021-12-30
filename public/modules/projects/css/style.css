@@ -300,3 +300,6 @@
     border-radius: 8px;
 }
 
+.dropify-wrapper{
+    height: 246px !important;
+}

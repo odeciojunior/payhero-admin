@@ -45,7 +45,8 @@
                 <label for='photo' class="pl-0 pl-lg-10 pl-xl-0 mb-3">Capa da loja</label>
 
                 <div style="width:100%" class="text-center">
-                    <img id='previewimage' alt='Selecione a foto do projeto' src="{{asset('modules/global/img/projeto.svg')}}" style="min-width: 250px; max-width: 250px;margin: auto">
+                    {{-- <img id='previewimage' alt='Selecione a foto do projeto' src="{{asset('modules/global/img/projeto.svg')}}" style="min-width: 250px; max-width: 250px;margin: auto"> --}}
+                    <input type="file" id="product_photo" name="product_photo" data-height="651" data-max-width="651" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                 </div>
 
                 <input type='hidden' id='photo_x1' name='photo_x1'><input id='photo_y1' type='hidden' name='photo_y1'>
@@ -316,5 +317,32 @@
         </div>
     </div>
 </form>
+<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-project" aria-hidden="true" role="dialog" tabindex="-1">
+    <div class="modal-dialog  modal-dialog-centered  modal-simple">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                    <i class="material-icons md-16">close</i>
+                </a>
+            </div>
+            <div id="modal_excluir_body" class="modal-body text-center p-20">
+                <div class="d-flex justify-content-center">
+                    <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
+                </div>
+                <h3 class="black"> Você tem certeza? </h3>
+                <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
+            </div>
+            <div class="modal-footer d-flex align-items-center justify-content-center">
+                <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b>Cancelar</b>
+                </button>
+                <button type="button" class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b class="mr-2">Excluir </b>
+                    <span class="o-bin-1"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
