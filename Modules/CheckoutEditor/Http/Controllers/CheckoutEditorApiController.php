@@ -123,8 +123,6 @@ class CheckoutEditorApiController extends Controller
             $data = $request->all();
 
             $configId = hashids_decode($data['id']);
-            $verificationCode = foxutils()->getTelephone($data['verification_code']);
-
             $config = CheckoutConfig::find($configId);
 
             activity()->on($config)->tap(function (Activity $activity) use ($config) {
@@ -135,7 +133,7 @@ class CheckoutEditorApiController extends Controller
             $cookieName = "supportphoneverificationcode_" . hashids_encode(auth()->id()) . "_" . hashids_encode($config->project_id);
             $cookie = Cookie::get($cookieName);
 
-            if ($verificationCode !== $cookie) {
+            if ($data['verification_code'] !== $cookie) {
                 return response()->json(['message' => 'Código de verificação inválido!'], 400);
             }
 
@@ -157,7 +155,7 @@ class CheckoutEditorApiController extends Controller
             $data = $request->all();
 
             $configId = hashids_decode($data['id']);
-            $supportEmail = foxutils()->getTelephone($data['support_email']);
+            $supportEmail = $data['support_email'];
 
             $config = CheckoutConfig::find($configId);
 
@@ -200,8 +198,6 @@ class CheckoutEditorApiController extends Controller
             $data = $request->all();
 
             $configId = hashids_decode($data['id']);
-            $verificationCode = foxutils()->getTelephone($data['verification_code']);
-
             $config = CheckoutConfig::find($configId);
 
             activity()->on($config)->tap(function (Activity $activity) use ($config) {
@@ -212,7 +208,7 @@ class CheckoutEditorApiController extends Controller
             $cookieName = "supportemailverificationcode_" . hashids_encode(auth()->id()) . "_" . hashids_encode($config->project_id);
             $cookie = Cookie::get($cookieName);
 
-            if ($verificationCode !== $cookie) {
+            if ($data['verification_code'] !== $cookie) {
                 return response()->json(['message' => 'Código de verificação inválido!'], 400);
             }
 
