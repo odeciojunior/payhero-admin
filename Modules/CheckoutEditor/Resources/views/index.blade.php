@@ -713,7 +713,7 @@
                         <div class="whatsapp-content">
                             <label for="support_phone" class="checkout-label">Telefone do suporte <span class="observation-span">Opcional</span></label>
                             <div class="row-flex">
-                                <input type="text" class="checkout-input-text" id="support_phone" name="support_phone" placeholder="Digite o telefone com DDD do suporte" data-mask="(00) 00000-0000" pattern="\([0-9]{2}\)[\s][0-9]{5}-[0-9]{4,5}"></input>
+                                <input type="text" class="checkout-input-text" id="support_phone" name="support_phone" placeholder="Digite o telefone com DDD do suporte" data-mask="(00)00000-0000" pattern="\([0-9]{2}\)[\s][0-9]{5}-[0-9]{4,5}"></input>
                                 <button id="verify_phone_open" class="verify-button" type="button">Validar telefone</button>
                                 <button id="verified_phone_open" class="verified-button" type="button" style="display: none;">Trocar telefone</button>
                             </div>
