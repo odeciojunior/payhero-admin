@@ -170,14 +170,16 @@ $(function () {
                             $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg')
                         });
 
-                        //$(modal).find('.product-photo').on('load', function() {
+                        $(modal).find(find_stage).find('.product-photo').on('load', function() {
                             $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                                 $(modal).find(find_stage).find('.box-products').find('.row').css('display', 'flex').promise().done(function() {
                                     var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 20;
-                                    $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
+                                    $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
+                                        $(modal).find('.product-photo').unbind('load');
+                                    });
                                 });
                             });
-                        //});
+                        });
                     });
                 }
             });
@@ -234,7 +236,7 @@ $(function () {
                         response.data.forEach(function(product) {
                             var index_product = selected_products.map(function(e) { return e.id; }).indexOf(product.id);
                             append += '<div class="col-sm-6">';
-                                append += '<div ' + (product.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.name + '"' : '') + ' data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
+                                append += '<div ' + (product.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.name + '"' : '') + ' data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 || product.status_enum == 3 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
                                     append += '<div class="d-flex align-items-center">';
                                         append += '<div class="background-photo">';
                                             append += '<img class="product-photo" src="' + product.photo + '">';
@@ -297,12 +299,14 @@ $(function () {
                             $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
                         });
 
-                        $(modal).find(find_stage).find('.product-photo').on('load', function() {
+                        $(modal).find(find_stage).find('.box-products').find('.product-photo').on('load', function() {
                             $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                                 $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
                                     $(modal).find(find_stage).addClass('show active').promise().done(function() {
                                         var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 20;
-                                        $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
+                                        $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
+                                            $(modal).find('.product-photo').unbind('load');
+                                        });
                                     });
                                 });
                             });
@@ -446,16 +450,18 @@ $(function () {
                     $(modal).find('.modal-footer').find('#btn-modal-plan-next').html('Finalizar');
                 }
 
-                //$(modal).find('.product-photo').on('load', function() {
+                $(modal).find('.product-photo').on('load', function() {
                     $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                         $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
                             $(modal).find(find_stage).addClass('show active').promise().done( function() {
                                 var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 60;
-                                $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
+                                $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
+                                    $(modal).find('.product-photo').unbind('load');
+                                });
                             });
                         });
                     });
-                //});
+                });
             });
         });
     }
@@ -497,7 +503,9 @@ $(function () {
 
                 $(modal).find('#stage3').addClass('show active').promise().done( function() {
                     var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 60;
-                    $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
+                    $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
+                        $(modal).find('.product-photo').unbind('load');
+                    });
                 });
             });
         });
@@ -636,7 +644,7 @@ $(function () {
                         if (flag == true) {
                             getCustom(modal);
                         } else {
-                            //$(modal).find('.product-photo').on('load', function() {
+                            $(modal).find('#stage1').find('.product-photo').on('load', function() {
                                 $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                                     $('[data-toggle="tooltip"]').tooltip({
                                         container: '.page',
@@ -646,11 +654,13 @@ $(function () {
                                     $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
                                         $(modal).find('#stage1').addClass('show active').promise().done(function() {
                                             var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 65;
-                                            $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
+                                            $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
+                                                $(modal).find('.product-photo').unbind('load');
+                                            });
                                         });
                                     });
                                 });
-                            //});
+                            });
                         }
                     });
                 }
@@ -748,7 +758,7 @@ $(function () {
 
             var curHeight = $(modal).find('.modal-body').height();
             $(modal).find('#stage1-customization').find('.box-products').html(append).promise().done(function() {
-                //$(modal).find('.product-photo').on('load', function() {
+                $(modal).find('#stage1-customization').find('.product-photo').on('load', function() {
                     $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                         $('[data-toggle="tooltip"]').tooltip({
                             container: '.page',
@@ -758,11 +768,13 @@ $(function () {
                         $(modal).find('#tab-customizations_panel').addClass('show active').promise().done(function() {
                             $(modal).find('#stage1-customization').addClass('show active').promise().done(function() {
                                 var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + (products_plan.length > 2 ? 65 : 55);
-                                $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
+                                $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
+                                    $(modal).find('.product-photo').unbind('load');
+                                });
                             });
                         });
                     });
-                //});
+                });
             });
         });
     }
@@ -856,16 +868,18 @@ $(function () {
             }
 
             $(modal).find('#stage2-customization').find('.list-custom-products').html(append).promise().done(function() {
-                //$(modal).find('.product-photo').on('load', function() {
+                $(modal).find('#stage2-customization').find('.product-photo').on('load', function() {
                     $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                         $(modal).find('#tab-customizations_panel').addClass('show active').promise().done(function() {
                             $(modal).find('#stage2-customization').addClass('show active').promise().done(function() {
                                 var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + (products_plan.length > 2 ? 65 : 55);
-                                $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
+                                $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
+                                    $(modal).find('.product-photo').unbind('load');
+                                });
                             });
                         });
                     });
-                //});
+                });
             });
         });
     }
@@ -1051,38 +1065,42 @@ $(function () {
         var tabID = $(this).parents('.tab-content').attr('id');
         var stageID = $(this).parents('.tab-pane').attr('id');
 
-        if ((tabID == 'tabs-modal-edit-plans' && stageID == 'stage2') || (tabID == 'tabs-modal-create-plans' && stageID == 'stage1')) {
-            if (!$(this).hasClass('selected')) {
-                $(this).addClass('selected');
-                $(this).find('.check').append('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
-                selected_products.push({'id': product_id});
-            } else {
-                $.ajax({
-                    method: "POST",
-                    url: '/api/products/verifyproductinplansale',
-                    dataType: "json",
-                    data: {
-                        product_id: product_id,
-                        plan_id: plan_id
-                    },
-                    headers: {
-                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                        'Accept': 'application/json',
-                    },
-                    error: function (response) {
-                        errorAjaxResponse(response);
-                    },
-                    success: function success(response) {
-                        if (!response.product_in_plan_sale) {
-                            $(box_product).removeClass('selected');
-                            $(box_product).find('.check img').remove();
-                            var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
-                            selected_products.splice(index_selected_products, 1);
-                        } else {
-                            alertCustom('error', 'Não é possível remover o produto, possui vendas associadas a este plano.')
+        if ($(this).hasClass('review')) {
+            alertCustom('error', 'Não é possível selecionar este produto.')
+        } else {
+            if ((tabID == 'tabs-modal-edit-plans' && stageID == 'stage2') || (tabID == 'tabs-modal-create-plans' && stageID == 'stage1')) {
+                if (!$(this).hasClass('selected')) {
+                    $(this).addClass('selected');
+                    $(this).find('.check').append('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
+                    selected_products.push({'id': product_id});
+                } else {
+                    $.ajax({
+                        method: "POST",
+                        url: '/api/products/verifyproductinplansale',
+                        dataType: "json",
+                        data: {
+                            product_id: product_id,
+                            plan_id: plan_id
+                        },
+                        headers: {
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
+                        },
+                        error: function (response) {
+                            errorAjaxResponse(response);
+                        },
+                        success: function success(response) {
+                            if (!response.product_in_plan_sale) {
+                                $(box_product).removeClass('selected');
+                                $(box_product).find('.check img').remove();
+                                var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
+                                selected_products.splice(index_selected_products, 1);
+                            } else {
+                                alertCustom('error', 'Não é possível remover o produto, possui vendas associadas a este plano.')
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
     });
