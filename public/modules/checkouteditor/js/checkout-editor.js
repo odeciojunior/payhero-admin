@@ -430,10 +430,6 @@ $(document).ready(function () {
         $("#checkout_banner").parent().find(".dropify-clear").trigger("click");
     });
 
-    $("#verify_phone").on('click', () => {
-        $('#modal_verify_phone').modal("show");
-    })
-
     $("#checkout_editor").on('submit', function (e) {
         e.preventDefault();
         console.log("Form");

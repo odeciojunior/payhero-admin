@@ -25,6 +25,7 @@
 
     <form id="checkout_editor">
         @method('PUT')
+        <input type="hidden" id="checkout_editor_id">
         <div style="display: flex; flex-direction: column; width: 100%">
             <div class="grid-checkout-editor">
 
@@ -113,7 +114,7 @@
 
                         <div class="banner-top-content">
                             <div id='upload-banner'>
-                                <input type="file" name="checkout_banner" id="checkout_banner" class="dropify"  data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
+                                <input type="file" name="checkout_banner" id="checkout_banner" class="dropify" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                             </div>
 
                             <div class="banner-intructions ">
@@ -713,11 +714,12 @@
                             <label for="support_phone" class="checkout-label">Telefone do suporte <span class="observation-span">Opcional</span></label>
                             <div class="row-flex">
                                 <input type="text" class="checkout-input-text" id="support_phone" name="support_phone" placeholder="Digite o telefone com DDD do suporte" data-mask="(00) 00000-0000" pattern="\([0-9]{2}\)[\s][0-9]{5}-[0-9]{4,5}"></input>
-                                <button id="verify_phone" class="verify-button" type="button">Validar Telefone</button>
+                                <button id="verify_phone_open" class="verify-button" type="button">Validar telefone</button>
+                                <button id="verified_phone_open" class="verified-button" type="button" style="display: none;">Trocar telefone</button>
                             </div>
 
                             <div class="textarea-observation">
-                                <span class="dot"></span><span class="observation-span">Visível somente em desktop.</span>
+                                <span class="dot"></span><span class="observation-span">Caso preenchido, esse número apareçerá para o cliente no envio da mensagem de WhatsApp.</span>
                             </div>
                         </div>
                     </div>
@@ -1074,7 +1076,7 @@
                                 </h1>
                             </div>
                             <div class="radio-group">
-                                <input class="custom-icon-radio desktop preview-type" id="preview_payment_desktop" type="radio" name="preview-payment-type" data-target="preview-desktop-payment" data-toggle="preview-mobile-payment" checked readonly/>
+                                <input class="custom-icon-radio desktop preview-type" id="preview_payment_desktop" type="radio" name="preview-payment-type" data-target="preview-desktop-payment" data-toggle="preview-mobile-payment" checked readonly />
                                 <label for="preview_payment_desktop"><img src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
 
                                 <input class="custom-icon-radio mobile preview-type" id="preview_payment_mobile" type="radio" name="preview-payment-type" data-target="preview-mobile-payment" data-toggle="preview-desktop-payment" />
@@ -1309,7 +1311,7 @@
                 </div>
 
                 <div class="editor-buttons">
-                    <div class="save-changes" id="changing_container" >
+                    <div class="save-changes" id="changing_container">
                         <div style="margin-right: 50px;">
                             Você tem alterações que <strong>não estão salvas</strong>
                         </div>
@@ -1317,7 +1319,7 @@
                         <div class="save-changes-button-group">
                             <button id="cancel_button" type="button" class="change-button cancel-changes-button">Cancelar</button>
                             <button type="submit" form="checkout_editor" class="change-button save-changes-button">Salvar alterações</button>
-                            
+
                         </div>
                     </div>
 
@@ -1374,23 +1376,35 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Create New Topic</h4>
+                    <h3 class="modal-title">Validar telefone</h3>
+                    <button type="button" class="close verify-phone" aria-hidden="true" data-dismiss="modal">x</button>
                 </div>
                 <div class="modal-body centered">
+                    
+                    <p>
+                        Enviamos um código de confirmação para <br />
+                        o seu telefone <b id="phone_modal"></b>
+                    </p>
+                    <br />
+                    <p><b>Digite ou cole aqui:</b></p>
+
                     <fieldset class='number-code'>
                         <div class="code-input-container">
-                            <input name='code' class='code-input' required />
-                            <input name='code' class='code-input' required />
-                            <input name='code' class='code-input' required />
-                            <input name='code' class='code-input' required />
-                            <input name='code' class='code-input' required />
-                            <input name='code' class='code-input' required />
+                            <input type="text" name='verify-phone-code' class='code-input' required />
+                            <input type="text" name='verify-phone-code' class='code-input' required />
+                            <input type="text" name='verify-phone-code' class='code-input' required />
+                            <input type="text" name='verify-phone-code' class='code-input' required />
+                            <input type="text" name='verify-phone-code' class='code-input' required />
+                            <input type="text" name='verify-phone-code' class='code-input' required />
                         </div>
                     </fieldset>
+                    <p class="verify-error" style="display: none">Código inválido ou vencido.</p>
+
+                    <a id="resend_code" class="resend-code">Reenviar código</a>
+                    <p id="timer" style="display: none"></p>
 
                 </div>
-                <div class="modal-footer btn-group-crop">
+                <div class="modal-footer verify-phone">
                     <button id="verify_phone" class="verify-button" type="button">Verificar</button>
                 </div>
             </div>
@@ -1411,4 +1425,5 @@
 <script src="{{asset('modules/checkouteditor/js/cropper.min.js?v='.uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/checkout-editor.js?v='.uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/loadcheckoutdata.js?v='.uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/verifyPhone.js?v='.uniqid())}}"></script>
 @endpush

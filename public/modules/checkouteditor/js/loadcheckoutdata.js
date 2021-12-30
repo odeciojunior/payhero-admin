@@ -66,7 +66,6 @@ $(() => {
                     let checkoutForm = document.getElementById("checkout_editor");
                     let formData = new FormData(checkoutForm);
                     
-                    formData.append('project_id', checkout.id);
                     formData.append('topbar_content', $("#topbar_content").children().html());
                     formData.append('post_purchase_message_content', $("#post_purchase_message_content").children().html());
 
@@ -151,7 +150,10 @@ $(() => {
         });
 
         function fillForm(checkout) {
-            if (checkout.checkout_type_enum === 0) {
+
+            $("#checkout_editor #checkout_editor_id").prop("value", checkout.id);
+
+            if (checkout.checkout_type_enum == 0) {
                 $("#checkout_editor #checkout_type_steps").prop("checked", true);
                 $("#checkout_editor .visual-content-left").addClass("three-steps");
                 $("#checkout_editor .visual-content-left").removeClass("unique");
@@ -177,7 +179,7 @@ $(() => {
                 ).slideUp("slow", "swing");
             }
 
-            if (checkout.checkout_logo_enabled) {
+            if (checkout.checkout_logo_enabled == 1) {
                 $("#checkout_editor #checkout_logo_enabled").prop("checked", true);
                 $("#checkout_editor #checkout_logo_enabled").prop("value", 1);
                 $("#checkout_editor .logo-content").show();
@@ -573,7 +575,7 @@ $(() => {
                 checkout.post_purchase_message_content
             );
 
-            if (checkout.whatsapp_enabled) {
+            if (checkout.whatsapp_enabled == 1) {
                 $("#checkout_editor #whatsapp_enabled").prop("checked", true);
                 $("#checkout_editor #whatsapp_enabled").prop("value", 1);
                 $(".whatsapp-content").show("slow", "swing");
@@ -585,9 +587,18 @@ $(() => {
                 $(".whatsapp-preview").slideUp("slow", "swing");
             }
 
-            $("#checkout_editor #support_phone").val(
-                checkout.support_phone || ""
-            );
+            $("#checkout_editor #support_phone").val(checkout.support_phone || "");
+
+
+            console.log('Verified: ' + checkout.support_phone_verified);
+            
+            if(checkout.support_phone_verified == 1) {
+                $('#verify_phone_open').hide();
+                $('#verified_phone_open').show();
+            }else{
+                $('#verify_phone_open').show();
+                $('#verified_phone_open').hide();
+            }
 
             if (checkout.theme_enum == 0) {
                 $(":root").css("--primary-color", checkout.color_primary);
