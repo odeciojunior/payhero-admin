@@ -23,24 +23,26 @@
 <form id='update-project'>
     @method('PUT')
     @csrf
+
+    <!-- IDENTIFICACAO -->
     <div class='card col-md-12'>
 
-        <!-- Titulo -->
         <div class="row">
-            <div class="col-md pt-20 pl-10 pl-sm-30">
+            <!-- TITULO CABECALHO -->
+            <div class="col-md pt-20 pl-10 pl-lg-25">
                 <div class="row d-flex pl-20">
                     <img src="{{asset('/modules/global/img/projects/imgIcon.svg')}}" class="mb-15 mr-15">
                     <h3>Identificação</h3>
                 </div>
             </div>
+
         </div>
 
-        <!-- Information about projects  -->
         <div class="row">
-
-            <div class='col-md-5 d-flex flex-column' id='div-img-project' style='position: relative;'>
+            <!-- FOTO -->
+            <div class="col-md-5 col-lg-4 col-xl-3 pl-xl-25 d-flex flex-column" id='div-img-project' style='position: relative;'>
                 <input name='photo' type='file' class='form-control' id='photoProject' style='display:none;' accept='image/*'>
-                <label for='photo' class="pl-0 pl-sm-20 mb-3">Capa da loja</label>
+                <label for='photo' class="pl-0 pl-lg-10 pl-xl-0 mb-3">Capa da loja</label>
 
                 <div style="width:100%" class="text-center">
                     <img id='previewimage' alt='Selecione a foto do projeto' src="{{asset('modules/global/img/projeto.svg')}}" style="min-width: 250px; max-width: 250px;margin: auto">
@@ -51,7 +53,8 @@
                 <input type='hidden' id='photo_w' name='photo_w'><input id='photo_h' type='hidden' name='photo_h'>
             </div>
 
-            <div class="col-md-7 pl-10 pr-sm-50">
+            <!-- NOME E DESCRICAO -->
+            <div class="col-md-7 col-lg-8 col-xl-9 pl-10 pr-sm-50">
 
                 <div class='form-group col-md-12'>
                     <label for='name'>Nome do projeto</label>
@@ -78,12 +81,14 @@
     <div class="card mt-20" data-plugin="tabs">
         <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
 
-            <!-- CABECALHO ON/OFF-->
+            <!-- ON/OFF-->
             <div class='row'>
-
                 <div class='col-md-12 d-flex py-10'>
 
                     <div class="col-md-6 d-flex align-items-center pl-5 pl-sm-30">
+                        <div class="bg-afiliate-icon p-5 mr-15">
+                            <img src="{{ asset('/modules/global/img/projects/afiliatesIcon.svg') }}" alt="icone afiliacao">
+                        </div>
                         <label for='boleto_redirect' class="font-size-24 m-0">Afiliações</label>
                     </div>
 
@@ -97,28 +102,30 @@
                 </div>
             </div>
 
-            <!-- LINHA CONTAINER GERAL -->
+            <!-- CONTAINER GERAL -->
             <div class="row div-url-affiliate">
 
-                <!-- CONTAINER 4 COL -->
+                <!-- CONTAINER 5 COL -->
                 <div class="col-md-5 form-group">
-
+                    <!-- URL DA PAGINA -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row no-gutters">
                                 <div class="col-md-12 px-5 pl-sm-30 pr-sm-0 form-group">
                                     <label for='url-affiliates font-size-16'>URL da página principal</label>
-                                    <div id="affiliate-link-select" class="input-group">
-                                        <input type="text" class="form-control px-5 px-sm-15" id="url-affiliates" value="" readonly="">
+                                    <div class="input-group">
+                                        <input name="url_page" value="" type="text" class="input-pad" id="url-page" placeholder="URL da página" maxlength="60">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- TEMPO DE COOKIE E PORCENTAGEM -->
                     <div class="row">
                         <div class="col-md-12 d-flex">
 
+                            <!-- COOKIE -->
                             <div class='form-group col-md-6 pl-5 pl-sm-30 pr-0'>
                                 <label for="cookie-duration">Duração do cookie</label>
                                 <select class='cookie-duration form-control select-pad' name='cookie_duration'>
@@ -133,6 +140,7 @@
                                 <span id='error-cookie-duration' class='text-danger' style='display: none'></span>
                             </div>
 
+                            <!-- PORCENTAGEM -->
                             <div class="col-md-6 form-group pr-3 pr-sm-0">
                                 <label for='percentage-affiliates'>Porcentagem</label>
 
@@ -160,6 +168,7 @@
                                 </div>
 
                             </div>
+
                         </div>
                     </div>
 
@@ -174,7 +183,7 @@
 
                             <div class="row">
                                 <div class="d-flex col-md-12">
-                                    <div class="col-md-12 d-flex justify-content-between px-0" id='commission_type_enum'>
+                                    <div class="col-md-12 d-flex justify-content-between px-0 commission-type-enum" id="commission_type_enum" name="commission_type_enum">
     
                                         <div class="col-md-6 pl-0">
                                             <input type="radio" id="first-click" name="commission_type_enum" class="d-none" value="1" checked>
@@ -192,7 +201,7 @@
 
                             {{-- <div class='form-group col-md-12 pr-0'>
                                 <label for='commission-type-enum'>Tipo comissão</label>
-                                <select class='commission-type-enum form-control select-pad' name='commission_type_enum' class='form-control select-pad'>
+                                <select class='commission-type-enum form-control select-pad'  class='form-control select-pad'>
                                     <option value='1'>Primeiro clique</option>
                                     <option value='2'>Último clique</option>
                                 </select>
@@ -202,7 +211,7 @@
                     </div>
                 </div>
 
-                <!-- Container de 8 col -->
+                <!-- CONTAINER 7 COL -->
                 <div class="col-md-7 form-group pl-10 pr-10 pr-sm-40">
                     <div class="row">
                         <div class="col-md-12">
@@ -227,7 +236,7 @@
                             </select>
                         </div> --}}
                         
-                        <div class="col-md-2 pl-5 pl-sm-30 pr-20 d-flex align-items-center border-top border-right" name='automatic_affiliation'>
+                        <div class="automatic-affiliation col-md-2 pl-5 pl-md-10 pl-lg-30 pr-20 d-flex align-items-center border-top border-right" name='automatic_affiliation'>
                             <input type="checkbox" id="auto-afiliation" class="col-1 h-20 mr-10">
                             <label for="auto-afiliation" class="m-0">Afiliação automática</label>
                         </div>
@@ -266,8 +275,8 @@
                 <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/trash.svg') }}">
     
                 <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete-project" style="float: left;">
-                    <span class='orion-icon-lixo'></span>
-                    <span class="gray">Excluir projeto</span>
+                    <span class="orion-icon-lixo"></span>
+                    <span class="gray"> Deletar projeto</span>
                 </a>
             </div>
         </div>
@@ -306,7 +315,6 @@
             
         </div>
     </div>
-
-
 </form>
+
 

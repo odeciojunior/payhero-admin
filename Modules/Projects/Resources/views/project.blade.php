@@ -114,7 +114,7 @@
                             <div class="card col px-0">
 
                                 <!-- VENDAS APROVADAS -->
-                                <div class="pl-30 pt-15 pt-md-20 pl-xl-30 pt-xl-40">
+                                <div class="pl-30 pt-15 pt-md-20 pl-xl-30 pt-xl-50">
                                     <div class="d-flex">
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">
@@ -128,7 +128,7 @@
                                 </div>
     
                                 <!-- RECEITA TOTAL -->
-                                <div class="pl-30 pb-10 pl-xl-30 pt-xl-15">
+                                <div class="pl-30 pb-5 pl-xl-30 pt-xl-35">
                                     <div class="d-flex pt-10">
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="mr-5" src="{{ asset('/modules/global/img/projects/arrowBalance.svg') }}">
@@ -222,6 +222,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="shadow" data-plugin="matchHeight">
                 <div class="tab-content">
                     <div class="tab-content">

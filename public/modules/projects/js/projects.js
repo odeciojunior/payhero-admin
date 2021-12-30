@@ -180,7 +180,7 @@ $(() => {
 
     show();
 
-    //carrega detalhes do projeto
+    //CARD INICIAL CABECALHO carrega detalhes do projeto
     function show() {
         loadingOnScreen();
 
@@ -233,6 +233,7 @@ $(() => {
         });
     }
 
+    //FUNCIONALIDADE BOTAO DE COPIAR LINK
     $("#copy-link-affiliation").on("click", function () {
         var copyText = document.getElementById("url-affiliates");
         copyText.select();
@@ -244,6 +245,34 @@ $(() => {
     function renderProjectConfig(data) {
         let {project, companies, userProject, shopifyIntegrations, projectUpsell} = data;
 
+        // CARD DE IDENTIFICACAO
+        $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
+        $('#update-project #name').val(project.name);
+        $('#update-project #description').text(project.description);
+
+        // CARD DE AFILICAO
+            //URL DA PAGINA
+        $('#update-project #url-page').val(project.url_page ? project.url_page : 'https://');
+
+            
+        // DURACAO DE COOKIE
+        if (project.cookie_duration == 0) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 0).change();
+        } else if (project.cookie_duration == 7) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 1).change();
+        } else if (project.cookie_duration == 15) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 2).change();
+        } else if (project.cookie_duration == 30) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 3).change();
+        } else if (project.cookie_duration == 60) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 4).change();
+        } else if (project.cookie_duration == 180) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 5).change();
+        } else if (project.cookie_duration == 365) {
+            $('#update-project .cookie-duration').prop('selectedIndex', 6).change();
+        }
+
+        //  PORCETAGEM
         $('#percentage-affiliates').mask('000', {
             reverse: true,
             onKeyPress: function (val, e, field, options) {
@@ -252,18 +281,25 @@ $(() => {
                 }
             }
         });
+        $('#update-project #percentage-affiliates').val(project.percentage_affiliates);
 
-        $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
-        $('#update-project #name').val(project.name);
-        // $('#cost_currency_type').val(project.cost_currency_type);
-        $('#update-project #description').text(project.description);
+        // TIPO DE COMISSAO
+        if (project.commission_type_enum == 1) {
+            $('#update-project .commission-type-enum').prop('selectedIndex', 0).change();
+        } else {
+            $('#update-project .commission-type-enum').prop('selectedIndex', 1).change();
+        }
+
+        // URL DA PAGINA
+        $('#update-project #url-affiliates').val(project.url_affiliates);
+
+
         if (project.visibility === 'public') {
             $('#update-project #visibility').prop('selectedIndex', 0).change();
         } else {
             $('#update-project #visibility').prop('selectedIndex', 1).change();
         }
         $('#update-project #image-logo-email').attr('src', project.logo ? project.logo : '/modules/global/img/projeto.svg');
-        $('#update-project #url-page').val(project.url_page ? project.url_page : 'https://');
         $('#update-project #contact').val(project.contact);
         $('#update-project #support_phone').val(project.support_phone);
         $('#update-project #invoice-description').val(project.invoice_description);
@@ -328,28 +364,14 @@ $(() => {
         $('#update-project #pix').val(project.pix);
         termsaffiliates.setData(project.terms_affiliates ?? ' ');
 
+        //AFILIACAO AUTOMATICA AGORA E CHECKBOX
         if (project.automatic_affiliation == 1) {
             $('#update-project .automatic-affiliation').prop('selectedIndex', 1).change();
         } else {
             $('#update-project .automatic-affiliation').prop('selectedIndex', 0).change();
         }
 
-        if (project.cookie_duration == 0) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 0).change();
-        } else if (project.cookie_duration == 7) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 1).change();
-        } else if (project.cookie_duration == 15) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 2).change();
-        } else if (project.cookie_duration == 30) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 3).change();
-        } else if (project.cookie_duration == 60) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 4).change();
-        } else if (project.cookie_duration == 180) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 5).change();
-        } else if (project.cookie_duration == 365) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 6).change();
-        }
-
+        //CONVIDE AFILIADOS URL DE AFILIADOS
         if (project.status_url_affiliates == 1) {
             $('#update-project .status-url-affiliates').prop('checked', true)
             $('.div-url-affiliate').show('fast', 'linear')
@@ -357,14 +379,9 @@ $(() => {
             $('.div-url-affiliate').prop('checked', false)
         }
 
-        if (project.commission_type_enum == 1) {
-            $('#update-project .commision-type-enum').prop('selectedIndex', 0).change();
-        } else {
-            $('#update-project .commission-type-enum').prop('selectedIndex', 1).change();
-        }
+        
 
-        $('#update-project #percentage-affiliates').val(project.percentage_affiliates);
-        $('#update-project #url-affiliates').val(project.url_affiliates);
+        
 
         $('#shopify-integration-pending, #bt-change-shopify-integration, #bt-shopify-sincronization-product, #bt-shopify-sincronization-template').hide();
         if (project.woocommerce_id) {
