@@ -30,7 +30,8 @@ class PlansDetailsResource extends JsonResource
                 'variant_id' => $productsPlan->product->shopify_variant_id,
                 'photo' => $photo,
                 'amount' => $productsPlan->amount,
-                'product_cost' => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $productsPlan->cost)) / 100, 2, '.', ','),
+                'currency_type_enum' => $productsPlan->currency_type_enum,
+                'product_cost' => $productsPlan->currency_type_enum == 1 ? 'R$ ' : '$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $productsPlan->cost)) / 100, 2, '.', ','),
                 'currency' => $productsPlan->present()->getCurrency($productsPlan->currency_type_enum),
                 'custom_configs' => !empty($productsPlan->custom_config) ? $productsPlan->custom_config : [],
                 'is_custom' => $productsPlan->is_custom > 0

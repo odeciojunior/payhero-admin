@@ -11,6 +11,7 @@ $(function () {
     var products_plan = [];
     var plan_id = '';
     var gateway_tax = 0;
+    var currency_quotations = 0;
     var allow_change_in_block = false;
 
     var selected_plans = [];
@@ -34,6 +35,7 @@ $(function () {
             },
             success: function success(response) {
                 gateway_tax = response.data.gateway_tax;
+                currency_quotations = response.data.currency_quotation;
             }
         });
     });
@@ -183,6 +185,7 @@ $(function () {
     }
 
     function getProducts(modal, type) {
+        $(modal).find('.modal-dialog').css({'right': '-17px'});
         $(modal).find('.product-photo').unbind('load');
 
         $(modal).find('.modal-body').css('height', 'auto').attr('style', 'padding-bottom: 0px !important');
@@ -196,15 +199,6 @@ $(function () {
                 '<button id="btn-modal-plan-return" type="button" data-type="edit" class="btn btn-default btn-lg" role="button">Voltar</button>' +
                 '<button id="btn-modal-plan-next" type="button" data-type="edit" class="btn btn-primary btn-lg">Continuar</button>'
             ).removeClass('justify-content-between');
-
-            selected_products = [];
-            products_plan.map(function(e) {
-                selected_products.push({
-                    id: e.product_id,
-                    amount: e.amount,
-                    value: e.product_cost
-                });
-            });
         } else {
             $(modal).find('#btn-modal-plan-return').html('Voltar');
             $(modal).find('#btn-modal-plan-next').html('Continuar');
@@ -386,15 +380,11 @@ $(function () {
                                                     append += '</div>';
                                                 append += '</div>';
                                             append += '</div>';
-                                            if (type == 'create') {
-                                                append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + response.data.cost + '" type="text" name="value" placeholder="Valor un."></div>';
-                                            } else {
-                                                append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + (selected_products[index_product].value ?? '') + '" type="text" name="value" placeholder="Valor un."></div>';
-                                            }
+                                            append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + response.data.cost + '" type="text" name="value" placeholder="Valor un."></div>';
                                             append += '<div class="div-currency">';
                                                 append += '<select class="sirius-select" type="text" name="currency_type_enum">';
-                                                    append += '<option value="BRL" ' + (selected_products[index_product].currency_type_enum == 'BRL' ? 'selected' : '') + '>BRL (R$)</option>';
-                                                    append += '<option value="USD" ' + (selected_products[index_product].currency_type_enum == 'USD' ? 'selected' : '') + '>USD ($)</option>';
+                                                    append += '<option value="BRL" ' + (response.data.currency_type_enum == 1 ? 'selected' : '') + '>BRL (R$)</option>';
+                                                    append += '<option value="USD" ' + (response.data.currency_type_enum == 2 ? 'selected' : '') + '>USD ($)</option>';
                                                 append += '</select>';
                                             append += '</div>';
                                         append += '</div>';
@@ -514,6 +504,8 @@ $(function () {
     }
 
     function getPlanData(modal, flag = false) {
+        selected_products = [];
+
         $(modal).find('.product-photo').unbind('load');
 
         $(modal).find('.modal-body').css('height', 'auto');
@@ -557,7 +549,8 @@ $(function () {
                     products_plan.map(function(e) {
                         selected_products.push({
                             id: e.product_id,
-                            value: e.product_cost.replace('R$ ', '').replace(',', '').replace('.', ','),
+                            currency_type_enum: e.currency,
+                            value: e.product_cost.replace('R$ ', '').replace('$ ', '').replace(',', '').replace('.', ','),
                             amount: e.amount
                         });
                     });
@@ -995,7 +988,11 @@ $(function () {
 
         for (var i = 0; i < selected_products.length; i++) {
             if (selected_products[i]['value']) {
-                costs_plan += (selected_products[i]['value'].replace('.', '').replace(',', '.') * selected_products[i]['amount']);
+                var value = selected_products[i]['value'].replace('.', '').replace(',', '.');
+                if (selected_products[i]['currency_type_enum'] == 'USD') {
+                    value = value * (currency_quotations / 100);
+                }
+                costs_plan += (value * selected_products[i]['amount']);
             }
         }
 
@@ -2041,6 +2038,7 @@ $(function () {
 
                 const prefixCurrency = (response.data.cost_currency_type == 'USD') ? 'US$' : 'R$';
 
+                $('#cost_plan').attr('placeholder', prefixCurrency);
                 $('#cost_plan').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: prefixCurrency});
 
                 $('#modal_config_cost_plan').modal('show');

@@ -654,15 +654,23 @@ class PlansApiController extends Controller
             if (!empty($productsSelected) && !empty($cost)) {
                 foreach ($productsSelected as $p) {
                     $productId = current(Hashids::decode($p['id']));
-                    ProductPlan::where('product_id', $productId)->update([
-                        'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
-                        'cost' => $cost
-                    ]);
+                    $product = Product::find($productId);
+                    if (count($product->variants) > 0) {
+                        ProductPlan::whereIn('product_id', $product->variants->pluck('id')->toArray())->update([
+                            'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
+                            'cost' => $cost
+                        ]);
+                    } else {
+                        ProductPlan::where('product_id', $productId)->update([
+                            'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
+                            'cost' => $cost
+                        ]);
+                    }
                 }
             } else {
                 return response()->json([
-                    'message' => 'Erro ao atualizar configurações',
-                ], 400);
+                    'message' => 'Configurações do projeto atualizadas com sucesso',
+                ], 200);
             }
 
             return response()->json([
