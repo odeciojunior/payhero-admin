@@ -1,4 +1,4 @@
-<div style="min-height: 300px" class="card">
+<div class="card">
     <table id='withdrawalsTable' class="table table-striped table-condensed unify">
         <thead>
             <tr>

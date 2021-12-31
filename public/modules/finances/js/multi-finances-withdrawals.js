@@ -95,7 +95,7 @@ window.defaultWithdrawal = function(gatewayId) {
 
                                 <button
                                     id="bt-confirm-withdrawal"
-                                    class="btn btn-success col-6 btn-confirmation s-btn-border m-0"
+                                    class="btn btn-success col-5 btn-confirmation s-btn-border m-0"
                                     style="background-color: #41DC8F;font-size:20px;">
                                     <strong>Confirmar</strong>
                                 </button>
@@ -302,7 +302,7 @@ window.customWithdrawal = function(gatewayId) {
         const withdrawal = $("#withdrawal-value-" + gatewayId).val().replace(/,/g, "").replace(/\./g, "");
         const debitValue = onlyNumbers($("#pending-debt-" + gatewayId).val());
 
-        const singleValue = modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue);
+        const singleValue = false//modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, debitValue);
 
         let withdrawRequestValid = false;
         let totalBalanceNegative = false;
@@ -325,9 +325,9 @@ window.customWithdrawal = function(gatewayId) {
                 $("#debit-pending-informations").html(`
                     <div class="col-12">
                         <h3 class="text-center mt-10" id="text-title-debit-pending">Você tem débitos pendentes superiores ao <br> valor do seu saldo disponível.</h3>
-                            <p style="color: #959595;" class="text-center" id="text-description-debit-pending">
-                            Você só poderá solicitar um saque quando seu saldo disponível for maior <br> que o valor dos débitos pendentes.
-                        </p>
+                            <p id="text-description-debit-pending">
+                                Você só poderá solicitar um saque quando seu saldo disponível for maior <br> que o valor dos débitos pendentes.
+                            </p>
                         <div id="debit-itens">
                             <div class="row">
                                 <div class='col-md-8 mt-10'>
@@ -347,7 +347,7 @@ window.customWithdrawal = function(gatewayId) {
                                 <div class="col-md-4 d-flex align-items-center justify-content-end">
                                     <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                         <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
-                                            ${formatMoney(removeFormatNumbers(debitValue))}
+                                            - ${formatMoney(removeFormatNumbers(debitValue))}
                                         </span>
                                     </span>
                                 </div>
@@ -373,7 +373,7 @@ window.customWithdrawal = function(gatewayId) {
                 $("#modal-withdrawal-custom-footer").html(`
                     <hr>
                     <div class="row w-p100 justify-content-around">
-                        <button class="btn col-8 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:180px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
+                        <button class="btn col-12 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:180px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC; padding: 8px 50px;">
                             Ok, entendi!
                         </button>
                     </div>
@@ -391,7 +391,11 @@ window.customWithdrawal = function(gatewayId) {
                 $("#debit-pending-informations")
                     .html(`
                     <div class="col-12">
-                        <h3 class="text-center mt-10" id="text-title-debit-pending"> Você tem débitos pendentes superiores ao <br> valor solicitado no saque.</h3>
+                        <h3 class="text-center mt-10 mb-0" id="text-title-debit-pending"> Você tem débitos pendentes superiores ao <br> valor solicitado no saque.
+                            <p id="text-description-debit-pending">
+                                Você só poderá solicitar um saque quando seu saldo disponível for maior <br> que o valor dos débitos pendentes.
+                            </p>
+                        </h3>
                         <div id="debit-itens">
                             <div class="row">
                                 <div class='col-md-8 mt-10'>
@@ -412,7 +416,7 @@ window.customWithdrawal = function(gatewayId) {
                                 <div class="col-md-4 d-flex align-items-center justify-content-end">
                                     <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                         <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
-                                            ${formatMoney(removeFormatNumbers(debitValue))}
+                                            - ${formatMoney(removeFormatNumbers(debitValue))}
                                         </span>
                                     </span>
                                 </div>
@@ -434,7 +438,7 @@ window.customWithdrawal = function(gatewayId) {
                 $("#modal-withdrawal-custom-footer").html(`
                     <hr>
                     <div class="row justify-content-around">
-                        <button class="btn col-8 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
+                        <button class="btn col-12 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC; padding: 8px 50px;">
                             Ok, entendi!
                         </button>
                     </div>
@@ -477,8 +481,8 @@ window.customWithdrawal = function(gatewayId) {
                 $("#debit-pending-informations")
                     .html(`
                     <div class="col-12">
-                        <h3 class="text-center mt-10" id="text-title-debit-pending"> Débitos pendentes</h3>
-                        <p style="color: #959595;" class="text-center" id="text-description-debit-pending">
+                        <h3 class="text-center mt-10 mb-0" id="text-title-debit-pending"> Débitos pendentes</h3>
+                        <p class="mt-5" id="text-description-debit-pending">
                             Você tem alguns valores em aberto, confira:
                         </p>
                         <div id="debit-itens">
@@ -501,7 +505,7 @@ window.customWithdrawal = function(gatewayId) {
                                 <div class="col-md-4 d-flex align-items-center justify-content-end">
                                     <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                         <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
-                                            ${formatMoney(removeFormatNumbers(debitValue))}
+                                            - ${formatMoney(removeFormatNumbers(debitValue))}
                                         </span>
                                     </span>
                                 </div>
@@ -533,7 +537,7 @@ window.customWithdrawal = function(gatewayId) {
                         Cancelar
                     </button>
 
-                    <button id="bt-confirm-withdrawal-modal-custom" class="btn btn-success col-6 btn-confirmation s-btn-border m-0" style="background-color: #41DC8F; font-size:20px;">
+                    <button id="bt-confirm-withdrawal-modal-custom" class="btn btn-success col-5 btn-confirmation s-btn-border m-0" style="background-color: #41DC8F; font-size:20px;">
                         <strong>Confirmar</strong>
                     </button>
                 </div>
@@ -617,7 +621,7 @@ window.customWithdrawal = function(gatewayId) {
         return `
             <div class="">
                 <div class="row justify-content-around w-p100 m-0">
-                    <div class="col-12 mb-5 mb-md-0 col-md-5 btn btn-primary pr-4 s-btn s-btn-border" id="lower-value" data-value="${dataWithdrawal.lower_value}">
+                    <div class="col-12 mb-5 mb-md-0 col-md-5 btn btn-primary s-btn s-btn-border" id="lower-value" data-value="${dataWithdrawal.lower_value}">
                         ${lowerValue}
                     </div>
 
@@ -633,7 +637,9 @@ window.customWithdrawal = function(gatewayId) {
         return (value / 100).toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL",
-        });
+        })
+            .replace(/\s+/g, '')
+            .replace('-', '- ');
     }
 }
 

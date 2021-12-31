@@ -78,11 +78,11 @@ window.loadWithdrawalsTable = function(link = null) {
                     }
 
                     if (window.gatewayCode == 'w7YL9jZD6gp4qmv' && data.debt_pending_value != null && data.debt_pending_value != "R$ 0,00") {
-                        tableData += `<br> <a role='button' class='pending_debit_withdrawal_id pointer' withdrawal_id='${data.id}'><small class="gray" style="color: #F41C1C;">- ${data.debt_pending_value}</small></a>`;
+                        tableData += `<br> <a role='button' class='pending_debit_withdrawal_id pointer' withdrawal_id='${data.id}'><small style="color: #ED1C24;">- ${data.debt_pending_value}</small></a>`;
                     }
                     tableData += '</td>';
                     if(window.gatewayCode == 'w7YL9jZD6gp4qmv') {
-                        tableData += `</td><td class="d-none d-lg-block"><a role='button' class='details_transaction pointer' withdrawal='${data.id}'><span class='o-eye-1'></span></a></td></tr>`;
+                        tableData += `</td><td class="d-none d-lg-table-cell"><a role='button' class='details_transaction pointer' withdrawal='${data.id}'><span class='o-eye-1'></span></a></td></tr>`;
                     }
                     tableData += '</tr>';
                     $("#withdrawals-table-data").append(tableData);

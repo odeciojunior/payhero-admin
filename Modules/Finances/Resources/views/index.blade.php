@@ -1,6 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css?v='.uniqid()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v='.uniqid()) }}">
@@ -77,6 +78,7 @@
             {{-- <script src="{{ asset('modules/finances/js/withdrawal-default.js?v='. uniqid()) }}"></script> --}}
             <script src="{{ asset('modules/finances/js/withdrawal-handler.js?v='. uniqid()) }}"></script>
             <script src="{{ asset('modules/finances/js/statement.js?v='. uniqid()) }}"></script>
+            <script src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js?v=' . uniqid()) }}"></script>
         @endpush
     </div>
 

@@ -35,9 +35,9 @@ class GetnetService implements Statement
 
     public function __construct()
     {
-        $this->gatewayIds = [ 
-            Gateway::GETNET_PRODUCTION_ID, 
-            Gateway::GETNET_SANDBOX_ID 
+        $this->gatewayIds = [
+            Gateway::GETNET_PRODUCTION_ID,
+            Gateway::GETNET_SANDBOX_ID
         ];
     }
 
@@ -121,11 +121,11 @@ class GetnetService implements Statement
     public function createWithdrawal($value)
     {
         try {
-            
+
             if($this->company->asaas_balance < 0 && $value-$this->company->asaas_balance < 0){
                 throw new Exception('Saque negado devido ao saldo negativo no Asaas');
             }
-    
+
             $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
             $withdrawal = Withdrawal::create(
@@ -220,7 +220,7 @@ class GetnetService implements Statement
     public function getLowerAndBiggerAvailableValues(int $withdrawalValueRequested): array
     {
 
-        $availableBalance = $this->getAvailableBalance() - $this->getBlockedBalance();
+        $availableBalance = $this->getAvailableBalance();
 
         $transactionsSum = $this->company->transactions()
             ->whereIn('gateway_id', $this->gatewayIds)
@@ -364,9 +364,9 @@ class GetnetService implements Statement
         if (isset($result->errors)) {
             return response()->json($result->errors, 400);
         }
-        
+
         $data = (new GetNetStatementService())->performWebStatement($result, $filters, 1000);
-        
+
         return response()->json($data);
     }
 
@@ -436,7 +436,7 @@ class GetnetService implements Statement
             $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
 
             $saleService = new SaleService();
-            
+
             foreach ($refundTransactions as $refundTransaction) {
                 $transactionRefundAmount = $refundTransaction->value;
 
@@ -486,13 +486,13 @@ class GetnetService implements Statement
         $result = json_decode($getnetService->setStatementSubSellerId($company->subseller_getnet_id)
             ->setStatementSaleHashId($hashSaleId)
             ->getStatement());
-        
+
         if(empty($result) || empty($result->list_transactions)){
             throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
         }
-        
+
         $sale = end($result->list_transactions);
-        
+
         $sale->flag = strtoupper($transaction->sale->flag) ?? null;
 
         return PDF::loadView('sales::refund_receipt_getnet', compact('company', 'sale'));
