@@ -92,6 +92,7 @@ $(function () {
     }
 
     function searchProducts(product, modal, type) {
+        $('.tooltip').remove();
         $(modal).find('.product-photo').unbind('load');
 
         var find_stage = type == 'create' ? '#stage1' : '#stage2';
@@ -1568,7 +1569,7 @@ $(function () {
         } else {
             var autoHeight = $(this).parent().find('.products-data').find('.row').height();
             $(this).parent().find('.products-data').animate({height: autoHeight}, 500).css('max-height', autoHeight);
-            $('#modal_edit_plan').find('.modal-body').css('overflow', 'hidden');
+            //$('#modal_edit_plan').find('.modal-body').css('overflow', 'hidden');
             $(this).addClass('open');
             $(this).html('Ver menos <span class="fas fa-chevron-up"></span>');
 
