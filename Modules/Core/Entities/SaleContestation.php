@@ -67,6 +67,7 @@ class SaleContestation extends Model
 
     protected $fillable = [
         'sale_id',
+        'gateway_id',
         'data',
         'nsu',
         'file_date',
