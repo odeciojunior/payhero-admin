@@ -163,10 +163,10 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                             </div>
                         </div>
                         <div class="row" style="background-color:#F41C1C1A;">
-                            <div class='col-md-8 yt-10>
-                                <p style="color: #5A5A5A;" class="m-0" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
+                            <div class='col-md-8 d-flex align-items-center py-10'>
+                                <p class="m-0" style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                             </div>
-                            <div class="col-md-4 mt-10 text-right">
+                            <div class="col-md-4 d-flex align-items-center justify-content-end">
                                 <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                     <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
                                         - ${formatMoney(removeFormatNumbers(debitValue))}
@@ -195,7 +195,7 @@ function manipulateModalWithdrawal(dataWithdrawal) {
             $("#modal-withdrawal-custom-footer").html(`
                 <hr>
                 <div class="row w-p100 justify-content-around">
-                    <button class="btn col-12 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:180px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
+                    <button class="btn col-12 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:180px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC; padding: 8px 50px;">
                         Ok, entendi!
                     </button>
                 </div>
@@ -211,9 +211,9 @@ function manipulateModalWithdrawal(dataWithdrawal) {
             );
 
             $("#debit-pending-informations")
-                .html(`
+            .html(`
                 <div class="col-12">
-                    <h3 class="text-center mt-10" id="text-title-debit-pending"> Você tem débitos pendentes superiores ao <br> valor solicitado no saque.
+                    <h3 class="text-center mt-10 mb-0" id="text-title-debit-pending"> Você tem débitos pendentes superiores ao <br> valor solicitado no saque.
                         <p id="text-description-debit-pending">
                             Você só poderá solicitar um saque quando seu saldo disponível for maior <br> que o valor dos débitos pendentes.
                         </p>
@@ -232,10 +232,10 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                             </div>
                         </div>
                         <div class="row" style="background-color:#F41C1C1A;">
-                            <div class='col-md-8 my-10'>
-                                <p style="color: #5A5A5A;" class="m-0" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
+                            <div class='col-md-8 d-flex align-items-center py-10'>
+                                <p class="m-0" style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                             </div>
-                            <div class="col-md-4 mt-10 text-right">
+                            <div class="col-md-4 d-flex align-items-center justify-content-end">
                                 <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                     <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
                                         - ${formatMoney(removeFormatNumbers(debitValue))}
@@ -259,8 +259,8 @@ function manipulateModalWithdrawal(dataWithdrawal) {
 
             $("#modal-withdrawal-custom-footer").html(`
                 <hr>
-                <div class="row w-p100 justify-content-around">
-                    <button class="btn col-12 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:200px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC;">
+                <div class="row justify-content-around">
+                    <button class="btn col-12 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; border-radius: 12px; color:#FFFFFF; background-color: #2E85EC; padding: 8px 50px;">
                         Ok, entendi!
                     </button>
                 </div>
@@ -301,10 +301,10 @@ function manipulateModalWithdrawal(dataWithdrawal) {
 
         if (debitValue != undefined && debitValue != "0,00" && debitValue != '000') {
             $("#debit-pending-informations")
-                .html(`
+            .html(`
                 <div class="col-12">
-                    <h3 class="text-center mt-10" id="text-title-debit-pending"> Débitos pendentes</h3>
-                    <p id="text-description-debit-pending">
+                    <h3 class="text-center mt-10 mb-0" id="text-title-debit-pending"> Débitos pendentes</h3>
+                    <p class="mt-5" id="text-description-debit-pending">
                         Você tem alguns valores em aberto, confira:
                     </p>
                     <div id="debit-itens">
@@ -321,10 +321,10 @@ function manipulateModalWithdrawal(dataWithdrawal) {
                             </div>
                         </div>
                         <div class="row" style="background-color:#F41C1C1A;">
-                            <div class='col-md-8 my-10'>
-                                <p style="color: #5A5A5A;" class="m-0" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
+                            <div class='col-md-8 d-flex align-items-center py-10'>
+                                <p class="m-0" style="color: #5A5A5A;" id="modal-text-value-debt-pending">DÉBITOS PENDENTES</p>
                             </div>
-                            <div class="col-md-4 mt-10 text-right">
+                            <div class="col-md-4 d-flex align-items-center justify-content-end">
                                 <span class="currency" style="font: normal normal 300 19px/13px Muli; color: #E61A1A;">
                                     <span id="value-withdrawal-debt-pending" class="text-right" style="color: #F41C1C;">
                                         - ${formatMoney(removeFormatNumbers(debitValue))}
@@ -354,12 +354,12 @@ function manipulateModalWithdrawal(dataWithdrawal) {
         }
 
         $("#modal-withdrawal-custom-footer").html(`
-            <div class="col-md-12 text-center">
-                <button id="bt-cancel-withdrawal" class="btn col-5 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; width:200px; border-radius: 12px; color:#818181;">
+            <div class="row justify-content-around w-p100">
+                <button id="bt-cancel-withdrawal" class="btn col-5 s-btn-border" data-dismiss="modal" aria-label="Close" style="font-size:20px; border-radius: 12px; color:#818181;">
                     Cancelar
                 </button>
 
-                <button id="bt-confirm-withdrawal-modal-custom" class="btn btn-success col-5 btn-confirmation s-btn-border" style="background-color: #41DC8F;font-size:20px; width:200px;">
+                <button id="bt-confirm-withdrawal-modal-custom" class="btn btn-success col-5 btn-confirmation s-btn-border m-0" style="background-color: #41DC8F; font-size:20px;">
                     <strong>Confirmar</strong>
                 </button>
             </div>
