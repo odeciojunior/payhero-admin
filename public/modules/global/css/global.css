@@ -1558,6 +1558,8 @@ input[type="checkbox"], input[type="radio"] {
     border-radius: 0 !important;
     border-top: solid 1px #C1C1C1;
     border-bottom: solid 1px #C1C1C1;
+    border-left: 0 solid #fff;
+    border-right: 0 solid #fff;
 }
 .input-number input::-webkit-outer-spin-button,
 .input-number input::-webkit-inner-spin-button {
@@ -1942,4 +1944,20 @@ tbody td{
 #btn-modal-plan-delete:hover * {
     color: #F10800 !important;
     stroke: #F10800 !important;
+}
+
+.input-number .form-control:focus {
+    border-top: 1px solid #46BCFF;
+    border-bottom: 1px solid #46BCFF;
+    border-left: 0px solid #FFF !important;
+    border-right: 0px solid #FFF !important;
+}
+.input-number:focus-within button {
+    border: 1px solid #88BFFF !important;
+}
+.input-number:focus-within .btn-sub {
+    border-right: 0px solid #FFF !important;
+}
+.input-number:focus-within .btn-add {
+    border-left: 0px solid #FFF !important;
 }
