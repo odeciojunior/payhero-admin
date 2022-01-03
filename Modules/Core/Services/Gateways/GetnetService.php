@@ -35,9 +35,9 @@ class GetnetService implements Statement
 
     public function __construct()
     {
-        $this->gatewayIds = [ 
-            Gateway::GETNET_PRODUCTION_ID, 
-            Gateway::GETNET_SANDBOX_ID 
+        $this->gatewayIds = [
+            Gateway::GETNET_PRODUCTION_ID,
+            Gateway::GETNET_SANDBOX_ID
         ];
     }
 
@@ -157,6 +157,7 @@ class GetnetService implements Statement
 
             $transactionsSum = $this->company->transactions()
                 ->whereIn('gateway_id', $this->gatewayIds)
+                ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
                 ->where('is_waiting_withdrawal', 1)
                 ->whereNull('withdrawal_id')
                 ->orderBy('id');
@@ -359,9 +360,9 @@ class GetnetService implements Statement
         if (isset($result->errors)) {
             return response()->json($result->errors, 400);
         }
-        
+
         $data = (new GetNetStatementService())->performWebStatement($result, $filters, 1000);
-        
+
         return response()->json($data);
     }
 
@@ -431,7 +432,7 @@ class GetnetService implements Statement
             $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
 
             $saleService = new SaleService();
-            
+
             foreach ($refundTransactions as $refundTransaction) {
                 $transactionRefundAmount = $refundTransaction->value;
 
@@ -481,13 +482,13 @@ class GetnetService implements Statement
         $result = json_decode($getnetService->setStatementSubSellerId($company->subseller_getnet_id)
             ->setStatementSaleHashId($hashSaleId)
             ->getStatement());
-        
+
         if(empty($result) || empty($result->list_transactions)){
             throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
         }
-        
+
         $sale = end($result->list_transactions);
-        
+
         $sale->flag = strtoupper($transaction->sale->flag) ?? null;
 
         return PDF::loadView('sales::refund_receipt_getnet', compact('company', 'sale'));

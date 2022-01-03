@@ -164,19 +164,19 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30');
 
         /** Antecipações Asaas */
-        $schedule->command('anticipations:asaas')->dailyAt('4:00');
-        $schedule->command('anticipations:asaas-pending')->dailyAt('14:00');
-        $schedule->command('anticipations:asaas-pending')->dailyAt('16:00');
+        $schedule->command('asaas:anticipations')->dailyAt('4:00');
+        $schedule->command('asaas:anticipations-pending')->dailyAt('14:00');
+        $schedule->command('asaas:anticipations-pending')->dailyAt('16:00');
 
         /** Sincronizar códigos de rastreio com WooCommerce */
         $schedule->command('woocommerce:check-tracking-codes')->sundays()->at('07:00');
-    
+
         /** Transferir grana dos vendedores no asaas para conta Cloudfox */
         $schedule->command('asaas:transfers-chargebacks')->dailyAt('00:20');
 
         /** transfere saldo excedente no asaas*/
         $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('08:00');
-        
+
     }
 
 

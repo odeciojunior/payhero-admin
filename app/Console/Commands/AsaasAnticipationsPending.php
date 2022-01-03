@@ -15,7 +15,7 @@ class AsaasAnticipationsPending extends Command
      *
      * @var string
      */
-    protected $signature = 'anticipations:asaas-pending';
+    protected $signature = 'asaas:anticipations-pending';
 
     /**
      * The console command description.
@@ -48,7 +48,7 @@ class AsaasAnticipationsPending extends Command
                                      'status' => Sale::STATUS_APPROVED,
                                      'gateway_id' => Gateway::ASAAS_PRODUCTION_ID
                                  ])
-                ->whereIn('anticipation_status', ['SCHEDULED','PENDING'])
+                ->whereIn('anticipation_status', ['SCHEDULED','PENDING', 'ANTICIPATED_ASAAS', 'ANTICIPATED'])
                 ->where('created_at', '>', '2021-10-19 00:00:00')
                 ->get();
 
@@ -58,6 +58,10 @@ class AsaasAnticipationsPending extends Command
                 if (isset($response['status'])) {
                     $sale->update(['anticipation_status' => $response['status']]);
                 }
+
+                if (isset($response['status']) != 'SCHEDULED' or 'PENDING' or 'CREDITED' or 'CANCELLED') {
+                    report(new Exception("Erro ao consultar as antecipações, UserId:  " . $sale->owner_id . " SaleId:  " . $sale->id .
+                                         ' -- Status asaas: ' . $response['status'] . ' -- ' . json_encode($response)));                }
             }
 
         } catch (Exception $e) {
