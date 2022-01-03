@@ -5,6 +5,7 @@ namespace Modules\Products\Http\Controllers;
 use Exception;
 use Google\Service\AdExchangeBuyer\Resource\Products;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -600,13 +601,24 @@ class ProductsApiController extends Controller
         }
     }
 
-    public function getProductById($id)
+    public function getProductById($id, Request $request)
     {
         try {
-            $productModel = new Product();
-            $product = $productModel->with('productsPlans')->find(current(Hashids::decode($id)));
+            $plan_id = $request->input('plan_id');
 
-            return new ProductsSelectResource($product);
+            $productModel = Product::query();
+
+            if (!empty($plan_id)) {
+                $plan_id = current(Hashids::decode($plan_id));
+
+                $products = $productModel->whereHas('productsPlans', function(Builder $query) use ($plan_id) {
+                    $query->where('plan_id', $plan_id);
+                })->find(current(Hashids::decode($id)));
+            } else {
+                $products = $productModel->with('productsPlans')->find(current(Hashids::decode($id)));
+            }
+
+            return new ProductsSelectResource($products);
         } catch (Exception $e) {
             report($e);
             //return response()->json(['message' => 'Erro ao tentar buscar produto'], 400);

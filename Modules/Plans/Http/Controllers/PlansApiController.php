@@ -232,10 +232,14 @@ class PlansApiController extends Controller
 
                     if (!empty($id)) {
                         $planId = current(Hashids::decode($id));
+
                         $plan = $planModel->with([
-                            'productsPlans.product', 'project.domains' => function ($query) use ($projectId) {
-                                $query->where([['project_id', $projectId], ['status', 3]])
-                                    ->first();
+                            'productsPlans' => function ($query) use ($planId) {
+                                $query->where('plan_id', $planId)->first();
+                            },
+                            'productsPlans.product',
+                            'project.domains' => function ($query) use ($projectId) {
+                                $query->where([['project_id', $projectId], ['status', 3]])->first();
                             },
                         ])->find($planId);
 
@@ -655,13 +659,27 @@ class PlansApiController extends Controller
                 foreach ($productsSelected as $p) {
                     $productId = current(Hashids::decode($p['id']));
                     $product = Product::find($productId);
+
                     if (count($product->variants) > 0) {
-                        ProductPlan::whereIn('product_id', $product->variants->pluck('id')->toArray())->update([
+                        foreach ($product->variants as $pt) {
+                            $pt->update([
+                                'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
+                                'cost' => $cost
+                            ]);
+                        }
+
+                        ProductPlan::whereIn('product_id', $product->variants->pluck('id')->toArray())
+                        ->update([
                             'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
                             'cost' => $cost
                         ]);
                     } else {
-                        ProductPlan::where('product_id', $productId)->update([
+                        $product->currency_type_enum = $projectModel->present()->getCurrencyCost($costCurrency);
+                        $product->cost = $cost;
+                        $product->save();
+
+                        ProductPlan::where('product_id', $productId)
+                        ->update([
                             'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
                             'cost' => $cost
                         ]);

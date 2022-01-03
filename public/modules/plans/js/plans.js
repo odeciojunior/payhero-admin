@@ -355,6 +355,7 @@ $(function () {
                 append += '<div class="body">';
                     append += '<div class="row">';
                         append += '<div class="col-sm-12">';
+                            console.log(selected_products);
                             selected_products.forEach(function(product) {
                                 var index_product = selected_products.map(function(p) { return p.id; }).indexOf(product.id);
 
@@ -362,6 +363,9 @@ $(function () {
                                     async: false,
                                     method: "GET",
                                     url: "/api/product/" + product.id,
+                                    data: {
+                                        plan_id: plan_id
+                                    },
                                     dataType: "json",
                                     headers: {
                                         'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -371,6 +375,20 @@ $(function () {
                                         alertCustom('error', 'Ocorreu um erro, por favor, refaça a operação');
                                     },
                                     success: function success(response) {
+                                        let amount = 1;
+                                        let cost = response.data.cost;
+                                        let currency_type_enum = response.data.currency_type_enum;
+
+                                        if (selected_products[index_product].currency_type_enum) {
+                                            amount = selected_products[index_product].amount;
+                                            cost = selected_products[index_product].value;
+                                            if (selected_products[index_product].currency_type_enum == 'USD') {
+                                                currency_type_enum = 2;
+                                            } else {
+                                                currency_type_enum = 1;
+                                            }
+                                        }
+
                                         append += '<div class="product d-flex align-items-center" data-code="' + response.data.id + '">';
                                             append += '<div class="div-product d-flex align-items-center" ' + (response.data.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + response.data.name + '"' : '') + '>';
                                                 append += '<div class="div-photo" data-type="' + type + '"><img class="product-photo" src="' + response.data.photo + '"></div>';
@@ -382,18 +400,18 @@ $(function () {
                                                         append += '<button class="btn-sub">';
                                                             append += '<img src="/modules/global/img/minus.svg">';
                                                         append += '</button>';
-                                                        append += '<input type="number" class="form-control" name="amount" value="' + (selected_products[index_product].amount ?? 1) + '" min="1" max="99" step="1">';
+                                                        append += '<input type="number" class="form-control" name="amount" value="' + amount + '" min="1" max="99" step="1">';
                                                         append += '<button class="btn-add">';
                                                             append += '<img src="/modules/global/img/plus.svg">';
                                                         append += '</button>';
                                                     append += '</div>';
                                                 append += '</div>';
                                             append += '</div>';
-                                            append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + response.data.cost + '" type="text" name="value" placeholder="Valor un."></div>';
+                                            append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + cost + '" type="text" name="value" placeholder="Valor un."></div>';
                                             append += '<div class="div-currency">';
                                                 append += '<select class="sirius-select" type="text" name="currency_type_enum">';
-                                                    append += '<option value="BRL" ' + (response.data.currency_type_enum == 1 ? 'selected' : '') + '>BRL (R$)</option>';
-                                                    append += '<option value="USD" ' + (response.data.currency_type_enum == 2 ? 'selected' : '') + '>USD ($)</option>';
+                                                    append += '<option value="BRL" ' + (currency_type_enum == 1 ? 'selected' : '') + '>BRL (R$)</option>';
+                                                    append += '<option value="USD" ' + (currency_type_enum == 2 ? 'selected' : '') + '>USD ($)</option>';
                                                 append += '</select>';
                                             append += '</div>';
                                         append += '</div>';
@@ -890,6 +908,8 @@ $(function () {
     }
 
     function storePlan(modalID, type) {
+        console.log(selected_products);
+
         if (type == 'create') {
             $.ajax({
                 method: 'POST',
@@ -1151,6 +1171,7 @@ $(function () {
             modal = '#modal_edit_plan';
         } else {
             selected_products.splice(index_selected_products, 1);
+
             if (selected_products.length > 0) {
                 $('.tooltip').remove();
                 getDetailsProducts(modal, type);
@@ -2232,6 +2253,9 @@ $(function () {
 
     $(document).on('change', '#cost_currency_type', function (event) {
         $('#div_update_cost_shopify').show();
+
+        const prefixCurrency = ($(this).val() == 'USD') ? 'US$' : 'R$';
+        $('#cost_plan').attr('placeholder', prefixCurrency);
     });
 
     /**
