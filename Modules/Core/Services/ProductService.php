@@ -41,7 +41,7 @@ class ProductService
             return $productModel
             ->with('productsPlans')
             ->where('user_id', auth()->user()->account_owner_id)
-            ->where('shopify', 0)
+            ->whereNull('shopify_variant_id')
             ->take(16)
             ->get();
         }
@@ -69,7 +69,7 @@ class ProductService
             ->with('productsPlanSales')
             ->with('productsPlans')
             ->where('user_id', auth()->user()->account_owner_id)
-            ->where('shopify', 0)
+            ->whereNull('shopify_variant_id')
             ->take(16)
             ->get()
             ->sortByDesc(function($query) {
@@ -127,14 +127,14 @@ class ProductService
                     ->with('productsPlans')
                     ->where('user_id', auth()->user()->account_owner_id)
                     ->where('name', 'like', '%'. $product .'%')
-                    ->where('shopify', 0)
+                    ->whereNull('shopify_variant_id')
                     ->take(16)
                     ->get();
                 } else {
                     return $productModel
                     ->with('productsPlans')
                     ->where('user_id', auth()->user()->account_owner_id)
-                    ->where('shopify', 0)
+                    ->whereNull('shopify_variant_id')
                     ->take(16)
                     ->get();
                 }
