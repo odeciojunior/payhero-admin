@@ -355,16 +355,19 @@ $(function () {
                 append += '<div class="body">';
                     append += '<div class="row">';
                         append += '<div class="col-sm-12">';
-                            console.log(selected_products);
                             selected_products.forEach(function(product) {
                                 var index_product = selected_products.map(function(p) { return p.id; }).indexOf(product.id);
+                                var plan = 0;
+                                if (selected_products[index_product].currency_type_enum) {
+                                    plan = plan_id;
+                                }
 
                                 $.ajax({
                                     async: false,
                                     method: "GET",
                                     url: "/api/product/" + product.id,
                                     data: {
-                                        plan_id: plan_id
+                                        plan_id: plan
                                     },
                                     dataType: "json",
                                     headers: {

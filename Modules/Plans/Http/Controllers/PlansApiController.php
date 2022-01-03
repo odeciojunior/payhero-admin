@@ -235,7 +235,7 @@ class PlansApiController extends Controller
 
                         $plan = $planModel->with([
                             'productsPlans' => function ($query) use ($planId) {
-                                $query->where('plan_id', $planId)->first();
+                                $query->where('plan_id', $planId);
                             },
                             'productsPlans.product',
                             'project.domains' => function ($query) use ($projectId) {
