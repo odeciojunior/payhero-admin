@@ -79,8 +79,6 @@ class ProductsApiController extends Controller
 
             if (isset($filters['shopify']) && $filters['shopify'] == 1) {
                 $productsSearch->where('shopify', $filters['shopify']);
-            } else {
-                $productsSearch->whereNull('shopify_variant_id');
             }
 
             if (isset($filters['name'])) {
