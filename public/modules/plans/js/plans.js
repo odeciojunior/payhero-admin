@@ -243,15 +243,17 @@ $(function () {
                                             append += '<img class="product-photo" src="' + product.photo + '">';
                                         append += '</div>';
                                         append += '<div>';
-                                            append += '<h1 class="title">' + product.name_short + '</h1>';
-                                            append += '<p class="description">' + product.description + '</p>';
+                                            append += '<h1 class="title" ' + (product.status_enum == 1 || product.status_enum == 3 ? 'style="color: #C5C5C5"' : '') + '>' + product.name_short + '</h1>';
+                                            append += '<p class="description" ' + (product.status_enum == 1 || product.status_enum == 3 ? 'style="color: #C7C7C7"' : '') + '>' + product.description + '</p>';
                                         append += '</div>';
                                     append += '</div>';
-                                    append += '<div class="check">';
-                                        if (index_product != -1) {
-                                            append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
-                                        }
-                                    append += '</div>';
+                                    if (product.status_enum != 1 && product.status_enum != 3) {
+                                        append += '<div class="check">';
+                                            if (index_product != -1) {
+                                                append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                                            }
+                                        append += '</div>';
+                                    }
                                 append += '</div>';
                             append += '</div>';
                         });
