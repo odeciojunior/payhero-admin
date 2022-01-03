@@ -1716,7 +1716,7 @@ input[type="checkbox"], input[type="radio"] {
     padding: 0;
 }
 .pagination-sm .btn.last_page {
-    margin-right: 0;
+    margin-right: 0 !important;
 }
 
 .box-description .input-group-lg > .input-group-append > .input-group-text {
