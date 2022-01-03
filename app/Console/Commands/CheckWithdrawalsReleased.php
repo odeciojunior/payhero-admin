@@ -41,6 +41,7 @@ class CheckWithdrawalsReleased extends Command
 
                         $withdrawalTransactionsCount = $withdrawal->transactions
                             ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
+                            ->whereNull('gateway_transferred_at')
                             ->count();
 
                         $countTransactionsReleased = 0;
