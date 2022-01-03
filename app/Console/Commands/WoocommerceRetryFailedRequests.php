@@ -39,41 +39,68 @@ class WoocommerceRetryFailedRequests extends Command
     public function handle()
     {
         $model = new SaleWoocommerceRequests();
-        $requests = $model->where('status',0)->get();
+        $requests = $model->where('status', 0)
+            ->whereRaw("DATEDIFF(CURDATE(),STR_TO_DATE(created_at, '%Y-%m-%d')) <= 10")->get();
 
-        
+
+        $this->line('Total: ' . count($requests));
 
         foreach ($requests as $request) {
+
             try {
+                $integration = WooCommerceIntegration::where('project_id', $request['project_id'])->first();
+                $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
 
-                if($request['method']=='approve_billet'){
+                if ($request['method'] == 'approve_billet' || $request['method'] == 'ApproveOrder') {
 
-                    $integration = WooCommerceIntegration::where('project_id', $request['project_id'])->first();
-    
-                    $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                    $res = $service->approveBillet($request['order'], $request['project_id'], null, false);
 
-                    $res = $service->approveBillet($request['order'], $request['project_id']);
-
-                    if(!empty($res->status) && $res->status == 'processing'){
+                    if (!empty($res->status) && $res->status == 'processing') {
                         $res = json_encode($res);
                         $service->updatePostRequest($request['id'], 1, $res);
-                        
-                        $this->line('sucesso: '.$request['id']);
-                        
-                    }else{
-                        
-                        $this->line('fail: '.$request['id']);
+
+                        $this->line('sucess -> status changed to paid on order: ' . $request['order']);
+                    } else {
+
+                        $this->line('fail -> requesId: ' . $request['id']);
                     }
                 }
 
-                
+                if ($request['method'] == 'CancelOrder' || $request['method'] == 'CancelOrderAntiFraud') {
+
+                    $res = $service->cancelOrder($request['order'], null, false);
+
+                    if (!empty($res->status) && $res->status == 'cancelled') {
+                        $res = json_encode($res);
+                        $service->updatePostRequest($request['id'], 1, $res);
+
+                        $this->line('sucess -> status changed to cancelled -> order: ' . $request['order']);
+                    } else {
+
+                        $this->line('fail -> requesId: ' . $request['id']);
+                    }
+                }
+
+                if ($request['method'] == 'AddItemsToOrder') {
+                    $res = $service->addItemsToOrder($request['sale_id'], null, false);
+                    
+                    if (!empty($res->id) && $res->id == $request['order']) {
+                        $res = json_encode($res);
+                        $service->updatePostRequest($request['id'], 1, $res);
+
+                        $this->line('sucess -> item added -> order: ' . $request['order']);
+                    } else {
+
+                        $this->line('fail -> requesId: ' . $request['id']);
+                    }
+                }
+
+
+
             } catch (Exception $e) {
 
                 $this->line('erro -> ' . $e->getMessage());
-                
             }
         }
     }
-
-
 }

@@ -119,14 +119,20 @@ class CreateAccountAsaas extends Command
                 'gateway_id' => $this->gatewayId,
                 'gateway_subseller_id' => $result->walletId,
                 'gateway_api_key' => $result->apiKey,
-                'has_webhook'=>0
+                'has_transfers_webhook'=>0,
+                'has_charges_webhook'=>0
             ];
 
             $gatewayCompanyCredential->create($dataToCreate);
 
-            $response = $this->api->registerWebhookTransferAsaas($gatewayCompanyCredential->company_id);
+            $response = $this->api->registerTransfersWebhookAsaas($gatewayCompanyCredential->company_id);
             if($response->status =='success'){
-                $gatewayCompanyCredential->update(['has_webhook' => 1]);
+                $gatewayCompanyCredential->update(['has_transfers_webhook' => 1]);
+            }
+
+            $response = $this->api->registerChargesWebhookAsaas($gatewayCompanyCredential->company_id);
+            if($response->status =='success'){
+                $gatewayCompanyCredential->update(['has_charges_webhook' => 1]);
             }
 
             return [

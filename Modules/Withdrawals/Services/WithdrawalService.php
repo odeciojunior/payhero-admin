@@ -2,6 +2,7 @@
 
 namespace Modules\Withdrawals\Services;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;

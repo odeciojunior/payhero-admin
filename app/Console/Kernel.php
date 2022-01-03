@@ -19,8 +19,6 @@ class Kernel extends ConsoleKernel
     {
         setlocale(LC_ALL, 'pt_BR');
 
-        $schedule->command('antifraudpostbacks:process')->withoutOverlapping()->everyMinute();
-
         $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
 
         $schedule->command('check:systems')->everyTenMinutes();
