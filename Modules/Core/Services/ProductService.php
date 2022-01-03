@@ -60,10 +60,7 @@ class ProductService
             ->where('user_id', auth()->user()->account_owner_id)
             ->where('project_id', $projectId)
             ->take(16)
-            ->get()
-            ->sortByDesc(function($query) {
-                return $query->productsPlanSales->count();
-            });
+            ->get();
         } else {
             return $productModel
             ->with('productsPlanSales')
@@ -71,10 +68,7 @@ class ProductService
             ->where('user_id', auth()->user()->account_owner_id)
             ->whereNull('shopify_variant_id')
             ->take(16)
-            ->get()
-            ->sortByDesc(function($query) {
-                return $query->productsPlanSales->count();
-            });
+            ->get();
         }
     }
 
