@@ -479,6 +479,8 @@ $(function () {
             $(modal).find('.modal-body').append(loadingCreateStage3);
 
             $('.box-products .form-control').each(function() {
+                console.log(selected_products);
+
                 var product_ID = $(this).parents('.product').attr('data-code');
 
                 var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);

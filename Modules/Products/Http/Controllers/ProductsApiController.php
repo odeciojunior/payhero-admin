@@ -77,15 +77,17 @@ class ProductsApiController extends Controller
 
             $productsSearch = $productsModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id);
 
-            if (isset($filters['shopify'])) {
+            if (isset($filters['shopify']) && $filters['shopify'] == 1) {
                 $productsSearch->where('shopify', $filters['shopify']);
+            } else {
+                $productsSearch->whereNull('shopify_variant_id');
             }
 
             if (isset($filters['name'])) {
                 $productsSearch->where('name', 'LIKE', '%' . $filters['name'] . '%');
             }
 
-            if (isset($filters['project']) && $filters['shopify'] == 1) {
+            if (isset($filters['project']) && $filters['project'] > 0 && $filters['shopify'] == 1) {
                 $projectId = current(Hashids::decode($filters['project']));
                 $productsSearch->where('project_id', $projectId);
             }

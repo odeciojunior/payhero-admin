@@ -26,114 +26,74 @@ class ProductService
      */
     public function getProductsMyProject(int $projectId)
     {
-        $productModel = new Product();
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
 
+        $productModel = Product::query();
+
         if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
-            return $productModel
-            ->with('productsPlans')
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->where('project_id', $projectId)
-            ->take(16)
-            ->get();
+            $productModel->where('project_id', $projectId);
         } else {
-            return $productModel
-            ->with('productsPlans')
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->whereNull('shopify_variant_id')
-            ->take(16)
-            ->get();
+            $productModel->whereNull('shopify_variant_id');
         }
+
+        return $productModel
+        ->with('productsPlans')
+        ->where('user_id', auth()->user()->account_owner_id)
+        ->take(16)
+        ->get();
     }
 
     public function getTopSellingProducts(int $projectId)
     {
-        $productModel = new Product();
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
 
+        $productModel = Product::query();
+
         if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
-            return $productModel
-            ->with('productsPlanSales')
-            ->with('productsPlans')
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->where('project_id', $projectId)
-            ->take(16)
-            ->get();
+            $productModel->where('project_id', $projectId);
         } else {
-            return $productModel
-            ->with('productsPlanSales')
-            ->with('productsPlans')
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->whereNull('shopify_variant_id')
-            ->take(16)
-            ->get();
+            $productModel->whereNull('shopify_variant_id');
         }
+
+        return $productModel
+        ->with('productsPlanSales')
+        ->with('productsPlans')
+        ->where('user_id', auth()->user()->account_owner_id)
+        ->take(16)
+        ->get()
+        ->sortByDesc(function($query) {
+            return $query->productsPlanSales->count();
+        });
     }
 
     public function getProductsFilter(int $projectId, string $product, bool $variants = false)
     {
-        $productModel = new Product();
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
 
+        $productModel = Product::query();
+
         if ($variants == true) {
-            if (!empty($product)) {
-                return $productModel
-                ->select('shopify_id')
-                ->distinct()
-                ->where('user_id', auth()->user()->account_owner_id)
-                ->where('project_id', $projectId)
-                ->where('name', 'like', '%'. $product .'%')
-                ->take(16)
-                ->get();
-            } else {
-                return $productModel
-                ->select('shopify_id')
-                ->distinct()
-                ->where('user_id', auth()->user()->account_owner_id)
-                ->where('project_id', $projectId)
-                ->take(16)
-                ->get();
-            }
+            $productModel->select('shopify_id')->distinct();
         } else {
-            if (!empty($projectId) && ( !empty($project->shopify_id) || !empty($project->woocommerce_id) ) ) {
-                if (!empty($product)) {
-                    return $productModel
-                    ->with('productsPlans')
-                    ->where('user_id', auth()->user()->account_owner_id)
-                    ->where('project_id', $projectId)
-                    ->where('name', 'like', '%'. $product .'%')
-                    ->take(16)
-                    ->get();
-                } else {
-                    return $productModel
-                    ->with('productsPlans')
-                    ->where('user_id', auth()->user()->account_owner_id)
-                    ->where('project_id', $projectId)
-                    ->take(16)
-                    ->get();
-                }
-            } else {
-                if (!empty($product)) {
-                    return $productModel
-                    ->with('productsPlans')
-                    ->where('user_id', auth()->user()->account_owner_id)
-                    ->where('name', 'like', '%'. $product .'%')
-                    ->whereNull('shopify_variant_id')
-                    ->take(16)
-                    ->get();
-                } else {
-                    return $productModel
-                    ->with('productsPlans')
-                    ->where('user_id', auth()->user()->account_owner_id)
-                    ->whereNull('shopify_variant_id')
-                    ->take(16)
-                    ->get();
-                }
-            }
+            $productModel->with('productsPlans');
         }
+
+        $productModel->where('user_id', auth()->user()->account_owner_id);
+
+        if (!empty($projectId) && !empty($project->shopify_id) || !empty($project->woocommerce_id)) {
+            $productModel->where('project_id', $projectId);
+        } else {
+            $productModel->whereNull('shopify_variant_id');
+        }
+
+        if (!empty($product)) {
+            $productModel->where('name', 'like', '%'. $product .'%');
+        }
+
+        return $productModel->take(16)->get();
     }
 
     public function getProductsBySale($saleParam)
