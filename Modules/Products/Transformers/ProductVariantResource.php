@@ -22,7 +22,7 @@ class ProductVariantResource extends JsonResource
             'name'              => $this->name,
             'name_short'        => Str::limit($this->name, 14),
             'name_short_flag'   => mb_strwidth($this->name, 'UTF-8') <= 14 ? false : true,
-            'description'       => Str::limit($this->description, 28),
+            'description'       => Str::limit($this->description, 22),
             'type_enum'         => $this->type_enum,
             'status_enum'       => $this->status_enum,
             'cost'              => 'R$ '.number_format(($this->productsPlans->first()->cost ?? 0) / 100, 2, '.', ','),
