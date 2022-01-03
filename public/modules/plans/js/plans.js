@@ -125,21 +125,23 @@ $(function () {
                         response.data.forEach(function(product) {
                             var index_product = selected_products.map(function(e) { return e.id; }).indexOf(product.id);
                             append += '<div class="col-sm-6">';
-                                append += '<div ' + (product.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.name + '"' : '') + ' data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
+                                append += '<div ' + (product.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.name + '"' : '') + ' data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 || product.status_enum == 3 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
                                     append += '<div class="d-flex align-items-center">';
                                         append += '<div class="background-photo">';
                                             append += '<img class="product-photo" src="' + product.photo + '">';
                                         append += '</div>';
                                         append += '<div>';
-                                            append += '<h1 class="title">' + product.name_short + '</h1>';
-                                            append += '<p class="description">' + product.description + '</p>';
+                                            append += '<h1 class="title" ' + (product.status_enum == 1 || product.status_enum == 3 ? 'style="color: #C5C5C5"' : '') + '>' + product.name_short + '</h1>';
+                                            append += '<p class="description" ' + (product.status_enum == 1 || product.status_enum == 3 ? 'style="color: #C7C7C7"' : '') + '>' + product.description + '</p>';
                                         append += '</div>';
                                     append += '</div>';
-                                    append += '<div class="check">';
-                                        if (index_product != -1) {
-                                            append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
-                                        }
-                                    append += '</div>';
+                                    if (product.status_enum != 1 && product.status_enum != 3) {
+                                        append += '<div class="check">';
+                                            if (index_product != -1) {
+                                                append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                                            }
+                                        append += '</div>';
+                                    }
                                 append += '</div>';
                             append += '</div>';
                         });
