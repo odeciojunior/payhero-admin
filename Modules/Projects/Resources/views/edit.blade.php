@@ -41,6 +41,7 @@
         <div class="row">
             <!-- FOTO -->
             <div class="col-md-5 col-lg-4 col-xl-3 pl-xl-25 d-flex flex-column" id='div-img-project' style='position: relative;'>
+
                 <input name='photo' type='file' class='form-control' id='photoProject' style='display:none;' accept='image/*'>
                 <label for='photo' class="pl-0 pl-lg-10 pl-xl-0 mb-3">Capa da loja</label>
 
@@ -50,7 +51,6 @@
                 </div>
 
                 <input type='hidden' id='photo_x1' name='photo_x1'><input id='photo_y1' type='hidden' name='photo_y1'>
-
                 <input type='hidden' id='photo_w' name='photo_w'><input id='photo_h' type='hidden' name='photo_h'>
             </div>
 
@@ -78,11 +78,11 @@
         </div>
     </div>
 
-    <!-- AFILIACOES -->
+    <!-- CARD GERAL AFILIACOES-->
     <div class="card mt-20" data-plugin="tabs">
         <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
 
-            <!-- ON/OFF-->
+            <!-- ON/OFF COLLAPSE-->
             <div class='row'>
                 <div class='col-md-12 d-flex py-10'>
 
@@ -103,10 +103,10 @@
                 </div>
             </div>
 
-            <!-- CONTAINER GERAL -->
+            <!-- CONTAINER COL 5 E COL 7 -->
             <div class="row div-url-affiliate">
 
-                <!-- CONTAINER 5 COL -->
+                <!-- CONTAINER COL-5 -->
                 <div class="col-md-5 form-group">
                     <!-- URL DA PAGINA -->
                     <div class="row">
@@ -212,16 +212,20 @@
                     </div>
                 </div>
 
-                <!-- CONTAINER 7 COL -->
+                <!-- CONTAINER COL-7 -->
                 <div class="col-md-7 form-group pl-10 pr-10 pr-sm-40">
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class='form-group col-md-12'>
+                        <div class="col-md-12 form-group">
+
+
                                 <label for='terms-affiliates'>Termos de Afiliação</label>
                                 <input type="hidden" name="terms_affiliates" id="terms_affiliates">
-                                <textarea class='input-pad' id='termsaffiliates' placeholder='Termos'></textarea>
+
+                                <!-- TEXTAREA QUILL -->
+                                <div class="h-200" id='termsaffiliates' placeholder='Termos'></div>
+
                                 <span id='terms-affiliates-error' class='text-danger'></span>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -237,12 +241,12 @@
                             </select>
                         </div> --}}
                         
-                        <div class="automatic-affiliation col-md-2 pl-5 pl-md-10 pl-lg-30 pr-20 d-flex align-items-center border-top border-right" name='automatic_affiliation'>
+                        <div class="automatic-affiliation col-md-4 col-lg-2 pl-5 pl-md-10 pl-lg-30 pr-20 d-flex align-items-center border-top border-right" name='automatic_affiliation'>
                             <input type="checkbox" id="auto-afiliation" class="col-1 h-20 mr-10">
                             <label for="auto-afiliation" class="m-0">Afiliação automática</label>
                         </div>
                         
-                        <div class="col-12 col-sm-9 pl-0 pr-0 align-items-center border-top border-right">
+                        <div class="col-12 col-md-5 col-lg-8 pl-0 pr-0 align-items-center border-top border-right">
                             <div class="row no-gutters mt-3">
 
                                 <div class="col-md-6 d-flex align-items-center justify-content-sm-end">
@@ -256,9 +260,9 @@
                             </div>
                         </div>
 
-                        <div class="col-md-1 p-5 border-top">
-                            <button id="copy-link-affiliation" class="btn btn-default mx-0 bg-white border-0" type="button">
-                                <img src="{{asset('/modules/global/img/projects/btnCopy.svg')}}" alt="botao de copiar">Copiar
+                        <div class="col-md-3 col-lg-2 p-5 border-top">
+                            <button id="copy-link-affiliation" class="btn btn-default mx-0 bg-white border-0 pl-md-30" type="button">
+                                <img src="{{asset('/modules/global/img/projects/btnCopy.svg')}}" class="mr-10" alt="botao de copiar">Copiar
                             </button>
                         </div>
 
@@ -344,5 +348,3 @@
         </div>
     </div>
 </div>
-
-

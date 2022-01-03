@@ -244,6 +244,7 @@
     }
 }
 
+/* new version by J */
 .product-chargeback{
     border-top-left-radius: 8px;
     border-bottom-left-radius: 0px;
@@ -302,4 +303,11 @@
 
 .dropify-wrapper{
     height: 246px !important;
+    border: 1px dashed #2E85EC !important;
+    border-radius: 8px !important;
+}
+
+.ql-toolbar.ql-snow{
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
 }
