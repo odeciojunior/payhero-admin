@@ -1281,7 +1281,8 @@ img.border-icon{
 .modal-plans .box-products.customizations .box-product:hover {
     background: none;
 }
-.modal-plans .box-product.review {
+.modal-plans .box-product.review,
+.modal-plans .box-plan.review {
     background: #F4F4F4;
     border: 1px solid #F4F4F4;
 }

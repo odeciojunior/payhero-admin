@@ -408,30 +408,31 @@ class ProductsApiController extends Controller
             $projectModel = new Project();
             $project = $projectModel->find($projectId);
 
+            $products->with('productsPlanSales')->with('productsPlans')->where('user_id', auth()->user()->account_owner_id);
+
             if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
                 $products->where('project_id', $projectId);
+
+                $groupByVariants = $data['variants'];
+
+                if ($groupByVariants) {
+                    $products->select('name',
+                        DB::raw("min(id) as id"),
+                        DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
+                        ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
+                }
             } else {
-                $products
-                ->where('user_id', auth()->user()->account_owner_id)
-                ->where('shopify', 0);
+                $products->whereNull('shopify_variant_id');
             }
 
             if (!empty($data['search'])) {
                 $products->where('name', 'like', '%' . $data['search'] . '%');
             }
 
-            $groupByVariants = boolval($data['variants'] ?? 1);
+            $products = $products->get()->sortByDesc(function($query) {
+                return $query->productsPlanSales->count();
+            })->take(10);
 
-            if ($groupByVariants) {
-                $products->select('name',
-                    DB::raw("min(id) as id"),
-                    DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
-                    ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
-            } else {
-                $products->select('id', 'name', 'description');
-            }
-
-            $products = $products->orderBy('name')->take(10)->get();
             foreach($products as $p) {
                 $product = Product::find($p->id);
                 $p->photo = $product->photo;

@@ -1134,8 +1134,6 @@ $(function () {
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
-                    console.log(response.product_in_plan_sale);
-
                     if (!response.product_in_plan_sale) {
                         selected_products.splice(index_selected_products, 1);
                         if (selected_products.length > 0) {
@@ -1798,7 +1796,6 @@ $(function () {
                     url: "/api/products/products-variants",
                 data: {
                     project_id: projectId,
-                    is_config: true,
                     variants: true,
                     search: plan
                 },
@@ -1820,21 +1817,23 @@ $(function () {
                             let select_all = $('#select-all').attr('data-selected');
 
                             append += '<div class="col-sm-6">';
-                                append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center ' + (select_all == 'true' ? 'selected' : '') + '">';
+                                append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'review' : '') + ' ' + (select_all == 'true' ? 'selected' : '') + '">';
                                     append += '<div class="d-flex align-items-center">';
                                         append += '<div class="background-photo">';
                                             append += '<img class="product-photo" src="' + plan.photo + '">';
                                         append += '</div>';
                                         append += '<div>';
-                                            append += '<h1 class="title">' + plan.name_short + '</h1>';
-                                            append += '<p class="description">' + plan.description + '</p>';
+                                            append += '<h1 class="title" ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C5C5C5"' : '') + '>' + plan.name_short + '</h1>';
+                                            append += '<p class="description" ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C7C7C7"' : '') + '>' + plan.description + '</p>';
                                         append += '</div>';
                                     append += '</div>';
-                                    append += '<div class="check">';
-                                        if (index_plan != -1 || select_all == 'true') {
-                                            append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
-                                        }
-                                    append += '</div>';
+                                    if (plan.status_enum != 1 && plan.status_enum != 3) {
+                                        append += '<div class="check">';
+                                            if (index_plan != -1) {
+                                                append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                                            }
+                                        append += '</div>';
+                                    }
                                 append += '</div>';
                             append += '</div>';
                         });
@@ -1906,21 +1905,25 @@ $(function () {
     $('body').on('click', '.box-plan', function() {
         var plan_id = $(this).data('code');
 
-        if (!$(this).hasClass('selected')) {
-            $(this).addClass('selected');
-            $(this).find('.check').html('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
-
-            selected_plans.push({'id': plan_id});
+        if ($(this).hasClass('review')) {
+            alertCustom('error', 'Não é possível selecionar este produto.')
         } else {
-            $('#select-all').attr('data-selected', false)
-            $('#select-all').removeClass('selected');
-            $('#select-all').find('.check').html('');
+            if (!$(this).hasClass('selected')) {
+                $(this).addClass('selected');
+                $(this).find('.check').html('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
 
-            $(this).removeClass('selected');
-            $(this).find('.check img').remove();
+                selected_plans.push({'id': plan_id});
+            } else {
+                $('#select-all').attr('data-selected', false)
+                $('#select-all').removeClass('selected');
+                $('#select-all').find('.check').html('');
 
-            var index_selected_plans = selected_plans.map(function(e) { return e.id; }).indexOf(plan_id);
-            selected_plans.splice(index_selected_plans, 1);
+                $(this).removeClass('selected');
+                $(this).find('.check img').remove();
+
+                var index_selected_plans = selected_plans.map(function(e) { return e.id; }).indexOf(plan_id);
+                selected_plans.splice(index_selected_plans, 1);
+            }
         }
     });
 
@@ -1935,7 +1938,6 @@ $(function () {
                     url: "/api/products/products-variants",
                     data: {
                         project_id: projectId,
-                        is_config: true,
                         variants: true
                     },
                     dataType: "json",
@@ -1952,21 +1954,23 @@ $(function () {
                             response.data.forEach(function(plan) {
                                 var index_plan = selected_plans.map(function(e) { return e.id; }).indexOf(plan.id);
                                 append += '<div class="col-sm-6">';
-                                    append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center">';
+                                    append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'review' : '') + '">';
                                         append += '<div class="d-flex align-items-center">';
                                             append += '<div class="background-photo">';
                                                 append += '<img class="product-photo" src="' + plan.photo + '">';
                                             append += '</div>';
                                             append += '<div>';
-                                                append += '<h1 class="title">' + plan.name_short + '</h1>';
-                                                append += '<p class="description">' + plan.description + '</p>';
+                                            append += '<h1 class="title" ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C5C5C5"' : '') + '>' + plan.name_short + '</h1>';
+                                            append += '<p class="description" ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C7C7C7"' : '') + '>' + plan.description + '</p>';
                                             append += '</div>';
                                         append += '</div>';
-                                        append += '<div class="check">';
-                                            if (index_plan != -1) {
-                                                append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
-                                            }
-                                        append += '</div>';
+                                        if (plan.status_enum != 1 && plan.status_enum != 3) {
+                                            append += '<div class="check">';
+                                                if (index_plan != -1) {
+                                                    append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                                                }
+                                            append += '</div>';
+                                        }
                                     append += '</div>';
                                 append += '</div>';
                             });

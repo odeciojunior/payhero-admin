@@ -61,11 +61,10 @@ class ProductService
         ->with('productsPlanSales')
         ->with('productsPlans')
         ->where('user_id', auth()->user()->account_owner_id)
-        ->take(16)
         ->get()
         ->sortByDesc(function($query) {
             return $query->productsPlanSales->count();
-        });
+        })->take(16);
     }
 
     public function getProductsFilter(int $projectId, string $product, bool $variants = false)
@@ -75,13 +74,7 @@ class ProductService
 
         $productModel = Product::query();
 
-        if ($variants == true) {
-            $productModel->select('shopify_id')->distinct();
-        } else {
-            $productModel->with('productsPlans');
-        }
-
-        $productModel->where('user_id', auth()->user()->account_owner_id);
+        $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id);
 
         if (!empty($projectId) && !empty($project->shopify_id) || !empty($project->woocommerce_id)) {
             $productModel->where('project_id', $projectId);
