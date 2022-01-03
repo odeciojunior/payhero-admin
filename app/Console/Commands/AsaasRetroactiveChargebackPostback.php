@@ -47,6 +47,25 @@ class AsaasRetroactiveChargebackPostback extends Command
      */
     public function handle()
     {
+        $postbacks = GatewayPostback::whereHas('sale',function($qr){
+            $qr->where('status',1);
+        })->where('gateway_id',8)->where('data', 'like','%PAYMENT_REFUNDED%')->count();
+dd($postbacks);
+        $output = new ConsoleOutput();
+        $progress = new ProgressBar($output, count($postbacks));
+        $progress->start();
+
+        foreach($postbacks as $postback){
+            $postback->processed_flag = false;
+            $this->line($postback->id);
+            //$postback->update();
+            $progress->advance();
+        }
+
+        $progress->finish();
+    }
+
+    public function createPostbackRetroactive(){
         /* VENDAS CHARGEBACK PRODUÇÃO */
         $saleIds = [1362901,1368162,1368623,1368762,1368977,1370087,1370114,1370138,1371066,1371470,1372036,1372097,1373680,1373793,1373798,1373891,
         1374053,1374214,1374272,1374874,1374880,1375402,1375460,1375468,1375471,1375481,1375513,1377568,1378070,1378074,1378687,1379013,1379360,
@@ -77,7 +96,7 @@ class AsaasRetroactiveChargebackPostback extends Command
 
         $progress->finish();
     }
-
+    
     public function createPostback($saleId,$status)
     {
         $saleGatewayRequest = SaleGatewayRequest::where('sale_id',$saleId)->orderBy('id','desc')->first();
