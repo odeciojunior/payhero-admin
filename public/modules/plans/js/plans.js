@@ -1789,6 +1789,8 @@ $(function () {
 
     // Tab plan cost change
     $('body').on('click', '#tab_update_cost_block', function() {
+        console.log($(this).hasClass('active'));
+
         if (!$(this).hasClass('active')) {
             let modal = '#modal_config_cost_plan';
             getPlansConfig(modal);
@@ -2259,8 +2261,8 @@ $(function () {
     $(document).on('change', '#cost_currency_type', function (event) {
         $('#div_update_cost_shopify').show();
 
-        const prefixCurrency = ($(this).val() == 'USD') ? 'US$' : 'R$';
-        $('#cost_plan').attr('placeholder', prefixCurrency);
+        let prefixCurrency = ($(this).val() == 'USD') ? 'US$' : 'R$';
+        $('#cost_plan').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: prefixCurrency}).attr('placeholder', prefixCurrency);
     });
 
     /**
