@@ -44,7 +44,7 @@ class ProductService
         ->get();
     }
 
-    public function getTopSellingProducts(int $projectId)
+    public function getTopSellingProducts(int $projectId, string $product)
     {
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
@@ -55,6 +55,10 @@ class ProductService
             $productModel->where('project_id', $projectId);
         } else {
             $productModel->whereNull('shopify_variant_id');
+        }
+
+        if (!empty($product)) {
+            $productModel->where('name', 'like', '%'. $product .'%');
         }
 
         return $productModel
@@ -74,7 +78,10 @@ class ProductService
 
         $productModel = Product::query();
 
-        $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id);
+        $productModel
+        ->with('productsPlanSales')
+        ->with('productsPlans')
+        ->where('user_id', auth()->user()->account_owner_id);
 
         if (!empty($projectId) && !empty($project->shopify_id) || !empty($project->woocommerce_id)) {
             $productModel->where('project_id', $projectId);
@@ -86,7 +93,11 @@ class ProductService
             $productModel->where('name', 'like', '%'. $product .'%');
         }
 
-        return $productModel->take(16)->get();
+        return $productModel
+        ->get()
+        ->sortByDesc(function($query) {
+            return $query->productsPlanSales->count();
+        })->take(16);
     }
 
     public function getProductsBySale($saleParam)

@@ -457,16 +457,17 @@ class ProductsApiController extends Controller
     public function getTopSellingProducts(Request $request)
     {
         try {
-            $data = $request->all();
+            $project = $request->input('project') ?? '';
+            $product = $request->input('product') ?? '';
 
-            if (empty($data['project'])) {
+            if (empty($project)) {
                 return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
             }
 
             $productService = new ProductService();
-            $projectId = current(Hashids::decode($data['project']));
+            $projectId = current(Hashids::decode($project));
 
-            $products = $productService->getTopSellingProducts($projectId);
+            $products = $productService->getTopSellingProducts($projectId, $product);
 
             return ProductsSelectResource::collection($products);
         } catch (Exception $e) {
@@ -479,14 +480,14 @@ class ProductsApiController extends Controller
     public function getProducts(Request $request)
     {
         try {
-            $data = $request->all();
+            $project = $request->input('project') ?? '';
 
-            if (empty($data['project'])) {
+            if (empty($project)) {
                 return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
             }
 
             $productService = new ProductService();
-            $projectId = current(Hashids::decode($data['project']));
+            $projectId = current(Hashids::decode($project));
 
             $products = $productService->getProductsMyProject($projectId);
 
@@ -578,26 +579,6 @@ class ProductsApiController extends Controller
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao verificar produto'], 400);
-        }
-    }
-
-    public function getProductFilter(Request $request)
-    {
-        try {
-            $project = $request->input('project');
-            $product = $request->input('product') ?? '';
-            $variants = $request->input('variants') ?? false;
-
-            $projectId = current(Hashids::decode($project));
-
-            $productService = new ProductService();
-            $products = $productService->getProductsFilter($projectId, $product, $variants);
-
-            return ProductsSelectResource::collection($products);
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(['message' => 'Erro ao tentar buscar produto'], 400);
         }
     }
 

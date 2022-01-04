@@ -106,7 +106,7 @@ $(function () {
         $(modal).find(find_stage).find('.box-products').html(loadingProducts).promise().done(function() {
             $.ajax({
                 method: "POST",
-                url: "/api/products/search",
+                url: "/api/products/topselling",
                 data: {
                     project: projectId,
                     product: product
@@ -1791,7 +1791,7 @@ $(function () {
 
     // Tab plan cost change
     $('body').on('click', '#tab_update_cost_block', function() {
-        console.log($(this).hasClass('active'));
+        console.log($(this));
 
         if (!$(this).hasClass('active')) {
             let modal = '#modal_config_cost_plan';
