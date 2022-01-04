@@ -2077,8 +2077,6 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                console.log(response.data.cost_currency_type);
-
                 if (response.data.shopify_id == null) {
                     $('.div-cost_currency').removeClass('col-sm-6').addClass('col-sm-12');
                     $('.div-cost_currency').find('.sirius-select-container').css('width', '100%');
@@ -2093,8 +2091,9 @@ $(function () {
                     container: '.page',
                 });
 
-                let indexCurrency = (response.data.cost_currency_type == 'BRL') ? 0 : 1;
-                $('#cost_currency_type').prop('selectedIndex', indexCurrency);
+                let textCurrency = (response.data.cost_currency_type == 'BRL') ? 'R$ - Real Brasileiro (BRL)' : '$ - Dólar Americano (USD)';
+                $('#tab_configuration_cost-panel').find('.sirius-select-text').text(textCurrency);
+                $('#cost_currency_type').val(response.data.cost_currency_type);
 
                 $('#update_cost_shopify').prop('selectedIndex', response.data.update_cost_shopify);
 
