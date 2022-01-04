@@ -90,8 +90,9 @@ class ContestationService
         $contestations->when(request('contestation_situation'), function ($query, $situation) {
             $situationStatus = [
                 '0' => null,
-                '1' => SaleContestation::STATUS_WIN,
-                '2' => SaleContestation::STATUS_LOST
+                '1' => SaleContestation::STATUS_IN_PROGRESS,
+                '2' => SaleContestation::STATUS_LOST,
+                '3' => SaleContestation::STATUS_WIN
             ];
 
             return $query->where('sale_contestations.status', $situationStatus[$situation]);
@@ -166,6 +167,11 @@ class ContestationService
                 'like',
                 '%' . $search . '%'
             );
+        });
+        $contestations->when(request('sale_approve'), function ($query, $val) {
+            if($val==1){
+                return $query->where('sales.status', Sale::STATUS_APPROVED);
+            }
         });
 
         return $contestations;
