@@ -24,7 +24,7 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
             ->selectRaw('withdrawals.*')
             ->join('companies as c', 'c.id', '=', 'withdrawals.company_id')
             ->join('users as u', 'u.id', '=', 'c.user_id')
-            ->whereIn('withdrawals.status', [Withdrawal::STATUS_PENDING, Withdrawal::STATUS_IN_REVIEW])            
+            ->whereIn('withdrawals.status', [Withdrawal::STATUS_PENDING, Withdrawal::STATUS_IN_REVIEW])
             ->where('u.get_faster', 1)
             ->whereIn('withdrawals.gateway_id',[Gateway::GETNET_PRODUCTION_ID,Gateway::ASAAS_PRODUCTION_ID,Gateway::GERENCIANET_PRODUCTION_ID])
             ->whereNull('c.deleted_at')

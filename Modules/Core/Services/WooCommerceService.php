@@ -362,15 +362,23 @@ class WooCommerceService
     }
 
 
-    public function cancelOrder($order, $note = null)
+    public function cancelOrder($sale, $note = null, $logRequest = true)
     {
         try {
+            $order = $sale->woocommerce_order;
 
             $data = [
                 'status' => 'cancelled'
             ];
 
+            if($logRequest) $requestId = $this->logPostRequests($data, $sale->project_id, 'CancelOrder', $sale->woocommerce_order, $sale->id);
+
             $result = $this->woocommerce->post('orders/'.$order, $data);
+
+            if($logRequest && $result->status == 'cancelled'){
+                $result = json_encode($result);
+                $this->updatePostRequest($requestId, 1, $result);
+            }
 
             if(!empty($note)){
                 $data = [
@@ -652,6 +660,74 @@ class WooCommerceService
         $model->received_data = $received_data;
         $model->save();
 
+    }
+
+    public function addItemsToOrder($saleId)
+    {
+        $firstSale = Sale::where('id', $saleId)
+            ->with(['upsells.productsPlansSale'])->first();
+
+        $orderId = $firstSale->woocommerce_order;
+        $data["line_items"] = [];
+
+        $total = 0;
+
+        foreach ($firstSale->upsells as $sale) {
+            $totalValue = $sale->present()->getSubTotal();
+            $firstProduct = true;
+            foreach ($sale->productsPlansSale as $productsPlanSale) {
+                if ($firstProduct) {
+                    $product = $productsPlanSale->product;
+
+                    $id = explode('-', $product->shopify_variant_id);
+
+                    if (empty($product->shopify_id)) {
+                        $item = [
+                            "product_id" => $id[0],
+                            "quantity" => $productsPlanSale->amount
+                        ];
+                    } else {
+                        $item = [
+                            "product_id" => $product->shopify_id,
+                            "variation_id" => $id[0],
+                            "quantity" => $productsPlanSale->amount
+                        ];
+                    }
+                    array_push($data["line_items"], $item);
+                    $total += $product->price;
+                }
+                $firstProduct = false;
+            }
+            $discount = $total - FoxUtils::floatFormat($totalValue);
+
+
+            $data['fee_lines'][] = [
+                "title" => "Desconto",
+                "total" => "-" . $discount,
+                "tax_class" => "",
+                "tax_status" => "taxable",
+                "name" => "Desconto"
+            ];
+        }
+
+
+        if (!empty($data["line_items"])) {
+
+            
+
+
+            try {
+                $result = $this->woocommerce->put('orders/' . $orderId, $data);
+
+
+            } catch (Exception $e) {
+            
+            
+            }
+        }
+
+        if(!empty($result))
+            return $result;
     }
 
 }

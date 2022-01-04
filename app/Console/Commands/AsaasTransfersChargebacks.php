@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transfer;
@@ -47,6 +48,9 @@ class AsaasTransfersChargebacks extends Command
     {
         $transfers = Transfer::whereDoesntHave('asaasTransfer',function($qr){
             $qr->where('status','DONE');
+        })
+        ->whereHas('transaction',function($q){
+            $q->where('gateway_id',Gateway::GETNET_PRODUCTION_ID);
         })
         ->where('reason','chargedback')
         ->where('gateway_id',$this->gatewayId)

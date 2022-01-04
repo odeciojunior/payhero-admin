@@ -133,9 +133,7 @@ class SalesApiController extends Controller
             $saleIdDecoded = hashids_decode($saleId, 'sale_id');
             $sale = Sale::find($saleIdDecoded);
             if (!in_array($sale->gateway_id, [
-                Gateway::GETNET_SANDBOX_ID, 
-                Gateway::GETNET_PRODUCTION_ID, 
-                Gateway::GERENCIANET_PRODUCTION_ID, 
+                Gateway::GERENCIANET_PRODUCTION_ID,
                 Gateway::GERENCIANET_SANDBOX_ID,
                 Gateway::ASAAS_PRODUCTION_ID,
                 Gateway::ASAAS_SANDBOX_ID
@@ -159,7 +157,7 @@ class SalesApiController extends Controller
                     ['status' => 'error', 'message' => 'Venda em processo de antecipação, tente novamente mais tarde'],
                     Response::HTTP_BAD_REQUEST
                 );
-            }  
+            }
 
             $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
             $gatewayService = $sale->gateway->getService();
@@ -174,36 +172,11 @@ class SalesApiController extends Controller
             if ($result['status'] != 'success') {
                 return response()->json(['message' => $result['message']], 400);
             }
-                        
+
             ((new Gateway)->getServiceById($sale->gateway_id))
             ->cancel($sale,$result['response'], $refundObservation);
 
-            if (!empty($sale->shopify_order)) {
-                $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
-                if (!empty($shopifyIntegration)) {
-                    $shopifyService = new ShopifyService(
-                        $shopifyIntegration->url_store,
-                        $shopifyIntegration->token,
-                        false
-                    );
-                    $shopifyService->refundOrder($sale);
-                    $shopifyService->saveSaleShopifyRequest();
-                }
-            }
 
-            //WooCommerce
-            if (!empty($sale->woocommerce_order)) {
-                $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
-                if (!empty($integration)) {
-                    $service = new WooCommerceService(
-                        $integration->url_store,
-                        $integration->token_user,
-                        $integration->token_pass
-                    );
-
-                    $service->cancelOrder($sale->woocommerce_order, 'Estorno');
-                }
-            }
             if ( !$sale->api_flag ) {
                 event(new SaleRefundedEvent($sale));
             }
@@ -342,7 +315,7 @@ class SalesApiController extends Controller
             };
 
             if (current($projectIds)) {
-                
+
                 $plans = null;
 
                 if (!empty($data['search'])) {
@@ -350,10 +323,10 @@ class SalesApiController extends Controller
 
                 } else {
                     $plans = $planModel->whereIn('project_id', $projectIds)->limit(30)->get();
-                
+
                 }
                 return PlansSelectResource::collection($plans);
-            
+
             } else {
                 $userId = auth()->user()->account_owner_id;
                 $userProjects = $userProjectModel->where('user_id', $userId)->pluck('project_id');
@@ -364,7 +337,7 @@ class SalesApiController extends Controller
 
                 } else {
                     $plans = $planModel->whereIn('project_id', $userProjects)->limit(30)->get();
-                    
+
                 }
                 return PlansSelectResource::collection($plans);
             }
@@ -420,6 +393,6 @@ class SalesApiController extends Controller
                 400
             );
         }
-    }  
+    }
 
 }
