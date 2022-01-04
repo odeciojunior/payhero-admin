@@ -2,6 +2,7 @@
 
 namespace Modules\Withdrawals\Services;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transaction;
@@ -38,7 +39,7 @@ class WithdrawalService
         return (new Withdrawal())
                 ->where('company_id', $companyId)
                 ->where('gateway_id', $gatewayId)
-                ->whereDate('created_at', Date('Y-m-d'))
+                ->whereDate('created_at', now())
                 ->exists();
     }
 
