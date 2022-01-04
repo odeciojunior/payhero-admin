@@ -2077,6 +2077,8 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                console.log(response.data.cost_currency_type);
+
                 if (response.data.shopify_id == null) {
                     $('.div-cost_currency').removeClass('col-sm-6').addClass('col-sm-12');
                     $('.div-cost_currency').find('.sirius-select-container').css('width', '100%');
@@ -2091,13 +2093,12 @@ $(function () {
                     container: '.page',
                 });
 
-                const indexCurrency = (response.data.cost_currency_type == 'BRL') ? 0 : 1;
-
+                let indexCurrency = (response.data.cost_currency_type == 'BRL') ? 0 : 1;
                 $('#cost_currency_type').prop('selectedIndex', indexCurrency);
+
                 $('#update_cost_shopify').prop('selectedIndex', response.data.update_cost_shopify);
 
-                const prefixCurrency = (response.data.cost_currency_type == 'USD') ? 'US$' : 'R$';
-
+                let prefixCurrency = (response.data.cost_currency_type == 'USD') ? 'US$' : 'R$';
                 $('#cost_plan').attr('placeholder', prefixCurrency);
                 $('#cost_plan').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: prefixCurrency});
 
