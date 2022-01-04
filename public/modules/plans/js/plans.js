@@ -379,7 +379,8 @@ $(function () {
                                     },
                                     success: function success(response) {
                                         let amount = 1;
-                                        let cost = response.data.cost;
+                                        let cost = response.data.cost.replace('$ ', '').replace('R$ ', '').replace(',', '').replace('.', ',');
+                                        console.log(cost);
                                         let currency_type_enum = response.data.currency_type_enum;
 
                                         if (selected_products[index_product].currency_type_enum) {
