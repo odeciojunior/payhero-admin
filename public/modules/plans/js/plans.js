@@ -1832,6 +1832,8 @@ $(function () {
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
+                    $('.tooltip').remove();
+
                     var append = '<div class="row">';
                     if (response.data.length > 0) {
                         $(modal).find('.modal-body').find('.box-plans').css('height', 'auto').css('max-height', '222px');
@@ -1890,7 +1892,7 @@ $(function () {
                             $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
                         });
 
-                        $(modal).find('.product-photo').on('load', function() {
+                        $(modal).find('.tab-pane.show.active').find('.product-photo').on('load', function() {
                             $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                                 $(modal).find('.tab-content').fadeIn('fast').promise().done(function() {
                                     var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 18;
