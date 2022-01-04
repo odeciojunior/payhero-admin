@@ -30,6 +30,7 @@ body {
 .btn-saque{
     background: #1BE4A8;
     border-radius: 8px;
+    margin-top: 5px;
     color: #f3f7f9;
     height: 48px;
     display: -webkit-box;
@@ -467,7 +468,6 @@ span.font-size-16 {
 }
 .btn-cancel {
     font-weight: bold;
-    margin-top: 5px;
     border-radius: 8px;
     color: #636363;
     height: 48px;

@@ -213,14 +213,14 @@ $(document).ready(function(){
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="collapse multi-collapse-${data.name}" id="collapse-withdrawal-${data.name}">
+                                            <div class="collapse multi-collapse-${data.name} mb-25 mb-md-0" id="collapse-withdrawal-${data.name}">
                                                 <div id="container-withdrawal-${data.name}" style="display:none">
                                                     <label class="ml-20" style="font-size:16px;color: #636363;">Valor a sacar</label>
                                                     <div class="input-group mb-3 withdrawal-value px-20">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">R$</span>
                                                         </div>
-                                                        <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque">
+                                                        <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque" placeholder="Digite o valor">
                                                     </div>
                                                 </div>
                                             </div>
@@ -228,8 +228,8 @@ $(document).ready(function(){
                                         <div class="collapse multi-collapse-${data.name}" id="collapse-withdrawal-${data.name}">
                                             <div class="col-sm-12 mb-10 pb-10">
                                                 <a href="#" class="col-12 btn-outline-success btn font-weight-bold" id="request-withdrawal-${data.id}" style="font-size:16px">Solicitar saque</a>
-                                                <a href="#" class="btn btn-saque font-weight-bold" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
                                                 <a href="#" class="btn btn-cancel" id="cancel-withdrawal-${data.name}" style="display:none;">Cancelar</a>
+                                                <a href="#" class="btn btn-saque font-weight-bold" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
                                             </div>
                                         </div>
                                     </div>
