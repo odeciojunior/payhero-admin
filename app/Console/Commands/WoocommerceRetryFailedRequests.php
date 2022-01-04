@@ -11,6 +11,7 @@ use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Modules\Core\Entities\SaleWoocommerceRequests;
 use Modules\Core\Services\FoxUtils;
+use stdClass;
 use Vinkla\Hashids\Facades\Hashids;
 
 
@@ -67,8 +68,14 @@ class WoocommerceRetryFailedRequests extends Command
                 }
 
                 if ($request['method'] == 'CancelOrder' || $request['method'] == 'CancelOrderAntiFraud') {
+                    
+                    $sale = new stdClass();
+                    $sale->woocommerce_order = $request['order'];
+                    $sale->project_id = $request['project_id'];
+                    $sale->id = $request['sale_id'];
 
-                    $res = $service->cancelOrder($request['order'], null, false);
+
+                    $res = $service->cancelOrder($sale, null, false);
 
                     if (!empty($res->status) && $res->status == 'cancelled') {
                         $res = json_encode($res);
