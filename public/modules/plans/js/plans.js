@@ -1777,8 +1777,10 @@ $(function () {
 
     // Update table plans by 'enter' button
     $(document).on('keypress', function (e) {
-        if (e.keyCode == 13) {
-            index();
+        if (!$('body').hasClass('modal-open')) {
+            if (e.keyCode == 13) {
+                index();
+            }
         }
     });
 
