@@ -303,8 +303,8 @@ class AsaasService implements Statement
         curl_close($curl);
         $response = json_decode($result, true);
 
-        if(($httpStatus < 200 || $httpStatus > 299) && (!isset($response->errors))) {
-            //report(new Exception('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus));
+        if(($httpStatus < 200 || $httpStatus > 299) && (!isset($response['errors']))) {
+            \Log::info($sale->id);
             report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus . ' -- $sale->id = ' . $sale->id . ' -- ' . json_encode($response));
         }
 
