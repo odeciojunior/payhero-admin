@@ -658,7 +658,7 @@ input[type="color"]::-moz-color-swatch {
 #preview_visual,
 #preview_payment {
     position: absolute;
-    width: inherit;
+    width: 100%;
     height: inherit;
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box; /* Firefox, other Gecko */

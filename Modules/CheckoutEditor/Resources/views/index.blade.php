@@ -115,7 +115,6 @@
                         <div class="banner-top-content">
                             <div id='upload-banner'>
                                 <input type="file" id="checkout_banner" name="checkout_banner" class="dropify" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
-                                <input type="hidden" id="checkout_banner_hidden">
                             </div>
 
                             
@@ -1052,6 +1051,7 @@
 
                                             <div class="input-container" style="margin-right: 20px">
                                                 <label for="color_buy_button">Cor do botão de compra</label>
+                                                <input class="color-picker" type="color" id="color_buy_button" name="color_buy_button" value="#23d07d" styles="height: 20px">
                                             </div>
                                         </div>
 

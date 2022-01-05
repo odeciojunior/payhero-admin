@@ -393,25 +393,65 @@ $(document).ready(function () {
         $("#zoom-slide").val(0);
     });
 
+    $('.img-profile input').on('click', function (e) {
+        e.stopPropagation();
+    }).on('change', function () {
+        let file = this.files[0];
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            let img = $('.img-profile').addClass('cropping')
+                .find('img')
+                .attr('src', e.target.result);
+            cropper = new Cropper(img[0], {
+                aspectRatio: 1,
+                minContainerWidth: 150,
+                minContainerHeight: 150,
+            });
+            $('#btn-crop-cancel, #btn-crop').show();
+        };
+        reader.readAsDataURL(file);
+    });
+
     $("#button-crop").on("click", function () {
-        var canvas = cropper.getCroppedCanvas();
-        var src = canvas.toDataURL();
-
-        var imgPreviewDesktop = document.getElementById(
-            "preview_banner_img_desktop"
-        );
-        var imgPreviewMobile = document.getElementById(
-            "preview_banner_img_mobile"
-        );
-
-        imgPreviewDesktop.src = src;
-        imgPreviewMobile.src = src;
-
-        replacePreview("checkout_banner", src, "Image.jpg");
         
-        $('#checkout_banner_hidden').prop('type', 'hidden');
-        $('#checkout_banner_hidden').val(src);
-        $('#checkout_banner_hidden').prop('type', 'file');
+        if (cropper) {
+            var canvas = cropper.getCroppedCanvas();
+            var src = canvas.toDataURL();
+
+            var imgPreviewDesktop = document.getElementById(
+                "preview_banner_img_desktop"
+            );
+            var imgPreviewMobile = document.getElementById(
+                "preview_banner_img_mobile"
+            );
+
+            imgPreviewDesktop.src = src;
+            imgPreviewMobile.src = src;
+
+            replacePreview("checkout_banner", src, "Image.jpg");
+            
+            $('#checkout_banner_hidden').prop('type', 'hidden');
+            $('#checkout_banner_hidden').val(src);
+            $('#checkout_banner_hidden').prop('type', 'file');
+
+            cropper.getCroppedCanvas().toBlob((blob) => {
+                let dt = new DataTransfer();
+                let file = new File([blob], 'banner.' + blob.type.split('/')[1]);
+                dt.items.add(file);
+                document.querySelector('#upload-banner input').files = dt.files;
+
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    // $('.img-profile')
+                    //     .find('img')
+                    //     .attr('src', e.target.result)
+                    //     .data('src', e.target.result);
+                    // cropper.destroy();
+                    // $('#btn-crop-cancel, #btn-crop').hide();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
 
         bs_modal.modal("hide");
     });
