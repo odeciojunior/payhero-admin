@@ -132,15 +132,24 @@
                                 <div class="col-sm-12 col-md mt-10">
                                     <label for="contestation_situation">Situação</label>
                                     <select name='contestation_situation' id="contestation_situation" class="form-control select-pad">
-                                        <option value="0">Ambos</option>
-                                        <option value="1">Ganha</option>
+                                        <option value="">Todos status</option>
+                                        <option value="1">Em Andamento</option>
                                         <option value="2">Perdida</option>
+                                        <option value="3">Ganha</option>
                                     </select>
                                 </div>
 
                                 <div class="col-sm-12 col-md mt-10">
                                     <label for='customer'>Cliente</label>
                                     <input id="customer" name="customer" class="form-control select-pad" placeholder="Nome do cliente">
+                                </div>
+                                <div class='col-sm-12 col-md-2 mt-10'>                                
+                                    <label for="sale_approve" class='mb-10'>Vendas aprovadas</label>
+                                    <br>
+                                    <label class="switch m-0 mx-5">
+                                        <input type="checkbox" id='sale_approve' name="sale_approve" >
+                                        <span class="slider round"></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>

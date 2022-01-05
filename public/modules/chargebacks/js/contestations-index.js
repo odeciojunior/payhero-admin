@@ -250,6 +250,7 @@ $(document).ready(function () {
             contestation_situation: $("#contestation_situation").val() ?? "",
             is_contested: $("#is_contested").val() ?? "",
             is_expired: $("#is_expired").val() ?? "",
+            sale_approve: $("#sale_approve").is(":checked") ? 1 : 0,
         };
         if (urlParams) {
             let params = "";
