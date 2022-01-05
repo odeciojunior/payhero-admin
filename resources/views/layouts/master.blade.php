@@ -35,7 +35,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/logos/2021/favicon/favicon-16x16.png') }}">
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=21') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=21') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">

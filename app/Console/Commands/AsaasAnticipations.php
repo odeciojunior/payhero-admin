@@ -17,7 +17,7 @@ class AsaasAnticipations extends Command
      *
      * @var string
      */
-    protected $signature = 'anticipations:asaas';
+    protected $signature = 'asaas:anticipations';
 
     /**
      * The console command description.
@@ -65,6 +65,10 @@ class AsaasAnticipations extends Command
                 ->where('release_date', '<=', $afterThreeDays)
                 ->where('created_at', '<', $toDay);
 
+            $total = $transactions->count();
+            $bar = $this->output->createProgressBar($total);
+            $bar->start();
+
             foreach ($transactions->cursor() as $transaction) {
                 $sale = $transaction->sale;
                 $response = $service->makeAnticipation($sale, $this->saveRequests, $this->simulate);
@@ -87,11 +91,24 @@ class AsaasAnticipations extends Command
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças já recebidas.') ) ) {
                             $error = false;
-                            $updateUser = true;
+                            if(!$this->simulate) {
+                                $sale->update([
+                                    'anticipation_status' => 'ANTICIPATED_ASAAS'
+                                ]);
+                            }
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
+                        and (str_contains($response['errors'][0]['description'], 'Este parcelamento já foi antecipado.') ) ) {
+                        $error = false;
+                        if(!$this->simulate) {
+                            $sale->update([
+                                              'anticipation_status' => 'ANTICIPATED'
+                                          ]);
+                        }
+                    }
+                    elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Para fazer antecipação, todas as parcelas devem estar confirmadas.') ) ) {
-                            $updateUser = true;
                             $error = true;
+                            $updateUser = true;
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar parcelamentos que possuem parcelas estornadas.') ) ) {
                             $error = true;
@@ -99,16 +116,19 @@ class AsaasAnticipations extends Command
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças estornadas.') ) ) {
                             $error = true;
+                            $updateUser = true;
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças desse cliente.') ) ) {
                             $error = true;
                             $updateUser = true;
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'excede seu limite atual') ) ) {
-                        $error = true;
-                        $updateUser = false;
+                            $error = true;
+                    } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
+                        and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças que serão creditadas') ) ) {
+                            $error = false;
                     } elseif(isset($response['errors'][0]['code'])) {
-                        $error = true;
+                            $error = true;
                     }
 
                     if($error) {
@@ -124,6 +144,7 @@ class AsaasAnticipations extends Command
                             );
                         }
                     }
+
                     if($updateUser and !$this->simulate) {
                         $transaction->user->update(
                             [
@@ -132,7 +153,11 @@ class AsaasAnticipations extends Command
                         );
                     }
                 }
+
+                $bar->advance();
             }
+
+            $bar->finish();
 
         } catch (Exception $e) {
             report($e);

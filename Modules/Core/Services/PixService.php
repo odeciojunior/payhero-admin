@@ -62,7 +62,7 @@ class PixService
 
 
                     if(empty($saleModel)) {
-                        report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id . ' sale conflitante $saleModel = ' . $saleModel->id));
+                        report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
                         continue;
                     }
 
@@ -87,7 +87,7 @@ class PixService
                     ]
                 );
 
-                
+
 
                 $pix = $sale->pixCharges->where('status', 'ATIVA')->first();
 

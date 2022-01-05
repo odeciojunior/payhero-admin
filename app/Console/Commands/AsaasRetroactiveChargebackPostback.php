@@ -37,7 +37,7 @@ class AsaasRetroactiveChargebackPostback extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->gatewayId = Gateway::ASAAS_PRODUCTION_ID; // foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID;
+        $this->gatewayId = Gateway::ASAAS_PRODUCTION_ID; // : Gateway::ASAAS_SANDBOX_ID;
     }
 
     /**
@@ -46,14 +46,97 @@ class AsaasRetroactiveChargebackPostback extends Command
      * @return int
      */
     public function handle()
+    {        
+        //$this->reprocessGatewayPostback();
+        //$this->createPostbackRetroactive();
+    }
+
+    public function reprocessGatewayPostback(){
+        $postbacks = GatewayPostback::whereHas('sale',function($qr){
+            $qr->where('status',1);
+        })->where('gateway_id',8)->where('data', 'like','%PAYMENT_REFUNDED%')->get();
+
+        $output = new ConsoleOutput();
+        $progress = new ProgressBar($output, count($postbacks));
+        $progress->start();
+
+        $sales = [];
+        foreach($postbacks as $postback){
+            if(!in_array($postback->sale_id,$sales) && $postback->id <> 1247278){
+                $postback->processed_flag = false;
+                $this->line($postback->id);
+                $postback->update();        
+                $sales[] = $postback->sale_id;
+            }
+            $progress->advance();
+        }
+
+        $progress->finish();
+
+        $this->comment("processados:".count($sales));
+    }
+
+    public function createPostbackRetroactive(){
+        $gateway_postbacks = array(           
+            array(
+                "sale_id" => 1376233,
+            ),
+            array(
+                "sale_id" => 1379013,
+            )           
+        );
+        
+
+        $output = new ConsoleOutput();
+        $progress = new ProgressBar($output, count($gateway_postbacks));
+        $progress->start();
+
+        foreach($gateway_postbacks as $row){
+            $requestExist = GatewayPostback::where('sale_id',$row['sale_id'])->where('data','like','%PAYMENT_CHARGEBACK_REQUESTED%')->exists();
+            if ($requestExist) {
+                continue;
+            }
+            Log::info('criando postback para sale id '.$row['sale_id']);
+            $this->createPostback($row['sale_id'],'CHARGEBACK_REQUESTED');
+            $progress->advance();
+        }
+
+        $progress->finish();
+    }
+    
+    public function createPostback($saleId,$status)
+    {
+        $saleGatewayRequest = SaleGatewayRequest::where('sale_id',$saleId)->where('send_data','like','%split%')->orderBy('id','desc')->first();
+        
+        if(!empty($saleGatewayRequest)){
+            $data = json_decode($saleGatewayRequest->gateway_result,true);
+
+            if(!empty($data['status'])){
+
+                $data['status'] = 'CHARGEBACK_REQUESTED';
+                $data = ['event'=>'PAYMENT_CHARGEBACK_REQUESTED','payment'=>$data];
+    
+                GatewayPostback::create([
+                    'data' => json_encode($data),
+                    'gateway_id' => $this->gatewayId,
+                    'gateway_enum' => GatewayPostback::GATEWAY_ASAAS_ENUM,
+                    'processed_flag' => false,
+                    'postback_valid_flag' => false,
+                    'created_at'=>'2021-12-20 14:49:57'
+                ]);
+            }
+        }        
+    }
+
+    public function collectChargeback()
     {
         $sales = DB::table('sales')->select('id')->where('created_at', '>', '2021-10-19 00:00:00')
-                ->where('gateway_id',$this->gatewayId)
-                ->where('status',Sale::STATUS_APPROVED)
-                ->where('payment_method',Sale::CREDIT_CARD_PAYMENT)
-                ->whereNotNull('gateway_transaction_id')
-                ->where('id','>',1426315)
-                ->get(); 
+        ->where('gateway_id',$this->gatewayId)
+        ->where('status',Sale::STATUS_APPROVED)
+        ->where('payment_method',Sale::CREDIT_CARD_PAYMENT)
+        ->whereNotNull('gateway_transaction_id')
+        ->where('id','>',1426315)
+        ->get(); 
 
         $total = count($sales);
 
@@ -86,27 +169,5 @@ class AsaasRetroactiveChargebackPostback extends Command
         }
 
         $progress->finish();
-    }
-
-    public function createPostback($saleId,$status)
-    {
-        $saleGatewayRequest = SaleGatewayRequest::where('sale_id',$saleId)->last();
-        if(!empty($saleGatewayRequest)){
-            $data = json_decode($saleGatewayRequest->gateway_result,true);
-
-            if(!empty($data['status'])){
-
-                $data['status'] = 'CHARGEBACK_REQUESTED';
-                $data = ['event'=>'PAYMENT_CHARGEBACK_REQUESTED','payment'=>$data];
-    
-                GatewayPostback::create([
-                    'data' => json_encode($data),
-                    'gateway_id' => $this->gatewayId,
-                    'gateway_enum' => GatewayPostback::GATEWAY_ASAAS_ENUM,
-                    'processed_flag' => false,
-                    'postback_valid_flag' => false,
-                ]);
-            }
-        }        
     }
 }

@@ -43,3 +43,10 @@ if (!function_exists('builder2sql')) {
         return str_replace_array('?', $bindings, $query->toSql());
     }
 }
+
+if (!function_exists('versionsFile')) {
+    function versionsFile()
+    {
+        return 1;
+    }
+}
