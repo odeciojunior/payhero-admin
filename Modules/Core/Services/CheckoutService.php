@@ -220,7 +220,7 @@ class CheckoutService
             ];
 
             $response = $this->runCurl($regenerateBilletUrl, 'POST', $data);
-            if (!empty($response) && $response->status == 'success' && $response->response->status == 'success') {
+            if (!empty($response->status) && !empty($response->response->status) && $response->status == 'success' && $response->response->status == 'success') {
                 // $saleModel  = new Sale();
                 $dataUpdate = (array)$response->response;
                 // if (!empty($dataUpdate['gateway_received_date'])) {
