@@ -35,10 +35,10 @@
                     </h1>
 
                     <div id="checkout_type" class="radio-group">
-                        <input class="custom-radio" id="checkout_type_steps" type="radio" name="checkout_type_enum" value="0" />
+                        <input class="custom-radio" id="checkout_type_steps" type="radio" name="checkout_type_enum" value="1" />
                         <label for="checkout_type_steps">Checkout de 3 passos</label>
 
-                        <input class="custom-radio" id="checkout_type_unique" type="radio" name="checkout_type_enum" value="1" />
+                        <input class="custom-radio" id="checkout_type_unique" type="radio" name="checkout_type_enum" value="2" />
                         <label for="checkout_type_unique">Checkout único</label>
                     </div>
                 </div>
