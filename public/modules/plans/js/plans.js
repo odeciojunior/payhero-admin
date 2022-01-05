@@ -34,7 +34,7 @@ $(function () {
                 console.log(response);
             },
             success: function success(response) {
-                gateway_tax = response.data.gateway_tax;
+                gateway_tax = parseFloat(response.data.gateway_tax);
                 currency_quotations = response.data.currency_quotation;
             }
         });
@@ -379,8 +379,7 @@ $(function () {
                                     },
                                     success: function success(response) {
                                         let amount = 1;
-                                        let cost = response.data.cost.replace('$ ', '').replace('R$ ', '').replace(',', '').replace('.', ',');
-                                        console.log(cost);
+                                        let cost = response.data.cost.replace('R$ ', '').replace('$ ', '').replace(',', '').replace('.', ',');
                                         let currency_type_enum = response.data.currency_type_enum;
 
                                         if (selected_products[index_product].currency_type_enum) {
@@ -526,7 +525,7 @@ $(function () {
                 $('input[name="price"]').mask('#.##0,00', {reverse: true});
 
                 $(modal).find('.costs-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(calculateCostsPlan()));
-                $(modal).find('.box-review').find('.tax').html(gateway_tax);
+                $(modal).find('.box-review').find('.tax').html(gateway_tax.toString().replace('.', ','));
 
                 $(modal).find('#stage3').addClass('show active').promise().done( function() {
                     var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 60;
@@ -595,7 +594,7 @@ $(function () {
 
                     var price = parseFloat(response.data.price.replace('R$', '').replace('$ ', '').replace('.', '').replace(',', '.')).toFixed(2);
 
-                    var tax = (price * gateway_tax / 100).toFixed(2);
+                    var tax = ((price * (gateway_tax + 1)) / 100).toFixed(2);
                     var costs = calculateCostsPlan();
                     var comission = (price - tax).toFixed(2);
                     var return_value = (comission - costs).toFixed(2);
@@ -660,7 +659,7 @@ $(function () {
                         $(modal).find('#stage1').find('.comission-plan p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(comission));
                         $(modal).find('#stage1').find('.profit-plan p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(return_value));
 
-                        $(modal).find('#stage1').find('.description-tax p span').html(gateway_tax);
+                        $(modal).find('#stage1').find('.description-tax p span').html(gateway_tax.toString().replace('.', ','));
 
                         $(modal).find('#stage1').find('.products-edit').find('.title').find('span').html(' ' + response.data.products.length + (response.data.products.length > 1 ? ' produtos' : ' produto'));
 
@@ -1066,8 +1065,7 @@ $(function () {
     $('body').on('keyup', '.box-products #price', function() {
         if ($(this).val() != '') {
             var price = $(this).val().replace('.', '').replace(',', '.');
-
-            var tax = (price * gateway_tax / 100).toFixed(2);
+            var tax = ((price * (gateway_tax + 1)) / 100).toFixed(2);
             var costs = calculateCostsPlan();
             var comission = (price - tax).toFixed(2);
             var return_value = (comission - costs).toFixed(2);
@@ -1653,7 +1651,7 @@ $(function () {
 
                 var price = response.plan.price.replace('R$', '').replace('.', '').replace(',', '.');
 
-                var tax = (price * gateway_tax / 100).toFixed(2);
+                var tax = ((price * (gateway_tax + 1)) / 100).toFixed(2);
                 var costs = calculateCostsPlan();
                 var comission = (price - tax).toFixed(2);
                 var return_value = (comission - costs).toFixed(2);
