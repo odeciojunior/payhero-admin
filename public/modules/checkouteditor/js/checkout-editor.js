@@ -1,6 +1,5 @@
 $(document).ready(function () {
     // ----------------------- Funções de Botão ----------------------------
-
     $("#default_finish_color").on("change", function () {
         if ($(this).is(":checked")) {
             $(":root").css("--finish-button-color", "#23D07D");
@@ -260,19 +259,7 @@ $(document).ready(function () {
 
     
 
-    // $("#changing_container").on("click", function (e) {
-    //     e.preventDefault();
-
-    //     $(this).fadeOut("slow", "swing");
-
-    //     // Save form...
-
-    //     $("#done").fadeIn("slow", "swing");
-
-    //     setTimeout(function () {
-    //         $("#done").fadeOut("slow", "swing");
-    //     }, 5000);
-    // });
+    
 
     $("input[name=number]").on("input", () => {
         $(this).attr(
@@ -353,21 +340,20 @@ $(document).ready(function () {
     });
 
     drEventBanner.on("dropify.beforeClear", function (event, element) {
-        var imgPreviewDesktop = document.getElementById(
-            "preview_banner_img_desktop"
-        );
-        var imgPreviewMobile = document.getElementById(
-            "preview_banner_img_mobile"
-        );
+        
+        var imgPreviewDesktop = document.getElementById("preview_banner_img_desktop");
+        var imgPreviewMobile = document.getElementById("preview_banner_img_mobile");
+
         imgPreviewDesktop.src = "";
         imgPreviewMobile.src = "";
+
+        $('#checkout_banner_hidden').val('');
     });
 
     //  ----------------- Crop Modal ----------------------
 
     var $dataZoom = $("#dataZoom");
-    bs_modal
-        .on("shown.bs.modal", function () {
+    bs_modal.on("shown.bs.modal", function () {
             cropper = new Cropper(image, {
                 highlight: false,
                 movable: false,
@@ -422,7 +408,11 @@ $(document).ready(function () {
         imgPreviewMobile.src = src;
 
         replacePreview("checkout_banner", src, "Image.jpg");
-        drEventBanner.attr("data-file", src);
+        
+        $('#checkout_banner_hidden').prop('type', 'hidden');
+        $('#checkout_banner_hidden').val(src);
+        $('#checkout_banner_hidden').prop('type', 'file');
+
         bs_modal.modal("hide");
     });
 
@@ -430,14 +420,11 @@ $(document).ready(function () {
         $("#checkout_banner").parent().find(".dropify-clear").trigger("click");
     });
 
-    $("#checkout_editor").on('submit', function (e) {
-        e.preventDefault();
-        console.log("Form");
-        let myForm = document.getElementById("checkout_editor");
-        console.log(myForm);
-        let formData = new FormData(myForm);
-        console.log(formData);
-    });
+    // $("#checkout_editor").on('submit', function (e) {
+    //     e.preventDefault();
+    //     let myForm = document.getElementById("checkout_editor");
+    //     let formData = new FormData(myForm);
+    // });
 
     $("#checkout_editor input[type=checkbox]").on('change', function(){
         if($(this).is(':checked')){
@@ -445,45 +432,17 @@ $(document).ready(function () {
         }else{
             $(this).val(0);
         }
-    })
+    });
 });
 
 // -------------------------- Funções de Scroll -----------------------
-$(window).on("scroll", function () {
-    if ($("#tab-checkout").hasClass("active")) {
-        var scrollWindow = $(this).scrollTop();
-        var topVisual = $("#checkout_type").position().top;
-        var topPayment = $("#payment_container").position().top - 200;
-        var topPostPurchase = $("#post_purchase").position().top - 200;
-
-        if (scrollWindow > topVisual) {
-            var marginTop = scrollWindow - topVisual;
-            $("#preview_div").css("margin-top", marginTop + 10);
-        } else {
-            $("#preview_div").css("margin-top", 0);
-        }
-
-        if (scrollWindow < topPayment) {
-            $("#preview_payment").fadeOut("slow", "swing");
-            $("#preview_post_purchase").fadeOut("slow", "swing");
-            $("#preview_visual").fadeIn("slow", "swing");
-        } else if (
-            scrollWindow > topPayment &&
-            scrollWindow < topPostPurchase
-        ) {
-            $("#preview_visual").fadeOut("slow", "swing");
-            $("#preview_post_purchase").fadeOut("slow", "swing");
-            $("#preview_payment").fadeIn("slow", "swing");
-        } else if (scrollWindow > topPostPurchase) {
-            $("#preview_visual").fadeOut("slow", "swing");
-            $("#preview_payment").fadeOut("slow", "swing");
-            $("#preview_post_purchase").fadeIn("slow", "swing");
-        }
-    }
+$(window).on('scroll', function() {
+    console.log('scrollTop');
 });
 
+
 function replacePreview(name, src, fname = "") {
-    let input = $('input[name="' + name + '"]');
+    let input = $('input[id="' + name + '"]');
     let wrapper = input.closest(".dropify-wrapper");
     let preview = wrapper.find(".dropify-preview");
     let filename = wrapper.find(".dropify-filename-inner");

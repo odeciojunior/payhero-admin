@@ -564,11 +564,26 @@ textarea:focus {
     align-items: center;
 }
 
-.modal-body.centered {
+.modal-body.spaced {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+}
+
+.modal-body.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: Center;
+}
+
+#modal_verify_content {
+  min-height: 350px;
+}
+
+#modal_verified_content {
+  min-height: 350px;
 }
 
 .code-input-container {
@@ -589,6 +604,7 @@ textarea:focus {
     font-size: 14px;
     text-align: center;
     color: #808080;
+    margin-bottom: 0;
 }
 
 .warning-input {
@@ -612,3 +628,14 @@ textarea:focus {
     font-size: 14px !important;
     text-align: center;
 }
+
+.icon-verified-modal{
+  width: 115px;
+  margin-bottom: 10px;
+}
+
+
+#checkout_banner_hidden {
+    position: absolute;
+    left: -9999px;
+  }

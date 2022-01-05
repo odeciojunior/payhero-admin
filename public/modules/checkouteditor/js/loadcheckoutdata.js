@@ -57,7 +57,6 @@ $(() => {
             },
             success: (response) => {
                 checkout = response.data;
-                console.log(checkout);
                 fillForm(checkout);
 
                 $(document).on("submit", "#checkout_editor", function (e) {
@@ -70,9 +69,11 @@ $(() => {
                     formData.append('post_purchase_message_content', $("#post_purchase_message_content").children().html());
 
                     if(!$('#theme_ready_enabled').is(':checked')){
+
                         var primaryColor = $('label[for="' + $("input[name=theme_ready]:checked").attr("id") +'"]')
                             .children(".theme-primary-color")
                             .attr("data-color");
+
                         var secondaryColor = $('label[for="' + $("input[name=theme_ready]:checked").attr("id") +'"]')
                             .children(".theme-secondary-color")
                             .attr("data-color");
@@ -83,11 +84,20 @@ $(() => {
                     }
 
                     $('#checkout_editor input[type=checkbox]:not(:checked)').map(function () {
-                        console.log($(this).attr('name'));
                         formData.append($(this).attr('name'), $(this).is(':checked') ? 1 : 0);
-                    });
+                    });                    
+                    
+                    // if($('#checkout_logo').get(0).files.length == 0){
+                    //     formData.set('checkout_logo', new File([checkout.checkout_logo], 'checkout_logo', { type: 'image/png'}));
+                    // }                    
+                    
+                    // console.log(formData.get('checkout_logo'));
 
+                    // formData.set('checkout_banner', new File([base64ImageToBlob($('#checkout_banner_hidden').val())], "checkout_banner", { type: 'image/png'}));
+                    
+                    console.log(formData.get('checkout_banner'));
 
+                    // Printar Form
                     for (var form of formData.entries()) {
                         console.log(form[0]+ ': ' + form[1]); 
                     }
@@ -119,27 +129,30 @@ $(() => {
             },
             error: (response) => {
                 errorAjaxResponse(response);
+
                 $("#checkout_logo").dropify(dropifyOptions);
 
-                drEventLogo.on("dropify.fileReady", function (event, element) {
-                    var files = event.target.files;
-                    var done = function (url) {
-                        $("#logo_preview").attr("src", url);
-                    };
-                    if (files && files.length > 0) {
-                        file = files[0];
+                // drEventLogo.settings.defaultFile = imagenUrl;
 
-                        if (URL) {
-                            done(URL.createObjectURL(file));
-                        } else if (FileReader) {
-                            reader = new FileReader();
-                            reader.onload = function (e) {
-                                done(reader.result);
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    }
-                });
+                // drEventLogo.on("dropify.fileReady", function (event, element) {
+                //     var files = event.target.files;
+                //     var done = function (url) {
+                //         $("#logo_preview").attr("src", url);
+                //     };
+                //     if (files && files.length > 0) {
+                //         file = files[0];
+
+                //         if (URL) {
+                //             done(URL.createObjectURL(file));
+                //         } else if (FileReader) {
+                //             reader = new FileReader();
+                //             reader.onload = function (e) {
+                //                 done(reader.result);
+                //             };
+                //             reader.readAsDataURL(file);
+                //         }
+                //     }
+                // });
 
                 loadOnAny(".checkout-container", true);
             },
@@ -147,13 +160,14 @@ $(() => {
 
         $("#cancel_button").on("click", function () {
             fillForm(checkout);
+            $("#changing_container").fadeOut("slow", "swing");
         });
 
         function fillForm(checkout) {
 
             $("#checkout_editor #checkout_editor_id").prop("value", checkout.id);
 
-            if (checkout.checkout_type_enum == 0) {
+            if (checkout.checkout_type_enum == 1) {
                 $("#checkout_editor #checkout_type_steps").prop("checked", true);
                 $("#checkout_editor .visual-content-left").addClass("three-steps");
                 $("#checkout_editor .visual-content-left").removeClass("unique");
@@ -191,12 +205,16 @@ $(() => {
                 $("#checkout_editor .logo-mobile").hide();
             }
 
-            if (checkout.checkout_logo != "") {
+            
+            if (checkout.checkout_logo != '') {
                 dropifyOptions.defaultFile = checkout.checkout_logo;
             }
 
             var drEventLogo = $("#checkout_logo").dropify(dropifyOptions);
 
+            $("#checkout_logo").attr('src', checkout.checkout_logo);
+
+            // Seta imagem no preview
             $("#logo_preview").attr("src", checkout.checkout_logo);
 
             drEventLogo.on("dropify.fileReady", function (event, element) {
@@ -239,12 +257,6 @@ $(() => {
                 $("#checkout_editor #banner_type_square").prop("checked", true);
                 $(".preview-banner").addClass("retangle-banner");
                 $(".preview-banner").removeClass("wide-banner");
-            }
-
-            if (checkout.checkout_banner !== "") {
-                // ADICIONA IMAGEM NO DROPIFY
-
-                $("#logo_upload").dropify(dropifyOptions);
             }
 
             if (checkout.countdown_enabled) {
@@ -570,10 +582,8 @@ $(() => {
                     formats: ["bold", "italic", "underline"],
                 }
             );
-            quillThanksPage.clipboard.dangerouslyPasteHTML(
-                0,
-                checkout.post_purchase_message_content
-            );
+
+            quillThanksPage.clipboard.dangerouslyPasteHTML( 0, checkout.post_purchase_message_content );
 
             if (checkout.whatsapp_enabled == 1) {
                 $("#checkout_editor #whatsapp_enabled").prop("checked", true);
@@ -589,8 +599,6 @@ $(() => {
 
             $("#checkout_editor #support_phone").val(checkout.support_phone || "");
 
-
-            console.log('Verified: ' + checkout.support_phone_verified);
             
             if(checkout.support_phone_verified == 1) {
                 $('#verify_phone_open').hide();
@@ -625,12 +633,28 @@ $(() => {
         }
     }
 
-    function objectifyForm(formArray) {
-        //serialize data function
-        var returnArray = {};
-        for (var i = 0; i < formArray.length; i++) {
-            returnArray[formArray[i]["name"]] = formArray[i]["value"];
+    function base64ImageToBlob(str) {
+        // Extract content type and base64 payload from original string
+        var pos = str.indexOf(';base64,');
+        var type = str.substring(5, pos);
+        var b64 = str.substr(pos + 8);
+      
+        // Decode base64
+        var imageContent = atob(b64);
+      
+        // Create an ArrayBuffer and a view (as unsigned 8-bit)
+        var buffer = new ArrayBuffer(imageContent.length);
+        var view = new Uint8Array(buffer);
+      
+        // Fill the view, using the decoded base64
+        for(var n = 0; n < imageContent.length; n++) {
+          view[n] = imageContent.charCodeAt(n);
         }
-        return returnArray;
-    }
+      
+        // Convert ArrayBuffer to Blob
+        var blob = new Blob([buffer], { type: type });
+      
+        return blob;
+      }
+
 });

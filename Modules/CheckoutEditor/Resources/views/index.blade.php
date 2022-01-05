@@ -114,8 +114,11 @@
 
                         <div class="banner-top-content">
                             <div id='upload-banner'>
-                                <input type="file" name="checkout_banner" id="checkout_banner" class="dropify" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
+                                <input type="file" id="checkout_banner" name="checkout_banner" class="dropify" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
+                                <input type="hidden" id="checkout_banner_hidden">
                             </div>
+
+                            
 
                             <div class="banner-intructions ">
                                 <div class="instrunctios">
@@ -713,7 +716,7 @@
                         <div class="whatsapp-content">
                             <label for="support_phone" class="checkout-label">Telefone do suporte <span class="observation-span">Opcional</span></label>
                             <div class="row-flex">
-                                <input type="text" class="checkout-input-text" id="support_phone" name="support_phone" placeholder="Digite o telefone com DDD do suporte" data-mask="(00)00000-0000" pattern="\([0-9]{2}\)[\s][0-9]{5}-[0-9]{4,5}"></input>
+                                <input type="text" class="checkout-input-text" id="support_phone" name="support_phone" placeholder="Digite o telefone com DDD do suporte" data-mask="(00) 00000-0000" ></input>
                                 <button id="verify_phone_open" class="verify-button" type="button">Validar telefone</button>
                                 <button id="verified_phone_open" class="verified-button" type="button" style="display: none;">Trocar telefone</button>
                             </div>
@@ -1379,13 +1382,12 @@
                     <h3 class="modal-title">Validar telefone</h3>
                     <button type="button" class="close verify-phone" aria-hidden="true" data-dismiss="modal">x</button>
                 </div>
-                <div class="modal-body centered">
-                    
+                <div id="modal_verify_content" class="modal-body spaced">
                     <p>
                         Enviamos um código de confirmação para <br />
                         o seu telefone <b id="phone_modal"></b>
                     </p>
-                    <br />
+
                     <p><b>Digite ou cole aqui:</b></p>
 
                     <fieldset class='number-code'>
@@ -1403,14 +1405,24 @@
                     <a id="resend_code" class="resend-code">Reenviar código</a>
                     <p id="timer" style="display: none"></p>
 
-                </div>
-                <div class="modal-footer verify-phone">
                     <button id="verify_phone" class="verify-button" type="button">Verificar</button>
+
                 </div>
+
+
+                <div id="modal_verified_content" class="modal-body centered" style="display: none">
+                    <img class="icon-verified-modal" src="{{ asset('/modules/checkouteditor/img/svg/verified-icon.svg') }}">
+
+                    <div>
+                        <h2> Seu telefone foi validado com sucesso! </h2>
+                        <p> As mensagens de WhatsApp solicitadas pelo seu cliente <br /> terão o telefone de suporte da sua loja. </p>
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </div>
-
 
 </div>
 
@@ -1423,7 +1435,7 @@
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin/asselectable.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin/selectable.js') }}"></script>
 <script src="{{asset('modules/checkouteditor/js/cropper.min.js?v='.uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/checkout-editor.js?v='.uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/loadcheckoutdata.js?v='.uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/verifyPhone.js?v='.uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/checkout-editor.js?v='.uniqid())}}"></script>
 @endpush

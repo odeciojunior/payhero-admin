@@ -6,7 +6,7 @@ $(() => {
         if (
             $("#support_phone").val() &&
             testinput(
-                /^\([1-9]{2}\)(?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/,
+                /^\([1-9]{2}\)\s(?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/,
                 $("#support_phone").val()
             )
         ) {
@@ -21,6 +21,11 @@ $(() => {
     });
 
     $("#modal_verify_phone").on("shown.bs.modal", function () {
+
+        $('#modal_verify_content').show();
+        $('#modal_verified_content').hide();
+
+        $("#phone_modal").empty();
         $("#phone_modal").append($("#support_phone").val());
 
         // 2 - Envia o código;
@@ -42,6 +47,16 @@ $(() => {
     });
 
     function verifyPhone() {
+
+        loadOnAny("#modal_verify_content", false, {
+            styles: {
+                container: {
+                    minHeight: "350px",
+                    minWidth: "600px",
+                },
+            },
+        });
+
         let config_id = $("#checkout_editor #checkout_editor_id").val();
         var confirmationCode = getCodeInput();
         $.ajax({
@@ -58,12 +73,22 @@ $(() => {
             },
             success: function (response) {
                 alertCustom("success", response.message);
+                
+                $('#verify_phone_open').hide();
+                $('#verified_phone_open').show();
+
+                $('#modal_verify_content').hide();                
+
+                loadOnAny("#modal_verified_content", true);
+                
             },
             error: function (response) {
                 startTimer();
                 $(".code-input").addClass("warning-input");
-                $(".verify-error").show("slow", "linear");
+                $(".verify-error").show("fast", "linear");
                 errorAjaxResponse(response);
+                loadOnAny("#modal_verify_content", true);
+                
             },
         });
     }
@@ -72,7 +97,7 @@ $(() => {
         startTimer();
         // Ajax para verificar telefone
         let config_id = $("#checkout_editor #checkout_editor_id").val();
-        let support_phone = $("#checkout_editor #support_phone").val();
+        let support_phone = $("#checkout_editor #support_phone").masked();
         $.ajax({
             method: "POST",
             url: "/api/checkouteditor/sendsupportphoneverification",
@@ -96,19 +121,18 @@ $(() => {
 
     function startTimer() {
         $("#resend_code").addClass("disabled");
-        $("#timer").show("slow", "linear");
+        $("#timer").show("fast", "linear");
         display = document.querySelector("#timer");
         var timer = 59,
             seconds;
         var timeCounter = setInterval(function () {
-            seconds = parseInt(timer % 60, 10);
-            seconds = seconds < 10 ? "0" + seconds : seconds;
+            seconds = timer < 10 ? "0" + timer : timer;
             display.textContent = `Aguarde (${seconds})`;
             if (--timer < 0) {
                 clearInterval(timeCounter);
                 // Ao zerar o contador libera o reenvio do código.
                 $("#resend_code").removeClass("disabled");
-                $("#timer").hide("slow", "linear");
+                $("#timer").hide("fast", "linear");
             }
         }, 1000);
     }

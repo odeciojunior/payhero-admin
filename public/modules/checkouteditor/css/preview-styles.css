@@ -22,12 +22,17 @@
 
 .preview {
     height: calc(100vh - 150px);
-    width: 100%;
-    min-width: 460px;
+    
     position: relative;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    
+    position: fixed;
+
+    top: 80px;
+    right: 180px;
+    min-width: 32%;
 
     -webkit-transition: all 0.7s ease-out;
     -moz-transition: all 0.7s ease-out;
