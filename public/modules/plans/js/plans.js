@@ -1281,6 +1281,18 @@ $(function () {
         getProducts(modal, 'create');
     });
 
+    // Check cost currency type
+    $('#check-custom').on('click', '.check', function() {
+        var check = $(this);
+        if (!check.attr('checked')) {
+            check.attr('checked', true).css({ 'background': '#2E85EC', 'border-color': '#2E85EC'}).html('<img src="/modules/global/img/icon-check.svg" />');
+            $('#cost_currency_type_all_plans').val(1);
+        } else {
+            check.attr('checked', false).css({ 'background': '#fff', 'border-color': '#9B9B9B'}).html('');
+            $('#cost_currency_type_all_plans').val(0);
+        }
+    });
+
     // Copy link plan
     $("#table-plans").on("click", ".copy_link", function () {
         var status = $(this).attr('data-status');
@@ -2060,6 +2072,10 @@ $(function () {
 
         var modal = '#modal_config_cost_plan';
 
+        $('#check-custom').hide();
+        $('#check-custom').find('.check').attr('checked', false).css({ 'background': '#fff', 'border-color': '#9B9B9B' }).html('');
+        $('#cost_currency_type_all_plans').val(0);
+
         $(modal).find('#cost_plan').val('');
         $(modal).find('#search-plan').val('');
         $(modal).find('#select-all').removeClass('selected');
@@ -2109,6 +2125,13 @@ $(function () {
                 $('#cost_plan').attr('placeholder', prefixCurrency);
                 $('#cost_plan').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: prefixCurrency});
 
+                $(modal).find('#cost_currency_type').on('change', function() {
+                    var selected = $(this).val();
+                    if(selected !== response.data.cost_currency_type) {
+                        $('#check-custom').show();
+                    }
+                });
+
                 $('#modal_config_cost_plan').modal('show');
             },
         });
@@ -2118,7 +2141,7 @@ $(function () {
     $(document).on('click', '.bt-update-cost-block', function (event) {
         let costCurrency = $('#cost_currency_type').val();
         let updateCostShopify = $('#update_cost_shopify').val();
-        //let updateAllCurrency = $('#select-all').attr('data-selected');
+        let updateAllCurrency = $('#cost_currency_type_all_plans').val();
         let cost = $('#cost_plan').val();
 
         $.ajax({
@@ -2133,6 +2156,7 @@ $(function () {
                 project: projectId,
                 costCurrency: costCurrency,
                 updateCostShopify: updateCostShopify,
+                updateAllCurrency: updateAllCurrency,
                 cost: cost,
                 products: selected_plans
             },

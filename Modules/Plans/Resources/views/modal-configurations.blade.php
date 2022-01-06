@@ -40,9 +40,17 @@
                                     <span class="icon"><img src="/modules/global/img/icon-info.svg"></span>
                                 </label>
                                 <select name="cost_currency_type" class="sirius-select" id="cost_currency_type">
-                                    <option value="BRL">R$ - Real Brasileiro (BRL)</option>
+                                    <option value="BRL" selected>R$ - Real Brasileiro (BRL)</option>
                                     <option value="USD">$ - Dólar Americano (USD)</option>
                                 </select>
+
+                                <div id="check-custom" style="margin-top: 28px; display: none;">
+                                    <div class="d-flex align-items-center check-custom">
+                                        <div class="check" style="text-align: center; line-height: 25px; cursor: pointer; margin-right: 11px; width: 31px; height: 31px; border: 1px solid #9B9B9B; border-radius: 8px;"></div>
+                                        <div style="font-weight: normal; font-size: 16px; line-height: 20px; color: #494949">Alterar a moeda em todos os planos do projeto</div>
+                                    </div>
+                                    <input type="hidden" name="cost_currency_type_all_plans" id="cost_currency_type_all_plans" value="0">
+                                </div>
                             </div>
 
                             <div class="form-group col-sm-6 div-cost_shopify">

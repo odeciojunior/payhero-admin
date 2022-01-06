@@ -635,6 +635,7 @@ class PlansApiController extends Controller
         try {
             $costCurrency = $request->input('costCurrency');
             $updateCostShopify = $request->input('updateCostShopify');
+            $updateAllCurrency = $request->input('updateAllCurrency');
             $projectId = current(Hashids::decode($request->input('project')));
             $cost = FoxUtils::onlyNumbers($request->input('cost'));
             $productsSelected = $request->input('products');
@@ -654,6 +655,13 @@ class PlansApiController extends Controller
             }
 
             $project->update(['notazz_configs' => json_encode($configs)]);
+
+            if ($updateAllCurrency == 1) {
+                ProductPlan::whereIn('plan_id', $project->plans->pluck('id')->toArray())
+                ->update([
+                    'currency_type_enum' => $projectModel->present()->getCurrencyCost($costCurrency),
+                ]);
+            }
 
             if (!empty($productsSelected) && !empty($cost)) {
                 foreach ($productsSelected as $p) {
