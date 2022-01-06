@@ -207,7 +207,7 @@ $(() => {
             },
             success: (response) => {
                 getSale(response.data);
-
+                
                 $("#refundAmount").val(response.data.total);
                 $("#refundBilletAmount").text(response.data.total);
                 $(".btn_refund_transaction").unbind("click");
@@ -674,6 +674,42 @@ $(() => {
             sale.user_sale_type == "affiliate"
         ) {
             $("#comission-value").text(sale.affiliate_comission);
+        }
+        
+        //Ordem Woocommerce
+        if (sale.has_woocommerce_integration) {
+            $('#nav-woo-tab').show()
+            if(sale.woocommerce_order){
+                var order = 'Status: <strong>'+sale.woocommerce_order.status+'</strong>'
+                // console.log(sale)
+                $('#woo_order').html(order)
+
+                $("#resendWoocommerceOrder").addClass("d-none");
+                $("#resendWoocommerceOrder").removeClass("d-block");
+                $("#resendWoocommerceOrderButton").attr("sale", "");
+            }else{
+                $('#woo_order').html('Ordem não encontrada!')
+
+                if(sale.woocommerce_retry_order){
+                    
+                    $("#resendWoocommerceOrder").removeClass("d-none");
+                    $("#resendWoocommerceOrder").addClass("d-block");
+                    $("#resendWoocommerceOrderButton").attr("sale", sale.id);
+                    $(".btn_new_order_woocommerce").unbind("click");
+                    $(".btn_new_order_woocommerce").on("click", function () {
+                        var sale = $(this).attr("sale");
+                        $("#modal-new-order-woocommerce").modal("show");
+                        $("#modal_detalhes").modal("hide");
+                        $(".btn-confirm-new-order-woocommerce").unbind("click");
+                        $(".btn-confirm-new-order-woocommerce").on(
+                            "click",
+                            function () {
+                                newOrderWooClick(sale);
+                            }
+                        );
+                    });
+                }
+            }
         }
 
         //Detalhes do shopify
@@ -1378,6 +1414,31 @@ $(() => {
         $.ajax({
             method: "POST",
             url: "/api/sales/newordershopify/" + sale,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+                atualizar(currentPage);
+            },
+            success: (response) => {
+                loadingOnScreenRemove();
+                alertCustom("success", response.message);
+                atualizar(currentPage);
+            },
+        });
+    }
+
+    //Gera ordem woocommerce
+    function newOrderWooClick(sale) {
+        
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: "/api/sales/neworderwoocommerce/" + sale,
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
