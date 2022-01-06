@@ -1283,12 +1283,15 @@ $(function () {
 
     // Copy link plan
     $("#table-plans").on("click", ".copy_link", function () {
-        var temp = $("<input>");
-        $("#table-plans").append(temp);
-        temp.val($(this).attr('link')).select();
-        document.execCommand("copy");
-        temp.remove();
-        alertCustom('success', 'Link copiado!');
+        var status = $(this).attr('data-status');
+        if (status == '1') {
+            var temp = $("<input>");
+            $("#table-plans").append(temp);
+            temp.val($(this).attr('link')).select();
+            document.execCommand("copy");
+            temp.remove();
+            alertCustom('success', 'Link copiado!');
+        }
     });
 
     // Details Plan
@@ -1744,7 +1747,11 @@ $(function () {
                                 data += '<td id="" class="" style="vertical-align: middle; line-height: 1;"><span ' + (value.name_short_flag ? 'data-toggle="tooltip" title="' + value.name + '"' : '') + '>' + value.name_short + '</span><div style="color: #8B8B8B; line-height: 1;"><small>com ' + (value.products_length > 1 ? value.products_length + ' produtos' : value.products_length + ' produto') + '</small></div></td>';
                                 data += "<td id='' class='' style='vertical-align: middle;'><span " + (value.description_short_flag ? "data-toggle='tooltip' title='" + value.description + "'" : "") + ">" + value.description_short + "</span></td>";
                                 data += '<td id="" class="" style="vertical-align: middle;">' + value.price + '</td>';
-                                data += '<td id="link" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; cursor:pointer;" link="' + value.code + '"><span class="display-sm-none display-m-none">Copiar </span><img src="/modules/global/img/icon-copy-c.svg"></td>';
+                                data += '<td id="link" data-status="' + value.status + '" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; ' + (value.status == 1 ? 'cursor:pointer;' : '') + '" link="' + value.code + '">';
+                                    data += '<span ' + (value.status == 0 ? 'data-toggle="tooltip" title="Domínio não confirugado"' : '') + '>';
+                                        data += '<span class="display-sm-none display-m-none">Copiar </span><img src="/modules/global/img/icon-copy-c.svg">';
+                                    data += '</span>';
+                                data += '</td>';
                                 data += '<td id="" class="text-center"><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
                                 data += "<td class='mg-responsive text-center' style='line-height: 1;'>"
                                     data += "<div class='d-flex justify-content-end align-items-center'>";
