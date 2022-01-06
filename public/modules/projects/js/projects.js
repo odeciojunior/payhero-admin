@@ -1,7 +1,9 @@
 $(() => {
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
-    // CONGIGURACOES DE COMPORTAMENTO DA TELA
+    $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
+
+    // COMPORTAMENTOS DA TELA
     $('#tab-info').click(() => {
         show();
     });
@@ -24,14 +26,6 @@ $(() => {
         }
     });
 
-    $('.status-url-affiliates').on('change', function () {
-        if ($(this).prop('selectedIndex') == 0) {
-            $('.div-url-affiliate').hide();
-        } else {
-            $('.div-url-affiliate').show();
-        }
-    });
-
     // PARCELAS
     let parcelas = '';
     let parcelasJuros = '';
@@ -46,6 +40,7 @@ $(() => {
         parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
         verificaParcelas(parcelas, parcelasJuros);
     });
+
     function verificaParcelas(parcelas, parcelasJuros) {
         if (parcelas < parcelasJuros) {
             $("#error-juros").css('display', 'block');
@@ -150,11 +145,11 @@ $(() => {
         }
 
     });
-    // FIM DAS CONGIGURACOES DE COMPORTAMENTO DA TELA
+    // FIM - COMPORTAMENTOS DA TELA
 
 
 
-    // CARD 1 - DE DETALHES DO PROJETO COM FOTO, NOME, CRIADO EM, DESCRICAO, ATIVO, ETC...
+    // CARD 1 FOTO, NOME, CRIADO EM, DESCRICAO E RESUMO
     function show() {
         loadingOnScreen();
 
@@ -207,7 +202,7 @@ $(() => {
         });
     }
 
-    // CARD 2 - CARREGA A TELA DE EDICAO DE PROJETO
+    // CARD 2 CARREGA TELA DE EDITAR PROJETO
     function updateConfiguracoes() {
         loadOnAny('#tab_configuration_project .card');
         $.ajax({
@@ -227,8 +222,78 @@ $(() => {
             }
         });
     }
+
+    // CARD 2 COMPORTAMENTO ABAS (Principal, Marketing e Recuperacao)
+    $('#slick-tabs').slick({
+        infinite: false,
+        speed: 300,
+        slidesToShow: 7,
+        variableWidth: true,
+        nextArrow: false,
+        prevArrow: false,
+
+        responsive: [
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                }
+            },
+        ]
+    });
+
+    let firstCategory = [
+        "tab-domains",
+        "tab_plans",
+        "tab-fretes",
+    ]
+
+    let secondCategory = [
+        "tab_pixels",
+        "tab_upsell",
+        "tab_order_bump",
+        "tab_coupons",
+        "tab_reviews",
+    ]
+
+    let thirdCategory = [
+        "tab_sms",
+    ]
+
+    $('.nav-tabs-horizontal .nav-link').click((e) => {
+        let currentActive = $('.nav-link.active')
+        let currentElement = e.target.id
+
+        if (currentActive.attr('id') !== currentElement) {
+            currentActive.removeClass('active')
+        }
+
+        if ($.inArray(currentElement, firstCategory) !== -1) {
+            $('#first-category').css('color', '#2E85EC')
+            $('#second-category').css('color', '#9C9C9C')
+            $('#third-category').css('color', '#9C9C9C')
+        }
+
+        if ($.inArray(currentElement, secondCategory) !== -1) {
+            $('#first-category').css('color', '#9C9C9C')
+            $('#second-category').css('color', '#2E85EC')
+            $('#third-category').css('color', '#9C9C9C')
+        }
+
+        if ($.inArray(currentElement, thirdCategory) !== -1) {
+            $('#first-category').css('color', '#9C9C9C')
+            $('#second-category').css('color', '#9C9C9C')
+            $('#third-category').css('color', '#2E85EC')
+        }
+    })
+
+    $('.slick-track').on('click', function () {
+        $('.nav-tabs-horizontal .tab-pane').removeClass('active show');
+    });
     
-    // CARD 3 - EDITAR PROJETO CONFIGURACOES DO PLUGIN DROPFY
+
+    // CARD 3 CONFIGURACAO DO PLUGIN DE ADD FOTO
     dropifyOptions = {
         messages: {
             'default': '',
@@ -253,26 +318,30 @@ $(() => {
     $('#product_photo').dropify(dropifyOptions);
 
 
-    // CARD 3 & 4 - IDENTIFICACAO - AFILIACOES
+    // CARD 4 - TEXTAREA TERMOS DE AFILIACAO
+
+    var quill = new Quill("#termsaffiliates", {
+        theme: "snow",
+        modules: {
+            toolbar: ['bold', 'italic', 'underline']
+        }
+    });
+    $(document).ready(function() {
+        $(".ql-toolbar.ql-snow").addClass("d-flex justify-content-center")
+    });
+
+    //CONFIGURACOES CARD 3 & 4
     function renderProjectConfig(data) {
+        // let {project, companies, userProject, shopifyIntegrations, projectUpsell} = data;
+        let {project, companies, userProject, shopifyIntegrations, projectUpsell} = data;
 
-        let {project} = data;
-
-        // FOTO, NOME E DESCRICAO
-        $('#update-project #product_photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
+        $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
         $('#update-project #name').val(project.name);
         $('#update-project #description').text(project.description);
 
-        // COLLAPESED BEHAVIOR ON-OFF
-        if (project.status_url_affiliates == 1) {
-            $('#update-project .status-url-affiliates').prop('checked', true)
-            $('.div-url-affiliate').show('fast', 'linear')
-        } else {
-            $('.div-url-affiliate').prop('checked', false)
-        }
-
-        // URL DA PAGINA PRINCIPAL
+        
         $('#update-project #url-page').val(project.url_page ? project.url_page : 'https://');
+
 
         // DURACAO DE COOKIE
         if (project.cookie_duration == 0) {
@@ -290,7 +359,7 @@ $(() => {
         } else if (project.cookie_duration == 365) {
             $('#update-project .cookie-duration').prop('selectedIndex', 6).change();
         }
-
+        
         // PORCENTAGEM
         $('#percentage-affiliates').mask('000', {
             reverse: true,
@@ -300,44 +369,42 @@ $(() => {
                 }
             }
         });
+        $('#update-project #percentage-affiliates').val(project.percentage_affiliates);
+
+
+        // TIPO DE COMISSAO 
+        $('#update-project .commission-type-enum input').filter(`[value=${project.commission_type_enum}]`).prop("checked", true);
+
+
+        // TEXT
+        //termsaffiliates.setData(project.terms_affiliates ?? ' ');
+        quill.setText(project.terms_affiliates ?? ' ');
+
 
         // AFILIACAO AUTOMATICA
         if (project.automatic_affiliation == 1) {
-            $('#update-project .automatic-affiliation').prop('selectedIndex', 1).change();
-        } else {
-            $('#update-project .automatic-affiliation').prop('selectedIndex', 0).change();
-        }
+            $('#update-project .automatic-affiliation input').prop("checked", true);
+        } 
 
         
-
-        if (project.commission_type_enum == 1) {
-            $('#update-project .commision-type-enum').prop('selectedIndex', 0).change();
-        } else {
-            $('#update-project .commission-type-enum').prop('selectedIndex', 1).change();
-        }
-
-        $('#update-project #percentage-affiliates').val(project.percentage_affiliates);
+        // URL CONVIDE AFILIADOS
         $('#update-project #url-affiliates').val(project.url_affiliates);
+
     }
 
 
     
+    // CARD 4 BOTAO DE COPIAR LINK
+    $("#copy-link-affiliation").on("click", function () {
+        var copyText = document.getElementById("url-affiliates");
+        copyText.select();
+        document.execCommand("copy");
 
-
-    // CARD 4 - TEXTAREA TERMOS DE AFILIACAO
-    var quill = new Quill("#termsaffiliates", {
-        theme: "snow",
-        modules: {
-            toolbar: ['bold', 'italic', 'underline']
-        }
-    });
-    $(document).ready(function() {
-        $(".ql-toolbar.ql-snow").addClass("d-flex justify-content-center")
+        alertCustom('success', 'Link copiado!');
     });
 
 
-
-    //CARD 4 - ABRE O MODAL DE CONFIRMACAO DE DELECAO DE PROJETO
+    // CARD DELETAR PROJETO
     $('#bt-delete-project').on('click', function (event) {
         event.preventDefault();
         let name = $("#name").val();
@@ -373,33 +440,10 @@ $(() => {
         });
 
     });
-
-
-
-    // CARD 4 - CHECKBOS AFILIACAO AUTOMATICA
-
-
-
-    // CARD 4 - BOTAO COPIAR LINK AFILIADO
-    $("#copy-link-affiliation").on("click", function () {
-        var copyText = document.getElementById("url-affiliates");
-        copyText.select();
-        document.execCommand("copy");
-
-        alertCustom('success', 'Link copiado!');
-    });
-    
     show();
 
 
-
-
-
-    
-    $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
-
-
-    //atualiza as configuracoes do projeto
+    // ATUALIZA AS CONFIGURACOES DO PROJETO
     $("#bt-update-project").on('click', function (event) {
         if ($('#photo_w').val() == '0' || $('#photo_h').val() == '0') {
             alertCustom('error', 'Selecione as dimensões da imagem de capa');
@@ -409,10 +453,9 @@ $(() => {
         event.preventDefault();
         loadingOnScreen();
 
-        parcelas = parseInt($(".installment_amount option:selected").val());
-        parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
-
-        //$('#terms_affiliates').val(termsaffiliates.getData());
+        // ENVIA O TEXTO
+        $('#terms_affiliates').val(quill.getText());
+        
 
         let verify = verificaParcelas(parcelas, parcelasJuros);
         let statusUrlAffiliates = 0;
@@ -425,27 +468,10 @@ $(() => {
 
         formData.append('status_url_affiliates', statusUrlAffiliates);
 
-        let discountCard = $('#credit_card_discount').val().replace('%', '');
-        let discountBillet = $('#billet_discount').val().replace('%', '');
-        let discountPix = $('#pix_discount').val().replace('%', '');
-
-        discountBillet = (discountBillet == '') ? 0 : discountBillet;
-        discountCard = (discountCard == '') ? 0 : discountCard;
-
-        formData.append('credit_card_discount', discountCard);
-        formData.append('billet_discount', discountBillet);
-        formData.append('pix_discount', discountPix);
-        formData.set('countdown_timer_flag', $('[name=countdown_timer_flag]').is(':checked') ? '1' : '0');
-        formData.set('product_amount_selector', $('#product_amount_selector').is(':checked') ? '1' : '0');
-        formData.set('custom_message_switch', $('[name=custom_message_switch]').is(':checked') ? '1' : '0');
-
-        formData.set('finalizing_purchase_config_toogle', $('[name=finalizing_purchase_config_toogle]').is(':checked') ? '1' : '0');
-        formData.set('checkout_notification_config_toogle', $('[name=checkout_notification_config_toogle]').is(':checked') ? '1' : '0');
-
         if (!verify) {
             $.ajax({
                 method: "POST",
-                url: "/api/projects/" + projectId,
+                url: "/api/projects/" + projectId + "/settings",
                 processData: false,
                 contentType: false,
                 cache: false,
@@ -470,7 +496,6 @@ $(() => {
                     $("#previewimage").imgAreaSelect({remove: true});
                     show();
                     loadingOnScreenRemove();
-
 
                 }
             });

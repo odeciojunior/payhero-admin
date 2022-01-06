@@ -95,7 +95,7 @@
 
                     <div class="col-md-6 d-flex justify-content-end align-items-center">
                         <label class="switch">
-                            <input type="checkbox" id="status-url-affiliates" name="status-url-affiliates" class='check status-url-affiliates' value='0'>
+                            <input type="checkbox" id="status-url-affiliates" name="status-url-affiliates" class="status-url-affiliates" data-toggle="collapse" data-target="#affiliation" aria-expanded="false" aria-controls="affiliation" value='0'>
                             <span class="slider round"></span>
                         </label>
                     </div>
@@ -104,171 +104,174 @@
             </div>
 
             <!-- CONTAINER COL 5 E COL 7 -->
-            <div class="row div-url-affiliate">
+            <div class="collapse" id="affiliation">
+                
+                <div class="row">
 
-                <!-- CONTAINER COL-5 -->
-                <div class="col-md-5 form-group">
-                    <!-- URL DA PAGINA -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="row no-gutters">
-                                <div class="col-md-12 px-5 pl-sm-30 pr-sm-0 form-group">
-                                    <label for='url-affiliates font-size-16'>URL da página principal</label>
-                                    <div class="input-group">
-                                        <input name="url_page" value="" type="text" class="input-pad" id="url-page" placeholder="URL da página" maxlength="60">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TEMPO DE COOKIE E PORCENTAGEM -->
-                    <div class="row">
-                        <div class="col-md-12 d-flex">
-
-                            <!-- COOKIE -->
-                            <div class='form-group col-md-6 pl-5 pl-sm-30 pr-0'>
-                                <label for="cookie-duration">Duração do cookie</label>
-                                <select class='cookie-duration form-control select-pad' name='cookie_duration'>
-                                    <option value="0"> Eterno</option>
-                                    <option value="7"> 7 dias</option>
-                                    <option value="15"> 15 dias</option>
-                                    <option value="30"> 1 mês</option>
-                                    <option value="60"> 2 meses</option>
-                                    <option value="180"> 6 meses</option>
-                                    <option value="365"> 1 ano</option>
-                                </select>
-                                <span id='error-cookie-duration' class='text-danger' style='display: none'></span>
-                            </div>
-
-                            <!-- PORCENTAGEM -->
-                            <div class="col-md-6 form-group pr-3 pr-sm-0">
-                                <label for='percentage-affiliates'>Porcentagem</label>
-
+                    <!-- COL - 5 URL, COOKI, PORCENTAGEM -->
+                    <div class="col-md-5 form-group">
+                        <!-- URL DA PAGINA -->
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="row no-gutters">
-                                    <div class="col-md-12">
-                                        <div class="input-group mb-3 test">
-
-                                            <input id='percentage-affiliates' class="form-control select-pad" name='percentage_affiliates' value='' type='text' min="0" max="100" maxlength="3">
-
-                                            <div class="input-group-append">
-                                                <span class="input-group-text select-pad percent-border">%</span>
-                                                <span id='input-pad-error' class='text-danger'></span>
-                                            </div>
-
-                                          </div>
+                                    <div class="col-md-12 px-5 pl-sm-30 pr-sm-0 form-group">
+                                        <label for='url-affiliates font-size-16'>URL da página principal</label>
+                                        <div class="input-group">
+                                            <input name="url_page" value="" type="text" class="input-pad" id="url-page" placeholder="URL da página" maxlength="60">
+                                        </div>
                                     </div>
-                                    {{-- <div class='form-group col-md-6 pr-3 pr-sm-0'>
-                                        <label for='percentage-affiliates'>Porcentagem</label>
-                                        <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='text' min="0" max="100" maxlength="3">
-
-                                        <span id='input-pad-error' class='text-danger'></span>
-                                    </div> --}}
-
-                                
                                 </div>
-
                             </div>
+                        </div>
+    
+                        <!-- TEMPO DE COOKIE E PORCENTAGEM -->
+                        <div class="row">
+                            <div class="col-md-12 d-flex">
+    
+                                <!-- COOKIE -->
+                                <div class='form-group col-md-6 pl-5 pl-sm-30 pr-0'>
+                                    <label for="cookie-duration">Duração do cookie</label>
+                                    <select class='cookie-duration form-control select-pad' name='cookie_duration'>
+                                        <option value="0"> Eterno</option>
+                                        <option value="7"> 7 dias</option>
+                                        <option value="15"> 15 dias</option>
+                                        <option value="30"> 1 mês</option>
+                                        <option value="60"> 2 meses</option>
+                                        <option value="180"> 6 meses</option>
+                                        <option value="365"> 1 ano</option>
+                                    </select>
+                                    <span id='error-cookie-duration' class='text-danger' style='display: none'></span>
+                                </div>
+    
+                                <!-- PORCENTAGEM -->
+                                <div class="col-md-6 form-group pr-3 pr-sm-0">
+                                    <label for='percentage-affiliates'>Porcentagem</label>
+    
+                                    <div class="row no-gutters">
+                                        <div class="col-md-12">
+                                            <div class="input-group mb-3 test">
+    
+                                                <input id='percentage-affiliates' class="form-control select-pad" name='percentage_affiliates' value='' type='text' min="0" max="100" maxlength="3">
+    
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text select-pad percent-border">%</span>
+                                                    <span id='input-pad-error' class='text-danger'></span>
+                                                </div>
+    
+                                              </div>
+                                        </div>
+                                        {{-- <div class='form-group col-md-6 pr-3 pr-sm-0'>
+                                            <label for='percentage-affiliates'>Porcentagem</label>
+                                            <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='text' min="0" max="100" maxlength="3">
+    
+                                            <span id='input-pad-error' class='text-danger'></span>
+                                        </div> --}}
+    
+                                    
+                                    </div>
+    
+                                </div>
+    
+                            </div>
+                        </div>
 
+                        <!-- TIPO DE COMISSAO -->
+                        <div class="row no-gutters">
+                            <div class="col-md-12 pl-5 pl-sm-30">
+    
+                                <!-- LABEL -->
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label for='commission-type-enum'>Tipo comissão</label>
+                                    </div>
+                                </div>
+    
+                                <!-- PRIMEIRO / ULTIMO CLICK -->
+                                <div class="row">
+                                    <div class="d-flex col-md-12">
+                                        <div class="col-md-12 d-flex justify-content-between px-0 commission-type-enum" id="commission_type_enum" name="commission_type_enum">
+        
+                                            <!-- PRIMEIRO -->
+                                            <div class="col-md-6 pl-0">
+                                                <input type="radio" id="first-click" name="commission_type_enum" class="d-none" value="1">
+                                                <label for="first-click" class="col-md-12 btn bg-light font-size-16 p-10 type-comission">Primiero Click</label>
+                                            </div>
+        
+                                            <!-- ULTIMO -->
+                                            <div class="col-md-6 pr-0">
+                                                <input type="radio" id="last-click" name="commission_type_enum" class="d-none" value="2">
+                                                <label for="last-click" class="col-md-12 btn bg-light font-size-16 p-10 type-comission">Ultimo Click</label>
+                                            </div>
+        
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>
                         </div>
                     </div>
-
-                    <div class="row no-gutters">
-                        <div class="col-md-12 pl-5 pl-sm-30">
-
-                            <div class="row">
-                                <div class="col-12">
-                                    <label for='commission-type-enum'>Tipo comissão</label>
-                                </div>
+    
+                    <!-- COL-7 TERMOS AFFILIACAO-->
+                    <div class="col-md-7 form-group pl-10 pr-10 pr-sm-40">
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+    
+    
+                                    <label for='terms-affiliates'>Termos de Afiliação</label>
+                                    <input type="hidden" name="terms_affiliates" id="terms_affiliates">
+    
+                                    <!-- TEXTAREA QUILL -->
+                                    <div class="h-200" id='termsaffiliates' placeholder='Termos'></div>
+    
+                                    <span id='terms-affiliates-error' class='text-danger'></span>
+    
                             </div>
+                        </div>
+                    </div>
+    
+                </div>
 
-                            <div class="row">
-                                <div class="d-flex col-md-12">
-                                    <div class="col-md-12 d-flex justify-content-between px-0 commission-type-enum" id="commission_type_enum" name="commission_type_enum">
-    
-                                        <div class="col-md-6 pl-0">
-                                            <input type="radio" id="first-click" name="commission_type_enum" class="d-none" value="1" checked>
-                                            <label for="first-click" class="col-md-12 btn bg-light font-size-16 p-10 type-comission">Primiero Click</label>
-                                        </div>
-    
-                                        <div class="col-md-6 pr-0">
-                                            <input type="radio" id="last-click" name="commission_type_enum" class="d-none" value="2">
-                                            <label for="last-click" class="col-md-12 btn bg-light font-size-16 p-10 type-comission">Ultimo Click</label>
-                                        </div>
-    
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- <div class='form-group col-md-12 pr-0'>
-                                <label for='commission-type-enum'>Tipo comissão</label>
-                                <select class='commission-type-enum form-control select-pad'  class='form-control select-pad'>
-                                    <option value='1'>Primeiro clique</option>
-                                    <option value='2'>Último clique</option>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row no-gutters">
+                            {{-- checked = 1 
+                                nao check3ed = 0 --}}
+                            {{-- <div class="col-md-2 pl-30 pr-0">
+                                <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation' class='form-control select-pad'>
+                                    <option value='0'>Não</option>
+                                    <option value='1'>Sim</option>
                                 </select>
                             </div> --}}
                             
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CONTAINER COL-7 -->
-                <div class="col-md-7 form-group pl-10 pr-10 pr-sm-40">
-                    <div class="row">
-                        <div class="col-md-12 form-group">
-
-
-                                <label for='terms-affiliates'>Termos de Afiliação</label>
-                                <input type="hidden" name="terms_affiliates" id="terms_affiliates">
-
-                                <!-- TEXTAREA QUILL -->
-                                <div class="h-200" id='termsaffiliates' placeholder='Termos'></div>
-
-                                <span id='terms-affiliates-error' class='text-danger'></span>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row no-gutters">
-                        {{-- <div class="col-md-2 pl-30 pr-0">
-                            <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation' class='form-control select-pad'>
-                                <option value='0'>Não</option>
-                                <option value='1'>Sim</option>
-                            </select>
-                        </div> --}}
-                        
-                        <div class="automatic-affiliation col-md-4 col-lg-2 pl-5 pl-md-10 pl-lg-30 pr-20 d-flex align-items-center border-top border-right" name='automatic_affiliation'>
-                            <input type="checkbox" id="auto-afiliation" class="col-1 h-20 mr-10">
-                            <label for="auto-afiliation" class="m-0">Afiliação automática</label>
-                        </div>
-                        
-                        <div class="col-12 col-md-5 col-lg-8 pl-0 pr-0 align-items-center border-top border-right">
-                            <div class="row no-gutters mt-3">
-
-                                <div class="col-md-6 d-flex align-items-center justify-content-sm-end">
-                                    <span class="font-weight-bold pr-0 pl-5">Convide afiliados:</span>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <input type="text" class="text-left pl-5 pl-sm-5 pr-10 border-0" id="url-affiliates" readonly>
-                                </div>
-
+                            <div class="automatic-affiliation col-md-4 col-lg-2 pl-5 pl-md-10 pl-lg-30 pr-20 d-flex align-items-center border-top border-right" name='automatic_affiliation'>
+                                <input type="checkbox" id="auto-afiliation" class="col-1 h-20 mr-10">
+                                <label for="auto-afiliation" class="m-0">Afiliação automática</label>
                             </div>
+                            
+                            <div class="col-12 col-md-5 col-lg-8 pl-0 pr-0 align-items-center border-top border-right">
+                                <div class="row no-gutters mt-3">
+    
+                                    <div class="col-md-6 d-flex align-items-center justify-content-sm-end">
+                                        <span class="font-weight-bold pr-0 pl-5">Convide afiliados:</span>
+                                    </div>
+    
+                                    <div class="col-md-6">
+                                        <input type="text" class="text-left pl-5 pl-sm-5 pr-10 border-0" id="url-affiliates" readonly>
+                                    </div>
+    
+                                </div>
+                            </div>
+    
+                            <div class="col-md-3 col-lg-2 p-5 border-top">
+                                <button id="copy-link-affiliation" class="btn btn-default mx-0 bg-white border-0 pl-md-30" type="button">
+                                    <img src="{{asset('/modules/global/img/projects/btnCopy.svg')}}" class="mr-10" alt="botao de copiar">Copiar
+                                </button>
+                            </div>
+    
                         </div>
-
-                        <div class="col-md-3 col-lg-2 p-5 border-top">
-                            <button id="copy-link-affiliation" class="btn btn-default mx-0 bg-white border-0 pl-md-30" type="button">
-                                <img src="{{asset('/modules/global/img/projects/btnCopy.svg')}}" class="mr-10" alt="botao de copiar">Copiar
-                            </button>
-                        </div>
-
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
     {{--END Configurações--}}
@@ -321,6 +324,7 @@
         </div>
     </div>
 </form>
+
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-project" aria-hidden="true" role="dialog" tabindex="-1">
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
         <div class="modal-content">

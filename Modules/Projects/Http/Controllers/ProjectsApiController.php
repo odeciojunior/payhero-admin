@@ -33,6 +33,7 @@ use Modules\Core\Services\SmsService;
 use Modules\Core\Services\TaskService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
+use Modules\Projects\Http\Requests\ProjectsSettingsUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\UserProjectResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
@@ -544,6 +545,40 @@ class ProjectsApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
+            return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
+        }
+    }
+
+    public function updateSettings(ProjectsSettingsUpdateRequest $request, $id){
+        return $request->all();
+        try {
+            $requestValidated = $request->validated();
+            $projectModel = new Project();
+            $userProjectModel = new UserProject();
+            $amazonFileService = app(AmazonFileService::class);
+
+            if (!$requestValidated) {
+                return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
+            }
+
+            $projectId = current(Hashids::decode($id));
+            $project = $projectModel->find($projectId);
+
+            if (!Gate::allows('update', [$project])) {
+                return response()->json(['message' => 'Sem permissão para atualizar o projeto'], 403);
+            }
+
+            $requestValidated['status'] = 1;
+
+            $projectUpdate = $project->update($requestValidated);
+            if (!$projectUpdate) {
+                return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
+            }
+
+            return response()->json(['message' => 'Projeto atualizado!'], 200);
+
+        } catch (Exception $e) {
+            report($e);
             return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
         }
     }

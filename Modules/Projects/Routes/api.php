@@ -19,6 +19,9 @@ Route::group(
           Route::apiResource('/projects', 'ProjectsApiController')
                ->only('store', 'destroy', 'update')->middleware('permission:projects_manage');
 
+          // Nova Edicao de projeto com novo metodo
+          Route::put("/projects/{id}/settings", "ProjectsApiController@updateSettings");
+
           // Verificação de telefone de suporte
           Route::post('/projects/{projectId}/verifysupportphone', 'ProjectsApiController@verifySupportphone')
                ->middleware('permission:projects_manage');
