@@ -189,6 +189,10 @@ $(() => {
         $("#nav-profile").removeClass("active");
         $("#nav-profile").removeClass("show");
 
+        $("#nav-woo-tab").removeClass("active");
+        $("#nav-woo").removeClass("active");
+        $("#nav-woo").removeClass("show");
+
         $("#modal_detalhes").modal("show");
         $("#refundAmount").mask("##.###,#0", {reverse: true});
         $("#refundBilletAmount").mask("##.###,#0", {reverse: true});
