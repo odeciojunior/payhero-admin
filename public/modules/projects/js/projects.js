@@ -319,7 +319,6 @@ $(() => {
 
 
     // CARD 4 - TEXTAREA TERMOS DE AFILIACAO
-
     var quill = new Quill("#termsaffiliates", {
         theme: "snow",
         modules: {
@@ -376,10 +375,9 @@ $(() => {
         $('#update-project .commission-type-enum input').filter(`[value=${project.commission_type_enum}]`).prop("checked", true);
 
 
-        // TEXT
-        //termsaffiliates.setData(project.terms_affiliates ?? ' ');
-        quill.setText(project.terms_affiliates ?? ' ');
-
+        // INSERI TEXTO DO BANCO
+        //quill.setText(project.terms_affiliates ?? ' ');
+        quill.clipboard.dangerouslyPasteHTML(0, project.terms_affiliates ?? ' ');
 
         // AFILIACAO AUTOMATICA
         if (project.automatic_affiliation == 1) {
@@ -393,7 +391,6 @@ $(() => {
     }
 
 
-    
     // CARD 4 BOTAO DE COPIAR LINK
     $("#copy-link-affiliation").on("click", function () {
         var copyText = document.getElementById("url-affiliates");
@@ -454,19 +451,27 @@ $(() => {
         loadingOnScreen();
 
         // ENVIA O TEXTO
-        $('#terms_affiliates').val(quill.getText());
+        let formatedText = quill.root.innerHTML;
         
-
+        $('#terms_affiliates').val(formatedText);
+        // $('#terms_affiliates').val(quill.getText());
+        
         let verify = verificaParcelas(parcelas, parcelasJuros);
+        
         let statusUrlAffiliates = 0;
-
         if ($('#status-url-affiliates').prop('checked')) {
             statusUrlAffiliates = 1;
         }
+        
+        let automaticAffiliation = 0;
+        if($('#update-project .automatic-affiliation input').prop("checked")){
+            automaticAffiliation = 1;
+        };
 
         let formData = new FormData(document.getElementById("update-project"));
-
         formData.append('status_url_affiliates', statusUrlAffiliates);
+        formData.append("automatic_affiliation", automaticAffiliation);
+
 
         if (!verify) {
             $.ajax({

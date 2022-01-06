@@ -17,7 +17,7 @@ Route::group(
           Route::get('/projects/{id}/edit', 'ProjectsApiController@edit');
 
           Route::apiResource('/projects', 'ProjectsApiController')
-               ->only('store', 'destroy', 'update')->middleware('permission:projects_manage');
+               ->only('store', 'destroy')->middleware('permission:projects_manage');
 
           // Nova Edicao de projeto com novo metodo
           Route::put("/projects/{id}/settings", "ProjectsApiController@updateSettings");

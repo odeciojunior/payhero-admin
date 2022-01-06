@@ -233,10 +233,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row no-gutters">
-                            {{-- checked = 1 
-                                nao check3ed = 0 --}}
                             {{-- <div class="col-md-2 pl-30 pr-0">
-                                <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation' class='form-control select-pad'>
+                                <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation'>
                                     <option value='0'>Não</option>
                                     <option value='1'>Sim</option>
                                 </select>

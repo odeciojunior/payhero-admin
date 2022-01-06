@@ -17,6 +17,7 @@ class ProjectsSettingsUpdateRequest extends FormRequest
             "status_url_affiliates" => 'nullable|int|max:1',
             "terms_affiliates" => 'nullable',
             "url_page" => "nullable|string|max:255",
+            "automatic_affiliation" => 'nullable',
         ];
     }
 
