@@ -4,10 +4,12 @@ namespace Modules\Core\Services;
 
 
 use Carbon\Carbon;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Entities\SaleContestationFile;
@@ -90,8 +92,9 @@ class ContestationService
         $contestations->when(request('contestation_situation'), function ($query, $situation) {
             $situationStatus = [
                 '0' => null,
-                '1' => SaleContestation::STATUS_WIN,
-                '2' => SaleContestation::STATUS_LOST
+                '1' => SaleContestation::STATUS_IN_PROGRESS,
+                '2' => SaleContestation::STATUS_LOST,
+                '3' => SaleContestation::STATUS_WIN
             ];
 
             return $query->where('sale_contestations.status', $situationStatus[$situation]);
@@ -167,6 +170,11 @@ class ContestationService
                 '%' . $search . '%'
             );
         });
+        $contestations->when(request('sale_approve'), function ($query, $val) {
+            if($val==1){
+                return $query->where('sales.status', Sale::STATUS_APPROVED);
+            }
+        });
 
         return $contestations;
 
@@ -197,8 +205,13 @@ class ContestationService
     public function getTotalApprovedSales($filters)
     {
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        
+        $gatewayIds = [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID];
+        if(!FoxUtils::isProduction()){
+            $gatewayIds = array_merge($gatewayIds, [Gateway::ASAAS_SANDBOX_ID, Gateway::GETNET_SANDBOX_ID]);
+        }
 
-        $totalSaleApproved = Sale::where('gateway_id', 15)
+        $totalSaleApproved = Sale::whereIn('gateway_id', $gatewayIds)
             ->where('payment_method', 1)
             ->whereIn('status', [1, 4, 7, 24])
             ->where('sales.owner_id', \Auth::user()->account_owner_id);

@@ -7,6 +7,7 @@ use Google\Service\PolyService\Format;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\Sale;
@@ -424,7 +425,10 @@ class TrackingService
 
     public function getAveragePostingTimeInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
-        $gatewayIds = FoxUtils::isProduction() ? [15] : [14, 15];
+        $gatewayIds = [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID];
+        if(!FoxUtils::isProduction()){
+            $gatewayIds = array_merge($gatewayIds, [Gateway::ASAAS_SANDBOX_ID, Gateway::GETNET_SANDBOX_ID]);
+        }
 
         $approvedSalesWithTrackingCode = Tracking::select(DB::raw('ceil(avg(datediff(trackings.created_at, sales.end_date))) as averagePostingTime'))
             ->join('sales', 'sales.id', '=', 'trackings.sale_id')

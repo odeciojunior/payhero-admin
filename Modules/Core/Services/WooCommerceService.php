@@ -45,6 +45,7 @@ class WooCommerceService
     private $pass;
     private $endPoint = "/wp-json/wc/v3/";
     public $woocommerce;
+    public $requestId;
 
     /**
      * constructor.
@@ -371,13 +372,13 @@ class WooCommerceService
                 'status' => 'cancelled'
             ];
 
-            if($logRequest) $requestId = $this->logPostRequests($data, $sale->project_id, 'CancelOrder', $sale->woocommerce_order, $sale->id);
+            if($logRequest) $this->requestId = $this->logPostRequests($data, $sale->project_id, 'CancelOrder', $sale->woocommerce_order, $sale->id);
 
             $result = $this->woocommerce->post('orders/'.$order, $data);
 
             if($logRequest && $result->status == 'cancelled'){
                 $result = json_encode($result);
-                $this->updatePostRequest($requestId, 1, $result);
+                $this->updatePostRequest($this->requestId, 1, $result);
             }
 
             if(!empty($note)){
@@ -391,7 +392,9 @@ class WooCommerceService
             return $result;
 
         } catch (Exception $e) {
-            report($e);
+            $result = json_encode($e);
+            $this->updatePostRequest($this->requestId, 0, $result);
+
         }
     }
 

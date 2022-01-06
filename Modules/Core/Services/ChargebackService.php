@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Illuminate\Support\Carbon;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GetnetChargeback;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
@@ -159,7 +160,12 @@ class ChargebackService
     {
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-        $totalSaleApproved = Sale::where('gateway_id', 15)
+        $gatewayIds = [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID];
+        if(!FoxUtils::isProduction()){
+            $gatewayIds = array_merge($gatewayIds, [Gateway::ASAAS_SANDBOX_ID, Gateway::GETNET_SANDBOX_ID]);
+        }
+
+        $totalSaleApproved = Sale::whereIn('gateway_id', $gatewayIds)
             ->where('payment_method', 1)
             ->whereIn('status', [1, 4, 7, 24]);
 
