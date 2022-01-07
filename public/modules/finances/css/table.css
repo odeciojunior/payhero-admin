@@ -13,15 +13,19 @@ thead {
     font-size: 16px;
     line-height: 20px;
     color: #5D5D5D;
-    padding: 25px 10px !important;
+    padding: 25px 10px;
 }
 
 .table-striped > tbody > tr:nth-child(even) > td, .table-striped > tbody > tr:nth-child(even) > th {
-    background-color: #FBFBFB !important;
+    background-color: #FBFBFB;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: transparent !important;
+    background-color: transparent;
+}
+
+.table tbody > tr > td:last-child {
+   border-radius: 0 16px !important
 }
 
 @media (max-width: 767px) {

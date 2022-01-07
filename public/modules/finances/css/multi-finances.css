@@ -30,7 +30,6 @@ body {
 .btn-saque{
     background: #1BE4A8;
     border-radius: 8px;
-    margin-top: 5px;
     color: #f3f7f9;
     height: 48px;
     display: -webkit-box;
@@ -470,6 +469,7 @@ span.font-size-16 {
     font-weight: bold;
     border-radius: 8px;
     color: #636363;
+    margin-top: 5px;
     height: 48px;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -513,12 +513,6 @@ hr{
     background: -webkit-gradient(linear, left top, right top, color-stop(40%, #FFF), color-stop(#ECECEC), color-stop(60%, #FFF)) right/300% 100%;
     background: -o-linear-gradient(left, #FFF 40%, #ECECEC, #FFF 60%) right/300% 100%;
     background: linear-gradient(90deg, #FFF 40%, #ECECEC, #FFF 60%) right/300% 100%;
-}
-.badge {
-    width: -moz-min-content;
-    width: -webkit-min-content;
-    width: min-content;
-    white-space: pre-line;
 }
 
 .owl-dot {

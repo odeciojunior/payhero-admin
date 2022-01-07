@@ -310,7 +310,7 @@
                             <br>
                             <span id="delivery-city" class="table-title gray"></span>
                         </div>
-                        <div id='div_tracking_code' style='display:none;'>
+                        <div id='div_tracking_code' style='display:none; overflow: auto'>
                             <h4> Rastreio </h4>
                             <table class='table table-striped mb-10'>
                                 <thead>

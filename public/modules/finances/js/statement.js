@@ -1,3 +1,25 @@
+function getRequestTime(data = '') {
+    let request_date = ''
+    if (!isEmpty(data.date_request))
+        request_date = `<div class="d-block d-md-none"> Solicitado em  </div>
+                        <div class="bold-mobile"> ${data.date_request} </div>`;
+
+    if (!isEmpty(data.date_request_time))
+        request_date += `<small style="color: #9E9E9E; font-size: 11px"> ás ${data.date_request_time.replace(':', 'h')} </small>`;
+
+    return request_date;
+}
+function getReleaseTime(data = '') {
+    let release_date = ''
+    if (!isEmpty(data.date_release))
+        release_date = `<div class="d-block d-md-none"> Liberado em  </div>
+                        <div class="bold-mobile"> ${data.date_release} </div>`;
+
+    if (!isEmpty(data.date_release_time))
+        release_date += `<small style="color: #9E9E9E; font-size: 11px"> ás ${data.date_release_time.replace(':', 'h')} </small>`;
+
+    return release_date;
+}
 window.loadStatementTable = function() {
     if(window.gatewayCode == 'w7YL9jZD6gp4qmv') {
         updateAccountStatementData();
@@ -39,6 +61,7 @@ window.updateTransfersTable = function(link = null) {
         },
         error: (response) => {
             errorAjaxResponse(response);
+            $('#available-in-period').html(`<span class="currency">R$ </span>0,00`)
         },
         success: (response) => {
 
@@ -68,8 +91,6 @@ window.updateTransfersTable = function(link = null) {
                     .addClass('green');
             }
 
-            // loadOnAny('#available-in-period', true);
-
             if (response.data == '') {
                 $("#table-transfers-body").html(`
                     <tr class='text-center bg-transparent'>
@@ -89,32 +110,47 @@ window.updateTransfersTable = function(link = null) {
                 data = '';
 
                 $.each(response.data, function (index, value) {
-                    data += '<tr >';
+                    data += '<tr class="s-table table-finance-schedule-new">';
+                    let dateRequest = getRequestTime(value);
+                    let dateRelease = getReleaseTime(value);
+
                     if (value.is_owner && value.sale_id) {
-                        data += `<td style="vertical-align: middle;">
-                            ${value.reason}
+                        data += `<td style="grid-area: sale" class="sale-finance-schedule text-center">
+                            <span class="d-block mb-10"> ${value.reason} </span>
                             <a class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" venda="${value.sale_id}">
-                                <span style="color:black;">#${value.sale_id}</span>
-                            </a><br>
-                            <small>(Data da venda: ${value.sale_date})</small>
-                        </td>`;
+                                <span class="transfers-sale">#${value.sale_id}</span>
+                            </a>
+                        </td>`
                     } else {
                         if (value.reason === 'Antecipação') {
-                            data += `<td style="vertical-align: middle;">${value.reason} <span style='color: black;'> #${value.anticipation_id} </span></td>`;
+                            data += `<td style="grid-area: sale" class="text-center sale-finance-schedule">
+                                        <span class="d-block mb-10"> ${value.reason} </span>
+                                        <span class="transfers-sale"> #${value.anticipation_id} </span>
+                                    </td>`;
                         } else {
-                            data += `<td style="vertical-align: middle;">${value.reason}${value.sale_id ? '<span> #' + value.sale_id + '</span>' : ''}</td>`;
+                            data += `<td style="grid-area: sale" class="text-center sale-finance-schedule">
+                                        <span class="d-block mb-10"> ${value.reason} </span>
+                                        ${value.sale_id ? `<span class="transfers-sale"> #${value.sale_id}</span>` : ''}
+                                    </td>`;
                         }
                     }
-                    data += '<td style="vertical-align: middle;">' + value.date + '</td>';
+
+                    data += `<td class="date-start-finance-transfers text-left" style="grid-area: date-start"> ${dateRequest} </td>
+                             <td class="date-end-finance-transfers text-left" style="grid-area: date-end"> ${dateRelease} </td>`;
+
                     if (value.type_enum === 1) {
-                        data += `<td style="vertical-align: middle; color:green;"> ${value.value}`;
+                        data += `<td class="value-finance-schedule" style="grid-area: value">
+                                    <span class="font-md-size-20 bold" style="color:green"> R$ </span>
+                                    <strong class="font-md-size-20" style="color:green"> ${value.value} </strong>`;
                         if (value.reason === 'Antecipação') {
                             data += `<br><small style='color:#543333;'>(Taxa: ${value.tax})</small> </td>`;
                         } else {
                             data += `</td>`;
                         }
                     } else {
-                        data += `<td style="vertical-align: middle; color:red;"> ${value.value}</td> `;
+                        data += `<td class="value-finance-schedule" style="grid-area: value">
+                                    <span class="font-md-size-20 bold" style="color:red"> R$ </span>
+                                    <strong class="font-md-size-20" style="color:red"> ${value.value} </strong></td> `;
                     }
                     data += '</tr>';
                 });
@@ -258,8 +294,8 @@ window.updateAccountStatementData = function() {
             };
 
             items.forEach(function (item) {
-                let dataTable = `<tr class="s-table table-finance-schedule"><td style="vertical-align: middle;">`;
-
+                let dataTable = `<tr class="s-table table-finance-schedule">
+                <td style="vertical-align: middle;">`;
                 if (item.order && item.order.hashId) {
                     dataTable += `Transação`;
 

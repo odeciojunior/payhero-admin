@@ -81,6 +81,7 @@
 .label-price {
     font-size: 14px;
     margin: 0;
+    color: #70707E;
 }
 
 .price {
@@ -402,7 +403,7 @@ select, .select-pad {
 }
 
 .table td, .table {
-    margin-bottom: 0 !important
+    margin-bottom: 0
 }
 
 #modal_detalhes .nav-tabs .nav-link:not(.active) {
@@ -421,7 +422,7 @@ select, .select-pad {
 }
 
 #header h6, #header .available-balance{
-   color: #70707E;
+    color: #70707E;
 }
 #bt-withdrawal {
     background-color: #1BE4A8;
@@ -429,7 +430,7 @@ select, .select-pad {
 }
 
 .balance-resume .card-body{
-   padding: 18px 24px
+    padding: 18px 24px
 }
 
 .balance-resume h5{
@@ -446,6 +447,20 @@ select, .select-pad {
     padding: 10px 35px 12px 16px
 }
 
+.title-withdrawals-table {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 23px;
+    color: #636363;
+}
+
+.transfers-sale {
+    color: #000;
+    padding-top: 5px;
+    margin-top: 5px;
+    border-top: 1px solid #F4F4F4;
+}
+
 @media (min-width: 768px) {
     .pointer-md {
         cursor: pointer !important;
@@ -456,40 +471,43 @@ select, .select-pad {
 
 @media (max-width: 991px) {
     .badge {
-        width: 10px;
-        height: 10px;
-
-        padding: .5rem !important;
-
-        border: 2px solid white;
-        box-shadow: 0 3px 6px #00000029;
-        text-indent: -9999px;
-        white-space: nowrap;
+        font-size: 10px !important;
+        padding: 10px 15px !important;
+        border-radius: 36px !important;
+        line-height: 100%;
     }
 }
 
 /*MOBILE SM*/
 @media (max-width: 767px) {
     .s-table {
-        padding: 20px !important;
-
         display: grid;
-
         border: none;
-        margin: unset;
+        margin: 14px 0 !important;
+        padding: 14px 16px !important;
+        background-color: #FFF !important;
+        border-radius: 8px !important;
     }
 
     .s-table.table-finance-schedule {
         grid-template-columns: 1fr 1fr;
         grid-template-areas: "sale status"
                              "date value";
+                             "date-start date-end";
+    }
+
+    .s-table.table-finance-schedule-new {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "sale value"
+                             "date-start date-end";
     }
 
     .s-table.table-finance-transfers {
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-areas: "sale sale status"
-                             "bank bank value"
-                             "date-start date-end ."
+        grid-template-columns: 1fr 1fr ;
+        grid-template-areas: "status sale"
+                             "value value"
+                             "bank bank"
+                             "date-start date-end"
     }
 
     table.unify tr {
@@ -498,12 +516,12 @@ select, .select-pad {
     }
 
     .table td {
+        background-color: #FFF !important;
         margin: 0;
     }
 
     table.unify tr {
         padding: 0;
-        background-color: #f8fbff;
     }
 
     .table-striped tbody tr:first-child {
@@ -532,6 +550,7 @@ select, .select-pad {
     }
 
     .btn-sacar {
+        background: #1BE4A8;
         box-shadow: 0 1px 15px #00000017;
         border-radius: 12px;
         padding: 15px;
@@ -566,10 +585,94 @@ select, .select-pad {
     .pr-0 {
         padding-left: 5px
     }
-}
 
-/*MOBILE SM*/
-@media (max-width: 575.98px) {
+    .withdrawals-table, .transfersTable, .table {
+        background: transparent;
+    }
+
+    .status-finance-transfers {
+        text-align: left !important;
+        padding: 0 !important;
+        margin-right: 10px !important;
+    }
+
+    .sale-finance-transfers{
+        font-size: 12px !important;
+        line-height: 15px !important;
+        color: #9E9E9E !important;
+        padding: 0 !important;
+        text-align: right !important;
+        align-self: center;
+    }
+
+    .value-finance-transfers {
+        padding: 0 !important;
+        margin: 12px 0 !important;
+    }
+    .value-finance-transfers span {
+        font-size: 14px !important;
+        line-height: 18px;
+        color: #9E9E9E;
+        font-weight: normal;
+    }
+    .value-finance-transfers strong {
+        font-size: 20px !important;
+        line-height: 25px;
+        color: #636363;
+    }
+
+    .bank-finance-transfers {
+        padding: 0 !important;
+        margin-bottom: 10px !important;
+    }
+    .bank-finance-transfers div {
+        font-size: 14px !important;
+        line-height: 18px;
+    }
+    .bank-finance-transfers small {
+        font-size: 11px !important;
+        line-height: 14px;
+        display: block;
+    }
+
+    .date-start-finance-transfers,
+    .date-end-finance-transfers {
+        padding: 0 !important
+    }
+    .date-start-finance-transfers *,
+    .date-end-finance-transfers * {
+        display: inline;
+        font-size: 12px !important;
+        line-height: 15px;
+        color: #9E9E9E;
+    }
+    .date-start-finance-transfers .bold-mobile, .date-start-finance-transfers small,
+    .date-end-finance-transfers .bold-mobile, .date-end-finance-transfers small {
+        color: #636363 !important
+    }
+
+    .sale-finance-schedule {
+        padding: 0 !important;
+        margin-right: 10px;
+        margin-bottom: 12px !important;
+    }
+
+    .value-finance-schedule {
+        padding: 0 !important;
+        align-self: center;
+        margin-bottom: 12px !important;
+    }
+    .value-finance-schedule span {
+        font-size: 14px !important;
+        line-height: 18px;
+        color: #9E9E9E;
+        font-weight: normal;
+    }
+    .value-finance-schedule strong {
+        font-size: 20px !important;
+        line-height: 25px;
+    }
+
     .price {
         font-size: 16px;
     }

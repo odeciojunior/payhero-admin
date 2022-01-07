@@ -228,8 +228,8 @@ $(document).ready(function(){
                                         <div class="collapse multi-collapse-${data.name}" id="collapse-withdrawal-${data.name}">
                                             <div class="col-sm-12 mb-10 pb-10">
                                                 <a href="#" class="col-12 btn-outline-success btn font-weight-bold" id="request-withdrawal-${data.id}" style="font-size:16px">Solicitar saque</a>
-                                                <a href="#" class="btn btn-cancel" id="cancel-withdrawal-${data.name}" style="display:none;">Cancelar</a>
                                                 <a href="#" class="btn btn-saque font-weight-bold" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
+                                                <a href="#" class="btn btn-cancel" id="cancel-withdrawal-${data.name}" style="display:none;">Cancelar</a>
                                             </div>
                                         </div>
                                     </div>

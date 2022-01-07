@@ -4,8 +4,8 @@
     <link rel="stylesheet" href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css?v='.uniqid()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v='.uniqid()) }}">
     <link rel="stylesheet" href="{{ asset('modules/finances/css/table.css?v='.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v='.uniqid()) }}">
 @endpush
 
 @section('content')
