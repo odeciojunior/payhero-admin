@@ -469,6 +469,14 @@ $(document).ready(function () {
                             tableClass = "";
                         }
 
+                        if (
+                            value.woocommerce_retry_order != null
+                        ) {
+                            tableClass = "table-warning-roll";
+                        } else {
+                            tableClass = "";
+                        }
+
                         let observation = "";
                         if (
                             !isEmpty(value.observation) ||
