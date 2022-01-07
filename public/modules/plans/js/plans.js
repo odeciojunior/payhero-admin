@@ -500,24 +500,35 @@ $(function () {
             $(modal).find('.modal-body').append(loadingCreateStage3);
 
             $('.box-products .form-control').each(function() {
-                console.log(selected_products);
-
                 var product_ID = $(this).parents('.product').attr('data-code');
-
-                var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
-
                 var name_input = $(this).attr('name');
-                if (name_input == 'amount') selected_products[product_selected_index].amount = $(this).val();
-                if (name_input == 'value') selected_products[product_selected_index].value = $(this).val();
+                var value_input = $(this).val();
+
+                selected_products.map(function(p) {
+                    if (product_ID == p.id) {
+                        if (name_input == 'amount') {
+                            return Object.assign(p, { amount: value_input });
+                        }
+
+                        if (name_input == 'value') {
+                            return Object.assign(p, { value: value_input });
+                        }
+                    }
+                });
             });
 
             $('.box-products .sirius-select').each(function() {
                 var product_ID = $(this).parents('.product').attr('data-code');
-
-                var product_selected_index = selected_products.map(function(p) { return p.id; }).indexOf(product_ID);
-
                 var name_input = $(this).attr('name');
-                if (name_input == 'currency_type_enum') selected_products[product_selected_index].currency_type_enum = $(this).val();
+                var value_input = $(this).val();
+
+                selected_products.map(function(p) {
+                    if (product_ID == p.id) {
+                        if (name_input == 'currency_type_enum') {
+                            return Object.assign(p, { currency_type_enum: value_input });
+                        }
+                    }
+                });
             });
 
             var curHeight = $(modal).find('.modal-body').height();
