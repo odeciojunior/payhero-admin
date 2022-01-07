@@ -83,7 +83,7 @@ class SaleRefundedSendEmailListener implements ShouldQueue
 
             $data = [
                 'first_name' => $customer->present()->getFirstName(),
-                "store_logo" => $checkoutConfig->logo,
+                "store_logo" => $checkoutConfig->checkout_logo,
                 'sale_code' => $saleCode,
                 "products" => $products,
                 "total_paid_value" => $sale->total_paid_value,

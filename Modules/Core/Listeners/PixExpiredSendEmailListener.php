@@ -140,7 +140,7 @@ class PixExpiredSendEmailListener implements ShouldQueue
             $data = [
                 'first_name' => $customer->present()->getFirstName(),
                 'pix_link' => $link . '/pix/' . Hashids::connection('sale_id')->encode($sale->id),
-                "store_logo" => $checkoutConfig->logo,
+                "store_logo" => $checkoutConfig->checkout_logo,
                 'sale_code' => $saleCode,
                 "products" => $products,
                 "total_value" => $sale->total_paid_value,

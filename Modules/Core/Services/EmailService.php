@@ -196,7 +196,7 @@ class EmailService
                     'products' => $productsSale,
                     'shipment_value' => $shipmentValue,
                     'subtotal' => $subTotal,
-                    'store_logo' => $project->checkoutConfig->logo,
+                    'store_logo' => $project->checkoutConfig->checkout_logo,
                     'discount' => $discount,
                     'sac_link' => 'https://sac.'.$domain->name,
                     'sale_code' => $saleCode,
@@ -218,7 +218,7 @@ class EmailService
                     'products' => $productsSale,
                     'shipment_value' => $sale->shipment_value,
                     'subtotal' => $subTotal,
-                    'store_logo' => $project->checkoutConfig->logo,
+                    'store_logo' => $project->checkoutConfig->checkout_logo,
                     'discount' => $discount,
                     'sale_code' => $saleCode,
                 ];

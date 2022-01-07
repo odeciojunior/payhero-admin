@@ -89,7 +89,7 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                         $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
                         $data = [
                             'name' => $clientName,
-                            'project_logo' => $checkoutConfig->logo,
+                            'project_logo' => $checkoutConfig->checkout_logo,
                             'tracking_code' => $tracking->tracking_code,
                             "subject" => $subjectMessage,
                             "title" => $titleMessage,

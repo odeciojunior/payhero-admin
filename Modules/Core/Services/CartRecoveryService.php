@@ -107,7 +107,7 @@ class CartRecoveryService
                                               if (!empty($domain)) {
                                                   $bodyEmail = [
                                                       'name'            => $clientNameExploded[0],
-                                                      'project_logo'    => $project->checkoutConfig->logo,
+                                                      'project_logo'    => $project->checkoutConfig->checkout_logo,
                                                       'checkout_link'   => $linkCheckout,
                                                       "subject"         => $subjectMessage,
                                                       "title"           => $titleMessage,
@@ -232,7 +232,7 @@ class CartRecoveryService
                                           if (!empty($domain)) {
                                               $bodyEmail = [
                                                   'name'            => $clientNameExploded[0],
-                                                  'project_logo'    => $project->checkoutConfig->logo,
+                                                  'project_logo'    => $project->checkoutConfig->checkout_logo,
                                                   'checkout_link'   => $linkCheckout,
                                                   "subject"         => $subjectMessage,
                                                   "title"           => $titleMessage,
