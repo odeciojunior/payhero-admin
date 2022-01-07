@@ -68,7 +68,7 @@
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js?v=' . versionsFile()) }}"></script>
             <script src="{{ asset('modules/global/js/daterangepicker.min.js?v=' . versionsFile()) }}"></script>
-            <script src="{{ asset('modules/finances/js/jPages.min.j?v=' . versionsFile()) }}"></script>
+            <script src="{{ asset('modules/finances/js/jPages.min.js?v=' . versionsFile()) }}"></script>
             <script src="{{ asset('modules/finances/js/statement-index.js?v=' . versionsFile()) }}"></script>
             <script src="{{ asset('modules/finances/js/balances.js?v=' . versionsFile()) }}"></script>
             <script src="{{ asset('modules/finances/js/withdrawals-table.js?v=' . versionsFile()) }}"></script>
