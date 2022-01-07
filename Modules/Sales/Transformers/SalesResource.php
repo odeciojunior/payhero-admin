@@ -8,8 +8,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleWoocommerceRequests;
+use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
+use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -83,6 +86,7 @@ class SalesResource extends JsonResource
             'release_date' => $this->details->release_date,
             'affiliate_comission' => $this->details->affiliate_comission,
             'shopify_order' => $this->shopify_order ?? null,
+            'woocommerce_order' => $this->woocommerce_order ?? null,
             'automatic_discount' => $this->details->automatic_discount ?? 0,
             'refund_value' => $this->details->refund_value ?? '0,00',
             'value_anticipable' => $this->details->value_anticipable ?? null,
@@ -118,6 +122,33 @@ class SalesResource extends JsonResource
         if (count($shopifyIntegrations) > 0)
         {
             $data['has_shopify_integration'] = true;
+        }
+
+        $woocommerceIntegrations = [];
+        if(!empty($this->project)){
+            $woocommerceIntegrations = $this->project->woocommerceIntegrations->where('status', 2);
+        }
+        $data['has_woocommerce_integration'] = null;
+        if (count($woocommerceIntegrations) > 0)
+        {
+            $data['has_woocommerce_integration'] = true;
+
+            if(!empty($this->woocommerce_order)){
+                $integration = WooCommerceIntegration::where('project_id', $this->project_id)->first();
+                $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                $order = $service->woocommerce->get('orders/'.$this->woocommerce_order);
+                $data['woocommerce_order'] = $order;
+
+            }else{
+                $request = SaleWoocommerceRequests::where('sale_id', $this->id)
+                ->where('method', 'CreatePendingOrder')
+                ->where('status', 0)
+                ->first();
+
+                if(!empty($request) && $this->status == 1){
+                    $data['woocommerce_retry_order'] = true;
+                }
+            }
         }
 
         $data['user_sale_type'] = 'producer';
