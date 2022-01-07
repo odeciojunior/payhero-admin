@@ -112,7 +112,6 @@ class EmailService
                 'subtotal' => $subTotal,
                 'shipment_value' => $sale->shipment_value,
                 'discount' => $discount,
-                'project_contact' => $sale->project->contact,
                 'installments_amount' => $sale->installments_amount,
                 'installments_value' => number_format($sale->installments_value, 2, ',', '.'),
             ];
@@ -197,9 +196,9 @@ class EmailService
                     'products' => $productsSale,
                     'shipment_value' => $shipmentValue,
                     'subtotal' => $subTotal,
-                    'store_logo' => $project->logo ?? null,
+                    'store_logo' => $project->checkoutConfig->logo,
                     'discount' => $discount,
-                    'project_contact' => $project->contact ?? null,
+                    'sac_link' => 'https://sac.'.$domain->name,
                     'sale_code' => $saleCode,
                 ];
                 $sendEmail->sendEmail(
@@ -219,9 +218,8 @@ class EmailService
                     'products' => $productsSale,
                     'shipment_value' => $sale->shipment_value,
                     'subtotal' => $subTotal,
-                    'store_logo' => $project->logo ?? null,
+                    'store_logo' => $project->checkoutConfig->logo,
                     'discount' => $discount,
-                    'project_contact' => $project->contact ?? null,
                     'sale_code' => $saleCode,
                 ];
 

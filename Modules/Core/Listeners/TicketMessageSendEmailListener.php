@@ -50,8 +50,7 @@ class TicketMessageSendEmailListener implements ShouldQueue
                         'first_name'      => $customerName[0],
                         'date'            => $ticketMessage->created_at->format('d/m/Y H:i:s'),
                         'project_name'    => $project->name,
-                        'project_logo'    => $project->logo,
-                        "project_contact" => $project->contact,
+                        'project_logo'    => $project->checkoutConfig->logo,
                         'ticket_code'     => Hashids::encode($ticketMessage->ticket->id),
                         'link'            => "https://sac." . $domain->name,
                     ];

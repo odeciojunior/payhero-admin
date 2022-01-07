@@ -56,6 +56,8 @@ class CheckoutEditorApiController extends Controller
                 $amazonFileService->deleteFile($config->checkout_logo);
                 $amazonPathLogo = $amazonFileService->uploadFile('uploads/user/' . $userId . '/public/projects/' . hashids_encode($id) . '/logo', $logo);
                 $data['checkout_logo'] = $amazonPathLogo;
+            } elseif(!$data['checkout_logo_enabled']) {
+                $data['checkout_logo'] = null;
             }
 
             $banner = $request->file('checkout_banner');
@@ -63,6 +65,8 @@ class CheckoutEditorApiController extends Controller
                 $amazonFileService->deleteFile($config->checkout_banner);
                 $amazonPathBanner = $amazonFileService->uploadFile('uploads/user/' . $userId . '/public/projects/' . hashids_encode($id) . '/logo', $banner);
                 $data['checkout_banner'] = $amazonPathBanner;
+            } elseif(!$data['checkout_banner_enabled']) {
+                $data['checkout_banner'] = null;
             }
 
             if ($data['company_id'] !== $config->company_id) {

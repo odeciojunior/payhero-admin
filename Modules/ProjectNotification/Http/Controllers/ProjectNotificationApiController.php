@@ -68,7 +68,6 @@ class ProjectNotificationApiController extends Controller
 
                 $projectNotification->project_image   = $project->photo;
                 $projectNotification->project_name    = $project->name;
-                $projectNotification->project_contact = $project->contact;
 
                 if (Gate::allows('edit', [$project])) {
                     if ($projectNotification) {

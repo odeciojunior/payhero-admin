@@ -182,7 +182,6 @@
                         <div class='row'>
                             <div class='form-group col-6 col-xs-12'>
                                 <label for='invoice-description'>Descrição da Fatura</label>
-                                {{-- <input name='invoice_description' value='{{$project->invoice_description}}' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura' maxlength='50'>--}}
                                 <input name='invoice_description' value='' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura' maxlength='50'>
                                 <span id='invoice-description-error' class='text-danger'></span>
                                 <p class='info pt-5' style='font-size: 10px;'>
@@ -465,7 +464,7 @@
                                     carrinho.
                                     <b>Nota:</b> Esta opção não se aplica à planos que possuem mais de um produto.
                                 </p>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="row">
                             <div class='col'>
@@ -483,14 +482,14 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="row custom_message_box">                            
+                        <div class="row custom_message_box">
                             <div class='form-group col-md-6 col-sm-12'>
                                 <label for="custom_message_title">Título da mensagem personalizada</label>
-                                <input type="text" name='custom_message_title' class='form-control input-pad' id="custom_message_title">                                
+                                <input type="text" name='custom_message_title' class='form-control input-pad' id="custom_message_title">
                             </div>
                             <div class='form-group col-sm-12'>
                                 <label for="custom_message_content">Mensagem personalizada</label>
-                                <input type="text" name='custom_message_content' class='form-control input-pad' id="custom_message_content">                                
+                                <input type="text" name='custom_message_content' class='form-control input-pad' id="custom_message_content">
                             </div>
                         </div>
                         <div class='row'>
@@ -841,13 +840,13 @@
                             </a>
                         </div>
                     </div>
-                    
+
                     <hr>
-                    
+
                     <div class='row justify-left mx-20 mt-30'>
 
                         <div class='col-md-4 pt-20 mb-40'>
-                        
+
                             <a  role="button" integration-status="" class="pointer align-items-center" data-toggle="modal" data-target="#modal-woocom-integration-apikeys">
                                 <span class="fa fa-key font-size-16"></span>
 
@@ -855,7 +854,7 @@
                             </a>
                         </div>
 
-                        
+
                     </div>
                     <hr>
 

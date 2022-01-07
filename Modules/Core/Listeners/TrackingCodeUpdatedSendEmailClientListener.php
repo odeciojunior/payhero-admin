@@ -38,7 +38,7 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
             $trackingModel = new Tracking();
 
             $tracking = $trackingModel->with([
-                'sale.project',
+                'sale.project.checkoutConfig',
                 'sale.customer',
                 'sale.productsPlansSale.tracking',
                 'sale.productsPlansSale.product',
@@ -48,6 +48,7 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
 
                 $sale = $tracking->sale;
                 $project = $sale->project;
+                $checkoutConfig = $project->checkoutConfig;
                 $customer = $sale->customer;
                 $products = $productService->getProductsBySale($sale);
 
@@ -56,7 +57,6 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                 $clientTelephone = $customer->telephone;
 
                 $projectName = $project->name;
-                $projectContact = $project->contact;
                 $domain = $domainModel->where('project_id', $project->id)->first();
 
                 //Traz a mensagem do sms formatado
@@ -89,9 +89,8 @@ class TrackingCodeUpdatedSendEmailClientListener implements ShouldQueue
                         $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
                         $data = [
                             'name' => $clientName,
-                            'project_logo' => $project->logo,
+                            'project_logo' => $checkoutConfig->logo,
                             'tracking_code' => $tracking->tracking_code,
-                            'project_contact' => $projectContact,
                             "subject" => $subjectMessage,
                             "title" => $titleMessage,
                             "content" => $contentMessage,

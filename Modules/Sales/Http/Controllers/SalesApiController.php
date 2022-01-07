@@ -260,7 +260,7 @@ class SalesApiController extends Controller
             $saleModel = new Sale();
             $sale = explode(" ", $request->input('sale'));
             $saleId = current(Hashids::connection('sale_id')->decode($sale[0]));
-            $sale = $saleModel->with(['customer', 'project'])->find($saleId);
+            $sale = $saleModel->with(['customer', 'project.checkoutConfig'])->find($saleId);
             if (empty($sale)) {
                 return response()->json(['message' => 'Erro ao reenviar email.'], Response::HTTP_BAD_REQUEST);
             }

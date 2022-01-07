@@ -34,8 +34,7 @@ class AffiliateResource extends JsonResource
                                                                                ->getStatus($this->status_enum)),
             'project_name'      => $this->project->name,
             'project_photo'     => $this->project->photo,
-            'project_logo'      => $this->project->logo,
-            'suport_contact'    => $this->suport_contact,
+            'project_logo'      => $this->project->checkoutConfig->logo,
             'suport_phone'      => $this->suport_phone,
         ];
     }

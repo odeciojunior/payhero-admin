@@ -49,7 +49,8 @@ class PixExpiredSendEmailListener implements ShouldQueue
             $projectNotificationService = new ProjectNotificationService();
             $domainPresent = $domainModel->present();
 
-            $project = $projectModel->find($event->sale->project_id);
+            $project = $projectModel->with('checkoutConfig')->find($event->sale->project_id);
+            $checkoutConfig = $project->checkoutConfig;
             $checkout = $checkoutModel->find($event->sale->checkout_id);
             $domain = $domainModel->where('project_id', $project->id)
                 ->where('status', $domainPresent->getStatus('approved'))->first();
@@ -139,8 +140,7 @@ class PixExpiredSendEmailListener implements ShouldQueue
             $data = [
                 'first_name' => $customer->present()->getFirstName(),
                 'pix_link' => $link . '/pix/' . Hashids::connection('sale_id')->encode($sale->id),
-                "store_logo" => $project->logo,
-                "project_contact" => $project->contact,
+                "store_logo" => $checkoutConfig->logo,
                 'sale_code' => $saleCode,
                 "products" => $products,
                 "total_value" => $sale->total_paid_value,
