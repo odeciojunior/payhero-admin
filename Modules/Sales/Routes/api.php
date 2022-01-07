@@ -28,6 +28,8 @@ Route::group(
         ->middleware('permission:sales_manage');
         Route::post('/newordershopify/{transaction_id}', 'SalesApiController@newOrderShopify')
         ->middleware('permission:sales_manage');
+        Route::post('/neworderwoocommerce/{transaction_id}', 'SalesApiController@newOrderWoocommerce')
+        ->middleware('permission:sales_manage');
         Route::post('/updaterefundobservation/{transaction_id}', 'SalesApiController@updateRefundObservation')
         ->middleware('permission:sales_manage');
         Route::post('/saleresendemail', 'SalesApiController@saleReSendEmail')

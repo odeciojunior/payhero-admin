@@ -42,7 +42,7 @@ class TrackingsApiController extends Controller
                 )->log('Visualizou tela todos os códigos de rastreios');
             }
             $trackingService = new TrackingService();
-            
+
             $data = $request->all();
 
 
@@ -54,7 +54,7 @@ class TrackingsApiController extends Controller
                 if ( !empty($sale) && $sale->api_flag ) {
                     return response()->json(['message' => 'Venda por api não contém códigos de rastreio'], 400);
                 }
-                
+
                 $trackings = $trackingService->getPaginatedTrackings($data);
 
                 return TrackingResource::collection($trackings);

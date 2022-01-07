@@ -11,6 +11,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleRefundHistory;
+use Modules\Core\Entities\SaleWoocommerceRequests;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\SaleRefundedEvent;
@@ -83,6 +84,7 @@ class SalesApiController extends Controller
             // if(!auth()->user()->hasAnyPermission('sales_manage','finances_manage','trackings_manage','report_pending')){
             //     return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
             // }
+            $sale->test='asdf';
             return new SalesResource($sale);
         } catch (Exception $e) {
             report($e);
@@ -250,6 +252,93 @@ class SalesApiController extends Controller
                 report($e);
                 $message = 'Erro ao tentar gerar ordem no Shopify.';
             }
+            return response()->json(['message' => $message], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+
+    public function newOrderWoocommerce(Request $request, $saleId)
+    {
+        
+
+        try {
+            // if (FoxUtils::isProduction()) {
+                
+                $saleModel = new Sale();
+                $sale = $saleModel->with('upsells')->find(Hashids::connection('sale_id')->decode($saleId))->first();
+                $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
+                activity()->on($saleModel)->tap(
+                    function (Activity $activity) use ($saleId) {
+                        $activity->log_name = 'visualization';
+                        $activity->subject_id = current(Hashids::connection('sale_id')->decode($saleId));
+                    }
+                )->log('Gerou nova ordem no woocommerce para transação: #' . $saleId);
+                if (!FoxUtils::isEmpty($integration)) {
+                    $service = new WooCommerceService( $integration->url_store, $integration->token_user, $integration->token_pass);
+                    
+                    
+                    $request = SaleWoocommerceRequests::where('sale_id', $sale->id)
+                                ->where('status', 0)
+                                ->where('method', 'CreatePendingOrder')->first();
+
+                    if(!empty($request)){
+                        $data = json_decode($request['send_data'], true);
+
+                        $changeToPaidStatus = 0;
+
+                        if($data['status'] == 'processing' && $data['set_paid'] == true){
+                            $data['status'] = 'pending';
+                            $data['set_paid'] = false;
+                            $changeToPaidStatus = 1;
+                        }
+
+                        $result = $service->woocommerce->post('orders', $data);
+
+                        if($result->id){
+                            $order = $result->id;
+                            $saleModel = Sale::where('id',$request['sale_id'])->first();
+                            $saleModel->woocommerce_order = $order;
+                            $saleModel->save();
+                            
+                            $result = json_encode($result);
+                            $service->updatePostRequest($request['id'], 1, $result, $order);
+
+                            
+
+                            if($changeToPaidStatus == 1){
+                                
+                                $result = $service->approveBillet($order, $request['project_id'], $request['sale_id']);
+
+                            }
+
+                            return response()->json(['message' => 'Ordem criada com sucesso!'], Response::HTTP_OK);
+
+                        }else{
+
+                            return response()->json(['message' => 'Erro ao tentar criar a ordem!'], Response::HTTP_BAD_REQUEST);
+
+                        }
+
+                        
+                    }else{
+                        return response()->json(['message' => 'Requisição não encontrada!'], Response::HTTP_BAD_REQUEST);
+
+                    }
+                    
+                }else {
+                    return response()->json(['message' => 'Integração não encontrada'], Response::HTTP_BAD_REQUEST);
+                }
+            // } else {
+            //     return response()->json(
+            //         ['message' => 'Funcionalidade habilitada somente em produção =)'],
+            //         Response::HTTP_OK
+            //     );
+            // }
+        } catch (Exception $e) {
+            
+            report($e);
+            $message = 'Erro ao tentar gerar ordem no Woocommerce.';
+            
             return response()->json(['message' => $message], Response::HTTP_BAD_REQUEST);
         }
     }
