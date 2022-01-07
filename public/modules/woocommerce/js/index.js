@@ -78,7 +78,7 @@ $(document).ready(function () {
                             <div class="card shadow card-edit" project="${data.id}">
 
                             
-                            <svg style="position:absolute; top:8px; right:8px; cursor:pointer" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="open-cfg" app="${data.id}" style="position:absolute; top:8px; right:8px; cursor:pointer" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M30.5519 15.2167C30.5519 23.4694 23.8618 30.1596 15.6091 30.1596C7.35639 30.1596 0.66626 23.4694 0.66626 15.2167C0.66626 6.96405 7.35639 0.273926 15.6091 0.273926C23.8618 0.273926 30.5519 6.96405 30.5519 15.2167Z" fill="white"/>
                                 <g clip-path="url(#clip0_0_1)">
                                 <path d="M15.609 18.7327C17.5508 18.7327 19.1249 17.1586 19.1249 15.2168C19.1249 13.275 17.5508 11.7008 15.609 11.7008C13.6672 11.7008 12.093 13.275 12.093 15.2168C12.093 17.1586 13.6672 18.7327 15.609 18.7327Z" stroke="#70707E" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -105,6 +105,9 @@ $(document).ready(function () {
                         </div>
                     `);
                 });
+            
+                $('.open-cfg').on('click', openCfg)
+
 
 
             }
@@ -192,5 +195,14 @@ $(document).ready(function () {
                 alertCustom('success', response.message);
             }
         });
+    }
+
+
+    function openCfg() {
+        var projectId = $(this).attr('app')
+        
+        
+        $("#modal_explicacao").modal('show');
+
     }
 });
