@@ -86,7 +86,7 @@ class AsaasAnticipationsCheckValeus extends Command
                         $description = strtolower(trim($response['errors'][0]['description']));
 
 
-                        if (str_contains($description, 'limite para antecipação de cartão de crédito e o valor escolhido ') ) {
+                        if (str_contains($description, 'limite para antecipação de cartão de crédito e o valor escolhido') ) {
                             $description = 'limite para antecipação de cartão de crédito e o valor escolhido';
                             continue;
                         }
@@ -103,6 +103,7 @@ class AsaasAnticipationsCheckValeus extends Command
                                 $cannotAnticipate[$description][$sale->owner_id]['value'] += $transaction->value;
                                 array_push($cannotAnticipate[$description][$sale->owner_id]['sale_ids'], $transaction->sale_id);
                                 array_push($cannotAnticipate[$description][$sale->owner_id]['values'], $transaction->value);
+                                array_push($cannotAnticipate[$description][$sale->owner_id]['messages'], strtolower(trim($response['errors'][0]['description'])));
 
                             } else {
 
@@ -115,6 +116,7 @@ class AsaasAnticipationsCheckValeus extends Command
                                     'value' => $transaction->value,
                                     'sale_ids' => [$transaction->sale_id],
                                     'values' => [$transaction->value],
+                                    'messages' => [strtolower(trim($response['errors'][0]['description']))]
                                 ];
 
                             }
@@ -129,6 +131,7 @@ class AsaasAnticipationsCheckValeus extends Command
                                 'value' => $transaction->value,
                                 'sale_ids' => [$transaction->sale_id],
                                 'values' => [$transaction->value],
+                                'messages' => [strtolower(trim($response['errors'][0]['description']))]
                             ];
 
                         }
