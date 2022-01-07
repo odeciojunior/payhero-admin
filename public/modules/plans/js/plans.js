@@ -1804,13 +1804,16 @@ $(function () {
 
     // Tab general settings
     $('body').on('click', '#tab_configuration', function() {
-        $('#modal_config_cost_plan').find('.modal-body').css('height', 'auto');
+        $('#modal_config_cost_plan').find('.tab-pane').removeClass('active show').promise().done(function() {
+            $('#modal_config_cost_plan').find('#tab_update_cost_block-panel').css('display', 'none');
+            $('#modal_config_cost_plan').find('.tab-pane').addClass('active show').promise().done(function() {
+                $('#modal_config_cost_plan').find('.modal-body').css('height', 'auto');
+            });
+        });
     });
 
     // Tab plan cost change
     $('body').on('click', '#tab_update_cost_block', function() {
-        console.log($(this));
-
         if (!$(this).hasClass('active')) {
             let modal = '#modal_config_cost_plan';
             getPlansConfig(modal);
@@ -1916,7 +1919,7 @@ $(function () {
 
                         $(modal).find('.tab-pane.show.active').find('.product-photo').on('load', function() {
                             $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
-                                $(modal).find('.tab-content').fadeIn('fast').promise().done(function() {
+                                $(modal).find('.tab-content').css('display', 'block').promise().done(function() {
                                     var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 18;
                                     $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
                                         $(modal).find('.product-photo').unbind('load');
@@ -1979,84 +1982,93 @@ $(function () {
     function getPlansConfig(modal) {
         $(modal).find('.modal-body').css('height', 'auto').attr('style', 'padding-bottom: 0px !important');
 
-        $(modal).find('.tab-content').fadeOut('fast').promise().done(function() {
-            $(modal).find('.modal-body').append(loadingPlansConfigCost).promise().done(function() {
-                $.ajax({
-                    method: "POST",
-                    url: "/api/products/products-variants",
-                    data: {
-                        project_id: projectId,
-                        variants: true
-                    },
-                    dataType: "json",
-                    headers: {
-                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                        'Accept': 'application/json',
-                    },
-                    error: function error(response) {
-                        errorAjaxResponse(response);
-                    },
-                    success: function success(response) {
-                        var append = '<div class="row">';
-                        if (response.data.length > 0) {
-                            response.data.forEach(function(plan) {
-                                var index_plan = selected_plans.map(function(e) { return e.id; }).indexOf(plan.id);
-                                append += '<div class="col-sm-6">';
-                                    append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'review' : '') + '">';
-                                        append += '<div class="d-flex align-items-center">';
-                                            append += '<div class="background-photo">';
-                                                append += '<img class="product-photo" src="' + plan.photo + '">';
+        $(modal).find('.tab-pane').removeClass('active show').promise().done(function() {
+            $(modal).find('#tab_update_cost_block-panel').css('display', 'none').promise().done(function() {
+                $(modal).find('.modal-body').append(loadingPlansConfigCost).promise().done(function(e) {
+                    var curHeight = $(modal).find('.modal-body').height() + 20;
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/api/products/products-variants",
+                        data: {
+                            project_id: projectId,
+                            variants: true
+                        },
+                        dataType: "json",
+                        headers: {
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
+                        },
+                        error: function error(response) {
+                            errorAjaxResponse(response);
+                        },
+                        success: function success(response) {
+                            var append = '<div class="row">';
+                            if (response.data.length > 0) {
+                                response.data.forEach(function(plan) {
+                                    var index_plan = selected_plans.map(function(e) { return e.id; }).indexOf(plan.id);
+                                    append += '<div class="col-sm-6">';
+                                        append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'review' : '') + '">';
+                                            append += '<div class="d-flex align-items-center">';
+                                                append += '<div class="background-photo">';
+                                                    append += '<img class="product-photo" src="' + plan.photo + '">';
+                                                append += '</div>';
+                                                append += '<div>';
+                                                append += '<h1 class="title" ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C5C5C5"' : '') + '>' + plan.name_short + '</h1>';
+                                                append += '<p class="description" ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C7C7C7"' : '') + '>' + plan.description + '</p>';
+                                                append += '</div>';
                                             append += '</div>';
-                                            append += '<div>';
-                                            append += '<h1 class="title" ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C5C5C5"' : '') + '>' + plan.name_short + '</h1>';
-                                            append += '<p class="description" ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C7C7C7"' : '') + '>' + plan.description + '</p>';
-                                            append += '</div>';
+                                            if (plan.status_enum != 1 && plan.status_enum != 3) {
+                                                append += '<div class="check">';
+                                                    if (index_plan != -1) {
+                                                        append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                                                    }
+                                                append += '</div>';
+                                            }
                                         append += '</div>';
-                                        if (plan.status_enum != 1 && plan.status_enum != 3) {
-                                            append += '<div class="check">';
-                                                if (index_plan != -1) {
-                                                    append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
-                                                }
-                                            append += '</div>';
-                                        }
                                     append += '</div>';
-                                append += '</div>';
-                            });
-                        } else {
-                            $(modal).find('.modal-body').find('.box-plans').css('height', '274px').css('max-height', '274px');
-
-                            append += '<div class="col-sm-12">';
-                                append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
-                                append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
-                                append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A;">Por aqui, nenhum plano com esse nome.</p>';
-                            append += '</div>';
-                        }
-                        append + '</div>';
-
-                        var curHeight = $(modal).find('.modal-body').height();
-                        $(modal).find('#tab_update_cost_block-panel').find('.box-plans').html(append).promise().done(function() {
-                            $('[data-toggle="tooltip"]').tooltip({
-                                container: '.page',
-                            });
-
-                            if (response.data.length > 4) {
-                                scrollCustom(modal + ' #tab_update_cost_block-panel .box-plans');
+                                });
                             } else {
-                                $(modal + ' #tab_update_cost_block-panel .box-plans').off('wheel');
+                                $(modal).find('.modal-body').find('.box-plans').css('height', '274px').css('max-height', '274px');
+
+                                append += '<div class="col-sm-12">';
+                                    append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
+                                    append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
+                                    append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A;">Por aqui, nenhum plano com esse nome.</p>';
+                                append += '</div>';
                             }
+                            append + '</div>';
 
-                            $(modal).find('.tab-pane.show.active').find(".product-photo").on("error", function () {
-                                $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
-                            });
+                            $(modal).find('#tab_update_cost_block-panel').find('.box-plans').html(append).promise().done(function() {
+                                $('[data-toggle="tooltip"]').tooltip({
+                                    container: '.page',
+                                });
 
-                            $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
-                                $(modal).find('.tab-content').fadeIn('fast').promise().done(function() {
-                                    var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + 18;
-                                    $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
+                                if (response.data.length > 4) {
+                                    scrollCustom(modal + ' #tab_update_cost_block-panel .box-plans');
+                                } else {
+                                    $(modal + ' #tab_update_cost_block-panel .box-plans').off('wheel');
+                                }
+
+                                $(modal).find(".product-photo").on("error", function () {
+                                    $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                                });
+
+                                $(modal).find('.product-photo').on('load', function() {
+                                    $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
+                                        $(modal).find('#tab_update_cost_block-panel').css('display', 'block').promise().done(function() {
+                                            $(modal).find('.modal-body').height(curHeight).promise().done(function() {
+                                                $(modal).find('.product-photo').unbind('load');
+
+                                                var autoHeight = $(modal).find('.height-auto').height() + 20;
+                                                $(modal).find('.modal-body').animate({ height: autoHeight }, 300);
+                                            });
+                                        });
+                                    });
                                 });
                             });
-                        });
-                    }
+                        }
+                    });
                 });
             });
         });
@@ -2080,6 +2092,7 @@ $(function () {
         $(modal).find('#search-plan').val('');
         $(modal).find('#select-all').removeClass('selected');
         $(modal).find('#select-all').find('.check').html('');
+        $(modal).find('#tab_update_cost_block-panel').css('display', 'none');
 
         $(modal).find('.modal-body').css('height', 'auto');
 
