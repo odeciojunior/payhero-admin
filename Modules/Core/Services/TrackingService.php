@@ -420,7 +420,7 @@ class TrackingService
                     'product',
                 ]
             )
-            ->leftJoin('trackings', 'products_plans_sales.ids', '=', 'trackings.product_plan_sale_id')
+            ->leftJoin('trackings', 'products_plans_sales.id', '=', 'trackings.product_plan_sale_id')
             ->selectRaw(
                 "COUNT(*) as total,
                                 SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_POSTED . " AND trackings.system_status_enum IN ($validSystemStatus) THEN 1 ELSE 0 END) as posted,
