@@ -114,7 +114,7 @@
 
                         <div class="banner-top-content">
                             <div id='upload-banner'>
-                                <input type="file" id="checkout_banner" name="checkout_banner" class="dropify" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
+                                <input type="file" id="checkout_banner" name="checkout_banner" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                             </div>
 
                             
@@ -207,7 +207,7 @@
                                         <button class="ql-underline" data-toggle="tooltip" data-placement="bottom" title="Sublinhar"></button>
                                     </div>
                                     <div id="topbar_content" class="quill-editor">
-                                        Aproveite o <strong>desconto extra</strong> ao comprar no <u>Cartão ou pelo PIX!</u> <strong>É por tempo limitado.</strong>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -643,7 +643,7 @@
 
                 </div>
 
-                <div class="checkout-content post-purchase-pages" id="post_purchase" style="height: calc(100vh - 90px); max-height: calc(100vh - 70px);">
+                <div class="checkout-content post-purchase-pages" id="post_purchase" style="margin-bottom: 500px;">
 
                     <span class="title-icon">
                         <img class="icon-title" src="{{ asset('/modules/checkouteditor/img/svg/paid-page.svg') }}">
@@ -924,7 +924,7 @@
                             <div class="theme-ready-content">
                                 <div id="theme_ready" class="radio-group theme-ready">
 
-                                    <input class="theme-radio" id="theme_spaceship" type="radio" name="theme_ready" value="1" />
+                                    <input class="theme-radio" id="theme_spaceship" type="radio" name="theme_enum" value="1" checked/>
                                     <label for="theme_spaceship">
                                         <div class="theme-primary-color" style="background: #4B8FEF;" data-color="#4B8FEF"></div>
                                         <div class="theme-secondary-color" style="background: #313C52;" data-color="#313C52"></div>
@@ -933,7 +933,7 @@
                                         </div>
                                     </label>
 
-                                    <input class="theme-radio" id="theme_purple_space" type="radio" name="theme_ready" value="2" />
+                                    <input class="theme-radio" id="theme_purple_space" type="radio" name="theme_enum" value="2" />
                                     <label for="theme_purple_space">
                                         <div class="theme-primary-color" style="background: #6C009E;" data-color="#6C009E"></div>
                                         <div class="theme-secondary-color" style="background: #3E005B;" data-color="#3E005B"></div>
@@ -942,7 +942,7 @@
                                         </div>
                                     </label>
 
-                                    <input class="theme-radio" id="theme_cloud_std" type="radio" name="theme_ready" value="3" />
+                                    <input class="theme-radio" id="theme_cloud_std" type="radio" name="theme_enum" value="3" />
                                     <label for="theme_cloud_std">
                                         <div class="theme-primary-color" style="background: #FF7900;" data-color="#FF7900"></div>
                                         <div class="theme-secondary-color" style="background: #FFFFFF;" data-color="#FFFFFF"></div>
@@ -951,7 +951,7 @@
                                         </div>
                                     </label>
 
-                                    <input class="theme-radio" id="theme_sunny_day" type="radio" name="theme_ready" value="4" />
+                                    <input class="theme-radio" id="theme_sunny_day" type="radio" name="theme_enum" value="4" />
                                     <label for="theme_sunny_day">
                                         <div class="theme-primary-color" style="background: #FF7900;" data-color="#FF7900"></div>
                                         <div class="theme-secondary-color" style="background: #FFBF08;" data-color="#FFBF08"></div>
@@ -960,7 +960,7 @@
                                         </div>
                                     </label>
 
-                                    <input class="theme-radio" id="theme_blue_sky" type="radio" name="theme_ready" value="5" />
+                                    <input class="theme-radio" id="theme_blue_sky" type="radio" name="theme_enum" value="5" />
                                     <label for="theme_blue_sky">
                                         <div class="theme-primary-color" style="background: #009BF2;" data-color="#009BF2"></div>
                                         <div class="theme-secondary-color" style="background: #008BD9;" data-color="#008BD9"></div>
@@ -969,7 +969,7 @@
                                         </div>
                                     </label>
 
-                                    <input class="theme-radio" id="theme_all_black" type="radio" name="theme_ready" value="6" />
+                                    <input class="theme-radio" id="theme_all_black" type="radio" name="theme_enum" value="6" />
                                     <label for="theme_all_black">
                                         <div class="theme-primary-color" style="background: #262626;" data-color="#262626"></div>
                                         <div class="theme-secondary-color" style="background: #393939;" data-color="#393939"></div>
@@ -978,7 +978,7 @@
                                         </div>
                                     </label>
 
-                                    <input class="theme-radio" id="theme_red_mars" type="radio" name="theme_ready" value="7" />
+                                    <input class="theme-radio" id="theme_red_mars" type="radio" name="theme_enum" value="7" />
                                     <label for="theme_red_mars">
                                         <div class="theme-primary-color" style="background: #FA0000;" data-color="#FA0000"></div>
                                         <div class="theme-secondary-color" style="background: #9B0000;" data-color="#9B0000"></div>
@@ -987,7 +987,7 @@
                                         </div>
                                     </label>
 
-                                    <input class="theme-radio" id="theme_pink_galaxy" type="radio" name="theme_ready" value="8" />
+                                    <input class="theme-radio" id="theme_pink_galaxy" type="radio" name="theme_enum" value="8" />
                                     <label for="theme_pink_galaxy">
                                         <div class="theme-primary-color" style="background: #F68AFF;" data-color="#F68AFF"></div>
                                         <div class="theme-secondary-color" style="background: #9B51A1;" data-color="#9B51A1"></div>
@@ -996,7 +996,7 @@
                                         </div>
                                     </label>
 
-                                    <input class="theme-radio" id="theme_turquoise" type="radio" name="theme_ready" value="9" />
+                                    <input class="theme-radio" id="theme_turquoise" type="radio" name="theme_enum" value="9" />
                                     <label for="theme_turquoise">
                                         <div class="theme-primary-color" style="background: #32BCAD;" data-color="#32BCAD"></div>
                                         <div class="theme-secondary-color" style="background: #D3FAF5;" data-color="#D3FAF5"></div>
@@ -1005,7 +1005,7 @@
                                         </div>
                                     </label>
 
-                                    <input class="theme-radio" id="theme_greener" type="radio" name="theme_ready" value="10" />
+                                    <input class="theme-radio" id="theme_greener" type="radio" name="theme_enum" value="10" />
                                     <label for="theme_greener">
                                         <div class="theme-primary-color" style="background: #23D07D;" data-color="#23D07D"></div>
                                         <div class="theme-secondary-color" style="background: #02AD5B;" data-color="#02AD5B"></div>
@@ -1313,8 +1313,8 @@
 
                 </div>
 
-                <div class="editor-buttons">
-                    <div class="save-changes" id="changing_container">
+                <div class="editor-buttons position-fixed container page-content pr-5 pr-sm-45" style="padding: 0;">
+                    <div class="save-changes " id="save_changes" style="display: none;">
                         <div style="margin-right: 50px;">
                             Você tem alterações que <strong>não estão salvas</strong>
                         </div>
@@ -1322,17 +1322,36 @@
                         <div class="save-changes-button-group">
                             <button id="cancel_button" type="button" class="change-button cancel-changes-button">Cancelar</button>
                             <button type="submit" form="checkout_editor" class="change-button save-changes-button">Salvar alterações</button>
-
                         </div>
                     </div>
 
-                    <div class="save-changes" id="done" style="display: none;">
+                    <div class="save-changes" id="save_success" style="display: none;">
                         <div style="margin-right: 50px;">
                             Alterações salvas com sucesso!
                         </div>
 
                         <div>
                             <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-check.svg') }}">
+                        </div>
+                    </div>
+
+                    <div class="save-changes" id="save_error" style="display: none;">
+                        <div style="margin-right: 50px;">
+                            Ops! Algo deu errado.
+                        </div>
+
+                        <div>
+                            <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-error.svg') }}">
+                        </div>
+                    </div>
+
+                    <div class="save-changes" id="save_load" style="display: none;">
+                        <div style="margin-right: 50px;">
+                            Um momento... estamos salvando suas alterações.
+                        </div>
+
+                        <div>
+                            
                         </div>
                     </div>
                 </div>
@@ -1435,7 +1454,8 @@
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin/asselectable.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin/selectable.js') }}"></script>
 <script src="{{asset('modules/checkouteditor/js/cropper.min.js?v='.uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/loadcheckoutdata.js?v='.uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/verifyPhone.js?v='.uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/checkout-editor.js?v='.uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/loadcheckoutdata.js?v='.uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/scrollPreview.js?v='.uniqid())}}"></script>
 @endpush

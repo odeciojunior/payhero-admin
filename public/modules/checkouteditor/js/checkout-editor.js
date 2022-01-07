@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(document).ready( function () {
     // ----------------------- Funções de Botão ----------------------------
     $("#default_finish_color").on("change", function () {
         if ($(this).is(":checked")) {
@@ -73,7 +73,7 @@ $(document).ready(function () {
         }
     });
 
-    $("input[name=banner-type]").on("click", function () {
+    $("input[name=checkout_banner_type]").on("click", function () {
         var bannerType = $(this).val();
 
         if (bannerType === "1") {
@@ -88,7 +88,7 @@ $(document).ready(function () {
     $("input[name=checkout_type_enum]").on("click", function () {
         var checkoutType = $(this).val();
 
-        if (checkoutType === "0") {
+        if (checkoutType === "1") {
             $(".visual-content-left").addClass("three-steps");
             $(".visual-content-left").removeClass("unique");
             $(".visual-content-mobile").addClass("three-steps");
@@ -158,10 +158,18 @@ $(document).ready(function () {
                 $("." + $(this).attr("data-target")).slideUp("slow", "swing");
                 $("." + $(this).attr("data-toggle")).slideDown("slow", "swing");
 
-                var primaryColor = $('label[for="' + $("input[name=theme_ready]:checked").attr("id") +'"]')
+                var primaryColor = $(
+                    'label[for="' +
+                        $("input[name=theme_enum]:checked").attr("id") +
+                        '"]'
+                )
                     .children(".theme-primary-color")
                     .css("background-color");
-                var secondaryColor = $('label[for="' + $("input[name=theme_ready]:checked").attr("id") +'"]')
+                var secondaryColor = $(
+                    'label[for="' +
+                        $("input[name=theme_enum]:checked").attr("id") +
+                        '"]'
+                )
                     .children(".theme-secondary-color")
                     .css("background-color");
 
@@ -200,7 +208,7 @@ $(document).ready(function () {
     $("#whatsapp_phone").mask("(00) 00000-0000");
 
     // ----------------- Editor de Texto --------------------
-    var formats = ["bold","italic", "underline"];
+    var formats = ["bold", "italic", "underline"];
 
     var quillTextbar = new Quill("#topbar_content", {
         modules: {
@@ -253,14 +261,6 @@ $(document).ready(function () {
     // Enable all tooltips
     $('[data-toggle="tooltip"]').tooltip();
 
-    $("#checkout_editor").on("change", function () {
-        $("#changing_container").fadeIn("slow", "swing");
-    });
-
-    
-
-    
-
     $("input[name=number]").on("input", () => {
         $(this).attr(
             "value",
@@ -285,6 +285,51 @@ $(document).ready(function () {
             $("#" + $(this).attr("data-label")).addClass("active");
         } else {
             $("#" + $(this).attr("data-label")).removeClass("active");
+        }
+    });
+
+    var drEventLogo = $("#checkout_logo").dropify({
+        messages: {
+            default: "",
+            replace: "",
+            remove: "Remover",
+            error: "",
+        },
+        error: {
+            fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
+            minWidth: "",
+            maxWidth: "A imagem deve ter largura menor que 300px.",
+            minHeight: "",
+            maxHeight: "A imagem deve ter altura menor que 300px.",
+            fileExtension:
+                "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+        },
+        tpl: {
+            message:
+                '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">Clique ou arraste e solte aqui</span></p></div>',
+            clearButton:
+                '<button type="button" class="dropify-clear o-bin-1"></button>',
+        },
+        imgFileExtensions: ["png", "jpg", "jpeg", "svg"],
+    });
+
+    drEventLogo.on("dropify.fileReady", function (event, element) {
+        var files = event.target.files;
+        var done = function (url) {
+            $("#logo_preview").attr("src", url);
+        };
+        if (files && files.length > 0) {
+            file = files[0];
+
+            if (URL) {
+                done(URL.createObjectURL(file));
+            } else if (FileReader) {
+                reader = new FileReader();
+                reader.onload = function (e) {
+                    done(reader.result);
+                };
+                reader.readAsDataURL(file);
+            }
         }
     });
 
@@ -340,20 +385,24 @@ $(document).ready(function () {
     });
 
     drEventBanner.on("dropify.beforeClear", function (event, element) {
-        
-        var imgPreviewDesktop = document.getElementById("preview_banner_img_desktop");
-        var imgPreviewMobile = document.getElementById("preview_banner_img_mobile");
+        var imgPreviewDesktop = document.getElementById(
+            "preview_banner_img_desktop"
+        );
+        var imgPreviewMobile = document.getElementById(
+            "preview_banner_img_mobile"
+        );
 
         imgPreviewDesktop.src = "";
         imgPreviewMobile.src = "";
 
-        $('#checkout_banner_hidden').val('');
+        $("#checkout_banner_hidden").val("");
     });
 
     //  ----------------- Crop Modal ----------------------
 
     var $dataZoom = $("#dataZoom");
-    bs_modal.on("shown.bs.modal", function () {
+    bs_modal
+        .on("shown.bs.modal", function () {
             cropper = new Cropper(image, {
                 highlight: false,
                 movable: false,
@@ -393,27 +442,29 @@ $(document).ready(function () {
         $("#zoom-slide").val(0);
     });
 
-    $('.img-profile input').on('click', function (e) {
-        e.stopPropagation();
-    }).on('change', function () {
-        let file = this.files[0];
-        let reader = new FileReader();
-        reader.onload = function (e) {
-            let img = $('.img-profile').addClass('cropping')
-                .find('img')
-                .attr('src', e.target.result);
-            cropper = new Cropper(img[0], {
-                aspectRatio: 1,
-                minContainerWidth: 150,
-                minContainerHeight: 150,
-            });
-            $('#btn-crop-cancel, #btn-crop').show();
-        };
-        reader.readAsDataURL(file);
-    });
+    $(".img-profile input")
+        .on("click", function (e) {
+            e.stopPropagation();
+        })
+        .on("change", function () {
+            let file = this.files[0];
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let img = $(".img-profile")
+                    .addClass("cropping")
+                    .find("img")
+                    .attr("src", e.target.result);
+                cropper = new Cropper(img[0], {
+                    aspectRatio: 1,
+                    minContainerWidth: 150,
+                    minContainerHeight: 150,
+                });
+                $("#btn-crop-cancel, #btn-crop").show();
+            };
+            reader.readAsDataURL(file);
+        });
 
     $("#button-crop").on("click", function () {
-        
         if (cropper) {
             var canvas = cropper.getCroppedCanvas();
             var src = canvas.toDataURL();
@@ -429,16 +480,19 @@ $(document).ready(function () {
             imgPreviewMobile.src = src;
 
             replacePreview("checkout_banner", src, "Image.jpg");
-            
-            $('#checkout_banner_hidden').prop('type', 'hidden');
-            $('#checkout_banner_hidden').val(src);
-            $('#checkout_banner_hidden').prop('type', 'file');
+
+            $("#checkout_banner_hidden").prop("type", "hidden");
+            $("#checkout_banner_hidden").val(src);
+            $("#checkout_banner_hidden").prop("type", "file");
 
             cropper.getCroppedCanvas().toBlob((blob) => {
                 let dt = new DataTransfer();
-                let file = new File([blob], 'banner.' + blob.type.split('/')[1]);
+                let file = new File(
+                    [blob],
+                    "banner." + blob.type.split("/")[1]
+                );
                 dt.items.add(file);
-                document.querySelector('#upload-banner input').files = dt.files;
+                document.querySelector("#upload-banner input").files = dt.files;
 
                 let reader = new FileReader();
                 reader.onload = function (e) {
@@ -460,26 +514,18 @@ $(document).ready(function () {
         $("#checkout_banner").parent().find(".dropify-clear").trigger("click");
     });
 
-    // $("#checkout_editor").on('submit', function (e) {
-    //     e.preventDefault();
-    //     let myForm = document.getElementById("checkout_editor");
-    //     let formData = new FormData(myForm);
-    // });
-
-    $("#checkout_editor input[type=checkbox]").on('change', function(){
-        if($(this).is(':checked')){
+    $("#checkout_editor input[type=checkbox]").on("change", function () {
+        if ($(this).is(":checked")) {
             $(this).val(1);
-        }else{
+        } else {
             $(this).val(0);
         }
     });
-});
 
-// -------------------------- Funções de Scroll -----------------------
-$(window).on('scroll', function() {
-    console.log('scrollTop');
+    $("#checkout_editor").on("change", function () {
+        $("#save_changes").fadeIn("slow", "swing");
+    });
 });
-
 
 function replacePreview(name, src, fname = "") {
     let input = $('input[id="' + name + '"]');
@@ -500,19 +546,20 @@ function replacePreview(name, src, fname = "") {
     preview.fadeIn();
 }
 
-const inputElements = [...document.querySelectorAll('input.code-input')]
+const inputElements = [...document.querySelectorAll("input.code-input")];
 
-inputElements.forEach((ele,index)=>{
-  ele.addEventListener('keydown',(e)=>{
-    if(e.keyCode === 8 && e.target.value==='') inputElements[Math.max(0,index-1)].focus()
-  })
-  ele.addEventListener('input',(e)=>{
-    const [first,...rest] = e.target.value
-    e.target.value = first ?? ''
-    if(index!==inputElements.length-1 && first!==undefined) {
-      inputElements[index+1].focus()
-      inputElements[index+1].value = rest.join('')
-      inputElements[index+1].dispatchEvent(new Event('input'))
-    }
-  })
-})
+inputElements.forEach((ele, index) => {
+    ele.addEventListener("keydown", (e) => {
+        if (e.keyCode === 8 && e.target.value === "")
+            inputElements[Math.max(0, index - 1)].focus();
+    });
+    ele.addEventListener("input", (e) => {
+        const [first, ...rest] = e.target.value;
+        e.target.value = first ?? "";
+        if (index !== inputElements.length - 1 && first !== undefined) {
+            inputElements[index + 1].focus();
+            inputElements[index + 1].value = rest.join("");
+            inputElements[index + 1].dispatchEvent(new Event("input"));
+        }
+    });
+});

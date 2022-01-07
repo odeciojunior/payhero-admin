@@ -22,23 +22,17 @@
 
 .preview {
     height: calc(100vh - 150px);
-    
     position: relative;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    
-    position: fixed;
+    min-width: 32%;
+}
 
+.preview.fixed-div {
     top: 80px;
     right: 180px;
-    min-width: 32%;
-
-    -webkit-transition: all 0.7s ease-out;
-    -moz-transition: all 0.7s ease-out;
-    -ms-transition: all 0.7s ease-out;
-    -o-transition: all 0.7s ease-out;
-    transition: all 0.7s ease-out;
+    position: fixed;
 }
 
 .preview-container {
@@ -656,7 +650,8 @@ input[type="color"]::-moz-color-swatch {
 
 
 #preview_visual,
-#preview_payment {
+#preview_payment,
+#preview_post_purchase {
     position: absolute;
     width: 100%;
     height: inherit;
