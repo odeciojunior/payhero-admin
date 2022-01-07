@@ -7,7 +7,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleWoocommerceRequests;
+use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TransactionResource extends JsonResource
@@ -70,6 +73,32 @@ class TransactionResource extends JsonResource
             $data['has_shopify_integration'] = true;
         } else {
             $data['has_shopify_integration'] = null;
+        }
+
+
+        $woocommerceIntegrations = [];
+        if(!empty($sale->project)){
+            $woocommerceIntegrations = $sale->project->woocommerceIntegrations->where('status', 2);
+        }
+        $data['has_woocommerce_integration'] = null;
+        if (count($woocommerceIntegrations) > 0)
+        {
+            $data['has_woocommerce_integration'] = true;
+
+            if(!empty($sale->woocommerce_order)){
+                
+                $data['woocommerce_order'] = $sale->woocommerce_order;
+
+            }else{
+                $request = SaleWoocommerceRequests::where('sale_id', $sale->id)
+                ->where('method', 'CreatePendingOrder')
+                ->where('status', 0)
+                ->first();
+
+                if(!empty($request) && $sale->status == 1){
+                    $data['woocommerce_retry_order'] = true;
+                }
+            }
         }
 
         $data['cashback_value'] = '0.00';

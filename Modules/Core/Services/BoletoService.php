@@ -101,7 +101,8 @@ class BoletoService
                             );
 
                             $products = $saleService->getEmailProducts($boleto->id);
-                            $project = $projectModel->find($boleto->project_id);
+                            $project = $projectModel->with('checkoutConfig')->find($boleto->project_id);
+                            $checkoutConfig = $project->checkoutConfig;
                             $domain = $domainModel->where('project_id', $project->id)
                                 ->where('status', $domainPresent->getStatus('approved'))
                                 ->first();
@@ -192,8 +193,7 @@ class BoletoService
                                             "shipment_value" => $boleto->shipment_value,
                                             "subtotal" => strval($subTotal),
                                             'discount' => $discount,
-                                            "project_logo" => $project->logo,
-                                            "project_contact" => $project->contact,
+                                            "project_logo" => $checkoutConfig->checkout_logo,
                                             "subject" => $subjectMessage,
                                             "title" => $titleMessage,
                                             "content" => $contentMessage,
@@ -293,7 +293,8 @@ class BoletoService
                                     0
                                 );
                                 $products = $saleService->getEmailProducts($boleto->id);
-                                $project = $projectModel->find($boleto->project_id);
+                                $project = $projectModel->with('checkoutConfig')->find($boleto->project_id);
+                                $checkoutConfig = $project->checkoutConfig;
                                 $domain = $domainModel->where('project_id', $project->id)
                                     ->where('status', 3)
                                     ->first();
@@ -359,8 +360,7 @@ class BoletoService
                                                     "shipment_value" => $boleto->shipment_value,
                                                     "subtotal" => strval($subTotal),
                                                     'discount' => $discount,
-                                                    "project_logo" => $project->logo,
-                                                    "project_contact" => $project->contact,
+                                                    "project_logo" => $checkoutConfig->checkout_logo,
                                                     "subject" => $subjectMessage,
                                                     "title" => $titleMessage,
                                                     "content" => $contentMessage,
@@ -464,7 +464,8 @@ class BoletoService
                                     0
                                 );
                                 $products = $saleService->getEmailProducts($boleto->id);
-                                $project = $projectModel->find($boleto->project_id);
+                                $project = $projectModel->with('checkoutConfig')->find($boleto->project_id);
+                                $checkoutConfig = $project->checkoutConfig;
                                 $domain = $domainModel->where('project_id', $project->id)
                                     ->where('status', $domainPresenter->getStatus('approved'))->first();
 
@@ -529,8 +530,7 @@ class BoletoService
                                                 "shipment_value" => $boleto->shipment_value,
                                                 "subtotal" => strval($subTotal),
                                                 'discount' => $discount,
-                                                "project_logo" => $project->logo,
-                                                "project_contact" => $project->contact,
+                                                "project_logo" => $checkoutConfig->checkout_logo,
                                                 "subject" => $subjectMessage,
                                                 "title" => $titleMessage,
                                                 "content" => $contentMessage,

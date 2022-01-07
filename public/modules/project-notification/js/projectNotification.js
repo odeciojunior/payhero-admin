@@ -167,7 +167,6 @@ $(function () {
 
                     $('#modal-detail-project-notification .p_text_message').html(response.data.message_html);
                     $('#modal-detail-project-notification .p_project_name').html(response.data.project_name);
-                    $('#modal-detail-project-notification .p_project_contact').html(response.data.project_contact);
                     $('#modal-detail-project-notification .p_text_notification').html(response.data.title);
                     if (response.data.project_image != '') {
                         $('#modal-detail-project-notification .p_image_project').attr('src', response.data.project_image);

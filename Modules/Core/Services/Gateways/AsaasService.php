@@ -4,6 +4,8 @@ namespace Modules\Core\Services\Gateways;
 
 use Carbon\Carbon;
 use Exception;
+use Modules\Core\Entities\Task;
+use Modules\Core\Services\TaskService;
 use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
@@ -142,6 +144,13 @@ class AsaasService implements Statement
             if (empty($withdrawal)) {
 
                 $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
+
+                if ($isFirstUserWithdrawal) {
+                    TaskService::setCompletedTask(
+                        $this->company->user,
+                        Task::find(Task::TASK_FIRST_WITHDRAWAL)
+                    );
+                }
 
                 $withdrawal = Withdrawal::create(
                     [
@@ -418,7 +427,7 @@ class AsaasService implements Statement
             );
 
             $refundTransactions = $sale->transactions;
-            
+
             $saleService = new SaleService();
             $saleTax = 0;
             if(!empty($sale->anticipation_status)){
@@ -428,17 +437,17 @@ class AsaasService implements Statement
             $totalSale = $saleService->getSaleTotalValue($sale);
 
             foreach ($refundTransactions as $refundTransaction) {
-                
+
                 $company = $refundTransaction->company;
                 if (!empty($company)) {
 
                     if ($refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
-                        
+
                         $refundValue = $refundTransaction->value;
                         if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
                             $refundValue += $saleTax;
                         }
-                        
+
                         if($refundValue > $totalSale){
                             $refundValue = $totalSale;
                         }
@@ -454,7 +463,7 @@ class AsaasService implements Statement
                             'reason' => 'refunded',
                             'is_refunded_tax' => 0
                         ]);
-                   
+
                         $company->update([
                             'asaas_balance' => $company->asaas_balance -= $refundValue
                         ]);
@@ -462,7 +471,7 @@ class AsaasService implements Statement
                     } elseif(!empty($sale->anticipation_status))
                     {
                         if ($refundTransaction->type <> Transaction::TYPE_PRODUCER) continue;
-                        
+
                         Transfer::create(
                             [
                                 'transaction_id' => $refundTransaction->id,
@@ -479,12 +488,12 @@ class AsaasService implements Statement
                             'asaas_balance' => $company->asaas_balance += $refundTransaction->value
                         ]);
 
-                        $refundValue = $refundTransaction->value + $saleTax;                        
-                        
+                        $refundValue = $refundTransaction->value + $saleTax;
+
                         if($refundValue > $totalSale){
                             $refundValue = $totalSale;
                         }
-                   
+
                         Transfer::create([
                             'transaction_id' => $refundTransaction->id,
                             'user_id' => $refundTransaction->user_id,
@@ -496,7 +505,7 @@ class AsaasService implements Statement
                             'reason' => 'refunded',
                             'is_refunded_tax' => 0
                         ]);
-                   
+
                         $company->update([
                             'asaas_balance' => $company->asaas_balance -= $refundValue
                         ]);
