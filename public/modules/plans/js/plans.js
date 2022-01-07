@@ -695,7 +695,9 @@ $(function () {
     }
 
     function getCustom(modal) {
-        $(modal).find('.modal-body').css('height', 'auto');
+        $(modal).find('.product-photo').unbind('load');
+
+        $(modal).find('.modal-body').css('height', 'auto').attr('style', 'padding-bottom: 0px !important');
 
         $(modal).find('.modal-footer').html(
             '<button id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">' +
@@ -718,65 +720,67 @@ $(function () {
                 append += '</div>';
             append += '</div>';
 
-            products_plan.forEach(function(product) {
-                append += '<div class="row box-product body align-items-center" style="cursor: inherit;">';
-                    append += '<div class="col-sm-6" ' + (product.product_name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.product_name + '"' : '') + '>';
-                        append += '<div class="product d-flex align-items-center">';
-                            append += '<div class="background-photo">';
-                                append += '<img class="product-photo" src="' + product.photo + '">';
-                            append += '</div>';
-                            append += '<div>';
-                                append += '<h1 class="title">' + product.product_name_short + '</h1>';
-                                append += '<p class="description m-0">Qtd: ' + product.amount + '</p>';
-                            append += '</div>';
-                        append += '</div>';
-                    append += '</div>';
-                    append += '<div class="col-sm-6">';
-                        append += '<div class="d-flex ' + (product.custom_configs.length > 0 ? 'justify-content-between' : 'justify-content-end') + ' align-items-center">';
-                            if (product.custom_configs.length > 0) {
-                                append += '<div class="d-flex customs">';
-                                    if (product.custom_configs.map(function(e) { return e.type }).indexOf('Text') != -1) {
-                                        append += '<div class="d-flex align-items-center">';
-                                            append += '<div class="custom-type">';
-                                                append += '<img src="/modules/global/img/icon-custom-product-text.svg">';
-                                            append += '</div>';
-                                        append += '</div>';
-                                    }
-
-                                    if (product.custom_configs.map(function(e) { return e.type }).indexOf('Image') != -1) {
-                                        append += '<div class="d-flex align-items-center">';
-                                            append += '<div class="custom-type">';
-                                                append += '<img src="/modules/global/img/icon-custom-product-image.svg">';
-                                            append += '</div>';
-                                        append += '</div>';
-                                    }
-
-                                    if (product.custom_configs.map(function(e) { return e.type }).indexOf('File') != -1) {
-                                        append += '<div class="d-flex align-items-center">';
-                                            append += '<div class="custom-type">';
-                                                append += '<img src="/modules/global/img/icon-custom-product-file.svg">';
-                                            append += '</div>';
-                                        append += '</div>';
-                                    }
-                                append += '</div>';
-                            }
-
-                            append += '<div class="d-flex align-items-center">';
-                                append += '<a class="btn-customizations" data-product="' + product.id + '" type="button" style="cursor: pointer; ' + (product.custom_configs.length > 0 ? 'margin-right: 14px;' : '') + '">' + (product.custom_configs.length > 0 ? 'Editar' : 'Adicionar') + '</a>';
-                                if (product.custom_configs.length > 0) {
-                                    append += '<div class="switch-holder active_custom d-flex align-items-center">';
-                                        append += '<label class="switch m-0">';
-                                            append += '<input type="checkbox" data-product="' + product.id + '" name="check-values" class="check active_custom_product" value="' + product.is_custom + '" ' + (product.is_custom ? 'checked' : '') + '>';
-                                            append += '<span class="slider round"></span>';
-                                        append += '</label>';
+            append += '<div class="row body-products" style="padding: 0;">';
+                append += '<div class="col-sm-12">';
+                    products_plan.forEach(function(product) {
+                        append += '<div class="row box-product body align-items-center" style="cursor: inherit;">';
+                            append += '<div class="col-sm-6" ' + (product.product_name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.product_name + '"' : '') + '>';
+                                append += '<div class="product d-flex align-items-center">';
+                                    append += '<div class="background-photo">';
+                                        append += '<img class="product-photo" src="' + product.photo + '">';
                                     append += '</div>';
-                                }
+                                    append += '<div>';
+                                        append += '<h1 class="title">' + product.product_name_short + '</h1>';
+                                        append += '<p class="description m-0">Qtd: ' + product.amount + '</p>';
+                                    append += '</div>';
+                                append += '</div>';
+                            append += '</div>';
+                            append += '<div class="col-sm-6">';
+                                append += '<div class="d-flex ' + (product.custom_configs.length > 0 ? 'justify-content-between' : 'justify-content-end') + ' align-items-center">';
+                                    if (product.custom_configs.length > 0) {
+                                        append += '<div class="d-flex customs">';
+                                            if (product.custom_configs.map(function(e) { return e.type }).indexOf('Text') != -1) {
+                                                append += '<div class="d-flex align-items-center">';
+                                                    append += '<div class="custom-type">';
+                                                        append += '<img src="/modules/global/img/icon-custom-product-text.svg">';
+                                                    append += '</div>';
+                                                append += '</div>';
+                                            }
+
+                                            if (product.custom_configs.map(function(e) { return e.type }).indexOf('Image') != -1) {
+                                                append += '<div class="d-flex align-items-center">';
+                                                    append += '<div class="custom-type">';
+                                                        append += '<img src="/modules/global/img/icon-custom-product-image.svg">';
+                                                    append += '</div>';
+                                                append += '</div>';
+                                            }
+
+                                            if (product.custom_configs.map(function(e) { return e.type }).indexOf('File') != -1) {
+                                                append += '<div class="d-flex align-items-center">';
+                                                    append += '<div class="custom-type">';
+                                                        append += '<img src="/modules/global/img/icon-custom-product-file.svg">';
+                                                    append += '</div>';
+                                                append += '</div>';
+                                            }
+                                        append += '</div>';
+                                    }
+
+                                    append += '<div class="d-flex align-items-center">';
+                                        append += '<a class="btn-customizations" data-product="' + product.id + '" type="button" style="cursor: pointer; ' + (product.custom_configs.length > 0 ? 'margin-right: 14px;' : '') + '">' + (product.custom_configs.length > 0 ? 'Editar' : 'Adicionar') + '</a>';
+                                        if (product.custom_configs.length > 0) {
+                                            append += '<div class="switch-holder active_custom d-flex align-items-center">';
+                                                append += '<label class="switch m-0">';
+                                                    append += '<input type="checkbox" data-product="' + product.id + '" name="check-values" class="check active_custom_product" value="' + product.is_custom + '" ' + (product.is_custom ? 'checked' : '') + '>';
+                                                    append += '<span class="slider round"></span>';
+                                                append += '</label>';
+                                            append += '</div>';
+                                        }
+                                    append += '</div>';
+                                append += '</div>';
                             append += '</div>';
                         append += '</div>';
-                    append += '</div>';
+                    });
                 append += '</div>';
-            });
-
             append += '</div>';
 
             $(modal).find('#tab-general-data').removeClass('show active');
@@ -784,8 +788,21 @@ $(function () {
 
             var curHeight = $(modal).find('.modal-body').height();
             $(modal).find('#stage1-customization').find('.box-products').html(append).promise().done(function() {
+                if (products_plan.length > 2) {
+                    $(modal).find('#stage1-customization').find('.body-products').css({'max-height': '214px', 'position': 'relative', 'overflow': 'hidden'});
+
+                    scrollCustom(modal + ' #stage1-customization .body-products');
+                    $(modal).find('#stage1-customization').find('.body-products').css({'padding-right': '22px'});
+                    $(modal).find('#stage1-customization').find('.body-products').find('.scrollbox').css({'right': '46px'});
+                    $(modal).find('#stage1-customization').find('.body-products').find('.scrollbox-bar').css({'right': '46px'});
+                } else {
+                    $(modal + ' #stage1-customization .body-products').off('wheel');
+                }
+
                 $(modal).find('#stage1-customization').find('.product-photo').on('load', function() {
                     $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
+                        $(modal).find('.product-photo').unbind('load');
+
                         $('[data-toggle="tooltip"]').tooltip({
                             container: '.page',
                             template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
@@ -793,10 +810,8 @@ $(function () {
 
                         $(modal).find('#tab-customizations_panel').addClass('show active').promise().done(function() {
                             $(modal).find('#stage1-customization').addClass('show active').promise().done(function() {
-                                var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + (products_plan.length > 2 ? 65 : 55);
-                                $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
-                                    $(modal).find('.product-photo').unbind('load');
-                                });
+                                var autoHeight = $(modal).find('.height-auto').height();
+                                $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300);
                             });
                         });
                     });

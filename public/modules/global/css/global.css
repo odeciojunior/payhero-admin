@@ -1147,7 +1147,11 @@ img.border-icon{
 .modal-plans .box-products.customizations .body {
     padding: 16px 30px;
     border-top: none;
+    border-right: none;
     border-bottom: 1px solid #EBEBEB;
+    border-left: none;
+    border-radius: 0;
+    margin-bottom: 0;
 }
 .modal-plans .box-products.customizations .body:last-child {
     border-bottom: none;

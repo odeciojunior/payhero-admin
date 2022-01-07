@@ -70,7 +70,7 @@ function scrollCustom(div) {
     $(div).on('wheel', function(event) {
         if(event.originalEvent.deltaY !== 0) {
             var heightDivScroll = $(div).height();
-            var heightDivScrollTotal = $(div).find('.row').height();
+            var heightDivScrollTotal = $(div).children(":first").height();
 
             var heightCalculateScroll = ((heightDivScroll - 60) / 60) * 2;
             var heightCalculateTotal = ((heightDivScrollTotal - heightDivScroll) / 60) * 2;
@@ -97,7 +97,7 @@ function scrollCustom(div) {
             }
 
             $(div).find('.scrollbox-bar').css('top', scroll + 'px');
-            $(div).find('.row').css('margin-top', '-' + scrollDiv + 'px');
+            $(div).children(":first").css('margin-top', '-' + scrollDiv + 'px');
         }
     });
 }
