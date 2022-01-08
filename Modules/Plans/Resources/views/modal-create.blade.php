@@ -9,15 +9,17 @@
             </div>
 
             <div class="modal-body" id="modal_add_body">
-                <div class="tab-content" id="tabs-modal-create-plans">
-                    <div class="tab-pane fade" id="stage1" role="tabpanel" aria-labelledby="stage1-tab">
-                        @include('plans::stages/stage1-create')
-                    </div>
-                    <div class="tab-pane fade" id="stage2" role="tabpanel" aria-labelledby="stage2-tab">
-                        @include('plans::stages/stage2-create')
-                    </div>
-                    <div class="tab-pane fade" id="stage3" role="tabpanel" aria-labelledby="stage3-tab">
-                        @include('plans::stages/stage3-create')
+                <div class="height-auto">
+                    <div class="tab-content" id="tabs-modal-create-plans">
+                        <div class="tab-pane fade" id="stage1" role="tabpanel" aria-labelledby="stage1-tab">
+                            @include('plans::stages/stage1-create')
+                        </div>
+                        <div class="tab-pane fade" id="stage2" role="tabpanel" aria-labelledby="stage2-tab">
+                            @include('plans::stages/stage2-create')
+                        </div>
+                        <div class="tab-pane fade" id="stage3" role="tabpanel" aria-labelledby="stage3-tab">
+                            @include('plans::stages/stage3-create')
+                        </div>
                     </div>
                 </div>
             </div>

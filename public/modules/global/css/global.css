@@ -1035,6 +1035,9 @@ img.border-icon{
 }
 
 /* MODAL PLANS - breadcrumbs */
+.modal-plans {
+    overflow-y: scroll !important;
+}
 .modal-plans .form-control:focus,
 .modal-plans .sirius-select-text.active {
     border: 1px solid #46BCFF;
