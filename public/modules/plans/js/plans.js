@@ -1638,6 +1638,7 @@ $(function () {
         var open = $(this).attr('data-open');
         if (open == 1) {
             $(this).parent().find('.products-data').animate({height: '74px'}, 500);
+            $('#modal_edit_plan').find('.modal-body').css('overflow', '');
             $(this).removeClass('open');
             $(this).html('Ver todos os produtos <span class="fas fa-chevron-down"></span>')
 
@@ -1645,7 +1646,7 @@ $(function () {
         } else {
             var autoHeight = $(this).parent().find('.products-data').find('.row').height();
             $(this).parent().find('.products-data').animate({height: autoHeight}, 500).css('max-height', autoHeight);
-            //$('#modal_edit_plan').find('.modal-body').css('overflow', 'hidden');
+            $('#modal_edit_plan').find('.modal-body').css('overflow', 'hidden');
             $(this).addClass('open');
             $(this).html('Ver menos <span class="fas fa-chevron-up"></span>');
 
