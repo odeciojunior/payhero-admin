@@ -944,8 +944,6 @@ $(function () {
     }
 
     function storePlan(modalID, type) {
-        console.log(selected_products);
-
         if (type == 'create') {
             $.ajax({
                 method: 'POST',
@@ -976,6 +974,8 @@ $(function () {
                 }
             });
         } else {
+            var current_page = $('#pagination-plans').find('.current_page').text();
+
             $('.box-products .form-control').each(function() {
                 var product_ID = $(this).parents('.product').attr('data-code');
 
@@ -1009,7 +1009,7 @@ $(function () {
                     errorAjaxResponse(response);
                 },
                 success: function success(response) {
-                    index();
+                    index(current_page);
                     alertCustom('success', 'Produtos do plano atualizados');
 
                     $(modalID).modal('hide');
@@ -1664,6 +1664,8 @@ $(function () {
         var parents = $(this).parents('.informations-edit');
         var curHeight = parents.find('.informations-data').height();
 
+        var current_page = $('#pagination-plans').find('.current_page').text();
+
         $.ajax({
             method: "PUT",
             url: '/api/plans/' + plan_id + '/informations',
@@ -1728,7 +1730,7 @@ $(function () {
                     parents.find('.informations-data').height(curHeight).animate({ height: autoHeight }, 300);
                 });
 
-                index();
+                index(current_page);
                 alertCustom('success', response.message);
             }
         });
@@ -1750,7 +1752,7 @@ $(function () {
     });
 
     // Update Table Plan
-    function index() {
+    function index(page = 1) {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         pageCurrent = link;
 
@@ -1759,6 +1761,10 @@ $(function () {
             link = '/api/project/' + projectId + '/plans';
         } else {
             link = '/api/project/' + projectId + '/plans' + link;
+        }
+
+        if (page > 1) {
+            link = '/api/project/' + projectId + '/plans?page=' + page + '&plan=';
         }
 
         $.ajax({
