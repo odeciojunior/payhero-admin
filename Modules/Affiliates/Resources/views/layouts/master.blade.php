@@ -45,9 +45,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=11') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=12') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=13') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=14') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production')

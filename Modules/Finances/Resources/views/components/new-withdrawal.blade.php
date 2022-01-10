@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <label for="custom-input-addon"> Valor a transferir</label>
+                    <label for="custom-input-addon"> Valor a sacar</label>
                     <div class="input-group align-items-center input-custom-transfer">
                         <div class="input-moeda">R$</div>
                         <input id="custom-input-addon" type="text"
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     <div class="col-md-12 p-0 mt-10">
-                        <label for="custom-input-addon"> Valor a transferir</label>
+                        <label for="custom-input-addon"> Valor a sacar</label>
                         <div class="input-group align-items-center input-custom-transfer">
                             <div class="input-moeda">R$</div>
                             <input id="custom-input-addon" type="text"
