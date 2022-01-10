@@ -13,6 +13,7 @@
 
 Route::middleware(['web', 'auth'])->prefix('reports')->group(function() {
     Route::get('/sales', 'ReportsController@index')->name('reports.index')->middleware('permission:report_sales');
+    Route::get('/new', 'ReportsController@new')->name('reports.new')->middleware('permission:report_sales');
 
     Route::get('/checkouts', 'ReportsController@checkouts')->name('reports.checkouts')->middleware('permission:report_checkouts');
 

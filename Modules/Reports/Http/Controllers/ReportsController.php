@@ -30,6 +30,11 @@ class ReportsController extends Controller
         return view('reports::index');
     }
 
+    public function new()
+    {
+        return view('reports::new');
+    }
+
     public function checkouts()
     {
         return view('reports::checkouts');
