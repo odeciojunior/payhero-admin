@@ -61,7 +61,7 @@ class AsaasAnticipationsPending extends Command
 
                 if (isset($response['status']) != 'SCHEDULED' or 'PENDING' or 'CREDITED' or 'CANCELLED') {
                     report(new Exception("Erro ao consultar as antecipações, UserId:  " . $sale->owner_id . " SaleId:  " . $sale->id .
-                                         ' -- Status asaas: ' . $response['status'] . ' -- ' . json_encode($response)));                }
+                                         ' -- ' . json_encode($response)));                }
             }
 
         } catch (Exception $e) {
