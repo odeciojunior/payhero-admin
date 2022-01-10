@@ -116,7 +116,20 @@ window.defaultWithdrawal = function(gatewayId) {
                         $("#modal-withdrawal-document").html('  ' + response.data.document);
 
                         $("#bt-confirm-withdrawal").off("click");
-                        $("#bt-confirm-withdrawal").on("click", function () {
+                        $("#bt-confirm-withdrawal").on("click", function (e) {
+
+                            var click = $(this);
+                            if (click.data('clicked')) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return false;
+                            }
+                            click.data('clicked', true);
+
+                            window.setTimeout(function(){
+                                click.removeData('clicked');
+                            }, 2000);
+
                             loadOnModal('#modal-body');
 
                             $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
@@ -211,7 +224,19 @@ window.customWithdrawal = function(gatewayId) {
     });
 
     $(document).off('click', '#bt-confirm-withdrawal-modal-custom');
-    $(document).on('click', '#bt-confirm-withdrawal-modal-custom', function () {
+    $(document).on('click', '#bt-confirm-withdrawal-modal-custom', function (e) {
+
+        var click = $(this);
+        if (click.data('clicked')) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+        click.data('clicked', true);
+
+        window.setTimeout(function(){
+            click.removeData('clicked');
+        }, 2000);
 
         loadOnModal("#modal-body-withdrawal-custom");
 
@@ -641,5 +666,19 @@ window.customWithdrawal = function(gatewayId) {
             .replace(/\s+/g, '')
             .replace('-', '- ');
     }
+}
+
+function notHaveTwoRequisition(click, e) {
+//alert('fkljsdkl');
+    if (click.data('clicked')) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }
+    click.data('clicked', true);
+
+    window.setTimeout(function(){
+        click.removeData('clicked');
+    }, 2000);
 }
 

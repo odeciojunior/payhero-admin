@@ -210,6 +210,20 @@
                 </div>
                 {{--resend shopfy order--}}
 
+
+                {{--resend woo order--}}
+                <div id='resendWoocommerceOrder' class='alert alert-warning text-center d-none'>
+                    <span>Ordem do <b>WOOCOMMERCE</b> não foi gerada</span>
+                    <br>
+                    <span style='font-size:12px'>clique no botão a seguir para gerar</span>
+                    <br>
+                    <button id='resendWoocommerceOrderButton' class="btn btn-warning btn-sm btn_new_order_woocommerce mt-10"
+                            sale=''>
+                        <b>Gerar ordem Woocommerce</b>
+                    </button>
+                </div>
+                {{--resend woo order--}}
+
             <!-- Observation -->
                 <div style="box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);" class="panel-group my-30" aria-multiselectable="true" role="tablist">
                     <div class="panel">
@@ -242,15 +256,35 @@
                     <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
                            role="tab"
-                           style="width:50%;">Cliente
+                           style="width:33%;">Cliente
                         </a>
                         <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
                            role="tab"
-                           style="width:50%;">Detalhes
+                           style="width:33%;">Detalhes
+                        </a>
+                        <a class="nav-item nav-link" id="nav-woo-tab" data-toggle="tab" href="#nav-woo"
+                           role="tab"
+                           style="width:33%; display:none">WooCommerce
                         </a>
                     </div>
                 </div>
                 <div class="tab-content p-10" id="nav-tabContent">
+                    {{-- WOOCOMMERCE --}}
+                    <div class="tab-pane fade" id="nav-woo" role="tabpanel" aria-labelledby="nav-woo-tab">
+                        <h4> Ordem Woocommerce  </h4>
+                        
+                        <br>
+
+                        
+                        <div id="woo_order" class="mb-20">
+                            
+                        </div>
+
+                        <br>
+                        
+                        
+                    </div>
+                    
                     <!-- CLIENTE -->
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <h4> Dados Pessoais </h4>

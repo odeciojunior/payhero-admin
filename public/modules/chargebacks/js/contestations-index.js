@@ -338,8 +338,9 @@ $(document).ready(function () {
                     } else {
                         dados += `<td><span class='badge badge-danger'> Vazio</span></td>`;
                     }
+                    //<td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia") ? '<br><span class="font-size-12 text-muted"> para expirar</span>' : ""}</td>
                     dados += `
-                                    <td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia") ? '<br><span class="font-size-12 text-muted"> para expirar</span>' : ""}</td>
+                                    
                                     <td class="font-size-12 bold line-overflow" style="white-space: normal;">${value.reason}</td>
 <!--                                    <td style='white-space: nowrap'><b>${
                         value.amount

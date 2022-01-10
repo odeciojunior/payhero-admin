@@ -36,7 +36,19 @@ $("#bt-withdrawal, #bt-withdrawal_m").on("click", function () {
     });
 });
 
-$(document).on('click', '#bt-confirm-withdrawal-modal-custom', function () {
+$(document).on('click', '#bt-confirm-withdrawal-modal-custom', function (e) {
+
+    var click = $(this);
+    if (click.data('clicked')) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }
+    click.data('clicked', true);
+
+    window.setTimeout(function(){
+        click.removeData('clicked');
+    }, 2000);
 
     loadOnModal("#modal-body-withdrawal-custom");
 
