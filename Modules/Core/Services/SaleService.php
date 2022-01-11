@@ -464,6 +464,11 @@ class SaleService
             }
         }
 
+        if (!empty($userTransaction->release_date)) {
+            $userTransaction->release_date = Carbon::parse($userTransaction->release_date);
+        } else {
+            $userTransaction->release_date = null;
+        }
         $companyName = $userTransaction->company->fantasy_name;
 
         //add details to sale
