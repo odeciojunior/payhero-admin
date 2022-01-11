@@ -1926,20 +1926,35 @@ $(function () {
         }
     });
 
-    // Search plan
-    let timeoutID_plan = null;
-    $('body').on('keyup', '#search-plan', function(e) {
-        clearTimeout(timeoutID_plan);
+    // Search products variations
+    let timeoutID_product = null;
+    $('#modal_config_cost_plan').on('keyup', '#search-plan', function(e) {
+        clearTimeout(timeoutID_product);
 
         var modal = '#modal_config_cost_plan';
         var search_plan = e.target.value;
+        var description = $(modal).find('#search-product-description').val();
 
-        timeoutID_plan = setTimeout(function() {
-            searchPlans(search_plan, modal);
+        timeoutID_product = setTimeout(function() {
+            searchPlans(search_plan, description, modal);
         }, 800);
     });
 
-    function searchPlans(plan, modal) {
+    // Search products description
+    let timeoutID_product_ = null;
+    $('#modal_config_cost_plan').on('keyup', '#search-product-description', function(e) {
+        clearTimeout(timeoutID_product_);
+
+        var modal = '#modal_config_cost_plan';
+        var description = e.target.value;
+        var search_plan = $(modal).find('#search-plan').val();
+
+        timeoutID_product_ = setTimeout(function() {
+            searchPlans(search_plan, description, modal);
+        }, 800);
+    });
+
+    function searchPlans(plan, description, modal) {
         $(modal).find('.product-photo').unbind('load');
         $(modal).find('.modal-body').css('height', 'auto');
 
@@ -1953,7 +1968,8 @@ $(function () {
                 data: {
                     project_id: projectId,
                     variants: true,
-                    search: plan
+                    search: plan,
+                    description: description
                 },
                 dataType: "json",
                 headers: {
@@ -2086,6 +2102,9 @@ $(function () {
         $(modal).find('.product-photo').unbind('load');
         $(modal).find('.modal-body').css('height', 'auto').attr('style', 'padding-bottom: 0px !important');
 
+        $(modal).find('#search-product').val('');
+        $(modal).find('#search-product-description').val('');
+
         $(modal).find('.tab-pane').removeClass('active show').promise().done(function() {
             $(modal).find('#tab_update_cost_block-panel').css('display', 'none').promise().done(function() {
                 $(modal).find('.modal-body').append(loadingPlansConfigCost).promise().done(function(e) {
@@ -2105,6 +2124,35 @@ $(function () {
                             errorAjaxResponse(response);
                         },
                         success: function success(response) {
+                            let project_type = $('#project_type').val();
+                            if (project_type == 'my_products') {
+                                $(modal).find('.search-type').html(
+                                    '<div class="d-flex">'+
+                                        '<input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">'+
+                                        '<div class="input-group input-group-lg" style="width: 650px;">'+
+                                            '<input class="form-control" type="text" id="search-product-description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">'+
+                                            '<div class="input-group-append">'+
+                                                '<span class="input-group-text">'+
+                                                    '<img src="/modules/global/img/icon-search.svg" alt="Icon Search">'+
+                                                '</span>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'
+                                );
+                            } else {
+                                $(modal).find('.search-type').html(
+                                    '<div class="input-group input-group-lg">'+
+                                        '<input class="form-control" type="text" id="search-plan" placeholder="Pesquisa por nome">'+
+                                        '<div class="input-group-append">'+
+                                            '<span class="input-group-text">'+
+                                                '<img src="/modules/global/img/icon-search.svg" alt="Icon Search">'+
+                                            '</span>'+
+                                        '</div>'+
+                                    '</div>'
+                                );
+                            }
+
+
                             var append = '<div class="row">';
                             if (response.data.length > 0) {
                                 response.data.forEach(function(plan) {

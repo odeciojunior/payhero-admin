@@ -29,6 +29,7 @@
         </div>
         <div class="page-content container page-project" style="display: none">
             <!-- Painel de informações gerais -->
+            <input type="hidden" id="project_type">
             <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
                 <div class="card">
                     <div class="row no-gutters">

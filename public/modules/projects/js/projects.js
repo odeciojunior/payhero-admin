@@ -207,6 +207,11 @@ $(() => {
             success: (response) => {
 
                 let project = response.data;
+                let project_type = 'my_products';
+                if (project.shopify_id != null) project_type = 'shopify';
+                if (project.woocommerce_id != null) project_type = 'woocommerce';
+
+                $('#project_type').val(project_type);
                 $('.title-pad').text(project.name);
                 $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
                 $('#created_at').text('Criado em ' + project.created_at);

@@ -80,6 +80,8 @@ class ProductsApiController extends Controller
 
             if (isset($filters['shopify']) && $filters['shopify'] == 1) {
                 $productsSearch->where('shopify', $filters['shopify']);
+            } else {
+                $productsSearch->whereNull('shopify_variant_id');
             }
 
             if (isset($filters['name'])) {
@@ -428,6 +430,10 @@ class ProductsApiController extends Controller
 
             if (!empty($data['search'])) {
                 $products->where('name', 'like', '%' . $data['search'] . '%');
+            }
+
+            if (!empty($data['description'])) {
+                $products->where('name', 'like', '%' . $data['description'] . '%');
             }
 
             $products = $products->get()->sortByDesc(function($query) {

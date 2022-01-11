@@ -95,14 +95,7 @@
                                     </div>
                                 </div>
 
-                                <div class="input-group input-group-lg">
-                                    <input class="form-control" type="text" id="search-plan" placeholder="Pesquisa por nome">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">
-                                            <img src="/modules/global/img/icon-search.svg" alt="Icon Search">
-                                        </span>
-                                    </div>
-                                </div>
+                                <div class="search-type"></div>
                             </div>
 
                             <div class="box-plans" style="max-height: 220px;">
