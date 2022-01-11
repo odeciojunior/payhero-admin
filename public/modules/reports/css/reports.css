@@ -75,3 +75,63 @@
 h4.number{
     color:#57617c;
 }
+
+
+/* new reports */
+.grey {
+    color: #636363;
+}
+.new-title {
+    font-size: 30px;
+    line-height: 44px;
+    padding-bottom: 30px;
+}
+
+.box-select {
+    margin: 10px 0;
+}
+
+.box-select input {
+    margin-left: 0! important;
+    width: 100% !important;
+}
+
+@media only screen and (min-width: 480px) {
+    .box-select {
+        margin: 0 -1.0715rem;
+    }
+    
+    .box-select input {
+        margin-left: 5px! important;
+        width: 92% !important;
+    }
+    
+    /* .box-select .form-control-icon { top: 40%;} */   
+    
+}
+
+@media only screen and (min-width: 1366px) and (max-width: 1598px) {
+    /* .box-select .form-control-icon { top: 25%;} */
+}
+
+@media only screen and (min-width: 1024px) {
+    .new-title {
+        padding-bottom: 0;
+    }
+    
+}
+
+.lk-export {
+    font-size: .9rem;
+    line-height: 39px;
+    font-weight: bold;
+    text-align: left;
+    display: block;
+}
+.lk-export i {
+    float: left; 
+}
+
+@media only screen and (min-width: 1024px) {
+    .box-export { padding: 0; }    
+}

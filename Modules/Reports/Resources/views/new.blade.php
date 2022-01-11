@@ -14,15 +14,42 @@
         <div style="display: none" class="page-header container">
             <div class="row">
                 <div class="col-12">
-                    <h1 class="page-title">Relatórios</h1>
-                    <span type="hidden" class="error-data"></span>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-12 col-xs-12">
+                            <h1 class="page-title new-title grey">Relatórios</h1>
+                            <span type="hidden" class="error-data"></span>
+                        </div>
+                        <div class="col-lg-8 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div class="col-sm-6 col-m-3 col-lg-5">
+                                    <div>
+                                        <select id='select_projects' class="form-control input-pad">
+                                            {{-- JS carrega.. --}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-m-3 col-lg-5">
+                                    <div class="row align-items-center form-icons box-select">
+                                        <i style="right:10%;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
+                                        <input id="date-filter" type="text" name="daterange" class="input-pad text-center pr-30 font-size-14 ml-5" style="width: 92%" value="" readonly>
+                                    </div>
+                                </div>
+                                <div class="box-export col-lg-2">
+                                    <a href="" class="grey lk-export">
+                                        <i class="o-download-cloud-1 mr-2"></i>
+                                        Exportar dados
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div id="project-not-empty" style="display: none">
             <div id="reports-content" class="page-content container">
                 <div class="row align-items-center justify-content-between">
-                    <div class="col-sm-6 col-m-3 col-lg-3">
+                    <!-- <div class="col-sm-6 col-m-3 col-lg-3">
                         <div class="">
                             <select id='select_projects' class="form-control input-pad">
                                 {{-- JS carrega.. --}}
@@ -34,7 +61,7 @@
                             <i style="right:10%;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
                             <input id="date-filter" type="text" name="daterange" class="input-pad text-center pr-30 font-size-14 ml-5" style="width: 92%" value="" readonly>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class='container col-sm-12 mt-20 d-lg-block'>
                     <div class='row'>
