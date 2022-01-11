@@ -243,7 +243,7 @@ $(function () {
                                 append += '<div ' + (product.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.name + '"' : '') + ' data-code="' + product.id + '" class="box-product ' + (index_product != -1 ? 'selected' : '') + ' ' + (product.status_enum == 1 || product.status_enum == 3 ? 'review' : '') + ' d-flex justify-content-between align-items-center">';
                                     append += '<div class="d-flex align-items-center">';
                                         append += '<div class="background-photo">';
-                                            append += '<img class="product-photo" src="' + product.photo + '">';
+                                            append += '<img class="product-photo" src="' + product.photo + '" style="display: none;">';
                                         append += '</div>';
                                         append += '<div>';
                                             append += '<h1 class="title" ' + (product.status_enum == 1 || product.status_enum == 3 ? 'style="color: #C5C5C5"' : '') + '>' + product.name_short + '</h1>';
@@ -302,18 +302,18 @@ $(function () {
                         }
 
                         $(modal).find('.product-photo').on('error', function() {
-                            $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
+                            $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
                         });
 
-                        $(modal).find(find_stage).find('.box-products').find('.product-photo').on('load', function() {
-                            $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
-                                $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
-                                    $(modal).find(find_stage).addClass('show active').promise().done(function() {
-                                        var autoHeight = $(modal).find('.height-auto').height() + 18;
-                                        $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
-                                            $(modal).find('.product-photo').unbind('load');
-                                        });
-                                    });
+                        $(modal).find('.product-photo').on('load', function() {
+                            $(this).fadeIn(300);
+                        });
+
+                        $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
+                            $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
+                                $(modal).find(find_stage).addClass('show active').promise().done(function() {
+                                    var autoHeight = $(modal).find('.height-auto').height() + 18;
+                                    $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300);
                                 });
                             });
                         });
@@ -339,154 +339,154 @@ $(function () {
         }
 
         $(modal).find('.tab-pane').removeClass('show active').promise().done(function() {
-            if (type == 'create') {
-                $(modal).find('.modal-body').append(loadingCreateStage2);
-            } else {
-                $(modal).find('.modal-body').append(loadingEditStage3);
-            }
+            $(modal).find('.modal-body').append(type == 'create' ? loadingEditStage3 : loadingEditStage3).promise().done(function() {
+                var numOfGetsReturned = 0;
 
-            var append = '';
-            append += '<div class="box-details">';
-                append += '<div class="head d-flex">';
-                    append += '<div>Produto</div>';
-                    append += '<div>Quantidade<span style="color: #FF0000;">*</span></div>';
-                    append += '<div>Custo (un)</div>';
-                    append += '<div>Moeda</div>';
-                append += '</div>';
-                append += '<div class="body">';
-                    append += '<div class="row">';
-                        append += '<div class="col-sm-12">';
-                            selected_products.forEach(function(product) {
-                                var index_product = selected_products.map(function(p) { return p.id; }).indexOf(product.id);
-                                var plan = 0;
-                                if (selected_products[index_product].currency_type_enum) {
-                                    plan = plan_id;
+                var append = '';
+                selected_products.forEach(function(product) {
+                    var index_product = selected_products.map(function(p) { return p.id; }).indexOf(product.id);
+                    var plan = 0;
+                    if (selected_products[index_product].currency_type_enum) {
+                        plan = plan_id;
+                    }
+
+                    $.ajax({
+                        method: "GET",
+                        url: "/api/product/" + product.id,
+                        data: {
+                            plan_id: plan
+                        },
+                        dataType: "json",
+                        headers: {
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
+                        },
+                        error: function error(response) {
+                            alertCustom('error', 'Ocorreu um erro, por favor, refaça a operação');
+                        },
+                        success: function success(response) {
+                            let amount = 1;
+                            let cost = response.data.cost.replace('R$ ', '').replace('$ ', '').replace(',', '').replace('.', ',');
+                            let currency_type_enum = response.data.currency_type_enum;
+
+                            if (selected_products[index_product].currency_type_enum) {
+                                amount = selected_products[index_product].amount;
+                                cost = selected_products[index_product].value;
+                                if (selected_products[index_product].currency_type_enum == 'USD') {
+                                    currency_type_enum = 2;
+                                } else {
+                                    currency_type_enum = 1;
                                 }
+                            }
 
-                                $.ajax({
-                                    async: false,
-                                    method: "GET",
-                                    url: "/api/product/" + product.id,
-                                    data: {
-                                        plan_id: plan
-                                    },
-                                    dataType: "json",
-                                    headers: {
-                                        'Authorization': $('meta[name="access-token"]').attr('content'),
-                                        'Accept': 'application/json',
-                                    },
-                                    error: function error(response) {
-                                        alertCustom('error', 'Ocorreu um erro, por favor, refaça a operação');
-                                    },
-                                    success: function success(response) {
-                                        let amount = 1;
-                                        let cost = response.data.cost.replace('R$ ', '').replace('$ ', '').replace(',', '').replace('.', ',');
-                                        let currency_type_enum = response.data.currency_type_enum;
-
-                                        if (selected_products[index_product].currency_type_enum) {
-                                            amount = selected_products[index_product].amount;
-                                            cost = selected_products[index_product].value;
-                                            if (selected_products[index_product].currency_type_enum == 'USD') {
-                                                currency_type_enum = 2;
-                                            } else {
-                                                currency_type_enum = 1;
-                                            }
-                                        }
-
-                                        append += '<div class="product d-flex align-items-center" data-code="' + response.data.id + '">';
-                                            append += '<div class="div-product d-flex align-items-center" ' + (response.data.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + response.data.name + '"' : '') + '>';
-                                                append += '<div class="div-photo" data-type="' + type + '"><img class="product-photo" src="' + response.data.photo + '"></div>';
-                                                append += '<h1 class="title">' + response.data.name_short + '</h1>';
-                                            append += '</div>';
-                                            append += '<div class="div-amount">';
-                                                append += '<div class="d-flex align-items-center justify-content-center ">';
-                                                    append += '<div class="input-number">';
-                                                        append += '<button class="btn-sub">';
-                                                            append += '<img src="/modules/global/img/minus.svg">';
-                                                        append += '</button>';
-                                                        append += '<input type="number" class="form-control" name="amount" value="' + amount + '" min="1" max="99" step="1">';
-                                                        append += '<button class="btn-add">';
-                                                            append += '<img src="/modules/global/img/plus.svg">';
-                                                        append += '</button>';
-                                                    append += '</div>';
-                                                append += '</div>';
-                                            append += '</div>';
-                                            append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + cost + '" type="text" name="value" placeholder="Valor un."></div>';
-                                            append += '<div class="div-currency">';
-                                                append += '<select class="sirius-select" type="text" name="currency_type_enum">';
-                                                    append += '<option value="BRL" ' + (currency_type_enum == 1 ? 'selected' : '') + '>BRL (R$)</option>';
-                                                    append += '<option value="USD" ' + (currency_type_enum == 2 ? 'selected' : '') + '>USD ($)</option>';
-                                                append += '</select>';
-                                            append += '</div>';
+                            append += '<div class="product d-flex align-items-center" data-code="' + response.data.id + '">';
+                                append += '<div class="div-product d-flex align-items-center" ' + (response.data.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + response.data.name + '"' : '') + '>';
+                                    append += '<div class="div-photo" data-type="' + type + '"><img class="product-photo" src="' + response.data.photo + '" style="display: none;"></div>';
+                                    append += '<h1 class="title">' + response.data.name_short + '</h1>';
+                                append += '</div>';
+                                append += '<div class="div-amount">';
+                                    append += '<div class="d-flex align-items-center justify-content-center ">';
+                                        append += '<div class="input-number">';
+                                            append += '<button class="btn-sub">';
+                                                append += '<img src="/modules/global/img/minus.svg">';
+                                            append += '</button>';
+                                            append += '<input type="number" class="form-control" name="amount" value="' + amount + '" min="1" max="99" step="1">';
+                                            append += '<button class="btn-add">';
+                                                append += '<img src="/modules/global/img/plus.svg">';
+                                            append += '</button>';
                                         append += '</div>';
+                                    append += '</div>';
+                                append += '</div>';
+                                append += '<div class="div-value"><input class="form-control form-control-lg" autocomplete="off" value="' + cost + '" type="text" name="value" placeholder="Valor un."></div>';
+                                append += '<div class="div-currency">';
+                                    append += '<select class="sirius-select" type="text" name="currency_type_enum">';
+                                        append += '<option value="BRL" ' + (currency_type_enum == 1 ? 'selected' : '') + '>BRL (R$)</option>';
+                                        append += '<option value="USD" ' + (currency_type_enum == 2 ? 'selected' : '') + '>USD ($)</option>';
+                                    append += '</select>';
+                                append += '</div>';
+                            append += '</div>';
+
+                            if (selected_products.length == ++numOfGetsReturned) {
+                                var curHeight = $(modal).find('.modal-body').height();
+                                $(modal).find(find_stage).find('.box-products').html(
+                                    '<div class="box-details">'+
+                                        '<div class="head d-flex">'+
+                                            '<div>Produto</div>'+
+                                            '<div>Quantidade<span style="color: #FF0000;">*</span></div>'+
+                                            '<div>Custo (un)</div>'+
+                                            '<div>Moeda</div>'+
+                                        '</div>'+
+                                        '<div class="body">'+
+                                            '<div class="row">'+
+                                                '<div class="col-sm-12">'+
+                                                    append +
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'
+                                ).promise().done(function() {
+                                    $('[data-toggle="tooltip"]').tooltip({
+                                        container: '.page',
+                                        template: '<div class="tooltip product-details" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+                                    });
+
+                                    $(modal).find('.sirius-select').each(function () {
+                                        let $target = $(this);
+                                        let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
+                                        $target.wrap(`<div class="sirius-select-container"></div>`);
+                                        $target.hide();
+                                        $target.after(`<div class="sirius-select-options"></div>`);
+                                        $target.after(`<div class="sirius-select-text ${classes}"></div>`);
+
+                                        renderSiriusSelect(this);
+                                    });
+
+                                    $(modal).find('.product-photo').on('error', function() {
+                                        $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
+                                    });
+
+                                    $(modal).find('.product-photo').on('load', function() {
+                                        $(this).fadeIn(300);
+                                    });
+                                    $('input[name="value"]').mask('#.##0,00', { reverse: true });
+
+                                    if (selected_products.length > 4) {
+                                        $(modal).find(find_stage).find('.box-products').find('.body').css({'max-height': '278px', 'position': 'relative', 'overflow': 'hidden'});
+
+                                        scrollCustom(modal + ' ' + find_stage + ' .box-products .body');
+                                    } else {
+                                        $(modal + ' ' + find_stage + ' .box-products .body').off('wheel');
                                     }
+
+                                    if (selected_products.length > 1) {
+                                        $(modal).find(find_stage).find('.box-review').html(
+                                            `<div class="switch-holder d-flex">
+                                                <label class="switch">
+                                                    <input type="checkbox" id="check-values" name="check-values" class="check" value="0">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                                <label for="product_amount_selector" style="margin: 0;">Todos os produtos têm o mesmo custo</label>
+                                            </div>`
+                                        ).css({'margin-top': '25px'});
+                                    } else {
+                                        $(modal).find(find_stage).find('.box-review').html('');
+                                    }
+
+                                    if (type == 'edit') {
+                                        $(modal).find('.modal-footer').find('#btn-modal-plan-next').html('Finalizar');
+                                    }
+
+                                    $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
+                                        $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
+                                            $(modal).find(find_stage).addClass('show active').promise().done( function() {
+                                                var autoHeight = $(modal).find('.height-auto').height() + 40;
+                                                $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300);
+                                            });
+                                        });
+                                    });
                                 });
-                            });
-                        append += '</div>';
-                    append += '</div>';
-                append += '</div>';
-            append += '</div>';
-
-            var curHeight = $(modal).find('.modal-body').height();
-            $(modal).find(find_stage).find('.box-products').html(append).promise().done(function() {
-                $('[data-toggle="tooltip"]').tooltip({
-                    container: '.page',
-                    template: '<div class="tooltip product-details" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
-                });
-
-                $(modal).find('.sirius-select').each(function () {
-                    let $target = $(this);
-                    let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
-                    $target.wrap(`<div class="sirius-select-container"></div>`);
-                    $target.hide();
-                    $target.after(`<div class="sirius-select-options"></div>`);
-                    $target.after(`<div class="sirius-select-text ${classes}"></div>`);
-
-                    renderSiriusSelect(this);
-                });
-
-                $(modal).find(find_stage).find(".product-photo").on("error", function () {
-                    $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
-                });
-
-                $('input[name="value"]').mask('#.##0,00', { reverse: true });
-
-                if (selected_products.length > 4) {
-                    $(modal).find(find_stage).find('.box-products').find('.body').css({'max-height': '278px', 'position': 'relative', 'overflow': 'hidden'});
-
-                    scrollCustom(modal + ' ' + find_stage + ' .box-products .body');
-                } else {
-                    $(modal + ' ' + find_stage + ' .box-products .body').off('wheel');
-                }
-
-                if (selected_products.length > 1) {
-                    $(modal).find(find_stage).find('.box-review').html(
-                        `<div class="switch-holder d-flex">
-                            <label class="switch">
-                                <input type="checkbox" id="check-values" name="check-values" class="check" value="0">
-                                <span class="slider round"></span>
-                            </label>
-                            <label for="product_amount_selector" style="margin: 0;">Todos os produtos têm o mesmo custo</label>
-                        </div>`
-                    ).css({'margin-top': '25px'});
-                } else {
-                    $(modal).find(find_stage).find('.box-review').html('');
-                }
-
-                if (type == 'edit') {
-                    $(modal).find('.modal-footer').find('#btn-modal-plan-next').html('Finalizar');
-                }
-
-                $(modal).find(find_stage).find('.product-photo').on('load', function() {
-                    $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
-                        $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
-                            $(modal).find(find_stage).addClass('show active').promise().done( function() {
-                                var autoHeight = $(modal).find('.height-auto').height() + 40;
-                                $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
-                                    $(modal).find('.product-photo').unbind('load');
-                                })
-                            });
-                        });
+                            }
+                        }
                     });
                 });
             });
