@@ -441,13 +441,14 @@ $(function () {
                                         renderSiriusSelect(this);
                                     });
 
-                                    $(modal).find('.product-photo').on('error', function() {
+                                    $(modal).find(find_stage).find('.product-photo').on('error', function() {
                                         $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
                                     });
 
-                                    $(modal).find('.product-photo').on('load', function() {
+                                    $(modal).find(find_stage).find('.product-photo').on('load', function() {
                                         $(this).fadeIn(300);
                                     });
+
                                     $('input[name="value"]').mask('#.##0,00', { reverse: true });
 
                                     if (selected_products.length > 4) {
@@ -622,7 +623,7 @@ $(function () {
                         append += '<div class="col-sm-6">';
                             append += '<div ' + (product.product_name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.product_name + '"' : '') + ' class="box-product d-flex justify-content-between align-items-center" style="cursor: inherit;">';
                                 append += '<div class="d-flex align-items-center">';
-                                    append += '<div class="background-photo"><img class="product-photo" src="' + product.photo + '"></div>';
+                                    append += '<div class="background-photo"><img class="product-photo" src="' + product.photo + '" style="display: none;"></div>';
                                     append += '<div>';
                                         append += '<h1 class="title">' + product.product_name_short + '</h1>';
                                         append += '<p class="description">Qtd: ' + product.amount + '</p>';
@@ -682,27 +683,27 @@ $(function () {
 
                         $(modal).find('#stage1').find('.products-edit').find('.title').find('span').html(' ' + response.data.products.length + (response.data.products.length > 1 ? ' produtos' : ' produto'));
 
-                        $(modal).find('#stage1').find(".product-photo").on("error", function () {
-                            $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                        $(modal).find('#stage1').find('.product-photo').on('error', function() {
+                            $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
+                        });
+
+                        $(modal).find('#stage1').find('.product-photo').on('load', function() {
+                            $(this).fadeIn(300);
                         });
 
                         if (flag == true) {
                             getCustom(modal);
                         } else {
-                            $(modal).find('#stage1').find('.product-photo').on('load', function() {
-                                $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
-                                    $('[data-toggle="tooltip"]').tooltip({
-                                        container: '.page',
-                                        template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
-                                    });
+                            $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
+                                $('[data-toggle="tooltip"]').tooltip({
+                                    container: '.page',
+                                    template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+                                });
 
-                                    $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
-                                        $(modal).find('#stage1').addClass('show active').promise().done(function() {
-                                            var autoHeight = $(modal).find('.height-auto').height() + 20;
-                                            $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
-                                                $(modal).find('.product-photo').unbind('load');
-                                            });
-                                        });
+                                $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
+                                    $(modal).find('#stage1').addClass('show active').promise().done(function() {
+                                        var autoHeight = $(modal).find('.height-auto').height() + 20;
+                                        $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300);
                                     });
                                 });
                             });
@@ -746,7 +747,7 @@ $(function () {
                             append += '<div class="col-sm-6" ' + (product.product_name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.product_name + '"' : '') + '>';
                                 append += '<div class="product d-flex align-items-center">';
                                     append += '<div class="background-photo">';
-                                        append += '<img class="product-photo" src="' + product.photo + '">';
+                                        append += '<img class="product-photo" src="' + product.photo + '" style="display: none;">';
                                     append += '</div>';
                                     append += '<div>';
                                         append += '<h1 class="title">' + product.product_name_short + '</h1>';
@@ -818,20 +819,26 @@ $(function () {
                     $(modal + ' #stage1-customization .body-products').off('wheel');
                 }
 
+                $(modal).find('#stage1-customization').find('.product-photo').on('error', function() {
+                    $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
+                });
+
                 $(modal).find('#stage1-customization').find('.product-photo').on('load', function() {
-                    $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
-                        $(modal).find('.product-photo').unbind('load');
+                    $(this).fadeIn(300);
+                });
 
-                        $('[data-toggle="tooltip"]').tooltip({
-                            container: '.page',
-                            template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
-                        });
+                $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
+                    $(modal).find('.product-photo').unbind('load');
 
-                        $(modal).find('#tab-customizations_panel').addClass('show active').promise().done(function() {
-                            $(modal).find('#stage1-customization').addClass('show active').promise().done(function() {
-                                var autoHeight = $(modal).find('.height-auto').height();
-                                $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300);
-                            });
+                    $('[data-toggle="tooltip"]').tooltip({
+                        container: '.page',
+                        template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+                    });
+
+                    $(modal).find('#tab-customizations_panel').addClass('show active').promise().done(function() {
+                        $(modal).find('#stage1-customization').addClass('show active').promise().done(function() {
+                            var autoHeight = $(modal).find('.height-auto').height();
+                            $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300);
                         });
                     });
                 });
@@ -1075,7 +1082,7 @@ $(function () {
         });
     }
 
-    function  calculateCostsPlan() {
+    function calculateCostsPlan() {
         var costs_plan = 0;
 
         for (var i = 0; i < selected_products.length; i++) {
