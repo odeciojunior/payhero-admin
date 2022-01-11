@@ -1526,8 +1526,8 @@ $(function () {
         var custom_type = $('#custom-type').val();
         var custom_title = $('#custom-title').val();
         if (custom_title != '' && custom_type != '') {
-            if (numCustom == 5) {
-                alertCustom('error', 'Você pode adicionar no máximo 5 personalizações ao seu produto');
+            if (numCustom >= 5) {
+                alertCustom('error', 'Não é possível adicionar mais personalizações ao seu produto');
                 return;
             }
 
