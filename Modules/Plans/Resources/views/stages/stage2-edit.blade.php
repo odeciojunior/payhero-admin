@@ -11,12 +11,15 @@
     <div class="box-photos-products" style="margin-bottom: 27px; margin-top: 16px;"></div>
 
     <div class="box-description">
-        <div class="input-group input-group-lg">
-            <input class="form-control" type="text" id="search-product" placeholder="Pesquisa por nome">
-            <div class="input-group-append">
-                <span class="input-group-text">
-                    <img src="/modules/global/img/icon-search.svg" alt="Icon Search">
-                </span>
+        <div class="d-flex">
+            <input class="form-control form-control-lg" type="text" id="search-product" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
+            <div class="input-group input-group-lg" style="width: 650px;">
+                <input class="form-control" type="text" id="search-product-description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <img src="/modules/global/img/icon-search.svg" alt="Icon Search">
+                    </span>
+                </div>
             </div>
         </div>
     </div>

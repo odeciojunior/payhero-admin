@@ -1103,7 +1103,7 @@ $(function () {
         }
 
         var searchProduct = e.target.value;
-        var searchProductDescription = $('#search-product-description').val();
+        var searchProductDescription = $(modal).find('#search-product-description').val();
         timeoutID = setTimeout(function() {
             searchProducts(searchProduct, searchProductDescription, modal, type);
         }, 800);
@@ -1121,7 +1121,7 @@ $(function () {
         }
 
         var searchProductDescription = e.target.value;
-        var searchProduct = $('#search-product').val();
+        var searchProduct = $(modal).find('#search-product').val();
         timeoutID_ = setTimeout(function() {
             searchProducts(searchProduct, searchProductDescription, modal, type);
         }, 800);
