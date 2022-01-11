@@ -913,7 +913,7 @@ $(function () {
 
             if (allow_change_in_block) {
                 $('.custom_products_checkbox').html(`
-                <div class="d-flex align-items-center" style="line-heigth: 1;">
+                <div class="d-flex align-items-center" style="line-height: 1;">
                     <div class="switch-holder">
                         <label class="switch">
                             <input type="checkbox" class="allow_change_in_block" name="allow_change_in_block" value="true">
@@ -922,7 +922,7 @@ $(function () {
                     </div>
                     <span>Aplicar personalização nas outras variantes deste produto</span>
                 </div>
-                `).css('margin-top', '20px');
+                `).css({ 'margin': '20px 0' });
             } else {
                 $('.custom_products_checkbox').html('');
             }
@@ -1521,9 +1521,16 @@ $(function () {
 
     // Add custom
     $('body').on('click', '#add-list-custom-product', function () {
+        var numCustom = $('.list-custom-products').find('.custom').length;
+
         var custom_type = $('#custom-type').val();
         var custom_title = $('#custom-title').val();
         if (custom_title != '' && custom_type != '') {
+            if (numCustom == 5) {
+                alertCustom('error', 'Você pode adicionar no máximo 5 personalizações ao seu produto');
+                return;
+            }
+
             if ($('.list-custom-products').find('.custom-empty').length > 0) {
                 $('.list-custom-products').html('');
             }
@@ -1535,8 +1542,8 @@ $(function () {
             var product_ID = $(this).attr('product');
 
             var append = '';
-            append += '<div class="row" style="margin-bottom: 20px;">';
-            append += '<input type="hidden" name="productsPlan[]" value="' + product_ID + '">';
+            append += '<div class="row custom" style="margin-bottom: 20px;">';
+                append += '<input type="hidden" name="productsPlan[]" value="' + product_ID + '">';
                 append += '<div class="col-sm-12">';
                     append += '<div class="d-flex">';
                         append += '<div class="d-flex">';
