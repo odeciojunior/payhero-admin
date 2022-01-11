@@ -881,7 +881,7 @@ $(function () {
             var append = '';
             if (products_plan[index_product_custom].custom_configs.length > 0) {
                 products_plan[index_product_custom].custom_configs.forEach(function(custom) {
-                    append += '<div class="row" style="margin-bottom: 20px;">';
+                    append += '<div class="row custom" style="margin-bottom: 20px;">';
                         append += '<input type="hidden" name="productsPlan[]" value="' + product_ID + '">';
                         append += '<div class="col-sm-12">';
                             append += '<div class="d-flex">';
