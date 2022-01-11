@@ -42,16 +42,11 @@
             <!-- FOTO -->
             <div class="col-md-5 col-lg-4 col-xl-3 pl-xl-25 d-flex flex-column" id='div-img-project' style='position: relative;'>
 
-                <input name='photo' type='file' class='form-control' id='photoProject' style='display:none;' accept='image/*'>
-                <label for='photo' class="pl-0 pl-lg-10 pl-xl-0 mb-3">Capa da loja</label>
+                <label for='product_photo' class="pl-0 pl-lg-10 pl-xl-0 mb-3">Capa da loja</label>
 
                 <div style="width:100%" class="text-center">
-                    {{-- <img id='previewimage' alt='Selecione a foto do projeto' src="{{asset('modules/global/img/projeto.svg')}}" style="min-width: 250px; max-width: 250px;margin: auto"> --}}
                     <input type="file" id="product_photo" name="product_photo" data-height="651" data-max-width="651" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                 </div>
-
-                <input type='hidden' id='photo_x1' name='photo_x1'><input id='photo_y1' type='hidden' name='photo_y1'>
-                <input type='hidden' id='photo_w' name='photo_w'><input id='photo_h' type='hidden' name='photo_h'>
             </div>
 
             <!-- NOME E DESCRICAO -->
@@ -216,13 +211,13 @@
                             <div class="col-md-12 form-group">
     
     
-                                    <label for='terms-affiliates'>Termos de Afiliação</label>
-                                    <input type="hidden" name="terms_affiliates" id="terms_affiliates">
-    
-                                    <!-- TEXTAREA QUILL -->
-                                    <div class="h-200" id='termsaffiliates' placeholder='Termos'></div>
-    
-                                    <span id='terms-affiliates-error' class='text-danger'></span>
+                                <label for='terms-affiliates'>Termos de Afiliação</label>
+                                <input type="hidden" name="terms_affiliates" id="terms_affiliates">
+
+                                <!-- TEXTAREA QUILL -->
+                                <div class="h-200" id='termsaffiliates' placeholder='Termos'></div>
+
+                                <span id='terms-affiliates-error' class='text-danger'></span>
     
                             </div>
                         </div>
@@ -230,21 +225,18 @@
     
                 </div>
 
+                <!-- RODA PE CARD 5 & 7 -->
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row no-gutters">
-                            {{-- <div class="col-md-2 pl-30 pr-0">
-                                <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation'>
-                                    <option value='0'>Não</option>
-                                    <option value='1'>Sim</option>
-                                </select>
-                            </div> --}}
-                            
+
+                            <!-- AFILIACAO AUTOMATICA -->
                             <div class="automatic-affiliation col-md-4 col-lg-2 pl-5 pl-md-10 pl-lg-30 pr-20 d-flex align-items-center border-top border-right" name='automatic_affiliation'>
                                 <input type="checkbox" id="auto-afiliation" class="col-1 h-20 mr-10">
                                 <label for="auto-afiliation" class="m-0">Afiliação automática</label>
                             </div>
                             
+                            <!-- CONVITE AFILIADOS -->
                             <div class="col-12 col-md-5 col-lg-8 pl-0 pr-0 align-items-center border-top border-right">
                                 <div class="row no-gutters mt-3">
     
@@ -259,6 +251,7 @@
                                 </div>
                             </div>
     
+                            <!-- COPIAR LINK -->
                             <div class="col-md-3 col-lg-2 p-5 border-top">
                                 <button id="copy-link-affiliation" class="btn btn-default mx-0 bg-white border-0 pl-md-30" type="button">
                                     <img src="{{asset('/modules/global/img/projects/btnCopy.svg')}}" class="mr-10" alt="botao de copiar">Copiar
@@ -272,9 +265,9 @@
 
         </div>
     </div>
-    {{--END Configurações--}}
 
-    <div class="row mt-60">
+    <!-- DELETE PROJETO -->
+    <div class="row mt-60 mb-30">
         <div class="col-md-12">
             <div class="row no-gutters">
 
@@ -288,17 +281,18 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="container position-fixed pr-5 pr-sm-45" style="bottom: 0;">
+    <!-- CARD SALVAR OU CANCELAR ALTERACOES -->
+    <div id="confirm-changes" class="row">
+        <div class="container position-fixed pr-5 pr-sm-45 z-index" style="bottom: 0;">
 
-            <div class="row mt-25">
+            <div class="row">
 
                 <div class="col-md-12">
 
-                    <div class="row bg-primary no-gutters final-card">
+                    <div class="row bg-primary no-gutters final-card py-30">
 
                         <div class="col-md-6 d-flex align-items-center">
-                            <div class="row">
+                            <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
                                     <span class="pl-30">Você tem alterações que <b>não estão salvas</b> </span>
                                 </div>
@@ -306,12 +300,43 @@
                         </div>
             
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
-                            <div class="row">
-                                <div class="col-md-12 d-flex justify-content-end pt-25 pb-20 pr-0 pr-md-30">
-                                    <button type="button" class="btn btn-primary border border-white mr-25 px-15 px-sm-40">Cancelar</button>
+                            <div class="row no-gutters">
+                                <div class="col-md-12 d-flex justify-content-end pr-0 pr-md-30">
+                                    <button type="button" id="cancel-edit" class="btn btn-primary border border-white mr-25 px-15 px-sm-40">Cancelar</button>
                 
                                     <button type="button" id="bt-update-project" class="btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alteração</button>
                                 </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- CARD ALTERACEOS SALVAS COM SUCESSO -->
+    <div id="saved-alterations" class="row">
+        <div class="container position-fixed pr-5 pr-sm-45 z-index" style="bottom: 0;">
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="row no-gutters success-card text-white py-30">
+
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="row no-gutters">
+                                <div class="col-md-12 pl-0">
+                                    <span class="pl-30 font-size-18">Alterações salvas com sucesso!</span>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="bg-afiliate-icon pr-10 mr-15 success-card">
+                                <img src="{{ asset('/modules/global/img/projects/successIcon.svg') }}" alt="icone success">
                             </div>
                         </div>
 

@@ -332,11 +332,10 @@ class ProjectsApiController extends Controller
     }
 
     public function updateSettings(ProjectsSettingsUpdateRequest $request, $id){
-        // return $request->all();
+
         try {
             $requestValidated = $request->validated();
             $projectModel = new Project();
-            $userProjectModel = new UserProject();
             $amazonFileService = app(AmazonFileService::class);
 
             if (!$requestValidated) {
@@ -349,8 +348,38 @@ class ProjectsApiController extends Controller
             if (!Gate::allows('update', [$project])) {
                 return response()->json(['message' => 'Sem permissão para atualizar o projeto'], 403);
             }
-
             $requestValidated['status'] = 1;
+            
+
+            $projectPhoto = $request->file('product_photo');
+
+            if ($projectPhoto == null) {
+                try{
+                    $amazonFileService->deleteFile($project->photo);
+                    $project->update(['photo' => null]);
+
+                }catch(Exception $error){
+                    report($error);
+                }
+            }
+
+            if($projectPhoto != null){
+                try{
+                    $amazonFileService->deleteFile($project->photo);
+                    $img = Image::make($projectPhoto->getPathname());
+                    $img->save($projectPhoto->getPathname());
+
+                    $amazonPath = $amazonFileService->uploadFile('uploads/user/' . Hashids::encode(
+                        auth()->user()->account_owner_id).'/public/project/'.Hashids::encode($project->id).'/main',$projectPhoto
+                    );
+
+                    $project->update(['photo' => $amazonPath]);
+
+                }catch(Exception $error) {
+                    report($error);
+                    return response()->json(['message' =>'Ocorreu um erro, tente novamente mais tarde'], 400);
+                }
+            }
 
             $projectUpdate = $project->update($requestValidated);
             if (!$projectUpdate) {

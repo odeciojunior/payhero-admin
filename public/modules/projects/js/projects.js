@@ -1,8 +1,7 @@
 $(() => {
     let projectId = $(window.location.pathname.split('/')).get(-1);
-
     $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
-
+    
     // COMPORTAMENTOS DA TELA
     $('#tab-info').click(() => {
         show();
@@ -62,94 +61,9 @@ $(() => {
         }
     });
 
-    // IMAGES
-    let p = $("#previewimage");
-    $('#photoProject').unbind('change');
-    $("#photoProject").on('change', function () {
-        let imageReader = new FileReader();
-        imageReader.readAsDataURL(document.getElementById("photoProject").files[0]);
-
-        imageReader.onload = function (oFREvent) {
-            p.attr('src', oFREvent.target.result).fadeIn();
-
-            p.on('load', function () {
-
-                let img = document.getElementById('previewimage');
-                let x1, x2, y1, y2;
-
-                if (img.naturalWidth > img.naturalHeight) {
-                    y1 = Math.floor(img.naturalHeight / 100 * 10);
-                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                    x2 = x1 + (y2 - y1);
-                } else {
-                    if (img.naturalWidth < img.naturalHeight) {
-                        x1 = Math.floor(img.naturalWidth / 100 * 10);
-                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                        y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                        y2 = y1 + (x2 - x1);
-                    } else {
-                        x1 = Math.floor(img.naturalWidth / 100 * 10);
-                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                        y1 = Math.floor(img.naturalHeight / 100 * 10);
-                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                    }
-                }
-
-                $('#previewimage').imgAreaSelect({
-                    x1: x1, y1: y1, x2: x2, y2: y2,
-                    aspectRatio: '1:1',
-                    handles: true,
-                    imageHeight: this.naturalHeight,
-                    imageWidth: this.naturalWidth,
-                    onSelectEnd: function (img, selection) {
-                        $('#photo_x1').val(selection.x1);
-                        $('#photo_y1').val(selection.y1);
-                        $('#photo_w').val(selection.width);
-                        $('#photo_h').val(selection.height);
-                    }
-                });
-            })
-        };
-    });
-
-    $("#previewimage").on("click", function () {
-        $("#photoProject").click();
-    });
-
-    $("#image-logo-email").on('click', function () {
-        $("#photo-logo-email").click();
-    });
-
-    let ratio = '1:1';
-    $('#ratioImage').unbind('change');
-    $("#ratioImage").on('change', function () {
-        ratio = $('#ratioImage option:selected').val();
-        $("#image-logo-email").imgAreaSelect({remove: true});
-        updateConfiguracoes();
-        imgNatural(ratio);
-    });
-
-    let photoLogo = $("#image-logo-email");
-    $("#photo-logo-email").on('change', function () {
-        $(".container-image").css('display', 'block');
-        let imageReader = new FileReader();
-        imageReader.readAsDataURL(document.getElementById("photo-logo-email").files[0]);
-        imageReader.onload = function (ofREvent) {
-            photoLogo.attr('src', ofREvent.target.result).fadeIn();
-            photoLogo.on('load', function () {
-                let img = document.getElementById("image-logo-email");
-                $('input[name="logo_h"]').val(img.clientWidth);
-                $('input[name="logo_w"]').val(img.clientHeight);
-            });
-        }
-
-    });
-    // FIM - COMPORTAMENTOS DA TELA
-
-
-
     // CARD 1 FOTO, NOME, CRIADO EM, DESCRICAO E RESUMO
+    const getImageProject = projectPhoto => projectPhoto ? dropifyOptions.defaultFile = projectPhoto : "/modules/global/img/projeto.svg";
+
     function show() {
         loadingOnScreen();
 
@@ -177,7 +91,7 @@ $(() => {
 
                 let project = response.data;
                 $('.title-pad').text(project.name);
-                $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
+                $('#show-photo').attr('src', getImageProject(project.photo));
                 $('#created_at').text('Criado em ' + project.created_at);
                 if (project.status == '1') {
                     $('#show-status').text('Ativo').addClass('badge-success');
@@ -218,6 +132,7 @@ $(() => {
 
             }, success: function (data) {
                 renderProjectConfig(data);
+                localStorage.setItem('projectConfig',JSON.stringify(data));
                 loadOnAny('#tab_configuration_project .card', true);
             }
         });
@@ -290,7 +205,8 @@ $(() => {
 
     $('.slick-track').on('click', function () {
         $('.nav-tabs-horizontal .tab-pane').removeClass('active show');
-    });
+    });   
+    // FIM COMPORTAMENTOS DA TELA
     
 
     // CARD 3 CONFIGURACAO DO PLUGIN DE ADD FOTO
@@ -315,9 +231,12 @@ $(() => {
         },
         imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'],
     };
-    $('#product_photo').dropify(dropifyOptions);
 
-
+    // CARD 3 SE NAO ACHAR IMAGEM SETTA UMA PADRAO
+    $("img").on("error", function () {
+        $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+    });
+    
     // CARD 4 - TEXTAREA TERMOS DE AFILIACAO
     var quill = new Quill("#termsaffiliates", {
         theme: "snow",
@@ -331,16 +250,24 @@ $(() => {
 
     //CONFIGURACOES CARD 3 & 4
     function renderProjectConfig(data) {
-        // let {project, companies, userProject, shopifyIntegrations, projectUpsell} = data;
-        let {project, companies, userProject, shopifyIntegrations, projectUpsell} = data;
 
-        $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
+        let {project} = data;
+
+        // AFILIACOES ON / OFF
+        if (project.status_url_affiliates == 1) {
+            if(!$("#status-url-affiliates").hasClass("collapsed")){
+                $('#update-project .status-url-affiliates').trigger('click');
+            }
+        }
+
+        $('#update-project #product_photo').attr('src', getImageProject(project.photo));
+        $('#product_photo').dropify(dropifyOptions);
+
+
         $('#update-project #name').val(project.name);
-        $('#update-project #description').text(project.description);
+        $('#update-project #description').val(project.description);
 
-        
         $('#update-project #url-page').val(project.url_page ? project.url_page : 'https://');
-
 
         // DURACAO DE COOKIE
         if (project.cookie_duration == 0) {
@@ -370,13 +297,11 @@ $(() => {
         });
         $('#update-project #percentage-affiliates').val(project.percentage_affiliates);
 
-
         // TIPO DE COMISSAO 
         $('#update-project .commission-type-enum input').filter(`[value=${project.commission_type_enum}]`).prop("checked", true);
 
-
-        // INSERI TEXTO DO BANCO
-        //quill.setText(project.terms_affiliates ?? ' ');
+        // DELETA TEXTO E RESGATA O TEXTO SALVO
+        quill.setContents([{ insert: '\n' }]);
         quill.clipboard.dangerouslyPasteHTML(0, project.terms_affiliates ?? ' ');
 
         // AFILIACAO AUTOMATICA
@@ -384,12 +309,22 @@ $(() => {
             $('#update-project .automatic-affiliation input').prop("checked", true);
         } 
 
-        
         // URL CONVIDE AFILIADOS
         $('#update-project #url-affiliates').val(project.url_affiliates);
 
+        //COMPORTAMENTO CARD SALVAR / CANCELAR
+        $("#confirm-changes, #saved-alterations").css({
+            display: "block",
+        })
+        $("#confirm-changes > .container, #saved-alterations > .container").css({
+            bottom: "-100px",
+        })
+        $("#update-project :input").on('change', function() {
+            $("#confirm-changes > .container").animate({
+                bottom: '0'
+            },500);
+        });
     }
-
 
     // CARD 4 BOTAO DE COPIAR LINK
     $("#copy-link-affiliation").on("click", function () {
@@ -399,7 +334,6 @@ $(() => {
 
         alertCustom('success', 'Link copiado!');
     });
-
 
     // CARD DELETAR PROJETO
     $('#bt-delete-project').on('click', function (event) {
@@ -437,25 +371,20 @@ $(() => {
         });
 
     });
-    show();
-
-
+    
     // ATUALIZA AS CONFIGURACOES DO PROJETO
     $("#bt-update-project").on('click', function (event) {
-        if ($('#photo_w').val() == '0' || $('#photo_h').val() == '0') {
-            alertCustom('error', 'Selecione as dimensões da imagem de capa');
-            return false;
-        }
+        $("#confirm-changes > .container").animate({
+            bottom: '-100px'
+        },400);
 
         event.preventDefault();
         loadingOnScreen();
 
-        // ENVIA O TEXTO
-        let formatedText = quill.root.innerHTML;
-        
+        // Pega tags e texto joga no input pra salvar no banco
+        let formatedText = quill.root.innerHTML;        
         $('#terms_affiliates').val(formatedText);
-        // $('#terms_affiliates').val(quill.getText());
-        
+
         let verify = verificaParcelas(parcelas, parcelasJuros);
         
         let statusUrlAffiliates = 0;
@@ -471,8 +400,7 @@ $(() => {
         let formData = new FormData(document.getElementById("update-project"));
         formData.append('status_url_affiliates', statusUrlAffiliates);
         formData.append("automatic_affiliation", automaticAffiliation);
-
-
+        
         if (!verify) {
             $.ajax({
                 method: "POST",
@@ -491,17 +419,19 @@ $(() => {
                     errorAjaxResponse(response);
 
                 }, success: function (response) {
-                    alertCustom('success', response.message);
+                    $("#saved-alterations > .container").animate({
+                        bottom: '0'
+                    },2000),setTimeout(function () {
+                        $("#saved-alterations > .container").animate({
+                            bottom: '-100px'
+                        },3000)
+                    },4000);
 
-                    $('html, body').animate({
-                        scrollTop: $('#bt-update-project').offset().top
-                    }, 'slow');
-
-                    $("#image-logo-email").imgAreaSelect({remove: true});
-                    $("#previewimage").imgAreaSelect({remove: true});
+                    // $('html, body').animate({
+                    //     scrollTop: $('#bt-update-project').offset().top
+                    // }, 'slow');
                     show();
                     loadingOnScreenRemove();
-
                 }
             });
         } else {
@@ -511,4 +441,12 @@ $(() => {
 
     });
 
+    $("#cancel-edit").on("click", function(){
+        renderProjectConfig(JSON.parse(localStorage.getItem("projectConfig")))
+        $("#confirm-changes > .container").animate({
+            bottom: '-100px'
+        },400);
+    })
+
+    show();
 });

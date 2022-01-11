@@ -9,14 +9,15 @@ class ProjectsSettingsUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "commission_type_enum" => 'nullable|int|max:2',
-            "cookie_duration" => 'nullable',
-            "description" => "nullable|string|max:255",
+            "product_photo" => 'nullable',
             "name" => "nullable|string|max:100",
-            "percentage_affiliates" => 'nullable',
-            "status_url_affiliates" => 'nullable|int|max:1',
-            "terms_affiliates" => 'nullable',
+            "description" => "nullable|string|max:255",
             "url_page" => "nullable|string|max:255",
+            "cookie_duration" => 'nullable',
+            "percentage_affiliates" => 'nullable',
+            "commission_type_enum" => 'nullable|int|max:2',
+            "terms_affiliates" => 'nullable',
+            "status_url_affiliates" => 'nullable|int|max:1',
             "automatic_affiliation" => 'nullable',
         ];
     }
@@ -27,8 +28,6 @@ class ProjectsSettingsUpdateRequest extends FormRequest
             'name.max' => 'O campo Nome do projeto permite apenas 100 caracteres',
             'description.max' => 'O campo Descrição permite apenas 100 caracteres',
             'url_page.max' => 'O campo URL da pagina principal permite apenas 100 caracteres',           
-            'custom_message_title.required_if'=>'Informe o titulo da mensagem personalizada',
-            'custom_message_content.required_if'=>'Informe a mensagem personalizada'
         ];
     }
 

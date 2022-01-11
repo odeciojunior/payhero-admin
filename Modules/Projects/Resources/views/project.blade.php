@@ -71,7 +71,7 @@
                                     <div class="row no-gutters">
                                         <!-- CHARGEBACK -->
                                         <div class="col-md-4 d-flex alert m-0 product-chargeback product-alert-color">
-                                            <div class="d-flex pl-0 pl-md-10">
+                                            <div class="pl-0 pl-md-10">
                                                 <img class="arrow-chargeback" src="{{ asset('/modules/global/img/projects/arrow.svg') }}">
                                                 <img class="bodyArrow-chargeback" src="{{ asset('/modules/global/img/projects/bodyArrow.svg') }}">
                                             </div>
@@ -455,8 +455,8 @@
 
     @push('scripts')    
 {{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
-        {{-- <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
-        <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script> --}}
+        <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
+        <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script>
         <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>

@@ -341,9 +341,23 @@
 
 /* /////////////// FOOTER CARD SALVE OR CANCEL */
 .final-card{
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+.z-index{
+    z-index: 1;
 }
 
+#confirm-changes{
+    display: none;
+}
 
+#saved-alterations{
+    display: none;
+}
+.success-card{
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    background-color: #41DC8F;
+}
 /* /////////////////////////// END FOOTER CARD */
