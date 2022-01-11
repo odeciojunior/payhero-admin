@@ -46,23 +46,51 @@
                 </div>
             </div>
         </div>
-        <div id="project-not-empty" style="display: none">
+        <div style="border: 1px solid red; overflow: hidden;" id="project-not-empty" style="display: none">
+
+            <section class="container box-reports" style="border: 1px solid">
+				<div class="row">
+					<div class="col-12">
+						<div class="row">
+							<header class="header-reports">
+								<h3 class="title-reports">
+									<a href="" class="lk-reports grey">
+										<span class="box-title ico-finance">financeiro</span>
+										Financeiro
+									</a>
+								</h3>
+								<a href="" class="box-link">Financeiro</a>
+							</header>
+						</div>
+
+						<div class="row">
+							<header class="header-reports">
+								<h3 class="title-reports">
+									<a href="" class="lk-reports grey">
+										<span class="box-title ico-sell">vendas</span>
+										Vendas
+									</a>
+								</h3>
+								<a href="" class="box-link">Vendas</a>
+							</header>
+						</div>
+
+						<div class="row">
+							<header class="header-reports">
+								<h3 class="title-reports">
+									<a href="" class="lk-reports grey">
+										<span class="box-title ico-mkt">Marketing</span>
+										Marketing
+									</a>
+								</h3>
+								<a href="" class="box-link">Financeiro</a>
+							</header>
+						</div>
+					</div>
+				</div>
+            </section>
+
             <div id="reports-content" class="page-content container">
-                <div class="row align-items-center justify-content-between">
-                    <!-- <div class="col-sm-6 col-m-3 col-lg-3">
-                        <div class="">
-                            <select id='select_projects' class="form-control input-pad">
-                                {{-- JS carrega.. --}}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-m-3 col-lg-3">
-                        <div class="row align-items-center form-icons">
-                            <i style="right:10%;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
-                            <input id="date-filter" type="text" name="daterange" class="input-pad text-center pr-30 font-size-14 ml-5" style="width: 92%" value="" readonly>
-                        </div>
-                    </div> -->
-                </div>
                 <div class='container col-sm-12 mt-20 d-lg-block'>
                     <div class='row'>
                         <div class="col-md-3 col-sm-6 col-xs-12 card">

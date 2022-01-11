@@ -104,23 +104,13 @@ h4.number{
     .box-select input {
         margin-left: 5px! important;
         width: 92% !important;
-    }
-    
-    /* .box-select .form-control-icon { top: 40%;} */   
-    
+    } 
 }
-
-@media only screen and (min-width: 1366px) and (max-width: 1598px) {
-    /* .box-select .form-control-icon { top: 25%;} */
-}
-
 @media only screen and (min-width: 1024px) {
     .new-title {
         padding-bottom: 0;
     }
-    
 }
-
 .lk-export {
     font-size: .9rem;
     line-height: 39px;
@@ -131,7 +121,79 @@ h4.number{
 .lk-export i {
     float: left; 
 }
-
 @media only screen and (min-width: 1024px) {
-    .box-export { padding: 0; }    
+    .box-export { 
+        padding: 0;
+        display: flex;
+    }
+    .lk-export { margin-left: auto; }
+}
+
+/* box reports */
+.box-reports {
+    padding: 0 10px;
+}
+
+@media only screen and (min-width: 480px) {
+    .box-reports { padding: 0 30px; }
+}
+
+.pad-right-0 { padding-right: 1.0715rem; }
+
+@media only screen and (min-width: 1223px) {
+    .pad-right-0 { padding-right: 0; }
+}
+
+.header-reports {
+    display: flex;
+    width: 100%;
+    margin: 0 16px;
+}
+@media only screen and (min-width: 1223px) {
+    .header-reports { margin-right: 0; }
+}
+
+.title-reports {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.lk-reports {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+}
+
+.box-title {
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    text-indent: -9000em;
+    overflow: hidden;
+}
+
+.ico-finance { background: #fff url('/modules/global/img/reports/cash.png') no-repeat center; }
+.ico-sell { background: #fff url('/modules/global/img/reports/ico-sell.png') no-repeat center; }
+.ico-mkt { background: #fff url('/modules/global/img/reports/ico-mkt.png') no-repeat center; }
+
+.box-title img {
+    width: 23px;
+    height: 14px;
+}
+
+.box-link {
+    border-radius: 100%;
+    background: #fff url('/modules/global/img/reports/arrow-right.png') no-repeat center;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    text-indent: -9000em;
+    overflow: hidden;
 }
