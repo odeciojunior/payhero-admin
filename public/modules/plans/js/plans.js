@@ -1947,7 +1947,7 @@ $(function () {
 
         var modal = '#modal_config_cost_plan';
         var description = e.target.value;
-        var search_plan = $(modal).find('#search-plan_config').val();
+        var search_plan = $(modal).find('#search-product_config').val();
 
         timeoutID_product_ = setTimeout(function() {
             searchPlans(search_plan, description, modal);
@@ -2142,7 +2142,7 @@ $(function () {
                             } else {
                                 $(modal).find('.search-type').html(
                                     '<div class="input-group input-group-lg">'+
-                                        '<input class="form-control" type="text" id="search-plan" placeholder="Pesquisa por nome">'+
+                                        '<input class="form-control" type="text" id="search-product_config" placeholder="Pesquisa por nome">'+
                                         '<div class="input-group-append">'+
                                             '<span class="input-group-text">'+
                                                 '<img src="/modules/global/img/icon-search.svg" alt="Icon Search">'+

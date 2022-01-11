@@ -433,7 +433,7 @@ class ProductsApiController extends Controller
             }
 
             if (!empty($data['description'])) {
-                $products->where('name', 'like', '%' . $data['description'] . '%');
+                $products->where('description', 'like', '%' . $data['description'] . '%');
             }
 
             $products = $products->get()->sortByDesc(function($query) {
