@@ -63,8 +63,6 @@ class AsaasAnticipationsCheckValeus extends Command
                 ->whereNotNull('company_id')
                 ->where('type', Transaction::TYPE_PRODUCER)
                 ->where('release_date', '<=', $afterThreeDays)
-                //->where('sale_id', 1403259)
-                ->where('user_id', 4369)
                 ->where('created_at', '<', $toDay);
 
             $total = $transactions->count();
