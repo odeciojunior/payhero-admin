@@ -91,7 +91,7 @@ $(function () {
         }
     }
 
-    function searchProducts(product, modal, type) {
+    function searchProducts(product, description, modal, type) {
         $('.tooltip').remove();
         $(modal).find('.product-photo').unbind('load');
 
@@ -109,7 +109,8 @@ $(function () {
                 url: "/api/products/topselling",
                 data: {
                     project: projectId,
-                    product: product
+                    product: product,
+                    description: description
                 },
                 dataType: "json",
                 headers: {
@@ -176,7 +177,7 @@ $(function () {
                         $(modal).find(find_stage).find('.product-photo').on('load', function() {
                             $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                                 $(modal).find(find_stage).find('.box-products').find('.row').css('display', 'flex').promise().done(function() {
-                                    var autoHeight = $(modal).find('.height-auto').height() + 20;
+                                    var autoHeight = $(modal).find('.height-auto').height() + 18;
                                     $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
                                         $(modal).find('.product-photo').unbind('load');
                                     });
@@ -810,9 +811,9 @@ $(function () {
                     $(modal).find('#stage1-customization').find('.body-products').css({'max-height': '214px', 'position': 'relative', 'overflow': 'hidden'});
 
                     scrollCustom(modal + ' #stage1-customization .body-products');
-                    $(modal).find('#stage1-customization').find('.body-products').css({'padding-right': '22px'});
-                    $(modal).find('#stage1-customization').find('.body-products').find('.scrollbox').css({'right': '46px'});
-                    $(modal).find('#stage1-customization').find('.body-products').find('.scrollbox-bar').css({'right': '46px'});
+                    $(modal).find('#stage1-customization').find('.body-products').css({'padding-right': '0'});
+                    $(modal).find('#stage1-customization').find('.body-products').find('.scrollbox').css({'right': '15px'});
+                    $(modal).find('#stage1-customization').find('.body-products').find('.scrollbox-bar').css({'right': '15px'});
                 } else {
                     $(modal + ' #stage1-customization .body-products').off('wheel');
                 }
@@ -1088,9 +1089,28 @@ $(function () {
             type = 'edit';
         }
 
-        var search_product = e.target.value;
+        var searchProduct = e.target.value;
+        var searchProductDescription = $('#search-product-description').val();
         timeoutID = setTimeout(function() {
-            searchProducts(search_product, modal, type);
+            searchProducts(searchProduct, searchProductDescription, modal, type);
+        }, 800);
+    });
+
+    // Search products description
+    let timeoutID_ = null;
+    $('body').on('keyup', '#search-product-description', function(e) {
+        clearTimeout(timeoutID_);
+
+        var modal = '#' + $(this).parents('.modal').attr('id');
+        var type = 'create';
+        if (modal == '#modal_edit_plan') {
+            type = 'edit';
+        }
+
+        var searchProductDescription = e.target.value;
+        var searchProduct = $('#search-product').val();
+        timeoutID_ = setTimeout(function() {
+            searchProducts(searchProduct, searchProductDescription, modal, type);
         }, 800);
     });
 
@@ -1139,34 +1159,49 @@ $(function () {
                     $(this).find('.check').append('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
                     selected_products.push({'id': product_id});
                 } else {
-                    $.ajax({
-                        method: "POST",
-                        url: '/api/products/verifyproductinplansale',
-                        dataType: "json",
-                        data: {
-                            product_id: product_id,
-                            plan_id: plan_id
-                        },
-                        headers: {
-                            'Authorization': $('meta[name="access-token"]').attr('content'),
-                            'Accept': 'application/json',
-                        },
-                        error: function (response) {
-                            errorAjaxResponse(response);
-                        },
-                        success: function success(response) {
-                            if (!response.product_in_plan_sale) {
-                                $(box_product).removeClass('selected');
-                                $(box_product).find('.check img').remove();
-                                var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
-                                selected_products.splice(index_selected_products, 1);
-                            } else {
-                                alertCustom('error', 'Não é possível remover o produto, possui vendas associadas a este plano.')
+                    if (tabID == 'tabs-modal-create-plans' && stageID == 'stage1') {
+                        $(box_product).removeClass('selected');
+                        $(box_product).find('.check img').remove();
+                        var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
+                        selected_products.splice(index_selected_products, 1);
+                    } else {
+                        $.ajax({
+                            method: "POST",
+                            url: '/api/products/verifyproductinplansale',
+                            dataType: "json",
+                            data: {
+                                product_id: product_id,
+                                plan_id: plan_id
+                            },
+                            headers: {
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
+                            },
+                            error: function (response) {
+                                errorAjaxResponse(response);
+                            },
+                            success: function success(response) {
+                                if (!response.product_in_plan_sale) {
+                                    $(box_product).removeClass('selected');
+                                    $(box_product).find('.check img').remove();
+                                    var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
+                                    selected_products.splice(index_selected_products, 1);
+                                } else {
+                                    alertCustom('error', 'Não é possível remover o produto, possui vendas associadas a este plano.')
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
+        }
+
+        if (selected_products.length > 0) {
+            $('.box-description').find('.selecteds span').html(selected_products.length);
+            $('.box-description').find('.selecteds').css('display', 'block');
+        } else {
+            $('.box-description').find('.selecteds span').html('');
+            $('.box-description').find('.selecteds').css('display', 'none');
         }
     });
 

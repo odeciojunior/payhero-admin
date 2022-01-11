@@ -459,6 +459,7 @@ class ProductsApiController extends Controller
         try {
             $project = $request->input('project') ?? '';
             $product = $request->input('product') ?? '';
+            $description = $request->input('description') ?? '';
 
             if (empty($project)) {
                 return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
@@ -467,7 +468,7 @@ class ProductsApiController extends Controller
             $productService = new ProductService();
             $projectId = current(Hashids::decode($project));
 
-            $products = $productService->getTopSellingProducts($projectId, $product);
+            $products = $productService->getTopSellingProducts($projectId, $product, $description);
 
             return ProductsSelectResource::collection($products);
         } catch (Exception $e) {

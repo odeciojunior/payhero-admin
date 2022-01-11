@@ -44,7 +44,7 @@ class ProductService
         ->get();
     }
 
-    public function getTopSellingProducts(int $projectId, string $product)
+    public function getTopSellingProducts(int $projectId, string $product, string $description)
     {
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
@@ -59,6 +59,10 @@ class ProductService
 
         if (!empty($product)) {
             $productModel->where('name', 'like', '%'. $product .'%');
+        }
+
+        if (!empty($description)) {
+            $productModel->where('description', 'like', '%'. $description .'%');
         }
 
         return $productModel
