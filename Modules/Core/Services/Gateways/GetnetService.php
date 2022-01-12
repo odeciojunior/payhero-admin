@@ -128,6 +128,10 @@ class GetnetService implements Statement
 
             $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
+            if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID)) {
+                return false;
+            }
+
             $withdrawal = Withdrawal::create(
                 [
                     'value' => $value,

@@ -63,7 +63,6 @@ class AsaasAnticipationsCheckValeus extends Command
                 ->whereNotNull('company_id')
                 ->where('type', Transaction::TYPE_PRODUCER)
                 ->where('release_date', '<=', $afterThreeDays)
-                //->where('sale_id', 1403259)
                 ->where('created_at', '<', $toDay);
 
             $total = $transactions->count();
@@ -75,9 +74,6 @@ class AsaasAnticipationsCheckValeus extends Command
                 $sale = $transaction->sale;
                 $response = $service->makeAnticipation($sale, $this->saveRequests, $this->simulate);
 
-                //\Log::info(print_r($response, true));
-                //continue;
-
                 if(isset($response['errors'])) {
 
                     // se ja a mensagem tem no array entra no if
@@ -88,7 +84,7 @@ class AsaasAnticipationsCheckValeus extends Command
 
                         if (str_contains($description, 'limite para antecipação de cartão de crédito e o valor escolhido') ) {
                             $description = 'limite para antecipação de cartão de crédito e o valor escolhido';
-                            continue;
+                            //continue;
                         }
 
                         if (str_contains($description, 'este recebível já está reservado para a institui') ) {
