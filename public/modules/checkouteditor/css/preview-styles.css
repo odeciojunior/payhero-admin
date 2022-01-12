@@ -6,16 +6,10 @@
 
 .primary-color {
     background: var(--primary-color) !important;
-    transition: all 0.5s ease-out;
 }
 
 .secondary-color {
-    background: var(--secondary-color) !important;
-    -webkit-transition: all 0.7s ease-out;
-    -moz-transition: all 0.7s ease-out;
-    -ms-transition: all 0.7s ease-out;
-    -o-transition: all 0.7s ease-out;
-    transition: all 0.7s ease-out;
+    background: var(--secondary-color) !important;   
 }
 
 /* --------------- Preview Visual -------------------- */
@@ -42,6 +36,7 @@
     min-height: 300px;
     height: fit-content;
     align-items: center;
+		position: relative;
 }
 
 .preview-content {
@@ -57,16 +52,11 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-
-    -webkit-transition: all 0.5s ease-out;
-    -moz-transition: all 0.5s ease-out;
-    -ms-transition: all 0.5s ease-out;
-    -o-transition: all 0.5s ease-out;
-    transition: all 0.5s ease-out;
 }
 
 .preview-content.desktop {
     width: 100%;
+		position: absolute;
 }
 
 .preview-content.mobile {
@@ -101,34 +91,25 @@
 /* ----------- Banner Preview ----------- */
 .preview-banner {
     width: 100%;
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    -ms-transition: all 0.5s;
-    -o-transition: all 0.5s;
-    transition: all 0.5s;
-}
-
-.preview-banner.desktop {
-    height: 70px;
-}
-
-.preview-banner.mobile {
-    height: 40px;
+    -webkit-transition: all 0.1s;
+    -moz-transition: all 0.1s;
+    -ms-transition: all 0.1s;
+    -o-transition: all 0.1s;
+    transition: all 0.1s;
 }
 
 .preview-banner img {
     width: inherit;
-    border: 0px solid transparent;
     object-fit: cover;
     background: #fff;
 }
 
 .preview-banner.desktop img {
-    max-height: 70px;
+    height: 70px;
 }
 
 .preview-banner.mobile img {
-    max-height: 40px;
+    height: 40px;
 }
 
 .wide-banner {
@@ -150,6 +131,44 @@
 
 .retangle-banner.mobile img {
     border-radius: 0 0 5px 5px;
+}
+
+/* ----------- Logo Desktop Preview ----------- */
+
+.logo-desktop-div.desktop {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    padding: 10px 70px 0 80px;
+
+    -webkit-transition: all 0.1s;
+    -moz-transition: all 0.1s;
+    -ms-transition: all 0.1s;
+    -o-transition: all 0.1s;
+    transition: all 0.1s;
+}
+
+.logo-desktop-div.has-banner {
+    margin-top: -20px;
+    padding: 0px 70px 0 80px;
+}
+
+.logo-desktop-div .logo-desktop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 99px;
+    overflow: hidden;
+    background-color: var(--primary-color);
+}
+
+.preview-logo.desktop {
+    max-width: 41px;
+    max-height: 41px;
+    object-fit: cover;
 }
 
 /* ----------- Menubar Mobile Preview ----------- */
@@ -175,7 +194,7 @@
     background-color: var(--primary-color);
 }
 
-.preview-logo-img {
+.preview-logo.mobile {
     max-width: 27px;
     max-height: 27px;
     object-fit: cover;
@@ -321,8 +340,8 @@
 }
 
 .preview-payment-content .finish-button {
-    width: 90px;
-    height: 20px;
+    width: 124px !important;
+    height: 27px !important;
     align-self: flex-end;
     margin: 5px 0;
 }
@@ -544,7 +563,7 @@
 .theme-ready {
     display: inline-flex;
     flex-wrap: wrap;
-    width: 100%;    
+    width: 100%;
 }
 
 .theme-radio[type="radio"] {
@@ -648,7 +667,6 @@ input[type="color"]::-moz-color-swatch {
     opacity: 0.7;
 }
 
-
 #preview_visual,
 #preview_payment,
 #preview_post_purchase {
@@ -730,11 +748,7 @@ input[type="color"]::-moz-color-swatch {
 .accepted-payment-list {
     display: flex;
     width: 100%;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -ms-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
+    height: 60px;
 }
 
 .accepted-payment {
@@ -742,9 +756,8 @@ input[type="color"]::-moz-color-swatch {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0 5px 5px 0;
+    margin: 0 5px 20px 0;
     width: 60px;
-    height: 40px;
     border: 2px solid #e4e4e4;
     box-sizing: border-box;
     border-radius: 8px;
@@ -770,7 +783,6 @@ input[type="color"]::-moz-color-swatch {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 30px;
     border-bottom: 1px solid #bcbcbc;
     border-radius: 10px 10px 0 0;
     background: #f8f8f8;

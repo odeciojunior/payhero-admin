@@ -273,10 +273,8 @@ $(document).ready( function () {
 
     $(".preview-type").on("change", function () {
         if ($(this).add(":checked")) {
-            $("#" + $(this).attr("data-toggle")).fadeOut("fast", "swing");
-            setTimeout(() => {
-                $("#" + $(this).attr("data-target")).fadeIn("slow", "swing");
-            }, 400);
+            $("#" + $(this).attr("data-toggle")).fadeOut("slow", "swing");
+            $("#" + $(this).attr("data-target")).fadeIn("slow", "swing");
         }
     });
 
@@ -316,7 +314,8 @@ $(document).ready( function () {
     drEventLogo.on("dropify.fileReady", function (event, element) {
         var files = event.target.files;
         var done = function (url) {
-            $("#logo_preview").attr("src", url);
+            $("#logo_preview_mobile").attr("src", url);
+            $("#logo_preview_desktop").attr("src", url);
         };
         if (files && files.length > 0) {
             file = files[0];
@@ -524,6 +523,16 @@ $(document).ready( function () {
 
     $("#checkout_editor").on("change", function () {
         $("#save_changes").fadeIn("slow", "swing");
+    });
+
+    $('#checkout_banner_enabled').on('change', function(){
+        if($(this).is(':checked')){
+            $("#banner_type").fadeIn("slow", "swing");
+            $('#logo_preview_desktop_div').addClass('has-banner');
+        }else{
+            $("#banner_type").fadeOut("slow", "swing");
+            $('#logo_preview_desktop_div').removeClass('has-banner');
+        }
     });
 });
 

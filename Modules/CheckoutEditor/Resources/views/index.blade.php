@@ -61,7 +61,7 @@
 
                             <div class="switch-holder mb-3">
                                 <label class="switch" style='top:3px'>
-                                    <input type="checkbox" id="checkout_logo_enabled" name="checkout_logo_enabled" data-target="logo-content" data-preview=".logo-mobile" class='check switch-checkout'>
+                                    <input type="checkbox" id="checkout_logo_enabled" name="checkout_logo_enabled" data-target="logo-content" data-preview=".logo-preview-container" class='check switch-checkout'>
                                     <span class="slider round"></span>
                                 </label>
                             </div>
@@ -93,14 +93,17 @@
                                 Banner no topo
                             </h1>
 
-                            <div style=" display: flex; min-width: 140px; align-items: center;">
-                                <div id="banner_type" class="radio-group" style="justify-self: end;">
-                                    <input class="custom-icon-radio" id="banner_type_wide" type="radio" name="checkout_banner_type" value="0" />
-                                    <label for="banner_type_wide"><img src="{{ asset('/modules/checkouteditor/img/svg/banner-wide.svg') }}"></label>
+                            <div style=" display: flex; min-width: 140px; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div id="banner_type" class="radio-group" style="justify-self: end; display: none;">
+                                        <input class="custom-icon-radio" id="banner_type_wide" type="radio" name="checkout_banner_type" value="0" />
+                                        <label for="banner_type_wide"><img src="{{ asset('/modules/checkouteditor/img/svg/banner-wide.svg') }}"></label>
 
-                                    <input class="custom-icon-radio" id="banner_type_square" type="radio" name="checkout_banner_type" value="1" />
-                                    <label for="banner_type_square"><img src="{{ asset('/modules/checkouteditor/img/svg/banner-square.svg') }}"></label>
+                                        <input class="custom-icon-radio" id="banner_type_square" type="radio" name="checkout_banner_type" value="1" />
+                                        <label for="banner_type_square"><img src="{{ asset('/modules/checkouteditor/img/svg/banner-square.svg') }}"></label>
+                                    </div>
                                 </div>
+
 
                                 <div class="switch-holder mb-3">
                                     <label class="switch" style='top:3px'>
@@ -117,7 +120,7 @@
                                 <input type="file" id="checkout_banner" name="checkout_banner" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                             </div>
 
-                            
+
 
                             <div class="banner-intructions ">
                                 <div class="instrunctios">
@@ -207,7 +210,7 @@
                                         <button class="ql-underline" data-toggle="tooltip" data-placement="bottom" title="Sublinhar"></button>
                                     </div>
                                     <div id="topbar_content" class="quill-editor">
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -715,7 +718,7 @@
                         <div class="whatsapp-content">
                             <label for="support_phone" class="checkout-label">Telefone do suporte <span class="observation-span">Opcional</span></label>
                             <div class="row-flex">
-                                <input type="text" class="checkout-input-text" id="support_phone" name="support_phone" placeholder="Digite o telefone com DDD do suporte" data-mask="(00) 00000-0000" ></input>
+                                <input type="text" class="checkout-input-text" id="support_phone" name="support_phone" placeholder="Digite o telefone com DDD do suporte" data-mask="(00) 00000-0000"></input>
                                 <button id="verify_phone_open" class="verify-button" type="button">Validar telefone</button>
                                 <button id="verified_phone_open" class="verified-button" type="button" style="display: none;">Trocar telefone</button>
                             </div>
@@ -797,8 +800,14 @@
                                     </div>
                                 </div>
 
-                                <div class="preview-body desktop visual">
+                                <div id="logo_preview_desktop_div" class="logo-desktop-div desktop">
+                                    <div class="logo-desktop logo-preview-container">
+                                        <img id="logo_preview_desktop" class="preview-logo desktop" />
+                                    </div>
+                                </div>
 
+
+                                <div class="preview-body desktop visual">
                                     <div class="checkout-step-type">
                                         <div class="steps-lines">
                                             <div class="step-one primary-color"></div>
@@ -855,8 +864,8 @@
 
                                         <div class="menu-bar-mobile">
 
-                                            <div class="logo-mobile">
-                                                <img id="logo_preview" class="preview-logo-img" />
+                                            <div class="logo-mobile logo-preview-container">
+                                                <img id="logo_preview_mobile" class="preview-logo mobile" />
                                             </div>
 
                                             <div></div>
@@ -924,7 +933,7 @@
                             <div class="theme-ready-content">
                                 <div id="theme_ready" class="radio-group theme-ready">
 
-                                    <input class="theme-radio" id="theme_spaceship" type="radio" name="theme_enum" value="1" checked/>
+                                    <input class="theme-radio" id="theme_spaceship" type="radio" name="theme_enum" value="1" checked />
                                     <label for="theme_spaceship">
                                         <div class="theme-primary-color" style="background: #4B8FEF;" data-color="#4B8FEF"></div>
                                         <div class="theme-secondary-color" style="background: #313C52;" data-color="#313C52"></div>
@@ -1351,7 +1360,7 @@
                         </div>
 
                         <div>
-                            
+
                         </div>
                     </div>
                 </div>
