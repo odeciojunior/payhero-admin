@@ -66,6 +66,10 @@ class BoletoService
                         $domainPresent
                     ) {
                         foreach ($boletoDueToday as $boleto) {
+                            if ($boleto->api_flag) {
+                                continue;
+                            }
+
                             $checkout = $checkoutModel->where('id', $boleto->checkout_id)->first();
                             $clientName = $boleto->customer->name;
                             $clientEmail = $boleto->customer->email;
@@ -260,6 +264,10 @@ class BoletoService
                         $projectNotificationModel
                     ) {
                         foreach ($boletos as $boleto) {
+                            if ($boleto->api_flag) {
+                                continue;
+                            }
+
                             try {
                                 $checkout = $checkoutModel->where("id", $boleto->checkout_id)->first();
                                 $clientName = $boleto->customer->name;
@@ -433,6 +441,10 @@ class BoletoService
                         $domainPresenter
                     ) {
                         foreach ($boletos as $boleto) {
+                            if ($boleto->api_flag) {
+                                continue;
+                            }
+
                             try {
                                 $checkout = $checkoutModel->where("id", $boleto->checkout_id)->first();
                                 $clientName = $boleto->customer->name;
