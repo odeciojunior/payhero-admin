@@ -32,9 +32,9 @@ class GerencianetService implements Statement
 
     public function __construct()
     {
-        $this->gatewayIds = [ 
-            Gateway::GERENCIANET_PRODUCTION_ID, 
-            Gateway::GERENCIANET_SANDBOX_ID 
+        $this->gatewayIds = [
+            Gateway::GERENCIANET_PRODUCTION_ID,
+            Gateway::GERENCIANET_SANDBOX_ID
         ];
     }
 
@@ -87,7 +87,7 @@ class GerencianetService implements Statement
 
     public function getPendingDebtBalance() : int
     {
-        return 0;    
+        return 0;
     }
 
     public function getWithdrawals(): JsonResource
@@ -112,9 +112,14 @@ class GerencianetService implements Statement
 
     public function createWithdrawal($withdrawalValue)
     {
-        $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
-
         try {
+
+            $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
+
+            if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID : Gateway::GERENCIANET_SANDBOX_ID)) {
+                return false;
+            }
+
             DB::beginTransaction();
             $withdrawal = Withdrawal::create(
                 [
@@ -236,11 +241,11 @@ class GerencianetService implements Statement
                             });
                         });
                 });
-    
+
             if (!empty($saleId)) {
                 $transactions->where('sale_id', $saleId);
             }
-    
+
             $transactions->chunkById(100, function ($transactions) {
                 foreach ($transactions as $transaction) {
 
@@ -331,10 +336,10 @@ class GerencianetService implements Statement
                 ]
             );
 
-            $refundTransactions = $sale->transactions;            
-           
+            $refundTransactions = $sale->transactions;
+
             foreach ($refundTransactions as $refundTransaction) {
-                
+
                 $refundTransaction->status = 'refunded';
                 $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
                 $refundTransaction->is_waiting_withdrawal = 0;
