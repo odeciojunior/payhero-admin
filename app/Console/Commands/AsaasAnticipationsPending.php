@@ -49,8 +49,12 @@ class AsaasAnticipationsPending extends Command
                                      'gateway_id' => Gateway::ASAAS_PRODUCTION_ID
                                  ])
                 ->whereIn('anticipation_status', ['SCHEDULED','PENDING', 'ANTICIPATED_ASAAS', 'ANTICIPATED'])
-                ->where('created_at', '>', '2021-10-19 00:00:00')
                 ->get();
+
+            $total = count($sales);
+            $bar = $this->output->createProgressBar($total);
+            $bar->start();
+
 
             foreach ($sales as $sale) {
                 $response = $service->checkAnticipation($sale);
@@ -59,13 +63,21 @@ class AsaasAnticipationsPending extends Command
                     $sale->update(['anticipation_status' => $response['status']]);
                 }
 
-                if (isset($response['status']) != 'SCHEDULED' or 'PENDING' or 'CREDITED' or 'CANCELLED') {
+                $arrayStatus = ['SCHEDULED', 'PENDING', 'CREDITED', 'CANCELLED'];
+
+                if (!isset($response['status']) or !in_array($response['status'], $arrayStatus)) {
                     report(new Exception("Erro ao consultar as antecipações, UserId:  " . $sale->owner_id . " SaleId:  " . $sale->id .
-                                         ' -- Status asaas: ' . $response['status'] . ' -- ' . json_encode($response)));                }
+                                         ' -- ' . json_encode($response)));
+                }
+
+                $bar->advance();
             }
 
+            $bar->finish();
+
         } catch (Exception $e) {
-            report($e);
+            //report($e);
+            \Log::info($e);
         }
     }
 }

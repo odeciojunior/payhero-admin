@@ -464,7 +464,7 @@ class SaleService
             }
         }
 
-        if ($sale->status == 1) {
+        if (!empty($userTransaction->release_date)) {
             $userTransaction->release_date = Carbon::parse($userTransaction->release_date);
         } else {
             $userTransaction->release_date = null;
@@ -486,7 +486,7 @@ class SaleService
             'taxaReal' => FoxUtils::formatMoney($taxaReal / 100),
             'release_date' => $userTransaction->release_date != null ? $userTransaction->release_date->format(
                 'd/m/Y'
-            ) : '',
+            ) : 'Processando',
             'has_withdrawal' => $userTransaction->withdrawal_id,
             'affiliate_comission' => $affiliateComission,
             'refund_value' => FoxUtils::formatMoney(intval($sale->refund_value) / 100),

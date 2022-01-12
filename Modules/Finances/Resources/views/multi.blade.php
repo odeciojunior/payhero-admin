@@ -5,11 +5,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css')}}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v='.uniqid()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/multi-finances.css?v='.uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css?v=' . versionsFile()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css?v=' . versionsFile()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=' . versionsFile()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/multi-finances.css?v=?v=' . versionsFile()) }}">
 @endpush
 
 @section('content')
@@ -383,14 +383,14 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-    <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-    <script src="{{ asset('modules/finances/js/jPages.min.js') }}"></script>
-    {{-- <script src="{{ asset('modules/finances/js/statement-index.js?v='. uniqid()) }}"></script> --}}
-    {{-- <script src="{{ asset('modules/finances/js/balances.js?v='. uniqid()) }}"></script> --}}
-    {{-- <script src="{{ asset('modules/finances/js/withdrawals.js?v='. uniqid()) }}"></script> --}}
-    <script src="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.js?v='. uniqid()) }}"></script>
-    <script src="{{ asset('modules/finances/js/multi-finances.js?v='. uniqid()) }}"></script>
-    <script src="{{ asset('modules/finances/js/multi-finances-withdrawals.js?v='. uniqid()) }}"></script>
-    <script src="{{ asset('modules/finances/js/settings.js?v='. uniqid()) }}"></script>
+    <script src="{{ asset('modules/global/js-extra/moment.min.js?v=' . versionsFile()) }}"></script>
+    <script src="{{ asset('modules/global/js/daterangepicker.min.js?v=' . versionsFile()) }}"></script>
+    <script src="{{ asset('modules/finances/js/jPages.min.js?v=' . versionsFile()) }}"></script>
+    {{-- <script src="{{ asset('modules/finances/js/statement-index.js?v=' . versionsFile()) }}"></script> --}}
+    {{-- <script src="{{ asset('modules/finances/js/balances.js?v=' . versionsFile()) }}"></script> --}}
+    {{-- <script src="{{ asset('modules/finances/js/withdrawals.js?v=' . versionsFile()) }}"></script> --}}
+    <script src="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.js?v=' . versionsFile()) }}"></script>
+    <script src="{{ asset('modules/finances/js/multi-finances.js?v=' . versionsFile()) }}"></script>
+    <script src="{{ asset('modules/finances/js/multi-finances-withdrawals.js?v=' . versionsFile()) }}"></script>
+    <script src="{{ asset('modules/finances/js/settings.js?v=' . versionsFile()) }}"></script>
 @endpush

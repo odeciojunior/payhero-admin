@@ -63,7 +63,6 @@ class AsaasAnticipationsCheckValeus extends Command
                 ->whereNotNull('company_id')
                 ->where('type', Transaction::TYPE_PRODUCER)
                 ->where('release_date', '<=', $afterThreeDays)
-                //->where('sale_id', 1403259)
                 ->where('created_at', '<', $toDay);
 
             $total = $transactions->count();
@@ -75,9 +74,6 @@ class AsaasAnticipationsCheckValeus extends Command
                 $sale = $transaction->sale;
                 $response = $service->makeAnticipation($sale, $this->saveRequests, $this->simulate);
 
-                //\Log::info(print_r($response, true));
-                //continue;
-
                 if(isset($response['errors'])) {
 
                     // se ja a mensagem tem no array entra no if
@@ -86,9 +82,9 @@ class AsaasAnticipationsCheckValeus extends Command
                         $description = strtolower(trim($response['errors'][0]['description']));
 
 
-                        if (str_contains($description, 'limite para antecipação de cartão de crédito e o valor escolhido ') ) {
+                        if (str_contains($description, 'limite para antecipação de cartão de crédito e o valor escolhido') ) {
                             $description = 'limite para antecipação de cartão de crédito e o valor escolhido';
-                            continue;
+                            //continue;
                         }
 
                         if (str_contains($description, 'este recebível já está reservado para a institui') ) {
@@ -103,6 +99,7 @@ class AsaasAnticipationsCheckValeus extends Command
                                 $cannotAnticipate[$description][$sale->owner_id]['value'] += $transaction->value;
                                 array_push($cannotAnticipate[$description][$sale->owner_id]['sale_ids'], $transaction->sale_id);
                                 array_push($cannotAnticipate[$description][$sale->owner_id]['values'], $transaction->value);
+                                array_push($cannotAnticipate[$description][$sale->owner_id]['messages'], strtolower(trim($response['errors'][0]['description'])));
 
                             } else {
 
@@ -115,6 +112,7 @@ class AsaasAnticipationsCheckValeus extends Command
                                     'value' => $transaction->value,
                                     'sale_ids' => [$transaction->sale_id],
                                     'values' => [$transaction->value],
+                                    'messages' => [strtolower(trim($response['errors'][0]['description']))]
                                 ];
 
                             }
@@ -129,6 +127,7 @@ class AsaasAnticipationsCheckValeus extends Command
                                 'value' => $transaction->value,
                                 'sale_ids' => [$transaction->sale_id],
                                 'values' => [$transaction->value],
+                                'messages' => [strtolower(trim($response['errors'][0]['description']))]
                             ];
 
                         }
