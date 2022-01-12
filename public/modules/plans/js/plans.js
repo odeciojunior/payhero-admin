@@ -1726,7 +1726,7 @@ $(function () {
         var parents = $(this).parents('.informations-edit');
         var curHeight = parents.find('.informations-data').height();
 
-        var current_page = $('#pagination-plans').find('.current_page').text();
+        var current_page = $('#pagination-plans').find('.active').text();
 
         $.ajax({
             method: "PUT",
@@ -1773,7 +1773,6 @@ $(function () {
                 var costs = calculateCostsPlan();
                 var comission = (price - tax).toFixed(2);
                 var return_value = (comission - costs).toFixed(2);
-                console.log(return_value);
 
                 $(modal).find('.price-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price));
                 $(modal).find('.tax-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tax));

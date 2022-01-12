@@ -40,6 +40,11 @@ class PixExpiredSendEmailListener implements ShouldQueue
     public function handle(PixExpiredEvent $event)
     {
         try {
+            $sale = $event->sale;
+            if ($sale->api) {
+                return;
+            }
+
             $projectModel = new Project();
             $domainModel = new Domain();
             $checkoutModel = new Checkout();
@@ -58,7 +63,6 @@ class PixExpiredSendEmailListener implements ShouldQueue
                 return false;
             }
 
-            $sale = $event->sale;
             $customer = $event->sale->customer;
             if (stristr($customer->email, 'invalido') !== false) {
                 return false;
