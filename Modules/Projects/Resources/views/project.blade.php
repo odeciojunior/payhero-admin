@@ -7,6 +7,10 @@
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=10') }}">
+    <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
+
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
     <style>
         @font-face {
             font-family: raty;
@@ -19,6 +23,7 @@
 
     <!-- Page -->
     <div class="page">
+
         <div style="display: none" class="page-header container">
             <h1 class="page-title my-10" style="min-height: 28px">
                 <a class="gray" href="/projects">
@@ -27,94 +32,125 @@
                 </a>
             </h1>
         </div>
+
         <div class="page-content container page-project" style="display: none">
             <!-- Painel de informações gerais -->
-            <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
-                <div class="card">
+            <div class="row" id="tab_info_geral" role="tabpanel">
+
+                <div class="col-md-12">
+
                     <div class="row no-gutters">
-                        <div class="col-md-3">
-                            <img id="show-photo" class="card-img" src="" alt="">
-                        </div>
-                        <div class="col-md-9 pl-10">
-                            <div class="card-body h-p100">
-                                <div class="row h-p100 justify-content-between align-items-start">
-                                    <div style="line-height: normal" class="col-md-9">
-                                        <div>
-                                            <div class="row row-flex row-title justify-content-between">
-                                                <h4 class="title-pad mr-5 s-title"></h4>
-                                                <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill mr-10"></span>
+
+                        <div class="col-md-12 col-lg-8 card mr-0 mr-sm-30 px-0">
+
+                            <div class="row no-gutters">
+
+                                <div class="col-md-4">
+                                    <div class="pl-0">
+                                        <img id="show-photo" class="card-img" src="" alt="">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8 d-flex flex-column justify-content-between pl-25 pr-25">
+                                    <div alt="titulo" class="pt-25 mr-20">
+                                        <!-- TITULO CRIADO EM -->
+                                        <div class="row row-title justify-content-between pt-0">
+                                            <h4 class="title-pad mr-5 s-title"></h4>
+                                            <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill mr-10"></span>
+                                        </div>
+                                        <div style="color: #C8C8C8" class="card-text gray font-size-10" id="created_at"></div>
+                                    </div>
+
+                                    <!-- DESCRISAO PRODUTO -->
+                                    <div class="my-20">
+                                        <h5 style="line-height: unset" class="sm-title s-title-description mb-5"><strong> Descrição </strong></h5>
+                                        <p id="show-description" class="card-text sm s-description"></p>
+                                    </div>
+
+                                    <!-- RODA PE -->
+                                    <div class="row no-gutters">
+                                        <!-- CHARGEBACK -->
+                                        <div class="col-md-4 d-flex alert m-0 product-chargeback product-alert-color">
+                                            <div class="pl-0 pl-md-10">
+                                                <img class="arrow-chargeback" src="{{ asset('/modules/global/img/projects/arrow.svg') }}">
+                                                <img class="bodyArrow-chargeback" src="{{ asset('/modules/global/img/projects/bodyArrow.svg') }}">
                                             </div>
-                                            <div style="color: #C8C8C8" class="card-text gray font-size-10" id="created_at"></div>
-                                        </div>
-
-                                        <div class="my-20 s-control-magin">
-                                            <h5 style="line-height: unset" class="sm-title s-title-description mb-5"><strong> Descrição </strong></h5>
-                                            <p id="show-description" class="card-text sm s-description"></p>
-                                        </div>
-
-                                        <div class="col-12 my-10 px-0">
-                                            <div class="row">
-                                                {{-- <div id="value-cancel" class="col-3 text-center">1.2K</div>--}}
-                                                <div class="col-3 col-md-2 d-flex justify-content-center align-items-center">
-                                                    <img class="control-img mr-5" src="{{ asset('/modules/global/img/svg/chamados-abertos.svg') }}">
-                                                    <span class="s-data-project-values" id="value-chargeback"></span>
-                                                </div>
-                                                <div class="col-3 col-md-2 d-flex justify-content-center align-items-center border-between">
-                                                    <img class="control-img mr-5" src="{{ asset('/modules/global/img/svg/atendimentos-abertos.svg') }}">
-                                                    <span class="s-data-project-values" id="value-open-tickets"></span>
-                                                </div>
-                                                <div class="col-3 col-md-2 d-flex justify-content-center align-items-center">
-                                                    <img class="control-img mr-5" src="{{ asset('/modules/global/img/svg/vendas-rastreio.svg') }}">
-                                                    <span class="s-data-project-values" id="value-without-tracking"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-9 col-md-6" style="border-bottom: 1px solid #EEEEEE; margin: 5px 0;"></div>
-
-                                        <div class="row">
-                                            {{--                                                <div class="col-3 text-center font-size-10">--}}
-                                            {{--                                                    <small> CANCELADAS </small>--}}
-                                            {{--                                                </div>--}}
-                                            <div class="col-3 col-md-2 text-center font-size-10 s-data-project">
+        
+                                            <span class="s-data-project-values pl-5 pl-md-5 align-self-center" id="value-chargeback"></span>
+                                            <div class="d-flex align-items-center pl-5 font-size-10">
                                                 <small> CHARGEBACKS </small>
                                             </div>
-                                            <div class="col-3 col-md-2 text-center font-size-10 s-data-project">
+                                        </div>
+        
+                                        <!-- CHAMADOS ABERTOS -->
+                                        <div class="col-md-4 d-flex alert m-0 rounded-0 product-alert-color border-product-alert">
+                                            <div class="d-flex pl-0 pl-sm-20">
+                                                <img class="control-img mt-md-5" src="{{ asset('/modules/global/img/projects/fallowUp.svg') }}">
+                                            </div>
+
+                                            <span class="s-data-project-values pl-10 align-self-center" id="value-open-tickets"></span>
+                                            <div class="d-flex align-items-center pl-5 font-size-10">
                                                 <small> CHAMADOS ABERTOS </small>
                                             </div>
-                                            <div class="col-3 col-md-2 text-center font-size-10 s-data-project">
+                                        </div>
+                                        
+                                        <!-- VENDAS S/ RASTREIO -->
+                                        <div class="col-md-4 d-flex alert m-0 tracking-sell product-alert-color border-product-alert">
+                                            <div class="d-flex pl-0 pl-sm-20">
+                                                <img class="control-img" src="{{ asset('/modules/global/img/projects/trackCar.svg') }}">
+                                            </div>
+                                            
+                                            <span class="s-data-project-values pl-10 align-self-center" id="value-without-tracking"></span>
+                                            <div class="d-flex align-items-center pl-5 font-size-10">
                                                 <small> VENDAS S/ RASTREIO </small>
                                             </div>
+        
                                         </div>
+        
                                     </div>
-                                    <div class="col-md-3 h-auto h-md-p100 d-flex flex-wrap align-items-center justify-content-between justify-content-md-start my-10 my-md-0" style="border-left: 1px solid #EEEEEE">
-                                        <div class="col-12 my-10 mt-md-auto">
-                                            <div class="d-flex">
-                                                <img class="control-img mr-5" src="{{ asset('/modules/global/img/svg/store-sales.svg') }}">
-                                                <span class="font-size-12"> Vendas Aprovadas </span>
-                                            </div>
-                                            <div>
-                                                <strong style="color: #707070" class="font-size-18" id="total-approved">0</strong>
-                                            </div>
-                                        </div>
+                                </div>
+                                
+                            </div>
+                        </div>
 
-                                        <div class="col-11" style="border-bottom: 1px solid #EEEEEE; margin: 5px auto;"></div>
+                        <!-- RESUMO VENDAS -->
+                        <div class="row f-grow mx-0">
+                            <div class="card col px-0">
 
-                                        <div class="col-12 my-10 mb-md-auto">
-                                            <div class="d-flex">
-                                                <img class="control-img mr-5" src="{{ asset('/modules/global/img/svg/store-coin.svg') }}">
-                                                <span class="font-size-12"> Total </span>
-                                            </div>
-                                            <div style="color: #707070">
-                                                <small> R$ </small>
-                                                <strong class="font-size-18" id="total-approved-value">0</strong>
-                                            </div>
+                                <!-- VENDAS APROVADAS -->
+                                <div class="pl-30 pt-15 pt-md-20 pl-xl-30 pt-xl-50">
+                                    <div class="d-flex">
+                                        <div class="p-5 resume-sales mr-10">
+                                            <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">
                                         </div>
+                                        <span class="d-flex align-items-center font-size-14"> Vendas Aprovadas </span>
                                     </div>
+            
+                                    <div>
+                                        <strong style="color: #707070" class="font-size-24" id="total-approved">0</strong>
+                                    </div>
+                                </div>
+    
+                                <!-- RECEITA TOTAL -->
+                                <div class="pl-30 pb-5 pl-xl-30 pt-xl-35">
+                                    <div class="d-flex pt-10">
+                                        <div class="p-5 resume-sales mr-10">
+                                            <img class="mr-5" src="{{ asset('/modules/global/img/projects/arrowBalance.svg') }}">
+                                        </div>
+                                        <span class="d-flex align-items-center font-size-14">Total em receita</span>
+                                    </div>
+            
+                                    <div style="color: #707070">
+                                        <small> R$ </small>
+                                        <strong class="font-size-24" id="total-approved-value">0</strong>
+                                    </div>
+                                
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
+
                 </div>
             </div>
 
@@ -124,8 +160,9 @@
                         <ul id="slick-tabs" class="nav nav-tabs nav-tabs-line col-9 col-md-11" role="tablist" style="color: #ee535e">
                             <li class="nav-item tab-domains" role="presentation">
                                 <span style="color: #2E85EC" id="first-category" class="category-tabs">PRINCIPAL</span>
-                                <a id="tab-domains" class="nav-link active" data-toggle="tab" href="#tab_domains"
-                                   aria-controls="tab-domains" role="tab">Domínios <span id="count-cupons" class=" d-none tab-counter"> 0 </span>
+                                <a id="tab-domains" class="nav-link active" data-toggle="tab" href="#tab_domains" aria-controls="tab-domains" role="tab">
+                                    Domínios
+                                    <span id="count-cupons" class=" d-none tab-counter"> 0 </span>
                                 </a>
                             </li>
                             <li class="nav-item tab-checkout" role="presentation">
@@ -185,10 +222,9 @@
                             </li>
                         </ul>
                         <ul class="nav nav-tabs nav-tabs-line col-3 col-md-1">
-                            <li class="nav-item tab_configuration" role="presentation" style="margin-left: auto;margin-right: 10px">
+                            <li class="nav-item tab_configuration mr-0" role="presentation" style="margin-left: auto;margin-right: 10px">
                                 <span class="category-tabs">&nbsp;</span>
-                                <a id="tab_configuration" class="nav-link" data-toggle="tab"
-                                   href="#tab_configuration_project"
+                                <a id="tab_configuration" class="nav-link" data-toggle="tab" href="#tab_configuration_project"
                                    aria-controls="tab_configuration_project" role="tab"> <img height="15" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
                                 </a>
                             </li>
@@ -196,6 +232,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="shadow" data-plugin="matchHeight">
                 <div class="tab-content">
                     <div class="tab-content">
@@ -432,6 +469,7 @@
 {{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script>
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.uniqid())}}"></script>
@@ -444,9 +482,12 @@
         <script src="{{asset('modules/projectreviews/js/index.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v='.uniqid())}}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
         <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>
         <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.uniqid())}}"></script>
     @endpush
 @endsection
+

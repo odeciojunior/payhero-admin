@@ -29,6 +29,7 @@ use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\TaskService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
+use Modules\Projects\Http\Requests\ProjectsSettingsUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\UserProjectResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
@@ -332,8 +333,8 @@ class ProjectsApiController extends Controller
         }
     }
 
-    public function update(ProjectUpdateRequest $request, $id): JsonResponse
-    {
+    public function updateSettings(ProjectsSettingsUpdateRequest $request, $id){
+
         try {
             $requestValidated = $request->validated();
             $projectModel = new Project();
@@ -344,84 +345,53 @@ class ProjectsApiController extends Controller
             }
 
             $projectId = current(Hashids::decode($id));
-
-            CacheService::forget(CacheService::CHECKOUT_PROJECT, $projectId);
-            CacheService::forgetContainsUnique(CacheService::SHIPPING_RULES, $projectId);
-
             $project = $projectModel->find($projectId);
 
             if (!Gate::allows('update', [$project])) {
                 return response()->json(['message' => 'Sem permissão para atualizar o projeto'], 403);
             }
-
             $requestValidated['status'] = 1;
 
-            $projectUpdate = $project->fill($requestValidated)->save();
-            $projectChanges = $project->getChanges();
 
+            $projectPhoto = $request->file('product_photo');
+
+            if ($projectPhoto == null) {
+                try{
+                    $amazonFileService->deleteFile($project->photo);
+                    $project->update(['photo' => null]);
+
+                }catch(Exception $error){
+                    report($error);
+                }
+            }
+
+            if($projectPhoto != null){
+                try{
+                    $amazonFileService->deleteFile($project->photo);
+                    $img = Image::make($projectPhoto->getPathname());
+                    $img->save($projectPhoto->getPathname());
+
+                    $amazonPath = $amazonFileService->uploadFile('uploads/user/' . Hashids::encode(
+                        auth()->user()->account_owner_id).'/public/project/'.Hashids::encode($project->id).'/main',$projectPhoto
+                    );
+
+                    $project->update(['photo' => $amazonPath]);
+
+                }catch(Exception $error) {
+                    report($error);
+                    return response()->json(['message' =>'Ocorreu um erro, tente novamente mais tarde'], 400);
+                }
+            }
+
+            $projectUpdate = $project->update($requestValidated);
             if (!$projectUpdate) {
                 return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
             }
 
-            try {
-                $projectPhoto = $request->file('photo');
-                if ($projectPhoto != null) {
-                    $amazonFileService->deleteFile($project->photo);
-                    $img = Image::make($projectPhoto->getPathname());
-                    if (
-                        !empty($requestValidated['photo_w']) && !empty($requestValidated['photo_h'])
-                        && !empty($requestValidated['photo_x1']) && !empty($requestValidated['photo_y1'])
-                    ) {
-                        $img->crop(
-                            $requestValidated['photo_w'],
-                            $requestValidated['photo_h'],
-                            $requestValidated['photo_x1'],
-                            $requestValidated['photo_y1']
-                        );
-                    }
-                    $img->resize(300, 300);
-                    $img->save($projectPhoto->getPathname());
-
-                    $amazonPath = $amazonFileService
-                        ->uploadFile(
-                            'uploads/user/' . Hashids::encode(
-                                auth()->user()->account_owner_id
-                            ) . '/public/projects/' . Hashids::encode($project->id) . '/main',
-                            $projectPhoto
-                        );
-                    $project->update(
-                        [
-                            'photo' => $amazonPath,
-                        ]
-                    );
-                }
-
-            } catch (Exception $e) {
-                report($e);
-
-                return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
-            }
-
-            //ATUALIZA STATUS E VALOR DA RECOBRANÇA POR FALTA DE SALDO
-            if (isset($projectChanges["discount_recovery_status"])) {
-                $project->update(
-                    [
-                        'discount_recovery_status' => $requestValidated['discount_recovery_status'],
-                        'discount_recovery_value' => $requestValidated['discount_recovery_value'],
-                    ]
-                );
-            } else {
-                $project->update(
-                    [
-                        'discount_recovery_status' => 0,
-                    ]
-                );
-            }
-
             return response()->json(['message' => 'Projeto atualizado!'], 200);
+
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
         }
     }
