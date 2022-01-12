@@ -346,7 +346,7 @@ $(function () {
                 selected_products.forEach(function(product) {
                     var index_product = selected_products.map(function(p) { return p.id; }).indexOf(product.id);
                     var plan = 0;
-                    if (selected_products[index_product].currency_type_enum) {
+                    if (type == 'edit' && selected_products[index_product].currency_type_enum) {
                         plan = plan_id;
                     }
 
