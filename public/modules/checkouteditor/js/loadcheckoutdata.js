@@ -179,75 +179,45 @@ $(() => {
                     "three-steps"
                 );
                 $("#checkout_editor .visual-content-left").addClass("unique");
-                $("#checkout_editor .visual-content-mobile").removeClass(
-                    "three-steps"
-                );
+                $("#checkout_editor .visual-content-mobile").removeClass("three-steps");
                 $("#checkout_editor .visual-content-mobile").addClass("unique");
                 $("#checkout_editor .steps-lines").slideUp("slow", "swing");
-                $(
-                    "#checkout_editor #finish_button_preview_desktop_visual"
-                ).slideUp("slow", "swing");
-                $(
-                    "#checkout_editor #finish_button_preview_mobile_visual"
-                ).slideUp("slow", "swing");
+                $("#checkout_editor #finish_button_preview_desktop_visual").slideUp("slow", "swing");
+                $("#checkout_editor #finish_button_preview_mobile_visual").slideUp("slow", "swing");
             }
 
             if (checkout.checkout_logo_enabled == 1) {
-                $("#checkout_editor #checkout_logo_enabled").prop(
-                    "checked",
-                    true
-                );
+                $("#checkout_editor #checkout_logo_enabled").prop("checked", true);
                 $("#checkout_editor #checkout_logo_enabled").prop("value", 1);
                 $("#checkout_editor .logo-content").show();
                 $("#checkout_editor .logo-mobile").show();
             } else {
-                $("#checkout_editor #checkout_logo_enabled").prop(
-                    "checked",
-                    false
-                );
+                $("#checkout_editor #checkout_logo_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_logo_enabled").prop("value", 0);
                 $("#checkout_editor .logo-content").hide();
                 $("#checkout_editor .logo-mobile").hide();
             }
 
             if (checkout.checkout_logo != "" || !checkout.checkout_logo) {
-                replacePreview(
-                    "checkout_logo",
-                    checkout.checkout_logo,
-                    "Image.jpg"
-                );
-                $("#logo_preview").attr("src", checkout.checkout_logo);
+                replacePreview("checkout_logo", checkout.checkout_logo, "Image.jpg");
+                $("#logo_preview_mobile").attr("src", checkout.checkout_logo);
+                $("#logo_preview_desktop").attr("src", checkout.checkout_logo);
             }
 
             if (checkout.checkout_banner != "" || !checkout.checkout_banner) {
-                replacePreview(
-                    "checkout_banner",
-                    checkout.checkout_banner,
-                    "Image.jpg"
-                );
-                $("#preview_banner_img_desktop").attr(
-                    "src",
-                    checkout.checkout_banner
-                );
-                $("#preview_banner_img_mobile").attr(
-                    "src",
-                    checkout.checkout_banner
-                );
+                replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
+                $("#preview_banner_img_desktop").attr("src", checkout.checkout_banner);
+                $("#preview_banner_img_mobile").attr("src", checkout.checkout_banner);
+                $('#logo_preview_desktop_div').addClass('has-banner');
             }
 
             if (checkout.checkout_banner_enabled) {
-                $("#checkout_editor #checkout_banner_enabled").prop(
-                    "checked",
-                    true
-                );
+                $("#checkout_editor #checkout_banner_enabled").prop("checked", true);
                 $("#checkout_editor #checkout_banner_enabled").prop("value", 1);
                 $("#checkout_editor .banner-top-content").show();
                 $("#checkout_editor .preview-banner").show();
             } else {
-                $("#checkout_editor #checkout_banner_enabled").prop(
-                    "checked",
-                    false
-                );
+                $("#checkout_editor #checkout_banner_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_banner_enabled").prop("value", 0);
                 $("#checkout_editor .banner-top-content").hide();
                 $("#checkout_editor .preview-banner").hide();
