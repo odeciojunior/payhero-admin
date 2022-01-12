@@ -25,71 +25,71 @@
   object-fit: cover;
 }
 
-.dropify-wrapper .dropify-message {
+#checkout_editor .dropify-wrapper .dropify-message {
   transform: none;
   top: auto;
 }
 
-.dropify-errors-container ul {
+#checkout_editor .dropify-errors-container ul {
   padding-left: 0;
   font-size: 10px;
   color: red;
   padding-top: 10px;
 }
 
-.dropify-errors-container li {
+#checkout_editor .dropify-errors-container li {
   list-style-type: none;
 }
 
-.dropify-infos-message::before,
-.dropify-filename span.dropify-filename-inner {
+#checkout_editor .dropify-infos-message::before,
+#checkout_editor .dropify-filename span.dropify-filename-inner {
   display: none;
 }
 
-.dropify-wrapper .dropify-message span.file-icon, p {
+#checkout_editor .dropify-wrapper .dropify-message span.file-icon p {
   color: #3B8CED;
 }
 
-.dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
+#checkout_editor .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
   white-space: normal;
 }
 
-.dropify-filename span.file-icon::before {
+#checkout_editor .dropify-filename span.file-icon::before {
   content: '\e800';
 }
 
-.dropify-filename span.file-icon {
+#checkout_editor .dropify-filename span.file-icon {
   font-family: dropify;
   display: inline;
   font-size: 4em;
 }
 
-.dropify-wrapper .dropify-clear {
+#checkout_editor .dropify-wrapper .dropify-clear {
 color: #0D2C54;
 border: 2px solid #3B8CED;
 }
 
-.dropify-wrapper .dropify-preview .dropify-infos {
+#checkout_editor .dropify-wrapper .dropify-preview .dropify-infos {
   background: #F8FDFFE6;
 }
 
-.dropify-wrapper:hover .dropify-preview .dropify-infos {
+#checkout_editor .dropify-wrapper:hover .dropify-preview .dropify-infos {
 opacity: .9;
 }
 
-.dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
+#checkout_editor .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
 line-height: 14px;
 color: #3B8CED;
 text-align: center;
 }
 
-.dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-infos-message {
+#checkout_editor .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-infos-message {
   margin-top: 0;
   padding-top: 8px;
 
 }
 
-.dropify-wrapper .dropify-clear {
+#checkout_editor .dropify-wrapper .dropify-clear {
   content: '';
   color: #3B8CED;
   border: 2px solid #3B8CED;
@@ -101,20 +101,20 @@ text-align: center;
 
 /* Upload Digital Product Input */
 
-.input-file-trigger::before {
+#checkout_editor .input-file-trigger::before {
   content: "\e800";
   font-family: dropify;
   font-size: 25px;
   margin-right: 10px;
 }
 
-#file_return,
-.input-file-trigger {
+#checkout_editor #file_return,
+#checkout_editor .input-file-trigger {
   font-size: 15px;
   font-weight: bold;
 }
 
-.input-file-trigger {
+#checkout_editor .input-file-trigger {
   color: #3B8CED;
   cursor: pointer;
   background-color: #F8FDFF;
@@ -123,14 +123,14 @@ text-align: center;
   align-items: center;
 }
 
-.input-file {
+#checkout_editor .input-file {
   display: none;
 }
 
-.div-expiration-time > .input-group {
+#checkout_editor .div-expiration-time > .input-group {
   width: 150px;
 }
 
-.o-arrow-right-1:before {
+#checkout_editor .o-arrow-right-1:before {
   transform: rotate(180deg);
 }
