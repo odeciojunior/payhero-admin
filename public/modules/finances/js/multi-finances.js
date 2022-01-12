@@ -270,7 +270,6 @@ $(document).ready(function(){
                                 }, 400)
                             });
 
-                            if(data.id == GETNET || data.id == GERENCIA_NET) {
                                 $(document).off("click","#new-withdrawal-" + data.name);
                                 $(document).on("click","#new-withdrawal-" + data.name,function(){
                                     let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
@@ -279,30 +278,17 @@ $(document).ready(function(){
                                         return;
                                     }
 
-                                    // if(withdrawalValue <= 5000){
-                                    //     alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
-                                    //     return;
-                                    // }
-
-                                    customWithdrawal(data.id);
-                                });
-                            } else {
-                                $(document).off("click","#new-withdrawal-" + data.name);
-                                $(document).on("click","#new-withdrawal-" + data.name,function(){
-                                    let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
-                                    if(withdrawalValue <= 0 || withdrawalValue == ''){
-                                        alertCustom('error', 'Valor do saque inválido!');
+                                    if(withdrawalValue < 5000){
+                                        alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
                                         return;
                                     }
 
-                                    // if(withdrawalValue <= 5000){
-                                    //     alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
-                                    //     return;
-                                    // }
-
-                                    defaultWithdrawal(data.id);
+                                    if(data.id == GETNET || data.id == GERENCIA_NET) {
+                                        customWithdrawal(data.id)
+                                    } else {
+                                        defaultWithdrawal(data.id);
+                                    }
                                 });
-                            }
                         }else{
                             $('#val-skeleton').hide();
                             $('#container_val').css({

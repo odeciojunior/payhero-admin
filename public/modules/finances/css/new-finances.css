@@ -240,27 +240,87 @@
 }
 
 .modal-title-withdrawal {
-    background-color: #2E85EC;
-    box-shadow: 0px 1px 15px #00000017;
-    border-radius: 20px 20px 0px 0px;
-    opacity: 1;
+    background: #2E85EC;
+    border-radius: 8px 8px 0 0;
+    padding: 16px;
+}
+.modal-title-withdrawal h3 {
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: bold;
+    color: #FFF
+}
+.modal-title-withdrawal.debit-pending {
+    background-color: #484848;
+}
+
+#text-title-debit-pending, #text-title-withdrawal-custom {
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: bold;
+    color: #747474;
+}
+
+#text-description-debit-pending, #text-description-withdrawal-custom {
+    font-size: 12px;
+    line-height: 15px;
+    color: #959595;
+    text-align: center;
+}
+#text-description-debit-pending {
+    border-bottom: 1px solid #EDEDED;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+#debit-items p{
+    font-size: 14px;
+    line-height: 18px;
+    color: #636363;
+    margin: 0;
+}
+#debit-items span {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.modal-content-style {
+    border-radius: 8px;
+}
+
+#modal-withdrawal-custom-footer {
+    border-top: 1px solid #EDEDED;
+    padding-top: 25px;
+    margin-top: 20px;
+}
+#modal-withdrawal-custom-footer .btn {
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: bold;
+    padding: 12px 24px;
+    border-radius: 8px;
+}
+
+#more-than-on-values-show .btn{
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 12px 24px;
+    border: 1px solid #959595;
+    color: #959595;
+}
+#more-than-on-values-show .btn.green, #more-than-on-values-show .btn:hover{
+    border-color: transparent;
+    color: #FFF;
 }
 
 .disableFields {
     background-color: #f3f7f9;
     opacity: 1;
 }
-
-.modal-content-style {
-    border-radius: 16px 16px 16px 16px;
-}
-
-.modal-title-withdrawal {
-    background: #2E85EC;
-    box-shadow: 0px 1px 15px #00000017;
-    border-radius: 16px 16px 0px 0px;
-}
-
 
 strong span {
     color: #57617c;
@@ -576,14 +636,6 @@ select, .select-pad {
 
     .text-xs-center {
         text-align: center !important;
-    }
-
-    .pl-0 {
-        padding-right: 5px
-    }
-
-    .pr-0 {
-        padding-left: 5px
     }
 
     .withdrawals-table, .transfersTable, .table {

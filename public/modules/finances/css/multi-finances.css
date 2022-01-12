@@ -562,28 +562,17 @@ input:checked + .slider::before {
     transition: 0.3s;
 }
 
-#text-description-debit-pending {
-    font-size: 12px;
-    color: #959595;
-    text-align: center;
-    margin: 20px 0;
-}
-
 #just-value-show{
     padding: 0;
 }
 
-#modal-withdrawal-custom-footer .btn {
-    padding: 12px;
-    font-weight: bold;
-}
 @media (max-width: 991px) {
     .new-title {
         margin-left: 0;
     }
     .badge {
         height: unset;
-        padding: 8px 16px;;
+        padding: 8px 16px;
         border: unset;
         -webkit-box-shadow: unset;
         box-shadow: unset;
