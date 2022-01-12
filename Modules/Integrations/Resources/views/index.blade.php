@@ -25,7 +25,7 @@
         </div>
         <div class="page-content container" id='page-integrates'>
             <div id="content-error" class='' style='display: none;'>
-                <div class="content-modal-error text-center" style="padding-top: 100px;">
+                <div class="content-modal-error text-center" style="padding-top: 20px;">
                     <img src="modules/global/img/image-empty-state.svg" width="260px" style="margin-bottom: 32px;" />
                     <h1 class="m-0" style="color: #636363; font-weight: normal; font-size: 24px; line-height: 30px;">Você ainda não cadastrou nenhuma integração!</h1>
                     <p class="m-0">Use nossa checkout API ou faça uma integração externa para sua loja.</p>

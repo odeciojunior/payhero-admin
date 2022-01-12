@@ -394,24 +394,6 @@ class TrackingService
 
     public function getResume($filters)
     {
-        $validSystemStatus = implode(
-            ',',
-            [
-                Tracking::SYSTEM_STATUS_VALID,
-                Tracking::SYSTEM_STATUS_CHECKED_MANUALLY
-            ]
-        );
-
-        $invalidSystemStatus = implode(
-            ',',
-            [
-                Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
-                Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
-                Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
-                Tracking::SYSTEM_STATUS_DUPLICATED
-            ]
-        );
-
         $productPlanSales = $this->getTrackingsQueryBuilder($filters)
             ->without(
                 [
@@ -423,11 +405,11 @@ class TrackingService
             ->leftJoin('trackings', 'products_plans_sales.id', '=', 'trackings.product_plan_sale_id')
             ->selectRaw(
                 "COUNT(*) as total,
-                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_POSTED . " AND trackings.system_status_enum IN ($validSystemStatus) THEN 1 ELSE 0 END) as posted,
-                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_DISPATCHED . " AND trackings.system_status_enum IN ($validSystemStatus) THEN 1 ELSE 0 END) as dispatched,
-                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_DELIVERED . " AND trackings.system_status_enum IN ($validSystemStatus) THEN 1 ELSE 0 END) as delivered,
-                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_OUT_FOR_DELIVERY . " AND trackings.system_status_enum IN ($validSystemStatus) THEN 1 ELSE 0 END) as out_for_delivery,
-                                SUM(CASE WHEN trackings.system_status_enum IN ($invalidSystemStatus) THEN 1 ELSE 0 END) as exception,
+                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_POSTED . " THEN 1 ELSE 0 END) as posted,
+                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_DISPATCHED . " THEN 1 ELSE 0 END) as dispatched,
+                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_DELIVERED . " THEN 1 ELSE 0 END) as delivered,
+                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_OUT_FOR_DELIVERY . " THEN 1 ELSE 0 END) as out_for_delivery,
+                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_EXCEPTION . " THEN 1 ELSE 0 END) as exception,
                                 SUM(CASE WHEN trackings.tracking_status_enum is null THEN 1 ELSE 0 END) as unknown"
             )
             ->first();
