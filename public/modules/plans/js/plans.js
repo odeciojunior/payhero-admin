@@ -1813,7 +1813,7 @@ $(function () {
     });
 
     // Update Table Plan
-    function index(page = 1) {
+    function index(page = 0) {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         pageCurrent = link;
 
@@ -1821,11 +1821,11 @@ $(function () {
         if (link == null) {
             link = '/api/project/' + projectId + '/plans';
         } else {
-            link = '/api/project/' + projectId + '/plans' + link;
-        }
-
-        if (page > 1) {
-            link = '/api/project/' + projectId + '/plans?page=' + page + '&plan=';
+            if (page > 0) {
+                link = '/api/project/' + projectId + '/plans?page=' + page + '&plan=';
+            } else {
+                link = '/api/project/' + projectId + '/plans' + link;
+            }
         }
 
         $.ajax({
