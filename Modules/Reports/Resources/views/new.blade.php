@@ -34,7 +34,7 @@
                                         <input id="date-filter" type="text" name="daterange" class="input-pad text-center pr-30 font-size-14 ml-5" style="width: 92%" value="" readonly>
                                     </div>
                                 </div>
-                                <div class="box-export col-lg-2">
+                                <div class="box-export col-lg-12 col-xl-2">
                                     <a href="" class="grey lk-export">
                                         <i class="o-download-cloud-1 mr-2"></i>
                                         Exportar dados
@@ -46,13 +46,14 @@
                 </div>
             </div>
         </div>
-        <div style="border: 1px solid red; overflow: hidden;" id="project-not-empty" style="display: none">
+        <div style="overflow: hidden;" id="project-not-empty" style="display: none">
 
-            <section class="container box-reports" style="border: 1px solid">
+            <section class="container box-reports" id="reports-content">
 				<div class="row">
 					<div class="col-12">
+						<!-- /FINANCE -->	
 						<div class="row">
-							<header class="header-reports">
+							<header class="header-reports container">
 								<h3 class="title-reports">
 									<a href="" class="lk-reports grey">
 										<span class="box-title ico-finance">financeiro</span>
@@ -61,10 +62,39 @@
 								</h3>
 								<a href="" class="box-link">Financeiro</a>
 							</header>
+                            <div class="container pad-right-0">
+                                <div id="reports-content" class="">
+                                    <div class='container col-sm-12 mt-20 d-lg-block'>
+										<div class="row cards-reports">
+											<div class="card">
+												<div class="card-body">
+													<h6 class="font-size-16 gray-700"> Comissão </h6>
+													<h4 id='revenue-generated' class="font-size-16 gray-1">0</h4>
+													<div class="new-graph"></div>
+												</div>
+											</div>
+											<div class="card ">
+												<div class="card-body">
+													<h6 class="font-size-16 gray-700"> Pendentes </h6>
+													<h4 id='qtd-pending' class="font-size-24 bold">0</h4>
+												</div>
+											</div>
+											<div class="card">
+												<div class="card-body">
+													<h6 class="font-size-16 gray-700"> Cashback </h6>
+													<h4 id='qtd-aproved' class="font-size-24 bold">0</h4>
+												</div>
+											</div>
+										</div>
+                                    </div>
+                                </div>
+                            </div>
 						</div>
-
+						<!-- /FINANCE -->
+						
+						<!-- SELL -->
 						<div class="row">
-							<header class="header-reports">
+							<header class="header-reports container">
 								<h3 class="title-reports">
 									<a href="" class="lk-reports grey">
 										<span class="box-title ico-sell">vendas</span>
@@ -73,10 +103,38 @@
 								</h3>
 								<a href="" class="box-link">Vendas</a>
 							</header>
+							<div class="container pad-right-0">
+                                <div id="reports-content" class="">
+                                    <div class='container col-sm-12 mt-20 d-lg-block'>
+										<div class="row cards-reports">
+											<div class="card">
+												<div class="card-body">
+													<h6 class="font-size-16 gray-700"> Vendas realizadas </h6>
+													<h4 id='qtd-canceled' class=" font-size-24 bold">0</h4>
+												</div>
+											</div>
+											<div class="card ">
+												<div class="card-body">
+													<h6 class="font-size-16 gray-700"> Meios de pagamento </h6>
+													<h4 id='qtd-recusadas' class=" font-size-24 bold">0</h4>
+												</div>
+											</div>
+											<div class="card">
+												<div class="card-body">
+													<h6 class="font-size-16 gray-700"> Produtos </h6>
+													<h4 id='qtd-reembolso' class=" font-size-24 bold">0</h4>
+												</div>
+											</div>
+										</div>
+                                    </div>
+                                </div>
+                            </div>
 						</div>
+						<!-- /SELL -->
 
+						<!-- MARKETING -->
 						<div class="row">
-							<header class="header-reports">
+							<header class="header-reports container">
 								<h3 class="title-reports">
 									<a href="" class="lk-reports grey">
 										<span class="box-title ico-mkt">Marketing</span>
@@ -85,40 +143,103 @@
 								</h3>
 								<a href="" class="box-link">Financeiro</a>
 							</header>
+							<div class="container pad-right-0">
+                                <div id="reports-content" class="">
+                                    <div class='container col-sm-12 mt-20 d-lg-block'>
+										<div class="row cards-reports">
+											<div class="card">
+												<div class="card-body">
+													<h6 class="font-size-16 gray-700"> Cupons </h6>
+													<h4 id='qtd-dispute' class=" font-size-24 bold">0</h4>
+												</div>
+											</div>
+											<div class="card">
+												<div class="card-body">
+													<h6 class="font-size-16 gray-700"> Regiões </h6>
+													<h4 id='qtd-chargeback' class=" font-size-24 bold">0</h4>
+												</div>
+											</div>
+											<div class="card ">
+												<div class="card-body">
+													<div class="row">
+														<header class="col-8">
+															<h6 class="font-size-16 gray-700"> Origens </h6>
+														</header>
+														<div class="col-4">
+															<select class="form-control float-right" id='origin'>
+																<option selected value="src">SRC</option>
+																<option value="utm_source">UTM Source</option>
+																<option value="utm_medium">UTM Medium</option>
+																<option value="utm_campaign">UTM Campaign</option>
+																<option value="utm_term">UTM Term</option>
+																<option value="utm_content">UTM Content</option>
+															</select>
+														</div>
+													</div>
+													<div class="row">
+														<div class="data-holder">
+															<div class="row">
+																<div class="col-12">
+																	<table class="table-vendas table table-striped "
+																		style="width:100%;margin: auto; margin-top:15px">
+																		<tbody id="origins-table">
+																			{{-- js carrega... --}}
+																		</tbody>
+																	</table>
+																</div>
+															</div>
+															<br/>
+														</div>
+														<div class="row">
+															<div class="col-11">
+																<ul id="pagination-origins" class="pagination-sm float-right margin-chat-pagination"
+																	style="margin-top:10px; margin-left: 5%">
+																	{{-- js carrega... --}}
+																</ul>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+                                    </div>
+                                </div>
+                            </div>
 						</div>
+						<!-- /MARKETING -->
 					</div>
 				</div>
             </section>
 
-            <div id="reports-content" class="page-content container">
+            <div id="reports-content" class="page-content container" style="display: none">
                 <div class='container col-sm-12 mt-20 d-lg-block'>
                     <div class='row'>
-                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                        <!-- <div class="col-md-3 col-sm-6 col-xs-12 card">
                             <div class="card-body">
                                 <h6 class="font-size-14 gray-600"> Receita gerada </h6>
                                 <h4 id='revenue-generated'>0</h4>
                             </div>
                             <div class="s-border-right yellow"></div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                        </div> -->
+                        <!-- <div class="col-md-3 col-sm-6 col-xs-12 card">
                             <div class="card-body">
                                 <h6 class="font-size-14 gray-600"> Aprovadas </h6>
                                 <h4 id='qtd-aproved' class=" font-size-30 bold">0</h4>
                             </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                        </div> -->
+                        <!-- <div class="col-md-3 col-sm-6 col-xs-12 card">
                             <div class="card-body">
                                 <h6 class="font-size-14 gray-600"> Pendentes </h6>
                                 <h4 id='qtd-pending' class=" font-size-30 bold">0</h4>
                             </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                        </div> -->
+                        <!-- <div class="col-md-3 col-sm-6 col-xs-12 card">
                             <div class="card-body">
                                 <h6 class="font-size-14 gray-600"> Canceladas </h6>
                                 <h4 id='qtd-canceled' class=" font-size-30 bold">0</h4>
                             </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12 card">
+                        </div> -->
+                        <!-- <div class="col-md-3 col-sm-6 col-xs-12 card">
                             <div class="card-body">
                                 <h6 class="font-size-14 gray-600"> Recusadas </h6>
                                 <h4 id='qtd-recusadas' class=" font-size-30 bold">0</h4>
@@ -141,7 +262,7 @@
                                 <h6 class="font-size-14 gray-600"> Em disputa </h6>
                                 <h4 id='qtd-dispute' class=" font-size-30 bold">0</h4>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="row justify-content-between mt-20">
@@ -233,7 +354,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 gutter_top">
+                    <div class="col-lg-4 gutter_top" style="display: none">
                         <div class="card shadow">
                             <div class="card-header s-card-header">
                                 <h4> Dispositivos </h4>
@@ -268,7 +389,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 gutter_top">
+                    <div class="col-lg-4 gutter_top" style="display: none">
                         <div class="card shadow">
                             <div class="card-header s-card-header">
                                 <h4> Conversão </h4>
@@ -338,7 +459,7 @@
                             <div class="list-linear-gradient-bottom"></div>
                         </div>
                     </div>
-                    <div class="col-lg-4 gutter_top">
+                    <div class="col-lg-4 gutter_top" style="display: none">
                         <div class="card shadow">
                             <div class="card-header s-card-header">
                                 <h4> Meios de Pagamento </h4>
@@ -408,7 +529,7 @@
                             <div class="list-linear-gradient-bottom"></div>
                         </div>
                     </div>
-                    <div class='col-lg-8'>
+                    <div class='col-lg-8' style="display: none">
                         <div class="card shadow ">
                             <div class="card-header s-card-header">
                                 <h4> Mais Vendidos </h4>
@@ -426,7 +547,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class='col-lg-4'>
+                    <div class='col-lg-4' style="display: none">
                         <div class='card shadow'>
                             <div class='card-header s-card-header'>
                                 <h4>Ticket Médio</h4>
@@ -448,7 +569,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12 mt-10">
+                    <div class="col-lg-12 mt-10" style="display: none">
                         <div class="card shadow">
                             <div class="card-header s-card-header">
                                 <div class="row">
