@@ -59,9 +59,10 @@ function stringToMoney(string, currency = 'BRL') {
     return value.toLocaleString('pt-br', { style: 'currency', currency: currency });
 }
 
-function scrollCustom(div) {
+function scrollCustom(div, padding = false) {
     var scroll = 0;
     var scrollDiv = 0;
+    var valuePadding = 0;
 
     $(div).css('padding-right', '12px');
     $(div).append('<div class="scrollbox"></div>');
@@ -69,8 +70,12 @@ function scrollCustom(div) {
 
     $(div).on('wheel', function(event) {
         if(event.originalEvent.deltaY !== 0) {
-            var heightDivScroll = $(div).height();
-            var heightDivScrollTotal = $(div).children(":first").height();
+            if (padding == true) {
+                valuePadding = 40;
+            }
+
+            var heightDivScroll = $(div).height() + valuePadding;
+            var heightDivScrollTotal = $(div).children(":first").height() + valuePadding;
 
             var heightCalculateScroll = ((heightDivScroll - 60) / 60) * 2;
             var heightCalculateTotal = ((heightDivScrollTotal - heightDivScroll) / 60) * 2;

@@ -558,12 +558,17 @@ $(function () {
         $(modal).find('.product-photo').unbind('load');
 
         $(modal).find('.modal-body').css('height', 'auto');
+        $(modal).find('.informations-data').attr('style', 'height: auto !important');
 
         $(modal).find('#tab-customizations').removeClass('show active').addClass('disabled');
         $(modal).find('#tab-general-data').addClass('show active');
 
         $(modal).find('.nav-tabs-horizontal').css('display', 'block');
         $(modal).find('#tab-general-data_panel').removeClass('show active');
+
+        $(modal + ' .modal-body').off('wheel');
+        $(modal).find('.scrollbox').remove();
+        $(modal).find('.scrollbox-bar').remove();
 
         $(modal).find('.products-data').css('height', '74px');
 
@@ -1407,6 +1412,11 @@ $(function () {
 
         var modal = '#modal_edit_plan';
 
+        $(modal).find('#btn-cancel-update-informations-plan').trigger('click').promise().done(function() {
+            $(modal).find('.informations-data').stop(true, true).css('height', '');
+            $(modal).find('.height-auto').stop(true, true).css('margin-top', '');
+        });
+
         $(modal).attr('data-backdrop', 'static');
         $(modal).modal('show');
 
@@ -1464,6 +1474,9 @@ $(function () {
                 parent.find('#name').val(name);
                 parent.find('#price').val(price.replace('R$', ''));
                 parent.find('#description').val(description);
+
+                $('#modal_edit_plan .modal-body').css('overflow', 'hidden');
+                scrollCustom('#modal_edit_plan .modal-body', true);
             }, 0);
         }
     });
@@ -1492,6 +1505,10 @@ $(function () {
         $(this).parents('.buttons-update').remove().promise().done(function() {
             var autoHeight = parents.find('.informations-data').css('height', 'auto').height();
             parents.find('.informations-data').height(curHeight).animate({ height: autoHeight }, 300);
+
+            $('#modal_edit_plan .modal-body').off('wheel');
+            $('#modal_edit_plan').find('.scrollbox').remove();
+            $('#modal_edit_plan').find('.scrollbox-bar').remove();
         });
     });
 
