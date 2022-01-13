@@ -1509,6 +1509,8 @@ $(function () {
             $('#modal_edit_plan .modal-body').off('wheel');
             $('#modal_edit_plan').find('.scrollbox').remove();
             $('#modal_edit_plan').find('.scrollbox-bar').remove();
+
+            $('#modal_edit_plan').find('.height-auto').stop(true, true).animate({ 'margin-top': 0 }, 300);
         });
     });
 
