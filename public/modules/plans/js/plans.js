@@ -201,6 +201,8 @@ $(function () {
 
         var find_stage = type == 'create' ? '#stage1' : '#stage2';
 
+        removeProductArraySelecteds(modal);
+
         if (type == 'edit') {
             $(modal).find('.nav-tabs-horizontal').css('display', 'none');
 
@@ -286,8 +288,6 @@ $(function () {
                         }
 
                         if (type == 'edit') {
-                            $(modal).find('.box-breadcrumbs').find('.title span').html(' ' + products_plan.length + (products_plan.length > 1 ? ' produtos' : ' produto'));
-
                             var appendProductsPlan = '<div class="d-flex">';
                             products_plan.forEach(function(product) {
                                 appendProductsPlan += '<div class="background-photo" data-toggle="tooltip" data-placement="top"  title="' + product.product_name + '">';
