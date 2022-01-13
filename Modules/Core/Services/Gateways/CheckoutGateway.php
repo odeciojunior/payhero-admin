@@ -135,6 +135,15 @@ class CheckoutGateway extends GatewayAbstract
         ]);
         return json_decode($this->requestHttp($options));
     }
+    
+    public function getReceivablesReserves($companyId,$filters){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'getReceivablesReserves',  
+            'data' => $filters,
+            'variables'=>[$companyId]             
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
 
     public function setBaseUrl($newUrl){
         $this->baseUrl = $newUrl;
@@ -193,7 +202,12 @@ class CheckoutGateway extends GatewayAbstract
             "getPaymentInfo"=>[
                 "route" => "payment/info/:saleId",
                 "method" => "GET"
+            ],
+            "getReceivablesReserves"=>[
+                "route" => "withdrawal/asaas/receivables-reserves/:companyId",
+                "method" => "POST"
             ]
+            
         ];
     }
 

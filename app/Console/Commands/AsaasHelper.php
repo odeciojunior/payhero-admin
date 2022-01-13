@@ -45,7 +45,8 @@ class AsaasHelper extends Command
         $this->comment("[4] Company Balance");
         $this->comment("[5] Cloudfox Balance");
         $this->comment("[6] Company Anticipation");
-        $this->comment("[7] Company Anticipations");        
+        $this->comment("[7] Company Anticipations");   
+        $this->comment('[8] Company Receivables Reserves');
         $this->comment("[0] Sair");
         $this->comment("===========================");
         $this->comment("[2964,3442] - João, Dani");
@@ -76,7 +77,9 @@ class AsaasHelper extends Command
             case 7:
                 $this->getCompanyAntipations();
             break;
-            
+            case 8:
+                $this->getReceivablesReserves();
+            break;
             case 0:  
                 $this->info('Bye!');              
                 exit;
@@ -120,4 +123,17 @@ class AsaasHelper extends Command
         
         VarDumper::dump($this->api->getAnticipationsAsaas($companyId)??[]);
     }   
+
+    public function getReceivablesReserves(){
+        $companyId = $this->anticipate('Informe CompanyId', ['2964', '3442']);
+        $filters = [
+            'startDate'=>'2021-11-01',
+            'finishDate'=>now(),            
+        ];
+        $response = $this->api->getReceivablesReserves($companyId,$filters);
+        
+        VarDumper::dump($response->total);
+        
+    }
+
 }
