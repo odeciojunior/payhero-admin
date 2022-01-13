@@ -425,7 +425,7 @@ class ProductsApiController extends Controller
                         ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
                 }
             } else {
-                $products->whereNull('shopify_variant_id');
+                $products->where('shopify', 0)->whereNull('shopify_variant_id');
             }
 
             if (!empty($data['search'])) {
