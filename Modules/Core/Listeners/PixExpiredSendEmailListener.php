@@ -41,7 +41,7 @@ class PixExpiredSendEmailListener implements ShouldQueue
     {
         try {
             $sale = $event->sale;
-            if ($sale->api) {
+            if ($sale->api_flag) {
                 return;
             }
 
