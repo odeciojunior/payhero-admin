@@ -288,11 +288,24 @@ $(function () {
                         }
 
                         if (type == 'edit') {
+                            products_plan.map(function(p) {
+                                var index = selected_products.map(function(s) { return s.id; }).indexOf(p.product_id);
+                                if (index > -1) {
+                                    selected_products[index]['name'] = p.product_name;
+                                    selected_products[index]['photo'] = p.photo;
+                                }
+                            });
+
+                            console.log(selected_products);
+
                             var appendProductsPlan = '<div class="d-flex">';
-                            products_plan.forEach(function(product) {
-                                appendProductsPlan += '<div class="background-photo" data-toggle="tooltip" data-placement="top"  title="' + product.product_name + '">';
-                                    appendProductsPlan += '<img class="product-photo" src="' + product.photo + '">';
-                                appendProductsPlan += '</div>';
+                            selected_products.forEach(function(product) {
+                                var index = selected_products.map(function(p) { return p.id; }).indexOf(product.id);
+                                if (index > -1) {
+                                    appendProductsPlan += '<div class="background-photo" data-toggle="tooltip" data-placement="top" data-id="' + product.id + '" title="' + product.name + '">';
+                                        appendProductsPlan += '<img class="product-photo" src="' + product.photo + '">';
+                                    appendProductsPlan += '</div>';
+                                }
                             });
                             appendProductsPlan += '</div>';
 
@@ -1189,7 +1202,17 @@ $(function () {
                     $(this).find('.check').append('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
                     selected_products.push({'id': product_id});
 
-                    removeProductArraySelecteds(modal);
+                    if (tabID == 'tabs-modal-edit-plans' && stageID == 'stage2') {
+                        var title = $(box_product).attr('data-original-title');
+                        var image = $(box_product).find('img').attr('src');
+                        $(modal).find('.box-photos-products').find('.d-flex').append(
+                            '<div class="background-photo" data-toggle="tooltip" data-placement="top" data-id="' + product_id + '" title="' + title + '">'+
+                                '<img class="product-photo" src="' + image + '">'+
+                            '</div>'
+                        );
+                    }
+
+                    removeProductArraySelecteds(modal, product_id);
                 } else {
                     if (tabID == 'tabs-modal-create-plans' && stageID == 'stage1') {
                         $(box_product).removeClass('selected');
@@ -1221,7 +1244,9 @@ $(function () {
                                     var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
                                     selected_products.splice(index_selected_products, 1);
 
-                                    removeProductArraySelecteds(modal);
+                                    $(modal).find('.box-photos-products').find('.d-flex').find('[data-id="' + product_id + '"]').remove();
+
+                                    removeProductArraySelecteds(modal, product_id);
                                 } else {
                                     alertCustom('error', 'Não é possível remover o produto, possui vendas associadas a este plano.')
                                 }
