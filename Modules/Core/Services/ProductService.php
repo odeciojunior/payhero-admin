@@ -34,7 +34,7 @@ class ProductService
         if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
             $productModel->where('project_id', $projectId);
         } else {
-            $productModel->where('shopify', 0);
+            $productModel->where('shopify', 0)->whereNull('shopify_variant_id');
         }
 
         return $productModel
@@ -54,7 +54,7 @@ class ProductService
         if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
             $productModel->where('project_id', $projectId);
         } else {
-            $productModel->where('shopify', 0);
+            $productModel->where('shopify', 0)->whereNull('shopify_variant_id');
         }
 
         if (!empty($product)) {
@@ -90,7 +90,7 @@ class ProductService
         if (!empty($projectId) && !empty($project->shopify_id) || !empty($project->woocommerce_id)) {
             $productModel->where('project_id', $projectId);
         } else {
-            $productModel->where('shopify', 0);
+            $productModel->where('shopify', 0)->whereNull('shopify_variant_id');
         }
 
         if (!empty($product)) {
