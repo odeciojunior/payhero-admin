@@ -1620,7 +1620,7 @@ input[type="checkbox"], input[type="radio"] {
 .modal-new-layout .switch-holder label {
     margin-left: 15px;
     margin-bottom: 0;
-    color: #636363;
+    color: #8B8B8B;
     font-weight: bold;
     line-height: 26px;
 }
@@ -1923,12 +1923,12 @@ tbody td{
 }
 
 #table-plans > tbody > tr:nth-child(2n+2) > td,
-#table-plans > tbody > tr:nth-child(2n+2) > th,
-#table-plans thead > tr > td,
-#table-plans thead > tr > th {
+#table-plans > tbody > tr:nth-child(2n+2) > th {
     background-color: #FBFBFB !important;
 }
-#table-plans thead > tr > td {
+#table-plans thead > tr > td,
+#table-plans thead > tr > th {
+    background-color: #FFFFFF !important;
     border-top: 1px solid #EDEDED !important;
     border-bottom: 1px solid #EDEDED !important;
 }

@@ -1178,6 +1178,8 @@ $(function () {
         var tabID = $(this).parents('.tab-content').attr('id');
         var stageID = $(this).parents('.tab-pane').attr('id');
 
+        var modal = '#' + $(this).parents('.modal').attr('id');
+
         if ($(this).hasClass('review')) {
             alertCustom('error', 'Não é possível selecionar este produto.')
         } else {
@@ -1186,12 +1188,16 @@ $(function () {
                     $(this).addClass('selected');
                     $(this).find('.check').append('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
                     selected_products.push({'id': product_id});
+
+                    removeProductArraySelecteds(modal);
                 } else {
                     if (tabID == 'tabs-modal-create-plans' && stageID == 'stage1') {
                         $(box_product).removeClass('selected');
                         $(box_product).find('.check img').remove();
                         var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
                         selected_products.splice(index_selected_products, 1);
+
+                        removeProductArraySelecteds(modal);
                     } else {
                         $.ajax({
                             method: "POST",
@@ -1214,6 +1220,8 @@ $(function () {
                                     $(box_product).find('.check img').remove();
                                     var index_selected_products = selected_products.map(function(e) { return e.id; }).indexOf(product_id);
                                     selected_products.splice(index_selected_products, 1);
+
+                                    removeProductArraySelecteds(modal);
                                 } else {
                                     alertCustom('error', 'Não é possível remover o produto, possui vendas associadas a este plano.')
                                 }
@@ -1223,15 +1231,25 @@ $(function () {
                 }
             }
         }
-
-        if (selected_products.length > 0) {
-            $('.box-description').find('.selecteds span').html(selected_products.length);
-            $('.box-description').find('.selecteds').css('display', 'block');
-        } else {
-            $('.box-description').find('.selecteds span').html('');
-            $('.box-description').find('.selecteds').css('display', 'none');
-        }
     });
+
+    function removeProductArraySelecteds(modal) {
+        if (selected_products.length > 0) {
+            if (modal == '#modal_add_plan') {
+                $(modal).find('.box-description').find('.selecteds span').html(selected_products.length);
+                $(modal).find('.box-description').find('.selecteds').css('display', 'block');
+            } else {
+                $(modal).find('#stage2').find('.box-breadcrumbs').find('.title span').html(' ' + selected_products.length + (selected_products.length > 1 ? ' produtos' : ' produto'));
+            }
+        } else {
+            if (modal == '#modal_add_plan') {
+                $(modal).find('.box-description').find('.selecteds span').html('');
+                $(modal).find('.box-description').find('.selecteds').css('display', 'none');
+            } else {
+                $(modal).find('#stage2').find('.box-breadcrumbs').find('.title span').html(' 0 produtos');
+            }
+        }
+    }
 
     // Remove products
     $('body').on('click', '.box-products .div-photo', function() {
@@ -1380,18 +1398,6 @@ $(function () {
         $(modal).modal('show');
 
         getProducts(modal, 'create');
-    });
-
-    // Check cost currency type
-    $('#check-custom').on('click', '.check', function() {
-        var check = $(this);
-        if (!check.attr('checked')) {
-            check.attr('checked', true).css({ 'background': '#2E85EC', 'border-color': '#2E85EC'}).html('<img src="/modules/global/img/icon-check.svg" />');
-            $('#cost_currency_type_all_plans').val(1);
-        } else {
-            check.attr('checked', false).css({ 'background': '#fff', 'border-color': '#9B9B9B'}).html('');
-            $('#cost_currency_type_all_plans').val(0);
-        }
     });
 
     // Copy link plan
@@ -2262,8 +2268,9 @@ $(function () {
         var modal = '#modal_config_cost_plan';
 
         $('#check-custom').hide();
-        $('#check-custom').find('.check').attr('checked', false).css({ 'background': '#fff', 'border-color': '#9B9B9B' }).html('');
-        $('#cost_currency_type_all_plans').val(0);
+        if ($('#cost_currency_type_all_plans').val() == 1) {
+            $('#check-custom').find('.switch').trigger('click');
+        }
 
         $(modal).find('#cost_plan').val('');
         $(modal).find('#search-plan').val('');

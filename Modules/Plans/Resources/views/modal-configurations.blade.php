@@ -61,12 +61,14 @@
                                 </div>
                             </div>
 
-                            <div id="check-custom" style="margin-top: 28px; margin-bottom: 1.429rem; display: none;">
-                                <div class="d-flex align-items-center check-custom">
-                                    <div class="check" style="text-align: center; line-height: 25px; cursor: pointer; margin-right: 11px; width: 31px; height: 31px; border: 1px solid #9B9B9B; border-radius: 8px;"></div>
-                                    <div style="font-weight: normal; font-size: 16px; line-height: 20px; color: #494949">Alterar a moeda em todos os planos do projeto</div>
+                            <div id="check-custom" style="margin-bottom: 1.429rem; display: none;">
+                                <div class="switch-holder d-flex">
+                                    <label class="switch">
+                                        <input type="checkbox" id="cost_currency_type_all_plans" name="cost_currency_type_all_plans" class="check" value="0">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label for="product_amount_selector" style="margin: 0;">Alterar a moeda em todos os planos do projeto</label>
                                 </div>
-                                <input type="hidden" name="cost_currency_type_all_plans" id="cost_currency_type_all_plans" value="0">
                             </div>
                         </div>
 
