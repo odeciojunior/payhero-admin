@@ -265,98 +265,38 @@ class WithdrawalsApiController
     public function getAccountInformation(Request $request): JsonResponse
     {
         try {
-            $companyModel = new Company();
+            $userService = new UserService();
+            $companyService = new CompanyService();
 
             $data = $request->all();
 
-            $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+            $company = Company::find(current(Hashids::decode($data['company_id'])));
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
             }
 
-            $bankService = new BankService();
-            $userModel = new User();
-            $companyService = new CompanyService();
-
-            $user = $userModel->where('id', auth()->user()->account_owner_id)->first();
-
-            if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved')
-                || $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')
-            ) {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data' => [
-                            'user_documents_status' => 'pending',
-                            'route' => env('ACCOUNT_FRONT_URL') . "/personal-info"
-                        ],
-                    ]
-                );
-            }
-
-            if (!$user->email_verified) {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data' => [
-                            'email_verified' => 'false',
-                            'route' => env('ACCOUNT_FRONT_URL') . "/personal-info"
-                        ],
-                    ]
-                );
-            }
-
-            if (!$user->cellphone_verified) {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data' => [
-                            'cellphone_verified' => 'false',
-                            'route' => env('ACCOUNT_FRONT_URL') . "/personal-info"
-                        ],
-                    ],
-                );
-            }
-
-            if (!$companyService->isDocumentValidated($company->id)) {
-                return response()->json(
-                    [
-                        'message' => 'success',
-                        'data' => [
-                            'documents_status' => 'pending',
-                            'route' => env('ACCOUNT_FRONT_URL') . "/companies/company-detail/" . \hashids()->encode($company->id)
-                        ],
-                    ]
-                );
-            }
-
-            $iofValue = 0;
-            $iofTax = 0.38;
-
-            $currency = $companyService->getCurrency($company);
-            $currentQuotation = 0;
-
-            return response()->json(
-                [
-                    'message' => 'success',
+            if (!$userService->haveAnyDocumentPending()) {
+                return response()->json([
                     'data' => [
-                        'documents_status' => 'approved',
-                        'bank' => $bankService->getBankName($company->bank),
-                        'account' => $company->account,
-                        'account_digit' => $company->account_digit,
-                        'agency' => $company->agency,
-                        'agency_digit' => $company->agency_digit,
-                        'document' => $company->document,
-                        'currency' => $currency,
-                        'quotation' => $currentQuotation,
-                        'iof' => [
-                            'tax' => $iofTax,
-                            'value' => number_format(intval($iofValue) / 100, 2, ',', '.'),
-                        ],
+                        'user_pending' => true,
+                        'route' => env('ACCOUNT_FRONT_URL') . "/personal-info"
                     ],
-                ],
-                200
-            );
+                ]);
+            }
+
+            if (!$companyService->haveAnyDocumentPending()) {
+                return response()->json([
+                    'data' => [
+                        'company_pending' => true,
+                        'route' => env('ACCOUNT_FRONT_URL') . "/companies/company-detail/" . \hashids()->encode($company->id)
+                    ],
+                ]);
+            }
+
+            return response()->json([
+                'message' => 'Sem documentos pendentes',
+                'data' => []
+            ]);
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 403);

@@ -272,17 +272,6 @@ $(document).ready(function(){
 
                                 $(document).off("click","#new-withdrawal-" + data.name);
                                 $(document).on("click","#new-withdrawal-" + data.name,function(){
-                                    let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
-                                    if(withdrawalValue <= 0 || withdrawalValue == ''){
-                                        alertCustom('error', 'Valor do saque inválido!');
-                                        return;
-                                    }
-
-                                    if(withdrawalValue < 5000){
-                                        alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
-                                        return;
-                                    }
-
                                     if(data.id == GETNET || data.id == GERENCIA_NET) {
                                         customWithdrawal(data.id)
                                     } else {

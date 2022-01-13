@@ -27,8 +27,8 @@ class CieloService implements Statement
 
     public function __construct()
     {
-        $this->gatewayIds = [ 
-            Gateway::CIELO_PRODUCTION_ID, 
+        $this->gatewayIds = [
+            Gateway::CIELO_PRODUCTION_ID,
             Gateway::CIELO_SANDBOX_ID ,
             // extrato cielo engloba as vendas antigas zoop e pagarme
             Gateway::PAGARME_PRODUCTION_ID,
@@ -104,7 +104,7 @@ class CieloService implements Statement
 
     public function getPendingDebtBalance() : int
     {
-        return 0;    
+        return 0;
     }
 
     public function hasEnoughBalanceToRefund(Sale $sale): bool
@@ -142,7 +142,7 @@ class CieloService implements Statement
         return true;
     }
 
-    public function createWithdrawal($withdrawalValue): bool
+    public function createWithdrawal($withdrawalValue)
     {
         try {
             DB::beginTransaction();
@@ -188,7 +188,7 @@ class CieloService implements Statement
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            return false;                
+            return false;
         }
 
         return $withdrawal;
@@ -216,7 +216,7 @@ class CieloService implements Statement
 
             if (!empty($saleId)) {
                 $transactions->where('sale_id', $saleId);
-            }            
+            }
 
             foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;

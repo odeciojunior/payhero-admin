@@ -1,189 +1,373 @@
-$('#bt-withdrawal').on('click', function () {
+$('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
 
     let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '');
     let toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '');
     let availableBalance = parseInt(availableBalanceText);
     let toTransfer = parseFloat(toTransferText);
 
-    if (toTransfer > availableBalance) {
+    if (!verifyWithdrawalIsValid(toTransfer, availableBalance)) {
+        return;
+    }
 
-        alertCustom('error', 'O valor requerido ultrapassa o limite disponivel');
-        toTransferText = $('#custom-input-addon').val();
-        toTransfer = toTransferText.slice(0, -2);
-        $('#custom-input-addon').val('');
-        $('.withdrawal-value').maskMoney({thousands: '.', decimal: ',', allowZero: true});
+    $("#bt-withdrawal, #bt-withdrawal_m").attr("disabled", "disabled");
 
-    } else if ($('#custom-input-addon').val() == '') {
-        alertCustom('error', 'Valor do saque inválido!');
+    $.ajax({
+        url: "/api/withdrawals/getaccountinformation",
+        type: "POST",
+        dataType: "json",
+        data: {
+            company_id: $("#transfers_company_select").val(),
+            gateway_id: window.gatewayCode,
+            withdrawal_value: $("#custom-input-addon").val(),
+        },
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: (response) => {
+            errorAjaxResponse(response);
+        },
+        success: (response) => {
+            if (response.data.user_pending === true || response.data.company_pending === true) {
+                modalDocsPending(response.data)
+            } else {
+                dataWithdrawal = {
+                    bigger_value: toTransfer,
+                    lower_value: 0,
+                };
 
-    } else {
-        $.ajax({
-                url: "/api/withdrawals/getaccountinformation",
+                modalCustomWithdrawal(true, dataWithdrawal)
+            }
+
+            $("#modal-withdrawal-custom").modal("show");
+        },
+        complete: () => {
+            $("#bt-withdrawal, #bt-withdrawal_m").removeAttr("disabled");
+        }
+    });
+
+    function modalDocsPending(data) {
+        const $modal = $("#debit-pending-informations")
+        const $footer = $("#modal-withdrawal-custom-footer")
+
+        const $modalCustomBody = $("#modal-body-withdrawal-custom")
+        const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+
+        let title =
+            `Documentos pessoais ainda não validados.`
+        let description =
+            `Parece que ainda existe pendencias com seus documentos <br>
+         Seria bom conferir se todos os documentos já foram cadastrados <br>
+         <small>
+             Deseja ir ao documentos?
+             <a class="red pointer" href="${data.route}">clique aqui</a>
+         </small>`
+
+        if (data.company_pending) {
+            title =
+                `Documentos da empresa ainda não validados.`
+            description =
+                `Parece que ainda existe pendencias com os documentos de sua empresa <br>
+             Seria bom conferir se todos os documentos já foram cadastrados. <br>
+             <small>
+                 Deseja ir ao documentos?
+                 <a class="red pointer" href="${data.route}">clique aqui</a>
+             </small>`
+        }
+
+        $modalCustomBody
+            .html('')
+            .addClass('d-none')
+        $modalCustomTitle
+            .text("Não é possivel realizar este saque")
+            .parent()
+            .addClass('debit-pending');
+
+        $modal
+            .removeClass('d-none')
+            .html(`
+                <h3 class="text-center mt-10" id="text-title-withdrawal-custom">
+                    ${title}
+                </h3>
+                <p id="text-description-withdrawal-custom">
+                    ${description}
+                </p>
+            `)
+            .show();
+
+        $footer
+            .html(`
+            <hr>
+            <div class="row justify-content-center w-p100">
+                <button class="btn col-auto s-btn-border" data-dismiss="modal" aria-label="Close"
+                style="background-color: #2E85EC; color: #FFF">
+                    Ok, entendi!
+                </button>
+            </div>
+        `);
+    }
+    function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue = 0) {
+        const $options = optionsValuesWithdrawal(singleValue, dataWithdrawal);
+
+        const $modal = $("#modal-body-withdrawal-custom")
+        const $footer = $("#modal-withdrawal-custom-footer")
+
+        const $modalDebitPending = $('#debit-pending-informations')
+        const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+
+        $modalDebitPending
+            .html('')
+            .addClass('d-none')
+
+        $modalCustomTitle
+            .text("Confirmar Saque")
+            .parent()
+            .removeClass('debit-pending')
+
+        $modal
+            .removeClass('d-none')
+            .html(`
+                <h3 id="text-title-withdrawal-custom" class="text-center mb-1">
+                    ${singleValue ? "Valor disponível:" : "Valores disponíveis:"}
+                </h3>
+                <p id="text-description-withdrawal-custom" class="text-center mb-30">
+                    ${singleValue ? "" : "Selecione o valor que mais se encaixa a sua solicitação"}
+                </p>
+                <div class="text-center">
+                    <div id="more-than-on-values-show">
+                        ${$options}
+                    </div>
+                </div>
+            `);
+
+        if (!isEmptyValue(debitValue)) {
+            const $newValueSelected = $modal.find(".s-btn.green")
+            const $value = $newValueSelected.text().trim();
+
+            let result = $newValueSelected.data("value") - removeFormatNumbers(debitValue)
+            $modalDebitPending
+                .removeClass('d-none')
+                .html(`
+                    <h3 class="text-center mt-10 mb-0" id="text-title-debit-pending"> Débitos pendentes </h3>
+                    <p class="mt-5" id="text-description-debit-pending">
+                        Você tem alguns valores em aberto
+                    </p>
+
+                    <div id="debit-items">
+                        <div class="row mx-0">
+                            <div class='col-7'><p> VALOR SOLICITADO </p></div>
+                            <div class="col-5 pl-0 text-right">
+                                <span class="currency">
+                                    <span id="requested-amount-withdrawal" class="text-right" style="color: #636363;">
+                                        ${$value}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mx-0 my-20" style="background-color:#FFF2F2;">
+                            <div class='col-7 d-flex align-items-center py-20'><p> DÉBITOS PENDENTES </p></div>
+                            <div class="col-5 pl-0 d-flex align-items-center justify-content-end">
+                                <span class="currency">
+                                    <span id="value-withdrawal-debt-pending" class="text-right" style="color: #FF003D;">
+                                        - ${formatMoney(removeFormatNumbers(debitValue))}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mx-0">
+                            <div class='col-7'><p>VALOR A RECEBER</p></div>
+                            <div class="col-5 pl-0 text-right">
+                                <span class="currency">
+                                    <span id="value-withdrawal-received" class="text-right" style="color: #1BE4A8;">
+                                        ${formatMoney(result)}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `)
+                .show();
+        }
+
+        $footer
+            .html(`
+                <div class="row justify-content-center w-p100">
+                    <button id="bt-cancel-withdrawal" data-dismiss="modal" aria-label="Close"
+                    class="btn col-auto s-btn-border mr-10"
+                    style="color: #959595;">
+                        Cancelar
+                    </button>
+
+                    <button id="bt-confirm-withdrawal-modal-custom"
+                    class="btn btn-success col-auto btn-confirmation s-btn-border m-0"
+                    style="background-color: #1BE4A8;">
+                        <strong>Confirmar</strong>
+                    </button>
+                </div>
+            `);
+
+        const $event = $("#bigger-value, #lower-value, #single-value")
+        $event.off("click");
+        $event.on("click", function () {
+            const $value = $(this);
+            const $amountWithdrawal = $("#requested-amount-withdrawal");
+
+            $event.removeClass("green");
+            $value.addClass("green");
+            $amountWithdrawal.text($value.text().trim());
+
+            if (debitValue != undefined) {
+                const $valueWithdrawal = $("#value-withdrawal-received")
+
+                let result = $value.data("value") - removeFormatNumbers(debitValue);
+                $valueWithdrawal.text(formatMoney(result));
+            }
+        });
+
+        $(document).on('click', '#bt-confirm-withdrawal-modal-custom', function (e) {
+            var click = $(this);
+            if (click.data('clicked')) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+            click.data('clicked', true);
+
+            window.setTimeout(function(){
+                click.removeData('clicked');
+            }, 2000);
+
+            loadOnModal("#modal-body-withdrawal-custom");
+
+            $("#bt-confirm-withdrawal-modal-custom").attr("disabled", "disabled");
+
+            $.ajax({
+                url: "/api/withdrawals",
                 type: "POST",
-                dataType: "json",
                 data: {
                     company_id: $("#transfers_company_select").val(),
-                    withdrawal_value: $('#custom-input-addon').val()
+                    withdrawal_value: $(".s-btn.green").data("value"),
+                    gateway_id: window.gatewayCode,
                 },
+                dataType: "json",
                 headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
                 },
                 error: (response) => {
+                    loadingOnScreenRemove();
                     errorAjaxResponse(response);
                 },
                 success: (response) => {
+                    loadingOnScreenRemove();
+                    loadOnAny(".price", true);
+                    manipulateModalSuccessWithdrawal();
 
-                    if (response.data.user_documents_status == 'pending') {
-                        let route = '/profile';
-                        $('#modal-withdrawal').modal('show');
-                        $('#modal-withdrawal-title').text("Oooppsssss!");
-                        $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Documentos pessoais ainda não validados</strong></h3>' + '<h4 align="center">Parece que ainda existe pendencias com seus documentos</h4>' + '<h4 align="center">Seria bom conferir se todos os documentos já foram cadastrados</h4>' + '<h5 align="center">Deseja ir ao documentos? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
-                        $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
-                    } else if (response.data.documents_status == 'pending') {
-                        let companie = $('#transfers_company_select').val();
-                        let _route = '/companies/' + companie + '/edit';
-                        $('#modal-withdrawal').modal('show');
-                        $('#modal-withdrawal-title').text("Oooppsssss!");
-                        $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Documentos da empresa ainda não validados</strong></h3>' + '<h4 align="center">Parece que ainda existe pendencias com os documentos de sua empresa</h4>' + '<h4 align="center">Seria bom conferir se todos os documentos já foram cadastrados</h4>' + '<h5 align="center">Deseja ir ao documentos? <a class="red pointer" href="' + _route + '">clique aqui</a></h5>');
-                        $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
-                    } else if (response.data.email_verified == 'false') {
-                        let _route = '/profile';
-                        $('#modal-withdrawal').modal('show');
-                        $('#modal-withdrawal-title').text("Oooppsssss!");
-                        $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Email de usuário ainda não foi verificado</strong></h3>' + '<h4 align="center">Para maior segurança é necessário validar o e-mail do usuário na página de perfil</h4>' + '<h5 align="center">Deseja ir a pagina de perfil? <a class="red pointer" href="' + _route + '">clique aqui</a></h5>');
-                        $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
-                    } else if (response.data.cellphone_verified == 'false') {
-                        let _route = '/profile';
-                        $('#modal-withdrawal').modal('show');
-                        $('#modal-withdrawal-title').text("Oooppsssss!");
-                        $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Telefone de usuário ainda não foi verificado</strong></h3>' + '<h4 align="center">Para maior segurança é necessário validar o telefone do usuário na página de perfil</h4>' + '<h5 align="center">Deseja ir a pagina de perfil? <a class="red pointer" href="' + _route + '">clique aqui</a></h5>');
-                        $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                    $(".btn-return").off("click");
+                    $(".btn-return").on("click", function () {
+                        $("#custom-input-addon").val("");
+                        $(".modal-body #modal-body-withdrawal-custom").modal("hide");
+                    });
 
-                    } else {
-
-                        $('#modal-withdrawal').modal('show');
-                        $('#modal-withdrawal-title').text("Confirmar Saque");
-
-                        let confirmationData = `<div class="row">
-                                                    <div class="col">
-                                                        <h4>Verifique os dados da conta:</h4>
-                                                        <div><b>Banco:</b><span id="modal-withdrawal-bank"></span></div>
-                                                        <div><b>Agência:</b><span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></div>
-                                                        <div><b>Conta:</b><span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></div>
-                                                        <div><b>Documento:</b><span id="modal-withdrawal-document"></span></div>
-                                                        </div>`;
-
-                        confirmationData += `</div>
-                                                <hr>
-                                                <h4>Valor do saque: <span id="modal-withdrawal-value" class='greenGradientText'></span>`;
-
-                        // confirmationData += `</h4>
-                        //                     <hr>
-                        //                     <div class="alert alert-warning text-center">
-                        //                         <p><b>Atenção! A taxa para saques é gratuita para saques com o valor igual ou superior a R$500,00. Caso contrário a taxa cobrada será de R$10,00.</b></p>
-                        //                         <p><b>Os saques solicitados poderão ser liquidados em até um dia útil!</b></p>
-                        //                     </div>
-                        //                 </div>`;
-
-                        $('#modal_body').html(confirmationData);
-
-                        $("#modal-withdraw-footer").html(`
-                            <div class="col-md-12 text-center">
-                                <button
-                                    id="bt-cancel-withdrawal"
-                                    class="btn col-5 s-btn-border"
-                                    data-dismiss="modal"
-                                    aria-label="Close"
-                                    style="font-size:20px; width:200px; border-radius: 12px; color:#818181;">
-                                    Cancelar
-                                </button>
-
-                                <button
-                                    id="bt-confirm-withdrawal"
-                                    class="btn btn-success col-5 btn-confirmation s-btn-border"
-                                    style="background-color: #41DC8F;font-size:20px; width:200px;">
-                                    <strong>Confirmar</strong>
-                                </button>
-                            </div>
-                        `);
-
-                        $("#modal-withdrawal-value").html(' R$ ' + $('#custom-input-addon').val() + ' ');
-                        $("#modal-withdrawal-bank").html('  ' + response.data.bank);
-                        $("#modal-withdrawal-agency").html('  ' + response.data.agency);
-                        if (response.data.agency_digit != '' && response.data.agency_digit != null) {
-                            $("#modal-withdrawal-agency-digit").html(' - ' + response.data.agency_digit);
-                        }
-                        $("#modal-withdrawal-account").html('  ' + response.data.account);
-                        if (response.data.account_digit != '' && response.data.account_digit != null) {
-
-                            $("#modal-withdrawal-account-digit").html(' - ' + response.data.account_digit);
-                        }
-                        $("#modal-withdrawal-document").html('  ' + response.data.document);
-
-                        $("#bt-confirm-withdrawal").off("click");
-                        $("#bt-confirm-withdrawal").on("click", function (e) {
-
-                            var click = $(this);
-                            if (click.data('clicked')) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                return false;
-                            }
-                            click.data('clicked', true);
-
-                            window.setTimeout(function(){
-                                click.removeData('clicked');
-                            }, 2000);
-
-                            loadOnModal('#modal-body');
-
-                            $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
-                            $.ajax({
-                                url: "/api/withdrawals",
-                                type: "POST",
-                                data: {
-                                    company_id: $('#transfers_company_select').val(),
-                                    withdrawal_value: $('#custom-input-addon').val(),
-                                    gateway_id: window.gatewayCode,
-                                },
-                                dataType: "json",
-                                headers: {
-                                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                                    'Accept': 'application/json',
-                                },
-                                error: (response) => {
-                                    loadingOnScreenRemove();
-                                    errorAjaxResponse(response);
-                                },
-                                success: (response) => {
-                                    loadingOnScreenRemove();
-                                    $('#modal-withdrawal').modal('show');
-                                    $('#modal-withdrawal-title').text("Sucesso!");
-                                    $('#modal_body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' + '<h3 align="center"><strong>Sua solicitação foi para avaliação!</strong></h3>');
-                                    $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success btn-return" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
-                                    $('.btn-return').on('click', function () {
-                                        $('#custom-input-addon').val('');
-                                    });
-
-                                    updateBalances();
-
-                                    $('.btn-return').on(function () {
-                                        $('#modal_body').modal('hide');
-                                    });
-                                },
-                                complete: (response) => {
-                                    $("#bt-confirm-withdrawal").removeAttr('disabled');
-                                }
-                            });
-
-                            window.setTimeout(function(){
-                                $click.removeData('clicked');
-                            }, 2000);
-                        });
-                    }
-                }
-            }
-        );
+                    updateBalances();
+                },
+                complete: (response) => {
+                    $("#bt-confirm-withdrawal-modal-custom").removeAttr("disabled");
+                },
+            });
+        });
     }
+
+    function verifyWithdrawalIsValid(toTransfer, availableBalance) {
+        if (toTransfer < 1) {
+            alertCustom("error", "Valor do saque inválido!");
+            $("#custom-input-addon").val("");
+            $(".withdrawal-value").maskMoney({
+                thousands: ".",
+                decimal: ",",
+                allowZero: true,
+            });
+            return false;
+        }
+
+        if (toTransfer > availableBalance) {
+            alertCustom("error", "O valor requerido ultrapassa o limite disponivel");
+            $("#custom-input-addon").val("");
+            $(".withdrawal-value").maskMoney({
+                thousands: ".",
+                decimal: ",",
+                allowZero: true,
+            });
+            return false;
+        }
+
+        if ($("#custom-input-addon").val() == "") {
+            alertCustom("error", "Valor do saque inválido!");
+            return false;
+        }
+
+        // if(toTransfer < 5000){
+        //     alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
+        //     return;
+        // }
+
+        return true;
+    }
+    function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
+        const biggerValue = formatMoney(dataWithdrawal.bigger_value);
+        const lowerValue = formatMoney(dataWithdrawal.lower_value);
+
+        if (singleValue) {
+            return `
+                <div id="just-value-show" class="text-center mt-25">
+                    <div class="btn btn-primary s-btn s-btn-border green" id="single-value" data-value="${dataWithdrawal.bigger_value}">
+                        ${biggerValue}
+                    </div>
+                </div>
+            `;
+        }
+
+        return `
+            <div>
+                <div class="row justify-content-center w-p100 m-0">
+                    <div class="col-auto btn btn-primary s-btn s-btn-border mr-10" id="lower-value" data-value="${dataWithdrawal.lower_value}">
+                        ${lowerValue}
+                    </div>
+
+                    <div class="col-auto btn btn-primary s-btn s-btn-border green" id="bigger-value" data-value="${dataWithdrawal.bigger_value}">
+                        ${biggerValue}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    function manipulateModalSuccessWithdrawal() {
+        $("#debit-pending-informations").html("");
+
+        $("#modal-title-withdrawal-custom").text("Sucesso!");
+        $(".modal-body #modal-body-withdrawal-custom").html(`
+        <svg style="max-width: 70px; max-height: 70px;" class="checkmark"
+        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+        <h3 id="text-title-withdrawal-custom" class="text-center">
+            <strong>Sua solicitação foi para avaliação!</strong>
+        </h3>`);
+        $("#modal-withdrawal-custom-footer").html(`
+        <div style="width:100%;text-align:center;padding-top:3%">
+            <span class="btn btn-success btn-return" data-dismiss="modal">
+                Retornar
+            </span>
+        </div>`);
+    }
+    function formatMoney(value) {
+        return (value / 100).toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+        })
+            .replace(/\s+/g, '')
+            .replace('-', '- ')
+    }
+
 });

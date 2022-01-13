@@ -30,66 +30,11 @@ $("#bt-withdrawal, #bt-withdrawal_m").on("click", function () {
         success: (response) => {
             manipulateModalWithdrawal(response.data);
         },
-        complete: (response) => {
+        complete: () => {
             $("#bt-withdrawal, #bt-withdrawal_m").removeAttr("disabled");
         }
     });
 });
-
-$(document).on('click', '#bt-confirm-withdrawal-modal-custom', function (e) {
-
-    var click = $(this);
-    if (click.data('clicked')) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    }
-    click.data('clicked', true);
-
-    window.setTimeout(function(){
-        click.removeData('clicked');
-    }, 2000);
-
-    loadOnModal("#modal-body-withdrawal-custom");
-
-    $("#bt-confirm-withdrawal-modal-custom").attr("disabled", "disabled");
-
-    $.ajax({
-        url: "/api/withdrawals",
-        type: "POST",
-        data: {
-            company_id: $("#transfers_company_select").val(),
-            withdrawal_value: $(".s-btn.green").data("value"),
-            gateway_id: window.gatewayCode,
-        },
-        dataType: "json",
-        headers: {
-            Authorization: $('meta[name="access-token"]').attr("content"),
-            Accept: "application/json",
-        },
-        error: (response) => {
-            loadingOnScreenRemove();
-            errorAjaxResponse(response);
-        },
-        success: (response) => {
-            loadingOnScreenRemove();
-            loadOnAny(".price", true);
-            manipulateModalSuccessWithdrawal();
-
-            $(".btn-return").off("click");
-            $(".btn-return").on("click", function () {
-                $("#custom-input-addon").val("");
-                $(".modal-body #modal-body-withdrawal-custom").modal("hide");
-            });
-
-            updateBalances();
-        },
-        complete: (response) => {
-            $("#bt-confirm-withdrawal-modal-custom").removeAttr("disabled");
-        },
-    });
-});
-
 function verifyWithdrawalIsValid(toTransfer, availableBalance) {
     if (toTransfer < 1) {
         alertCustom("error", "Valor do saque inválido!");
@@ -393,6 +338,59 @@ function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue) {
             $valueWithdrawal.text(formatMoney(result));
         }
     });
+
+    $(document).on('click', '#bt-confirm-withdrawal-modal-custom', function (e) {
+        var click = $(this);
+        if (click.data('clicked')) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+        click.data('clicked', true);
+
+        window.setTimeout(function(){
+            click.removeData('clicked');
+        }, 2000);
+
+        loadOnModal("#modal-body-withdrawal-custom");
+
+        $("#bt-confirm-withdrawal-modal-custom").attr("disabled", "disabled");
+
+        $.ajax({
+            url: "/api/withdrawals",
+            type: "POST",
+            data: {
+                company_id: $("#transfers_company_select").val(),
+                withdrawal_value: $(".s-btn.green").data("value"),
+                gateway_id: window.gatewayCode,
+            },
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                loadingOnScreenRemove();
+                loadOnAny(".price", true);
+                manipulateModalSuccessWithdrawal();
+
+                $(".btn-return").off("click");
+                $(".btn-return").on("click", function () {
+                    $("#custom-input-addon").val("");
+                    $(".modal-body #modal-body-withdrawal-custom").modal("hide");
+                });
+
+                updateBalances();
+            },
+            complete: (response) => {
+                $("#bt-confirm-withdrawal-modal-custom").removeAttr("disabled");
+            },
+        });
+    });
 }
 
 function manipulateModalWithdrawal(dataWithdrawal) {
@@ -436,16 +434,17 @@ function manipulateModalSuccessWithdrawal() {
 
     $("#modal-title-withdrawal-custom").text("Sucesso!");
     $(".modal-body #modal-body-withdrawal-custom").html(`
-        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <svg style="max-width: 70px; max-height: 70px;" class="checkmark"
+        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
             <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
             <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
         </svg>
-        <h3 align="center">
+        <h3 id="text-title-withdrawal-custom" class="text-center">
             <strong>Sua solicitação foi para avaliação!</strong>
         </h3>`);
     $("#modal-withdrawal-custom-footer").html(`
         <div style="width:100%;text-align:center;padding-top:3%">
-            <span class="btn btn-success btn-return" data-dismiss="modal" style="font-size: 25px">
+            <span class="btn btn-success btn-return" data-dismiss="modal">
                 Retornar
             </span>
         </div>`);
