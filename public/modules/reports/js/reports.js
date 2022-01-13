@@ -78,6 +78,11 @@ $(function () {
             },
             success: function success(response) {
                 current_currency = response.currency;
+                cardTotalPercentCartao = parseFloat(response.totalPercentCartao).toFixed(1);
+                cardTotalPercentBoleto = parseFloat(response.totalPercentPaidBoleto).toFixed(1)
+                cardTotalPercentPix = parseFloat(response.totalPercentPaidPix).toFixed(1)
+
+                
                 console.log(response.totalPaidValueAproved);
                 if(response.totalPaidValueAproved='R$ 0,00' || response.totalPaidValueAproved ==false || !response.totalPaidValueAproved){
                     response.totalPaidValueAproved='R$ <span class="grey font-size-24 bold">0,00</span>'
@@ -98,12 +103,17 @@ $(function () {
                 $("#percent-credit-card").html(`
                     ${parseFloat(response.totalPercentCartao).toFixed(1)} %
                 `);
+                $("#percent-credit-card").next('.col-payment').find('.bar').css('width', cardTotalPercentCartao );
                 $("#percent-values-boleto").html(`
                     ${parseFloat(response.totalPercentPaidBoleto).toFixed(1)} %
                 `);
+                $("#percent-values-boleto").next('.col-payment').find('.bar').css('width', cardTotalPercentBoleto );
+
                 $("#percent-values-pix").html(`
                     ${parseFloat(response.totalPercentPaidPix).toFixed(1)} %
                 `);
+                $("#percent-values-pix").next('.col-payment').find('.bar').css('width', cardTotalPercentPix );
+
                 $("#credit-card-value").html(response.totalValueCreditCard);
                 $("#boleto-value").html(response.totalValueBoleto);
                 $("#pix-value").html(response.totalValuePix);

@@ -62,7 +62,7 @@
 								</h3>
 								<a href="" class="box-link">Financeiro</a>
 							</header>
-                            <div class="container pad-right-0">
+                            <div class="container container-reports">
                                 <div id="reports-content" class="">
                                     <div class='container col-sm-12 mt-20 d-lg-block'>
 										<div class="row cards-reports">
@@ -103,7 +103,7 @@
 								</h3>
 								<a href="" class="box-link">Vendas</a>
 							</header>
-							<div class="container pad-right-0">
+							<div class="container container-reports">
                                 <div id="reports-content" class="">
                                     <div class='container col-sm-12 mt-20 d-lg-block'>
 										<div class="row cards-reports">
@@ -116,7 +116,96 @@
 											<div class="card ">
 												<div class="card-body">
 													<h6 class="font-size-16 gray-700"> Meios de pagamento </h6>
-													<h4 id='qtd-recusadas' class=" font-size-24 bold">0</h4>
+                                                    <div id="payment-type-items" class="custom-table scrollbar pb-0 pt-0">
+                                                        <div class="row container-payment">
+															<div class="container">
+																<div class="data-holder b-bottom">
+																	<div class="box-payment-option">
+																		
+																		<div class="col-payment grey box-image-payment">
+																			<div class="box-ico">
+																				<i class="ms-Icon ms-Icon--PaymentCard grey" aria-hidden="true"></i>
+																			</div>Cartão
+																		</div>
+																		
+																		<div class="box-payment-option">
+																			<div class="col-payment grey" id='percent-credit-card'>
+																				0
+																				
+																			</div>
+
+																			<div class="col-payment col-graph">
+																				<div class="bar">barrinha</div>
+																			</div>
+
+																			<div class="col-payment"><span class="money-td green bold grey" id='credit-card-value'></span></div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="container">
+																<div class="data-holder b-bottom">
+																	<div class="box-payment-option">
+																		<div class="col-payment grey box-image-payment">
+																			<div class="box-ico">
+																				<span class="o-cash-dispenser-1"></span>
+																			</div> Boleto
+																		</div>
+																		<div class="box-payment-option">
+																			<div class="col-payment grey" id='percent-values-boleto'>
+																				0
+																			</div>
+																			<div class="col-payment col-graph">
+																				<div class="bar">barrinha</div>
+																			</div>
+																			<div class="col-payment">
+																				<span class="money-td green bold grey" id='boleto-value'></span>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="container">
+																<div class="data-holder b-bottom">
+																	<div class="box-payment-option">
+																		<div class="col-payment grey box-image-payment">
+																			<div class="box-ico">
+																				<svg xmlns="http://www.w3.org/2000/svg" 
+																					width="38.867" 
+																					height="40.868" 
+																					viewBox="0 0 38.867 40.868" 
+																					style="width: 24px;" 
+																				>
+																					<g id="Grupo_61" data-name="Grupo 61" transform="translate(-2948.5 213.743)">
+																						<g id="g992" transform="translate(2956.673 -190.882)">
+																							<path id="path994" d="M-73.541-25.595a5.528,5.528,0,0,1-3.933-1.629l-5.68-5.68a1.079,1.079,0,0,0-1.492,0l-5.7,5.7a5.529,5.529,0,0,1-3.934,1.628H-95.4l7.193,7.194a5.753,5.753,0,0,0,8.136,0l7.214-7.214Z" transform="translate(95.4 34.202)" fill="none" stroke="#3a506c" stroke-width="1"/>
+																						</g>
+																						<g id="g996" transform="translate(2956.673 -212.243)">
+																							<path id="path998" d="M-3.765-29.869A5.528,5.528,0,0,1,.169-28.24l5.7,5.7a1.056,1.056,0,0,0,1.493,0l5.68-5.68a5.529,5.529,0,0,1,3.934-1.629h.684l-7.214-7.214a5.753,5.753,0,0,0-8.136,0l-7.193,7.193Z" transform="translate(4.884 37.747)" fill="none" stroke="#3a506c" stroke-width="1"/>
+																						</g>
+																						<g id="g1000" transform="translate(2949 -201.753)">
+																							<path id="path1002" d="M-121.731-14.725l-4.36-4.359a.83.83,0,0,1-.31.063h-1.982a3.917,3.917,0,0,0-2.752,1.14l-5.68,5.68a2.718,2.718,0,0,1-1.927.8,2.719,2.719,0,0,1-1.928-.8l-5.7-5.7a3.917,3.917,0,0,0-2.752-1.14h-2.437a.827.827,0,0,1-.293-.059l-4.377,4.377a5.753,5.753,0,0,0,0,8.136l4.377,4.377a.828.828,0,0,1,.293-.059h2.437a3.917,3.917,0,0,0,2.752-1.14l5.7-5.7a2.792,2.792,0,0,1,3.856,0l5.68,5.679a3.917,3.917,0,0,0,2.752,1.14h1.982a.83.83,0,0,1,.31.062l4.359-4.359a5.753,5.753,0,0,0,0-8.136" transform="translate(157.913 19.102)" fill="none" stroke="#3a506c" stroke-width="1"/>
+																						</g>
+																					</g>
+																				</svg>
+																			</div> Pix
+																		</div>
+																		<div class="box-payment-option">
+																			<div class="col-payment grey" id='percent-values-pix'>
+																				0
+																			</div>
+																			<div class="col-payment col-graph">
+																				<div class="bar">barrinha</div>
+																			</div>
+																			<div class="col-payment">
+																				<span class="money-td green grey bold" id='pix-value'></span>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+                                                    </div>
 												</div>
 											</div>
 											<div class="card">
@@ -143,7 +232,7 @@
 								</h3>
 								<a href="" class="box-link">Financeiro</a>
 							</header>
-							<div class="container pad-right-0">
+							<div class="container container-reports">
                                 <div id="reports-content" class="">
                                     <div class='container col-sm-12 mt-20 d-lg-block'>
 										<div class="row cards-reports">
@@ -166,7 +255,7 @@
 															<h6 class="font-size-16 gray-700"> Origens </h6>
 														</header>
 														<div class="col-4">
-															<select class="form-control float-right" id='origin'>
+															<select class="form-control float-right sel-origin" id='origin'>
 																<option selected value="src">SRC</option>
 																<option value="utm_source">UTM Source</option>
 																<option value="utm_medium">UTM Medium</option>
@@ -467,7 +556,7 @@
                             <div class="list-linear-gradient-top"></div>
                             <div id="payment-type-items" class="custom-table scrollbar pb-0 pt-0">
                                 <div class="row">
-                                    <div class="col-6 col-md-12 col-lg-12  ">
+                                    <div class="col-6 col-md-12 col-lg-12">
                                         <div class="data-holder b-bottom">
                                             <div class="row px-25 py-10 justify-content-between align-items-center">
                                                 <div class="col-lg-4 d-flex justify-content-start align-items-center">
