@@ -104,7 +104,7 @@ function modalDebitPending (currentBalance, debitValue) {
                         <div class='col-7'><p> SALDO </p></div>
                         <div class="col-5 pl-0 text-right">
                             <span class="currency">
-                                <span id="requested-amount-withdrawal" class="text-right" style="color: #41DC8F;">
+                                <span id="requested-amount-withdrawal" class="text-right">
                                     ${formatMoney(removeFormatNumbers(currentBalance))}
                                 </span>
                             </span>
@@ -121,7 +121,7 @@ function modalDebitPending (currentBalance, debitValue) {
                         </div>
                     </div>
                     <div class="row mx-0">
-                        <div class='col-7'><p> SALDO FINAL </p></div>
+                        <div class='col-7'><p> FINAL </p></div>
                         <div class="col-5 pl-0 text-right">
                             <span class="currency">
                                 <span id="value-withdrawal-received" class="text-right" style="color: #636363;">
@@ -197,7 +197,7 @@ function modalDebitWithdrawal(currentBalance, debitValue, withdrawal) {
                         </div>
                     </div>
                     <div class="row mx-0">
-                        <div class='col-7'><p> SALDO FINAL </p></div>
+                        <div class='col-7'><p> FINAL </p></div>
                         <div class="col-5 pl-0 text-right">
                             <span class="currency">
                                 <span id="value-withdrawal-received" class="text-right" style="color: #636363;">
