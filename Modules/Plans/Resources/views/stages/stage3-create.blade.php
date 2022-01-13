@@ -50,23 +50,23 @@
         <p class="font-weight-bold" style="margin-top: 25px;">Revisão geral</p>
         <div class="d-flex justify-content-between" style="margin-bottom: 24px;">
             <div class="price-plan">
-                <small>Preço de venda</small>
+                <div style="font-size: 80%;font-weight: 400;">Preço de venda</div>
                 <p class="font-weight-bold m-0" style="line-height: 100%;">-</p>
             </div>
             <div class="costs-plan">
-                <small>Seu custo</small>
+                <div style="font-size: 80%;font-weight: 400;">Seu custo</div>
                 <p class="font-weight-bold m-0" style="line-height: 100%;">R$0,00</p>
             </div>
             <div class="tax-plan">
-                <small>Taxas est.</small>
+                <div style="font-size: 80%;font-weight: 400;">Taxas est.</div>
                 <p class="font-weight-bold m-0" style="line-height: 100%;">-</p>
             </div>
             <div class="comission-plan">
-                <small>Comissão aprox.</small>
+                <div style="font-size: 80%;font-weight: 400;">Comissão aprox.</div>
                 <p class="font-weight-bold m-0" style="line-height: 100%;">-</p>
             </div>
             <div class="profit-plan">
-                <small>Lucro aprox.</small>
+                <div style="font-size: 80%;font-weight: 400;">Lucro aprox.</div>
                 <p class="font-weight-bold m-0" style="line-height: 100%; color: #41DC8F;">-</p>
             </div>
         </div>

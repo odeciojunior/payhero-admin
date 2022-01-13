@@ -194,6 +194,9 @@ $(function () {
         $(modal).find('.modal-dialog').css({'right': '-17px'});
         $(modal).find('.product-photo').unbind('load');
 
+        $(modal).find('.box-description').find('.selecteds span').html('');
+        $(modal).find('.box-description').find('.selecteds').css('display', 'none');
+
         $(modal).find('.modal-body').css('height', 'auto').attr('style', 'padding-bottom: 0px !important');
 
         var find_stage = type == 'create' ? '#stage1' : '#stage2';
