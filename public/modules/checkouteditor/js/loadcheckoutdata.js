@@ -3,9 +3,6 @@
 $(() => {
     let projectId = $(window.location.pathname.split("/")).get(-1);
 
-    userProject = {
-        company_id: "n7vJOGY5LGKXdax",
-    };
 
     $("#tab-checkout").on("click", function () {
         loadData();
@@ -22,6 +19,47 @@ $(() => {
             },
         });
 
+        // ----------------- Editor de Texto --------------------
+        var formats = ["bold", "italic", "underline"];
+
+        var quillTextbar = new Quill("#topbar_content", {
+            modules: {
+                toolbar: "#topbar_content_toolbar_container",
+            },
+            placeholder: "",
+            theme: "snow",
+            formats: formats,
+        });
+
+        const limit = 1000;
+
+        quillTextbar.on("text-change", function () {
+            if (quillTextbar.getLength() > limit) {
+                quillTextbar.deleteText(limit, quillTextbar.getLength());
+            }
+        });
+
+        var quillThanksPage = new Quill("#post_purchase_message_content", {
+            modules: {
+                toolbar: "#post_purchase_message_content_toolbar_container",
+            },
+            theme: "snow",
+            formats: formats,
+        });
+
+        quillThanksPage.on("text-change", function () {
+            $(".shop-message-preview-content").empty();
+            $(".shop-message-preview-content").append(
+                $(quillThanksPage.root.innerHTML)
+            );
+        });
+
+        quillThanksPage.on("text-change", function () {
+            if (quillTextbar.getLength() > limit) {
+                quillTextbar.deleteText(limit, quillTextbar.getLength());
+            }
+        });    
+  
         $.ajax({
             method: "GET",
             url: "/api/checkouteditor/" + projectId,
@@ -216,11 +254,13 @@ $(() => {
                 $("#checkout_editor #checkout_banner_enabled").prop("value", 1);
                 $("#checkout_editor .banner-top-content").show();
                 $("#checkout_editor .preview-banner").show();
+                $("#checkout_editor #banner_type").show();
             } else {
                 $("#checkout_editor #checkout_banner_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_banner_enabled").prop("value", 0);
                 $("#checkout_editor .banner-top-content").hide();
                 $("#checkout_editor .preview-banner").hide();
+                $("#checkout_editor #banner_type").hide();
             }
 
             if (checkout.checkout_banner_type === 1) {
@@ -269,17 +309,6 @@ $(() => {
                 $("#checkout_editor .textbar-preview").hide();
             }
 
-            var quillTextbar = new Quill("#checkout_editor #topbar_content", {
-                modules: {
-                    toolbar: "#topbar_content_toolbar_container",
-                    clipboard: {
-                        matchVisual: false,
-                    },
-                },
-                placeholder: "",
-                theme: "snow",
-                formats: ["bold", "italic", "underline"],
-            });
 
             quillTextbar.root.innerHTML = checkout.topbar_content;
 
@@ -462,7 +491,7 @@ $(() => {
                     company.capture_transaction_enabled
                 ) {
                     $("#checkout_editor #companies").append(
-                        `<option value="${company.id}"
+                        `<option  class="sirius-select-option" value="${company.id}"
                         ${company.id === checkout.company_id ? "selected" : ""}
                         ${company.status == "pending" ? "disabled" : ""}
                         ${company.active_flag == 0 ? "disabled" : ""}
@@ -630,21 +659,7 @@ $(() => {
                     "Obrigado por comprar conosco!"
             );
 
-            var quillThanksPage = new Quill(
-                "#checkout_editor #post_purchase_message_content",
-                {
-                    modules: {
-                        toolbar:
-                            "#post_purchase_message_content_toolbar_container",
-                        clipboard: {
-                            matchVisual: false,
-                        },
-                    },
-                    theme: "snow",
-                    formats: ["bold", "italic", "underline"],
-                }
-            );
-
+    
             quillThanksPage.root.innerHTML = checkout.post_purchase_message_content;
 
             if (checkout.whatsapp_enabled == 1) {
@@ -697,7 +712,6 @@ $(() => {
                 $(".theme-ready-content").show("slow", "swing");
             }
 
-            $("#save_changes").hide();
         }
     }
 });
