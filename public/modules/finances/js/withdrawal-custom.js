@@ -168,7 +168,7 @@ function modalDebitWithdrawal(currentBalance, debitValue, withdrawal) {
         .removeClass('d-none')
         .html(`
                 <h3 class="text-center mt-10" id="text-title-debit-pending">
-                    Você tem débitos pendentes superiores ao <br> valor solicitado no saque.
+                    Você tem débitos pendentes superiores ao <br> valor do seu saldo disponível.
                 </h3>
                 <p id="text-description-debit-pending">
                     Você só poderá solicitar um saque quando seu valor solicitado for maior <br>

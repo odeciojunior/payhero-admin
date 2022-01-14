@@ -1,10 +1,13 @@
 $(window).on('load', function () {
 
-    $(document).on("change", "#transfers_company_select", function () {
-        $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]").prop("selected", true);
+    $(document).on("change", "#transfers_company_select, #transfers_company_select_mobile", function () {
+        let value = $(this);
+        let option = value.find('option:selected').val();
+        value.find(`option[value="${option}"]`)
+
         $('#custom-input-addon').val('');
-        updateBalances();
-        if ($(this).children("option:selected").attr('country') != 'brazil') {
+        updateBalances(option);
+        if (value.children("option:selected").attr('country') != 'brazil') {
             $("#col_transferred_value").show();
         } else {
             $("#col_transferred_value").hide();
@@ -13,7 +16,7 @@ $(window).on('load', function () {
 
 });
 
-window.updateBalances = function() {
+window.updateBalances = function(company) {
 
     loadOnAny(".number", false, {
         styles: {
@@ -35,7 +38,7 @@ window.updateBalances = function() {
         url: "/api/finances/getbalances",
         type: "GET",
         data: {
-               company: $("#transfers_company_select option:selected").val(),
+               company: company,
                gateway_id: gatewayCode
         },
         dataType: "json",
