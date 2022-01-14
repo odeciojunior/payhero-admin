@@ -101,10 +101,10 @@ function modalDebitPending (currentBalance, debitValue) {
 
                 <div id="debit-items">
                     <div class="row mx-0">
-                        <div class='col-7'><p> SALDO </p></div>
+                        <div class='col-7'><p> VALOR SOLICITADO </p></div>
                         <div class="col-5 pl-0 text-right">
                             <span class="currency">
-                                <span id="requested-amount-withdrawal" class="text-right">
+                                <span id="requested-amount-withdrawal" class="text-right" style="color: #636363;">
                                     ${formatMoney(removeFormatNumbers(currentBalance))}
                                 </span>
                             </span>
@@ -243,9 +243,9 @@ function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue) {
         .removeClass('d-none')
         .html(`
                 <h3 id="text-title-withdrawal-custom" class="text-center mb-1">
-                    ${singleValue ? "Valor disponível:" : "Valores disponíveis:"}
+                    ${singleValue ? "Valor a ser sacado" : "Valores disponíveis:"}
                 </h3>
-                <p id="text-description-withdrawal-custom" class="text-center mb-30">
+                <p id="text-description-withdrawal-custom" class="text-center ${singleValue ? "" : "mb-30"}">
                     ${singleValue ? "" : "Selecione o valor que mais se encaixa a sua solicitação"}
                 </p>
                 <div class="text-center">

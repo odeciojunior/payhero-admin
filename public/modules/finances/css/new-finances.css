@@ -240,7 +240,7 @@
 }
 
 .modal-title-withdrawal {
-    background: #2E85EC;
+    background-color: transparent;
     border-radius: 8px 8px 0 0;
     padding: 16px;
 }
@@ -248,10 +248,11 @@
     font-size: 20px;
     line-height: 25px;
     font-weight: bold;
-    color: #FFF
+    text-align: center;
+    color: #484848;
 }
-.modal-title-withdrawal.debit-pending {
-    background-color: #484848;
+.modal-title-withdrawal.debit-pending h3{
+    color: #FF003D;
 }
 
 #text-title-debit-pending, #text-title-withdrawal-custom {
@@ -259,6 +260,7 @@
     line-height: 20px;
     font-weight: bold;
     color: #747474;
+    padding: 0 10px
 }
 
 #text-description-debit-pending, #text-description-withdrawal-custom {
@@ -266,6 +268,8 @@
     line-height: 15px;
     color: #959595;
     text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 #text-description-debit-pending {
     border-bottom: 1px solid #EDEDED;
@@ -319,6 +323,18 @@
 #more-than-on-values-show .btn.green, #more-than-on-values-show .btn:hover{
     border-color: transparent;
     color: #FFF;
+}
+#single-value {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 30px;
+    color: #29DCA7;
+    margin-top: 8px;
+
+}
+#bt-cancel-withdrawal {
+    background-color: #F5F5F5;
+    color: #959595;
 }
 
 .disableFields {

@@ -167,10 +167,10 @@ function modalDebitPending (currentBalance, debitValue) {
 
                 <div id="debit-items">
                     <div class="row mx-0">
-                        <div class='col-7'><p> SALDO </p></div>
+                        <div class='col-7'><p> VALOR SOLICITADO </p></div>
                         <div class="col-5 pl-0 text-right">
                             <span class="currency">
-                                <span id="requested-amount-withdrawal" class="text-right">
+                                <span id="requested-amount-withdrawal" class="text-right" style="color: #636363;">
                                     ${formatMoney(removeFormatNumbers(currentBalance))}
                                 </span>
                             </span>
@@ -309,9 +309,9 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
         .removeClass('d-none')
         .html(`
                 <h3 id="text-title-withdrawal-custom" class="text-center mb-1">
-                    ${singleValue ? "Valor disponível:" : "Valores disponíveis:"}
+                    ${singleValue ? "Valor a ser sacado" : "Valores disponíveis:"}
                 </h3>
-                <p id="text-description-withdrawal-custom" class="text-center mb-30">
+                <p id="text-description-withdrawal-custom" class="text-center ${singleValue ? "" : "mb-30"}">
                     ${singleValue ? "" : "Selecione o valor que mais se encaixa a sua solicitação"}
                 </p>
                 <div class="text-center">
@@ -475,41 +475,45 @@ function modalDocsPending(data) {
     const $modalCustomBody = $("#modal-body-withdrawal-custom")
     const $modalCustomTitle = $("#modal-title-withdrawal-custom")
 
-    let title =
-        `Documentos pessoais ainda não validados.`
     let description =
         `Parece que ainda existe pendencias com seus documentos <br>
-         Seria bom conferir se todos os documentos já foram cadastrados <br>
-         <small>
-             Deseja ir ao documentos?
-             <a class="red pointer" href="${data.route}">clique aqui</a>
-         </small>`
+         Seria bom conferir se todos os documentos já foram cadastrados`
 
     if (data.company_pending) {
-        title =
-            `Documentos da empresa ainda não validados.`
         description =
             `Parece que ainda existe pendencias com os documentos de sua empresa <br>
-             Seria bom conferir se todos os documentos já foram cadastrados. <br>
-             <small>
-                 Deseja ir ao documentos?
-                 <a class="red pointer" href="${data.route}">clique aqui</a>
-             </small>`
+             Seria bom conferir se todos os documentos já foram cadastrados.`
     }
 
     $modalCustomBody
         .html('')
         .addClass('d-none')
     $modalCustomTitle
-        .text("Não é possivel realizar este saque")
+        .text("Você tem documentos pendentes")
         .parent()
-        .addClass('debit-pending');
+        .removeClass('debit-pending');
 
     $modal
         .removeClass('d-none')
         .html(`
-                <h3 class="text-center mt-10" id="text-title-withdrawal-custom">
-                    ${title}
+                <div class="text-center my-10">
+                    <svg width="151" height="150" viewBox="0 0 151 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M75.5 150C116.921 150 150.5 116.421 150.5 75C150.5 33.5786 116.921 0 75.5 0C34.0786 0 0.5 33.5786 0.5 75C0.5 116.421 34.0786 150 75.5 150Z" fill="url(#paint0_linear_729_70)"/>
+                        <path d="M120.5 150H30.5V53C34.742 52.9952 38.8089 51.308 41.8084 48.3085C44.808 45.3089 46.4952 41.242 46.5 37H104.5C104.496 39.1014 104.908 41.1828 105.713 43.1238C106.518 45.0648 107.7 46.8268 109.191 48.308C110.672 49.7991 112.434 50.9816 114.375 51.787C116.317 52.5924 118.398 53.0047 120.5 53V150Z" fill="white"/>
+                        <path d="M75.5 102C88.7548 102 99.5 91.2548 99.5 78C99.5 64.7452 88.7548 54 75.5 54C62.2452 54 51.5 64.7452 51.5 78C51.5 91.2548 62.2452 102 75.5 102Z" fill="#4285F4"/>
+                        <path d="M83.9853 89.3139L75.5 80.8286L67.0147 89.3139L64.1863 86.4854L72.6716 78.0002L64.1863 69.5149L67.0147 66.6865L75.5 75.1717L83.9853 66.6865L86.8137 69.5149L78.3284 78.0002L86.8137 86.4854L83.9853 89.3139Z" fill="white"/>
+                        <path d="M88.5 108H62.5C60.8431 108 59.5 109.343 59.5 111C59.5 112.657 60.8431 114 62.5 114H88.5C90.1569 114 91.5 112.657 91.5 111C91.5 109.343 90.1569 108 88.5 108Z" fill="#DFEAFB"/>
+                        <path d="M97.5 120H53.5C51.8431 120 50.5 121.343 50.5 123C50.5 124.657 51.8431 126 53.5 126H97.5C99.1569 126 100.5 124.657 100.5 123C100.5 121.343 99.1569 120 97.5 120Z" fill="#DFEAFB"/>
+                        <defs>
+                        <linearGradient id="paint0_linear_729_70" x1="75.5" y1="0" x2="75.5" y2="150" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#E3ECFA"/>
+                        <stop offset="1" stop-color="#DAE7FF"/>
+                        </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h3 class="text-center" id="text-title-withdrawal-custom">
+                    Não é possível realizar saque sem a confirmação dos documentos.
                 </h3>
                 <p id="text-description-withdrawal-custom">
                     ${description}
@@ -519,11 +523,16 @@ function modalDocsPending(data) {
 
     $footer
         .html(`
-            <hr>
             <div class="row justify-content-center w-p100">
-                <button class="btn col-auto s-btn-border" data-dismiss="modal" aria-label="Close"
-                style="background-color: #2E85EC; color: #FFF">
-                    Ok, entendi!
+                <a class="pointer" href="${data.route}">
+                    <button class="btn col-auto s-btn-border mr-10" style="background-color: #2E85EC; color: #FFF">
+                        Enviar documentos
+                    </button>
+                </a>
+
+                <button class="btn btn-outline-default col-auto s-btn-border m-0"
+                style="border-color: #484848;" data-dismiss="modal" aria-label="Close">
+                    <strong style="color: #484848">Deixar para depois</strong>
                 </button>
             </div>
         `);
@@ -589,8 +598,8 @@ function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
 
     if (singleValue) {
         return `
-                <div id="just-value-show" class="text-center mt-25">
-                    <div class="btn btn-primary s-btn s-btn-border green" id="single-value" data-value="${dataWithdrawal.bigger_value}">
+                <div id="just-value-show" class="text-center">
+                    <div id="single-value" data-value="${dataWithdrawal.bigger_value}">
                         ${biggerValue}
                     </div>
                 </div>
