@@ -31,7 +31,7 @@
                         </h4>
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-3 transfers_company_select">
                     <div class="input-holder">
                         <label for="transfers_company_select"> Empresa</label>
                         <select style='border-radius: 8px' class="sirius-select"
@@ -78,7 +78,7 @@
                 </div>
                 <div class="mt-10 w-p100">
                     <div class="col-md-12 px-0 mb-20">
-                        <div class="input-holder">
+                        <div class="input-holder transfers_company_select_mobile">
                             <label for="transfers_company_select_mobile"> Empresa</label>
                             <select style='border-radius: 8px'
                                     class="sirius-select"

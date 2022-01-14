@@ -3,8 +3,9 @@ $(window).on('load', function () {
     $(document).on("change", "#transfers_company_select, #transfers_company_select_mobile", function () {
         let value = $(this);
         let option = value.find('option:selected').val();
-        value.find(`option[value="${option}"]`)
+        let text = value.find('option:selected').text();
 
+        $(".transfers_company_select .sirius-select-text, .transfers_company_select_mobile .sirius-select-text").text(text)
         $('#custom-input-addon').val('');
         updateBalances(option);
         if (value.children("option:selected").attr('country') != 'brazil') {
@@ -16,7 +17,7 @@ $(window).on('load', function () {
 
 });
 
-window.updateBalances = function(company) {
+window.updateBalances = function(company_code = '') {
 
     loadOnAny(".number", false, {
         styles: {
@@ -34,11 +35,12 @@ window.updateBalances = function(company) {
 
     loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
 
+    let companyCode = company_code ? company_code :  $("#transfers_company_select option:selected").val();
     $.ajax({
         url: "/api/finances/getbalances",
         type: "GET",
         data: {
-               company: company,
+               company: companyCode,
                gateway_id: gatewayCode
         },
         dataType: "json",
