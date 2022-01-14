@@ -265,19 +265,19 @@ $(document).ready(function(){
                                 $("#cancel-withdrawal-" + data.name).fadeOut();
 
                                 setTimeout(() => {
-                                    $("#balance-not-available-" + data.name).fadeIn().css("display","inline-block");
+                                    $("#balance-not-available-" + data.name).fadeIn().css("display","block");
                                     $("#request-withdrawal-" + data.id).fadeIn();
                                 }, 400)
                             });
 
-                                $(document).off("click","#new-withdrawal-" + data.name);
-                                $(document).on("click","#new-withdrawal-" + data.name,function(){
-                                    if(data.id == GETNET || data.id == GERENCIA_NET) {
-                                        customWithdrawal(data.id)
-                                    } else {
-                                        defaultWithdrawal(data.id);
-                                    }
-                                });
+                            $(document).off("click","#new-withdrawal-" + data.name);
+                            $(document).on("click","#new-withdrawal-" + data.name,function(){
+                                if(data.id == GETNET || data.id == GERENCIA_NET) {
+                                    customWithdrawal(data.id)
+                                } else {
+                                    defaultWithdrawal(data.id);
+                                }
+                            });
                         }else{
                             $('#val-skeleton').hide();
                             $('#container_val').css({
