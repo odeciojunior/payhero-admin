@@ -1979,3 +1979,7 @@ tbody td{
 #btn-edit-products-plan:not(:disabled):hover svg path {
     fill:#ffffff;
 }
+
+#table-plans .options-column-width {
+    width: 120px !important;
+}

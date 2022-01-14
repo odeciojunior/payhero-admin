@@ -39,7 +39,7 @@ class PlansDetailsResource extends JsonResource
         }
 
         $limit_name = 24;
-        $limit_description = 60;
+        $limit_description = 38;
 
         return [
             'id' => hashids_encode($this->id),

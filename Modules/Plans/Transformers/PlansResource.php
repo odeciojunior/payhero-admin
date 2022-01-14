@@ -29,7 +29,7 @@ class PlansResource extends JsonResource
         $costCurrency = (!is_null($this->project->notazz_configs)) ? json_decode($this->project->notazz_configs) : null;
 
         $limit_name = 24;
-        $limit_description = 60;
+        $limit_description = 38;
 
         return [
             'id'                        => Hashids::encode($this->id),
