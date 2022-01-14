@@ -513,34 +513,22 @@ var loadingCustomStage1 = `
         </div>
     </div>
 
-    <div class="row" style="margin-bottom: 40px;">
+    <div class="row" style="margin-bottom: 20px;">
         <div class="col-12">
             <div style="display: flex;">
-                <div class="placeholder-picture" style="width: 56px; height: 56px; margin-right: 16px;"></div>
+                <div style="margin-right: 16px;">
+                    <div class="placeholder-picture" style="width: 56px; height: 56px;"></div>
+                </div>
                 <div class="placeholder-picture" style="height: 56px;"></div>
             </div>
         </div>
     </div>
-    <div class="row" style="margin-bottom: 40px;">
+    <div class="row" style="margin-bottom: 20px;">
         <div class="col-12">
             <div style="display: flex;">
-                <div class="placeholder-picture" style="width: 56px; height: 56px; margin-right: 16px;"></div>
-                <div class="placeholder-picture" style="height: 56px;"></div>
-            </div>
-        </div>
-    </div>
-    <div class="row" style="margin-bottom: 40px;">
-        <div class="col-12">
-            <div style="display: flex;">
-                <div class="placeholder-picture" style="width: 56px; height: 56px; margin-right: 16px;"></div>
-                <div class="placeholder-picture" style="height: 56px;"></div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <div style="display: flex;">
-                <div class="placeholder-picture" style="width: 56px; height: 56px; margin-right: 16px;"></div>
+                <div style="margin-right: 16px;">
+                    <div class="placeholder-picture" style="width: 56px; height: 56px;"></div>
+                </div>
                 <div class="placeholder-picture" style="height: 56px;"></div>
             </div>
         </div>
@@ -596,7 +584,7 @@ var loadingCustomStage2 = `
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="margin-bottom: 20px;">
         <div class="col-12">
             <div class="placeholder-picture" style="height: 28px;"></div>
         </div>

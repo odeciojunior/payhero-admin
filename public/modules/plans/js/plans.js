@@ -296,8 +296,6 @@ $(function () {
                                 }
                             });
 
-                            console.log(selected_products);
-
                             var appendProductsPlan = '<div class="d-flex">';
                             selected_products.forEach(function(product) {
                                 var index = selected_products.map(function(p) { return p.id; }).indexOf(product.id);
@@ -636,7 +634,7 @@ $(function () {
                         });
                     });
 
-                    var price = parseFloat(response.data.price.replace('R$', '').replace('$ ', '').replace('.', '').replace(',', '.')).toFixed(2);
+                    var price = parseFloat(response.data.price.replace('R$', '').replace('$ ', '').replace(/\./g, '').replace(',', '.')).toFixed(2);
 
                     var tax = ((price * (gateway_tax + 1)) / 100).toFixed(2);
                     var costs = calculateCostsPlan();
@@ -743,7 +741,7 @@ $(function () {
         });
     }
 
-    function getCustom(modal) {
+    function getCustom(modal, showLoading = true) {
         $(modal).find('.product-photo').unbind('load');
 
         $(modal).find('.modal-body').css('height', 'auto').attr('style', 'padding-bottom: 0px !important');
@@ -757,7 +755,9 @@ $(function () {
         ).removeClass('justify-content-end').addClass('justify-content-between');
 
         $(modal).find('.tab-pane').removeClass('show active').promise().done(function() {
-            $(modal).find('.modal-body').append(loadingCustomStage1);
+            if (showLoading) {
+                $(modal).find('.modal-body').append(loadingCustomStage1);
+            }
 
             var append = '';
             append += '<div class="row header">';
@@ -877,6 +877,8 @@ $(function () {
 
     function getProductCustom(modal, product_ID) {
         $(modal).find('.modal-body').css('height', 'auto');
+
+        $(modal).find('#product_id').val(product_ID);
 
         $(modal).find('.modal-footer').html(
             '<button id="btn-modal-plan-return" type="button" data-type="custom" class="btn btn-default btn-lg" role="button">Voltar</button>' +
@@ -1096,18 +1098,41 @@ $(function () {
                 error: function (_error4) {
                     $(modal).find('.modal-footer').find('.btn').prop('disabled', false);
 
-                    getPlanData(modal, false);
+                    getProductsPlan();
+
+                    getCustom(modal, false);
 
                     alertCustom("error", "Erro ao atualizar configurações do plano");
                 },
                 success: function success(data) {
                     $(modal).find('.modal-footer').find('.btn').prop('disabled', false);
 
-                    getPlanData(modal, true);
+                    getProductsPlan();
+
+                    getCustom(modal, false);
 
                     alertCustom("success", "Configurações do plano atualizado com sucesso");
                 }
             });
+        });
+    }
+
+    function getProductsPlan() {
+        $.ajax({
+            async: false,
+            method: "GET",
+            url: '/api/project/' + projectId + '/plans/' + plan_id,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                products_plan = response.data.products;
+            }
         });
     }
 
@@ -1116,7 +1141,7 @@ $(function () {
 
         for (var i = 0; i < selected_products.length; i++) {
             if (selected_products[i]['value']) {
-                var value = selected_products[i]['value'].replace('.', '').replace(',', '.');
+                var value = selected_products[i]['value'].replace(/\./g, '').replace(',', '.');
                 if (selected_products[i]['currency_type_enum'] == 'USD') {
                     value = value * (currency_quotations / 100);
                 }
@@ -1166,7 +1191,7 @@ $(function () {
     // Calculate details
     $('body').on('keyup', '.box-products #price', function() {
         if ($(this).val() != '') {
-            var price = $(this).val().replace('.', '').replace(',', '.');
+            var price = $(this).val().replace(/\./g, '').replace(',', '.');
             var tax = ((price * (gateway_tax + 1)) / 100).toFixed(2);
             var costs = calculateCostsPlan();
             var comission = (price - tax).toFixed(2);
@@ -1674,7 +1699,7 @@ $(function () {
         $('#modal_edit_plan').find('.modal-body').css('height', 'auto');
 
         if ($('.list-custom-products').find('.row').length == 0) {
-            $('.list-custom-products').html('<div class="row custom-empty"><div class="col-sm-12">Nenhum personalização adicionada</div></div>');
+            $('.list-custom-products').html('<div class="row custom-empty" style="margin-bottom: 20px;"><div class="col-sm-12">Nenhum personalização adicionada</div></div>');
         }
     });
 
@@ -1829,7 +1854,7 @@ $(function () {
                 $(modal).find('#description').val(response.plan.description_short);
                 $(modal).find('#description').attr('data', response.plan.description).attr('data-short', response.plan.description_short);
 
-                var price = response.plan.price.replace('R$', '').replace('.', '').replace(',', '.');
+                var price = response.plan.price.replace('R$', '').replace(/\./g, '').replace(',', '.');
 
                 var tax = ((price * (gateway_tax + 1)) / 100).toFixed(2);
                 var costs = calculateCostsPlan();

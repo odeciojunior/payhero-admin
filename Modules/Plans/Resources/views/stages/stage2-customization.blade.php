@@ -65,7 +65,7 @@
                     </div>
 
                     <div>
-                        <button style="width: 45px; height: 45px;" type="button" class="btn btn-plus" id="add-list-custom-product">
+                        <button style="width: 45px; height: 45px; line-height: 19px;" type="button" class="btn btn-plus" id="add-list-custom-product">
                             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M18 9.5H1M9.5 1V18V1Z" stroke="#41DC8F" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -103,5 +103,7 @@
                 </div>
             </div>
         </div>
+
+        <input type="hidden" name="product_id" id="product_id">
     </form>
 </div>
