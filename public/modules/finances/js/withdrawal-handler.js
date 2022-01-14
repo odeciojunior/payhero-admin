@@ -6,10 +6,10 @@ $(window).on("load", function() {
 
     let url = '';
     if(window.gatewayCode == 'w7YL9jZD6gp4qmv' || window.gatewayCode == 'oXlqv13043xbj4y'){
-        url = '/modules/finances/js/withdrawal-custom.js';
+        url = '/modules/finances/js/withdrawal-custom.js?v=1';
     }
     else {
-        url = '/modules/finances/js/withdrawal-default.js';
+        url = '/modules/finances/js/withdrawal-default.js?v=1';
     }
 
     var script = document.createElement("script");

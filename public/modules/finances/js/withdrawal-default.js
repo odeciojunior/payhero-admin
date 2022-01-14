@@ -122,7 +122,20 @@ $('#bt-withdrawal').on('click', function () {
                         $("#modal-withdrawal-document").html('  ' + response.data.document);
 
                         $("#bt-confirm-withdrawal").off("click");
-                        $("#bt-confirm-withdrawal").on("click", function () {
+                        $("#bt-confirm-withdrawal").on("click", function (e) {
+
+                            var click = $(this);
+                            if (click.data('clicked')) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return false;
+                            }
+                            click.data('clicked', true);
+
+                            window.setTimeout(function(){
+                                click.removeData('clicked');
+                            }, 2000);
+
                             loadOnModal('#modal-body');
 
                             $("#bt-confirm-withdrawal").attr('disabled', 'disabled');
@@ -163,6 +176,10 @@ $('#bt-withdrawal').on('click', function () {
                                     $("#bt-confirm-withdrawal").removeAttr('disabled');
                                 }
                             });
+
+                            window.setTimeout(function(){
+                                $click.removeData('clicked');
+                            }, 2000);
                         });
                     }
                 }
