@@ -1,6 +1,7 @@
 $(function () {
     loadingOnScreen();
     newGraph();
+    newGraphPie();
 
     $.ajax({
         method: "GET",
@@ -510,19 +511,38 @@ $(function () {
 
     // new graphs
     function newGraph() {
-        var options = {
-                seriesBarDistance: 10,
-                fullWidth: true,
-                showArea:true,
-            };
-
         new Chartist.Line('.new-graph', {
-                labels: [1, 2, 3],
-                series: [[5, 9, 7,10,20,30]]
-            }, 
-            
-            options
-        );
+            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            series: [
+              [12, 9, 7, 8, 5],
+            ]
+          }, {
+            fullWidth: true,
+            showArea: true,
+            chartPadding: 0,
+            axisX: {
+              showLabel: false,
+              offset: 0
+            },
+            axisY: {
+              showLabel: false,
+              offset: 0
+            }
+          });
+    }
+
+    function newGraphPie() {
+        new Chartist.Pie('.new-graph-pie', {
+            series: [18, 16, 12, 6]
+          }, {
+            donut: true,
+            donutWidth: 20,
+            donutSolid: true,
+            startAngle: 270,
+            showLabel: false,
+            chartPadding: 0,
+            labelOffset: 0,
+          });
     }
     
 });

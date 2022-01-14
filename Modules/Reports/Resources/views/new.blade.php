@@ -68,21 +68,33 @@
 										<div class="row cards-reports">
 											<div class="card">
 												<div class="card-body">
-													<h6 class="font-size-16 gray-700"> Comissão </h6>
-													<h4 id='revenue-generated' class="font-size-16 gray-1">0</h4>
+                                                    <header class="container">
+													    <h6 class="font-size-16 gray-700"> Comissão </h6>
+                                                        <div class="d-flex value-price">
+													        <h4 id='revenue-generated' class="font-size-16 gray-1">0</h4>
+                                                            <em class="pink">
+                                                                <i class="ms-Icon ms-Icon--SkypeArrow x-hidden-focus"></i>
+                                                                23%
+                                                            </em>
+                                                        </div>
+                                                    </header>
 													<div class="new-graph"></div>
 												</div>
 											</div>
 											<div class="card ">
 												<div class="card-body">
-													<h6 class="font-size-16 gray-700"> Pendentes </h6>
-													<h4 id='qtd-pending' class="font-size-24 bold">0</h4>
+                                                    <header class="container">
+													    <h6 class="font-size-16 gray-700"> Pendentes </h6>
+													    <h4 id='qtd-pending' class="font-size-24 bold">0</h4>
+                                                    </header>
 												</div>
 											</div>
 											<div class="card">
 												<div class="card-body">
-													<h6 class="font-size-16 gray-700"> Cashback </h6>
-													<h4 id='qtd-aproved' class="font-size-24 bold">0</h4>
+                                                    <header class="container">
+													    <h6 class="font-size-16 gray-700"> Cashback </h6>
+													    <h4 id='qtd-aproved' class="font-size-24 bold">0</h4>
+                                                    </header>
 												</div>
 											</div>
 										</div>
@@ -109,13 +121,17 @@
 										<div class="row cards-reports">
 											<div class="card">
 												<div class="card-body">
-													<h6 class="font-size-16 gray-700"> Vendas realizadas </h6>
-													<h4 id='qtd-canceled' class=" font-size-24 bold">0</h4>
+                                                    <header class="container">
+                                                        <h6 class="font-size-16 gray-700"> Vendas realizadas </h6>
+                                                        <h4 id='qtd-canceled' class=" font-size-24 bold">0</h4>
+                                                    </header>
 												</div>
 											</div>
 											<div class="card ">
 												<div class="card-body">
-													<h6 class="font-size-16 gray-700"> Meios de pagamento </h6>
+                                                    <header class="container">
+													    <h6 class="font-size-16 gray-700"> Meios de pagamento </h6>
+                                                    </header>
                                                     <div id="payment-type-items" class="custom-table scrollbar pb-0 pt-0">
                                                         <div class="row container-payment">
 															<div class="container">
@@ -128,7 +144,7 @@
 																			</div>Cartão
 																		</div>
 																		
-																		<div class="box-payment-option">
+																		<div class="box-payment-option option">
 																			<div class="col-payment grey" id='percent-credit-card'>
 																				0
 																				
@@ -151,12 +167,12 @@
 																				<span class="o-cash-dispenser-1"></span>
 																			</div> Boleto
 																		</div>
-																		<div class="box-payment-option">
+																		<div class="box-payment-option option">
 																			<div class="col-payment grey" id='percent-values-boleto'>
 																				0
 																			</div>
 																			<div class="col-payment col-graph">
-																				<div class="bar">barrinha</div>
+																				<div class="bar pink">barrinha</div>
 																			</div>
 																			<div class="col-payment">
 																				<span class="money-td green bold grey" id='boleto-value'></span>
@@ -190,12 +206,12 @@
 																				</svg>
 																			</div> Pix
 																		</div>
-																		<div class="box-payment-option">
+																		<div class="box-payment-option option">
 																			<div class="col-payment grey" id='percent-values-pix'>
 																				0
 																			</div>
 																			<div class="col-payment col-graph">
-																				<div class="bar">barrinha</div>
+																				<div class="bar purple">barrinha</div>
 																			</div>
 																			<div class="col-payment">
 																				<span class="money-td green grey bold" id='pix-value'></span>
@@ -210,8 +226,10 @@
 											</div>
 											<div class="card">
 												<div class="card-body">
-													<h6 class="font-size-16 gray-700"> Produtos </h6>
-													<h4 id='qtd-reembolso' class=" font-size-24 bold">0</h4>
+                                                    <header class="container">
+													    <h6 class="font-size-16 gray-700"> Produtos </h6>
+													    <h4 id='qtd-reembolso' class=" font-size-24 bold">0</h4>
+                                                    </header>
 												</div>
 											</div>
 										</div>
@@ -238,24 +256,71 @@
 										<div class="row cards-reports">
 											<div class="card">
 												<div class="card-body">
-													<h6 class="font-size-16 gray-700"> Cupons </h6>
-													<h4 id='qtd-dispute' class=" font-size-24 bold">0</h4>
+                                                    <header class="container">
+													    <h6 class="font-size-16 gray-700"> Cupons </h6>
+													    <h4 id='qtd-dispute' class=" font-size-24 bold">0</h4>
+                                                    </header>
+                                                    <div class="container d-flex justify-content-between box-donut">
+														<div class="new-graph-pie"></div>
+														<div class="data-pie">
+															<ul>
+																<li>
+																	<div class="donut-pie blue">
+																		<figure>
+																			<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" style="&#10;&#10;"/></svg>
+																		</figure>
+																		<div>Mariana</div>
+																	</div>
+																	<div class="grey bold">18</div>
+																</li>
+																<li>
+																	<div class="donut-pie pink">
+																		<figure>
+																			<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" style="&#10;&#10;"/></svg>
+																		</figure>
+																		<div>Cassio</div>
+																	</div>
+																	<div class="grey bold">16</div>
+																</li>
+																<li>
+																	<div class="donut-pie purple">
+																		<figure>
+																			<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" style="&#10;&#10;"/></svg>
+																		</figure>
+																		<div>Agosto</div>
+																	</div>
+																	<div class="grey bold">12</div>
+																</li>
+																<li>
+																	<div class="donut-pie orange">
+																		<figure>
+																			<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" style="&#10;&#10;"/></svg>
+																		</figure>
+																		<div>meuaniversario</div>
+																	</div>
+																	<div class="grey bold">06</div>
+																</li>
+															</ul>
+														</div>
+                                                    </div>
 												</div>
 											</div>
 											<div class="card">
 												<div class="card-body">
-													<h6 class="font-size-16 gray-700"> Regiões </h6>
-													<h4 id='qtd-chargeback' class=" font-size-24 bold">0</h4>
+                                                    <header class="container">
+                                                        <h6 class="font-size-16 gray-700"> Regiões </h6>
+                                                        <h4 id='qtd-chargeback' class=" font-size-24 bold">0</h4>
+                                                    </header>
 												</div>
 											</div>
 											<div class="card ">
-												<div class="card-body">
+												<div class="card-body card-origin">
 													<div class="row">
 														<header class="col-8">
 															<h6 class="font-size-16 gray-700"> Origens </h6>
 														</header>
 														<div class="col-4">
-															<select class="form-control float-right sel-origin" id='origin'>
+															<select class="form-control float-right" id='origin'>
 																<option selected value="src">SRC</option>
 																<option value="utm_source">UTM Source</option>
 																<option value="utm_medium">UTM Medium</option>
