@@ -25,7 +25,7 @@
             </tr>
         </thead>
         <tbody id="table-statement-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}"
-               class="custom-t-body table-statement-body-class s-table table-finance-transfers"></tbody>
+               class="custom-t-body table-statement-body-class"></tbody>
     </table>
 </div>
 

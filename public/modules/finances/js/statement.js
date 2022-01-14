@@ -255,11 +255,19 @@ window.updateAccountStatementData = function() {
 
             let error = "Erro ao gerar o extrato";
             $("#export-excel").addClass('d-none');
-            $("#table-statement-body").html(
-                "<tr style='border-radius: 16px;'><td style='padding:  10px !important' style='' colspan='11' class='text-center'>" +
-                    error +
-                    "</td></tr>"
-            );
+            $("#table-statement-body").html(`
+            <tr class='text-center bg-transparent'>
+                        <td style='height: 300px' colspan='11' >
+                            <div class="d-flex justify-content-center align-items-center h-p100">
+                                <div class="row m-0 row justify-content-center align-items-center h-p100 font-size-16">
+                                        <img style='width:124px; margin-right:12px;' alt=""
+                                        src='${$("#table-transfers-body").attr("img-empty")}'>
+                                    Erro ao gerar extrato
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+            `);
             errorAjaxResponse(error);
         },
         success: (response) => {
@@ -273,11 +281,19 @@ window.updateAccountStatementData = function() {
                     true
                 );
                 $("#export-excel").addClass('d-none');
-                $("#table-statement-body").html(
-                    "<tr class='text-center'><td colspan='11' style='vertical-align: middle;height:257px;'><img style='width:124px;margin-right:12px;' src='" +
-                        $("#table-statement-body").attr("img-empty") +
-                        "'>Nenhum dado encontrado</td></tr>"
-                );
+                $("#table-statement-body").html(`
+                    <tr class='text-center bg-transparent'>
+                        <td style='height: 300px' colspan='11' >
+                            <div class="d-flex justify-content-center align-items-center h-p100">
+                                <div class="row m-0 row justify-content-center align-items-center h-p100 font-size-16">
+                                    <img style='width:124px; margin-right:12px;' alt=""
+                                         src='${$("#table-transfers-body").attr("img-empty")}'>
+                                        Nenhum dado encontrado
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `);
                 return false;
             }
 
