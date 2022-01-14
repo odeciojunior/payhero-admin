@@ -572,7 +572,7 @@ select, .select-pad {
     .s-table.table-finance-schedule {
         grid-template-columns: 1fr 1fr;
         grid-template-areas: "sale status"
-                             "date value";
+                             "date value"
                              "date-start date-end";
     }
 

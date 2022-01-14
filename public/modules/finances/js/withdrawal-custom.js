@@ -180,7 +180,7 @@ function modalDebitWithdrawal(currentBalance, debitValue, withdrawal) {
                         <div class='col-7'><p> VALOR SOLICITADO </p></div>
                         <div class="col-5 pl-0 text-right">
                             <span class="currency">
-                                <span id="requested-amount-withdrawal" class="text-right" style="color: #1BE4A8;">
+                                <span id="requested-amount-withdrawal" class="text-right" style="color: #636363;">
                                     ${formatMoney(removeFormatNumbers(currentBalance))}
                                 </span>
                             </span>
