@@ -123,7 +123,7 @@ class AsaasAnticipations extends Command
                             $updateUser = true;
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'excede seu limite atual') ) ) {
-                            $error = true;
+                            $error = false;
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças que serão creditadas') ) ) {
                             $error = false;
