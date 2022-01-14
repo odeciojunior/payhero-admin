@@ -238,7 +238,7 @@ $(document).ready(function () {
         $("#project-name").html(name);
         $("#project-token").val(token);
 
-        $('#skiptocart-input').prop('checked', skip).val(skip);
+        $('#skiptocart-input').prop('checked', skip==1?true:false).val(skip);
 
     }
 
@@ -265,6 +265,14 @@ $(document).ready(function () {
 
 
     $('#skiptocart-input').on('change', function () {
+
+        if($('#skiptocart-input').prop('checked')==true){
+            $(this).val(1)
+        }else{
+            $(this).val(0)
+
+        }
+
         var input = $(this)
 
         $.ajax({
