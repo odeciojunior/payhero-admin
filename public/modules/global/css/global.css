@@ -563,7 +563,7 @@ a.label {
 }
 
 .table thead > tr > td, .table thead > tr > th {
-    background-color: #EFF7FF;
+    background-color: #FBFBFB;
     /* padding: 20px 0 20px 20px !important; */
     color: #002654;
 }

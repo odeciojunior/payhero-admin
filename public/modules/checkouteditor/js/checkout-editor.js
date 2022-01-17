@@ -207,47 +207,6 @@ $(document).ready( function () {
 
     $("#whatsapp_phone").mask("(00) 00000-0000");
 
-    // ----------------- Editor de Texto --------------------
-    var formats = ["bold", "italic", "underline"];
-
-    var quillTextbar = new Quill("#topbar_content", {
-        modules: {
-            toolbar: "#topbar_content_toolbar_container",
-        },
-        placeholder: "",
-        theme: "snow",
-        formats: formats,
-    });
-
-    const limit = 1000;
-
-    quillTextbar.on("text-change", function (delta, old, source) {
-        if (quillTextbar.getLength() > limit) {
-            quillTextbar.deleteText(limit, quillTextbar.getLength());
-        }
-    });
-
-    var quillThanksPage = new Quill("#post_purchase_message_content", {
-        modules: {
-            toolbar: "#post_purchase_message_content_toolbar_container",
-        },
-        theme: "snow",
-        formats: formats,
-    });
-
-    quillThanksPage.on("text-change", function () {
-        $(".shop-message-preview-content").empty();
-        $(".shop-message-preview-content").append(
-            $(quillThanksPage.root.innerHTML)
-        );
-    });
-
-    quillThanksPage.on("text-change", function (delta, old, source) {
-        if (quillTextbar.getLength() > limit) {
-            quillTextbar.deleteText(limit, quillTextbar.getLength());
-        }
-    });
-
     $("#download_template_banner").on("click", (e) => {
         e.preventDefault();
         window.open($(this).attr("data-href"), "_blank");
@@ -534,6 +493,8 @@ $(document).ready( function () {
             $('#logo_preview_desktop_div').removeClass('has-banner');
         }
     });
+
+    $('[data-toggle="tooltip"]').tooltip()
 });
 
 function replacePreview(name, src, fname = "") {

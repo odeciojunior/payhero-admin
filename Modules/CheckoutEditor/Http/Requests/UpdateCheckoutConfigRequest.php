@@ -54,7 +54,7 @@ class UpdateCheckoutConfigRequest extends FormRequest
             'post_purchase_message_title' => 'required_if:post_purchase_message_enabled,1|string',
             'post_purchase_message_content' => 'required_if:post_purchase_message_enabled,1|string',
             'whatsapp_enabled' => 'required|boolean',
-            'support_phone' => 'required_if:whatsapp_enabled,1|string',
+            'support_phone' => 'string',
             'theme_enum' => 'nullable|integer',
             'color_primary' => 'required|string',
             'color_secondary' => 'required|string',

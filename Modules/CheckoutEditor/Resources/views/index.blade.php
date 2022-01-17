@@ -159,11 +159,11 @@
                             </div>
 
                             <div class="countdown-content">
-                                <div class="input-container">
-                                    <label for="countdown-time" class="checkout-label">Tempo</label>
-                                    <div class="time-div">
-                                        <input class="time-input" type="number" id="countdown_time" name="countdown_time" value="15" min="1" max="99" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
-                                        <div class="min-input-label">min</div>
+                                <div class="input-container" style="width: 100px;">
+                                    <label for="countdown_time" class="checkout-label">Tempo</label>
+                                    <div class="tagged-input-div">
+                                        <input class="tagged-input" type="number" id="countdown_time" value="15" name="countdown_time" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                        <div class=" input-tag">min.</div>
                                     </div>
                                 </div>
 
@@ -316,7 +316,7 @@
                                                         Mensagem
                                                     </th>
                                                     <th>
-                                                        Qnd Mínima
+                                                        Qtd Mínima
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -324,28 +324,28 @@
                                                 <tr>
                                                     <td><b>XX</b> pessoas estão comprando <b>{produto}</b> nesse momento.</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification_buying_minimum" name="notification_buying_minimum" min="1" max="999" style="padding: 3px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                                        <input class="table-number-input" type="number" id="notification_buying_minimum" name="notification_buying_minimum" value="1" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                     </td>
                                                 </tr>
 
                                                 <tr>
                                                     <td><b>XX</b> pessoas compraram <b>{produto}</b> nos últimos 30 minutos.</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification_bought_30_minutes_minimum" name="notification_bought_30_minutes_minimum" min="1" max="999" style="padding: 3px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                                        <input class="table-number-input" type="number" id="notification_bought_30_minutes_minimum" name="notification_bought_30_minutes_minimum" value="1" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                     </td>
                                                 </tr>
 
                                                 <tr>
                                                     <td><b>XX</b> pessoas compraram <b>{produto}</b> na última hora.</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification_bought_last_hour_minimum" name="notification_bought_last_hour_minimum" min="1" max="999" style="padding: 3px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                                        <input class="table-number-input" type="number" id="notification_bought_last_hour_minimum" name="notification_bought_last_hour_minimum" value="1" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                     </td>
                                                 </tr>
 
                                                 <tr>
                                                     <td><b>{nome}</b> de <b>{cidade}</b> acabou de comprar esse produto</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification_just_bought_minimum" name="notification_just_bought_minimum" min="1" max="999" style="padding: 3px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                                        <input class="table-number-input" type="number" id="notification_just_bought_minimum" name="notification_just_bought_minimum" value="1" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                     </td>
                                                 </tr>
 
@@ -381,7 +381,7 @@
                             <div class="social-proof-content">
                                 <div class="input-container">
                                     <label for="social_proof_message" class="checkout-label">Mensagem</label>
-                                    <textarea class="checkout-textarea" id="social_proof_message" name="social_proof_message" rows="1">Outros {num-visitantes} estão finalizando esta compra nesse momento.</textarea>
+                                    <textarea class="checkout-textarea" id="social_proof_message" name="social_proof_message" rows="1">Outros { num-visitantes } estão finalizando esta compra nesse momento.</textarea>
                                 </div>
 
                                 <div>
@@ -393,9 +393,12 @@
                                 </div>
 
 
-                                <div class="input-container">
+                                <div class="input-container" style="width: 150px;">
                                     <label for="social_proof_minimum" class="checkout-label">Mínimo de vistantes</label>
-                                    <input type="number" class="min-visitors-input" id="social_proof_minimum" name="social_proof_minimum" value="15" min="1" max="999" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                    <div class="tagged-input-div">
+                                        <input class="tagged-input" type="number" id="social_proof_minimum" name="social_proof_minimum" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                        <div class=" input-tag">visitantes</div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -430,7 +433,11 @@
                             <div class="input-container" style="flex: 3">
                                 <label for="company_billing" class="checkout-label">Empresa responsável pelo faturamento</label>
                                 <div class='form-group'>
-                                    <select id='companies' name='company_id' class="form-control select-pad"> </select>
+                                    <select id='companies' name='company_id' class="sirius-select">
+                                        <div class="sirius-select-text" style="height: 43px;">
+                                            Empresas
+                                        </div>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -466,7 +473,7 @@
 
                         <div class="row-flex">
                             <div class="input-container" style="flex: 2">
-                                <label>Seletor de Quantidade</label>
+                                <label data-toggle="tooltip" data-placement="bottom" title="Teste">Seletor de Quantidade</label>
                                 <div class="switch-holder labeled mb-3">
                                     <label class="switch" style='top:3px'>
                                         <input type="checkbox" id="quantity_selector_enabled" name="quantity_selector_enabled" class='check switch-checkout switch-labeled' data-label="count-selector-label">
@@ -587,7 +594,7 @@
                             <div class="input-container">
                                 <label for="company_billing" class="checkout-label">Dias para vencimento</label>
                                 <div class="tagged-input-div">
-                                    <input class="tagged-input" type="number" id="bank_slip_due_days" name="bank_slip_due_days" min="1" max="99" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                    <input class="tagged-input" type="number" id="bank_slip_due_days" name="bank_slip_due_days" value="3" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <div class=" input-tag">dias</div>
                                 </div>
                             </div>
@@ -618,7 +625,7 @@
                             <div class="input-container credit-card-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">Cartão de crédito</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="automatic_discount_credit_card" name="automatic_discount_credit_card" value="5" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                    <input class="tagged-input" type="number" id="automatic_discount_credit_card" name="automatic_discount_credit_card" value="3" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
@@ -626,7 +633,7 @@
                             <div class="input-container bank-billet-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">Boleto</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="automatic_discount_bank_slip" name="automatic_discount_bank_slip" value="5" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                    <input class="tagged-input" type="number" id="automatic_discount_bank_slip" name="automatic_discount_bank_slip" value="3" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
@@ -634,7 +641,7 @@
                             <div class="input-container pix-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">PIX</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="automatic_discount_pix" name="automatic_discount_pix" value="5" min="1" max="99" maxlength="2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                    <input class="tagged-input" type="number" id="automatic_discount_pix" name="automatic_discount_pix" value="3" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
@@ -1322,7 +1329,7 @@
 
                 </div>
 
-                <div class="editor-buttons position-fixed container page-content pr-5 pr-sm-45" style="padding: 0;">
+                <div class="editor-buttons position-fixed container page-content" style="width: inhe;">
                     <div class="save-changes " id="save_changes" style="display: none;">
                         <div style="margin-right: 50px;">
                             Você tem alterações que <strong>não estão salvas</strong>
@@ -1359,9 +1366,8 @@
                             Um momento... estamos salvando suas alterações.
                         </div>
 
-                        <div>
-
-                        </div>
+                        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                        
                     </div>
                 </div>
 
@@ -1370,12 +1376,12 @@
     </form>
 
     <div class="modal fade" id="modal_banner" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-crop" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalLabel">Banner no topo</h5>
                 </div>
-                <div class="molda-crop modal-body">
+                <div class="modal-crop modal-body">
                     <div class="img-container">
                         <div class="row">
                             <div class="container-crop">
@@ -1390,13 +1396,13 @@
                         <button type="button" class="btn btn-secondary btn-crop-outline zoom" id="zoom-out">-</button>
                         <input id="zoom-slide" type="range" min="0" max="1" step="0.1" value="0">
                         <button type="button" class="btn btn-secondary btn-crop-outline zoom" id="zoom-in">+</button>
-                        <button type="button" class="btn btn-secondary btn-crop-outline" id="crop-reset">Reset</button>
+                        <button type="button" class="btn btn-crop-reset" id="crop-reset">Reset</button>
                     </div>
 
                     <div id='slider'></div>
                     <div>
-                        <button type="button" class="btn btn-secondary btn-crop-outline" id="button-cancel-crop" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary btn-crop-filled" id="button-crop">Cortar</button>
+                        <button type="button" class="btn btn-crop-cancel" id="button-cancel-crop" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-crop-cut" id="button-crop">Cortar</button>
                     </div>
                 </div>
             </div>
