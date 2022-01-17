@@ -3,10 +3,10 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=10') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=123') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=123') }}">
         <link rel="stylesheet" href="{{ asset('modules/chargebacks/css/contestations-index.css?v=12') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
@@ -76,62 +76,61 @@
                     @csrf
                     <div id="filter-contestations" class="card">
                         <div class="row align-items-baseline">
-                            <div class="col-sm-12 col-md mt-10">
+                            <div class="col-sm-12 col-md-3 mt-10">
                                 <label for="transaction">Transação</label>
-                                <input name="transaction" id="transaction" class="form-control input-pad" placeholder="Transação">
+                                <input name="transaction" id="transaction" class="input-pad" placeholder="Transação">
                             </div>
 
-                            <div class="col-sm-12 col-md mt-10">
+                            <div class="col-sm-12 col-md-3 mt-10">
                                 <label for="is_expired">Expiração</label>
                                 <br>
-                                <select name='is_expired' id="is_expired" class="form-control input-pad">
+                                <select name='is_expired' id="is_expired" class="input-pad">
                                     <option value="0">Ambos</option>
                                     <option value="1">Expirado</option>
                                     <option value="2" selected>Não expirado</option>
                                 </select>
                             </div>
 
-                            <div class="col-sm-12 col-md mt-10">
+                            <div class="col-sm-12 col-md-3 mt-10">
                                 <label for="date_type">Data</label>
-                                <select name='date_type' id="date_type" class="form-control input-pad">
+                                <select name='date_type' id="date_type" class="input-pad">
                                     <option value="expiration_date">Data da expiração</option>
                                     <option value="transaction_date">Data da compra</option>
                                     <option value="adjustment_date">Data da contestação</option>
                                 </select>
                             </div>
 
-                            <div class="col-sm-12 col-md mt-10">
+                            <div class="col-sm-12 col-md-3 mt-10">
                                 <div class="form-group form-icons">
                                     <label for="date_type">&nbsp;</label>
                                     <i style="right: 24px;top: 35px;"
                                        class="form-control-icon form-control-icon-right o-agenda-1 mt-15 font-size-20"></i>
-                                    <input name='date_range' id="date_range" class="form-control input-pad pr-30"
-                                           placeholder="Clique para editar..." readonly style="">
+                                    <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly style="">
                                 </div>
                             </div>
                         </div>
                         <div class="collapse" id="bt_collapse">
                             <div class="row">
-                                <div class="col-sm-12 col-md mt-10">
+                                <div class="col-sm-12 col-md-3 mt-10">
                                     <label for="project">Projeto</label><br>
-                                    <select name='project' id="project" class="form-control input-pad">
+                                    <select name='project' id="project" class="input-pad">
                                         <option value="">Todos projetos</option>
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md mt-10">
+                                <div class="col-sm-12 col-md-3 mt-10">
                                     <label for="is_contested">Concluído</label>
                                     <br>
-                                    <select name='is_contested' id="is_contested" class="form-control input-pad">
+                                    <select name='is_contested' id="is_contested" class="input-pad">
                                         <option value="0">Ambos</option>
                                         <option value="1">Concluído</option>
                                         <option value="2">Não concluído</option>
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md mt-10">
+                                <div class="col-sm-12 col-md-3 mt-10">
                                     <label for="contestation_situation">Situação</label>
-                                    <select name='contestation_situation' id="contestation_situation" class="form-control select-pad">
+                                    <select name='contestation_situation' id="contestation_situation" class="input-pad">
                                         <option value="">Todos status</option>
                                         <option value="1">Em Andamento</option>
                                         <option value="2">Perdida</option>
@@ -139,14 +138,16 @@
                                     </select>
                                 </div>
 
-                                <div class="col-sm-12 col-md mt-10">
+                                <div class="col-sm-12 col-md-3 mt-10">
                                     <label for='customer'>Cliente</label>
-                                    <input id="customer" name="customer" class="form-control select-pad" placeholder="Nome do cliente">
+                                    <input id="customer" name="customer" class="input-pad" placeholder="Nome do cliente">
                                 </div>
-                                <div class='col-sm-12 col-md-2 mt-10'>                                
-                                    <label for="sale_approve" class='mb-10'>Vendas aprovadas</label>
+                            </div>
+                            <div class="row justify-content-end">
+                                <div class='col-sm-12 col-md-2 mt-10 px-0'>                                
+                                    <label for="sale_approve" class='pl-50 mb-10'>Vendas aprovadas</label>
                                     <br>
-                                    <label class="switch m-0 mx-5">
+                                    <label class="switch mr-0" style="margin-left:140px">
                                         <input type="checkbox" id='sale_approve' name="sale_approve" >
                                         <span class="slider round"></span>
                                     </label>
