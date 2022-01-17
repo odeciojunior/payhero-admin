@@ -1013,7 +1013,8 @@ $(function () {
                 }
             });
         } else {
-            var current_page = $('#pagination-plans').find('.current_page').text();
+            var current_page = $('#pagination-plans').find('.active').text();
+
 
             $('.box-products .form-control').each(function() {
                 var product_ID = $(this).parents('.product').attr('data-code');
