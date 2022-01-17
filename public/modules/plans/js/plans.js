@@ -467,7 +467,7 @@ $(function () {
                                         reverse: true,
                                         onKeyPress: function(val, e, field, options) {
                                             if (val.replace(/\./g, '').replace(',', '.') > 10000000.00) {
-                                                $('input[name="value"]').val('10.000.000,00');
+                                                field.val('10.000.000,00');
                                                 alertCustom('error', 'Valor máximo de 10.000.000,00 por produto');
                                             }
                                         }
