@@ -41,68 +41,68 @@
 
                     <div class="row no-gutters">
 
-                        <div class="col-md-12 col-lg-8 card mr-0 mr-sm-30 px-0">
+                        <div class="col-md-12 col-lg-9 card mr-0 mr-sm-30 px-0">
 
                             <div class="row no-gutters">
 
                                 <div class="col-md-4">
                                     <div class="pl-0">
-                                        <img id="show-photo" class="card-img" src="" alt="">
+                                        <img id="show-photo" class="card-img-edit" src="" alt="">
                                     </div>
                                 </div>
 
-                                <div class="col-md-8 d-flex flex-column justify-content-between pl-25 pr-25">
+                                <div class="col-md-8 d-flex flex-column justify-content-between pl-0 pr-25">
                                     <div alt="titulo" class="pt-25 mr-20">
                                         <!-- TITULO CRIADO EM -->
                                         <div class="row row-title justify-content-between pt-0">
                                             <h4 class="title-pad mr-5 s-title"></h4>
                                             <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill mr-10"></span>
                                         </div>
-                                        <div style="color: #C8C8C8" class="card-text gray font-size-10" id="created_at"></div>
+                                        <div style="color: #C8C8C8" class="card-text gray font-size-14" id="created_at"></div>
                                     </div>
 
                                     <!-- DESCRISAO PRODUTO -->
                                     <div class="my-20">
-                                        <h5 style="line-height: unset" class="sm-title s-title-description mb-5"><strong> Descrição </strong></h5>
+                                        <h5 style="line-height: unset" class="sm-title s-title-description mb-5"><strong> Descrição da loja </strong></h5>
                                         <p id="show-description" class="card-text sm s-description"></p>
                                     </div>
 
                                     <!-- RODA PE -->
                                     <div class="row no-gutters">
                                         <!-- CHARGEBACK -->
-                                        <div class="col-md-4 d-flex alert m-0 product-chargeback product-alert-color">
+                                        <div class="col-md-4 d-flex align-items-center py-10 product-chargeback product-info-color">
                                             <div class="pl-0 pl-md-10">
-                                                <img class="arrow-chargeback" src="{{ asset('/modules/global/img/projects/arrow.svg') }}">
-                                                <img class="bodyArrow-chargeback" src="{{ asset('/modules/global/img/projects/bodyArrow.svg') }}">
+                                                <img class="img-default mr-10" src="{{ asset('/modules/global/img/projects/icon-arrowback.svg') }}">
+
                                             </div>
         
                                             <span class="s-data-project-values pl-5 pl-md-5 align-self-center" id="value-chargeback"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
-                                                <small> CHARGEBACKS </small>
+                                                <small class="font-size-10"> CHARGEBACKS </small>
                                             </div>
                                         </div>
         
                                         <!-- CHAMADOS ABERTOS -->
-                                        <div class="col-md-4 d-flex alert m-0 rounded-0 product-alert-color border-product-alert">
+                                        <div class="col-md-4 d-flex align-items-center py-10 rounded-0 product-info-color border-product-alert">
                                             <div class="d-flex pl-0 pl-sm-20">
-                                                <img class="control-img mt-md-5" src="{{ asset('/modules/global/img/projects/fallowUp.svg') }}">
+                                                <img class="img-default mr-10" src="{{ asset('/modules/global/img/projects/icon-chat.svg') }}">
                                             </div>
 
                                             <span class="s-data-project-values pl-10 align-self-center" id="value-open-tickets"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
-                                                <small> CHAMADOS ABERTOS </small>
+                                                <small class="font-size-10"> CHAMADOS ABERTOS </small>
                                             </div>
                                         </div>
                                         
                                         <!-- VENDAS S/ RASTREIO -->
-                                        <div class="col-md-4 d-flex alert m-0 tracking-sell product-alert-color border-product-alert">
+                                        <div class="col-md-4 d-flex align-items-center py-10 tracking-sell product-info-color border-product-alert">
                                             <div class="d-flex pl-0 pl-sm-20">
-                                                <img class="control-img" src="{{ asset('/modules/global/img/projects/trackCar.svg') }}">
+                                                <img class="img-default mr-10" src="{{ asset('/modules/global/img/projects/trackIcon.svg') }}">
                                             </div>
                                             
                                             <span class="s-data-project-values pl-10 align-self-center" id="value-without-tracking"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
-                                                <small> VENDAS S/ RASTREIO </small>
+                                                <small class="font-size-10"> VENDAS S/ RASTREIO </small>
                                             </div>
         
                                         </div>
@@ -118,7 +118,7 @@
                             <div class="card col px-0">
 
                                 <!-- VENDAS APROVADAS -->
-                                <div class="pl-30 pt-15 pt-md-20 pl-xl-30 pt-xl-50">
+                                <div class="pl-30 pt-15 pt-md-20 pl-xl-35 pt-xl-50">
                                     <div class="d-flex">
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">
@@ -132,7 +132,7 @@
                                 </div>
     
                                 <!-- RECEITA TOTAL -->
-                                <div class="pl-30 pb-5 pl-xl-30 pt-xl-35">
+                                <div class="pl-30 pb-5 pl-xl-35 pt-xl-50">
                                     <div class="d-flex pt-10">
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="mr-5" src="{{ asset('/modules/global/img/projects/arrowBalance.svg') }}">
