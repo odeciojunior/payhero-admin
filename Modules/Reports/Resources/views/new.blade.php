@@ -21,7 +21,7 @@
                         </div>
                         <div class="col-lg-8 col-sm-12 col-xs-12">
                             <div class="row">
-                                <div class="col-sm-6 col-m-3 col-lg-5">
+                                <div class="col-sm-6 col-m-3 col-lg-4">
                                     <div>
                                         <select id='select_projects' class="form-control input-pad">
                                             {{-- JS carrega.. --}}
@@ -34,18 +34,64 @@
                                         <input id="date-filter" type="text" name="daterange" class="input-pad text-center pr-30 font-size-14 ml-5" style="width: 92%" value="" readonly>
                                     </div>
                                 </div>
-                                <div class="box-export col-lg-12 col-xl-2">
-                                    <a href="" class="grey lk-export">
-                                        <i class="o-download-cloud-1 mr-2"></i>
-                                        Exportar dados
-                                    </a>
+                                <div class="box-export col-lg-3">
+                                    <div class="inner-reports">
+                                        <a href="" class="grey lk-export">
+                                            <i class="o-download-cloud-1 mr-2"></i>
+                                            Exportar relatórios
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="line-reports row">
+                <div class="modal-reports">
+                    <header class="head-modal">
+                        <h3>Exportar relatórios</h3>
+                        <a href="" title="Fechar" class="reports-remove">
+                            <i class="icon wb-close"></i>
+                        </a>
+                    </header>
+                    <section class="modal-report-content">
+                        <h6>E-mail</h6>
+                        <form action="">
+                            <fieldset>
+                                <div class="form-group form-icons">
+                                    <i class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
+                                    <input 
+                                        type="text" 
+                                        placeholder="E-mail para enviar os relatórios"
+                                        class="modal-email"
+                                    >
+                                </div>
+
+                                <h6>Selecione quais:</h6>
+                                <div class="d-flex">
+                                    <div class=""><input type="checkbox"><label for="">Vendas</label></div>
+                                    <div class=""><input type="checkbox"><label for="">Financeiro</label></div>
+                                    <div class=""><input type="checkbox"><label for="">Marketing</label></div>
+                                </div>
+
+                                <h6>Escolha o formato que irá receber</h6>
+                                <div class="d-flex">
+                                    <div><input type="radio" name="format" value="csv"><label for="">.csv</label></div>
+                                    <div><input type="radio" name="format" value="xls"><label for="">.xls</label></div>
+                                </div>
+
+                                <div class="d-flex modal-buttons">
+                                    <input type="reset" value="Cancelar" class="reset">
+                                    <input type="submit" value="Enviar para o e-mail" class="send">
+                                </div>
+                            </fieldset>
+                        </form>
+                    </section>
+                </div>
+            </div>
         </div>
+        
         <div style="overflow: hidden;" id="project-not-empty" style="display: none">
 
             <section class="container box-reports" id="reports-content">
@@ -108,12 +154,12 @@
 						<div class="row">
 							<header class="header-reports container">
 								<h3 class="title-reports">
-									<a href="" class="lk-reports grey">
+									<a href="{!! route('reports.index') !!}" class="lk-reports grey">
 										<span class="box-title ico-sell">vendas</span>
 										Vendas
 									</a>
 								</h3>
-								<a href="" class="box-link">Vendas</a>
+								<a href="{!! route('reports.index') !!}" class="box-link">Vendas</a>
 							</header>
 							<div class="container container-reports">
                                 <div id="reports-content" class="">

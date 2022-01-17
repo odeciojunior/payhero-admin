@@ -3,6 +3,19 @@ $(function () {
     newGraph();
     newGraphPie();
 
+    // show/hide modal de exportar relatórios
+    $(".lk-export").on('click', function(e) {
+        e.preventDefault();
+        $('.inner-reports').addClass('focus');
+        $('.line-reports').addClass('d-flex');
+    });
+
+    $('.reports-remove').on('click', function (e) {
+        e.preventDefault();
+        $('.inner-reports').removeClass('focus');
+        $('.line-reports').removeClass('d-flex');
+    });
+
     $.ajax({
         method: "GET",
         url: "/api/projects?select=true",
