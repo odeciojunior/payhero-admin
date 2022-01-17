@@ -69,7 +69,7 @@
 											<div class="card">
 												<div class="card-body">
                                                     <header class="container">
-													    <h6 class="font-size-16 gray-700"> Comissão </h6>
+													    <h6 class="font-size-16 gray-700 grey"> Comissão </h6>
                                                         <div class="d-flex value-price">
 													        <h4 id='revenue-generated' class="font-size-16 gray-1">0</h4>
                                                             <em class="pink">
@@ -84,7 +84,7 @@
 											<div class="card ">
 												<div class="card-body">
                                                     <header class="container">
-													    <h6 class="font-size-16 gray-700"> Pendentes </h6>
+													    <h6 class="font-size-16 gray-700 grey"> Pendentes </h6>
 													    <h4 id='qtd-pending' class="font-size-24 bold">0</h4>
                                                     </header>
 												</div>
@@ -92,7 +92,7 @@
 											<div class="card">
 												<div class="card-body">
                                                     <header class="container">
-													    <h6 class="font-size-16 gray-700"> Cashback </h6>
+													    <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
 													    <h4 id='qtd-aproved' class="font-size-24 bold">0</h4>
                                                     </header>
 												</div>
@@ -122,7 +122,7 @@
 											<div class="card">
 												<div class="card-body">
                                                     <header class="container">
-                                                        <h6 class="font-size-16 gray-700"> Vendas realizadas </h6>
+                                                        <h6 class="font-size-16 gray-700 grey"> Vendas realizadas </h6>
                                                         <h4 id='qtd-canceled' class=" font-size-24 bold">0</h4>
                                                     </header>
 												</div>
@@ -130,7 +130,7 @@
 											<div class="card ">
 												<div class="card-body">
                                                     <header class="container">
-													    <h6 class="font-size-16 gray-700"> Meios de pagamento </h6>
+													    <h6 class="font-size-16 gray-700 grey"> Meios de pagamento </h6>
                                                     </header>
                                                     <div id="payment-type-items" class="custom-table scrollbar pb-0 pt-0">
                                                         <div class="row container-payment">
@@ -227,7 +227,7 @@
 											<div class="card">
 												<div class="card-body">
                                                     <header class="container">
-													    <h6 class="font-size-16 gray-700"> Produtos </h6>
+													    <h6 class="font-size-16 gray-700 grey"> Produtos </h6>
 													    <h4 id='qtd-reembolso' class=" font-size-24 bold">0</h4>
                                                     </header>
 												</div>
@@ -257,7 +257,7 @@
 											<div class="card">
 												<div class="card-body">
                                                     <header class="container">
-													    <h6 class="font-size-16 gray-700"> Cupons </h6>
+													    <h6 class="font-size-16 gray-700 grey"> Cupons </h6>
 													    <h4 id='qtd-dispute' class=" font-size-24 bold">0</h4>
                                                     </header>
                                                     <div class="container d-flex justify-content-between box-donut">
@@ -308,7 +308,7 @@
 											<div class="card">
 												<div class="card-body">
                                                     <header class="container">
-                                                        <h6 class="font-size-16 gray-700"> Regiões </h6>
+                                                        <h6 class="font-size-16 gray-700 grey"> Regiões </h6>
                                                         <h4 id='qtd-chargeback' class=" font-size-24 bold">0</h4>
                                                     </header>
 												</div>
