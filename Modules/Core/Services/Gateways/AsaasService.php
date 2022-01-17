@@ -254,7 +254,8 @@ class AsaasService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $availableBalance -= $blockedBalance;
+        $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
 
         return [
