@@ -848,13 +848,11 @@ $(function () {
                     $(modal + ' #stage1-customization .body-products').off('wheel');
                 }
 
-                $(modal).find('#stage1-customization').find('.product-photo').on('error', function() {
+                $(modal).find('.customizations').find('.product-photo').on('error', function() {
                     $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
                 });
 
-                $(modal).find('#stage1-customization').find('.product-photo').on('load', function() {
-                    $(this).fadeIn(300);
-                });
+                $(modal).find('.customizations').find('.product-photo').fadeIn(300);
 
                 $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                     $(modal).find('.product-photo').unbind('load');
@@ -1584,18 +1582,24 @@ $(function () {
 
     // Tab general data
     $('body').on('click', '#tab-general-data', function() {
-        if (!$(this).hasClass('active')) {
+        if (!$(this).hasClass('clicked')) {
             var modal = '#modal_edit_plan';
             getPlanData(modal);
         }
+
+        $('#tab-customizations').removeClass('clicked');
+        $(this).addClass('clicked');
     });
 
     // Tab customizations
     $('body').on('click', '#tab-customizations', function() {
-        if (!$(this).hasClass('active')) {
+        if (!$(this).hasClass('clicked')) {
             var modal = '#modal_edit_plan';
-            getCustom(modal, false);
+            getCustom(modal, true);
         }
+
+        $('#tab-general-data').removeClass('clicked');
+        $(this).addClass('clicked');
     });
 
     // Create/Edit customizations
