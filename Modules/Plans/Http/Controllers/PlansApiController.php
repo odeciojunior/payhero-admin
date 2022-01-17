@@ -836,9 +836,12 @@ class PlansApiController extends Controller
             foreach ($planIds as $plan) {
                 $productPlans = ProductPlan::where('plan_id', $plan->id)->get();
                 foreach ($productPlans as $productPlan) {
-                    $productPlan->custom_config = $config;
-                    $productPlan->is_custom = $is_custom;
-                    $productPlan->update();
+                    $product = Product::where('id', $productPlan->product_id)->first();
+                    if ($product->shopify_id == $shopify_id) {
+                        $productPlan->custom_config = $config;
+                        $productPlan->is_custom = $is_custom;
+                        $productPlan->update();
+                    }
                 }
             }
         }
