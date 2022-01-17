@@ -629,7 +629,7 @@ $(function () {
                         selected_products.push({
                             id: e.product_id,
                             currency_type_enum: e.currency,
-                            value: e.product_cost.replace('R$ ', '').replace('$ ', '').replace(',', '').replace('.', ','),
+                            value: e.product_cost.replace('R$ ', '').replace('$ ', '').replace(/\,/g, '').replace('.', ','),
                             amount: e.amount
                         });
                     });
