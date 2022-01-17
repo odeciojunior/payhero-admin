@@ -121,12 +121,16 @@ class GetnetService implements Statement
     public function createWithdrawal($value)
     {
         try {
-            
+
             if($this->company->asaas_balance < 0 && $value-$this->company->asaas_balance < 0){
                 throw new Exception('Saque negado devido ao saldo negativo no Asaas');
             }
-    
+
             $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
+
+            if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID)) {
+                return false;
+            }
 
             $withdrawal = Withdrawal::create(
                 [

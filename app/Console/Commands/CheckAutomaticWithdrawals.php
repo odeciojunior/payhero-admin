@@ -26,7 +26,7 @@ class CheckAutomaticWithdrawals extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = "Gera o saque dos usuário que possuem rotinas de saque automático habilitado";
 
     private $defaultGateways = [
         AsaasService::class,

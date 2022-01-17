@@ -77,13 +77,14 @@ $(function () {
             },
             success: function success(response) {
                 current_currency = response.currency;
-                console.log(response.totalPaidValueAproved);
-                if(response.totalPaidValueAproved='R$ 0,00' || response.totalPaidValueAproved ==false || !response.totalPaidValueAproved){
+                
+                if(response.totalPaidValueAproved=='R$ 0,00' || response.totalPaidValueAproved ==false || !response.totalPaidValueAproved){
                     response.totalPaidValueAproved='R$ <span class="font-size-30 bold">0,00</span>'
                 }else{
                     let split=response.totalPaidValueAproved.split(/\s/g);
-                    response.totalPaidValueAproved=response.totalPaidValueAproved[0]+' <span class="font-size-30 bold">'+response.totalPaidValueAproved[1]+'</span>';
+                    response.totalPaidValueAproved=split[0]+' <span class="font-size-30 bold">'+split[1]+'</span>';
                 }
+                
                 $("#revenue-generated").html(response.totalPaidValueAproved);
                 $("#qtd-aproved").html(response.contAproved);
                 $("#qtd-boletos").html(response.contBoleto);
