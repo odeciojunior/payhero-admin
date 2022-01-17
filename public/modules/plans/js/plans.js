@@ -582,8 +582,8 @@ $(function () {
         $(modal).find('.modal-body').css('height', 'auto');
         $(modal).find('.informations-data').attr('style', 'height: auto !important');
 
-        $(modal).find('#tab-customizations').removeClass('show active').addClass('disabled');
-        $(modal).find('#tab-general-data').addClass('show active');
+        $(modal).find('#tab-customizations').removeClass('clicked show active').addClass('disabled');
+        $(modal).find('#tab-general-data').removeClass('clicked').addClass('show active');
 
         $(modal).find('.nav-tabs-horizontal').css('display', 'block');
         $(modal).find('#tab-general-data_panel').removeClass('show active');

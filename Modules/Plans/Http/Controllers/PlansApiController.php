@@ -436,13 +436,16 @@ class PlansApiController extends Controller
             $planId   = current(Hashids::decode($id));
             $plan = $planModel->with(['productsPlans'])->where('id', $planId)->first();
             if (!empty($plan)) {
-                if (count($plan->productsPlans) > 0) {
-                    foreach ($plan->productsPlans as $productPlan) {
-                        $productPlan->forceDelete();
-                    }
-                }
-
                 foreach ($requestData['products'] as $product) {
+                    if (count($plan->productsPlans) > 0) {
+                        foreach ($plan->productsPlans as $productPlan) {
+                            dd($productPlan, $productPlan->product_id, current(Hashids::decode($product['id'])));
+                            if ($productPlan->product_id !== current(Hashids::decode($product['id']))) {
+                                $productPlan->forceDelete();
+                            }
+                        }
+                    }
+
                     $productPlan->create([
                         'product_id'         => current(Hashids::decode($product['id'])),
                         'plan_id'            => $plan->id,
