@@ -35,6 +35,11 @@ class ReportsController extends Controller
         return view('reports::new');
     }
 
+    public function finances()
+    {
+        return view('reports::finances');
+    }
+
     public function checkouts()
     {
         return view('reports::checkouts');

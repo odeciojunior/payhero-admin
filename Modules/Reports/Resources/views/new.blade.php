@@ -101,12 +101,12 @@
 						<div class="row">
 							<header class="header-reports container">
 								<h3 class="title-reports">
-									<a href="" class="lk-reports grey">
+									<a href="{!! route('reports.finances') !!}" class="lk-reports grey">
 										<span class="box-title ico-finance">financeiro</span>
 										Financeiro
 									</a>
 								</h3>
-								<a href="" class="box-link">Financeiro</a>
+								<a href="{!! route('reports.finances') !!}" class="box-link">Financeiro</a>
 							</header>
                             <div class="container container-reports">
                                 <div id="reports-content" class="">
