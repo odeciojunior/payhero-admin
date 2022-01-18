@@ -1,8 +1,6 @@
 $(() => {
     $("body,html").scroll(function () {
         
-
-
         if ($("#tab-checkout").hasClass("active")) {
                     var scrollWindow = $(this).scrollTop();
                     var topVisual = $("#checkout_type").position().top;
@@ -20,10 +18,7 @@ $(() => {
                         $("#preview_payment").fadeOut("slow", "swing");
                         $("#preview_post_purchase").fadeOut("slow", "swing");
                         $("#preview_visual").fadeIn("slow", "swing");
-                    } else if (
-                        scrollWindow > topPayment &&
-                        scrollWindow < topPostPurchase
-                    ) {
+                    } else if (scrollWindow > topPayment && scrollWindow < topPostPurchase) {
                         $("#preview_visual").fadeOut("slow", "swing");
                         $("#preview_post_purchase").fadeOut("slow", "swing");
                         $("#preview_payment").fadeIn("slow", "swing");

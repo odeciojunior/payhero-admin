@@ -714,6 +714,11 @@ textarea:focus {
     padding: 5px 41px 10px 16px !important;
 }
 
+.quantity-selector-label > img {
+    width: 12px;
+    height: 12px;
+}
+
 /* ----------- Animated Loader ------------- */
 
 .lds-ring {

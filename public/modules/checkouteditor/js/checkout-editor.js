@@ -6,10 +6,7 @@ $(document).ready( function () {
             $("#color_buy_button").prop("disabled", true);
             $("#color_buy_button").css("opacity", "0.3");
         } else {
-            $(":root").css(
-                "--finish-button-color",
-                $("#color_buy_button").val()
-            );
+            $(":root").css("--finish-button-color",$("#color_buy_button").val());
             $("#color_buy_button").prop("disabled", false);
             $("#color_buy_button").css("opacity", "1");
         }
@@ -76,7 +73,7 @@ $(document).ready( function () {
     $("input[name=checkout_banner_type]").on("click", function () {
         var bannerType = $(this).val();
 
-        if (bannerType === "1") {
+        if (bannerType === "0") {
             $(".preview-banner").addClass("retangle-banner");
             $(".preview-banner").removeClass("wide-banner");
         } else {
@@ -495,6 +492,50 @@ $(document).ready( function () {
     });
 
     $('[data-toggle="tooltip"]').tooltip()
+
+    
+    $('#installments_limit').on('change', function() {
+        var installmentsLimit = parseInt($("#installments_limit option:selected").val());
+        var interestFreeInstallments = parseInt($("#interest_free_installments option:selected").val());
+        var preselectedInstallment = parseInt($("#preselected_installment option:selected").val());
+
+        $("#interest_free_installments option").remove();
+        $("#preselected_installment option").remove();
+
+        if(installmentsLimit < interestFreeInstallments ) {
+            interestFreeInstallments =  installmentsLimit;
+        }
+
+        for(var installments = 1; installments < installmentsLimit+1; installments++) {
+            $("#interest_free_installments").append(
+                `<option 
+                    value="${installments}" ${installments == interestFreeInstallments ? 'selected' : ''}>
+                    ${installments}x 
+                </option>`);
+        }
+
+        if(installmentsLimit < preselectedInstallment ) {
+            preselectedInstallment =  installmentsLimit;
+        }
+
+        for(var installments = 1; installments < installmentsLimit+1; installments++) {
+            $("#preselected_installment").append(
+                `<option 
+                    value="${installments}" ${installments == preselectedInstallment ? 'selected' : ''}>
+                    ${installments}x 
+                </option>`);
+        }
+    });
+
+
+    $('#quantity-selector-tooltip').mouseover(function(){
+        $('.tooltip-content').fadeIn();
+    });
+
+    $('#quantity-selector-tooltip').mouseout(function(){
+        $('.tooltip-content').fadeOut();
+    });
+
 });
 
 function replacePreview(name, src, fname = "") {

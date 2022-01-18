@@ -96,11 +96,11 @@
                             <div style=" display: flex; min-width: 140px; justify-content: space-between; align-items: center;">
                                 <div>
                                     <div id="banner_type" class="radio-group" style="justify-self: end; display: none;">
-                                        <input class="custom-icon-radio" id="banner_type_wide" type="radio" name="checkout_banner_type" value="0" />
-                                        <label for="banner_type_wide"><img src="{{ asset('/modules/checkouteditor/img/svg/banner-wide.svg') }}"></label>
-
-                                        <input class="custom-icon-radio" id="banner_type_square" type="radio" name="checkout_banner_type" value="1" />
+                                        <input class="custom-icon-radio" id="banner_type_square" type="radio" name="checkout_banner_type" value="0" />
                                         <label for="banner_type_square"><img src="{{ asset('/modules/checkouteditor/img/svg/banner-square.svg') }}"></label>
+                                        
+                                        <input class="custom-icon-radio" id="banner_type_wide" type="radio" name="checkout_banner_type" value="1" />
+                                        <label for="banner_type_wide"><img src="{{ asset('/modules/checkouteditor/img/svg/banner-wide.svg') }}"></label>
                                     </div>
                                 </div>
 
@@ -257,14 +257,13 @@
 
                                 <div id="notification-table">
                                     <label for="notification-interval" class="checkout-label">Configure as notificações</label>
-
                                     <div class="notification-table-cointainer">
                                         <table class="table table-hover selectable" id="notification-table" data-plugin="selectable" data-row-selectable="true">
                                             <thead>
                                                 <tr>
                                                     <th class="th-notification" style="height: 90px; max-height: 90px">
                                                         <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-all" type="checkbox">
+                                                            <input class="selectable-all triple-check" type="checkbox">
                                                             <label></label>
                                                         </span>
                                                     </th>
@@ -473,7 +472,13 @@
 
                         <div class="row-flex">
                             <div class="input-container" style="flex: 2">
-                                <label data-toggle="tooltip" data-placement="bottom" title="Teste">Seletor de Quantidade</label>
+                                <label class="quantity-selector-label">Seletor de Quantidade 
+                                    <div class="quantity-selector-tooltip">
+                                        <img class="icon-title" src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}">
+                                        <div class="tooltip-content" style="display: none;">Teste</div>
+                                    </div>    
+                                
+                                </label>
                                 <div class="switch-holder labeled mb-3">
                                     <label class="switch" style='top:3px'>
                                         <input type="checkbox" id="quantity_selector_enabled" name="quantity_selector_enabled" class='check switch-checkout switch-labeled' data-label="count-selector-label">
@@ -516,7 +521,7 @@
                             <div class="input-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">Limite de parcelas</label>
                                 <div class='form-group'>
-                                    <select id='installments_limit' name='installments_limit' class="form-control select-pad">
+                                    <select id='installments_limit' name='installments_limit' class="sirius-select">
                                         <option value="1">1x</option>
                                         <option value="2">2x</option>
                                         <option value="3">3x</option>
@@ -536,7 +541,7 @@
                             <div class="input-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">Sem juros até</label>
                                 <div class='form-group'>
-                                    <select id='interest_free_installments' name='interest_free_installments' class="form-control select-pad">
+                                    <select id='interest_free_installments' name='interest_free_installments' class="sirius-select">
                                         <option value="1">1x</option>
                                         <option value="2">2x</option>
                                         <option value="3">3x</option>
@@ -556,7 +561,7 @@
                             <div class="input-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">Parcela pré-selecionada</label>
                                 <div class='form-group'>
-                                    <select id='preselected_installment' name='preselected_installment' class="form-control select-pad">
+                                    <select id='preselected_installment' name='preselected_installment' class="sirius-select">
                                         <option value="1">1x</option>
                                         <option value="2">2x</option>
                                         <option value="3">3x</option>
@@ -862,7 +867,7 @@
                                 </div>
                             </div>
 
-                            <div id="preview-mobile-visual" class="preview-content mobile" style="display: none">
+                            <div id="preview-mobile-visual" class="preview-content mobile">
                                 <div id="preview-mobile-visual-collapse" class="preview-mobile-collapse collapse" aria-expanded="false">
                                     <div class="preview-header">
                                         <div class="header-colorbar mobile secondary-color countdown-preview"></div>
@@ -1254,7 +1259,7 @@
                                         <div style="display: flex; width: 100%; justify-content: space-between">
                                             <div style="border-radius: 12px; height: 25px; width: 70px; background-color: #F5F5F5; margin: 0 20px 0 0;border-radius: 4px;"></div>
 
-                                            <div style="border-radius: 12px; height: 25px; width: 80px; background-color: #2E85EC; border-radius: 4px; "></div>
+                                            <div class="primary-color" style="border-radius: 12px; height: 25px; width: 80px; background-color: #2E85EC; border-radius: 4px; "></div>
 
                                             <div class="whatsapp-preview" style="display: flex; padding: 6px; border-radius: 12px; height: 25px; width: 120px; background-color: #36DB8C; border-radius: 4px;">
                                                 <img src="{{ asset('/modules/checkouteditor/img/svg/whatsapp-icon.svg') }}">
@@ -1366,8 +1371,13 @@
                             Um momento... estamos salvando suas alterações.
                         </div>
 
-                        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-                        
+                        <div class="lds-ring">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+
                     </div>
                 </div>
 
