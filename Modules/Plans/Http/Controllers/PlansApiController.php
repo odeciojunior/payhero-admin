@@ -429,30 +429,43 @@ class PlansApiController extends Controller
     {
         try {
             $planModel    = new Plan();
-            $productPlan  = new ProductPlan();
+            $productPlanModel  = new ProductPlan();
 
             $requestData = $request->validated();
 
             $planId   = current(Hashids::decode($id));
             $plan = $planModel->with(['productsPlans'])->where('id', $planId)->first();
             if (!empty($plan)) {
-                foreach ($requestData['products'] as $product) {
-                    if (count($plan->productsPlans) > 0) {
-                        foreach ($plan->productsPlans as $productPlan) {
-                            dd($productPlan, $productPlan->product_id, current(Hashids::decode($product['id'])));
-                            if ($productPlan->product_id !== current(Hashids::decode($product['id']))) {
-                                $productPlan->forceDelete();
-                            }
-                        }
-                    }
+                $productsIds = array_map(function($p) {
+                    return current(Hashids::decode($p['id']));
+                }, $requestData['products']);
 
-                    $productPlan->create([
-                        'product_id'         => current(Hashids::decode($product['id'])),
-                        'plan_id'            => $plan->id,
-                        'amount'             => $product['amount'] ?? 1,
-                        'cost'               => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
-                        'currency_type_enum' => $productPlan->present()->getCurrency($product['currency_type_enum']),
-                    ]);
+                $productsPlan = $productPlanModel->where('plan_id', $planId)->get();
+
+                //dd($productsIds, $productsPlan->pluck('product_id')[0], $productsPlan->pluck('product_id')[1], $productsPlan->pluck('product_id')[2]);
+
+                //dd(array_search(854480, $productsIds), array_search(375488, $productsIds), array_search(579902, $productsIds));
+                //dd(array_search(375488, $productsIds));
+                //dd(array_search(579902, $productsIds));
+
+                //dd($productsIds, $productsPlan->pluck('product_id')->toArray());
+
+                foreach ($productsPlan as $pl) {
+                    if (!in_array($pl->product_id, $productsIds)) {
+                        $productPlanModel->where('plan_id', $planId)->where('product_id', $pl->product_id)->forceDelete();
+                    }
+                }
+
+                foreach ($requestData['products'] as $product) {
+                    if (!in_array(current(Hashids::decode($product['id'])), $productsPlan->pluck('product_id')->toArray())) {
+                        $productPlanModel->create([
+                            'product_id'         => current(Hashids::decode($product['id'])),
+                            'plan_id'            => $plan->id,
+                            'amount'             => $product['amount'] ?? 1,
+                            'cost'               => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
+                            'currency_type_enum' => $productPlanModel->present()->getCurrency($product['currency_type_enum']),
+                        ]);
+                    }
                 }
             } else {
                 return response()->json([
