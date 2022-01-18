@@ -246,7 +246,6 @@ $(() => {
                 replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
                 $("#preview_banner_img_desktop").attr("src", checkout.checkout_banner);
                 $("#preview_banner_img_mobile").attr("src", checkout.checkout_banner);
-                $('#logo_preview_desktop_div').addClass('has-banner');
             }
 
             if (checkout.checkout_banner_enabled) {
@@ -255,6 +254,7 @@ $(() => {
                 $("#checkout_editor .banner-top-content").show();
                 $("#checkout_editor .preview-banner").show();
                 $("#checkout_editor #banner_type").show();
+                $('#logo_preview_desktop_div').addClass('has-banner');
             } else {
                 $("#checkout_editor #checkout_banner_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_banner_enabled").prop("value", 0);
@@ -440,10 +440,7 @@ $(() => {
                 checkout.notification_bought_last_hour_enabled &&
                 checkout.notification_just_bought_enabled
             ) {
-                $("#checkout_editor #notification-table .selectable-all").prop(
-                    "checked",
-                    true
-                );
+                $("#checkout_editor #notification-table .selectable-all").prop("checked",true);
             }
 
             $("#checkout_editor #notification_buying_minimum").val(
