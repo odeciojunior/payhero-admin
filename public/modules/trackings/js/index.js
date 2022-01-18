@@ -785,6 +785,10 @@ $(() => {
         $('.select2-selection.select2-selection--multiple').scrollTop(0);
     });
 
+    $(document).on('focusin', '.select2-selection__rendered', function () {
+        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    });
+
     $(".applySelect2").on("change", function () {
         let idTarget = $(this).attr('id');
         deniedEmptyFilter(idTarget);
