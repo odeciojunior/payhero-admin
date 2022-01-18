@@ -3,10 +3,10 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=10') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=123') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=123') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
             .select2-selection--single {
