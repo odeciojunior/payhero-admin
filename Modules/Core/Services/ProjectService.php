@@ -16,6 +16,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Exceptions\Services\ServiceException;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\ProjectsSelectResource;
@@ -429,6 +430,12 @@ class ProjectService
         }
 
         if ($pagination) {
+            if(empty($projects)) {
+                $apiSale = Sale::where('owner_id', auth()->user()->account_owner_id)->exists();
+                if(!empty($apiSale)) {
+                    return response()->json(['data' => 'has api sales']);
+                }
+            }
             return ProjectsSelectResource::collection($projects->get());
         } else {
             return ProjectsResource::collection($projects->with('domains')->get());
