@@ -119,6 +119,14 @@ class ProductPlanSale extends Model
     /**
      * @return BelongsTo
      */
+    public function productSaleApi()
+    {
+        return $this->belongsTo(ProductSaleApi::class, 'products_sales_api_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
     public function sale()
     {
         return $this->belongsTo('Modules\Core\Entities\Sale');
