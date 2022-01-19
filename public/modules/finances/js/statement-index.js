@@ -201,13 +201,13 @@ $(window).on("load", function(){
         switch (nome) {
             case 'NzJqoR32egVj5D6':
                 $(".page-title").html(`<a href="/finances">
-                                                <i class="o-arrow-right-1" style="margin-right: 10px; font-size: 30px"></i>
+                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.asaas}
                                             </a>`);
                 break;
             case 'w7YL9jZD6gp4qmv':
                 $(".page-title").html(`<a href="/finances">
-                                                <i class="o-arrow-right-1" style="margin-right: 10px; font-size: 30px"></i>
+                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.getnet}
                                             </a>`);
                 $("#transfersTable").hide();
@@ -219,13 +219,13 @@ $(window).on("load", function(){
                 break;
             case 'oXlqv13043xbj4y':
                 $(".page-title").html(`<a href="/finances">
-                                                <i class="o-arrow-right-1" style="margin-right: 10px; font-size: 30px"></i>
+                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.gerencianet}
                                             </a>`);
                 break;
             case 'pM521rZJrZeaXoQ':
                 $(".page-title").html(`<a href="/finances">
-                                                <i class="o-arrow-right-1" style="margin-right: 10px; font-size: 30px"></i>
+                                                <i class="o-arrow-right-1 mr-0 mr-md-10" style="font-size: 30px"></i>
                                                 ${gatewayLogos.cielo}
                                             </a>`);
                 break;
