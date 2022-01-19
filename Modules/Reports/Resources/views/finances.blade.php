@@ -143,41 +143,105 @@
 					</div>
 				</div>
 
-                <div class="row">
+                <div class="row" style="border: 1px solid red">
                     <div class="container d-flex box-chart-primary">
-                        <div style="border: 1px solid red" class="card commission">
-                            <section class="container">
-                                <header class="d-flex title-graph">
-                                    <h5 class="grey font-size-16">
-                                        <strong>Comissão</strong>
-                                    </h5>
-                                </header>
+                        <!-- /comission -->    
+                        <div class="commission">
+                            <div class="card">
+                                <section class="container">
+                                    <header class="d-flex title-graph">
+                                        <h5 class="grey font-size-16">
+                                            <strong>Comissão</strong>
+                                        </h5>
+                                    </header>
 
-                                <div class="d-flex justify-content-between">
-                                    <div class="finances-values">
-                                        <span>R$</span>
-                                        <strong>26.567,33</strong>
+                                    <div class="d-flex justify-content-between box-finances-values">
+                                        <div class="finances-values">
+                                            <span>R$</span>
+                                            <strong>26.567,33</strong>
+                                        </div>
+                                        <div class="finances-values">
+                                            <svg class="green" width="18" height="14" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M10.1237 0L16.9451 0.00216293L17.1065 0.023901L17.2763 0.0736642L17.4287 0.145306L17.4865 0.18052L17.5596 0.23218L17.6737 0.332676L17.8001 0.484464L17.8876 0.634047L17.9499 0.792176L17.9845 0.938213L18 1.125V7.88084C18 8.50216 17.4964 9.00583 16.8751 9.00583C16.3057 9.00583 15.835 8.58261 15.7606 8.03349L15.7503 7.88084L15.7495 3.8415L9.41947 10.1762C9.01995 10.5759 8.39457 10.6121 7.95414 10.2849L7.82797 10.1758L5.62211 7.96668L1.92041 11.6703C1.48121 12.1098 0.768994 12.1099 0.329622 11.6707C-0.069807 11.2713 -0.106236 10.6463 0.220416 10.2059L0.329304 10.0797L4.82693 5.57966C5.22645 5.17994 5.85182 5.14374 6.29225 5.47097L6.41841 5.58004L8.62427 7.78914L14.1597 2.25H10.1237C9.55424 2.25 9.08361 1.82677 9.00912 1.27766L8.99885 1.125C8.99885 0.50368 9.50247 0 10.1237 0Z" fill="#1BE4A8"/>
+                                            </svg>
+                                            <em class="green">23%</em>
+                                        </div>
                                     </div>
-                                    <div class="">
-                                        <i>seta</i><em>23%</em>
+                                </section>
+
+                                <section>
+                                    <div class="graph-finance">
+                                        <div class="new-finance-graph"></div>
+                                    </div>
+                                </section>
+                            </div>
+
+                            <div class="" style="border: 1px solid red">
+                                <div class="d-flex justify-content-between sub-comission">
+                                    <div class="inner-comission" style="border: 1px solid">
+                                        <div class="card">
+                                            <header class="d-flex title-graph container">
+                                                <h5 class="grey font-size-16">
+                                                    <strong>Cashback</strong>
+                                                </h5>
+                                            </header>
+                                        </div>
+                                        <div class="card">d</div>
+                                    </div>
+                                    <div class="inner-comission" style="border: 1px solid">
+                                        <div class="card">
+                                            <header class="d-flex title-graph container">
+                                                <h5 class="grey font-size-16">
+                                                    <strong>Saques</strong>
+                                                </h5>
+                                                <ul class="d-flex">
+                                                    <li><a href="">Receitas</a></li>
+                                                    <li><a href="">Saques</a></li>
+                                                    <li><a href="">Últimos 6 meses</a></li>
+                                                </ul>
+                                            </header>
+                                        </div>
                                     </div>
                                 </div>
-                            </section>
-                            
+                            </div>
                         </div>
-                        <div style="border: 1px solid red" class="card distribution">
-                            <header class="d-flex title-graph container">
-                                <h5 class="grey font-size-16">
-                                    <strong>Distribuição</strong>
-                                </h5>
-                                <h6 class="font-size-14">Atual</h6>
-                            </header>
+                        <!-- /comission -->
+                        
+                        <!-- distribtion -->
+                        <div class="distribution">
+                            <div class="card">
+                                <header class="d-flex title-graph container">
+                                    <h5 class="grey font-size-16">
+                                        <strong>Distribuição</strong>
+                                    </h5>
+                                    <h6 class="font-size-14">Atual</h6>
+                                </header>
+                            </div>
+                            <div class="" style="border: 1px solid red">
+                                <div class="d-flex sub-distribution">
+                                    <div class="card">
+                                        <header class="d-flex title-graph container">
+                                            <h5 class="grey font-size-16">
+                                                <strong>Pendente</strong>
+                                            </h5>
+                                            <a href="">-></a>
+                                        </header>
+                                    </div>
+                                    <div class="card">
+                                        <header class="d-flex title-graph container">
+                                            <h5 class="grey font-size-16">
+                                                <strong>Bloqueado</strong>
+                                            </h5>
+                                            <a href="">Acessar -></a>
+                                        </header>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <!-- /distribtion -->
                     </div>
                 </div>
             </section>
-
-            
         </div>
         @include('projects::empty')
     </div>

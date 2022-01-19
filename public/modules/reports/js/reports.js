@@ -2,6 +2,7 @@ $(function () {
     loadingOnScreen();
     newGraph();
     newGraphPie();
+    newFinanceGraph();
 
     // show/hide modal de exportar relatórios
     $(".lk-export").on('click', function(e) {
@@ -556,6 +557,37 @@ $(function () {
             chartPadding: 0,
             labelOffset: 0,
           });
+    }
+
+    function newFinanceGraph() {
+        new Chartist.Line('.new-finance-graph', {
+            labels: [1,5,10,15,20,25,30],
+            series: [[1, 5, 10, 15, 20, 25, 30]]
+        }, {
+            chartPadding: {
+                top: 20,
+                right: 20,
+                bottom: 20
+            },
+            axisX: {
+                labelOffset: {
+                    x: -15,
+                    y: 15
+                },
+                showGrid: false,
+                scaleMinSpace: 2
+            },
+            axisY: {
+                offset: 60,
+                labelInterpolationFnc: function(value) {
+                    return 'R$ ' + value + 'K'
+                },
+                scaleMinSpace: 25
+            },
+            fullWidth: true,
+            low: 0,
+            showArea: true
+        });
     }
     
 });
