@@ -431,7 +431,7 @@ class ProjectService
 
         if ($pagination) {
             $projects = $projects->get();
-            if(empty($projects)) {
+            if(count($projects) == 0) {
                 $apiSale = Sale::where('owner_id', auth()->user()->account_owner_id)->exists();
                 if(!empty($apiSale)) {
                     return response()->json(['data' => 'api sales']);
