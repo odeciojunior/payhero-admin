@@ -77,8 +77,8 @@ function scrollCustom(div, padding = false) {
             var heightDivScroll = $(div).height() + valuePadding;
             var heightDivScrollTotal = $(div).children(":first").height() + valuePadding;
 
-            var heightCalculateScroll = ((heightDivScroll - 60) / 60) * 2;
-            var heightCalculateTotal = ((heightDivScrollTotal - heightDivScroll) / 60) * 2;
+            var heightCalculateScroll = ((heightDivScroll - 60) / 20) * 2;
+            var heightCalculateTotal = ((heightDivScrollTotal - heightDivScroll) / 20) * 2;
 
             if(event.originalEvent.deltaY < 0) {
                 // wheeled up
