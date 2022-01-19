@@ -59,6 +59,7 @@ class ProductPlanSale extends Model
     protected $fillable = [
         'product_id',
         'plan_id',
+        'products_sales_api_id',
         'sale_id',
         'amount',
         'name',
@@ -75,9 +76,6 @@ class ProductPlanSale extends Model
         'price',
         'shopify_id',
         'shopify_variant_id',
-        'tracking_code',
-        'tracking_type_enum',
-        'tracking_status_enum',
         'temporary_url',
         'created_at',
         'updated_at',
