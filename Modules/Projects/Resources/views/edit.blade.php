@@ -1,11 +1,11 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=05') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=541') }}">
 @endpush
 
 <div class='row card no-gutters p-30 rounded-top'>
 
     <div class="col-12 font-size-24 pl-0 mb-10">
-        Configuracoes
+        Configurações
     </div>
 
     <div class="col-md-12">
@@ -13,9 +13,7 @@
             NOVO
         </div>
 
-        <span>
-            Repaginamos nossa área de configurações de loja. Para encontrar configurações de checkout, use o nosso novo editor.
-        </span>
+        <span class="font-size-16">Repaginamos nossa área de configurações de loja. Para encontrar configurações de checkout, use o nosso novo editor.</span>
     </div>
 
 </div>
@@ -42,7 +40,7 @@
             <!-- FOTO -->
             <div class="col-md-5 col-lg-4 col-xl-3 pl-xl-25 d-flex flex-column" id='div-img-project' style='position: relative;'>
 
-                <label for='product_photo' class="pl-0 pl-lg-10 pl-xl-0 mb-3">Capa da loja</label>
+                <label for='product_photo' class="pl-0 pl-lg-10 pl-xl-0 mb-3 font-size-16">Capa da loja</label>
 
                 <div style="width:100%" class="text-center">
                     <input type="file" id="product_photo" name="product_photo" data-height="651" data-max-width="651" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
@@ -53,19 +51,17 @@
             <div class="col-md-7 col-lg-8 col-xl-9 pl-10 pr-sm-50">
 
                 <div class='form-group col-md-12'>
-                    <label for='name'>Nome do projeto</label>
-                    <input name='name' value="" type='text' class='input-pad' id='name' placeholder='Nome do Projeto' maxlength='40' required>
+                    <label for='name' class="font-size-16">Nome do projeto</label>
+                    <input name='name' value="" type='text' class='input-pad font-size-16' id='name' placeholder='Nome do Projeto' maxlength='40' required>
                     <span id='name-error' class='text-danger'></span>
                     <p class='info pt-5' style='font-size: 10px;'></p>
                 </div>
 
                 <div class='form-group col-lg-12'>
-                    <label for='description'>Descrição</label>
-                    <textarea style='height:100px;' name='description' type='text' class='input-pad' id='description' placeholder='Fale um pouco sobre seu Projeto' required='' maxlength='100'></textarea>
+                    <label for='description' class="font-size-16">Descrição</label>
+                    <textarea style='height:100px;' name='description' type='text' class='input-pad font-size-16' id='description' placeholder='Fale um pouco sobre seu Projeto' required='' maxlength='100'></textarea>
                     <span id='description-error' class='text-danger'></span>
-                    <p class='info pt-25 mb-0' style='font-size: 10px;'>
-                        Recomendações: Imagem de 300x300px  |  Formatos: JPEG ou PNG
-                    </p>
+                    <p class="pt-25 mb-0 font-size-12">Recomendações: Imagem de 300x300px  |  Formatos: JPEG ou PNG</p>
                 </div>
 
             </div>
@@ -104,13 +100,13 @@
                 <div class="row">
 
                     <!-- COL - 5 URL, COOKI, PORCENTAGEM -->
-                    <div class="col-md-5 form-group">
+                    <div class="col-md-4 form-group">
                         <!-- URL DA PAGINA -->
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="row no-gutters">
                                     <div class="col-md-12 px-5 pl-sm-30 pr-sm-0 form-group">
-                                        <label for='url-affiliates font-size-16'>URL da página principal</label>
+                                        <label for="url-affiliates" class="font-size-16">URL da página principal</label>
                                         <div class="input-group">
                                             <input name="url_page" value="" type="text" class="input-pad" id="url-page" placeholder="URL da página" maxlength="60">
                                         </div>
@@ -125,7 +121,7 @@
 
                                 <!-- COOKIE -->
                                 <div class='form-group col-md-6 pl-5 pl-sm-30 pr-0'>
-                                    <label for="cookie-duration">Duração do cookie</label>
+                                    <label for="cookie-duration" class="font-size-16">Duração do cookie</label>
                                     <select class='cookie-duration form-control select-pad' name='cookie_duration'>
                                         <option value="0"> Eterno</option>
                                         <option value="7"> 7 dias</option>
@@ -140,7 +136,7 @@
 
                                 <!-- PORCENTAGEM -->
                                 <div class="col-md-6 form-group pr-3 pr-sm-0">
-                                    <label for='percentage-affiliates'>Porcentagem</label>
+                                    <label for="percentage-affiliates" class="font-size-16">Porcentagem</label>
 
                                     <div class="row no-gutters">
                                         <div class="col-md-12">
@@ -155,14 +151,6 @@
 
                                               </div>
                                         </div>
-                                        {{-- <div class='form-group col-md-6 pr-3 pr-sm-0'>
-                                            <label for='percentage-affiliates'>Porcentagem</label>
-                                            <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='text' min="0" max="100" maxlength="3">
-
-                                            <span id='input-pad-error' class='text-danger'></span>
-                                        </div> --}}
-
-
                                     </div>
 
                                 </div>
@@ -177,7 +165,7 @@
                                 <!-- LABEL -->
                                 <div class="row">
                                     <div class="col-12">
-                                        <label for='commission-type-enum'>Tipo comissão</label>
+                                        <label for="commission-type-enum" class="font-size-16">Tipo comissão</label>
                                     </div>
                                 </div>
 
@@ -189,13 +177,13 @@
                                             <!-- PRIMEIRO -->
                                             <div class="col-md-6 pl-0">
                                                 <input type="radio" id="first-click" name="commission_type_enum" class="d-none" value="1">
-                                                <label for="first-click" class="col-md-12 btn bg-light font-size-16 p-10 type-comission">Primiero Click</label>
+                                                <label for="first-click" class="col-md-12 btn bg-gray font-size-16 font-weight-bold p-10 type-comission">Primeiro clique</label>
                                             </div>
 
                                             <!-- ULTIMO -->
                                             <div class="col-md-6 pr-0">
                                                 <input type="radio" id="last-click" name="commission_type_enum" class="d-none" value="2">
-                                                <label for="last-click" class="col-md-12 btn bg-light font-size-16 p-10 type-comission">Ultimo Click</label>
+                                                <label for="last-click" class="col-md-12 btn bg-gray font-size-16 font-weight-bold p-10 type-comission">Último clique</label>
                                             </div>
 
                                         </div>
@@ -206,12 +194,12 @@
                     </div>
 
                     <!-- COL-7 TERMOS AFFILIACAO-->
-                    <div class="col-md-7 form-group pl-10 pr-10 pr-sm-40">
+                    <div class="col-md-8 form-group pl-10 pr-10 pr-sm-40">
                         <div class="row">
                             <div class="col-md-12 form-group">
 
 
-                                <label for='terms-affiliates'>Termos de Afiliação</label>
+                                <label for="terms-affiliates" class="font-size-16">Termos de Afiliação</label>
                                 <input type="hidden" name="terms_affiliates" id="terms_affiliates">
 
                                 <!-- TEXTAREA QUILL -->
@@ -231,20 +219,18 @@
                         <div class="row no-gutters">
 
                             <!-- AFILIACAO AUTOMATICA -->
-                            <div class="automatic-affiliation col-md-4 col-lg-2 pl-5 pl-md-10 pl-lg-30 pr-20 d-flex align-items-center border-top border-right" name='automatic_affiliation'>
+                            <div class="col-md-4 col-lg-3 pl-5 pl-md-10 py-10 pl-lg-30 pr-20 d-flex align-items-center border-top border-right automatic-affiliation" name='automatic_affiliation'>
                                 <input type="checkbox" id="auto-afiliation" class="col-1 h-20 mr-10">
-                                <label for="auto-afiliation" class="m-0">Afiliação automática</label>
+                                <label for="auto-afiliation" class="font-size-16 m-0">Afiliação automática</label>
                             </div>
 
                             <!-- CONVITE AFILIADOS -->
-                            <div class="col-12 col-md-5 col-lg-8 pl-0 pr-0 align-items-center border-top border-right">
-                                <div class="row no-gutters mt-3">
+                            <div class="col-12 col-md-5 col-lg-7 py-10 pl-0 pr-0 align-items-center border-top border-right">
+                                <div class="row no-gutters mt-3 d-flex justify-content-end pl-60 pl-lg-0">
+                                    
+                                    <div class="font-weight-bold pr-0 pl-5 d-flex align-items-center">Convide afiliados:</div>
 
-                                    <div class="col-md-6 d-flex align-items-center justify-content-sm-end">
-                                        <span class="font-weight-bold pr-0 pl-5">Convide afiliados:</span>
-                                    </div>
-
-                                    <div class="col-md-6">
+                                    <div class="col-md-7">
                                         <input type="text" class="text-left pl-5 pl-sm-5 pr-10 border-0" id="url-affiliates" readonly>
                                     </div>
 
@@ -252,8 +238,8 @@
                             </div>
 
                             <!-- COPIAR LINK -->
-                            <div class="col-md-3 col-lg-2 p-5 border-top">
-                                <button id="copy-link-affiliation" class="btn btn-default mx-0 bg-white border-0 pl-md-30" type="button">
+                            <div class="col-md-3 col-lg-2 p-10 border-top d-flex align-items-center">
+                                <button id="copy-link-affiliation" class="btn btn-default mx-0 bg-white border-0 pl-md-10" type="button">
                                     <img src="{{asset('/modules/global/img/projects/btnCopy.svg')}}" class="mr-10" alt="botao de copiar">Copiar
                                 </button>
                             </div>
@@ -275,7 +261,7 @@
 
                 <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete-project" style="float: left;">
                     <span class="orion-icon-lixo"></span>
-                    <span class="gray"> Deletar projeto</span>
+                    <span class="gray">Excluir projeto</span>
                 </a>
             </div>
         </div>
@@ -289,7 +275,7 @@
 
                 <div class="col-md-12">
 
-                    <div class="row bg-primary no-gutters final-card py-30">
+                    <div class="row bg-primary no-gutters final-card pt-25 pb-20">
 
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
@@ -324,7 +310,7 @@
 
                 <div class="col-md-12">
 
-                    <div class="row no-gutters success-card text-white py-30">
+                    <div class="row no-gutters success-card text-white pt-25 pb-20">
 
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
