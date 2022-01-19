@@ -777,7 +777,8 @@ select, .select-pad {
     }
 
     .page-title svg {
-        width: 90%;
+        width: 100%;
+        margin-left: 0;
     }
 
     .card.shadow {

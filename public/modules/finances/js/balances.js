@@ -77,6 +77,7 @@ window.updateBalances = function(company_code = '') {
                     return;
                 }
                 $("#custom-input-addon").val(removeMoneyCurrency(response.available_balance));
+                $(".custom-input-addon-m").val(removeMoneyCurrency(response.available_balance));
             });
 
             loadWithdrawalsTable();

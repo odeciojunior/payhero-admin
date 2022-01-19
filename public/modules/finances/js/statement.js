@@ -94,7 +94,7 @@ window.updateTransfersTable = function(link = null) {
             if (response.data == '') {
                 $("#table-transfers-body").html(`
                     <tr class='text-center bg-transparent'>
-                        <td style='height: 300px' colspan='11' >
+                        <td style='height: 300px; border-radius: 16px !important' colspan='11' >
                             <div class="d-flex justify-content-center align-items-center h-p100">
                                 <div class="row m-0 row justify-content-center align-items-center h-p100 font-size-16">
                                         <img style='width:124px; margin-right:12px;' alt=""
@@ -257,7 +257,7 @@ window.updateAccountStatementData = function() {
             $("#export-excel").addClass('d-none');
             $("#table-statement-body").html(`
             <tr class='text-center bg-transparent'>
-                        <td style='height: 300px' colspan='11' >
+                        <td style='height: 300px; border-radius: 16px !important' colspan='11' >
                             <div class="d-flex justify-content-center align-items-center h-p100">
                                 <div class="row m-0 row justify-content-center align-items-center h-p100 font-size-16">
                                         <img style='width:124px; margin-right:12px;' alt=""
@@ -283,7 +283,7 @@ window.updateAccountStatementData = function() {
                 $("#export-excel").addClass('d-none');
                 $("#table-statement-body").html(`
                     <tr class='text-center bg-transparent'>
-                        <td style='height: 300px' colspan='11' >
+                        <td style='height: 300px; border-radius: 16px !important' colspan='11' >
                             <div class="d-flex justify-content-center align-items-center h-p100">
                                 <div class="row m-0 row justify-content-center align-items-center h-p100 font-size-16">
                                     <img style='width:124px; margin-right:12px;' alt=""

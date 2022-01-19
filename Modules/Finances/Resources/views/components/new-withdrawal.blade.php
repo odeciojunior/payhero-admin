@@ -89,7 +89,7 @@
                     <div class="input-group align-items-center input-custom-transfer">
                         <div class="input-moeda">R$</div>
                         <input id="custom-input-addon" type="text"
-                               class="form-control input-pad withdrawal-value"
+                               class="form-control input-pad withdrawal-value custom-input-addon-m"
                                placeholder="Digite o valor" aria-label="Digite o valor"
                                aria-describedby="basic-addon1"
                                style='border-radius: 0 8px 8px 0; border: none !important; border-left:1px solid #DDD !important; padding: 10px'>
