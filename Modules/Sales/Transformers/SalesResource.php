@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Transformers;
 
+use Exception;
 use Google\Service\ShoppingContent\Amount;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -134,10 +135,16 @@ class SalesResource extends JsonResource
             $data['has_woocommerce_integration'] = true;
 
             if(!empty($this->woocommerce_order)){
-                $integration = WooCommerceIntegration::where('project_id', $this->project_id)->first();
-                $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
-                $order = $service->woocommerce->get('orders/'.$this->woocommerce_order);
-                $data['woocommerce_order'] = $order;
+                try{
+
+                    $integration = WooCommerceIntegration::where('project_id', $this->project_id)->first();
+                    $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                    $order = $service->woocommerce->get('orders/'.$this->woocommerce_order);
+                    $data['woocommerce_order'] = $order;
+                }catch(Exception $e){
+                    $data['woocommerce_order'] = ['status'=>'Pedido não encontrado'];
+
+                }
 
             }else{
                 $request = SaleWoocommerceRequests::where('sale_id', $this->id)
