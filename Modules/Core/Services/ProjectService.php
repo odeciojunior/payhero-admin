@@ -430,13 +430,13 @@ class ProjectService
         }
 
         if ($pagination) {
-            if(empty($projects)) {
+            if(empty($projects->get())) {
                 $apiSale = Sale::where('owner_id', auth()->user()->account_owner_id)->exists();
                 if(!empty($apiSale)) {
                     return response()->json(['data' => 'has api sales']);
                 }
             }
-            return ProjectsSelectResource::collection($projects->get());
+            return ProjectsSelectResource::collection($projects);
         } else {
             return ProjectsResource::collection($projects->with('domains')->get());
         }
