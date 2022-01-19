@@ -430,12 +430,13 @@ class ProjectService
         }
 
         if ($pagination) {
-            if(empty($projects->get())) {
-                $apiSale = Sale::where('owner_id', auth()->user()->account_owner_id)->exists();
-                if(!empty($apiSale)) {
-                    return response()->json(['data' => 'has api sales']);
-                }
-            }
+            $projects = $projects->get();
+            // if(empty($projects)) {
+            //     $apiSale = Sale::where('owner_id', auth()->user()->account_owner_id)->exists();
+            //     if(!empty($apiSale)) {
+            //         return response()->json(['data' => 'api sales']);
+            //     }
+            // }
             return ProjectsSelectResource::collection($projects);
         } else {
             return ProjectsResource::collection($projects->with('domains')->get());
