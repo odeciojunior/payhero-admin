@@ -151,6 +151,8 @@ $(document).ready( function () {
                 $(":root").css("--secondary-color", secondaryColor);
 
                 $(":root").css("--finish-button-color", finishButtonColor);
+
+                $('.theme-ready-first-line').addClass('low-opacity');
             } else {
                 $("." + $(this).attr("data-target")).slideUp("slow", "swing");
                 $("." + $(this).attr("data-toggle")).slideDown("slow", "swing");
@@ -173,6 +175,8 @@ $(document).ready( function () {
                 $(":root").css("--primary-color", primaryColor);
                 $(":root").css("--secondary-color", secondaryColor);
                 $(":root").css("--finish-button-color", primaryColor);
+
+                $('.theme-ready-first-line').removeClass('low-opacity');
             }
         });
 
@@ -527,14 +531,47 @@ $(document).ready( function () {
         }
     });
 
-
-    $('#quantity-selector-tooltip').mouseover(function(){
-        $('.tooltip-content').fadeIn();
+    $('#selector-tooltip').on({
+        mouseenter: function () {
+            $('.tooltip-container').fadeIn();
+        },
+        mouseleave: function () {
+            $('.tooltip-container').fadeOut();
+        }
     });
 
-    $('#quantity-selector-tooltip').mouseout(function(){
-        $('.tooltip-content').fadeOut();
+    // ---------------- Functions Table - START ---------------------
+    $('.selectable-notification').on('change', function(){
+        const form = document.querySelector("#checkout_editor");
+        const selectableCheckboxes = form.querySelectorAll(".selectable-notification:checked");
+
+        console.log(selectableCheckboxes.length);
+        if(selectableCheckboxes.length > 0 && selectableCheckboxes.length < 4) {
+            $('#selectable-all-notification').addClass('dash-check');
+            $('#selectable-all-notification').prop('checked', true);
+        }
+
+        if(selectableCheckboxes.length == 0) {
+            $('#selectable-all-notification').prop('checked', false);
+            $('#selectable-all-notification').removeClass('dash-check');
+        }
+        
+        if (selectableCheckboxes.length == 4){
+            $('#selectable-all-notification').removeClass('dash-check');
+        }
     });
+    
+    $('#selectable-all-notification').on('click', function(){
+        if($(this).is(':checked')){
+            $('.selectable-notification').prop('checked', true);
+        }else{
+            $('.selectable-notification').prop('checked', false);
+            $('#selectable-all-notification').removeClass('dash-check');
+        }
+    });
+    // ---------------- Functions Table - END ---------------------
+
+    
 
 });
 

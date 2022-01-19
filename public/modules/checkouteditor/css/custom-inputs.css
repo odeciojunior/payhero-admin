@@ -106,7 +106,7 @@
 }
 
 
-.triple-check[type=checkbox]:checked+label::after {
+.dash-check[type=checkbox]:checked+label::after {
   font-weight: bold;
   content: "\f199" !important;
 }

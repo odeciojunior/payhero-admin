@@ -695,7 +695,8 @@ $(() => {
                 $("#checkout_editor #theme_ready_enabled").prop("checked", true);
                 $("#checkout_editor #theme_ready_enabled").prop("value", 1);
                 $(".custom-theme-content").show("slow", "swing");
-                $(".theme-ready-content").hide("slow", "swing");
+                $('.theme-ready-first-line').addClass('low-opacity');
+                $(".theme-ready-second-line").hide("slow", "swing");
             } else {
                 $("#checkout_editor #theme_ready_enabled").prop("checked", false);
                 $("#checkout_editor #theme_ready_enabled").prop("value", 0);
@@ -706,7 +707,8 @@ $(() => {
                 $(":root").css("--finish-button-color", checkout.color_buy_button);
 
                 $(".custom-theme-content").hide("slow", "swing");
-                $(".theme-ready-content").show("slow", "swing");
+                $('.theme-ready-first-line').removeClass('low-opacity');
+                $(".theme-ready-second-line").show("slow", "swing");
             }
 
         }
