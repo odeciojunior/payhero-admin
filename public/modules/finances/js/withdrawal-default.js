@@ -129,7 +129,7 @@ $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
             .addClass('d-none')
 
         $modalCustomTitle
-            .text("Confirmar Saque")
+            .text("Confirmar saque")
             .parent()
             .removeClass('debit-pending')
 

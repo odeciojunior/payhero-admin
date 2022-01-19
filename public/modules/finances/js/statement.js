@@ -310,8 +310,17 @@ window.updateAccountStatementData = function() {
             };
 
             items.forEach(function (item) {
-                let dataTable = `<tr class="s-table table-finance-schedule">
-                <td style="vertical-align: middle;">`;
+
+                if (item.isInvite) {
+                    let invite =`
+                        <a>
+                            <span class="bold" style="grid-area: sale;">#${item.order.hashId}</span>
+                        </a>`;
+                }
+
+                let dataTable =
+                    `<tr class="s-table table-finance-schedule-new">
+                        <td>`;
                 if (item.order && item.order.hashId) {
                     dataTable += `Transação`;
 
@@ -336,7 +345,7 @@ window.updateAccountStatementData = function() {
 
                 dataTable += `
                      </td>
-                    <td style="vertical-align: middle; grid-area: date">
+                    <td style="grid-area: date">
                         ${item.date}
                     </td>
                      <td style="grid-area: status" class="text-center">
@@ -346,7 +355,7 @@ window.updateAccountStatementData = function() {
                     statusExtract[item.details.type]
                 } p-2">${item.details.status}</span>
                      </td>
-                    <td class="text-xs-right text-md-left bold" style="vertical-align: middle;grid-area: value;};">
+                    <td class="text-xs-right text-md-left bold" style="grid-area: value;};">
                     ${item.amount.toLocaleString("pt-BR", {
                         style: "currency",
                         currency: "BRL",

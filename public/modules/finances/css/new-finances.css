@@ -387,10 +387,6 @@ strong span {
     border-bottom-color: transparent !important;
 }
 
-.card-tabs {
-    border-radius: 0 16px 16px 16px !important;
-}
-
 .card.shadow {
     border-radius: 0 12px 12px 12px;
 }
@@ -539,6 +535,13 @@ select, .select-pad {
     padding-top: 5px;
     margin-top: 5px;
     border-top: 1px solid #F4F4F4;
+}
+
+.page-title svg {
+    width: auto;
+    height: 20px;
+    margin-left: 10px;
+    margin-top: 5px;
 }
 
 @media (min-width: 768px) {
@@ -772,6 +775,20 @@ select, .select-pad {
         width: 30% !important;
         margin: 2px 5px !important;
     }
+
+    .page-title svg {
+        width: 90%;
+    }
+
+    .card.shadow {
+        border-radius: 0 0 8px 8px;
+    }
+    .nav-tabs {
+        justify-content: space-between;
+    }
+    .nav-tabs .nav-link {
+        margin: 0;
+    }
 }
 
 /********** Settings **********/
@@ -837,24 +854,7 @@ select, .select-pad {
 #withdrawalsTable tr:last-of-type td:last-child {
     border-bottom-right-radius: 16px !important;
 }
-@media only screen and (min-width: 768px){
-    .col-md-3.card {
-        margin-right: 10px;
-        max-width: calc(25% - 10px);
-    }
-}
-@media only screen and (min-width: 576px) and (max-width : 767px){
-    .col-sm-6.card {
-        margin-right: 10px;
-        max-width: calc(50% - 10px);
-    }
-}
-@media only screen and (min-width: 768px){
-    .col-md-4.card {
-        margin-right: 10px;
-        max-width: calc(33.3% - 10px);
-    }
-}
+
 .popover {
     left: -50px !important;
 }
@@ -872,11 +872,4 @@ select, .select-pad {
     display: flex;
     align-items: center;
     color: #404040;
-}
-
-.page-title svg {
-    width: auto;
-    height: 20px;
-    margin-left: 10px;
-    margin-top: 5px;
 }

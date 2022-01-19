@@ -37,7 +37,7 @@ class WithdrawalResource extends JsonResource
                     ->getStatus($this->status)
             ),
             'tax_value' => $this->tax,
-            'debt_pending_value' => 'R$ ' . number_format(intval($this->debt_pending_value) / 100, 2, ',', '.')
+            'debt_pending_value' => 'R$' . number_format(intval($this->debt_pending_value) / 100, 2, ',', '.')
         ];
     }
 

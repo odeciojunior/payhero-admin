@@ -235,7 +235,7 @@ function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue) {
         .addClass('d-none')
 
     $modalCustomTitle
-        .text("Confirmar Saque")
+        .text("Confirmar saque")
         .parent()
         .removeClass('debit-pending')
 

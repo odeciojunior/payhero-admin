@@ -205,7 +205,7 @@ class WithdrawalsApiController
                 'id' => $id,
                 'date_request' => $withdrawal->created_at->format('d/m/Y'),
                 'total_withdrawal' => 'R$' . number_format(intval($total_withdrawal) / 100, 2, ',', '.'),
-                'debt_pending_value' => 'R$ ' . number_format(intval($withdrawal->debt_pending_value) / 100, 2, ',', '.'),
+                'debt_pending_value' => 'R$' . number_format(intval($withdrawal->debt_pending_value) / 100, 2, ',', '.'),
                 'transactions' => $arrayTransactions,
             ];
 
