@@ -26,7 +26,7 @@ class AsaasAnticipations extends Command
      */
     protected $description = 'Command description';
 
-    public $saveRequests = true;
+    public $saveRequests = false;
     public $simulate = false;
 
     /**
@@ -88,6 +88,11 @@ class AsaasAnticipations extends Command
                         and (str_contains($response['errors'][0]['description'], 'Este recebível já está reservado para a instituição') ) ) {
                             $error = false;
                             $updateUser = true;
+                            if(!$this->simulate) {
+                                $sale->update([
+                                    'anticipation_status' => 'CONTRACTUAL_EFFECT_SETTLEMENT'
+                                ]);
+                            }
                     } elseif(($response['errors'][0]['code'] == 'cannotAnticipate' or $response['errors'][0]['code'] == 'invalid_action')
                         and (str_contains($response['errors'][0]['description'], 'Não é possível antecipar cobranças já recebidas.') ) ) {
                             $error = false;
@@ -160,7 +165,7 @@ class AsaasAnticipations extends Command
             $bar->finish();
 
         } catch (Exception $e) {
-            report($e);
+            dd($e);
         }
     }
 }

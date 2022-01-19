@@ -192,7 +192,7 @@ $(document).ready(function () {
                                 <div style="margin: 10px 10px 0px 0px;position: absolute;right: 0px;">
                                     <button type="button" class="menu_product" data-id="${value.id}">&#8942;</button>
                                 </div>
-                                <img class="card-img-top product-image" src="${value.image}" alt="Imagem do produto" data-link="/products/${value.id}/edit">
+                                <img class="card-img-top product-image pointer" src="${value.image}" alt="Imagem do produto" data-link="/products/${value.id}/edit">
                                 ${value.type_enum == 2
                                 ? `<span class="ribbon-inner ribbon-primary" style="background-color:${badgeList[value.status_enum]};border-radius: 0px 10px 10px 0px;"> ${statusList[value.status_enum]}
                                         </span>`
