@@ -1,11 +1,11 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=001') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=541') }}">
 @endpush
 
 <div class='row card no-gutters p-30 rounded-top'>
 
     <div class="col-12 font-size-24 pl-0 mb-10">
-        Configuracoes
+        Configurações
     </div>
 
     <div class="col-md-12">
@@ -151,14 +151,6 @@
 
                                               </div>
                                         </div>
-                                        {{-- <div class='form-group col-md-6 pr-3 pr-sm-0'>
-                                            <label for='percentage-affiliates'>Porcentagem</label>
-                                            <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='text' min="0" max="100" maxlength="3">
-
-                                            <span id='input-pad-error' class='text-danger'></span>
-                                        </div> --}}
-
-
                                     </div>
 
                                 </div>
@@ -233,8 +225,8 @@
                             </div>
 
                             <!-- CONVITE AFILIADOS -->
-                            <div class="col-12 col-md-5 col-lg-8 py-10 pl-0 pr-0 align-items-center border-top border-right">
-                                <div class="row no-gutters mt-3 d-flex justify-content-end pl-60">
+                            <div class="col-12 col-md-5 col-lg-7 py-10 pl-0 pr-0 align-items-center border-top border-right">
+                                <div class="row no-gutters mt-3 d-flex justify-content-end pl-60 pl-lg-0">
                                     
                                     <div class="font-weight-bold pr-0 pl-5 d-flex align-items-center">Convide afiliados:</div>
 
@@ -246,7 +238,7 @@
                             </div>
 
                             <!-- COPIAR LINK -->
-                            <div class="col-md-3 col-lg-1 p-10 border-top d-flex align-items-center">
+                            <div class="col-md-3 col-lg-2 p-10 border-top d-flex align-items-center">
                                 <button id="copy-link-affiliation" class="btn btn-default mx-0 bg-white border-0 pl-md-10" type="button">
                                     <img src="{{asset('/modules/global/img/projects/btnCopy.svg')}}" class="mr-10" alt="botao de copiar">Copiar
                                 </button>
@@ -269,7 +261,7 @@
 
                 <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete-project" style="float: left;">
                     <span class="orion-icon-lixo"></span>
-                    <span class="gray"> Deletar projeto</span>
+                    <span class="gray">Excluir projeto</span>
                 </a>
             </div>
         </div>
