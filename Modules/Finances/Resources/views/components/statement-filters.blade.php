@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div id="default-statement-filters" class="row mx-0 justify-content-start align-items-center">
+    <div id="default-statement-filters" class="row justify-content-start align-items-center mx-0 mt-10">
         <div class="col-12 pb-0 px-0">
             <div class="col-lg-12 mb-15 px-0">
                 <div class="row align-items-center mx-0">
@@ -94,18 +94,18 @@
             </div>
         </div>
     </div>
-    <div id="custom-statement-filters" class="row justify-content-start align-items-center mx-0" style="display: none">
+    <div id="custom-statement-filters" class="row justify-content-start align-items-center mx-0 mt-10" style="display: none">
         <div class="col-12 pb-0 px-0">
             <div class="col-lg-12 mb-15 px-0">
                 <div class="row mx-0">
-                    <div class="col-md-3">
+                    <div class="col-md-3 px-0">
                         <div class="input-holder form-group">
                             <label for="statement_company_select">Empresa</label>
                             <select class="sirius-select" name="company" id="statement_company_select">
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3" style="display:none">
+                    <div class="col-md-3 px-0" style="display:none">
                         <div class="input-holder form-group">
                             <label for="statement_data_type_select">Data</label>
                             <select class="sirius-select" name="statement_data_type_select" id="statement_data_type_select">
@@ -122,14 +122,14 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-3 px-0">
                         <div class="form-group form-icons">
                             <label for="date_range_statement">Período</label>
                             <i style="right: 20px;" class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
                             <input name="date_range_statement" id="date_range_statement" class="input-pad pr-30" placeholder="Clique para editar..." readonly>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 px-0">
                         <div class="form-group">
                             <label for="payment_method">Forma de pagamento</label>
                             <select name='payment_method' id="payment_method" class="sirius-select">
@@ -141,7 +141,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-3 px-0">
                         <div class="form-group">
                             <label for="statement_sale">
                                 Transação
@@ -155,7 +155,7 @@
                 </div>
                 <div class="collapse" id="bt-collapse-custom">
                     <div class="row mx-0">
-                        <div class="col-md-3">
+                        <div class="col-md-3 px-0">
                             <div class="input-holder form-group">
                                 <label for="statement_status_select">Status</label>
                                 <select class="sirius-select" name="status" id="statement_status_select">
@@ -187,7 +187,7 @@
                         <div class="col-auto col-xl-3 offset-xl-6 px-0">
                             <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center flex-column flex-lg-row" data-toggle="collapse" data-target="#bt-collapse-custom" aria-expanded="false" aria-controls="bt_collapse">
                                 <img id="icon-custom-filtro" src="{{ asset('/modules/global/img/svg/filter-2-line.svg') }}"/>
-                                <span class="w-p100 w-md-auto" id="text-custom-filtro" style="margin-left: 10px">Filtros avançados</span>
+                                <span class="w-p100 w-md-auto" id="text-custom-filtro">Filtros avançados</span>
                             </div>
                         </div>
 

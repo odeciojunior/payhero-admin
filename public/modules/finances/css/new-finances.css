@@ -781,13 +781,14 @@ select, .select-pad {
     }
 
     .card.shadow {
-        border-radius: 0 0 8px 8px;
-    }
-    .nav-tabs {
-        justify-content: space-between;
+        border-radius: 0 8px 8px 8px;
     }
     .nav-tabs .nav-link {
         margin: 0;
+    }
+
+    .page-content {
+        padding: 10px !important;
     }
 }
 
