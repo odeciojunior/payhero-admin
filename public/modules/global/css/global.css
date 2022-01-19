@@ -1990,3 +1990,6 @@ tbody td{
 .modal-plans .btn-plus:not(:disabled):hover svg path {
     stroke:#ffffff;
 }
+#table-plans td, #table-plans {
+    color: #5D5D5D;
+}

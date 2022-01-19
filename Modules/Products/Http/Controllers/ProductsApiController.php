@@ -348,10 +348,13 @@ class ProductsApiController extends Controller
     {
         try {
             $productId = current(Hashids::decode($id));
+            $planId = current(Hashids::decode($request->plan));
 
-            $product = ProductPlan::find($productId);
-
-            $product->update([
+            $productPlanModel = new ProductPlan();
+            $productPlanModel
+            ->where('plan_id', $planId)
+            ->where('product_id', $productId)
+            ->update([
                 'is_custom' => $request->productCustom
             ]);
 

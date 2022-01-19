@@ -815,11 +815,11 @@ $(function () {
                                     }
 
                                     append += '<div class="d-flex align-items-center">';
-                                        append += '<a class="btn-customizations" data-product="' + product.id + '" type="button" style="cursor: pointer; ' + (product.custom_configs.length > 0 ? 'margin-right: 14px;' : '') + '">' + (product.custom_configs.length > 0 ? 'Editar' : 'Adicionar') + '</a>';
+                                        append += '<a class="btn-customizations" data-product="' + product.product_id + '" type="button" style="cursor: pointer; ' + (product.custom_configs.length > 0 ? 'margin-right: 14px;' : '') + '">' + (product.custom_configs.length > 0 ? 'Editar' : 'Adicionar') + '</a>';
                                         if (product.custom_configs.length > 0) {
                                             append += '<div class="switch-holder active_custom d-flex align-items-center">';
                                                 append += '<label class="switch m-0">';
-                                                    append += '<input type="checkbox" data-product="' + product.id + '" name="check-values" class="check active_custom_product" value="' + product.is_custom + '" ' + (product.is_custom ? 'checked' : '') + '>';
+                                                    append += '<input type="checkbox" data-product="' + product.product_id + '" name="check-values" class="check active_custom_product" value="' + product.is_custom + '" ' + (product.is_custom ? 'checked' : '') + '>';
                                                     append += '<span class="slider round"></span>';
                                                 append += '</label>';
                                             append += '</div>';
@@ -2490,6 +2490,7 @@ $(function () {
                 'Accept': 'application/json',
             },
             data: {
+                plan: plan_id,
                 productCustom: productCustom
             },
             error: function (_error4) {

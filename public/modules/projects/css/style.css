@@ -44,8 +44,10 @@
 .nav-tabs .nav-link {
     text-transform: none;
     font-weight: bold;
-    border: none;
-    border-bottom: 0px solid #FAFAFA;
+    border-top: none;
+    border-right: none;
+    border-bottom: 2px solid #FAFAFA;
+    border-left: none;
     background-color: #FAFAFA;
     padding: 15px;
     color: #9C9C9C;
@@ -72,7 +74,6 @@
 
 .nav-tabs .nav-link.active {
     color: #2E85EC !important;
-    border: none;
     border-bottom: 3px solid #2E85EC;
     background-color: #FFF !important;
 
@@ -156,7 +157,7 @@
 }
 
 .nav-tabs {
-    border-bottom-color: transparent !important;
+    border-bottom: none !important;
 }
 
 .category-tabs {

@@ -442,14 +442,6 @@ class PlansApiController extends Controller
 
                 $productsPlan = $productPlanModel->where('plan_id', $planId)->get();
 
-                //dd($productsIds, $productsPlan->pluck('product_id')[0], $productsPlan->pluck('product_id')[1], $productsPlan->pluck('product_id')[2]);
-
-                //dd(array_search(854480, $productsIds), array_search(375488, $productsIds), array_search(579902, $productsIds));
-                //dd(array_search(375488, $productsIds));
-                //dd(array_search(579902, $productsIds));
-
-                //dd($productsIds, $productsPlan->pluck('product_id')->toArray());
-
                 foreach ($productsPlan as $pl) {
                     if (!in_array($pl->product_id, $productsIds)) {
                         $productPlanModel->where('plan_id', $planId)->where('product_id', $pl->product_id)->forceDelete();

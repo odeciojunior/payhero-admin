@@ -122,7 +122,7 @@
             <div>
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <div class="row ml-0">
-                        <ul id="slick-tabs" class="nav nav-tabs nav-tabs-line col-9 col-md-11" role="tablist" style="color: #ee535e">
+                        <ul id="slick-tabs" class="nav nav-tabs nav-tabs-line col-9 col-md-11" role="tablist">
                             <li class="nav-item tab-domains" role="presentation">
                                 <span style="color: #2E85EC" id="first-category" class="category-tabs">PRINCIPAL</span>
                                 <a id="tab-domains" class="nav-link active" data-toggle="tab" href="#tab_domains"
@@ -182,7 +182,7 @@
                         <ul class="nav nav-tabs nav-tabs-line col-3 col-md-1">
                             <li class="nav-item tab_configuration" role="presentation" style="margin-left: auto;">
                                 <span class="category-tabs">&nbsp;</span>
-                                <a id="tab_configuration" class="nav-link" data-toggle="tab"
+                                <a id="tab_configuration" class="nav-link" data-toggle="tab" style="padding: 14px 16px 12px 16px;"
                                    href="#tab_configuration_project"
                                    aria-controls="tab_configuration_project" role="tab"> <img height="22" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
                                 </a>
@@ -191,7 +191,7 @@
                     </div>
                 </div>
             </div>
-            <div class="shadow" data-plugin="matchHeight">
+            <div class="shadow" data-plugin="matchHeight" style="margin-top: 2px;">
                 <div class="tab-content">
                     <div class="tab-content">
                         <!-- Painel de Dominios -->
