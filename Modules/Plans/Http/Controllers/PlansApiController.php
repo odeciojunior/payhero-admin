@@ -808,7 +808,8 @@ class PlansApiController extends Controller
             //atualizando personalização existente
             $idsProductPlans = [];
             foreach ($itens as $productPlanId => $config) {
-                $productPlan = ProductPlan::where('id', current(Hashids::decode($productPlanId)))->where('plan_id', $planId)->first();
+                $productPlanModel = new ProductPlan();
+                $productPlan = $productPlanModel->where('product_id', current(Hashids::decode($productPlanId)))->where('plan_id', $planId)->first();
                 if (!empty($productPlan)) {
                     $productPlan->custom_config = $config;
                     $productPlan->is_custom = !empty($request->is_custom[$productPlanId]) ? 1 : 0;
