@@ -157,9 +157,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('check:sales-refunded')->weeklyOn(1, '23:00');
 
         /** Libera o dinheiro da azx */
-        $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00');
+        $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00')->withoutOverlapping();;
         /** Confirma a transferencia do dinheiro da azx */
-        $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30');
+        $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30')->withoutOverlapping();;
 
         /** Antecipações Asaas */
         $schedule->command('asaas:anticipations')->dailyAt('4:00');

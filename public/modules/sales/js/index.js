@@ -770,6 +770,11 @@ $(document).ready(function () {
     $(document).on('focusout', '.select2-selection__rendered', function () {
         $('.select2-selection.select2-selection--multiple').scrollTop(0);
     });
+
+    $(document).on('focusin', '.select2-selection__rendered', function () {
+        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    });
+    
     // FIM DO COMPORTAMENTO DO FILTRO
 
 

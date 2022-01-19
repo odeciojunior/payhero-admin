@@ -3,10 +3,10 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href='{{asset('/modules/sales/css/index.css?v=' . uniqid())}}'>
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=123') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=123') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
             .select2-selection--single {
@@ -72,7 +72,7 @@
                 <form id='filter_form'>
                     <div id="" class="card shadow p-20">
                         <div class="row">
-                            
+
                             <div class="col-sm-6 col-md-3">
                                 <label for="projeto">Projeto</label>
                                 <select name='select_project' id="projeto" class="form-control input-pad">

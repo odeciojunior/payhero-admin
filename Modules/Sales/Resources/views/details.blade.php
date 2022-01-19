@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href='{{asset('/modules/sales/css/index.css?v=' . uniqid())}}'>
+    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=101') }}">
 @endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-simple modal-sidebar modal-lg">
@@ -272,19 +272,19 @@
                     {{-- WOOCOMMERCE --}}
                     <div class="tab-pane fade" id="nav-woo" role="tabpanel" aria-labelledby="nav-woo-tab">
                         <h4> Ordem Woocommerce  </h4>
-                        
+
                         <br>
 
-                        
+
                         <div id="woo_order" class="mb-20">
-                            
+
                         </div>
 
                         <br>
-                        
-                        
+
+
                     </div>
-                    
+
                     <!-- CLIENTE -->
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <h4> Dados Pessoais </h4>

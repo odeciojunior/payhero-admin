@@ -18,5 +18,5 @@
     </a>
 </div>
 @push('css')
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=06') !!}">
+    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
 @endpush
