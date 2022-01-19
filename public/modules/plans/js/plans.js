@@ -748,8 +748,11 @@ $(function () {
 
         $(modal).find('.modal-footer').html(
             '<button id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">' +
-                '<img class="mr-10" src="/modules/global/img/icon-trash.svg" alt="Icon Trash" />' +
-                '<span>Excluir plano</span>' +
+                '<svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg">'+
+                    '<path d="M18.8846 4.2L17.7692 23.04C17.7594 23.5566 17.5577 24.0492 17.2064 24.4146C16.855 24.78 16.3814 24.9898 15.8846 25H6.11538C5.61864 24.9898 5.14497 24.78 4.79365 24.4146C4.44232 24.0492 4.24061 23.5566 4.23077 23.04L3.11538 4.2M1 4.2H21H1ZM7.15385 4.2V2.56C7.15385 2.14626 7.31188 1.74947 7.59319 1.45691C7.87449 1.16436 8.25602 1 8.65385 1H13.3462C13.5431 1 13.7382 1.04035 13.9202 1.11875C14.1022 1.19715 14.2675 1.31205 14.4068 1.45691C14.5461 1.60177 14.6566 1.77375 14.732 1.96301C14.8074 2.15228 14.8462 2.35514 14.8462 2.56V4.2H7.15385Z" stroke="#838383" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>'+
+                    '<path d="M10.9997 7.22223V20.5556M8.27246 7.22223L8.81792 20.5556M13.727 7.22223L13.1816 20.5556" stroke="#838383" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>'+
+                '</svg>' +
+                '<span style="margin-left: 10px;">Excluir plano</span>' +
             '</button>' +
             '<button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>'
         ).removeClass('justify-content-end').addClass('justify-content-between');
@@ -889,7 +892,7 @@ $(function () {
             var curHeight = $(modal).find('.modal-body').height();
 
             var index_product_custom = '';
-            index_product_custom = products_plan.map(function(p) { return p.id }).indexOf(product_ID);
+            index_product_custom = products_plan.map(function(p) { return p.product_id }).indexOf(product_ID);
 
             $(modal).find('#stage2-customization').find('.product-custom').removeAttr('data-toggle').removeAttr('title');
             $('.product-custom').tooltip('dispose');
