@@ -27,10 +27,12 @@
 
         <div class="row">
             <!-- TITULO CABECALHO -->
-            <div class="col-md pt-20 pl-10 pl-lg-25">
+            <div class="col-md py-10 pl-10 pl-lg-25">
                 <div class="row d-flex pl-20">
-                    <img src="{{asset('/modules/global/img/projects/imgIcon.svg')}}" class="mb-15 mr-15">
-                    <h3>Identificação</h3>
+                    <div class="bg-afiliate-icon mr-15">
+                        <img src="{{asset('/modules/global/img/projects/imgIcon.svg')}}" class="p-10">
+                    </div>
+                    <h3 class="mb-0">Identificação</h3>
                 </div>
             </div>
 
@@ -78,7 +80,7 @@
                 <div class='col-md-12 d-flex py-10'>
 
                     <div class="col-md-6 d-flex align-items-center pl-5 pl-sm-30">
-                        <div class="bg-afiliate-icon p-5 mr-15">
+                        <div class="bg-afiliate-icon p-10 mr-15">
                             <img src="{{ asset('/modules/global/img/projects/afiliatesIcon.svg') }}" alt="icone afiliacao">
                         </div>
                         <label for='boleto_redirect' class="font-size-24 m-0">Afiliações</label>
@@ -239,8 +241,13 @@
 
                             <!-- COPIAR LINK -->
                             <div class="col-md-3 col-lg-2 p-10 border-top d-flex align-items-center">
-                                <button id="copy-link-affiliation" class="btn btn-default mx-0 bg-white border-0 pl-md-10" type="button">
-                                    <img src="{{asset('/modules/global/img/projects/btnCopy.svg')}}" class="mr-10" alt="botao de copiar">Copiar
+                                <button id="copy-link-affiliation" class="mx-0 bg-white border-0 pl-md-10" type="button">
+                                    {{-- <img src="{{asset('/modules/global/img/projects/btnCopy.svg')}}" class="svg mr-10" alt="botao de copiar"> --}}
+                                    <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1.5028 2.62704L1.5 4.75V15.2542C1.5 17.0491 2.95507 18.5042 4.75 18.5042L13.3663 18.5045C13.0573 19.3782 12.224 20.0042 11.2444 20.0042H4.75C2.12665 20.0042 0 17.8776 0 15.2542V4.75C0 3.76929 0.627445 2.93512 1.5028 2.62704ZM13.75 0C14.9926 0 16 1.00736 16 2.25V15.25C16 16.4926 14.9926 17.5 13.75 17.5H4.75C3.50736 17.5 2.5 16.4926 2.5 15.25V2.25C2.5 1.00736 3.50736 0 4.75 0H13.75ZM13.75 1.5H4.75C4.33579 1.5 4 1.83579 4 2.25V15.25C4 15.6642 4.33579 16 4.75 16H13.75C14.1642 16 14.5 15.6642 14.5 15.25V2.25C14.5 1.83579 14.1642 1.5 13.75 1.5Z" fill="#37474F"/>
+                                    </svg>
+                                    Copiar
+                                    
                                 </button>
                             </div>
 
