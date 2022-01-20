@@ -2,12 +2,12 @@
 <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
 <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
 <link rel="stylesheet" href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/quill-editor.css?v=10') }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/dropfy.css?v=10') }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/custom-inputs.css?v=10') }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/cropper.css?v=10') }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/style.css?v=10') }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/preview-styles.css?v=10') }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/quill-editor.css?v='.uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/dropfy.css?v=' . uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/custom-inputs.css?v='.uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/cropper.css?v='.uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/style.css?v='.uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/preview-styles.css?v='.uniqid()) }}">
 @endpush
 
 <!-- Page -->
@@ -1487,10 +1487,9 @@
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
 <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
 <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
-
-<script src="{{asset('modules/checkouteditor/js/cropper.min.js?v='.uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/verifyPhone.js?v='.uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/checkout-editor.js?v='.uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/loadcheckoutdata.js?v='.uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/scrollPreview.js?v='.uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/cropper.min.js?v=' . uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/verifyPhone.js?v=' . uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/checkout-editor.js?v=' . uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/loadcheckoutdata.js?v=' . uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/scrollPreview.js?v=' . uniqid())}}"></script>
 @endpush

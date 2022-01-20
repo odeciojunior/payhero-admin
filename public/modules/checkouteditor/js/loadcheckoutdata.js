@@ -179,11 +179,6 @@ $(() => {
         });
 
         function fillForm(checkout) {
-            // $("#checkout_editor #checkout_editor_id").prop(
-            //     "value",
-            //     checkout.id
-            // );
-
             if (checkout.checkout_type_enum == 1) {
                 $("#checkout_editor #checkout_type_steps").prop(
                     "checked",
