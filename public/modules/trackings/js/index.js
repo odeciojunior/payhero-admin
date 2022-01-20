@@ -191,12 +191,15 @@ $(() => {
                     $("#project-not-empty").show();
                     $("#export-excel").show()
 
-                    $.each(response.data, function (i, project) {
-                        $("#project-select").append($('<option>', {
-                            value: project.id,
-                            text: project.name
-                        }));
-                    });
+                    if(response.data != 'api sales') {
+                        
+                        $.each(response.data, function (i, project) {
+                            $("#project-select").append($('<option>', {
+                                value: project.id,
+                                text: project.name
+                            }));
+                        });
+                    }
 
                     index();
                     getResume();
