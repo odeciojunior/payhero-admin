@@ -320,15 +320,44 @@ h4.number{
 }
 
 .box-link {
-    border-radius: 100%;
-    background: #fff url('/modules/global/img/reports/arrow-right.png') no-repeat center;
-    width: 36px;
-    height: 36px;
-    display: flex;
     align-items: center;
     margin-left: auto;
-    text-indent: -9000em;
+    color: #107DFF;
+    background: #fff;
+    padding: 3px 14px;
+    max-height: 28px;
+    border-radius: 20px;
+    border: 0;
+    display: flex;
+    align-items: center;
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+.box-link.silver { background: #F6F8FE; }
+
+.box-link .redirect::before {
+    color: #107DFF;
+    transform: unset;
+}
+
+.box-link:hover, .box-link:hover i::before {
+    color: #FFF;
+    background-color: #107DFF;
+}
+
+.box-link span {
+    font-weight: bold;
+    max-width: 0;
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
     overflow: hidden;
+    -webkit-transition: max-width 1s;
+    transition: max-width 1s;
+}
+.box-link:hover span {
+    max-width: 7rem;
 }
 
 /* cards reports */
@@ -433,11 +462,16 @@ h4.number{
 
 
 /* graph */
-.new-graph .ct-labels, 
-.new-graph .ct-grids {
-    display: none;
-}
+
 .new-graph .ct-series-a .ct-line { stroke: #2e85ec; }
+.new-graph-pending .ct-series-a .ct-line { stroke: #FF7900; }
+.new-graph-cashback .ct-series-a .ct-line { stroke: #1BE4A8; }
+.new-graph-sell .ct-series-a .ct-line { stroke: #2e85ec; }
+
+.new-graph .ct-series-a .ct-area { fill: #2e85ec; }
+.new-graph-pending .ct-series-a .ct-area { fill: #FF7900; }
+.new-graph-cashback .ct-series-a .ct-area { fill: #1BE4A8; }
+.new-graph-sell .ct-series-a .ct-area { fill: #2e85ec; }
 
 /* new graph pie */
 .box-donut { 
@@ -520,7 +554,7 @@ h4.number{
 }
 
 .finance-card { 
-    padding: 16px 20px 25px; 
+    padding: 16px 16px 25px; 
     border-radius: 12px;
     min-height: 104px;
 }
@@ -580,6 +614,7 @@ h4.number{
     }
 }
 .commission, .distribution { border-radius: 8px; }
+.inner { padding: 0 20px 20px 20px; }
 
 @media only screen and (min-width: 1220px) {
     .commission { flex: 0 0 68%; }
@@ -589,14 +624,17 @@ h4.number{
 .box-chart-primary .title-graph {
     justify-content: space-between;
     align-items: center;
+    padding: 15px 0;
 }
+.box-chart-primary .title-graph h5 { margin: 0; }
 
 .box-chart-primary .title-graph h6 {
     color: #9E9E9E;
+    margin: 0;
 }
 
 .box-finances-values { 
-    padding: 20px 0; 
+    padding: 20px 0 0 0; 
     align-items: center;
 }
 
@@ -628,6 +666,7 @@ h4.number{
 .finances-values em {
     font-size: 18px;
     font-weight: bold;
+    font-style: normal;
     padding-left: 5px;
 }
 .finances-values em.green { color: #1BE4A8; }
@@ -661,3 +700,56 @@ h4.number{
     flex-direction: column;
 }
 
+.box-graph-dist {
+    padding: 1.0715rem 1.0715rem 25px 1.0715rem;
+    align-items: center;
+}
+
+.info-graph h6 { margin-bottom: 0; }
+.info-graph small { 
+    color: #9E9E9E; 
+    font-style: normal;
+}
+.info-graph strong { font-size: 20px; font-style: normal;}
+
+.distribution-graph { width: 154px; }
+
+.distribution-graph svg {
+    transform: translate(-30px, 0);
+}
+
+@media only screen and (min-width: 1227px) and (max-width : 1600px){
+    .distribution-graph { width: 159px; }
+}
+
+.distribution-graph  .ct-series-a { fill: #FF2F2F; }
+.distribution-graph  .ct-series-b { fill: #B70000; }
+.distribution-graph  .ct-series-c { fill: #1BE4A8; }
+.distribution-graph  .ct-series-d { fill: #FFB443; }
+
+.box-distribution { flex-flow: wrap; }
+.box-distribution .distribution-area { width: 50%; }
+
+.distribution-area .cube {
+    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.distribution-area .green { background: rgba(27, 228, 168, .1) url('/modules/global/img/reports/ico-oval-green.png') no-repeat center; }
+.distribution-area .yellow { background: rgba(255, 180, 67, .1) url('/modules/global/img/reports/ico-oval-yellow.png') no-repeat center; }
+.distribution-area .red { background: rgba(255, 0, 0, 0.08) url('/modules/global/img/reports/ico-oval-red.png') no-repeat center; }
+.distribution-area .strong { background: rgba(183, 0, 0, 0.08) url('/modules/global/img/reports/ico-oval-strong.png') no-repeat center; }
+
+.footer-distribution { padding: 5px 0 20px 0; }
+
+.footer-distribution small { 
+    color: #9E9E9E; 
+    font-size: 14px;
+}
+.footer-distribution strong { 
+    font-size: 18px; 
+    font-weight: bold;
+}

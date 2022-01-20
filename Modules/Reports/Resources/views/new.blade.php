@@ -106,7 +106,10 @@
 										Financeiro
 									</a>
 								</h3>
-								<a href="{!! route('reports.finances') !!}" class="box-link">Financeiro</a>
+								<a href="{!! route('reports.finances') !!}" class="box-link">
+                                    <span>Acessar&nbsp&nbsp</span>
+                                    <i class="o-arrow-right-1 redirect"></i>
+                                </a>
 							</header>
                             <div class="container container-reports">
                                 <div id="reports-content" class="">
@@ -131,16 +134,22 @@
 												<div class="card-body">
                                                     <header class="container">
 													    <h6 class="font-size-16 gray-700 grey"> Pendentes </h6>
-													    <h4 id='qtd-pending' class="font-size-24 bold">0</h4>
+                                                        <div class="d-flex value-price">
+                                                            <h4 id='qtd-pending' class="font-size-24 bold">0</h4>
+                                                        </div>
                                                     </header>
+                                                    <div class="new-graph-pending"></div>
 												</div>
 											</div>
-											<div class="card">
+                                            <div class="card">
 												<div class="card-body">
                                                     <header class="container">
-													    <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
-													    <h4 id='qtd-aproved' class="font-size-24 bold">0</h4>
+                                                        <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
+                                                        <div class="d-flex value-price">
+                                                            <h4 id='qtd-aproved' class="font-size-24 bold">0</h4>
+                                                        </div>
                                                     </header>
+													<div class="new-graph-cashback"></div>
 												</div>
 											</div>
 										</div>
@@ -159,7 +168,10 @@
 										Vendas
 									</a>
 								</h3>
-								<a href="{!! route('reports.index') !!}" class="box-link">Vendas</a>
+                                <a href="{!! route('reports.index') !!}" class="box-link">
+                                    <span>Acessar&nbsp&nbsp</span>
+                                    <i class="o-arrow-right-1 redirect"></i>
+                                </a>
 							</header>
 							<div class="container container-reports">
                                 <div id="reports-content" class="">
@@ -169,8 +181,11 @@
 												<div class="card-body">
                                                     <header class="container">
                                                         <h6 class="font-size-16 gray-700 grey"> Vendas realizadas </h6>
-                                                        <h4 id='qtd-canceled' class=" font-size-24 bold">0</h4>
+                                                        <div class="d-flex value-price">
+                                                            <h4 id='qtd-canceled' class=" font-size-24 bold">0</h4>
+                                                        </div>
                                                     </header>
+                                                    <div class="new-graph-sell"></div>
 												</div>
 											</div>
 											<div class="card ">
@@ -294,7 +309,10 @@
 										Marketing
 									</a>
 								</h3>
-								<a href="" class="box-link">Financeiro</a>
+                                <a href="" class="box-link">
+                                    <span>Acessar&nbsp&nbsp</span>
+                                    <i class="o-arrow-right-1 redirect"></i>
+                                </a>
 							</header>
 							<div class="container container-reports">
                                 <div id="reports-content" class="">

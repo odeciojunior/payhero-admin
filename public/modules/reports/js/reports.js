@@ -1,8 +1,12 @@
 $(function () {
     loadingOnScreen();
     newGraph();
+    newGraphPending();
+    newGraphCashback();
+    newGraphSell();
     newGraphPie();
     newFinanceGraph();
+    distributionGraph();
 
     // show/hide modal de exportar relatórios
     $(".lk-export").on('click', function(e) {
@@ -536,14 +540,80 @@ $(function () {
             chartPadding: 0,
             axisX: {
               showLabel: false,
-              offset: 0
+              offset: 0,
+              showGrid: false
             },
             axisY: {
               showLabel: false,
+              offset: 0,
+              showGrid: false
+            }
+          });
+    }
+    function newGraphSell() {
+        new Chartist.Line('.new-graph-sell', {
+            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            series: [
+              [12, 9, 7, 8, 5],
+            ]
+          }, {
+            fullWidth: true,
+            showArea: true,
+            chartPadding: 0,
+            axisX: {
+              showLabel: false,
+              offset: 0,
+              showGrid: false
+            },
+            axisY: {
+              showLabel: false,
+              offset: 0,
+              showGrid: false
+            }
+          });
+    }
+    
+    function newGraphCashback() {
+        new Chartist.Line('.new-graph-cashback', {
+            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            series: [[12, 9, 7, 8, 5],]
+          }, {
+            fullWidth: true,
+            showArea: true,
+            chartPadding: 0,
+            axisX: {
+              showLabel: false,
+              offset: 0,
+              showGrid: false,
+            },
+            axisY: {
+              showLabel: false,
+              showGrid: false,
               offset: 0
             }
           });
     }
+    function newGraphPending() {
+        new Chartist.Line('.new-graph-pending', {
+            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            series: [[12, 9, 7, 8, 5],]
+          }, {
+            fullWidth: true,
+            showArea: true,
+            chartPadding: 0,
+            axisX: {
+              showLabel: false,
+              offset: 0,
+              showGrid: false,
+            },
+            axisY: {
+              showLabel: false,
+              showGrid: false,
+              offset: 0
+            }
+          });
+    }
+    
 
     function newGraphPie() {
         new Chartist.Pie('.new-graph-pie', {
@@ -561,12 +631,13 @@ $(function () {
 
     function newFinanceGraph() {
         new Chartist.Line('.new-finance-graph', {
-            labels: [1,5,10,15,20,25,30],
-            series: [[1, 5, 10, 15, 20, 25, 30]]
+            labels: [1, 5, 10, 15, 20, 30 ],
+            series: [[1, 5, 10, 15, 20, 30]]
         }, {
             chartPadding: {
-                top: 20,
-                right: 20,
+                top: 40,
+                right: 0,
+                left: -3,
                 bottom: 20
             },
             axisX: {
@@ -575,19 +646,38 @@ $(function () {
                     y: 15
                 },
                 showGrid: false,
-                scaleMinSpace: 2
             },
             axisY: {
-                offset: 60,
+                labelOffset: {
+                    x: 0,
+                    y: 0
+                },
+                offset: 55,
                 labelInterpolationFnc: function(value) {
                     return 'R$ ' + value + 'K'
                 },
-                scaleMinSpace: 25
+                scaleMinSpace: 40
             },
             fullWidth: true,
             low: 0,
+            height: 280,
             showArea: true
         });
+    }
+
+    function distributionGraph() {
+        new Chartist.Pie('.distribution-graph', {
+            series: [30, 15, 80, 70]
+          }, {
+            donut: true,
+            donutWidth: 30,
+            donutSolid: true,
+            startAngle: 270,
+            showLabel: false,
+            chartPadding: 0,
+            labelOffset: 0,
+            height: 123
+          });
     }
     
 });

@@ -169,7 +169,7 @@
                                     </div>
                                 </section>
 
-                                <section>
+                                <section class="container">
                                     <div class="graph-finance">
                                         <div class="new-finance-graph"></div>
                                     </div>
@@ -179,18 +179,27 @@
                             <div class="" style="border: 1px solid red">
                                 <div class="d-flex justify-content-between sub-comission">
                                     <div class="inner-comission" style="border: 1px solid">
-                                        <div class="card">
-                                            <header class="d-flex title-graph container">
+                                        <div class="card inner">
+                                            <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Cashback</strong>
                                                 </h5>
                                             </header>
                                         </div>
-                                        <div class="card">d</div>
+                                        <div class="card inner">
+                                            <div class="d-flex">
+                                                <div class=""></div>
+                                                <div class="">
+                                                    <p>
+                                                        O cashback por venda varia de acordo com o número de parcelas escolhidas pelo cliente.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="inner-comission" style="border: 1px solid">
-                                        <div class="card">
-                                            <header class="d-flex title-graph container">
+                                        <div class="card inner">
+                                            <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Saques</strong>
                                                 </h5>
@@ -209,30 +218,94 @@
                         
                         <!-- distribtion -->
                         <div class="distribution">
-                            <div class="card">
-                                <header class="d-flex title-graph container">
+                            <div class="card inner">
+                                <header class="d-flex title-graph">
                                     <h5 class="grey font-size-16">
                                         <strong>Distribuição</strong>
                                     </h5>
                                     <h6 class="font-size-14">Atual</h6>
                                 </header>
+                                <div class="d-flex box-graph-dist">
+                                    <div class="distribution-graph"></div>
+                                    <div class="info-graph">
+                                        <h6 class="font-size-14 grey">Saldo Total</h6>
+                                        <em>
+                                            <small class="font-size-14">R$</small>
+                                            <strong class="grey">2.654.202,00</strong>
+                                        </em>
+                                    </div>
+                                </div>
+                                <div class="d-flex box-distribution">
+                                    <div class="distribution-area">
+                                        <header class="grey font-size-14">
+                                            <span class="green cube"></span>
+                                            Disponível
+                                        </header>
+                                        <footer class="footer-distribution">
+                                            <small>R$</small>
+                                            <strong>1.655.200,00</strong>
+                                        </footer>
+                                    </div>
+                                    <div class="distribution-area">
+                                        <header class="grey font-size-14">
+                                            <span class="cube yellow">
+                                                <i></i>
+                                            </span>
+                                            Pendente
+                                        </header>
+                                        <footer class="footer-distribution">
+                                            <small>R$</small>
+                                            <strong>830.800,00</strong>
+                                        </footer>
+                                    </div>
+                                    <div class="distribution-area">
+                                        <header class="grey font-size-14">
+                                            <span class="cube red">
+                                                <i></i>
+                                            </span>
+                                            Bloqueado
+                                        </header>
+                                        <footer class="footer-distribution">
+                                            <small>R$</small>
+                                            <strong>26.540,22</strong>
+                                        </footer>
+                                    </div>
+                                    <div class="distribution-area">
+                                        <header class="grey font-size-14">
+                                            <span class="cube strong">
+                                                <i></i>
+                                            </span>
+                                            Débitos
+                                        </header>
+                                        <footer class="footer-distribution">
+                                            <small>R$</small>
+                                            <strong>8.654,20</strong>
+                                        </footer>
+                                    </div>
+                                </div>
                             </div>
                             <div class="" style="border: 1px solid red">
                                 <div class="d-flex sub-distribution">
-                                    <div class="card">
-                                        <header class="d-flex title-graph container">
+                                    <div class="card inner">
+                                        <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
                                                 <strong>Pendente</strong>
                                             </h5>
-                                            <a href="">-></a>
+                                            <a href="#" class="box-link silver">
+                                                <span>Acessar&nbsp&nbsp</span>
+                                                <i class="o-arrow-right-1 redirect"></i>
+                                            </a>
                                         </header>
                                     </div>
-                                    <div class="card">
-                                        <header class="d-flex title-graph container">
+                                    <div class="card inner">
+                                        <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
                                                 <strong>Bloqueado</strong>
                                             </h5>
-                                            <a href="">Acessar -></a>
+                                            <a href="#" class="box-link silver">
+                                                <span>Acessar&nbsp&nbsp</span>
+                                                <i class="o-arrow-right-1 redirect"></i>
+                                            </a>
                                         </header>
                                     </div>
                                 </div>
