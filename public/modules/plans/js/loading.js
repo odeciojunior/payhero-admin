@@ -492,6 +492,54 @@ var loadingEditStage3 = `
 </div>
 `;
 
+var loadingEditStage4 = `
+<div class="ph-item">
+    <div class="row" style="margin-bottom: 16px;">
+        <div class="col-12">
+            <div class="d-flex  align-items-center">
+                <div style="margin-right: 12px;">
+                    <div class="placeholder-avatar"></div>
+                </div>
+                <div style="width: 100%;">
+                    <div class="placeholder-picture" style="height: 20px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-12">
+            <div style="display: flex;">
+                <div style="margin-right: 16px;">
+                    <div class="placeholder-picture" style="width: 56px; height: 56px;"></div>
+                </div>
+                <div class="placeholder-picture" style="height: 56px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-12">
+            <div style="display: flex;">
+                <div style="margin-right: 16px;">
+                    <div class="placeholder-picture" style="width: 56px; height: 56px;"></div>
+                </div>
+                <div class="placeholder-picture" style="height: 56px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-12">
+            <div style="display: flex;">
+                <div style="margin-right: 16px;">
+                    <div class="placeholder-picture" style="width: 56px; height: 56px;"></div>
+                </div>
+                <div class="placeholder-picture" style="height: 56px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+`;
+
 var loadingCustomStage1 = `
 <div class="ph-item">
     <div class="row" style="margin-bottom: 36px;">

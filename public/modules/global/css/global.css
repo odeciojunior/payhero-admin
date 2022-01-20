@@ -1993,3 +1993,7 @@ tbody td{
 #table-plans td, #table-plans {
     color: #5D5D5D;
 }
+#stage4 .box-product:hover {
+    background: none;
+    border-color: #EBEBEB;
+}

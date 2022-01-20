@@ -50,12 +50,12 @@
         </div>
     </div>
 
-    <div class="box-products products-data" style="margin-top: 23px;">
+    <div class="box-products products-data" style="margin-top: 23px; padding-bottom: 2px;">
         {{-- js carrega --}}
     </div>
 </div>
 
-<div class="line"></div>
+<div class="line" style="margin-top: 0px;"></div>
 
 <div class="review-edit">
     <div>

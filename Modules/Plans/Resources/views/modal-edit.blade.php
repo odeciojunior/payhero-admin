@@ -37,6 +37,9 @@
                                 <div class="tab-pane fade" id="stage3" role="tabpanel" aria-labelledby="stage3-tab">
                                     @include('plans::stages/stage3-edit')
                                 </div>
+                                <div class="tab-pane fade" id="stage4" role="tabpanel" aria-labelledby="stage4-tab">
+                                    @include('plans::stages/stage4-edit')
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="tab-customizations_panel" role="tabpanel">

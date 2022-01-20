@@ -589,10 +589,11 @@ $(function () {
         $(modal).find('#tab-general-data_panel').removeClass('show active');
 
         $(modal + ' .modal-body').off('wheel');
+        $(modal + ' #stage1 .box-products').off('wheel');
         $(modal).find('.scrollbox').remove();
         $(modal).find('.scrollbox-bar').remove();
 
-        $(modal).find('.products-data').css('height', '74px');
+        $(modal).find('.products-data').css('height', '148px');
 
         $(modal).find('.modal-title').html('Detalhes');
         $(modal).find('.modal-footer').html(
@@ -645,22 +646,56 @@ $(function () {
 
                     var products = response.data.products;
 
+                    var heightDivProducts = '74px';
+                    if (products.length > 2 && products.length <= 10) {
+                        heightDivProducts = '148px';
+                    }
+
+                    if (products.length > 10) {
+                        heightDivProducts = '63px';
+                    }
+
+                    $(modal).find('.products-data').css('height', heightDivProducts);
+
                     var append = '<div class="row">';
-                    products.forEach(function(product) {
-                        append += '<div class="col-sm-6">';
-                            append += '<div ' + (product.product_name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.product_name + '"' : '') + ' class="box-product d-flex justify-content-between align-items-center" style="cursor: inherit;">';
-                                append += '<div class="d-flex align-items-center">';
-                                    append += '<div class="background-photo"><img class="product-photo" src="' + product.photo + '" style="display: none;"></div>';
-                                    append += '<div>';
-                                        append += '<h1 class="title">' + product.product_name_short + '</h1>';
-                                        append += '<p class="description">Qtd: ' + product.amount + '</p>';
+                        if (products.length <= 10) {
+                            products.forEach(function(product) {
+                                append += '<div class="col-sm-6">';
+                                    append += '<div ' + (product.product_name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.product_name + '"' : '') + ' class="box-product d-flex justify-content-between align-items-center" style="cursor: inherit;">';
+                                        append += '<div class="d-flex align-items-center">';
+                                            append += '<div class="background-photo"><img class="product-photo" src="' + product.photo + '" style="display: none;"></div>';
+                                            append += '<div>';
+                                                append += '<h1 class="title">' + product.product_name_short + '</h1>';
+                                                append += '<p class="description">Qtd: ' + product.amount + '</p>';
+                                            append += '</div>';
+                                        append += '</div>';
                                     append += '</div>';
                                 append += '</div>';
+                            });
+                        } else {
+                            append += '<div class="col-sm-12 d-flex align-items-center">';
+                                let count = 0;
+                                products.forEach(function(product) {
+                                    count++;
+                                    if (count <= 8) {
+                                        append += '<div data-toggle="tooltip" data-placement="top" title="' + product.product_name + '" class="box-product" style="cursor: inherit;">';
+                                            append += '<div class="background-photo" style="width: 43px; height: 43px;"><img class="product-photo" src="' + product.photo + '" style="display: none;"></div>';
+                                        append += '</div>';
+                                    }
+                                });
+                                let missingProducts = products.length - 8;
+                                append += '<div style="margin-bottom: 18px;">';
+                                    append += '<a type="button" id="all-products" style="cursor: pointer; color: #2E85EC; font-weight: bold; font-size: 16px;">+' + missingProducts + '</a>';
+                                append += '</div>';
                             append += '</div>';
-                        append += '</div>';
-                    });
+                        }
+                    append += '</div>';
 
                     $(modal).find('#stage1').find('.box-products').html(append).promise().done(function() {
+                        if (products.length > 4 && products.length <= 10) {
+                            scrollCustom(modal + ' #stage1 .box-products');
+                        }
+
                         $(modal).find('#tab-customizations').removeClass('disabled');
 
                         $(modal).find('.modal-title').html('Detalhes de ' + response.data.name_short);
@@ -687,12 +722,6 @@ $(function () {
                         } else {
                             $(modal).find('#description').removeAttr('data-toggle').removeAttr('title');
                             $(modal).find('#description').tooltip('dispose');
-                        }
-
-                        if (products.length > 2) {
-                            $(modal).find('#stage1').find('.products-edit').append('<a type="button" id="all-products" data-open="0">Ver todos os produtos <span class="fas fa-chevron-down"></span></a>');
-                        } else {
-                            $(modal).find('#stage1').find('.products-edit').find('a').remove();
                         }
 
                         $(modal).find('#stage1').find('.price-plan p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price));
@@ -961,7 +990,7 @@ $(function () {
                     </div>
                     <span>Aplicar personalização nas outras variantes deste produto</span>
                 </div>
-                `).css({ 'margin': '20px 0' });
+                `).css({ 'margin': '20px 0 0' });
             } else {
                 $('.custom_products_checkbox').html('');
             }
@@ -971,7 +1000,7 @@ $(function () {
                     $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                         $(modal).find('#tab-customizations_panel').addClass('show active').promise().done(function() {
                             $(modal).find('#stage2-customization').addClass('show active').promise().done(function() {
-                                var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + (products_plan.length > 2 ? 65 : 55);
+                                var autoHeight = $(modal).find('.modal-body').css('height', 'auto').height() + (products_plan.length > 2 ? 45 : 35);
                                 $(modal).find('.modal-body').height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
                                     $(modal).find('.product-photo').unbind('load');
                                 });
@@ -1440,6 +1469,8 @@ $(function () {
                 getPlanData(modal);
             } else if (stage == 'stage3') {
                 getProducts(modal, type);
+            } else if (stage == 'stage4') {
+                getPlanData(modal);
             }
         } else {
             getCustom(modal, false);
@@ -1518,6 +1549,10 @@ $(function () {
                 $('#btn-edit-products-plan').hide();
                 $('#btn-edit-informations-plan').hide();
 
+                $('#modal_edit_plan #stage1 .box-products').off('wheel');
+                $('#modal_edit_plan #stage1 .box-products .scrollbox').remove();
+                $('#modal_edit_plan #stage1 .box-products .scrollbox-bar').remove();
+
                 parent.find('.informations-data').addClass('edit');
                 parent.find('.informations-data').find('.form-control').attr('readonly', false);
                 parent.find('#price').val(function(index, value) {
@@ -1580,6 +1615,7 @@ $(function () {
             $('#modal_edit_plan').find('.scrollbox-bar').remove();
 
             $('#modal_edit_plan').find('.height-auto').stop(true, true).animate({ 'margin-top': 0 }, 300);
+            scrollCustom('#modal_edit_plan #stage1 .box-products');
         });
     });
 
@@ -1794,23 +1830,78 @@ $(function () {
 
     // Show all products
     $("body").on('click', '#all-products', function () {
-        var open = $(this).attr('data-open');
-        if (open == 1) {
-            $(this).parent().find('.products-data').animate({height: '74px'}, 500);
-            $('#modal_edit_plan').find('.modal-body').css('overflow', '');
-            $(this).removeClass('open');
-            $(this).html('Ver todos os produtos <span class="fas fa-chevron-down"></span>')
+        var modal = '#modal_edit_plan';
 
-            $(this).attr('data-open', '0');
-        } else {
-            var autoHeight = $(this).parent().find('.products-data').find('.row').height();
-            $(this).parent().find('.products-data').animate({height: autoHeight}, 500).css('max-height', autoHeight);
-            $('#modal_edit_plan').find('.modal-body').css('overflow', 'hidden');
-            $(this).addClass('open');
-            $(this).html('Ver menos <span class="fas fa-chevron-up"></span>');
+        $(modal).find('.modal-body').css('height', 'auto');
 
-            $(this).attr('data-open', '1');
-        }
+        $(modal).find('.nav-tabs-horizontal').css('display', 'block');
+
+        $(modal + ' .modal-body').off('wheel');
+        $(modal + ' #stage1 .box-products').off('wheel');
+        $(modal).find('.scrollbox').remove();
+        $(modal).find('.scrollbox-bar').remove();
+
+        $(modal).find('.box-breadcrumbs').find('span').html(' ' + products_plan.length + ' produtos');
+
+        $(modal).find('.modal-footer').html(
+            '<button id="btn-modal-plan-return" type="button" data-type="edit" class="btn btn-default btn-lg" role="button">Voltar</button>' +
+            '<button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>'
+        ).addClass('justify-content-between');
+
+        $(modal).find('.tab-pane').removeClass('show active').promise().done(function() {
+            $(modal).find('.modal-body').append(loadingEditStage4);
+
+            var append = '';
+            append += '<div class="row">';
+                append += '<div class="col-sm-12">';
+                    products_plan.forEach(function(product) {
+                        append += '<div class="box-product align-items-center" style="cursor: inherit;margin-bottom: 16px;padding: 16px 29px 0px;border-radius: 0;border-left: none;border-right: none;border-bottom: none; border-color: #EBEBEB;">';
+                            append += '<div ' + (product.product_name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + product.product_name + '"' : '') + '>';
+                                append += '<div class="product d-flex align-items-center">';
+                                    append += '<div class="background-photo">';
+                                        append += '<img class="product-photo" src="' + product.photo + '" style="display: none;">';
+                                    append += '</div>';
+                                    append += '<div>';
+                                        append += '<h1 class="title">' + product.product_name_short + '</h1>';
+                                        append += '<p class="description m-0">Qtd: ' + product.amount + '</p>';
+                                    append += '</div>';
+                                append += '</div>';
+                            append += '</div>';
+                        append += '</div>';
+                    });
+                append += '</div>';
+            append += '</div>';
+
+            var curHeight = $(modal).find('.modal-body').height();
+            $(modal).find('#stage4').find('.box-products').html(append).promise().done(function() {
+                $(modal).find('#stage4').find('.box-products').css({'max-height': '314px', 'position': 'relative', 'overflow': 'hidden'});
+
+                scrollCustom(modal + ' #stage4 .box-products');
+                $(modal).find('#stage4 .box-products').css('padding-right', '0');
+
+                $(modal).find('#stage4').find('.product-photo').on('error', function() {
+                    $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
+                });
+
+                $(modal).find('#stage4').find('.product-photo').fadeIn(300);
+
+                $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
+                    $(modal).find('.product-photo').unbind('load');
+
+                    $('[data-toggle="tooltip"]').tooltip({
+                        container: '.page',
+                        template: '<div class="tooltip product-select" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+                    });
+
+                    $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
+                        $(modal).find('#stage4').addClass('show active').promise().done(function() {
+                            var autoHeight = $(modal).find('.height-auto').height();
+                            $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300);
+                        });
+                    });
+                });
+            });
+        });
     });
 
 
@@ -1884,6 +1975,12 @@ $(function () {
                 $(modal).find('.buttons-update').remove().promise().done(function() {
                     var autoHeight = parents.find('.informations-data').css('height', 'auto').height();
                     parents.find('.informations-data').height(curHeight).animate({ height: autoHeight }, 300);
+
+                    $(modal + ' .modal-body').off('wheel');
+                    $(modal + ' .modal-body').find('.scrollbox').remove();
+                    $(modal + ' .modal-body').find('.scrollbox-bar').remove();
+
+                    scrollCustom('#modal_edit_plan #stage1 .box-products');
                 });
 
                 index(current_page);
