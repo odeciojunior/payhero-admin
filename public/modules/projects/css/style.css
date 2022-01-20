@@ -360,6 +360,17 @@
     transform: scale(1.3);
 }
 
+#copy-link-affiliation{
+    outline: none;
+}
+#copy-link-affiliation:hover{
+    color: #2E85EC;
+    cursor: pointer;
+}
+#copy-link-affiliation:hover svg path {
+    fill: #2E85EC;
+}
+
 
 /* //////////////////////////////// END CARD 4 */
 
