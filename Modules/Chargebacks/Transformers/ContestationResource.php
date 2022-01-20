@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\FoxUtilsService;
@@ -48,6 +49,20 @@ class ContestationResource extends JsonResource
 
         $deadline_in_days =  $expiration_date->diffInDays(Carbon::now());
 
+        $filesTypes = [
+            ['id'=>"NOTA_FISCAL",'option'=>'Nota fiscal'],
+            ['id'=>"POLITICA_VENDA",'option'=>'Politica de venda'],
+            ['id'=>"ENTREGA",'option'=>'Entrega'],
+            ['id'=>"INFO_ACORDO",'option'=>'Informação do acordo'],
+            ['id'=>"OUTROS",'option'=>'Outros']
+        ];
+
+        if($this->gateway_id == Gateway::ASAAS_PRODUCTION_ID){
+            $dataWebhook = json_decode($this->data);
+            if(!empty($dataWebhook->reason)){
+                $filesTypes = $this->getAsaasDocFromReason($dataWebhook->reason);
+            }
+        }
 
         return [
             'id' => Hashids::encode($this->id) ,
@@ -84,7 +99,7 @@ class ContestationResource extends JsonResource
             'files' => $this->files ?  SaleContestationFileResource::collection($this->files) : '',
             'has_files' => $this->files->count() ? true:false,
             'is_file_user_completed' => $this->file_user_completed,
-
+            'files_types'=>$filesTypes
         ];
     }
 
@@ -97,5 +112,63 @@ class ContestationResource extends JsonResource
     {
         // array_key_exists($offset, $this->resource) is deprecated php7.4;
         return property_exists($this->resource, $offset);
+    }
+
+    public function getAsaasDocFromReason($reasonEnum)
+    {
+        $docs = [];
+        switch($reasonEnum){
+            case 'ABSENT_CARD_FRAUD':
+            case 'CARD_FRAUD':
+            case 'FRAUD':
+            case 'OTHER_ABSENT_CARD_FRAUD':
+            case 'VISA_FRAUD_MONITORING_PROGRAM':
+            case 'RIGHT_OF_FULL_RECOURSE_FOR_FRAUD':                
+                $docs = [
+                    ['id'=>"NOTA_FISCAL",'option'=>'Nota fiscal'],
+                    ['id'=>"POLITICA_VENDA",'option'=>'Politica de venda'],
+                    ['id'=>"TERMOS_USO",'option'=>'Termos de Uso'],
+                    ['id'=>"INFO_ACORDO",'option'=>'Informação do acordo'],
+                    ['id'=>"OUTROS",'option'=>'Outros']
+                ];
+            break;
+            case 'COMMERCIAL_DISAGREEMENT':
+            case 'SERVICE_DISAGREEMENT_OR_DEFECTIVE_PRODUCT':
+            case 'SERVICE_NOT_RECEIVED':
+            case 'TRANSFERS_OF_DIVERSE_RESPONSIBILITIES':
+            case 'RECURRENCE_CANCELED':
+            case 'SALE_CANCELED':
+            case 'TRANSFERS_OF_DIVERSE_RESPONSIBILITIES':                
+                $docs = [
+                    ['id'=>"NOTA_FISCAL",'option'=>'Nota fiscal'],
+                    ['id'=>"POLITICA_CANCEL",'option'=>'Politica de Cancelamento, reembolso e frete'],
+                    ['id'=>"COMPROVANTE_CANCEL",'option'=>'Comprovante de cancelamento'],
+                    ['id'=>"INFO_ACORDO",'option'=>'Informação do acordo'],
+                    ['id'=>"OUTROS",'option'=>'Outros']
+                ];
+            break;
+            case 'ABSENCE_OF_PRINT':
+            case 'COPY_NOT_RECEIVED':
+            case 'CREDIT_OR_DEBIT_PRESENTATION_ERROR':
+            case 'DIFFERENT_PAY_METHOD':
+            case 'INCORRECT_TRANSACTION_VALUE':
+            case 'INVALID_CURRENCY':
+            case 'INVALID_DATA':
+            case 'LATE_PRESENTATION':
+            case 'MULTIPLE_ROCS':
+            case 'ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED':
+            case 'RECEIVED_COPY_ILLEGIBLE_OR_INCOMPLETE':
+            case 'REQUIRED_AUTHORIZATION_NOT_GRANTED':
+            case 'SPLIT_SALE':
+            case 'WARNING_BULLETIN_FILE':
+                $docs = [
+                    ['id'=>"NOTA_FISCAL",'option'=>'Nota fiscal'],
+                    ['id'=>"COMPROVANTE_CANCEL",'option'=>'Comprovante de cancelamento'],
+                    ['id'=>"INFO_ACORDO",'option'=>'Informação do acordo'],
+                    ['id'=>"OUTROS",'option'=>'Outros']
+                ];
+            break;
+        }                        
+        return $docs;
     }
 }
