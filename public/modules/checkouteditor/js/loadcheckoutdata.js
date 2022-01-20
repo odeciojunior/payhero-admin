@@ -179,10 +179,10 @@ $(() => {
         });
 
         function fillForm(checkout) {
-            $("#checkout_editor #checkout_editor_id").prop(
-                "value",
-                checkout.id
-            );
+            // $("#checkout_editor #checkout_editor_id").prop(
+            //     "value",
+            //     checkout.id
+            // );
 
             if (checkout.checkout_type_enum == 1) {
                 $("#checkout_editor #checkout_type_steps").prop(
@@ -236,13 +236,13 @@ $(() => {
                 $("#checkout_editor .logo-mobile").hide();
             }
 
-            if (checkout.checkout_logo != "" || !checkout.checkout_logo) {
+            if (checkout.checkout_logo) {
                 replacePreview("checkout_logo", checkout.checkout_logo, "Image.jpg");
                 $("#logo_preview_mobile").attr("src", checkout.checkout_logo);
                 $("#logo_preview_desktop").attr("src", checkout.checkout_logo);
             }
 
-            if (checkout.checkout_banner != "" || !checkout.checkout_banner) {
+            if (checkout.checkout_logo) {
                 replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
                 $("#preview_banner_img_desktop").attr("src", checkout.checkout_banner);
                 $("#preview_banner_img_mobile").attr("src", checkout.checkout_banner);

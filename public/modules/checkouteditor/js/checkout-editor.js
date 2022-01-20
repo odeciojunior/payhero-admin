@@ -292,6 +292,20 @@ $(document).ready( function () {
         }
     });
 
+    drEventLogo.on("dropify.beforeClear", function (event, element) {
+        var imgPreviewDesktop = document.getElementById(
+            "logo_preview_desktop"
+        );
+        var imgPreviewMobile = document.getElementById(
+            "logo_preview_mobile"
+        );
+
+        imgPreviewDesktop.src = "";
+        imgPreviewMobile.src = "";
+
+        $("#checkout_banner_hidden").val("");
+    });
+
     var drEventBanner = $("#checkout_banner").dropify({
         messages: {
             default: "",

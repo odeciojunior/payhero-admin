@@ -341,16 +341,21 @@ input[type="number"] {
     position: absolute;
 }
 
+.save-changes p {
+    margin: 0 50px 0 0; 
+    font-size: 18px;
+}
+
 .save-changes-button-group {
     display: flex;
     width: fit-content;
 }
 
 .change-button {
-    width: 113px;
-    height: 35px;
+    width: 165px;
+    height: 53px;
     border-radius: 10px;
-    font-size: 10px;
+    font-size: 16px;
     font-weight: bold;
     margin-right: 10px;
 

@@ -71,7 +71,7 @@
                             <div class="upload-container">
                                 <div id='upload_logo'>
                                     <label for="checkout_logo"></label>
-                                    <input type="file" id="checkout_logo" name="checkout_logo" data-height="300" data-max-width="300" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
+                                    <input type="file" id="checkout_logo" name="checkout_logo" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                                 </div>
 
                                 <div class="instrunctios">
@@ -87,7 +87,7 @@
 
                     <hr>
 
-                    <div class="preview-colors">
+                    <div class="colors-container">
                         <div class="title-buttons-group">
                             <div>
                                 <h1 class="checkout-title" style="margin: 0;">
@@ -581,7 +581,6 @@
                         </span>
                     </div>
 
-
                     <div class="billing-content">
 
                         <div class="row-flex">
@@ -1044,8 +1043,8 @@
                                 </div>
                             </div>
 
-                            <div id="preview-mobile-visual" class="preview-content mobile">
-                                <div id="preview-mobile-visual-collapse" class="preview-mobile-collapse collapse" aria-expanded="false">
+                            <div id="preview-mobile-visual" class="preview-content mobile" style="display: none;">
+                                <div id="preview-mobile-visual-collapse" class="preview-mobile-collapse">
                                     <div class="preview-header">
                                         <div class="header-colorbar mobile secondary-color countdown-preview"></div>
                                         <div class="header-colorbar mobile primary-color textbar-preview"> </div>
@@ -1098,10 +1097,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="expand-mobile-button-container">
-                                    <a class="expand-mobile-button collapsed" role="button" data-toggle="collapse" href="#preview-mobile-visual-collapse" aria-expanded="false" aria-controls="preview-mobile-visual-collapse"></a>
                                 </div>
                             </div>
                         </div>
@@ -1274,7 +1269,7 @@
                                         <div style="display: flex; width: 100%; justify-content: space-between">
                                             <div style="border-radius: 12px; height: 25px; width: 70px; background-color: #F5F5F5; margin: 0 20px 0 0;border-radius: 4px;"></div>
 
-                                            <div class="primary-color" style="border-radius: 12px; height: 25px; width: 80px; background-color: #2E85EC; border-radius: 4px; "></div>
+                                            <div class="primary-color" style="border-radius: 12px; height: 25px; width: 80px; background-color: #2E85EC; border-radius: 4px; margin-right: 5px;"></div>
 
                                             <div class="whatsapp-preview" style="display: flex; padding: 6px; border-radius: 12px; height: 25px; width: 120px; background-color: #36DB8C; border-radius: 4px;">
                                                 <img src="{{ asset('/modules/checkouteditor/img/svg/whatsapp-icon.svg') }}">
@@ -1328,9 +1323,9 @@
                                             <div class="grey-container" style="margin-bottom: 10px; height: 60px"></div>
 
                                             <div style="display: flex; width: 100%; justify-content: space-between">
-                                                <div style="border-radius: 12px; height: 25px; width: 70px; background-color: #F5F5F5; margin: 0 20px 0 0;border-radius: 8px;"></div>
+                                                <div style="border-radius: 12px; height: 35px; width: 70px; background-color: #F5F5F5; margin: 0 20px 0 0;border-radius: 8px;"></div>
 
-                                                <div style="border-radius: 12px; height: 35px; width: 100px; background-color: #2E85EC; border-radius: 4px; "></div>
+                                                <div style="border-radius: 12px; height: 35px; width: 100px; background-color: #2E85EC; border-radius: 4px;"></div>
                                             </div>
 
                                             <div class="whatsapp-preview" style="display: flex; padding: 6px; border-radius: 8px; height: 35px; width: 100%; background-color: #36DB8C; border-radius: 4px;">
@@ -1351,9 +1346,10 @@
 
                 <div class="editor-buttons position-fixed container page-content" style="width: inhe;">
                     <div class="save-changes " id="save_changes" style="display: none;">
-                        <div style="margin-right: 50px;">
+
+                        <p>
                             Você tem alterações que <strong>não estão salvas</strong>
-                        </div>
+                        </p>
 
                         <div class="save-changes-button-group">
                             <button id="cancel_button" type="button" class="change-button cancel-changes-button">Cancelar</button>
@@ -1362,9 +1358,9 @@
                     </div>
 
                     <div class="save-changes" id="save_success" style="display: none;">
-                        <div style="margin-right: 50px;">
+                        <p>
                             Alterações salvas com sucesso!
-                        </div>
+                        </p>
 
                         <div>
                             <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-check.svg') }}">
@@ -1372,9 +1368,9 @@
                     </div>
 
                     <div class="save-changes" id="save_error" style="display: none;">
-                        <div style="margin-right: 50px;">
+                        <p>
                             Ops! Algo deu errado.
-                        </div>
+                        </p>
 
                         <div>
                             <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-error.svg') }}">
@@ -1382,9 +1378,9 @@
                     </div>
 
                     <div class="save-changes" id="save_load" style="display: none;">
-                        <div style="margin-right: 50px;">
+                        <p>
                             Um momento... estamos salvando suas alterações.
-                        </div>
+                        </p>
 
                         <div class="lds-ring">
                             <div></div>
