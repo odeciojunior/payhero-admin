@@ -57,11 +57,18 @@ class ContestationResource extends JsonResource
             ['id'=>"OUTROS",'option'=>'Outros']
         ];
 
-        if($this->gateway_id == Gateway::ASAAS_PRODUCTION_ID){
-            $dataWebhook = json_decode($this->data);
-            if(!empty($dataWebhook->reason)){
-                $filesTypes = $this->getAsaasDocFromReason($dataWebhook->reason);
-            }
+        $reason = '';
+        switch($this->gateway_id){
+            case Gateway::ASAAS_PRODUCTION_ID:
+                $reason = $this->reason;
+                $dataWebhook = json_decode($this->data);
+                if(!empty($dataWebhook->reason)){
+                    $filesTypes = $this->getAsaasDocFromReason($dataWebhook->reason);
+                }
+            break;
+            case Gateway::GETNET_PRODUCTION_ID:
+                $reason = isset($result_decode['Codigo do Motivo de Chargeback']) ? FoxUtils::getnetReasonByCode($result_decode['Codigo do Motivo de Chargeback']) : FoxUtils::getnetReasonByCode($this->reason);
+            break;
         }
 
         return [
@@ -90,7 +97,7 @@ class ContestationResource extends JsonResource
             'expiration' => $expiration_date ? $expiration_date->format('d/m/Y') : '',
             'has_expired' => $has_expired,
             'expiration_user' => !$has_expired ? ($deadline_in_days == 0 ? "Expira hoje" : ($deadline_in_days > 1 ? $deadline_in_days . ' dias' : $deadline_in_days . ' dia')) : ($this->sale->status == Sale::STATUS_CHARGEBACK ? 'Perdida' : ($this->status == SaleContestation::STATUS_WIN ? 'Ganha' : 'Expirado')),
-            'reason' =>  isset($result_decode['Codigo do Motivo de Chargeback']) ? FoxUtils::getnetReasonByCode($result_decode['Codigo do Motivo de Chargeback']) : FoxUtils::getnetReasonByCode($this->reason),
+            'reason' =>  $reason,
             'observation' =>  $this->observation ?? '',
             'is_contested' =>  $this->is_contested ?? '',
             'amount' => isset($this->sale->original_total_paid_value) ? 'R$ ' . number_format(intval($this->sale->original_total_paid_value) / 100, 2, ',', '.') :
