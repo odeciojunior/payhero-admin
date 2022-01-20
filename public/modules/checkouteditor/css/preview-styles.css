@@ -162,7 +162,7 @@
     height: 40px;
     border-radius: 99px;
     overflow: hidden;
-    background-color: var(--primary-color);
+    background-color: #fff;
 }
 
 .preview-logo.desktop {
@@ -191,7 +191,7 @@
     height: 25px;
     border-radius: 99px;
     overflow: hidden;
-    background-color: var(--primary-color);
+    background-color: #fff;
 }
 
 .preview-logo.mobile {

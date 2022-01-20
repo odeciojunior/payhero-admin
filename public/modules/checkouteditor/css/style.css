@@ -83,7 +83,7 @@
 
 .checkout-title {
     font-weight: normal;
-    font-size: 20px;
+    font-size: 17px;
     margin: 0 !important;
     line-height: 2 !important;
 }
@@ -390,8 +390,8 @@ input[type="number"] {
 }
 
 .save-icon {
-    height: 24px;
-    width: 24px;
+    height: 40px;
+    width: 40px;
 }
 
 /* ------------ Crop -------------- */
@@ -982,15 +982,15 @@ input[type="color"]::-moz-color-swatch {
 .lds-ring {
     display: inline-block;
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
 }
 .lds-ring div {
     box-sizing: border-box;
     display: block;
     position: absolute;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     margin: 5px;
     border: 5px solid #fff;
     border-radius: 50%;

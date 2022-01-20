@@ -83,8 +83,6 @@
                         </div>
                     </div>
 
-
-
                     <hr>
 
                     <div class="colors-container">
@@ -596,6 +594,7 @@
                                         <div class="sirius-select-text" style="height: 43px;">
                                             Empresas
                                         </div>
+                                        
                                     </select>
                                 </div>
                             </div>
@@ -1359,7 +1358,7 @@
 
                     <div class="save-changes" id="save_success" style="display: none;">
                         <p>
-                            Alterações salvas com sucesso!
+                            Alterações salvas com <strong>sucesso</strong>!
                         </p>
 
                         <div>
@@ -1369,7 +1368,7 @@
 
                     <div class="save-changes" id="save_error" style="display: none;">
                         <p>
-                            Ops! Algo deu errado.
+                            <strong>Ops!</strong> Algo deu errado.
                         </p>
 
                         <div>
@@ -1379,7 +1378,7 @@
 
                     <div class="save-changes" id="save_load" style="display: none;">
                         <p>
-                            Um momento... estamos salvando suas alterações.
+                            Um momento... <strong>Estamos salvando suas alterações.</strong>
                         </p>
 
                         <div class="lds-ring">
@@ -1489,7 +1488,7 @@
 <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <script src="{{asset('modules/checkouteditor/js/cropper.min.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/verifyPhone.js?v=' . uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/checkout-editor.js?v=' . uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/checkoutEditor.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/loadcheckoutdata.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/scrollPreview.js?v=' . uniqid())}}"></script>
 @endpush
