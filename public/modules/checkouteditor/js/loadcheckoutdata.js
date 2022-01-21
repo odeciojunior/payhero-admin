@@ -219,7 +219,7 @@ $(() => {
                 $("#logo_preview_desktop").attr("src", checkout.checkout_logo);
             }
 
-            if (checkout.checkout_logo) {
+            if (checkout.checkout_banner) {
                 replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
                 $("#preview_banner_img_desktop").attr("src", checkout.checkout_banner);
                 $("#preview_banner_img_mobile").attr("src", checkout.checkout_banner);
@@ -464,104 +464,6 @@ $(() => {
                     company.id == checkout.company_id ||
                     company.capture_transaction_enabled
                 ) {
-                    $("#checkout_editor #companies").append(
-                        `<option  class="sirius-select-option" value="${company.id}"
-                        ${company.id === checkout.company_id ? "selected" : ""}
-                        ${company.status == "pending" ? "disabled" : ""}
-                        ${company.active_flag == 0 ? "disabled" : ""}
-                    >
-                        ${
-                            company.status == "pending"
-                                ? company.name + " (documentos pendentes)"
-                                : company.name
-                        }
-                    </option>
-                  `
-                    );
-                    $("#checkout_editor #companies").append(
-                        `<option  class="sirius-select-option" value="${company.id}"
-                        ${company.id === checkout.company_id ? "selected" : ""}
-                        ${company.status == "pending" ? "disabled" : ""}
-                        ${company.active_flag == 0 ? "disabled" : ""}
-                    >
-                        ${
-                            company.status == "pending"
-                                ? company.name + " (documentos pendentes)"
-                                : company.name
-                        }
-                    </option>
-                  `
-                    );
-                    $("#checkout_editor #companies").append(
-                        `<option  class="sirius-select-option" value="${company.id}"
-                        ${company.id === checkout.company_id ? "selected" : ""}
-                        ${company.status == "pending" ? "disabled" : ""}
-                        ${company.active_flag == 0 ? "disabled" : ""}
-                    >
-                        ${
-                            company.status == "pending"
-                                ? company.name + " (documentos pendentes)"
-                                : company.name
-                        }
-                    </option>
-                  `
-                    );
-                    $("#checkout_editor #companies").append(
-                        `<option  class="sirius-select-option" value="${company.id}"
-                        ${company.id === checkout.company_id ? "selected" : ""}
-                        ${company.status == "pending" ? "disabled" : ""}
-                        ${company.active_flag == 0 ? "disabled" : ""}
-                    >
-                        ${
-                            company.status == "pending"
-                                ? company.name + " (documentos pendentes)"
-                                : company.name
-                        }
-                    </option>
-                  `
-                    );
-                    $("#checkout_editor #companies").append(
-                        `<option  class="sirius-select-option" value="${company.id}"
-                        ${company.id === checkout.company_id ? "selected" : ""}
-                        ${company.status == "pending" ? "disabled" : ""}
-                        ${company.active_flag == 0 ? "disabled" : ""}
-                    >
-                        ${
-                            company.status == "pending"
-                                ? company.name + " (documentos pendentes)"
-                                : company.name
-                        }
-                    </option>
-                  `
-                    );
-                    $("#checkout_editor #companies").append(
-                        `<option  class="sirius-select-option" value="${company.id}"
-                        ${company.id === checkout.company_id ? "selected" : ""}
-                        ${company.status == "pending" ? "disabled" : ""}
-                        ${company.active_flag == 0 ? "disabled" : ""}
-                    >
-                        ${
-                            company.status == "pending"
-                                ? company.name + " (documentos pendentes)"
-                                : company.name
-                        }
-                    </option>
-                  `
-                    );
-                    $("#checkout_editor #companies").append(
-                        `<option  class="sirius-select-option" value="${company.id}"
-                        ${company.id === checkout.company_id ? "selected" : ""}
-                        ${company.status == "pending" ? "disabled" : ""}
-                        ${company.active_flag == 0 ? "disabled" : ""}
-                    >
-                        ${
-                            company.status == "pending"
-                                ? company.name + " (documentos pendentes)"
-                                : company.name
-                        }
-                    </option>
-                  `
-                    );
                     $("#checkout_editor #companies").append(
                         `<option  class="sirius-select-option" value="${company.id}"
                         ${company.id === checkout.company_id ? "selected" : ""}
