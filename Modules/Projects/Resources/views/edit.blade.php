@@ -35,7 +35,6 @@
                     <h3 class="mb-0">Identificação</h3>
                 </div>
             </div>
-
         </div>
 
         <div class="row no-gutters">
@@ -126,13 +125,13 @@
                                     <div class='form-group col-md-12 col-lg-7 mr-lg-10 pr-0'>
                                         <label for="cookie-duration" class="font-size-16">Duração do cookie</label>
                                         <select class='cookie-duration sirius-select' name='cookie_duration'>
-                                            <option value="0"> Eterno</option>
-                                            <option value="7"> 7 dias</option>
-                                            <option value="15"> 15 dias</option>
-                                            <option value="30"> 1 mês</option>
-                                            <option value="60"> 2 meses</option>
-                                            <option value="180"> 6 meses</option>
-                                            <option value="365"> 1 ano</option>
+                                            <option value="0">Eterno</option>
+                                            <option value="7">7 dias</option>
+                                            <option value="15">15 dias</option>
+                                            <option value="30">1 mês</option>
+                                            <option value="60">2 meses</option>
+                                            <option value="180">6 meses</option>
+                                            <option value="365">1 ano</option>
                                         </select>
                                         <span id='error-cookie-duration' class='text-danger' style='display: none'></span>
                                     </div>
