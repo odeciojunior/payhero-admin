@@ -165,12 +165,6 @@
                                     <span id="count-cupons" class=" d-none tab-counter"> 0 </span>
                                 </a>
                             </li>
-                            <li class="nav-item tab-checkout" role="presentation">
-                                <span class="category-tabs">&nbsp;</span>
-                                <a id="tab-checkout" class="nav-link" data-toggle="tab" href="#tab_checkout-panel"
-                                   aria-controls="tab-checkout" role="tab">Checkout<span id="count-checkout" class=" d-none tab-counter"> 0 </span>
-                                </a>
-                            </li>
                             <li class="nav-item tab_plans" role="presentation">
                                 <span class="category-tabs">&nbsp;</span>
                                 <a id="tab_plans" class="nav-link" data-toggle="tab" href="#tab_plans-panel"
@@ -181,6 +175,12 @@
                                 <span class="category-tabs">&nbsp;</span>
                                 <a id="tab-fretes" class="nav-link" data-toggle="tab" href="#tab-fretes-panel"
                                    aria-controls="tab-fretes" role="tab">Frete <span id="count-fretes" class=" d-none tab-counter"> 0 </span>
+                                </a>
+                            </li>
+                            <li class="nav-item tab-checkout" role="presentation">
+                                <span class="category-tabs">&nbsp;</span>
+                                <a id="tab-checkout" class="nav-link" data-toggle="tab" href="#tab_checkout-panel"
+                                   aria-controls="tab-checkout" role="tab">Checkout<span id="count-checkout" class=" d-none tab-counter"> 0 </span>
                                 </a>
                             </li>
                             <li class="nav-item tab_pixels" role="presentation">
