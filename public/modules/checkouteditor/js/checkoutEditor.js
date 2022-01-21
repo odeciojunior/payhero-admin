@@ -293,17 +293,15 @@ $(document).ready( function () {
     });
 
     drEventLogo.on("dropify.beforeClear", function (event, element) {
-        var imgPreviewDesktop = document.getElementById(
-            "logo_preview_desktop"
-        );
-        var imgPreviewMobile = document.getElementById(
-            "logo_preview_mobile"
-        );
-
-        imgPreviewDesktop.src = "";
-        imgPreviewMobile.src = "";
+        $("#logo_preview_mobile").attr("src", '');
+        $("#logo_preview_desktop").attr("src", '');
 
         $("#checkout_banner_hidden").val("");
+    });
+
+    drEventLogo.on('dropify.errors', function(event, element){
+        $("#logo_preview_mobile").attr("src", '');
+        $("#logo_preview_desktop").attr("src", '');
     });
 
     var drEventBanner = $("#checkout_banner").dropify({
