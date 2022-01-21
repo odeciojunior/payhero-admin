@@ -1,4 +1,35 @@
 $(document).ready(function(){
+    getProjects();
+
+    function getProjects() {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+
+                    getCompanies();
+                } else {
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
 
     $(document).on('click','.img-gateway', function(evt){
         let id=$(this).attr('href');
@@ -21,8 +52,6 @@ $(document).ready(function(){
     const GERENCIA_NET = 'oXlqv13043xbj4y';
 
     function getCompanies() {
-        loadingOnScreen();
-
         $.ajax({
             method: "GET",
             url: "/api/companies?select=true",
@@ -32,7 +61,6 @@ $(document).ready(function(){
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
@@ -40,7 +68,6 @@ $(document).ready(function(){
                 if (isEmpty(response.data)) {
                     $('.page-content').hide();
                     $('.content-error').show();
-                    loadingOnScreenRemove();
                     return;
                 }
 
@@ -56,13 +83,9 @@ $(document).ready(function(){
 
                 updateStatements();
                 updateWithdrawals();
-
-                loadingOnScreenRemove();
             }
         });
     }
-
-    getCompanies();
 
     $(document).on("change","#transfers_company_select", function () {
         $("#extract_company_select").val($(this).val());
