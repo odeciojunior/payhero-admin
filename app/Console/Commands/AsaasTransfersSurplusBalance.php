@@ -116,10 +116,10 @@ class AsaasTransfersSurplusBalance extends Command
                     $company->id, $amountTransfer
                 );
 
-                $status = 'Done';
-                if(empty($response) || empty($response->status) || $response->status=='error'){                
-                    $status = 'Error';
-                }
+                //$status = 'Done';
+                //if(empty($response) || empty($response->status) || $response->status=='error'){                
+                //    $status = 'Error';
+                //}
             }  
 
             // Log::info(
