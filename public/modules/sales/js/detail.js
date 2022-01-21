@@ -714,6 +714,9 @@ $(() => {
                     });
                 }
             }
+        }else{
+            $('#nav-woo-tab').hide()
+
         }
 
         //Detalhes do shopify

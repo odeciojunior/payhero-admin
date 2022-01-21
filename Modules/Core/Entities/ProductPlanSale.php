@@ -59,6 +59,7 @@ class ProductPlanSale extends Model
     protected $fillable = [
         'product_id',
         'plan_id',
+        'products_sales_api_id',
         'sale_id',
         'amount',
         'name',
@@ -75,9 +76,6 @@ class ProductPlanSale extends Model
         'price',
         'shopify_id',
         'shopify_variant_id',
-        'tracking_code',
-        'tracking_type_enum',
-        'tracking_status_enum',
         'temporary_url',
         'created_at',
         'updated_at',
@@ -116,6 +114,14 @@ class ProductPlanSale extends Model
     public function product()
     {
         return $this->belongsTo('Modules\Core\Entities\Product');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function productSaleApi()
+    {
+        return $this->belongsTo(ProductSaleApi::class, 'products_sales_api_id');
     }
 
     /**

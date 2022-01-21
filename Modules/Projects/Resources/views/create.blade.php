@@ -1,9 +1,9 @@
 @extends("layouts.master")
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('/modules/projects/css/create.css?v=06') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/projects/css/create.css?v=123') }}">
     @endpush
 
     <div class="page" style="display: none; margin-bottom: 0 !important;">
