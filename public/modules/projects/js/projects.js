@@ -471,7 +471,7 @@ $(() => {
                     setTimeout(function () {
                         $("#saved-alterations").fadeIn('slow').delay(4000).fadeOut('slow');
                         $( "#confirm-changes" ).hide();
-                    },2500);
+                    },1500);
                     
                     show();
                     $(".page").removeClass("low-opacity");
