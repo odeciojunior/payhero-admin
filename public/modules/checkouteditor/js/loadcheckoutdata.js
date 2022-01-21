@@ -70,7 +70,10 @@ $(() => {
             },
             success: (response) => {
                 checkout = response.data;
-                fillForm(checkout);
+                if(checkout) {
+                    fillForm(checkout);
+                }
+                
 
                 $(document).on("submit", "#checkout_editor", function (e) {
                     e.preventDefault();
@@ -179,43 +182,17 @@ $(() => {
         });
 
         function fillForm(checkout) {
-            $("#checkout_editor #checkout_editor_id").prop(
-                "value",
-                checkout.id
-            );
-
-            if (checkout.checkout_type_enum == 1) {
-                $("#checkout_editor #checkout_type_steps").prop(
-                    "checked",
-                    true
-                );
-                $("#checkout_editor .visual-content-left").addClass(
-                    "three-steps"
-                );
-                $("#checkout_editor .visual-content-left").removeClass(
-                    "unique"
-                );
-                $("#checkout_editor .visual-content-mobile").addClass(
-                    "three-steps"
-                );
-                $("#checkout_editor .visual-content-mobile").removeClass(
-                    "unique"
-                );
+            if (checkout.checkout_type_enum == 1) {$("#checkout_editor #checkout_type_steps").prop("checked",true);
+                $("#checkout_editor .visual-content-left").addClass("three-steps");
+                $("#checkout_editor .visual-content-left").removeClass("unique");
+                $("#checkout_editor .visual-content-mobile").addClass("three-steps");
+                $("#checkout_editor .visual-content-mobile").removeClass("unique");
                 $("#checkout_editor .steps-lines").slideDown("slow", "swing");
-                $(
-                    "#checkout_editor #finish_button_preview_desktop_visual"
-                ).slideDown("slow", "swing");
-                $(
-                    "#checkout_editor #finish_button_preview_mobile_visual"
-                ).slideDown("slow", "swing");
+                $("#checkout_editor #finish_button_preview_desktop_visual").slideDown("slow", "swing");
+                $("#checkout_editor #finish_button_preview_mobile_visual").slideDown("slow", "swing");
             } else {
-                $("#checkout_editor #checkout_type_unique").prop(
-                    "checked",
-                    true
-                );
-                $("#checkout_editor .visual-content-left").removeClass(
-                    "three-steps"
-                );
+                $("#checkout_editor #checkout_type_unique").prop("checked",true);
+                $("#checkout_editor .visual-content-left").removeClass("three-steps");
                 $("#checkout_editor .visual-content-left").addClass("unique");
                 $("#checkout_editor .visual-content-mobile").removeClass("three-steps");
                 $("#checkout_editor .visual-content-mobile").addClass("unique");
@@ -236,13 +213,13 @@ $(() => {
                 $("#checkout_editor .logo-mobile").hide();
             }
 
-            if (checkout.checkout_logo != "" || !checkout.checkout_logo) {
+            if (checkout.checkout_logo) {
                 replacePreview("checkout_logo", checkout.checkout_logo, "Image.jpg");
                 $("#logo_preview_mobile").attr("src", checkout.checkout_logo);
                 $("#logo_preview_desktop").attr("src", checkout.checkout_logo);
             }
 
-            if (checkout.checkout_banner != "" || !checkout.checkout_banner) {
+            if (checkout.checkout_logo) {
                 replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
                 $("#preview_banner_img_desktop").attr("src", checkout.checkout_banner);
                 $("#preview_banner_img_mobile").attr("src", checkout.checkout_banner);
@@ -501,6 +478,104 @@ $(() => {
                     </option>
                   `
                     );
+                    $("#checkout_editor #companies").append(
+                        `<option  class="sirius-select-option" value="${company.id}"
+                        ${company.id === checkout.company_id ? "selected" : ""}
+                        ${company.status == "pending" ? "disabled" : ""}
+                        ${company.active_flag == 0 ? "disabled" : ""}
+                    >
+                        ${
+                            company.status == "pending"
+                                ? company.name + " (documentos pendentes)"
+                                : company.name
+                        }
+                    </option>
+                  `
+                    );
+                    $("#checkout_editor #companies").append(
+                        `<option  class="sirius-select-option" value="${company.id}"
+                        ${company.id === checkout.company_id ? "selected" : ""}
+                        ${company.status == "pending" ? "disabled" : ""}
+                        ${company.active_flag == 0 ? "disabled" : ""}
+                    >
+                        ${
+                            company.status == "pending"
+                                ? company.name + " (documentos pendentes)"
+                                : company.name
+                        }
+                    </option>
+                  `
+                    );
+                    $("#checkout_editor #companies").append(
+                        `<option  class="sirius-select-option" value="${company.id}"
+                        ${company.id === checkout.company_id ? "selected" : ""}
+                        ${company.status == "pending" ? "disabled" : ""}
+                        ${company.active_flag == 0 ? "disabled" : ""}
+                    >
+                        ${
+                            company.status == "pending"
+                                ? company.name + " (documentos pendentes)"
+                                : company.name
+                        }
+                    </option>
+                  `
+                    );
+                    $("#checkout_editor #companies").append(
+                        `<option  class="sirius-select-option" value="${company.id}"
+                        ${company.id === checkout.company_id ? "selected" : ""}
+                        ${company.status == "pending" ? "disabled" : ""}
+                        ${company.active_flag == 0 ? "disabled" : ""}
+                    >
+                        ${
+                            company.status == "pending"
+                                ? company.name + " (documentos pendentes)"
+                                : company.name
+                        }
+                    </option>
+                  `
+                    );
+                    $("#checkout_editor #companies").append(
+                        `<option  class="sirius-select-option" value="${company.id}"
+                        ${company.id === checkout.company_id ? "selected" : ""}
+                        ${company.status == "pending" ? "disabled" : ""}
+                        ${company.active_flag == 0 ? "disabled" : ""}
+                    >
+                        ${
+                            company.status == "pending"
+                                ? company.name + " (documentos pendentes)"
+                                : company.name
+                        }
+                    </option>
+                  `
+                    );
+                    $("#checkout_editor #companies").append(
+                        `<option  class="sirius-select-option" value="${company.id}"
+                        ${company.id === checkout.company_id ? "selected" : ""}
+                        ${company.status == "pending" ? "disabled" : ""}
+                        ${company.active_flag == 0 ? "disabled" : ""}
+                    >
+                        ${
+                            company.status == "pending"
+                                ? company.name + " (documentos pendentes)"
+                                : company.name
+                        }
+                    </option>
+                  `
+                    );
+                    $("#checkout_editor #companies").append(
+                        `<option  class="sirius-select-option" value="${company.id}"
+                        ${company.id === checkout.company_id ? "selected" : ""}
+                        ${company.status == "pending" ? "disabled" : ""}
+                        ${company.active_flag == 0 ? "disabled" : ""}
+                    >
+                        ${
+                            company.status == "pending"
+                                ? company.name + " (documentos pendentes)"
+                                : company.name
+                        }
+                    </option>
+                  `
+                    );
                 }
             }
 
@@ -695,7 +770,8 @@ $(() => {
                 $("#checkout_editor #theme_ready_enabled").prop("checked", true);
                 $("#checkout_editor #theme_ready_enabled").prop("value", 1);
                 $(".custom-theme-content").show("slow", "swing");
-                $(".theme-ready-content").hide("slow", "swing");
+                $('.theme-ready-first-line').addClass('low-opacity');
+                $(".theme-ready-second-line").hide("slow", "swing");
             } else {
                 $("#checkout_editor #theme_ready_enabled").prop("checked", false);
                 $("#checkout_editor #theme_ready_enabled").prop("value", 0);
@@ -706,7 +782,8 @@ $(() => {
                 $(":root").css("--finish-button-color", checkout.color_buy_button);
 
                 $(".custom-theme-content").hide("slow", "swing");
-                $(".theme-ready-content").show("slow", "swing");
+                $('.theme-ready-first-line').removeClass('low-opacity');
+                $(".theme-ready-second-line").show("slow", "swing");
             }
 
         }

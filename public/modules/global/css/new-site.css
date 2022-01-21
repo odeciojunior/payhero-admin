@@ -299,12 +299,12 @@ select, .select-pad {
 }
 
 input:active, input:hover {
-    outline: none !important;
+    outline: 1px solid #2bb2ff;
 }
 
 
 select:active, select:hover {
-    outline: none !important;
+    outline: 1px solid #2bb2ff;
 }
 
 

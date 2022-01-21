@@ -2,12 +2,12 @@
 <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
 <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
 <link rel="stylesheet" href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/quill-editor.css?v=10') }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/dropfy.css?v=10') }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/custom-inputs.css?v=10') }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/cropper.css?v=10') }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/style.css?v=10') }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/preview-styles.css?v=10') }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/quill-editor.css?v='.uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/dropfy.css?v=' . uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/custom-inputs.css?v='.uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/cropper.css?v='.uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/style.css?v='.uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/preview-styles.css?v='.uniqid()) }}">
 @endpush
 
 <!-- Page -->
@@ -71,7 +71,7 @@
                             <div class="upload-container">
                                 <div id='upload_logo'>
                                     <label for="checkout_logo"></label>
-                                    <input type="file" id="checkout_logo" name="checkout_logo" data-height="300" data-max-width="300" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
+                                    <input type="file" id="checkout_logo" name="checkout_logo" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                                 </div>
 
                                 <div class="instrunctios">
@@ -83,7 +83,166 @@
                         </div>
                     </div>
 
+                    <hr>
 
+                    <div class="colors-container">
+                        <div class="title-buttons-group">
+                            <div>
+                                <h1 class="checkout-title" style="margin: 0;">
+                                    Temas Prontos
+                                </h1>
+                                <div class="checkout-subtitle">
+                                    <p style="margin: 0;">Utilizar um tema pronto.</p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="theme-ready-content">
+                            <div class="radio-group theme-ready theme-ready-first-line">
+                                <input class="theme-radio" id="theme_spaceship" type="radio" name="theme_enum" value="1" checked />
+                                <label for="theme_spaceship">
+                                    <div class="theme-primary-color" style="background: #4B8FEF;" data-color="#4B8FEF"></div>
+                                    <div class="theme-secondary-color" style="background: #313C52;" data-color="#313C52"></div>
+                                    <div class="theme-label">
+                                        Spaceship
+                                    </div>
+                                </label>
+
+                                <input class="theme-radio" id="theme_cloud_std" type="radio" name="theme_enum" value="3" />
+                                <label for="theme_cloud_std">
+                                    <div class="theme-primary-color" style="background: #FF7900;" data-color="#FF7900"></div>
+                                    <div class="theme-secondary-color" style="background: #FFFFFF;" data-color="#FFFFFF"></div>
+                                    <div class="theme-label">
+                                        Cloud Std
+                                    </div>
+                                </label>
+
+                                <input class="theme-radio" id="theme_sunny_day" type="radio" name="theme_enum" value="4" />
+                                <label for="theme_sunny_day">
+                                    <div class="theme-primary-color" style="background: #FF7900;" data-color="#FF7900"></div>
+                                    <div class="theme-secondary-color" style="background: #FFBF08;" data-color="#FFBF08"></div>
+                                    <div class="theme-label">
+                                        Sunny Day
+                                    </div>
+                                </label>
+
+                                <input class="theme-radio" id="theme_blue_sky" type="radio" name="theme_enum" value="5" />
+                                <label for="theme_blue_sky">
+                                    <div class="theme-primary-color" style="background: #009BF2;" data-color="#009BF2"></div>
+                                    <div class="theme-secondary-color" style="background: #008BD9;" data-color="#008BD9"></div>
+                                    <div class="theme-label">
+                                        Blue Sky
+                                    </div>
+                                </label>
+
+                                <input class="theme-radio" id="theme_all_black" type="radio" name="theme_enum" value="6" />
+                                <label for="theme_all_black">
+                                    <div class="theme-primary-color" style="background: #262626;" data-color="#262626"></div>
+                                    <div class="theme-secondary-color" style="background: #393939;" data-color="#393939"></div>
+                                    <div class="theme-label">
+                                        All Black
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="radio-group theme-ready theme-ready-second-line">
+
+                                <input class="theme-radio" id="theme_purple_space" type="radio" name="theme_enum" value="2" />
+                                <label for="theme_purple_space">
+                                    <div class="theme-primary-color" style="background: #6C009E;" data-color="#6C009E"></div>
+                                    <div class="theme-secondary-color" style="background: #3E005B;" data-color="#3E005B"></div>
+                                    <div class="theme-label">
+                                        Purple Space
+                                    </div>
+                                </label>
+
+                                <input class="theme-radio" id="theme_red_mars" type="radio" name="theme_enum" value="7" />
+                                <label for="theme_red_mars">
+                                    <div class="theme-primary-color" style="background: #FA0000;" data-color="#FA0000"></div>
+                                    <div class="theme-secondary-color" style="background: #9B0000;" data-color="#9B0000"></div>
+                                    <div class="theme-label">
+                                        Red Mars
+                                    </div>
+                                </label>
+
+                                <input class="theme-radio" id="theme_pink_galaxy" type="radio" name="theme_enum" value="8" />
+                                <label for="theme_pink_galaxy">
+                                    <div class="theme-primary-color" style="background: #F68AFF;" data-color="#F68AFF"></div>
+                                    <div class="theme-secondary-color" style="background: #9B51A1;" data-color="#9B51A1"></div>
+                                    <div class="theme-label">
+                                        Pink Galaxy
+                                    </div>
+                                </label>
+
+                                <input class="theme-radio" id="theme_turquoise" type="radio" name="theme_enum" value="9" />
+                                <label for="theme_turquoise">
+                                    <div class="theme-primary-color" style="background: #32BCAD;" data-color="#32BCAD"></div>
+                                    <div class="theme-secondary-color" style="background: #D3FAF5;" data-color="#D3FAF5"></div>
+                                    <div class="theme-label">
+                                        Turquoise
+                                    </div>
+                                </label>
+
+                                <input class="theme-radio" id="theme_greener" type="radio" name="theme_enum" value="10" />
+                                <label for="theme_greener">
+                                    <div class="theme-primary-color" style="background: #23D07D;" data-color="#23D07D"></div>
+                                    <div class="theme-secondary-color" style="background: #02AD5B;" data-color="#02AD5B"></div>
+                                    <div class="theme-label">
+                                        Greener
+                                    </div>
+                                </label>
+                                </label>
+
+                            </div>
+                        </div>
+
+                        <div class="title-buttons-group">
+                            <div>
+                                <h1 class="checkout-title" style="margin: 0;">
+                                    Criar tema personalizado
+                                </h1>
+                                <div class="checkout-subtitle">
+                                    <p style="font-size: 12px; margin: 0;">Personalize com as cores da sua marca.</p>
+                                </div>
+                            </div>
+                            <div class="switch-holder mb-3">
+                                <label class="switch" style='top:3px'>
+                                    <input type="checkbox" id="theme_ready_enabled" name="theme_ready_enabled" data-target="custom-theme-content" data-toggle="theme-ready-second-line" class='check switch-checkout-accordion'>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="custom-theme-content">
+                            <div>
+                                <div class="custom-theme-color">
+                                    <div style="display: flex; ">
+                                        <div class="input-container" style="margin-right: 20px">
+                                            <label for="custom_primary_color">Cor primária</label>
+                                            <input class="color-picker" type="color" id="color_primary" name="color_primary" value="#4B8FEF" styles="height: 20px">
+                                        </div>
+
+                                        <div class="input-container" style="margin-right: 20px">
+                                            <label for="color_secondary">Cor secundária</label>
+                                            <input class="color-picker" type="color" id="color_secondary" name="color_secondary" value="#313C52" styles="height: 20px">
+                                        </div>
+
+                                        <div class="input-container" style="margin-right: 20px">
+                                            <label for="color_buy_button">Cor do botão de compra</label>
+                                            <input class="color-picker" type="color" id="color_buy_button" name="color_buy_button" value="#23d07d" styles="height: 20px">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="checkbox-container">
+                                <input class="checkbox" id="default_finish_color" type="checkbox" />
+                                <label for="default_finish_color">Manter “Finalizar compra” verde</label>
+                            </div>
+                        </div>
+                    </div>
 
                     <hr>
 
@@ -98,7 +257,7 @@
                                     <div id="banner_type" class="radio-group" style="justify-self: end; display: none;">
                                         <input class="custom-icon-radio" id="banner_type_square" type="radio" name="checkout_banner_type" value="0" />
                                         <label for="banner_type_square"><img src="{{ asset('/modules/checkouteditor/img/svg/banner-square.svg') }}"></label>
-                                        
+
                                         <input class="custom-icon-radio" id="banner_type_wide" type="radio" name="checkout_banner_type" value="1" />
                                         <label for="banner_type_wide"><img src="{{ asset('/modules/checkouteditor/img/svg/banner-wide.svg') }}"></label>
                                     </div>
@@ -261,9 +420,9 @@
                                         <table class="table table-hover selectable" id="notification-table" data-plugin="selectable" data-row-selectable="true">
                                             <thead>
                                                 <tr>
-                                                    <th class="th-notification" style="height: 90px; max-height: 90px">
+                                                    <th class="th-notification">
                                                         <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-all triple-check" type="checkbox">
+                                                            <input id="selectable-all-notification" type="checkbox">
                                                             <label></label>
                                                         </span>
                                                     </th>
@@ -273,7 +432,7 @@
                                                 <tr style="height: 90px; max-height: 90px">
                                                     <td>
                                                         <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-item" type="checkbox" id="notification_buying_enabled" name="notification_buying_enabled">
+                                                            <input class="selectable-notification" type="checkbox" id="notification_buying_enabled" name="notification_buying_enabled">
                                                             <label for="notification_buying_enabled"></label>
                                                         </span>
                                                     </td>
@@ -282,7 +441,7 @@
                                                 <tr>
                                                     <td>
                                                         <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-item" type="checkbox" id="notification_bought_30_minutes_enabled" name="notification_bought_30_minutes_enabled">
+                                                            <input class="selectable-notification" type="checkbox" id="notification_bought_30_minutes_enabled" name="notification_bought_30_minutes_enabled">
                                                             <label for="notification_bought_30_minutes_enabled"></label>
                                                         </span>
                                                     </td>
@@ -291,7 +450,7 @@
                                                 <tr>
                                                     <td>
                                                         <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-item" type="checkbox" id="notification_bought_last_hour_enabled" name="notification_bought_last_hour_enabled">
+                                                            <input class="selectable-notification" type="checkbox" id="notification_bought_last_hour_enabled" name="notification_bought_last_hour_enabled">
                                                             <label for="notification_bought_last_hour_enabled"></label>
                                                         </span>
                                                     </td>
@@ -300,7 +459,7 @@
                                                 <tr>
                                                     <td>
                                                         <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-item" type="checkbox" id="notification_just_bought_enabled" name="notification_just_bought_enabled">
+                                                            <input class="selectable-notification" type="checkbox" id="notification_just_bought_enabled" name="notification_just_bought_enabled">
                                                             <label for="notification_just_bought_enabled"></label>
                                                         </span>
                                                     </td>
@@ -311,10 +470,10 @@
                                         <table class="table table-hover notification-counts" id="notification-table-count" data-row-selectable="true">
                                             <thead>
                                                 <tr>
-                                                    <th>
+                                                    <th class="th-notification">
                                                         Mensagem
                                                     </th>
-                                                    <th>
+                                                    <th class="th-notification">
                                                         Qtd Mínima
                                                     </th>
                                                 </tr>
@@ -420,22 +579,22 @@
                         </span>
                     </div>
 
-
                     <div class="billing-content">
 
                         <div class="row-flex">
-                            <div class="input-container" style="flex: 2">
+                            <div class="input-container" style="flex: 3; min-width: 200px;">
                                 <label for="invoice_description" class="checkout-label">Descrição na fatura</label>
                                 <input type="text" class="checkout-input-text" id="invoice_description" name="invoice_description" />
                             </div>
 
-                            <div class="input-container" style="flex: 3">
+                            <div class="input-container" style="flex: 4">
                                 <label for="company_billing" class="checkout-label">Empresa responsável pelo faturamento</label>
                                 <div class='form-group'>
                                     <select id='companies' name='company_id' class="sirius-select">
                                         <div class="sirius-select-text" style="height: 43px;">
                                             Empresas
                                         </div>
+                                        
                                     </select>
                                 </div>
                             </div>
@@ -472,12 +631,28 @@
 
                         <div class="row-flex">
                             <div class="input-container" style="flex: 2">
-                                <label class="quantity-selector-label">Seletor de Quantidade 
+                                <label class="quantity-selector-label">Seletor de Quantidade
                                     <div class="quantity-selector-tooltip">
-                                        <img class="icon-title" src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}">
-                                        <div class="tooltip-content" style="display: none;">Teste</div>
-                                    </div>    
-                                
+                                        <img id="selector-tooltip" src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}">
+                                        <div class="tooltip-container" style="display: none">
+                                            <div class="tooltip-content">
+                                                <p>Ao ativar, você permite que seu cliente selecione a quantidade de um mesmo produto no checkout.
+                                                <p>
+
+                                                <div class="input-example">
+                                                    <div class="grey-cube"></div>
+                                                    <p>Nome do produto</p>
+                                                    <div class="counter-example">
+                                                        <img src="{{ asset('/modules/checkouteditor/img/svg/red-minus.svg') }}">
+                                                        <p>1</p>
+                                                        <img src="{{ asset('/modules/checkouteditor/img/svg/green-plus.svg') }}">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="tooltip-arrow"></div>
+                                        </div>
+                                    </div>
                                 </label>
                                 <div class="switch-holder labeled mb-3">
                                     <label class="switch" style='top:3px'>
@@ -867,8 +1042,8 @@
                                 </div>
                             </div>
 
-                            <div id="preview-mobile-visual" class="preview-content mobile">
-                                <div id="preview-mobile-visual-collapse" class="preview-mobile-collapse collapse" aria-expanded="false">
+                            <div id="preview-mobile-visual" class="preview-content mobile" style="display: none;">
+                                <div id="preview-mobile-visual-collapse" class="preview-mobile-collapse">
                                     <div class="preview-header">
                                         <div class="header-colorbar mobile secondary-color countdown-preview"></div>
                                         <div class="header-colorbar mobile primary-color textbar-preview"> </div>
@@ -922,173 +1097,7 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="expand-mobile-button-container">
-                                    <a class="expand-mobile-button collapsed" role="button" data-toggle="collapse" href="#preview-mobile-visual-collapse" aria-expanded="false" aria-controls="preview-mobile-visual-collapse"></a>
-                                </div>
                             </div>
-                        </div>
-
-                        <div class="preview-colors">
-                            <div class="title-buttons-group">
-                                <div>
-                                    <h1 class="checkout-title" style="margin: 0;">
-                                        Temas Prontos
-                                    </h1>
-                                    <div class="checkout-subtitle">
-                                        <p style="margin: 0;">Utilizar um tema pronto.</p>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="theme-ready-content">
-                                <div id="theme_ready" class="radio-group theme-ready">
-
-                                    <input class="theme-radio" id="theme_spaceship" type="radio" name="theme_enum" value="1" checked />
-                                    <label for="theme_spaceship">
-                                        <div class="theme-primary-color" style="background: #4B8FEF;" data-color="#4B8FEF"></div>
-                                        <div class="theme-secondary-color" style="background: #313C52;" data-color="#313C52"></div>
-                                        <div class="theme-label">
-                                            Spaceship
-                                        </div>
-                                    </label>
-
-                                    <input class="theme-radio" id="theme_purple_space" type="radio" name="theme_enum" value="2" />
-                                    <label for="theme_purple_space">
-                                        <div class="theme-primary-color" style="background: #6C009E;" data-color="#6C009E"></div>
-                                        <div class="theme-secondary-color" style="background: #3E005B;" data-color="#3E005B"></div>
-                                        <div class="theme-label">
-                                            Purple Space
-                                        </div>
-                                    </label>
-
-                                    <input class="theme-radio" id="theme_cloud_std" type="radio" name="theme_enum" value="3" />
-                                    <label for="theme_cloud_std">
-                                        <div class="theme-primary-color" style="background: #FF7900;" data-color="#FF7900"></div>
-                                        <div class="theme-secondary-color" style="background: #FFFFFF;" data-color="#FFFFFF"></div>
-                                        <div class="theme-label">
-                                            Cloud Std
-                                        </div>
-                                    </label>
-
-                                    <input class="theme-radio" id="theme_sunny_day" type="radio" name="theme_enum" value="4" />
-                                    <label for="theme_sunny_day">
-                                        <div class="theme-primary-color" style="background: #FF7900;" data-color="#FF7900"></div>
-                                        <div class="theme-secondary-color" style="background: #FFBF08;" data-color="#FFBF08"></div>
-                                        <div class="theme-label">
-                                            Sunny Day
-                                        </div>
-                                    </label>
-
-                                    <input class="theme-radio" id="theme_blue_sky" type="radio" name="theme_enum" value="5" />
-                                    <label for="theme_blue_sky">
-                                        <div class="theme-primary-color" style="background: #009BF2;" data-color="#009BF2"></div>
-                                        <div class="theme-secondary-color" style="background: #008BD9;" data-color="#008BD9"></div>
-                                        <div class="theme-label">
-                                            Blue Sky
-                                        </div>
-                                    </label>
-
-                                    <input class="theme-radio" id="theme_all_black" type="radio" name="theme_enum" value="6" />
-                                    <label for="theme_all_black">
-                                        <div class="theme-primary-color" style="background: #262626;" data-color="#262626"></div>
-                                        <div class="theme-secondary-color" style="background: #393939;" data-color="#393939"></div>
-                                        <div class="theme-label">
-                                            All Black
-                                        </div>
-                                    </label>
-
-                                    <input class="theme-radio" id="theme_red_mars" type="radio" name="theme_enum" value="7" />
-                                    <label for="theme_red_mars">
-                                        <div class="theme-primary-color" style="background: #FA0000;" data-color="#FA0000"></div>
-                                        <div class="theme-secondary-color" style="background: #9B0000;" data-color="#9B0000"></div>
-                                        <div class="theme-label">
-                                            Red Mars
-                                        </div>
-                                    </label>
-
-                                    <input class="theme-radio" id="theme_pink_galaxy" type="radio" name="theme_enum" value="8" />
-                                    <label for="theme_pink_galaxy">
-                                        <div class="theme-primary-color" style="background: #F68AFF;" data-color="#F68AFF"></div>
-                                        <div class="theme-secondary-color" style="background: #9B51A1;" data-color="#9B51A1"></div>
-                                        <div class="theme-label">
-                                            Pink Galaxy
-                                        </div>
-                                    </label>
-
-                                    <input class="theme-radio" id="theme_turquoise" type="radio" name="theme_enum" value="9" />
-                                    <label for="theme_turquoise">
-                                        <div class="theme-primary-color" style="background: #32BCAD;" data-color="#32BCAD"></div>
-                                        <div class="theme-secondary-color" style="background: #D3FAF5;" data-color="#D3FAF5"></div>
-                                        <div class="theme-label">
-                                            Turquoise
-                                        </div>
-                                    </label>
-
-                                    <input class="theme-radio" id="theme_greener" type="radio" name="theme_enum" value="10" />
-                                    <label for="theme_greener">
-                                        <div class="theme-primary-color" style="background: #23D07D;" data-color="#23D07D"></div>
-                                        <div class="theme-secondary-color" style="background: #02AD5B;" data-color="#02AD5B"></div>
-                                        <div class="theme-label">
-                                            Greener
-                                        </div>
-                                    </label>
-                                    </label>
-
-                                </div>
-                            </div>
-
-                            <div class="title-buttons-group">
-                                <div>
-                                    <h1 class="checkout-title" style="margin: 0;">
-                                        Criar tema personalizado
-                                    </h1>
-                                    <div class="checkout-subtitle">
-                                        <p style="font-size: 12px; margin: 0;">Personalize com as cores da sua marca.</p>
-                                    </div>
-                                </div>
-                                <div class="switch-holder mb-3">
-                                    <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="theme_ready_enabled" name="theme_ready_enabled" data-target="custom-theme-content" data-toggle="theme-ready-content" class='check switch-checkout-accordion'>
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="custom-theme-content">
-                                <div>
-                                    <div class="custom-theme-color">
-                                        <div style="display: flex; ">
-                                            <div class="input-container" style="margin-right: 20px">
-                                                <label for="custom_primary_color">Cor primária</label>
-                                                <input class="color-picker" type="color" id="color_primary" name="color_primary" value="#4B8FEF" styles="height: 20px">
-                                            </div>
-
-                                            <div class="input-container" style="margin-right: 20px">
-                                                <label for="color_secondary">Cor secundária</label>
-                                                <input class="color-picker" type="color" id="color_secondary" name="color_secondary" value="#313C52" styles="height: 20px">
-                                            </div>
-
-                                            <div class="input-container" style="margin-right: 20px">
-                                                <label for="color_buy_button">Cor do botão de compra</label>
-                                                <input class="color-picker" type="color" id="color_buy_button" name="color_buy_button" value="#23d07d" styles="height: 20px">
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <div class="checkbox-container">
-                                    <input class="checkbox" id="default_finish_color" type="checkbox" />
-                                    <label for="default_finish_color">Manter “Finalizar compra” verde</label>
-                                </div>
-                            </div>
-
-
-
-
-
                         </div>
                     </div>
 
@@ -1259,7 +1268,7 @@
                                         <div style="display: flex; width: 100%; justify-content: space-between">
                                             <div style="border-radius: 12px; height: 25px; width: 70px; background-color: #F5F5F5; margin: 0 20px 0 0;border-radius: 4px;"></div>
 
-                                            <div class="primary-color" style="border-radius: 12px; height: 25px; width: 80px; background-color: #2E85EC; border-radius: 4px; "></div>
+                                            <div class="primary-color" style="border-radius: 12px; height: 25px; width: 80px; background-color: #2E85EC; border-radius: 4px; margin-right: 5px;"></div>
 
                                             <div class="whatsapp-preview" style="display: flex; padding: 6px; border-radius: 12px; height: 25px; width: 120px; background-color: #36DB8C; border-radius: 4px;">
                                                 <img src="{{ asset('/modules/checkouteditor/img/svg/whatsapp-icon.svg') }}">
@@ -1313,9 +1322,9 @@
                                             <div class="grey-container" style="margin-bottom: 10px; height: 60px"></div>
 
                                             <div style="display: flex; width: 100%; justify-content: space-between">
-                                                <div style="border-radius: 12px; height: 25px; width: 70px; background-color: #F5F5F5; margin: 0 20px 0 0;border-radius: 8px;"></div>
+                                                <div style="border-radius: 12px; height: 35px; width: 70px; background-color: #F5F5F5; margin: 0 20px 0 0;border-radius: 8px;"></div>
 
-                                                <div style="border-radius: 12px; height: 35px; width: 100px; background-color: #2E85EC; border-radius: 4px; "></div>
+                                                <div style="border-radius: 12px; height: 35px; width: 100px; background-color: #2E85EC; border-radius: 4px;"></div>
                                             </div>
 
                                             <div class="whatsapp-preview" style="display: flex; padding: 6px; border-radius: 8px; height: 35px; width: 100%; background-color: #36DB8C; border-radius: 4px;">
@@ -1336,9 +1345,10 @@
 
                 <div class="editor-buttons position-fixed container page-content" style="width: inhe;">
                     <div class="save-changes " id="save_changes" style="display: none;">
-                        <div style="margin-right: 50px;">
+
+                        <p>
                             Você tem alterações que <strong>não estão salvas</strong>
-                        </div>
+                        </p>
 
                         <div class="save-changes-button-group">
                             <button id="cancel_button" type="button" class="change-button cancel-changes-button">Cancelar</button>
@@ -1347,9 +1357,9 @@
                     </div>
 
                     <div class="save-changes" id="save_success" style="display: none;">
-                        <div style="margin-right: 50px;">
-                            Alterações salvas com sucesso!
-                        </div>
+                        <p>
+                            Alterações salvas com <strong>sucesso</strong>!
+                        </p>
 
                         <div>
                             <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-check.svg') }}">
@@ -1357,9 +1367,9 @@
                     </div>
 
                     <div class="save-changes" id="save_error" style="display: none;">
-                        <div style="margin-right: 50px;">
-                            Ops! Algo deu errado.
-                        </div>
+                        <p>
+                            <strong>Ops!</strong> Algo deu errado.
+                        </p>
 
                         <div>
                             <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-error.svg') }}">
@@ -1367,9 +1377,9 @@
                     </div>
 
                     <div class="save-changes" id="save_load" style="display: none;">
-                        <div style="margin-right: 50px;">
-                            Um momento... estamos salvando suas alterações.
-                        </div>
+                        <p>
+                            Um momento... <strong>Estamos salvando suas alterações.</strong>
+                        </p>
 
                         <div class="lds-ring">
                             <div></div>
@@ -1476,11 +1486,9 @@
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
 <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
 <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Plugin/asselectable.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Plugin/selectable.js') }}"></script>
-<script src="{{asset('modules/checkouteditor/js/cropper.min.js?v='.uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/verifyPhone.js?v='.uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/checkout-editor.js?v='.uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/loadcheckoutdata.js?v='.uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/scrollPreview.js?v='.uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/cropper.min.js?v=' . uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/verifyPhone.js?v=' . uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/checkoutEditor.js?v=' . uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/loadcheckoutdata.js?v=' . uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/scrollPreview.js?v=' . uniqid())}}"></script>
 @endpush

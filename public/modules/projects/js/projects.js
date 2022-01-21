@@ -1,6 +1,7 @@
 $(() => {
     let projectId = $(window.location.pathname.split('/')).get(-1);
     $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
+    let onChangeSet = false;
     
     // COMPORTAMENTOS DA TELA
     $('#tab-info').click(() => {
@@ -65,15 +66,16 @@ $(() => {
     const getImageProject = projectPhoto => projectPhoto ? dropifyOptions.defaultFile = projectPhoto : "/modules/global/img/projeto.svg";
 
     function show() {
-        loadingOnScreen();
+        $(".page").addClass("low-opacity");
 
-        loadOnAny('#tab_info_geral .card', false, {
-            styles: {
-                container: {
-                    minHeight: '250px'
-                }
-            }
-        });
+        //loadingOnScreen();
+        // loadOnAny('#tab_info_geral .card', false, {
+        //     styles: {
+        //         container: {
+        //             minHeight: '250px'
+        //         }
+        //     }
+        // });
 
         $.ajax({
             url: '/api/projects/' + projectId,
@@ -85,7 +87,8 @@ $(() => {
             error: (response) => {
                 window.location.replace(`${location.origin}/projects`);
                 $('.page-content').show()
-                loadingOnScreenRemove();
+                $(".page").removeClass("low-opacity");
+                //loadingOnScreenRemove();
             },
             success: (response) => {
 
@@ -110,7 +113,9 @@ $(() => {
                 $('#total-approved-value').text(approvedSalesValue)
 
                 $('.page-content').show()
-                loadOnAny('#tab_info_geral .card', true);
+                $(".page").removeClass("low-opacity");
+
+                // loadOnAny('#tab_info_geral .card', true);
                 loadingOnScreenRemove();
             }
         });
@@ -118,7 +123,9 @@ $(() => {
 
     // CARD 2 CARREGA TELA DE EDITAR PROJETO
     function updateConfiguracoes() {
-        loadOnAny('#tab_configuration_project .card');
+        // loadOnAny('#tab_configuration_project .card');
+        $("#update-project").addClass("low-opacity");
+        
         $.ajax({
             method: "GET",
             url: "/api/projects/" + projectId + '/edit',
@@ -127,13 +134,17 @@ $(() => {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             }, error: function (response) {
-                loadOnAny('#tab_configuration_project .card', true);
+                $("#update-project").removeClass("low-opacity");
+                // loadOnAny('#tab_configuration_project .card', true);
                 errorAjaxResponse(response);
 
             }, success: function (data) {
-                renderProjectConfig(data);
                 localStorage.setItem('projectConfig',JSON.stringify(data));
-                loadOnAny('#tab_configuration_project .card', true);
+                renderProjectConfig(data);
+
+                //manter o card azul escondido
+                $("#update-project").removeClass("low-opacity");
+                // loadOnAny('#tab_configuration_project .card', true);
             }
         });
     }
@@ -253,11 +264,11 @@ $(() => {
 
         let {project} = data;
 
+
         // AFILIACOES ON / OFF
-        if (project.status_url_affiliates == 1) {
-            if(!$("#status-url-affiliates").hasClass("collapsed")){
-                $('#update-project .status-url-affiliates').trigger('click');
-            }
+        let getStatusAffiliation = $("#status-url-affiliates").prop("checked");
+        if (project.status_url_affiliates == 1 && getStatusAffiliation == false) {
+            $('#update-project .status-url-affiliates').trigger('click');
         }
 
         $('#update-project #product_photo').attr('src', getImageProject(project.photo));
@@ -268,6 +279,7 @@ $(() => {
         $('#update-project #description').val(project.description);
 
         $('#update-project #url-page').val(project.url_page ? project.url_page : 'https://');
+
 
         // DURACAO DE COOKIE
         if (project.cookie_duration == 0) {
@@ -286,6 +298,7 @@ $(() => {
             $('#update-project .cookie-duration').prop('selectedIndex', 6).change();
         }
         
+
         // PORCENTAGEM
         $('#percentage-affiliates').mask('000', {
             reverse: true,
@@ -297,12 +310,15 @@ $(() => {
         });
         $('#update-project #percentage-affiliates').val(project.percentage_affiliates);
 
+
         // TIPO DE COMISSAO 
         $('#update-project .commission-type-enum input').filter(`[value=${project.commission_type_enum}]`).prop("checked", true);
+
 
         // DELETA TEXTO E RESGATA O TEXTO SALVO
         quill.setContents([{ insert: '\n' }]);
         quill.clipboard.dangerouslyPasteHTML(0, project.terms_affiliates ?? ' ');
+
 
         // AFILIACAO AUTOMATICA
         if (project.automatic_affiliation == 1) {
@@ -312,18 +328,14 @@ $(() => {
         // URL CONVIDE AFILIADOS
         $('#update-project #url-affiliates').val(project.url_affiliates);
 
-        //COMPORTAMENTO CARD SALVAR / CANCELAR
-        $("#confirm-changes, #saved-alterations").css({
-            display: "block",
-        })
-        $("#confirm-changes > .container, #saved-alterations > .container").css({
-            bottom: "-100px",
-        })
-        $("#update-project :input").on('change', function() {
-            $("#confirm-changes > .container").animate({
-                bottom: '0'
-            },500);
-        });
+        // COMPORTAMENTO CARD SALVAR / CANCELAR
+        if(!onChangeSet){
+            $("#update-project :input").on('change', function() {
+                $( "#confirm-changes" ).fadeIn( "slow" );
+            });
+            onChangeSet = true;
+        }
+        $( "#confirm-changes" ).hide();
     }
 
     // CARD 4 BOTAO DE COPIAR LINK
@@ -372,14 +384,17 @@ $(() => {
 
     });
     
-    // ATUALIZA AS CONFIGURACOES DO PROJETO
+    // SALVAR AS CONFIGURACOES DO PROJETO
     $("#bt-update-project").on('click', function (event) {
-        $("#confirm-changes > .container").animate({
-            bottom: '-100px'
-        },400);
-
+        
+        $( "#confirm-changes" ).hide();
         event.preventDefault();
-        loadingOnScreen();
+        
+        // $('html, body').animate({
+        //     scrollTop: 0
+        // });
+        $(".page").addClass("low-opacity");
+        // loadingOnScreen();
 
         // Pega tags e texto joga no input pra salvar no banco
         let formatedText = quill.root.innerHTML;        
@@ -415,23 +430,22 @@ $(() => {
                 },
                 data: formData,
                 error: function (response) {
-                    loadingOnScreenRemove();
+                    $(".page").removeClass("low-opacity");
+
+                    // loadingOnScreenRemove();
                     errorAjaxResponse(response);
 
                 }, success: function (response) {
-                    $("#saved-alterations > .container").animate({
-                        bottom: '0'
-                    },2000),setTimeout(function () {
-                        $("#saved-alterations > .container").animate({
-                            bottom: '-100px'
-                        },3000)
-                    },4000);
-
-                    // $('html, body').animate({
-                    //     scrollTop: $('#bt-update-project').offset().top
-                    // }, 'slow');
+                    //chamando atualizacao do projeto
+                    updateConfiguracoes();
+                    setTimeout(function () {
+                        $("#saved-alterations").fadeIn('slow').delay(4000).fadeOut('slow');
+                        $( "#confirm-changes" ).hide();
+                    },2500);
+                    
                     show();
-                    loadingOnScreenRemove();
+                    $(".page").removeClass("low-opacity");
+                    // loadingOnScreenRemove();
                 }
             });
         } else {
@@ -441,12 +455,10 @@ $(() => {
 
     });
 
+    //CANCELAR
     $("#cancel-edit").on("click", function(){
         renderProjectConfig(JSON.parse(localStorage.getItem("projectConfig")))
-        $("#confirm-changes > .container").animate({
-            bottom: '-100px'
-        },400);
+        $( "#confirm-changes" ).fadeOut( "slow" );
     })
-
     show();
 });

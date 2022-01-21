@@ -9,7 +9,7 @@
 }
 
 .secondary-color {
-    background: var(--secondary-color) !important;   
+    background: var(--secondary-color) !important;
 }
 
 /* --------------- Preview Visual -------------------- */
@@ -20,7 +20,7 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    min-width: 32%;
+    min-width: 435px;
 }
 
 .preview.fixed-div {
@@ -36,7 +36,7 @@
     min-height: 300px;
     height: fit-content;
     align-items: center;
-		position: relative;
+    position: relative;
 }
 
 .preview-content {
@@ -56,7 +56,7 @@
 
 .preview-content.desktop {
     width: 100%;
-		position: absolute;
+    position: absolute;
 }
 
 .preview-content.mobile {
@@ -162,7 +162,7 @@
     height: 40px;
     border-radius: 99px;
     overflow: hidden;
-    background-color: var(--primary-color);
+    background-color: #fff;
 }
 
 .preview-logo.desktop {
@@ -191,7 +191,7 @@
     height: 25px;
     border-radius: 99px;
     overflow: hidden;
-    background-color: var(--primary-color);
+    background-color: #fff;
 }
 
 .preview-logo.mobile {
@@ -370,33 +370,6 @@
     transition: all 0.7s;
 }
 
-.expand-mobile-button:hover {
-    opacity: 0.7;
-    color: #fff;
-}
-
-.expand-mobile-button:focus {
-    outline: none;
-}
-
-.expand-mobile-button-container .expand-mobile-button.collapsed:after {
-    content: "Expandir";
-}
-
-.expand-mobile-button-container .expand-mobile-button:not(.collapsed):after {
-    content: "Ocultar";
-}
-
-.preview-mobile-collapse.collapse:not(.show) {
-    display: block;
-    height: 250px;
-    overflow: hidden;
-}
-
-.preview-mobile-collapse.collapsing {
-    height: 250px;
-}
-
 .checkout-step-type {
     display: flex;
     justify-content: space-between;
@@ -552,119 +525,6 @@
     display: flex;
     flex-direction: column;
     padding: 10px 10px 0px 10px;
-}
-
-/* -------------------- Themes ------------------- */
-
-.theme-ready-content {
-    margin-bottom: 25px;
-}
-
-.theme-ready {
-    display: inline-flex;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-.theme-radio[type="radio"] {
-    position: absolute;
-    left: -9999px;
-}
-
-.theme-radio[type="radio"] + label:hover {
-    opacity: 0.7;
-}
-
-.theme-radio[type="radio"] + label {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    width: 80px;
-    height: 100px;
-    padding: 5px;
-    transition: background 0.5s;
-    font-size: 10px;
-    color: #37474f;
-    margin: 0 8px;
-    transition: opacity 0.5s;
-}
-
-.theme-primary-color {
-    width: 60px;
-    height: 35px;
-    border-radius: 10px 10px 0 0;
-}
-
-.theme-secondary-color {
-    width: 60px;
-    height: 25px;
-    border-radius: 0 0 10px 10px;
-}
-
-.theme-label {
-    height: 15px;
-}
-
-.theme-radio[type="radio"]:checked + label {
-    background: #fff;
-    border: 2px solid #2e85ec;
-    border-radius: 10px;
-}
-
-/* ------------------- Custom Color Picker --------------------- */
-
-input[type="color"]::-webkit-color-swatch-wrapper {
-    padding: 0;
-}
-
-input[type="color"]::-webkit-color-swatch {
-    border: none;
-    border-radius: 8px;
-}
-
-input[type="color"] {
-    border: none;
-    width: 100px;
-    height: 30px;
-    padding: 0;
-
-    -webkit-appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -ms-appearance: none;
-    -o-appearance: none;
-}
-
-input[type="color"]::-webkit-color-swatch-wrapper,
-input[type="color"]::-moz-color-swatch-wrapper,
-input[type="color"]::-ms-color-swatch-wrapper,
-input[type="color"]::-o-color-swatch-wrapper {
-    padding: 0;
-}
-
-input[type="color"]::-webkit-color-swatch,
-input[type="color"]::-moz-color-swatch,
-input[type="color"]::-ms-color-swatch,
-input[type="color"]::-o-color-swatch,
-input[type="color"]::color-swatch {
-    border: none;
-    border-radius: 8px;
-}
-
-input[type="color"]::-moz-color-swatch {
-    border-radius: 10px;
-    border-style: none;
-}
-
-.color-picker {
-    transition: opacity 0.7s;
-    cursor: pointer;
-}
-
-.color-picker:hover {
-    opacity: 0.7;
 }
 
 #preview_visual,
