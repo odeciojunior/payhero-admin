@@ -321,6 +321,17 @@
     background-color: #F2F8FF;
     border-radius: 8px;
 }
+.affiliation{
+    background-color: #F2F8FF;
+    border-radius: 8px;
+}
+
+.sirius-select-container{
+    width: auto;
+}
+.sirius-select-text{
+    height: 43.14px;
+}
 
 .percent-border{
     border-top-right-radius: 8px !important;
@@ -371,6 +382,13 @@
     fill: #2E85EC;
 }
 
+.delete-project:hover{
+    color: #E81414;
+}
+.delete-project:hover svg path {
+    fill: #E81414;
+    cursor: pointer;
+}
 
 /* //////////////////////////////// END CARD 4 */
 

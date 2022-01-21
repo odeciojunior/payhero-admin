@@ -258,26 +258,43 @@ $(() => {
     $(document).ready(function() {
         $(".ql-toolbar.ql-snow").addClass("d-flex justify-content-center")
     });
+    $(".ql-editor").on("focus", function(){
+        $(".h-200, .ql-container, .ql-snow").css("border-color", "#88BFFF");
+    });
+    $(".ql-editor").on("focusout", function(){
+        $(".h-200, .ql-container, .ql-snow").css("border-color", "#cccccc");
+    });
 
     //CONFIGURACOES CARD 3 & 4
     function renderProjectConfig(data) {
 
         let {project} = data;
 
-
         // AFILIACOES ON / OFF
         let getStatusAffiliation = $("#status-url-affiliates").prop("checked");
         if (project.status_url_affiliates == 1 && getStatusAffiliation == false) {
             $('#update-project .status-url-affiliates').trigger('click');
+            $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg").css("background-color", "#F2F8FF");
         }
 
+        if(project.status_url_affiliates == 0){
+            $(".affiliation").children("img").attr("src", "/modules/global/img/projects/affiliationDisable.svg").css("background-color", "#F2F8FF");
+
+            if(project.status_url_affiliates == 0 && getStatusAffiliation == true){
+                $('#update-project .status-url-affiliates').trigger('click');
+            }
+        }
+        
+        //IMAGEM DO PROJETO
         $('#update-project #product_photo').attr('src', getImageProject(project.photo));
         $('#product_photo').dropify(dropifyOptions);
 
 
+        //NOME E DESCRICAO
         $('#update-project #name').val(project.name);
         $('#update-project #description').val(project.description);
 
+        //URL PAGINA
         $('#update-project #url-page').val(project.url_page ? project.url_page : 'https://');
 
 
@@ -337,6 +354,19 @@ $(() => {
         }
         $( "#confirm-changes" ).hide();
     }
+
+    // INPUT AFFILIATION
+    $('#update-project .status-url-affiliates').on("click", function(){
+        let affiliationStatus = $("#status-url-affiliates").prop("checked")
+        if(affiliationStatus == false){
+            $(".affiliation").children("img").attr("src", "/modules/global/img/projects/affiliationDisable.svg");
+            $(".bg-afiliate-icon").css("background-color", "#F4F4F4");
+            
+        }else if(affiliationStatus == true){
+            $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg");
+            $(".bg-afiliate-icon").css("background-color", "#F2F8FF");
+        }
+    });
 
     // CARD 4 BOTAO DE COPIAR LINK
     $("#copy-link-affiliation").on("click", function () {
