@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewayPostback;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Entities\SaleGatewayRequest;
 use Modules\Core\Services\Gateways\CheckoutGateway;
 use Vinkla\Hashids\Facades\Hashids;
@@ -47,14 +48,34 @@ class AsaasRetroactiveChargebackPostback extends Command
      */
     public function handle()
     {        
-        //$this->reprocessGatewayPostback();
-        //$this->createPostbackRetroactive();
+        $this->updateNsuContestation();        
+    }
+
+    public function updateNsuContestation(){
+        $contestations = SaleContestation::where('gateway_id',8)->where('status',SaleContestation::STATUS_IN_PROGRESS)
+        ->whereNull('nsu')->get();
+       
+        foreach($contestations as $contestation){
+            if(!empty($contestation->sale_id)){
+                $request = DB::table('sale_gateway_requests')->select('id','gateway_result')
+                ->where('sale_id',$contestation->sale_id)->where('gateway_result','like','%CONFIRMED%CREDIT_CARD%')->orderBy('id','DESC')->first();
+                if(!empty($request)){
+                    $data = json_decode($request->gateway_result);  
+                    if(!empty($data->installment) || !empty($data->invoiceNumber))
+                    {                        
+                        $contestation->nsu = $data->installment??$data->invoiceNumber;
+                        $contestation->update();
+                        $this->line('Atualizando contestation '.$contestation->id);                        
+                    }else{
+                        $this->error('sale_request id: '.$request->id);
+                    }
+                }
+            }
+        }
     }
 
     public function reprocessGatewayPostback(){
-        $postbacks = GatewayPostback::whereHas('sale',function($qr){
-            $qr->where('status',1);
-        })->where('gateway_id',8)->where('data', 'like','%PAYMENT_REFUNDED%')->get();
+        $postbacks = GatewayPostback::where('gateway_id',8)->where('data', 'like','%PAYMENT_CHARGEBACK_REQUESTED%')->whereDate('created_at',now())->get();        
 
         $output = new ConsoleOutput();
         $progress = new ProgressBar($output, count($postbacks));
