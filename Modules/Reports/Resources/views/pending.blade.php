@@ -5,8 +5,8 @@
 
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=123') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <style>
             @media only screen and (min-width: 768px){

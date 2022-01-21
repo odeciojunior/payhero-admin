@@ -33,8 +33,335 @@ class CheckInvitationGetnet extends Command
 
     public  function  handle() {
         try {
+            $this->captureInvitonErro();
+        } catch (Exception $e) {
+            dd($e);
+        }
+    }
+
+    public  function  captureInvitonErro() {
+        try {
+
+            //$saleIds = $this->diffArrayUm($this->saleIdsUpdate(), $this->saleIdsCommnad());
+            $saleIds = $this->saleIdsCommnad();
+
+            $sales = Sale::
+            with('transactions')
+                ->whereHas('transactions', function ($query) {
+                    $query->where('type', Transaction::TYPE_INVITATION);
+                    $query->where('gateway_id', Gateway::GETNET_PRODUCTION_ID);
+                    $query->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED]);
+                })
+                //->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
+                ->whereDate('created_at', '<=', '2021-12-31')
+                ->whereIn('id', $saleIds);
+
+            $total = $sales->count();
+            $bar = $this->output->createProgressBar($total);
+            $bar->start();
+
+            $getnetService = new GetnetBackOfficeService();
+            $aux = 0;
+
+            $arrayInvitation  = [];
+            $valueTotal = 0;
+            foreach ($sales->cursor() as $sale) {
+
+                if ($aux == 100) {
+                    $getnetService = new GetnetBackOfficeService();
+                    $aux = 0;
+                    sleep(1);
+                }
+                $aux ++;
+
+                $orderId = $sale->gateway_order_id;
+                $transaction = $sale->transactions()->first();
+
+                $response = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                    ->setStatementSubSellerId(CompanyService::getSubsellerId($transaction->company))
+                    ->getStatement($orderId);
+
+                $getnetSale = json_decode($response);
+
+                if (
+                    !isset($getnetSale->list_transactions) ||
+                    !isset($getnetSale->list_transactions[0]) ||
+                    !isset($getnetSale->list_transactions[0]->details)
+                ) {
+                    //\Log::info("{$transaction->id} não possui detalhes na getnet - " . $sale->id);
+                    //$this->line(" {$transaction->id} não possui detalhes na getnet - " . $sale->id . " - User: " . $transaction->user->id . " - " . $transaction->user->name);
+
+                    $isWithdrawal = 'notWithdrawal';
+                    if(!empty($transaction->withdrawal_id)) {
+
+                        $isWithdrawal = 'isWithdrawal';
+                        $this->line("Tem saque");
+//                        \Log::info("Saque {$transaction->withdrawal->id}, {$transaction->withdrawal->status}, {$transaction->withdrawal->is_released}");
+//                        $transaction->withdrawal->update(
+//                            [
+//                                'status' => Withdrawal::STATUS_PARTIALLY_LIQUIDATED,
+//                                'is_released' => 0,
+//                            ]
+//                        );
+                    }
+                    //$transaction->withdrawal->update(['status' => Withdrawal::STATUS_PARTIALLY_LIQUIDATED]);
+
+                    if (isset($arrayInvitation[$transaction->user->id])) {
+
+                        $arrayInvitation[$transaction->user->id]['count_sale'] += 1;
+                        $arrayInvitation[$transaction->user->id]['value'][$isWithdrawal] += $transaction->value;
+                        array_push($arrayInvitation[$transaction->user->id]['sale_ids'][$isWithdrawal], $transaction->sale_id);
+                        array_push($arrayInvitation[$transaction->user->id]['values'][$isWithdrawal], $transaction->value);
+                    } else {
+
+                        $arrayInvitation[$transaction->user->id] = [
+                            'user_id' => $transaction->user->id,
+                            'user_name' => $transaction->user->name,
+                            'company_id' => $transaction->company->id,
+                            'company_name' => $transaction->company->fantasy_name,
+                            'count_sale' => 1,
+                            'value' => [
+                                $isWithdrawal => $transaction->value
+                            ],
+                            'sale_ids' => [
+                                $isWithdrawal => [$transaction->sale_id]
+                            ],
+                            'values' => [
+                                $isWithdrawal => [$transaction->value]
+                            ]
+                        ];
+
+                    }
+
+                    $valueTotal += $transaction->value;
+
+                } else {
+                    $this->line(" {$transaction->id} possui detalhes na getnet - " . $sale->id . " - User: " . $transaction->user->id . " - " . $transaction->user->name);
+                }
+
+                $bar->advance();
+
+            }
+
+            dd($arrayInvitation, $valueTotal);
+
+            $bar->finish();
+
+        } catch (Exception $e) {
+            dd($e);
+        }
+    }
+
+
+    function diff( $ary_1, $ary_2 ) {
+        // compare the value of 2 array
+        // get differences that in ary_1 but not in ary_2
+        // get difference that in ary_2 but not in ary_1
+        // return the unique difference between value of 2 array
+        $diff = array();
+
+        // get differences that in ary_1 but not in ary_2
+        foreach ( $ary_1 as $v1 ) {
+            $flag = 0;
+            foreach ( $ary_2 as $v2 ) {
+                $flag |= ( $v1 == $v2 );
+                if ( $flag ) break;
+            }
+            if ( !$flag ) array_push( $diff, $v1 );
+        }
+
+        // get difference that in ary_2 but not in ary_1
+        foreach ( $ary_2 as $v2 ) {
+            $flag = 0;
+            foreach ( $ary_1 as $v1 ) {
+                $flag |= ( $v1 == $v2 );
+                if ( $flag ) break;
+            }
+            if ( !$flag && !in_array( $v2, $diff ) ) array_push( $diff, $v2 );
+        }
+
+        return $diff;
+    }
+
+    public  function  AjustInviton() {
+        try {
+            //dd($this->saleIdsUpdate());
+            //dd($this->diffArrayUm($this->saleIdsUpdate(), $this->saleIdsCommnad()));
+            $saleIds = $this->diffArrayUm($this->saleIdsUpdate(), $this->saleIdsCommnad());
+
+            //dd(count($saleIds));
 
             //$saleIds = $this->saleIds();
+            $sales = Sale::
+            with('transactions')
+                ->whereHas('transactions', function ($query) {
+                    $query->where('type', Transaction::TYPE_INVITATION);
+                    $query->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID]);
+                })
+                ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
+                ->whereIn('id', $saleIds);
+
+            //dd(count($sales));
+//            $diff2 = array();
+//            $diff3 = array();
+//            foreach ( $saleIds as $saleId ) {
+//
+//                $flag = 0;
+//                $i = 0;
+//                foreach ( $saleIds as $saleId2 ) {
+//                    //$flag |= ( $v1 == $v2 );
+//                    //if ( $flag ) break;
+//                    if ($saleId == $saleId2) {
+//                        $i ++;
+//                        //dd($saleId, $sale->id);
+//                        if( $i > 1) {
+//                            array_push($diff3, $saleId);
+//                            $flag = 1;
+//                            //break;
+//                        }
+//
+//                    }
+//                }
+////                if ( !$flag ) {
+////                    dd($saleId);
+////                    array_push($diff2, $saleId);
+////                }
+//
+////                if(in_array($sale->id, $saleIds)) {
+////                    //$this->line($v2);
+////                    //array_push( $diff, $v1 );
+////                    $diff2[] = $sale->id;
+////                }
+//            }
+//
+//            dd($diff3);
+
+            $total = $sales->count();
+            $bar = $this->output->createProgressBar($total);
+            $bar->start();
+
+            $getnetService = new GetnetBackOfficeService();
+            $aux = 0;
+            $aux2 = 0;
+            foreach ($sales->cursor() as $sale) {
+                $this->line($sale->id);
+                if ($aux2 == 4) {
+                    sleep(1);
+                    $aux2 = 0;
+                }
+
+                if ($aux == 100) {
+                    $getnetService = new GetnetBackOfficeService();
+                    $aux = 0;
+                    sleep(1);
+                }
+                $aux ++;
+
+                $orderId = $sale->gateway_order_id;
+                //$transaction = $sale->transactions()->first();
+                $transaction = $sale->transactions()->where('type', Transaction::TYPE_INVITATION)->first();
+                //dd(CompanyService::getSubsellerId($transaction->company));
+                //$this->line($transaction->created_at);
+
+                $response = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                    ->setStatementSubSellerId(CompanyService::getSubsellerId($transaction->company))
+                    ->getStatement($orderId);
+
+                $getnetSale = json_decode($response);
+                //dd($getnetSale->list_transactions);
+
+                if (
+                    !isset($getnetSale->list_transactions) ||
+                    !isset($getnetSale->list_transactions[0]) ||
+                    !isset($getnetSale->list_transactions[0]->details)
+                ) {
+                    //\Log::info("{$transaction->id} não possui detalhes na getnet - " . $sale->id);
+                    $this->line(" {$transaction->id} não possui detalhes na getnet - " . $sale->id . " - User: " . $transaction->user->id . " - " . $transaction->user->name);
+
+                } else if (
+                    isset($getnetSale->list_transactions) &&
+                    isset($getnetSale->list_transactions[0]) &&
+                    isset($getnetSale->list_transactions[0]->details) &&
+                    isset($getnetSale->list_transactions[0]->details[0]) &&
+                    isset($getnetSale->list_transactions[0]->details[0]->release_status)
+                ) {
+                    if ($getnetSale->list_transactions[0]->details[0]->release_status == 'S') {
+                        //$countTransactionsReleased++;
+                        $this->line(" {$transaction->id}  enviado - " . $sale->id);
+                    } elseif ($getnetSale->list_transactions[0]->details[0]->release_status == 'N') {
+                        //event(new CheckTransactionReleasedEvent($transaction->id));
+                        $this->line(" {$transaction->id} não enviado - {$sale->id} - {$transaction->withdrawal_id}");
+                        if(!empty($transaction->withdrawal_id)) {
+                            $this->line("Tem saque");
+
+                            if($transaction->withdrawal->status == Withdrawal::STATUS_TRANSFERRED) {
+                                \Log::info("Saque {$transaction->withdrawal->id}, {$transaction->withdrawal->status}, {$transaction->withdrawal->is_released}");
+                                $transaction->withdrawal->update(
+                                    [
+                                        'status' => Withdrawal::STATUS_PARTIALLY_LIQUIDATED,
+                                        'is_released' => 0,
+                                    ]
+                                );
+                            }
+                            //$transaction->withdrawal->update(['status' => Withdrawal::STATUS_PARTIALLY_LIQUIDATED]);
+                        } else {
+                            $this->line("Não Tem saque");
+
+                        }
+
+                        \Log::info("Transaction {$transaction->id}, {$transaction->gateway_released_at}, {$transaction->gateway_transferred_at}, {$transaction->gateway_transferred}");
+                        $transaction->update([
+                                                 'gateway_released_at' => null,
+                                                 'gateway_transferred_at' => null,
+                                                 'gateway_transferred' => 0,
+                                             ]);
+//                        $transaction->withdrawal->update(['status' => Withdrawal::STATUS_PARTIALLY_LIQUIDATED]);
+                    }
+                }
+
+                $aux2 ++;
+
+                $bar->advance();
+
+            }
+
+            $bar->finish();
+
+        } catch (Exception $e) {
+            dd($e);
+        }
+    }
+
+    function diffArrayUm( $ary_1, $ary_2 ) {
+
+        $diff = array();
+        foreach ( $ary_1 as $v1 ) {
+//            $flag = 0;
+//            foreach ( $ary_2 as $v2 ) {
+//                //$flag |= ( $v1 == $v2 );
+//                //if ( $flag ) break;
+//
+//                if ( $v1 == $v2 ) {
+//                    $flag = 1;
+//                    break;
+//                }
+//            }
+//            if ( !$flag ) array_push( $diff, $v1 );
+
+            if(!in_array($v1, $ary_2)) {
+                //$this->line($v2);
+                //array_push( $diff, $v1 );
+                $diff[] = $v1;
+            }
+        }
+
+        return $diff;
+    }
+
+    public function checkInvionGetNet()
+    {
+        try {
+
             $sales = Sale::with('transactions')
                 ->whereHas('transactions', function ($query) {
                     $query->where('type', Transaction::TYPE_INVITATION);
@@ -43,11 +370,8 @@ class CheckInvitationGetnet extends Command
                     $query->whereDate('created_at', '>=', '2022-01-01');
                     $query->whereDate('created_at', '<=', '2022-01-31');
                 });
-                //->where('id', 1365721);
-                //->where('gateway_id', Gateway::GETNET_PRODUCTION_ID);
-                //->whereIn('id', $saleIds);
-
-
+            //->where('id', 1365721);
+            //->where('gateway_id', Gateway::GETNET_PRODUCTION_ID);
 
             $total = $sales->count();
             $bar = $this->output->createProgressBar($total);
@@ -72,15 +396,12 @@ class CheckInvitationGetnet extends Command
 
                 $orderId = $sale->gateway_order_id;
                 $transaction = $sale->transactions()->first();
-                //dd(CompanyService::getSubsellerId($transaction->company));
-                //$this->line($transaction->created_at);
 
                 $response = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
                     ->setStatementSubSellerId(CompanyService::getSubsellerId($transaction->company))
                     ->getStatement($orderId);
 
                 $getnetSale = json_decode($response);
-                //dd($getnetSale->list_transactions);
 
                 if (
                     !isset($getnetSale->list_transactions) ||
@@ -89,9 +410,6 @@ class CheckInvitationGetnet extends Command
                 ) {
                     \Log::info("{$transaction->id} não possui detalhes na getnet - " . $sale->id);
                     $this->line(" {$transaction->id} não possui detalhes na getnet - " . $sale->id . " - User: " . $transaction->user->id . " - " . $transaction->user->name);
-
-                } else {
-
                 }
 
                 $aux2 ++;
@@ -107,145 +425,7 @@ class CheckInvitationGetnet extends Command
         }
     }
 
-    public function handle2()
-    {
-        try {
-
-            $saleIds = $this->saleIds();
-            $sales = Sale::with('transactions')
-                ->whereHas('transactions', function ($query) {
-                    $query->where('type', Transaction::TYPE_INVITATION);
-                })
-                ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
-                ->whereIn('id', $saleIds);
-
-            $getnetService = new GetnetBackOfficeService();
-            $aux = 0;
-            foreach ($sales->cursor() as $sale) {
-                if($aux == 100) {
-                    $getnetService = new GetnetBackOfficeService();
-                    $aux = 0;
-                }
-                $aux ++;
-
-                $orderId = $sale->gateway_order_id;
-                $transaction = $sale->transactions()->first();
-                //dd($transaction->user_id);
-
-                $response = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
-                    ->setStatementSubSellerId(CompanyService::getSubsellerId($transaction->company))
-                    ->getStatement($orderId);
-
-                $getnetSale = json_decode($response);
-
-                if (
-                    !isset($getnetSale->list_transactions) ||
-                    !isset($getnetSale->list_transactions[0]) ||
-                    !isset($getnetSale->list_transactions[0]->details)
-                ) {
-                    //\Log::info("{$transaction->id} não possui detalhes na getnet - " . $sale->id);
-                    //$this->line("{$transaction->id} não possui detalhes na getnet - " . $sale->id . " - User: " . $transaction->user->id . " - " . $transaction->user->name);
-                } else {
-                    //\Log::info($getnetSale->list_transactions[0]->summary->reason_message . ' - ' . $sale->id);
-                    //$this->line($getnetSale->list_transactions[0]->summary->reason_message . ' - ' . $sale->id . " - User: " . $transaction->user->id . " - " . $transaction->user->name);
-
-                    if ($sale->status == Sale::STATUS_APPROVED) continue;
-                    $this->line($sale->id . ',');
-                    continue;
-                    if ($sale->status == Sale::STATUS_CHARGEBACK) {
-
-                        if (
-                            isset($gatewaySale->list_transactions) &&
-                            isset($gatewaySale->list_transactions[0]) &&
-                            isset($gatewaySale->list_transactions[0]->details) &&
-                            isset($gatewaySale->list_transactions[0]->details[0]) &&
-                            isset($gatewaySale->list_transactions[0]->details[0]->release_status)
-                        ) {
-                            if ($gatewaySale->list_transactions[0]->details[0]->release_status == 'N') {
-                                event(new CheckTransactionReleasedEvent($transaction->id));
-                            }
-                        }
-                    } else {
-
-                        $details = $getnetSale->list_transactions[0]->details;
-
-                        if(!empty($details[0]->subseller_rate_closing_date) && empty($details[0]->subseller_rate_confirm_date)) {
-                            Log::info("{$transaction->sale->id} está com closing_date e sem confirm_date");
-                        }
-                        else {
-                            Log::info("{$transaction->sale->id} está com algum outro problema");
-                        }
-                    }
-                }
-            }
-
-
-//            $withdrawals = Withdrawal::with('transactions', 'transactions.sale', 'transactions.company')
-//                ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
-//                ->where('automatic_liquidation', true)
-//                ->whereIn('status', [Withdrawal::STATUS_LIQUIDATING, Withdrawal::STATUS_PARTIALLY_LIQUIDATED])
-//                ->orderBy('id');
-//
-//            $withdrawals->chunk(500, function ($withdrawals) {
-//                foreach ($withdrawals as $withdrawal) {
-//                    $getnetService = new GetnetBackOfficeService();
-//
-//                    $withdrawalTransactionsCount = $withdrawal->transactions->count();
-//                    $countTransactionsLiquidated = 0;
-//
-//                    foreach ($withdrawal->transactions as $transaction) {
-//                        $sale = $transaction->sale;
-//
-//                        if (!empty($transaction->gateway_transferred_at)) {
-//                            $countTransactionsLiquidated++;
-//                            continue;
-//                        }
-//
-//                        $orderId = $sale->gateway_order_id;
-//
-//                        $response = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
-//                            ->setStatementSubSellerId(CompanyService::getSubsellerId($transaction->company))
-//                            ->getStatement($orderId);
-//
-//                        $gatewaySale = json_decode($response);
-//
-//                        if (
-//                            !empty($gatewaySale->list_transactions[0]) &&
-//                            !empty($gatewaySale->list_transactions[0]->details[0]) &&
-//                            !empty($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date)
-//                        ) {
-//                            $countTransactionsLiquidated++;
-//
-//                            $date = Carbon::parse($gatewaySale->list_transactions[0]->details[0]->subseller_rate_confirm_date);
-//
-//                            if (empty($transaction->gateway_transferred_at)) {
-//                                $transaction->update([
-//                                                         'status' => 'transfered',
-//                                                         'status_enum' => Transaction::STATUS_TRANSFERRED,
-//                                                         'gateway_transferred' => true,
-//                                                         'gateway_transferred_at' => $date
-//                                                     ]);
-//                            }
-//                        }
-//                    }
-//
-//                    if ($countTransactionsLiquidated == $withdrawalTransactionsCount) {
-//                        $withdrawal->update(['status' => Withdrawal::STATUS_TRANSFERRED]);
-//
-//                        TaskService::setCompletedTask(
-//                            User::find($sale->owner_id),
-//                            Task::find(Task::TASK_FIRST_WITHDRAWAL)
-//                        );
-//                    } elseif ($countTransactionsLiquidated > 0) {
-//                        $withdrawal->update(['status' => Withdrawal::STATUS_PARTIALLY_LIQUIDATED]);
-//                    }
-//                }
-//            });
-        } catch (Exception $e) {
-            dd($e);
-        }
-    }
-
+    //Convites que setamos como transferido
     public function  saleIdsUpdate() {
         return [
             1306241,
@@ -412,8 +592,18 @@ class CheckInvitationGetnet extends Command
         ];
     }
 
+    //Convites que não gerarm os detalhes na getnet
     public function  saleIdsCommnad()
     {
+//        return [
+//            1303532,
+//            1306178,
+//            1306186,
+//            1306191,
+//            1306203,
+//            1306205,
+//            1306207
+//        ];
         return [
             1303532,
             1306178,
@@ -680,6 +870,87 @@ class CheckInvitationGetnet extends Command
             1308412,
             1308419
         ];
+    }
+
+    //Diferença entre os array
+    public function arrayDiff() {
+        return [
+            1306472,
+            1306640,
+            1344508,
+            1343986,
+            1344282,
+            1346346,
+            1349383,
+            1349874,
+            1350386,
+            1350493,
+            1346591,
+            1346951,
+            1347460,
+            1347622,
+            1348083,
+            1352886,
+            1343826,
+            1344508,
+            1349137,
+            1349258,
+            1351530,
+            1356775,
+            1349137,
+            1349258,
+            1351530,
+            1349251,
+            1346211,
+            1347095,
+            1351337,
+            1349182,
+            1354018,
+            1198350,
+            1203239,
+            1205123,
+            1206211,
+            1206643,
+            1212853,
+            1216499,
+            1218713,
+            1219021,
+            1219056,
+            1220458,
+            1220803,
+            1221230,
+            1233646,
+            1236069,
+            1238288,
+            1239005,
+            1239007,
+            1240102,
+            1240991,
+            1241512,
+            1242344,
+            1246697,
+            1247988,
+            1249593,
+            1254625,
+            1255234,
+            1256068,
+            1256674,
+            1256810,
+            1256854,
+            1257203,
+            1257486,
+            1257531,
+            1258048,
+            1259813,
+            1259900,
+            1259940,
+            1261396,
+            1261403,
+            1265593,
+            1350613,
+            1355281
+        ];
+
     }
 
 }

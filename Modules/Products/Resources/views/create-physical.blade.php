@@ -4,7 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('/modules/products/css/create.css?v=07') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/products/css/create.css?v=123') }}">
     @endpush
 
     <!-- Page -->
