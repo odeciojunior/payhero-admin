@@ -30,7 +30,7 @@
 </div>
 
 <div class="row justify-content-end pr-15">
-    <ul id="pagination-transfers" class="pagination-sm margin-chat-pagination" style="margin-top:10px;position:relative;float:right">
+    <ul id="pagination-transfers" class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right" style="margin-top:10px;position:relative;float:right">
         {{--loaded by js...--}}
     </ul>
     <div id="pagination-statement" class="pagination-sm margin-chat-pagination pagination-statement-class text-xs-center text-md-right" style="margin-top: 10px; position:relative;display: none">

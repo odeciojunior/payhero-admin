@@ -542,8 +542,8 @@ $(window).on("load", function() {
     });
 
     $(".btn-light-1").on('click', function () {
-        var collapse = $("#icon-filtro");
-        var text = $("#text-filtro");
+        var collapse = $(this).find("#icon-filtro");
+        var text = $(this).find("#text-filtro");
 
         text.fadeOut(10);
         if (
@@ -556,22 +556,6 @@ $(window).on("load", function() {
             collapse.css("transform", "rotate(0deg)");
             text.text("Filtros avançados").fadeIn();
         }
-
-        var collapse = $("#icon-custom-filtro");
-        var text = $("#text-custom-filtro");
-
-        text.fadeOut(10);
-        if (
-            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
-            collapse.css("transform") == "none"
-        ) {
-            collapse.css("transform", "rotate(180deg)");
-            text.text("Minimizar filtros").fadeIn();
-        } else {
-            collapse.css("transform", "rotate(0deg)");
-            text.text("Filtros avançados").fadeIn();
-        }
-
     });
     //abaixo função para apagar numero zerado no botão de valor na aba extrato
     document.getElementById("transaction-value").addEventListener("focusout", inputOutOfFocus);

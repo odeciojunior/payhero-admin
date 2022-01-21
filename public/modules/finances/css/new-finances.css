@@ -174,6 +174,7 @@
     margin-top: 20px;
     width: 100%;
     height: 40px;
+    font-weight: bold;
 }
 
 .badge-pendente {
@@ -207,7 +208,7 @@
 }
 
 .nav-link {
-    font-size: 12px !important;
+    font-size: 14px !important;
     border-radius: 8px 8px 0 0 !important;
     padding: 15px;
 }
@@ -544,6 +545,10 @@ select, .select-pad {
     margin-top: 5px;
 }
 
+.pagination-sm button {
+    margin-bottom: 5px
+}
+
 @media (min-width: 768px) {
     .pointer-md {
         cursor: pointer !important;
@@ -698,7 +703,7 @@ select, .select-pad {
 
     .bank-finance-transfers {
         padding: 0 !important;
-        margin-bottom: 10px !important;
+        margin-bottom: 12px !important;
     }
     .bank-finance-transfers div {
         font-size: 14px !important;
@@ -782,7 +787,7 @@ select, .select-pad {
     }
 
     .card.shadow {
-        border-radius: 0 8px 8px 8px;
+        border-radius: 0 0 8px 8px;
     }
     .nav-tabs .nav-link {
         margin: 0;
