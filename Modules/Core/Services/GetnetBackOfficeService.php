@@ -95,10 +95,6 @@ class GetnetBackOfficeService extends GetnetBaseService
      */
     public function setStatementSaleHashId(?string $statementSaleHashId): GetnetBackOfficeService
     {
-        if (Sale::find(hashids_decode($statementSaleHashId, 'sale_id'))->api_flag) {
-            $statementSaleHashId = Sale::find(hashids_decode($statementSaleHashId, 'sale_id'))->productsSaleApi->first()->item_id;
-        }
-
         $this->statementSaleHashId = $statementSaleHashId;
         return $this;
     }
