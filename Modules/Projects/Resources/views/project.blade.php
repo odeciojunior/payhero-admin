@@ -118,7 +118,7 @@
                             <div class="card d-flex justify-content-between col-sm-12 col-md-6 col-lg col-xl px-0">
 
                                 <!-- VENDAS APROVADAS -->
-                                <div class="pl-20 pl-md-30 pt-15 pt-lg-30 pt-md-20 pl-lg-20 pl-xl-30 pt-xl-40 pb-xl-25">
+                                <div class="pl-20 pl-md-30 pt-15 pt-lg-30 pt-md-20 pl-lg-20 pl-xl-30 pt-xl-35 pb-xl-25">
                                     <div class="d-flex">
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">

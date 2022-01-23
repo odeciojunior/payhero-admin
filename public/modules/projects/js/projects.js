@@ -302,19 +302,33 @@ $(() => {
 
         // DURACAO DE COOKIE
         if (project.cookie_duration == 0) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 0).change();
+            $('.sirius-select').prop("selectedIndex", 0).change();
+            $(".sirius-select-text").text("Eterno");
+            // $('#update-project .cookie-duration').prop('selectedIndex', 0).change();
+
         } else if (project.cookie_duration == 7) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 1).change();
+            $('.sirius-select').prop("selectedIndex", 1).change();
+            $(".sirius-select-text").text("7 dias");
+
         } else if (project.cookie_duration == 15) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 2).change();
+            $('.sirius-select').prop("selectedIndex", 2).change();
+            $(".sirius-select-text").text("15 dias");
+
         } else if (project.cookie_duration == 30) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 3).change();
+            $('.sirius-select').prop("selectedIndex", 3).change();
+            $(".sirius-select-text").text("1 mês");
+
         } else if (project.cookie_duration == 60) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 4).change();
+            $('.sirius-select').prop("selectedIndex", 4).change();
+            $(".sirius-select-text").text("2 meses");
+
         } else if (project.cookie_duration == 180) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 5).change();
+            $('.sirius-select').prop("selectedIndex", 5).change();
+            $(".sirius-select-text").text("6 meses");
+
         } else if (project.cookie_duration == 365) {
-            $('#update-project .cookie-duration').prop('selectedIndex', 6).change();
+            $('.sirius-select').prop("selectedIndex", 6).change();
+            $(".sirius-select-text").text("1 ano");
         }
         
 
@@ -473,7 +487,7 @@ $(() => {
                     setTimeout(function () {
                         $("#saved-alterations").fadeIn('slow').delay(4000).fadeOut('slow');
                         $( "#confirm-changes" ).hide();
-                    },2500);
+                    },1500);
                     
                     show();
                     $(".page").removeClass("low-opacity");
