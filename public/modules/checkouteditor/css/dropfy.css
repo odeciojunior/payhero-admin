@@ -16,7 +16,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: fit-content !important;
+  height: 100px !important;
   width: 100% !important;
   border: 2px dashed #2E85EC;
   border-radius: 8px;
@@ -39,6 +39,7 @@
 
 #checkout_editor .dropify-errors-container li {
   list-style-type: none;
+  line-height: 10px;
 }
 
 #checkout_editor .dropify-infos-message::before,

@@ -157,13 +157,14 @@ $(() => {
         variableWidth: true,
         nextArrow: false,
         prevArrow: false,
+        swipeToSlide: true,
 
         responsive: [
             {
                 breakpoint: 480,
                 settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
                 }
             },
         ]
@@ -173,6 +174,7 @@ $(() => {
         "tab-domains",
         "tab_plans",
         "tab-fretes",
+        "tab-checkout",
     ]
 
     let secondCategory = [

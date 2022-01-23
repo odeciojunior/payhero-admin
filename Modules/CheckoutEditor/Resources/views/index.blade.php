@@ -55,7 +55,7 @@
                         <div class="title-buttons-group">
                             <div>
                                 <h1 class="checkout-title">
-                                    Logo no checkout
+                                    Logo no checkout<span style="color: red;">*</span>
                                 </h1>
                             </div>
 
@@ -105,7 +105,7 @@
                                     <div class="theme-primary-color" style="background: #4B8FEF;" data-color="#4B8FEF"></div>
                                     <div class="theme-secondary-color" style="background: #313C52;" data-color="#313C52"></div>
                                     <div class="theme-label">
-                                        Spaceship
+                                        Sirius Std
                                     </div>
                                 </label>
 
@@ -321,7 +321,7 @@
                                 <div class="input-container" style="width: 100px;">
                                     <label for="countdown_time" class="checkout-label">Tempo</label>
                                     <div class="tagged-input-div">
-                                        <input class="tagged-input" type="number" id="countdown_time" value="15" name="countdown_time" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                        <input class="tagged-input" type="number" id="countdown_time" value="15" name="countdown_time" min="0" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                         <div class=" input-tag">min</div>
                                     </div>
                                 </div>
@@ -697,7 +697,7 @@
                                 <label for="company_billing" class="checkout-label">Limite de parcelas</label>
                                 <div class='form-group'>
                                     <select id='installments_limit' name='installments_limit' class="sirius-select">
-                                        <option value="1" selected>1x</option>
+                                        <option value="1">1x</option>
                                         <option value="2">2x</option>
                                         <option value="3">3x</option>
                                         <option value="4">4x</option>
@@ -708,7 +708,7 @@
                                         <option value="9">9x</option>
                                         <option value="10">10x</option>
                                         <option value="11">11x</option>
-                                        <option value="12">12x</option>
+                                        <option value="12"selected>12x</option>
                                     </select>
                                 </div>
                             </div>
@@ -717,7 +717,7 @@
                                 <label for="company_billing" class="checkout-label">Sem juros até</label>
                                 <div class='form-group'>
                                     <select id='interest_free_installments' name='interest_free_installments' class="sirius-select">
-                                        <option value="1" selected>1x</option>
+                                        <option value="1">1x</option>
                                         <option value="2">2x</option>
                                         <option value="3">3x</option>
                                         <option value="4">4x</option>
@@ -728,7 +728,7 @@
                                         <option value="9">9x</option>
                                         <option value="10">10x</option>
                                         <option value="11">11x</option>
-                                        <option value="12">12x </option>
+                                        <option value="12"selected>12x </option>
                                     </select>
                                 </div>
                             </div>
@@ -737,7 +737,7 @@
                                 <label for="company_billing" class="checkout-label">Parcela pré-selecionada</label>
                                 <div class='form-group'>
                                     <select id='preselected_installment' name='preselected_installment' class="sirius-select">
-                                        <option value="1"selected>1x</option>
+                                        <option value="1">1x</option>
                                         <option value="2">2x</option>
                                         <option value="3">3x</option>
                                         <option value="4">4x</option>
@@ -748,7 +748,7 @@
                                         <option value="9">9x</option>
                                         <option value="10">10x</option>
                                         <option value="11">11x</option>
-                                        <option value="12">12x</option>
+                                        <option value="12"selected>12x</option>
                                     </select>
                                 </div>
                             </div>
