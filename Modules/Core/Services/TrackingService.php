@@ -246,7 +246,6 @@ class TrackingService
 
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
-        $trackingModel = new Tracking();
         $productPlanSaleModel = new ProductPlanSale();
         $filters['status'] =  is_array($filters['status']) ? implode(',', $filters['status']) : $filters['status'];
         $filters['project'] =  is_array($filters['project']) ? implode(',', $filters['project']) : $filters['project'];
@@ -266,6 +265,7 @@ class TrackingService
             'sale.delivery',
             'sale.customer',
             'product',
+            'productSaleApi'
         ]);
 
 
@@ -356,7 +356,7 @@ class TrackingService
             if ($filters['problem'] == 1) {
                 $productPlanSales->whereHas(
                     'tracking',
-                    function ($query) use ($trackingModel, $filters) {
+                    function ($query) {
                         $query->whereIn('system_status_enum', [
                                 Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
                                 Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
@@ -378,8 +378,12 @@ class TrackingService
             );
         }
 
-        $productPlanSales->whereHas('product', function ($query) {
-            $query->where('type_enum', (new Product)->present()->getType('physical'));
+        $productPlanSales->where(function($q) {
+            
+            $q->whereHas('product', function ($query) {
+                $query->where('type_enum', Product::TYPE_PHYSICAL);
+            })->orWhereNull('products_plans_sales.product_id');
+        
         });
 
         return $productPlanSales;
