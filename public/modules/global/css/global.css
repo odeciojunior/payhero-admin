@@ -1805,7 +1805,6 @@ input[type="checkbox"], input[type="radio"] {
     right: auto;
     bottom: 0;
     left: 0;
-    cursor: pointer;
 }
 
 .modal-plans .modal-dialog {

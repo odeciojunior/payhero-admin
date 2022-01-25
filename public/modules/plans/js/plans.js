@@ -1849,6 +1849,7 @@ $(function () {
         var modal = '#modal_edit_plan';
 
         $(modal).find('.modal-body').css('height', 'auto');
+        $(modal).find('.modal-body').find('.height-auto').css('margin-top', '');
 
         $(modal).find('.nav-tabs-horizontal').css('display', 'block');
 
