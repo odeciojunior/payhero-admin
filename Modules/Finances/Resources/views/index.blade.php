@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/table.css?v='. versionsFile()) }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=' . versionsFile()) }}">
 @endpush
 

@@ -1,6 +1,10 @@
 @extends("layouts.master")
 
 @section('content')
+    @push('css')
+        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
+    @endpush
+    
     <div class='page'>
         <div style="display: none" class="page-header container">
             <div class="row align-items-center justify-content-between">

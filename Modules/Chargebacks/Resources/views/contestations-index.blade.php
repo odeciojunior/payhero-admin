@@ -3,6 +3,7 @@
 @section('content')
 
     @push('css')
+        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=123') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">

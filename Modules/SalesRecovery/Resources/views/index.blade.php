@@ -3,6 +3,7 @@
 @section('content')
 
     @push('css')
+        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=' . random_int(100, 10000)) }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=101') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
