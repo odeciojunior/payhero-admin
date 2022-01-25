@@ -57,9 +57,9 @@ class SendPostbackApiBoletoPaid extends Command
                 $httpCode = $this->execCurl($data, $apiToken);
 
                 if($httpCode <> 200) {
-                    $this->line('Enviado ', $sale->id);
+                    $this->line('Enviado: '. $sale->id);
                 } else {
-                    $this->line('Erro ', $sale->id);
+                    $this->line('Erro: '. $sale->id);
                 }
             }
         }
