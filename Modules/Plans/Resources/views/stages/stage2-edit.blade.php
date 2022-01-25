@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="box-photos-products" style="margin-bottom: 27px; margin-top: 16px;"></div>
+    <div class="box-photos-products scroll-x" style="margin-bottom: 27px; margin-top: 16px; overflow: hidden; position: relative;"></div>
 
     <div class="box-description">
         <div class="d-flex">

@@ -109,6 +109,7 @@
 <script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
 <script src="{{ asset('modules/global/js-extra/jquery.mask.min.js') }}"></script>
 <script src="{{ asset('modules/global/js-extra/jquery.maskMoney.js') }}"></script>
+<script src="{{asset('modules/global/js/jquery-ui-custom.min.js')}}"></script>
 <script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Component.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin.js') }}"></script>

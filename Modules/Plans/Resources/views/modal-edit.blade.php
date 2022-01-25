@@ -10,7 +10,7 @@
 
             <div class="modal-body" id="modal_add_body">
                 <div class="height-auto">
-                    <div class="nav-tabs-horizontal nav-tabs-horizontal-custom" style="margin: -20px -30px 0 -30px;">
+                    <div class="nav-tabs-horizontal nav-tabs-horizontal-custom" style="margin: 0px -30px 20px;">
                         <ul class="nav nav-tabs nav-tabs-line" role="tablist">
                             <li class="nav-item text-center" style="width: 50%;">
                                 <a id="tab-general-data" class="nav-link active show" data-toggle="tab" href="#tab-general-data_panel" role="tab">
@@ -25,7 +25,7 @@
                         </ul>
                     </div>
 
-                    <div class="tab-content" id="tab-content_all" style="padding-top: 21px;">
+                    <div class="tab-content" id="tab-content_all">
                         <div class="tab-pane fade show active" id="tab-general-data_panel" role="tabpanel">
                             <div class="tab-content" id="tabs-modal-edit-plans">
                                 <div class="tab-pane fade" id="stage1" role="tabpanel" aria-labelledby="stage1-tab">

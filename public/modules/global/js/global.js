@@ -59,10 +59,11 @@ function stringToMoney(string, currency = 'BRL') {
     return value.toLocaleString('pt-br', { style: 'currency', currency: currency });
 }
 
-function scrollCustom(div, padding = false) {
+function scrollCustom(div, padding = false, type = '') {
     var scroll = 0;
     var scrollDiv = 0;
     var valuePadding = 0;
+    var heightAdjust = 0;
 
     $(div).css('padding-right', '12px');
     $(div).append('<div class="scrollbox"></div>');
@@ -72,6 +73,10 @@ function scrollCustom(div, padding = false) {
         if(event.originalEvent.deltaY !== 0) {
             if (padding == true) {
                 valuePadding = 40;
+            }
+
+            if (type == 'modal-body') {
+                heightAdjust = 20;
             }
 
             var heightDivScroll = $(div).height() + valuePadding;
@@ -103,6 +108,49 @@ function scrollCustom(div, padding = false) {
 
             $(div).find('.scrollbox-bar').css('top', scroll + 'px');
             $(div).children(":first").css('margin-top', '-' + scrollDiv + 'px');
+        }
+    });
+}
+
+function scrollCustomX(div) {
+    var scroll = 0;
+    var scrollDiv = 0;
+
+    $(div).css('padding-bottom', '12px');
+    $(div).append('<div class="scrollbox"></div>');
+    $(div).append('<div class="scrollbox-bar"></div>');
+
+    $(div).on('wheel', function(event) {
+        if(event.originalEvent.deltaY !== 0) {
+            var widthDivScroll = $(div).width();
+            var widthDivScrollTotal = $(div).children(":first").width() - 12;
+
+            var widthtCalculateScroll = ((widthDivScroll - 60) / 20) * 2;
+            var widthCalculateTotal = ((widthDivScrollTotal - widthDivScroll) / 20) * 2;
+
+            if(event.originalEvent.deltaY < 0) {
+                // wheeled left
+                if (scroll > widthtCalculateScroll) {
+                    scroll -= widthtCalculateScroll;
+                    scrollDiv -= widthCalculateTotal;
+                } else if (scroll == widthtCalculateScroll || scroll > 0) {
+                    scroll = 0;
+                    scrollDiv = 0;
+                }
+            } else {
+                // wheeled right
+                var sumScroll = scroll + widthtCalculateScroll;
+                if (sumScroll <= (widthDivScroll - 60)) {
+                    scroll += widthtCalculateScroll;
+                    scrollDiv += widthCalculateTotal;
+                } else {
+                    scroll = widthDivScroll - 60;
+                    scrollDiv = (widthDivScrollTotal - widthDivScroll);
+                }
+            }
+
+            $(div).find('.scrollbox-bar').css('left', scroll + 'px');
+            $(div).children(":first").css('margin-left', '-' + scrollDiv + 'px');
         }
     });
 }
