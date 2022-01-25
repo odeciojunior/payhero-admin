@@ -165,7 +165,7 @@ class AsaasAnticipations extends Command
             $bar->finish();
 
         } catch (Exception $e) {
-            dd($e);
+            report($e);
         }
     }
 }

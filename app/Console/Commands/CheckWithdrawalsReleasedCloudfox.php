@@ -151,8 +151,10 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                                 $errorGetnet = 'Comissão da cloudfox, venda na Getnet está como "CANCELADA NAO CONFIRMADA". $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
                             }
                         }
-                        $this->warn($errorGetnet);
-                        report(new Exception($errorGetnet));
+                        if (!foxutils()->isProduction()) {
+                            $this->warn($errorGetnet);
+                            //report(new Exception($errorGetnet));
+                        }
                     }
 
                     $this->tryFixGatewayOrderIdAndGatewayTransactionId($sale);
