@@ -66,6 +66,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property string|null $shopify_discount
  * @property string|null $dolar_quotation
  * @property int $first_confirmation
+ * @property boolean $api_flag
  * @property int $automatic_discount
  * @property int|null $interest_total_value
  * @property int $refund_value
@@ -225,6 +226,7 @@ class Sale extends Model
         'shopify_discount',
         'dolar_quotation',
         'first_confirmation',
+        'api_flag',
         'installment_tax_value',
         'attempts',
         'created_at',
