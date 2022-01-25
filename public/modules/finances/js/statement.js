@@ -311,57 +311,50 @@ window.updateAccountStatementData = function() {
 
             items.forEach(function (item) {
 
-                if (item.isInvite) {
-                    let invite =`
-                        <a>
-                            <span class="bold" style="grid-area: sale;">#${item.order.hashId}</span>
-                        </a>`;
+                let data = {
+                    date_request: item.details.description,
+                    date_release: item.details.description
                 }
 
-                let dataTable =
-                    `<tr class="s-table table-finance-schedule-new">
-                        <td>`;
-                if (item.order && item.order.hashId) {
-                    dataTable += `Transação`;
+                let dateRequest = getRequestTime(data);
+                let dateRelease = getReleaseTime(data);
 
+                let dataTable =
+                    `<tr class="s-table table-finance-schedule">`;
+                if (item.order && item.order.hashId) {
                     if (item.isInvite) {
                         dataTable += `
-                            <a>
-                                <span class="bold" style="grid-area: sale;">#${item.order.hashId}</span>
-                            </a>
+                            <td class="text-center sale-finance-schedule">
+                                <a>
+                                    <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale;">#${item.order.hashId}</span>
+                                </a>
+                            </td>
                         `;
                     } else {
                         dataTable += `
-                             <a class="detalhes_venda disabled pointer-md" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
-                                <span class="bold" style="grid-area: sale;">#${item.order.hashId}</span>
-                            </a>
+                            <td class="text-center sale-finance-schedule">
+                                 <a class="detalhes_venda disabled pointer-md" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
+                                    <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale;">#${item.order.hashId}</span>
+                                </a>
+                            </td>
                         `;
                     }
-                    dataTable += `<br>
-                                    <small>${item.details.description}</small>`;
-                } else {
-                    dataTable += `${item.details.description}`;
                 }
 
                 dataTable += `
+                    <td class="date-start-finance-transfers text-left" style="grid-area: date-start">${dateRequest}</td>
+                    <td class="date-end-finance-transfers text-left" style="grid-area: date-end">${dateRelease}</td>
+                     <td class="text-center status-finance-schedule">
+                        <span data-toggle="tooltip" data-placement="left" title="${item.details.status}"
+                        class="badge badge-sm badge-${statusExtract[item.details.type]} p-2">
+                            ${item.details.status}
+                        </span>
                      </td>
-                    <td style="grid-area: date">
-                        ${item.date}
+                    <td class="text-left value-finance-schedule" style="grid-area: value;">
+                        <span class="font-md-size-20 bold" style="color:green"> R$ </span>
+                        <strong class="font-md-size-20" style="color:green"> ${item.amount} </strong>
                     </td>
-                     <td style="grid-area: status" class="text-center">
-                        <span data-toggle="tooltip" data-placement="left" title="${
-                            item.details.status
-                        }" class="badge badge-sm badge-${
-                    statusExtract[item.details.type]
-                } p-2">${item.details.status}</span>
-                     </td>
-                    <td class="text-xs-right text-md-left bold" style="grid-area: value;};">
-                    ${item.amount.toLocaleString("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                    })}
-                    </td>
-                    </tr>`;
+                </tr>`;
 
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();

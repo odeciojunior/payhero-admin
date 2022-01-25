@@ -59,6 +59,7 @@ window.customWithdrawal = function(gatewayId) {
     $("#request-withdrawal-" + gatewayId).attr("disabled", "disabled");
 
 
+    let value = $("#withdrawal-value-" + gatewayId).val()
     $.ajax({
         url: "/api/withdrawals/getWithdrawalValues",
         type: "POST",
@@ -66,7 +67,7 @@ window.customWithdrawal = function(gatewayId) {
         data: {
             company_id: $("#transfers_company_select").val(),
             gateway_id: gatewayId,
-            withdrawal_value: $("#withdrawal-value-" + gatewayId).val(),
+            withdrawal_value: value,
         },
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),

@@ -405,13 +405,11 @@ $(document).ready(function(){
                                         <span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated.trim()}</span>
                                     </span>
                                 </div>
-                                <div class="col-12 col-md-3 col-xl-6
-                                            px-20 px-md-0 mt-10 mt-md-0
+                                <div class="col-12 col-md-3 col-xl-12
+                                            px-20 px-md-0 mt-10
                                             d-flex order-2 order-md-1 order-xl-2
                                             align-items-center">
-                                    <h4 style="margin-top:3px">
-                                        <span class="font-size-18 bold">R$ ${removeMoneyCurrency(data.value)}</span>
-                                    </h4>
+                                        <span class="money-label">R$ ${removeMoneyCurrency(data.value)}</span>
                                 </div>
                                 <div class="col-12 col-md-3 col-xl-6
                                             px-20 px-md-0
@@ -420,6 +418,15 @@ $(document).ready(function(){
                                             align-items-center">
                                     <span class="overflow-bank-name">
                                         ${data.bank_name.replace('BANCO ', '')}
+                                    </span>
+                                </div>
+                                <div class="col-12 col-md-3 col-xl-6
+                                            px-20 px-md-0
+                                            d-flex order-4
+                                            justify-content-end justify-content-md-center justify-content-xl-end
+                                            align-items-center">
+                                    <span class="date-label">
+                                        ${data.date}
                                     </span>
                                 </div>
                             </div>

@@ -321,14 +321,14 @@ function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue) {
                 </div>
             `);
 
-    const $event = $("#bigger-value, #lower-value, #single-value")
+    const $event = $("#bigger-value, #lower-value")
     $event.off("click");
     $event.on("click", function () {
         const $value = $(this);
         const $amountWithdrawal = $("#requested-amount-withdrawal");
 
-        $event.removeClass("green");
-        $value.addClass("green");
+        $event.removeClass("green value-select");
+        $value.addClass("green value-select");
         $amountWithdrawal.text($value.text().trim());
 
         if (debitValue != undefined) {
@@ -361,7 +361,7 @@ function modalCustomWithdrawal(singleValue, dataWithdrawal, debitValue) {
             type: "POST",
             data: {
                 company_id: $("#transfers_company_select").val(),
-                withdrawal_value: $(".s-btn.green").data("value"),
+                withdrawal_value: $(".value-select").data("value"),
                 gateway_id: window.gatewayCode,
             },
             dataType: "json",
@@ -479,7 +479,7 @@ function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
     if (singleValue) {
         return `
                 <div id="just-value-show" class="text-center mt-25">
-                    <div class="btn btn-primary s-btn s-btn-border green" id="single-value" data-value="${dataWithdrawal.bigger_value}">
+                    <div id="single-value" class="value-select" data-value="${dataWithdrawal.bigger_value}">
                         ${biggerValue}
                     </div>
                 </div>
@@ -493,7 +493,7 @@ function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
                         ${lowerValue}
                     </div>
 
-                    <div class="col-auto btn btn-primary s-btn s-btn-border green" id="bigger-value" data-value="${dataWithdrawal.bigger_value}">
+                    <div class="col-auto btn btn-primary s-btn s-btn-border green value-select" id="bigger-value" data-value="${dataWithdrawal.bigger_value}">
                         ${biggerValue}
                     </div>
                 </div>

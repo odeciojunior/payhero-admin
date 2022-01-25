@@ -24,7 +24,7 @@ thead {
     background-color: transparent;
 }
 
-.table tbody:last-child td {
+.table tbody tr:last-child td {
    border-radius: 0 0 16px 16px !important
 }
 

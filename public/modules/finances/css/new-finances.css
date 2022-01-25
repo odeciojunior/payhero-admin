@@ -549,6 +549,13 @@ select, .select-pad {
     margin-bottom: 5px
 }
 
+.transfers-sale {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 20px;
+    color: #2E85EC;
+}
 @media (min-width: 768px) {
     .pointer-md {
         cursor: pointer !important;
@@ -580,7 +587,7 @@ select, .select-pad {
     .s-table.table-finance-schedule {
         grid-template-columns: 1fr 1fr;
         grid-template-areas: "sale status"
-                             "date value"
+                             "value value"
                              "date-start date-end";
     }
 
@@ -735,6 +742,9 @@ select, .select-pad {
         padding: 0 !important;
         margin-right: 10px;
         margin-bottom: 12px !important;
+    }
+    .status-finance-schedule {
+        padding: 0 !important;
     }
 
     .value-finance-schedule {
