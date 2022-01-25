@@ -320,7 +320,7 @@ $(function () {
                                     scrollCustomX(modal + ' .box-photos-products');
                                 }
 
-                                $(this).find('.d-flex').css('width', widthBoxPhotosProducts);
+                                $(modal).find('.box-photos-products').find('.d-flex').css('width', widthBoxPhotosProducts);
 
                                 $('[data-toggle="tooltip"]').tooltip({
                                     container: '.page',
@@ -1277,6 +1277,8 @@ $(function () {
 
         var modal = '#' + $(this).parents('.modal').attr('id');
 
+        var widthBoxPhotosProducts = 'auto';
+
         if ($(this).hasClass('review')) {
             alertCustom('error', 'Não é possível selecionar este produto.')
         } else {
@@ -1294,6 +1296,26 @@ $(function () {
                                 '<img class="product-photo" src="' + image + '">'+
                             '</div>'
                         );
+
+                        $('[data-toggle="tooltip"]').tooltip({ container: '.page' });
+
+                        if (selected_products.length > 8) {
+                            widthBoxPhotosProducts = '' + (selected_products.length * 68) + 'px';
+                        } else {
+                            $(modal).find('.box-photos-products').find('.scrollbox').remove();
+                            $(modal).find('.box-photos-products').find('.scrollbox-bar').remove();
+
+                            widthBoxPhotosProducts = '586px';
+                        }
+
+                        //let left = parseInt($(div).find('.scrollbox-bar').css('left'));
+                        let marginLeft = parseInt($(modal).find('.box-photos-products').children(":first").css('margin-left'));
+
+                        //$(div).find('.scrollbox-bar').css('left', (changePosition ? left+68 : left-68) + 'px');
+                        $(modal).find('.box-photos-products').children(":first").css('margin-left', (marginLeft - 68) + 'px');
+
+                        $(modal).find('.box-photos-products').find('.d-flex').css('width', widthBoxPhotosProducts);
+                        scrollCustomX(modal + ' .box-photos-products', (selected_products.length > 8 ? false : true), true);
                     }
 
                     removeProductArraySelecteds(modal, product_id);
@@ -1329,6 +1351,24 @@ $(function () {
                                     selected_products.splice(index_selected_products, 1);
 
                                     $(modal).find('.box-photos-products').find('.d-flex').find('[data-id="' + product_id + '"]').remove();
+
+                                    if (selected_products.length > 8) {
+                                        widthBoxPhotosProducts = '' + (selected_products.length * 68) + 'px';
+                                    } else {
+                                        $(modal).find('.box-photos-products').find('.scrollbox').remove();
+                                        $(modal).find('.box-photos-products').find('.scrollbox-bar').remove();
+
+                                        widthBoxPhotosProducts = '586px';
+                                    }
+
+                                    //let left = parseInt($(div).find('.scrollbox-bar').css('left'));
+                                    let marginLeft = parseInt($(modal).find('.box-photos-products').children(":first").css('margin-left'));
+
+                                    //$(div).find('.scrollbox-bar').css('left', (changePosition ? left+68 : left-68) + 'px');
+                                    $(modal).find('.box-photos-products').children(":first").css('margin-left', (marginLeft + 68) + 'px');
+
+                                    $(modal).find('.box-photos-products').find('.d-flex').css('width', widthBoxPhotosProducts);
+                                    scrollCustomX(modal + ' .box-photos-products', (selected_products.length > 8 ? false : true), true);
 
                                     removeProductArraySelecteds(modal, product_id);
                                 } else {

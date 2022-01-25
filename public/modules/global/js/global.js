@@ -112,13 +112,15 @@ function scrollCustom(div, padding = false, type = '') {
     });
 }
 
-function scrollCustomX(div) {
-    var scroll = 0;
-    var scrollDiv = 0;
+function scrollCustomX(div, addScroll = true, changePosition = false) {
+    var scroll = changePosition ? ParseInt($(div).find('.scrollbox-bar').css('left')) : 0;
+    var scrollDiv = changePosition ? ParseInt($(div).children(":first").css('margin-left')) : 0;
 
-    $(div).css('padding-bottom', '12px');
-    $(div).append('<div class="scrollbox"></div>');
-    $(div).append('<div class="scrollbox-bar"></div>');
+    if (addScroll) {
+        $(div).css('padding-bottom', '12px');
+        $(div).append('<div class="scrollbox"></div>');
+        $(div).append('<div class="scrollbox-bar"></div>');
+    }
 
     $(div).on('wheel', function(event) {
         if(event.originalEvent.deltaY !== 0) {
