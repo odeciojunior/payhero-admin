@@ -660,7 +660,7 @@ $(function () {
             },
             fullWidth: true,
             low: 0,
-            height: 280,
+            height: 289,
             showArea: true
         });
     }
@@ -679,5 +679,6 @@ $(function () {
             height: 123
           });
     }
-    
+
+        
 });

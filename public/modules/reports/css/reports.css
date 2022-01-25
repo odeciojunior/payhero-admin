@@ -615,15 +615,18 @@ h4.number{
 }
 .commission, .distribution { border-radius: 8px; }
 .inner { padding: 0 20px 20px 20px; }
+.inner.cash { padding-bottom: 30px; }
 
 @media only screen and (min-width: 1220px) {
-    .commission { flex: 0 0 68%; }
+    .commission { flex: 0 0 67%; }
     .distribution { flex: 0 0 30%; }
+}
+@media only screen and (min-width: 1600px) {
+    .commission { flex: 0 0 68%; }
 }
 
 .box-chart-primary .title-graph {
     justify-content: space-between;
-    align-items: center;
     padding: 15px 0;
 }
 .box-chart-primary .title-graph h5 { margin: 0; }
@@ -752,4 +755,51 @@ h4.number{
 .footer-distribution strong { 
     font-size: 18px; 
     font-weight: bold;
+}
+
+.balance { padding-left: 0; }
+
+.balance small {
+    color: #9E9E9E;
+    font-size: 16px;
+}
+.balance .total { font-size: 18px; }
+.balance .total.orange { color: #FF7900; }
+.balance .total.red { color: #ED1C24; }
+
+.ico-coin {
+    background: #F6F8FE;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 31px;
+    margin-right: 10px;
+}
+.align-items { align-items: center; }
+.align-items .qtd {
+    height: 33px;
+    display: flex;
+    align-items: center;
+}
+
+.cash-box {
+    height: 73px;
+    padding: 45px 20px;
+}
+
+.inner.relative { 
+    position: relative; 
+    margin-bottom: 0;
+}
+
+.inner.relative .title-graph {
+    position: absolute;
+}
+
+#financesChart {
+    margin-top: 17px;
+
 }
