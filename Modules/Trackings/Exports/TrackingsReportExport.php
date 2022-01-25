@@ -42,19 +42,17 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
     public function map($row): array
     {
         $productName = '';
-        if (!empty($row->product)) {
+        if (!$row->sale->api_flag) {
             $productName = $row->product->name . ($row->product->description ? ' (' . $row->product->description . ')' : '');
         } else {
             $productName = $row->productSaleApi->name;
         }
 
         $productID = '';
-        if (!empty($row->product)) {
+        if (!$row->sale->api_flag) {
             $productID = Hashids::encode($row->product->id);
         } else {
-            if ($row->sale->api_flag) {
-                $productID = Hashids::encode($row->productSaleApi->id);
-            }
+            $productID = Hashids::encode($row->productSaleApi->id);
         }
 
         $return = [
