@@ -15,7 +15,7 @@ class SendPostbackApiBoletoPaid extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'postback-boleto-paid:send';
 
     /**
      * The console command description.
