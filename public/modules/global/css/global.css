@@ -1138,7 +1138,7 @@ tbody td{
     font-size: 16px;
     overflow-y: auto;
     scrollbar-width: none;
-    z-index: 100;
+    z-index: 1;
 }
 
 .sirius-select-container .sirius-select-options::-webkit-scrollbar {

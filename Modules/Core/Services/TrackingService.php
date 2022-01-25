@@ -265,6 +265,7 @@ class TrackingService
             'sale.delivery',
             'sale.customer',
             'product',
+            'productSaleApi'
         ]);
 
 

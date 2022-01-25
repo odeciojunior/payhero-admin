@@ -53,7 +53,7 @@ class AsaasService implements Statement
 
     public function getAvailableBalance() : int
     {
-        return $this->company->asaas_balance;
+        return $this->company->asaas_balance - $this->getBlockedBalance();
     }
 
     public function getPendingBalance() : int
@@ -95,10 +95,8 @@ class AsaasService implements Statement
     public function hasEnoughBalanceToRefund(Sale $sale): bool
     {
         $availableBalance = $this->getAvailableBalance();
-        $pendingBalance = $this->getPendingBalance();
-        $blockedBalance = $this->getBlockedBalance();
-        $availableBalance += $pendingBalance;
-        $availableBalance -= $blockedBalance;
+        $pendingBalance = $this->getPendingBalance();        
+        $availableBalance += $pendingBalance;        
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
@@ -254,7 +252,7 @@ class AsaasService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $availableBalance -= $blockedBalance;
+                
         $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
 

@@ -39,7 +39,7 @@
         <div id='modal-contestationFiles' class="modal-content p-20 " style="min-width: 300px;">
             <div class="header-modal">
                 <div class="row justify-content-between align-items-center" style="width: 100%;">
-                    <div class="col-lg-10 text-left"><h4 class="font-weight-bold">Arquivos para contestação</h4>
+                    <div class="col-lg-10 text-left"><h4 class="font-weight-bold">Arquivos para contestaçãoxxx</h4>
                         <strong id="sale_hash"></strong>
                     </div>
 
@@ -99,14 +99,8 @@
                             @csrf
 
                             <div class="form-group">
-                                <label for="observation">Escolha uma categoria</label>
-                                <select name="type" class="form-control" id="type">
-                                    <option value="NOTA_FISCAL">Nota fiscal</option>
-                                    <option value="POLITICA_VENDA">Politica de venda</option>
-                                    <option value="ENTREGA">Entrega</option>
-                                    <option value="INFO_ACORDO">Informação do acordo</option>
-                                    <option value="OUTROS">Outros</option>
-                                </select>
+                                <label for="type">Escolha uma categoria</label>
+                                <div id="type-select"></div>                               
                             </div>
                             <div class="form-group">
 
