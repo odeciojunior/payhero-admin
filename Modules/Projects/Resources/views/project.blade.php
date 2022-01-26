@@ -5,9 +5,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=13') }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=10') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=15') }}">
     <style>
         @font-face {
             font-family: raty;
@@ -30,6 +30,7 @@
         </div>
         <div class="page-content container page-project" style="display: none">
             <!-- Painel de informações gerais -->
+            <input type="hidden" id="project_type">
             <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
                 <div class="card">
                     <div class="row no-gutters">
@@ -122,7 +123,7 @@
             <div>
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <div class="row ml-0">
-                        <ul id="slick-tabs" class="nav nav-tabs nav-tabs-line col-9 col-md-11" role="tablist" style="color: #ee535e">
+                        <ul id="slick-tabs" class="nav nav-tabs nav-tabs-line col-9 col-md-11" role="tablist">
                             <li class="nav-item tab-domains" role="presentation">
                                 <span style="color: #2E85EC" id="first-category" class="category-tabs">PRINCIPAL</span>
                                 <a id="tab-domains" class="nav-link active" data-toggle="tab" href="#tab_domains"
@@ -180,18 +181,18 @@
                             </li>
                         </ul>
                         <ul class="nav nav-tabs nav-tabs-line col-3 col-md-1">
-                            <li class="nav-item tab_configuration" role="presentation" style="margin-left: auto;margin-right: 10px">
+                            <li class="nav-item tab_configuration" role="presentation" style="margin-left: auto;">
                                 <span class="category-tabs">&nbsp;</span>
-                                <a id="tab_configuration" class="nav-link" data-toggle="tab"
+                                <a id="tab_configuration" class="nav-link" data-toggle="tab" style="padding: 14px 16px 12px 16px;"
                                    href="#tab_configuration_project"
-                                   aria-controls="tab_configuration_project" role="tab"> <img height="15" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
+                                   aria-controls="tab_configuration_project" role="tab"> <img height="22" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="shadow" data-plugin="matchHeight">
+            <div class="shadow" data-plugin="matchHeight" style="margin-top: 2px;">
                 <div class="tab-content">
                     <div class="tab-content">
                         <!-- Painel de Dominios -->
@@ -226,9 +227,7 @@
                         </div>
                         <!--- Painel de Planos -->
                         <div class="tab-pane" id="tab_plans-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('plans::index')
-                            </div>
+                            @include('plans::index')
                         </div>
                         <!--- Upsell -->
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
@@ -254,14 +253,11 @@
                         </div>
                     </div>
                     <!-- Modal para fazer-desfazer integração com shopify -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical"
-                         id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle"
-                         role="dialog" tabindex="-1">
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog  modal-dialog-centered  modal-simple">
                             <div class="modal-content p-10 s-border-radius">
                                 <div class="modal-header text-center">
-                                    <a class="pointer close" role="button" data-dismiss="modal"
-                                       aria-label="Close" id="bt-close-modal-change-shopify-integration">
+                                    <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="bt-close-modal-change-shopify-integration">
                                         <i class="material-icons md-16">close</i>
                                     </a>
                                 </div>
@@ -298,7 +294,7 @@
                                         <i class="material-icons md-16">close</i>
                                     </a>
                                 </div>
-                                
+
 
                                 <div class="modal-body p-10 ">
                                     <div class='col-md-12 col-sm-12 col-12'>
@@ -309,17 +305,17 @@
                                     <div class='col-md-10 col-sm-12 col-12'>
                                         <label class="control-label"> Consumer key </label>
                                         <input class="form-control" id="consumer_k"  type='text'   class="form-control">
-                                        
+
                                     </div>
-                                
+
                                     <div class='col-md-10 col-sm-12 col-12 mt-20'>
                                         <label class="control-label"> Consumer secret </label>
                                         <input class="form-control" id="consumer_s"  type='text'   class="form-control">
-                                        
+
                                     </div>
                                 </div>
 
-                                
+
 
                                 <div class="modal-footer d-flex align-items-center justify-content-center">
                                         <button id="close-modal" type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">
@@ -330,11 +326,11 @@
                                         </button>
                                     </div>
 
-                            </div>               
-                        </div>               
-                    </div>               
-                    
-                    
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical"
                          id="modal-woocom-integration" aria-hidden="true" aria-labelledby="exampleModalTitle"
                          role="dialog" tabindex="-1">
@@ -356,21 +352,21 @@
 
                                 <div id="_loading" style="display:none">
                                     <div class="modal-body text-center p-10">
-                                        
+
                                         <h3 class="black" id="modal-title">
                                             Processando requisição.
                                         </h3>
                                     </div>
-                                    
+
                                 </div>
 
                                 <div id="_content">
 
                                     <div class="modal-body text-center p-10">
-                                        
+
                                         <h3 class="black" id="modal-title">Selecione as opções para sincronizar</h3>
                                         <p class="gray pt-10" id="modal-text">
-                                        
+
                                             <div class="switch-holder">
                                                 <label class="switch" style="top:3px">
                                                     <input type="checkbox" id="opt_prod" name="product_amount_selector" class="check" value="1">
@@ -397,7 +393,7 @@
                                                 <label class="text-left" for="opt_webhooks" style="margin-right:15px;margin-bottom: 3px; width:346px">
                                                     Sincronizar webhooks com WooCommerce</label>
                                             </div>
-                                            
+
                                         </p>
                                     </div>
                                     <div class="modal-footer d-flex align-items-center justify-content-center">
@@ -417,13 +413,14 @@
         </div>
     </div>
 
-    @push('scripts')    
+    @push('scripts')
 {{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
         <script type="text/javascript" src="{{asset('modules/global/ckeditor5/ckeditor.js')}}"></script>
         <script type="text/javascript" src="{{asset('modules/global/ckeditor5/pt-br.js')}}"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/plans/js/loading.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/shipping/js/shipping.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v='.uniqid())}}"></script>

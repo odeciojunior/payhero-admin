@@ -95,8 +95,8 @@ class AsaasService implements Statement
     public function hasEnoughBalanceToRefund(Sale $sale): bool
     {
         $availableBalance = $this->getAvailableBalance();
-        $pendingBalance = $this->getPendingBalance();        
-        $availableBalance += $pendingBalance;        
+        $pendingBalance = $this->getPendingBalance();
+        $availableBalance += $pendingBalance;
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
@@ -252,7 +252,7 @@ class AsaasService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-                
+
         $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
 
@@ -289,7 +289,7 @@ class AsaasService implements Statement
             $saleInstallmentId = $this->saleInstallmentId($sale);
             $data["installment"] = $saleInstallmentId;
         }
-
+dd($data);
         $url = 'https://www.asaas.com/api/v3/anticipations';
         if($simulate) $url = 'https://www.asaas.com/api/v3/anticipations/simulate';
 
@@ -312,8 +312,7 @@ class AsaasService implements Statement
         $response = json_decode($result, true);
 
         if(($httpStatus < 200 || $httpStatus > 299) && (!isset($response['errors']))) {
-            \Log::info($sale->id);
-            report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus . ' -- $sale->id = ' . $sale->id . ' -- ' . json_encode($response));
+            //report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus . ' -- $sale->id = ' . $sale->id . ' -- ' . json_encode($response));
         }
 
         if($saveRequests) {
