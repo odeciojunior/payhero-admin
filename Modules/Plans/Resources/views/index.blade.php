@@ -14,7 +14,7 @@
                 </div>
                 <div class='col-md-7'>
                     <div class="d-flex justify-content-end">
-                        <div id="config-cost-plan" class="btn-holder d-flex align-items-center pointer" style="padding-right: 10px;border-right: 1px solid #EDEDED;margin-top: -20px;margin-bottom: -20px;margin-right: 20px;">
+                        <div id="config-cost-plan" class="btn-holder d-flex align-items-center pointer" style="padding-right: 10px; border-right: 1px solid #EDEDED; margin-top: -20px; margin-bottom: -20px; margin-right: 20px;">
                             <span class="link-button-dependent">Configurar custos </span>
                             <a class="rounded-add pointer bg-secondary">
                                 <img src="{{ asset('modules/global/img/svg/settings.svg') }}" height="22">

@@ -277,15 +277,15 @@ $(function () {
 
                             <td class="project-notification-zip-code-origin">${value.message}</td>
 
-                            <td class="project-notification-status notification-status-${value.id}" style="vertical-align: middle">
+                            <td class="text-center project-notification-status notification-status-${value.id}" style="vertical-align: middle">
                                 <span class="badge badge-${statusNotification[value.status]}">${value.status_translated}</span>
                             </td>
 
                             <td style="text-align:center" class="justify-content-between align-items-center mb-0">
 
-                                <div style="display: flex; justify-content: center; flex-direction: row;">
+                                <div style="display: flex; justify-content: center; align-items-center; flex-direction: row;">
 
-                                    <a role="button" title='Visualizar' class="details-project-notification pointer pt-5 mr-30" project-notification="${value.id}">
+                                    <a role="button" title='Visualizar' class="details-project-notification mg-responsive pointer" project-notification="${value.id}">
                                         <span class="o-eye-1"></span>
                                     </a>
 
@@ -295,13 +295,13 @@ $(function () {
                                             <span class="o-edit-1"></span>
                                         </button>`
                                         :
-                                        `<a role="button" title="Editar" class="edit-project-notification pointer pt-10 mr-30" project-notification='${value.id}'>
+                                        `<a role="button" title="Editar" class="edit-project-notification mg-responsive pointer" project-notification='${value.id}'>
                                             <span class="o-edit-1"></span>
                                         </a>`
                                     }
-                                    <div class="switch-holder d-inline pt-20 mr-10" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
+                                    <div class="switch-holder d-inline mg-responsive pointer" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
 
-                                        <label class="switch" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}>
+                                        <label class="switch mr-0" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}>
 
                                             <input type="checkbox" class="project_notification_status" data-id="${value.id}" ${check}
                                             ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'disabled' : ''}>

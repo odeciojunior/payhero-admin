@@ -1,40 +1,55 @@
 <!-- Page -->
-<div class='row no-gutters mb-10'>
-    <div style='position:absolute; width:50%' class="d-flex align-items-center">
-        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-detalhes-dominio" style="border-color: #76838f;" >
-            <span class="o-info-1" style="font-size: 24px;"></span>
-        </a>
-        <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o domínio?</span>
+<div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">
+    <div class='row no-gutters mb-20'>
+        <div class="top-holder text-right mb-0" style="width: 100%;">
+            <div class='d-flex align-items-center'>
+                <div class='col-md-5'>
+                    <div class="d-flex align-items-center">
+                        <a class="rounded-info btn ml-8 d-flex justify-content-center align-items-center btn-default btn-outline" data-toggle="modal" data-target="#modal-detalhes-dominio" style="border-color: #76838f;" >
+                            <span class="o-info-1" style="font-size: 24px;"></span>
+                        </a>
+                        <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o domínio?</span>
+                    </div>
+                </div>
+                <div class='col-md-7'>
+                    <div class="d-flex justify-content-end">
+                        <div id="add-domain" class="btn-holder d-flex align-items-center pointer">
+                            <span class="link-button-dependent blue">Adicionar </span>
+                            <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
+                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="top-holder text-right mb-5" style="width: 100%;">
-        <div id="add-domain" class="d-flex align-items-center justify-content-end pointer">
-            <span class="link-button-dependent red"> Adicionar domínio </span>
-            <a class="ml-10 rounded-add" id='btn-add-domain'>
-                <i class="o-add-1" aria-hidden="true"></i></a>
+    <div class="card shadow" style="margin: 0 -1.429rem;">
+        <div style='min-height: 300px'>
+            <div class='page-invoice-table table-responsive'>
+                <table id='tabela-dominios' class='table table-striped text-left table-dominios table-striped unify' style="width: 100%; margin-bottom: 0px;">
+                    <thead>
+                        <tr>
+                            <td class='table-title text-center'>Nome</td>
+                            <td class='table-title text-center'>Status</td>
+                            <td class='table-title options-column-width text-center'>Opções</td>
+                        </tr>
+                    </thead>
+                    <tbody id='domain-table-body' class='min-row-height'>
+                        {{-- js carregando dados --}}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-<div class="card shadow">
-    <div style='min-height: 300px'>
-        <div class='page-invoice-table table-responsive'>
-            <table id='tabela-dominios' class='table table-striped text-left table-dominios table-striped unify' style='width:100%'>
-                <thead>
-                    <tr>
-                        <td class='table-title text-center'>Nome</td>
-                        <td class='table-title text-center'>Status</td>
-                        <td class='table-title options-column-width text-center'>Opções</td>
-                    </tr>
-                </thead>
-                <tbody id='domain-table-body' class='min-row-height'>
-                    {{-- js carregando dados --}}
-                </tbody>
-            </table>
-        </div>
-    </div>
+
+<div class="d-flex justify-content-center justify-content-md-end">
+    <ul id="pagination-domain" class="pagination-sm margin-chat-pagination text-right m-0">
+        {{-- js carrega... --}}
+    </ul>
 </div>
-<ul id="pagination-domain" class="pagination-sm margin-chat-pagination text-right" style="margin-top:10px;position:relative;float:right;">
-    {{-- js carrega... --}}
-</ul>
+
 {{-- Modal Create Domain--}}
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-add-domain" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">

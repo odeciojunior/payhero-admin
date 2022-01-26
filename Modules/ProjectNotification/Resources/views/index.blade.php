@@ -1,33 +1,46 @@
-<div class='row no-gutters mb-10'>
-    <div class="top-holder text-right mb-5" style="width: 100%;">
-        {{-- <div id="add-sms" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-content"> --}}
-        <div id="add-sms" class="d-flex align-items-center justify-content-end pointer">
-            <button type="button" class="ml-10 rounded-add pointer btn" disabled='true'>
-                <i class="o-add-1" aria-hidden="true"></i></button>
+<div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">
+    <div class='row no-gutters mb-20'>
+        <div class="top-holder text-right mb-0" style="width: 100%;">
+            <div class='d-flex align-items-center'>
+                <div class='col-md-12'>
+                    <div class="d-flex justify-content-end">
+                        <div id="add-sms" class="btn-holder d-flex align-items-center pointer">
+                            <span class="link-button-dependent blue">Adicionar </span>
+                            <button type="button" class="btn rounded-add pointer ml-10" style="display: inline-flex;" disabled>
+                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow" style="margin: 0 -1.429rem;">
+        <div style='min-height: 300px'>
+            <div class='page-invoice-table table-responsive' style='border-radius: 0 0 12px 12px;'>
+                <table id='tabela-sms' class='table text-left table-sms table-striped unify' style='width: 100%; margin-bottom: 0px;'>
+                    <thead>
+                        <tr>
+                            <td class='table-title'>Tipo</td>
+                            <td class='table-title display-m-none display-sm-none'>Evento</td>
+                            <td class='table-title'>Tempo</td>
+                            <td class='table-title'>Mensagem</td>
+                            <td class='table-title text-center'>Status</td>
+                            <td class='table-title text-center options-column-width'>Opções</td>
+                        </tr>
+                    </thead>
+                    <tbody id='data-table-sms' class='min-row-height'>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-<div class="card shadow">
-    <div style='min-height: 300px'>
-        <div class='page-invoice-table table-responsive'>
-            <table id='tabela-sms' class='table text-left table-sms table-striped unify' style='width:100%'>
-                <thead>
-                    <tr>
-                        <td class='table-title'>Tipo</td>
-                        <td class='table-title display-m-none display-sm-none'>Evento</td>
-                        <td class='table-title'>Tempo</td>
-                        <td class='table-title'>Mensagem</td>
-                        <td class='table-title'>Status</td>
-                        <td class='table-title text-center options-column-width'>Opções</td>
-                    </tr>
-                </thead>
-                <tbody id='data-table-sms' class='min-row-height'>
-                </tbody>
-            </table>
-        </div>
+
+<div class="d-flex justify-content-center justify-content-md-end">
+    <div id="pagination-project-notification" class="pagination-sm text-right margin-chat-pagination text-right m-0">
+        {{-- js carrega... --}}
     </div>
-</div>
-<div id="pagination-project-notification" class="pagination-sm text-right margin-chat-pagination">
 </div>
 
 <!-- Edit -->

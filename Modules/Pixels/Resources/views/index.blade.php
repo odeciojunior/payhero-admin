@@ -32,52 +32,55 @@
     }
 </style>
 
-<div class='row no-gutters mb-10'>
-    <div class="top-holder text-right mb-5" style="width: 100%;">
-        <div class="d-flex align-items-center justify-content-end">
-            <div class="col-md-12 pl-0">
-                <div class="btn-holder d-flex align-items-center pointer mr-10 float-right">
-                    <span class="link-button-dependent red"> Adicionar</span>
-                    <a id="add-pixel" data-toggle="modal" data-target="#modal-create-pixel" class="ml-10 rounded-add pointer">
-                        <i class="o-add-1" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <div class='div-config2'>
-                    <div class="btn-holder d-flex align-items-center pointer mr-10 float-right">
-                        <span class="link-button-dependent red"> Configurações</span>
-                        <a class="ml-10 rounded-add pointer bg-secondary btn-config-pixel">
-                            <i class="icon wb-settings" aria-hidden="true"></i>
-                        </a>
+<div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">
+    <div class='row no-gutters mb-20'>
+        <div class="top-holder text-right mb-0" style="width: 100%;">
+            <div class="d-flex align-items-center">
+                <div class="col-sm-12">
+                    <div class="d-flex justify-content-end">
+                        <div class="btn-holder d-flex align-items-center pointer btn-config-pixel" style="padding-right: 10px; border-right: 1px solid #EDEDED; margin-top: -20px; margin-bottom: -20px; margin-right: 20px;">
+                            <span class="link-button-dependent">Configurações </span>
+                            <a class="rounded-add pointer" style="background: none;">
+                                <img src="{{ asset('modules/global/img/svg/settings.svg') }}" height="22">
+                            </a>
+                        </div>
+                        <div id="add-pixel" class="btn-holder d-flex align-items-center pointer">
+                            <span class="link-button-dependent blue">Adicionar </span>
+                            <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
+                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="card shadow">
-    <div style='min-height: 300px'>
-        <div class='page-invoice-table table-responsive'>
-            <table id='table-pixel' class='table text-left table-pixels table-striped unify' style='width:100%'>
-                <thead>
-                <tr>
-                    <td class='table-title'>Nome</td>
-                    <td class='table-title'>Código</td>
-                    <td class='table-title'>Plataforma</td>
-                    <td class='table-title'>Status</td>
-                    <td class='table-title options-column-width text-center'>Opções</td>
-                </tr>
-                </thead>
-                <tbody id='data-table-pixel' class='min-row-height'>
-                {{-- js carregando dados --}}
-                </tbody>
-            </table>
+    <div class="card shadow" style="margin: 0 -1.429rem;">
+        <div style='min-height: 300px'>
+            <div class='page-invoice-table table-responsive'>
+                <table id='table-pixel' class='table text-left table-pixels table-striped unify' style="width: 100%; margin-bottom: 0px;">
+                    <thead>
+                    <tr>
+                        <td class='table-title'>Nome</td>
+                        <td class='table-title'>Código</td>
+                        <td class='table-title'>Plataforma</td>
+                        <td class='table-title text-center'>Status</td>
+                        <td class='table-title options-column-width text-center'>Opções</td>
+                    </tr>
+                    </thead>
+                    <tbody id='data-table-pixel' class='min-row-height'>
+                    {{-- js carregando dados --}}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-<ul id="pagination-pixels" class="pagination-sm margin-chat-pagination text-right"
-    style="margin-top:10px;position:relative;float:right">
-    {{-- js carrega... --}}
-</ul>
+<div class="d-flex justify-content-center justify-content-md-end">
+    <ul id="pagination-pixels" class="pagination-sm margin-chat-pagination text-right m-0">
+        {{-- js carrega... --}}
+    </ul>
+</div>
 
 <!-- Create -->
 <div id="modal-create-pixel" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">

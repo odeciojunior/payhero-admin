@@ -148,7 +148,7 @@ $(document).ready(function () {
                             <td>
                                 <div id="stars-${value.id}" data-score="${value.stars}"></div>
                             </td>
-                            <td>${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
+                            <td class='text-center'>${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
                                 <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${value.id}" data-target='#modal-detail-review' data-toggle='modal'><span class="o-eye-1"></span></a>
                                 <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${value.id}"><span class='o-edit-1'></span></a>
@@ -295,11 +295,11 @@ $(document).ready(function () {
                     function error() {
                         return _error3.apply(this, arguments);
                     }
-    
+
                     error.toString = function () {
                         return _error3.toString();
                     };
-    
+
                     return error;
                 }(function (response) {
                     errorAjaxResponse(response);

@@ -1651,16 +1651,16 @@ input[type="checkbox"], input[type="radio"] {
     left: -3px !important;
 }
 
-#table-plans td .badge {
+.page-project .table td .badge {
     padding: 10px 24px;
     font-size: 14px;
     line-height: 14px;
     min-width: 94px;
 }
-#table-plans .badge-success {
+.page-project .table .badge-success {
     background-color: #1BE4A8;
 }
-#table-plans .badge-default {
+.page-project .table .badge-default {
     color: #8B8B8B !important;
     background-color: #E6E6E6;
 }
@@ -1669,32 +1669,32 @@ input[type="checkbox"], input[type="radio"] {
     background: linear-gradient(90deg,hsla(0,0%,100%,0) 55%,hsla(0,0%,100%,.35) 65%,hsla(0,0%,100%,0) 75%) 100% 100%;
 }
 
-#table-plans thead > tr > td:first-child,
-#table-plans thead > tr > th:first-child,
-#table-plans tbody > tr > td:first-child {
+.page-project .table thead > tr > td:first-child,
+.page-project .table thead > tr > th:first-child,
+.page-project .table tbody > tr > td:first-child {
     border-radius: 0 !important;
     padding-left: 38px !important;
 }
-#table-plans thead > tr > td:last-child,
-#table-plans thead > tr > th:last-child,
-#table-plans tbody > tr > td:last-child {
+.page-project .table thead > tr > td:last-child,
+.page-project .table thead > tr > th:last-child,
+.page-project .table tbody > tr > td:last-child {
     border-radius: 0 !important;
     padding-right: 38px !important;
 }
-#table-plans td {
+.page-project .table td {
     padding-top: 25px !important;
     padding-bottom: 25px !important;
 }
-#table-plans .copy_link {
+.page-project .table .copy_link {
     font-weight: bold;
     font-size: 16px;
     line-height: 20px;
     color: #2E85EC;
 }
-#table-plans .copy_link img {
+.page-project .table .copy_link img {
     margin-left: 14px;
 }
-#table-plans .table-title {
+.page-project .table .table-title {
     color: #15034C !important;
     font: 16px 'Muli' !important;
 }
@@ -1710,22 +1710,24 @@ input[type="checkbox"], input[type="radio"] {
     height: 48px !important;
     border-radius: 8px 0 0 8px;
 }
-#tab_plans-panel .input-group-append .btn, .input-group-prepend .btn {
+.page-project .tab-pane .input-group-append .btn, .input-group-prepend .btn {
     width: 40px;
     border-radius: 0 4px 4px 0;
     line-height: 1;
 }
-#tab_plans-panel .btn-holder a {
+.page-project .tab-pane .btn-holder a,
+.page-project .tab-pane .btn-holder button {
     width: 40px;
     height: 40px;
     border-radius: 4px;
+    border: none;
     box-shadow: none;
 }
-#tab_plans-panel .link-button-dependent {
+.page-project .tab-pane .link-button-dependent {
     font-size: 16px;
     font-weight: 700;
 }
-#tab_plans-panel .link-button-dependent.blue {
+.page-project .tab-pane .link-button-dependent.blue {
     color: #2E85EC;
 }
 
@@ -1931,7 +1933,7 @@ tbody td{
     background: #F6F7F9;
 }
 
-#pagination-plans .nav-btn {
+.page-project .pagination-sm .nav-btn {
     color: #3D4456;
     background: #FFFFFF !important;
     border: 1px solid #EBEBEB !important;
@@ -1943,19 +1945,19 @@ tbody td{
     font-size: 16px;
     padding: 5px;
 }
-#pagination-plans .nav-btn.active {
+.page-project .pagination-sm .nav-btn.active {
     border-radius: 8px;
     color: #2E85EC !important;
     background: #FFFFFF !important;
     border: 1px solid #2E85EC !important;
 }
 
-#table-plans > tbody > tr:nth-child(2n+2) > td,
-#table-plans > tbody > tr:nth-child(2n+2) > th {
+.page-project .table > tbody > tr:nth-child(2n+2) > td,
+.page-project .table > tbody > tr:nth-child(2n+2) > th {
     background-color: #FBFBFB !important;
 }
-#table-plans thead > tr > td,
-#table-plans thead > tr > th {
+.page-project .table thead > tr > td,
+.page-project .table thead > tr > th {
     background-color: #FFFFFF !important;
     border-top: 1px solid #EDEDED !important;
     border-bottom: 1px solid #EDEDED !important;
@@ -2008,8 +2010,11 @@ tbody td{
     fill:#ffffff;
 }
 
-#table-plans .options-column-width {
+.page-project #table-plans .options-column-width {
     width: 120px !important;
+}
+.page-project .table:not(#table-plans) .options-column-width {
+    width: 185px !important;
 }
 
 .modal-plans .btn-plus:not(:disabled):hover {
@@ -2018,8 +2023,9 @@ tbody td{
 .modal-plans .btn-plus:not(:disabled):hover svg path {
     stroke:#ffffff;
 }
-#table-plans td, #table-plans {
+.page-project .table td, .page-project .table {
     color: #5D5D5D;
+    line-height: 1;
 }
 #stage4 .box-product:hover {
     background: none;

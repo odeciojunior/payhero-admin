@@ -63,7 +63,7 @@ $(document).ready(function () {
                         data += `
                         <tr>
                             <td>${value.description}</td>
-                            <td>${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
+                            <td class="text-center">${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
                                 <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id}" data-target='#modal-detail-upsell' data-toggle='modal'><span class="o-eye-1"></span></a>
                                 <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id}"><span class='o-edit-1'></span></a>
