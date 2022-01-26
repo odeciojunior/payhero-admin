@@ -3,6 +3,7 @@
 @section('content')
 
     @push('css')
+        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=123') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
@@ -144,7 +145,7 @@
                                 </div>
                             </div>
                             <div class="row justify-content-end">
-                                <div class='col-sm-12 col-md-2 mt-10 px-0'>                                
+                                <div class='col-sm-12 col-md-2 mt-10 px-0'>
                                     <label for="sale_approve" class='pl-50 mb-10'>Vendas aprovadas</label>
                                     <br>
                                     <label class="switch mr-0" style="margin-left:140px">

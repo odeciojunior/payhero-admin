@@ -37,11 +37,11 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=21') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=' .  versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=28') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v='.  versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css?v=21') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css?v=' .  versionsFile()) }}">
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/placeholder-loading.min.css') }}">
@@ -63,7 +63,7 @@
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}"> --}}
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=28') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=58') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=62') }}">
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}"> --}}
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
@@ -122,7 +122,7 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v='.uniqid()) }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=' . versionsFile()) }}"></script>
 <script>
     verifyDocumentPending();
 </script>

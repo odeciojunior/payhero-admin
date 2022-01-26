@@ -153,10 +153,6 @@ body {
         margin: 0px 1.5em;
     }
 
-    .table td {
-        padding: .3em !important;
-    }
-
     table.unify {
         border: 1px solid #CCCCCC;
         border-collapse: collapse;
@@ -875,7 +871,7 @@ img.border-icon{
 }
 
 .new-layout .table-striped tbody tr:nth-of-type(2n+1) {
-    background-color: transparent !important;
+    background-color: transparent;
 }
 
 .new-layout .table td {
@@ -1842,7 +1838,7 @@ input[type="checkbox"], input[type="radio"] {
 }*/
 
 .table td {
-    padding: 18px !important;
+    padding: 18px;
 }
 tbody td{
     font-size:14px;
@@ -1861,7 +1857,7 @@ tbody td{
 
 .sirius-select-container {
     position: relative;
-    width: 285px;
+    width: 100%;
 }
 
 .sirius-select-container .sirius-select-text {

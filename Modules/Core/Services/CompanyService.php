@@ -45,32 +45,12 @@ class CompanyService
 
     public function haveAnyDocumentPending(): bool
     {
-        $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
-        foreach ($companies as $company) {
-            if (
-                $company->company_type == Company::JURIDICAL_PERSON &&
-                (
-                    $company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED ||
-                    $company->bank_document_status == Company::DOCUMENT_STATUS_ANALYZING
-                ) &&
-                (
-                    $company->address_document_status == Company::DOCUMENT_STATUS_APPROVED ||
-                    $company->address_document_status == Company::DOCUMENT_STATUS_ANALYZING
-                ) &&
-                (
-                    $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED ||
-                    $company->contract_document_status == Company::DOCUMENT_STATUS_ANALYZING
-                )
-            ) {
-                return false;
-            } elseif (
-                $company->bank_document_status == Company::DOCUMENT_STATUS_APPROVED ||
-                $company->bank_document_status == Company::DOCUMENT_STATUS_ANALYZING
-            ) {
-                return false;
-            }
-        }
-        return true;
+        return Company::where([
+            'user_id' => auth()->user()->account_owner_id,
+            'bank_document_status' => Company::DOCUMENT_STATUS_APPROVED,
+            'address_document_status' => Company::DOCUMENT_STATUS_APPROVED,
+            'contract_document_status' => Company::DOCUMENT_STATUS_APPROVED,
+        ])->exists();
     }
 
     public function getRefusedDocuments(int $companyId)

@@ -197,10 +197,10 @@ $(() => {
 //                     $('#project-empty').show();
 //                     $('#integration-actions').hide();
 //                 } else {
-//                     $('.select-pad').html("");
+//                     $('#project_id, #select_projects_edit').html("");
 //                     let projects = response.projects;
 //                     for (let i = 0; i < projects.length; i++) {
-//                         $('.select-pad').append('<option value="' + projects[i].id + '">' + projects[i].name + '</option>');
+//                         $('#project_id, #select_projects_edit').append('<option value="' + projects[i].id + '">' + projects[i].name + '</option>');
 //                     }
 //                     if (isEmpty(response.integrations)) {
 //                         $("#no-integration-found").show();

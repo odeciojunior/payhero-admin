@@ -72,7 +72,7 @@
                 <form id='filter_form'>
                     <div id="" class="card shadow p-20">
                         <div class="row">
-                            
+
                             <div class="col-sm-6 col-md-3">
                                 <label for="projeto">Projeto</label>
                                 <select name='select_project' id="projeto" class="form-control input-pad">

@@ -197,7 +197,6 @@ function loading(elementId, loaderClass) {
 }
 
 function loadingOnScreen() {
-    // $('.page').addClass('d-none')
     $('#loadingOnScreen').append(
         `<div class="sirius-loading">
             <img style="height: 125px; width: 125px" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
@@ -291,7 +290,6 @@ function heightAnimate(element, height){
 
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
-        // $('.page').removeClass('d-none')
         $('#loadingOnScreen').fadeOut(function () {
             $(this).html('')
             $('body').css('overflow-y', 'unset')
@@ -879,7 +877,7 @@ $(document).ready(function () {
         renderSiriusSelect(this);
     });
 
-    $(document).on('DOMSubtreeModified propertychange', '.sirius-select', function () {
+    $(document).on('DOMSubtreeModified propertychange change', '.sirius-select', function () {
         renderSiriusSelect(this);
     });
 

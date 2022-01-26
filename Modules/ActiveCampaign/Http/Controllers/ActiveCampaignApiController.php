@@ -52,6 +52,7 @@ class ActiveCampaignApiController extends Controller
             ]);
         }
         catch(Exception $e){
+            report($e);
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
