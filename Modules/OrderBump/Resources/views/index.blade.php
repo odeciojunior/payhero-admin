@@ -180,7 +180,7 @@
                     </div>
                     <div class="form-group">
                         <label for="link">Status</label>
-                        <select name="active_flag" id="update-active-flag-order-bump" class="form-control">
+                        <select name="active_flag" id="update-active-flag-order-bump" class="sirius-select">
                             <option value="1" selected="selected">Ativo</option>
                             <option value="0">Desativado</option>
                         </select>

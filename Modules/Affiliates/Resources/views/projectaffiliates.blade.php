@@ -43,7 +43,7 @@
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Projeto</label>
-                                                <select class="form-control input-pad" id="project-affiliate" data-name="projects">
+                                                <select class="sirius-select" id="project-affiliate" data-name="projects">
                                                     <option value="0">Todos projetos</option>
                                                 </select>
                                             </div>
@@ -51,11 +51,11 @@
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="name">Nome do afiliado</label>
-                                                <input id="name-affiliate" class="input-pad form-control" placeholder="Nome" maxlength="100">
+                                                <input id="name-affiliate" class="input-pad form-control" placeholder="Nome" maxlength="100" style="height: 50px !important;">
                                             </div>
                                         </div>                
                                         <div class="col-lg-2 col-md-6" style="margin-top: 28px">
-                                            <button id="btn-filter-affiliates" class="btn btn-primary w-full p-10">
+                                            <button id="btn-filter-affiliates" class="btn btn-primary w-full px-10" style="height: 50px;">
                                                 <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                                             </button>
                                         </div>
@@ -96,7 +96,7 @@
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Projeto</label>
-                                                <select class="form-control input-pad" id="project-affiliate-request" data-name="projects">
+                                                <select class="sirius-select" id="project-affiliate-request" data-name="projects">
                                                     <option value="0">Todos projetos</option>
                                                 </select>
                                             </div>
@@ -104,11 +104,11 @@
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="name">Nome do afiliado</label>
-                                                <input id="name-affiliate-request" class="input-pad form-control" placeholder="Nome" maxlength="100">
+                                                <input id="name-affiliate-request" class="input-pad form-control" placeholder="Nome" maxlength="100" style="height: 50px !important">
                                             </div>
                                         </div>                
                                         <div class="col-lg-2 col-md-6" style="margin-top: 28px">
-                                            <button id="btn-filter-affiliates-request" class="btn btn-primary w-full p-10">
+                                            <button id="btn-filter-affiliates-request" class="btn btn-primary w-full px-10" style="height: 50px;">
                                                 <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                                             </button>
                                         </div>
