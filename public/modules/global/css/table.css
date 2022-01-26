@@ -24,8 +24,12 @@ thead {
     background-color: transparent;
 }
 
-.table tbody tr:last-child td {
-   border-radius: 0 0 16px 16px !important
+.table tbody tr:last-child td:first-child {
+   border-radius: 0 0 0 16px !important
+}
+
+.table tbody tr:last-child td:last-child {
+   border-radius: 0 0 16px 0 !important
 }
 
 @media (max-width: 767px) {
