@@ -1301,21 +1301,17 @@ $(function () {
 
                         if (selected_products.length > 8) {
                             widthBoxPhotosProducts = '' + (selected_products.length * 68) + 'px';
+
+                            $(modal).find('.box-photos-products').find('.d-flex').css('width', widthBoxPhotosProducts);
+                            scrollCustomX(modal + ' .box-photos-products', true, true);
                         } else {
+                            $(modal).find('.box-photos-products').children(":first").css('margin-left', '');
+                            $(modal).find('.box-photos-products').find('.d-flex').css('width', '586px');
+
+                            $(modal + ' .box-photos-products').off('wheel');
                             $(modal).find('.box-photos-products').find('.scrollbox').remove();
                             $(modal).find('.box-photos-products').find('.scrollbox-bar').remove();
-
-                            widthBoxPhotosProducts = '586px';
                         }
-
-                        //let left = parseInt($(div).find('.scrollbox-bar').css('left'));
-                        let marginLeft = parseInt($(modal).find('.box-photos-products').children(":first").css('margin-left'));
-
-                        //$(div).find('.scrollbox-bar').css('left', (changePosition ? left+68 : left-68) + 'px');
-                        $(modal).find('.box-photos-products').children(":first").css('margin-left', (marginLeft - 68) + 'px');
-
-                        $(modal).find('.box-photos-products').find('.d-flex').css('width', widthBoxPhotosProducts);
-                        scrollCustomX(modal + ' .box-photos-products', (selected_products.length > 8 ? false : true), true);
                     }
 
                     removeProductArraySelecteds(modal, product_id);
@@ -1354,21 +1350,17 @@ $(function () {
 
                                     if (selected_products.length > 8) {
                                         widthBoxPhotosProducts = '' + (selected_products.length * 68) + 'px';
+
+                                        $(modal).find('.box-photos-products').find('.d-flex').css('width', widthBoxPhotosProducts);
+                                        scrollCustomX(modal + ' .box-photos-products', false, true);
                                     } else {
+                                        $(modal).find('.box-photos-products').children(":first").css('margin-left', '');
+                                        $(modal).find('.box-photos-products').find('.d-flex').css('width', '586px');
+
+                                        $(modal + ' .box-photos-products').off('wheel');
                                         $(modal).find('.box-photos-products').find('.scrollbox').remove();
                                         $(modal).find('.box-photos-products').find('.scrollbox-bar').remove();
-
-                                        widthBoxPhotosProducts = '586px';
                                     }
-
-                                    //let left = parseInt($(div).find('.scrollbox-bar').css('left'));
-                                    let marginLeft = parseInt($(modal).find('.box-photos-products').children(":first").css('margin-left'));
-
-                                    //$(div).find('.scrollbox-bar').css('left', (changePosition ? left+68 : left-68) + 'px');
-                                    $(modal).find('.box-photos-products').children(":first").css('margin-left', (marginLeft + 68) + 'px');
-
-                                    $(modal).find('.box-photos-products').find('.d-flex').css('width', widthBoxPhotosProducts);
-                                    scrollCustomX(modal + ' .box-photos-products', (selected_products.length > 8 ? false : true), true);
 
                                     removeProductArraySelecteds(modal, product_id);
                                 } else {

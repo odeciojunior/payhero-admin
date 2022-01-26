@@ -113,13 +113,15 @@ function scrollCustom(div, padding = false, type = '') {
 }
 
 function scrollCustomX(div, addScroll = true, changePosition = false) {
-    var scroll = changePosition ? ParseInt($(div).find('.scrollbox-bar').css('left')) : 0;
-    var scrollDiv = changePosition ? ParseInt($(div).children(":first").css('margin-left')) : 0;
-
-    if (addScroll) {
+    if ($(div).find('.scrollbox').length == 0 && $(div).find('.scrollbox-bar').length == 0) {
         $(div).css('padding-bottom', '12px');
         $(div).append('<div class="scrollbox"></div>');
         $(div).append('<div class="scrollbox-bar"></div>');
+    }
+
+    if ($(div).find('.scrollbox').length > 0 && $(div).find('.scrollbox-bar').length > 0) {
+        var scroll = changePosition ? $(div).find('.scrollbox-bar').css('left').replace('px', '') : 0;
+        var scrollDiv = changePosition ? $(div).children(":first").css('margin-left').replace('px', '') : 0;
     }
 
     $(div).on('wheel', function(event) {
