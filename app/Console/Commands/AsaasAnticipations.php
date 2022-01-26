@@ -26,7 +26,7 @@ class AsaasAnticipations extends Command
      */
     protected $description = 'Command description';
 
-    public $saveRequests = false;
+    public $saveRequests = true;
     public $simulate = false;
 
     /**

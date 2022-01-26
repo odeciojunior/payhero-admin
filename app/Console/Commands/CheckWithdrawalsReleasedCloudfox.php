@@ -118,7 +118,9 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                                     );
                             }
 
-                            $this->line('Sale id: ' .  $sale->id . ', Transaction id: ' . $transaction->id . ', Transaction Cloudfox id: ' . $transactionCloudfox->id );
+                            if (!foxutils()->isProduction()) {
+                                $this->line('Sale id: ' .  $sale->id . ', Transaction id: ' . $transaction->id . ', Transaction Cloudfox id: ' . $transactionCloudfox->id );
+                            }
 
                             if (!empty($transactionCloudfox->release_date)) {
                                 $data = [
