@@ -323,7 +323,7 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
             `);
 
     if (!isEmptyValue(debitValue)) {
-        const $newValueSelected = $modal.find(".s-btn.green")
+        const $newValueSelected = $modal.find(".value-select")
         const $value = $newValueSelected.text().trim();
 
         let result = $newValueSelected.data("value") - removeFormatNumbers(debitValue)
@@ -394,8 +394,8 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
         const $value = $(this);
         const $amountWithdrawal = $("#requested-amount-withdrawal");
 
-        $event.removeClass("green");
-        $value.addClass("green");
+        $event.removeClass("green value-select");
+        $value.addClass("green value-select");
         $amountWithdrawal.text($value.text().trim());
 
         if (debitValue != undefined) {
@@ -430,7 +430,7 @@ function modalCustomWithdrawal(gatewayId, singleValue, dataWithdrawal, debitValu
             type: "POST",
             data: {
                 company_id: $("#transfers_company_select").val(),
-                withdrawal_value: $(".s-btn.green").data("value"),
+                withdrawal_value: $(".value-select").data("value"),//
                 gateway_id: gatewayId,
             },
             dataType: "json",
@@ -600,7 +600,7 @@ function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
     if (singleValue) {
         return `
                 <div id="just-value-show" class="text-center">
-                    <div id="single-value" data-value="${dataWithdrawal.bigger_value}">
+                    <div id="single-value" class="value-select" data-value="${dataWithdrawal.bigger_value}">
                         ${biggerValue}
                     </div>
                 </div>
@@ -614,7 +614,7 @@ function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
                         ${lowerValue}
                     </div>
 
-                    <div class="col-auto btn btn-primary s-btn s-btn-border green" id="bigger-value" data-value="${dataWithdrawal.bigger_value}">
+                    <div class="col-auto btn btn-primary s-btn s-btn-border green value-select" id="bigger-value" data-value="${dataWithdrawal.bigger_value}">
                         ${biggerValue}
                     </div>
                 </div>
