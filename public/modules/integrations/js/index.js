@@ -437,7 +437,7 @@ $(document).ready(function () {
         }
     }
 
-    $('.select-enum-list').on('change', handleIntegrationTypeChange);
+    $('#select-enum-list').on('change', handleIntegrationTypeChange);
 
     // Obtem os campos dos filtros
     function getCompanies() {
