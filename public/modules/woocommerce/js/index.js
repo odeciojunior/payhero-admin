@@ -363,10 +363,10 @@ $(document).ready(function () {
             
         }
         if ($("#bts-confirm").is(":visible")) {
-            $("#bts-confirm").slideUp('fast',null, function () {
-                fill()
-                $("#bts-confirm").slideDown();
-            });
+            // $("#bts-confirm").slideUp('fast',null, function () {
+                //     $("#bts-confirm").slideDown();
+                // });
+                    fill()
 
         } else {
             fill()

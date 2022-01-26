@@ -370,13 +370,15 @@ $(document).ready(function () {
             }
         }
         if ($("#bts-confirm").is(":visible")) {
-            $("#bts-confirm").slideUp('fast',null, function () {
-                fill()
-                $("#bts-confirm").slideDown();
-            });
-
+            // $("#bts-confirm").fadeOut('fast',null, function () {
+            //     fill()
+            //     $("#bts-confirm").slideDown();
+            // });
+            fill()
+            
         } else {
             fill()
+            //$("#bts-confirm").show()
             $("#bts-confirm").slideDown();
         }
     }
