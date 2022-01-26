@@ -2010,7 +2010,7 @@ tbody td{
     width: 120px !important;
 }
 .page-project .table:not(#table-plans) .options-column-width {
-    width: 185px !important;
+    width: 190px !important;
 }
 
 .modal-plans .btn-plus:not(:disabled):hover {
