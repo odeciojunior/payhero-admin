@@ -1,36 +1,45 @@
-<div class="row no-gutters mb-10">
-    <div class="top-holder w-full text-right mb-5">
-        <div class="d-flex align-items-center justify-content-end">
-            <div id="add-order-bump" class="btn-holder  d-flex align-items-center pointer" data-toggle="modal"
-                 data-target="#modal-store-order-bump">
-                <span class="link-button-dependent red"> Adicionar Order Bump </span>
-                <a class="ml-10 rounded-add pointer">
-                    <i class="o-add-1 text-white"></i></a>
+<div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">
+    <div class="row no-gutters mb-20">
+        <div class="top-holder w-full text-right mb-0" style="width: 100%;">
+            <div class='d-flex align-items-center'>
+                <div class='col-md-12'>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div id="add-order-bump" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal-store-order-bump">
+                            <span class="link-button-dependent blue"> Adicionar </span>
+                            <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
+                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow" style="margin: 0 -1.429rem;">
+        <div style="min-height: 300px">
+            <div class="page-invoice-table table-responsive">
+                <table id="table-order-bump" class="table text-left table-striped unify" style="width: 100%; margin-bottom: 0px;">
+                    <thead>
+                    <tr>
+                        <td class="table-title">Descrição</td>
+                        <td class="table-title text-center">Status</td>
+                        <td class="table-title text-center options-column-width">Opções</td>
+                    </tr>
+                    </thead>
+                    <tbody class="min-row-height">
+                    {{-- js carrega... --}}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
-<div class="card shadow">
-    <div style="min-height: 300px">
-        <div class="page-invoice-table table-responsive">
-            <table id="table-order-bump" class="table text-left table-striped">
-                <thead>
-                <tr>
-                    <td class="table-title">Descrição</td>
-                    <td class="table-title">Status</td>
-                    <td class="table-title text-center options-column-width">Opções</td>
-                </tr>
-                </thead>
-                <tbody class="min-row-height">
-                {{-- js carrega... --}}
-                </tbody>
-            </table>
-        </div>
-    </div>
+
+<div class="d-flex justify-content-center justify-content-md-end">
+    <ul id="pagination-order-bump" class="pagination-s margin-chat-pagination float-right text-right m-0">
+        {{-- js carrega... --}}
+    </ul>
 </div>
-<ul id="pagination-order-bump" class="pagination-s margin-chat-pagination float-right text-right" style="margin-top:10px;position:relative;float:right">
-    {{-- js carrega... --}}
-</ul>
 
 <!-- Modal Show -->
 <div id="modal-show-order-bump" class="modal fade modal-3d-flip-vertical" role="dialog" tabindex="-1">
@@ -171,7 +180,7 @@
                     </div>
                     <div class="form-group">
                         <label for="link">Status</label>
-                        <select name="active_flag" id="update-active-flag-order-bump" class="form-control">
+                        <select name="active_flag" id="update-active-flag-order-bump" class="sirius-select">
                             <option value="1" selected="selected">Ativo</option>
                             <option value="0">Desativado</option>
                         </select>

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PromotionalTax;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserDocument;
 
 class UserService
 {
@@ -35,20 +36,14 @@ class UserService
 
     public function haveAnyDocumentPending(): bool
     {
-        $userModel = new User();
         $user = auth()->user();
-        $userPresenter = $userModel->present();
 
-        if (!empty($user)) {
-            if (($user->address_document_status == $userPresenter->getAddressDocumentStatus('approved') ||
-                    $user->address_document_status == $userPresenter->getAddressDocumentStatus('analyzing')) &&
-                ($user->personal_document_status == $userPresenter->getPersonalDocumentStatus('approved') ||
-                    $user->personal_document_status == $userPresenter->getPersonalDocumentStatus('analyzing'))) {
-                return false;
-            }
-        }
-
-        return true;
+        return (
+            $user->address_document_status == UserDocument::STATUS_APPROVED &&
+            $user->personal_document_status == UserDocument::STATUS_APPROVED &&
+            $user->email_verified == User::EMAIL_VERIFIED &&
+            $user->cellphone_verified == User::CELLPHONE_VERIFIED
+        );
     }
 
     public function haveAnyDocumentRefused(): bool

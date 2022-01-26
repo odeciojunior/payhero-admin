@@ -225,7 +225,7 @@ class GetnetService implements Statement
     public function getLowerAndBiggerAvailableValues(int $withdrawalValueRequested): array
     {
 
-        $availableBalance = $this->getAvailableBalance() - $this->getBlockedBalance();
+        $availableBalance = $this->getAvailableBalance();
 
         $transactionsSum = $this->company->transactions()
             ->whereIn('gateway_id', $this->gatewayIds)

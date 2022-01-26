@@ -8,30 +8,30 @@ $(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
     //comportamento da tela
-    var cuponType = 0; 
-    $('.coupon-value').mask('00%', {reverse: true});    
+    var cuponType = 0;
+    $('.coupon-value').mask('00%', {reverse: true});
     $(document).on('change', '.coupon-type', function () {
         if ($(this).val() == 1) {
-            cuponType = 1;            
-            $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');            
+            cuponType = 1;
+            $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
         } else {
-            cuponType = 0;            
-            $('.coupon-value').mask('00%', {reverse: true});                       
+            cuponType = 0;
+            $('.coupon-value').mask('00%', {reverse: true});
         }
     });
     $(".rule-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
 
     $('.rule-value').on('blur', function () {
-        applyMaskManually(this); 
+        applyMaskManually(this);
     });
 
-    $('.coupon-value').on('blur', function () {            
+    $('.coupon-value').on('blur', function () {
         if(cuponType==1){
-            applyMaskManually(this);            
+            applyMaskManually(this);
         }
     });
 
-    function applyMaskManually(classValue){        
+    function applyMaskManually(classValue){
         if ($(classValue).val().length == 1) {
             let val = '0,0' + $(classValue).val();
             $(classValue).val(val);
@@ -240,7 +240,7 @@ $(function () {
                             <td class="shipping-type">${value.type}</td>
                             <td class="shipping-value">${value.value}</td>
                             <td class="shipping-zip-code-origin">${value.code}</td>
-                            <td class="shipping-status" style="vertical-align: middle">
+                            <td class="shipping-status text-center" style="vertical-align: middle">
                                 <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
                             </td>
                             <td style="text-align:center">

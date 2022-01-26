@@ -158,8 +158,9 @@ $(document).ready(function () {
         }
 
         if (data?.rule === SETTINGS_RULE_AMOUNT) {
+            let valueMask = (data.amount).toFixed(2).replace('.',',')
             withdrawalByAmount.prop('checked', true).trigger('change')
-            withdrawalAmount.val(data.amount).focus()
+            withdrawalAmount.val(valueMask).focus()
         }
     }
 

@@ -30,7 +30,7 @@ $(() => {
                     for (let rule of rules) {
                         let row = `<tr>
                                        <td>${rule.description}</td>
-                                       <td>${rule.active_flag ? `<span class="badge badge-success">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
+                                       <td class="text-center">${rule.active_flag ? `<span class="badge badge-success">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                                        <td>
                                            <a class="pointer mg-responsive show-order-bump" data-id="${rule.id}" title="Visualizar"><i class="o-eye-1"></i></a>
                                            <a class="pointer mg-responsive edit-order-bump" data-id="${rule.id}" title="Editar" ><i class="o-edit-1"></i></a>

@@ -105,7 +105,7 @@ return [
                 'processing' => "Processando",
                 'returned' => "Retornado",
                 'liquidating' => "Liquidando",
-                'partially_liquidated' => "Parcialmente Liquidado",
+                'partially_liquidated' => "Em liquidação",
             ],
         ],
         "invitation" => [

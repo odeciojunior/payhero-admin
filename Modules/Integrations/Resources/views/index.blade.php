@@ -105,7 +105,7 @@
                                 <div class="form-group col-12">
                                     <label for="token_type_enum">Tipo de Integração</label>
                                     <div id="enum-list">
-                                        <select name="token_type_enum" class="form-control form-control-lg select-enum-list border-default">
+                                        <select name="token_type_enum" id="select-enum-list" class="sirius-select">
                                             <option value="3">Integração Externa</option>
                                             <option value="4" selected>Checkout API</option>
                                         </select>
@@ -115,7 +115,7 @@
                             <div class="row companies-container">
                                 <div class="form-group col-sm-12 col-md">
                                     <label for="empresa">Empresa</label>
-                                    <select name="company_id" id="companies" class="form-control form-control-lg border-default">
+                                    <select name="company_id" id="companies" class="sirius-select">
                                         <option value="">Selecione a empresa</option>
                                     </select>
                                 </div>
@@ -227,7 +227,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/integrations/js/index.js?v='.uniqid()) }}"></script>
+        <script src="{{asset('modules/integrations/js/index.js?v='. versionsFile()) }}"></script>
     @endpush
 
 @endsection

@@ -1,3 +1,9 @@
+*:focus,
+.bootstrap-select .dropdown-toggle:focus,
+.bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
+    outline: none !important;
+}
+
 .price-holder.antecipacao {
     cursor: pointer;
 }
@@ -69,11 +75,13 @@
     margin: 0;
     line-height: 1.5;
     font-size: 22px;
+    color: #636363;
 }
 
 .label-price {
     font-size: 14px;
     margin: 0;
+    color: #70707E;
 }
 
 .price {
@@ -129,6 +137,7 @@
 .sub-pad {
     font-size: 12px;
     color: #aaa;
+    color: #9E9E9E;
 }
 
 
@@ -165,6 +174,7 @@
     margin-top: 20px;
     width: 100%;
     height: 40px;
+    font-weight: bold;
 }
 
 .badge-pendente {
@@ -198,26 +208,27 @@
 }
 
 .nav-link {
-    font-size: 12px !important;
+    font-size: 14px !important;
     border-radius: 8px 8px 0 0 !important;
     padding: 15px;
 }
 
 .nav-btn {
     margin-right: 5px !important;
-    background: transparent;
-    color: #888;
+    background: #FFF;
+    color: #3D4456;
     border-radius: 11px !important;
     border: 1px solid #D2D2D2 !important;
-    font-weight: 700;
+    font-weight: normal !important;
 }
 
 .nav-btn.active {
-    background: #2E85EC !important;
+    background: #FFF !important;
     border: 1px solid #2E85EC !important;
     border-radius: 11px;
     opacity: 1 !important;
-    color: white !important;
+    color: #2E85EC !important;
+    font-weight: 700 !important;
 }
 
 
@@ -230,27 +241,107 @@
 }
 
 .modal-title-withdrawal {
-    background-color: #2E85EC;
-    box-shadow: 0px 1px 15px #00000017;
-    border-radius: 20px 20px 0px 0px;
-    opacity: 1;
+    background-color: transparent;
+    border-radius: 8px 8px 0 0;
+    padding: 16px;
+}
+.modal-title-withdrawal h3 {
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: bold;
+    text-align: center;
+    color: #484848;
+}
+.modal-title-withdrawal.debit-pending h3{
+    color: #FF003D;
+}
+
+#text-title-debit-pending, #text-title-withdrawal-custom {
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: bold;
+    color: #747474;
+    padding: 0 10px
+}
+
+#text-description-debit-pending, #text-description-withdrawal-custom {
+    font-size: 12px;
+    line-height: 15px;
+    color: #959595;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+#text-description-debit-pending {
+    border-bottom: 1px solid #EDEDED;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+#text-description-withdrawal-custom small {
+    display: block;
+    margin-top: 10px
+}
+
+#debit-items p{
+    font-size: 14px;
+    line-height: 18px;
+    color: #636363;
+    margin: 0;
+}
+#debit-items span {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.modal-content-style {
+    border-radius: 8px;
+}
+
+#modal-withdrawal-custom-footer {
+    border-top: 1px solid #EDEDED;
+    padding-top: 25px;
+    margin-top: 20px;
+}
+#modal-withdrawal-custom-footer .btn {
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: bold;
+    padding: 12px 24px;
+    border-radius: 8px;
+}
+
+#more-than-on-values-show .btn{
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 12px 24px;
+    border: 1px solid #959595;
+    color: #959595;
+}
+#more-than-on-values-show .btn.green, #more-than-on-values-show .btn:hover{
+    border-color: transparent;
+    color: #FFF;
+}
+#single-value {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 30px;
+    color: #29DCA7;
+    margin-top: 8px;
+
+}
+#bt-cancel-withdrawal {
+    background-color: #F5F5F5;
+    color: #959595;
 }
 
 .disableFields {
     background-color: #f3f7f9;
     opacity: 1;
 }
-
-.modal-content-style {
-    border-radius: 16px 16px 16px 16px;
-}
-
-.modal-title-withdrawal {
-    background: #2E85EC;
-    box-shadow: 0px 1px 15px #00000017;
-    border-radius: 16px 16px 0px 0px;
-}
-
 
 strong span {
     color: #57617c;
@@ -268,8 +359,8 @@ strong span {
 
 .input-custom-transfer {
     background-color: #FFF;
-    border-radius: 12px;
-    border: 1px solid #DDD;;
+    border-radius: 8px;
+    border: 1px solid #DDD;
 }
 
 .input-custom-transfer:focus-within {
@@ -297,10 +388,6 @@ strong span {
     border-bottom-color: transparent !important;
 }
 
-.card-tabs {
-    border-radius: 0 16px 16px 16px !important;
-}
-
 .card.shadow {
     border-radius: 0 12px 12px 12px;
 }
@@ -321,7 +408,7 @@ strong span {
 .nav-tabs .nav-link {
     text-transform: none;
     font-weight: bold;
-    background-color: #D9D9D9;
+    background-color: #FCFCFC;
     padding: 15px;
     color: #767676;
 
@@ -349,7 +436,7 @@ strong span {
 }
 
 .nav-tabs .nav-link:hover {
-    background-color: #E9E9E9;
+    background-color: #D9D9D9;
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     -ms-transition: all 0.3s;
@@ -393,7 +480,7 @@ select, .select-pad {
 }
 
 .table td, .table {
-    margin-bottom: 0 !important
+    margin-bottom: 0
 }
 
 #modal_detalhes .nav-tabs .nav-link:not(.active) {
@@ -404,6 +491,71 @@ select, .select-pad {
     display: contents;
 }
 
+.badge-money {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 9px 12px;
+    display: inline-flex;
+}
+
+#header h6, #header .available-balance{
+    color: #70707E;
+}
+#bt-withdrawal {
+    background-color: #1BE4A8;
+    border-radius: 8px;
+}
+
+.balance-resume .card-body{
+    padding: 18px 24px
+}
+
+.balance-resume h5{
+    margin-top: 0;
+    margin-bottom: 10px
+}
+
+.balance-resume h5{
+    margin-top: 0;
+    margin-bottom: 6px
+}
+
+.form-group input {
+    padding: 10px 35px 12px 16px
+}
+
+.title-withdrawals-table {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 23px;
+    color: #636363;
+}
+
+.transfers-sale {
+    color: #000;
+    padding-top: 5px;
+    margin-top: 5px;
+    border-top: 1px solid #F4F4F4;
+}
+
+.page-title svg {
+    width: auto;
+    height: 20px;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+.pagination-sm button {
+    margin-bottom: 5px
+}
+
+.transfers-sale {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 20px;
+    color: #2E85EC;
+}
 @media (min-width: 768px) {
     .pointer-md {
         cursor: pointer !important;
@@ -414,40 +566,43 @@ select, .select-pad {
 
 @media (max-width: 991px) {
     .badge {
-        width: 10px;
-        height: 10px;
-
-        padding: .5rem;
-
-        border: 2px solid white;
-        box-shadow: 0 3px 6px #00000029;
-        text-indent: -9999px;
-        white-space: nowrap;
+        font-size: 10px !important;
+        padding: 10px 15px !important;
+        border-radius: 36px !important;
+        line-height: 100%;
     }
 }
 
 /*MOBILE SM*/
 @media (max-width: 767px) {
     .s-table {
-        padding: 20px !important;
-
         display: grid;
-
         border: none;
-        margin: unset;
+        margin: 14px 0 !important;
+        padding: 14px 16px !important;
+        background-color: #FFF !important;
+        border-radius: 8px !important;
     }
 
     .s-table.table-finance-schedule {
         grid-template-columns: 1fr 1fr;
         grid-template-areas: "sale status"
-                             "date value";
+                             "value value"
+                             "date-start date-end";
+    }
+
+    .s-table.table-finance-schedule-new {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "sale value"
+                             "date-start date-end";
     }
 
     .s-table.table-finance-transfers {
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-areas: "sale sale status"
-                             "date-start date-end value"
-                             "codigo codigo codigo";
+        grid-template-columns: 1fr 1fr ;
+        grid-template-areas: "status sale"
+                             "value value"
+                             "bank bank"
+                             "date-start date-end"
     }
 
     table.unify tr {
@@ -456,12 +611,12 @@ select, .select-pad {
     }
 
     .table td {
+        background-color: #FFF !important;
         margin: 0;
     }
 
     table.unify tr {
         padding: 0;
-        background-color: #f8fbff;
     }
 
     .table-striped tbody tr:first-child {
@@ -490,6 +645,7 @@ select, .select-pad {
     }
 
     .btn-sacar {
+        background: #1BE4A8;
         box-shadow: 0 1px 15px #00000017;
         border-radius: 12px;
         padding: 15px;
@@ -517,27 +673,102 @@ select, .select-pad {
         text-align: center !important;
     }
 
-    .pl-0 {
-        padding-right: 5px
+    .withdrawals-table, .transfersTable, .table {
+        background: transparent;
     }
 
-    .pr-0 {
-        padding-left: 5px
+    .status-finance-transfers {
+        text-align: left !important;
+        padding: 0 !important;
+        margin-right: 10px !important;
     }
-}
 
-/*MOBILE SM*/
-@media (max-width: 575.98px) {
+    .sale-finance-transfers{
+        font-size: 12px !important;
+        line-height: 15px !important;
+        color: #9E9E9E !important;
+        padding: 0 !important;
+        text-align: right !important;
+        align-self: center;
+    }
+
+    .value-finance-transfers {
+        padding: 0 !important;
+        margin: 12px 0 !important;
+    }
+    .value-finance-transfers span {
+        font-size: 14px !important;
+        line-height: 18px;
+        color: #9E9E9E;
+        font-weight: normal;
+    }
+    .value-finance-transfers strong {
+        font-size: 20px !important;
+        line-height: 25px;
+        color: #636363;
+    }
+
+    .bank-finance-transfers {
+        padding: 0 !important;
+        margin-bottom: 12px !important;
+    }
+    .bank-finance-transfers div {
+        font-size: 14px !important;
+        line-height: 18px;
+    }
+    .bank-finance-transfers small {
+        font-size: 11px !important;
+        line-height: 14px;
+        display: block;
+    }
+
+    .date-start-finance-transfers,
+    .date-end-finance-transfers {
+        padding: 0 !important
+    }
+    .date-start-finance-transfers *,
+    .date-end-finance-transfers * {
+        display: inline;
+        font-size: 12px !important;
+        line-height: 15px;
+        color: #9E9E9E;
+    }
+    .date-start-finance-transfers .bold-mobile, .date-start-finance-transfers small,
+    .date-end-finance-transfers .bold-mobile, .date-end-finance-transfers small {
+        color: #636363 !important
+    }
+
+    .sale-finance-schedule {
+        padding: 0 !important;
+        margin-right: 10px;
+        margin-bottom: 12px !important;
+    }
+    .status-finance-schedule {
+        padding: 0 !important;
+    }
+
+    .value-finance-schedule {
+        padding: 0 !important;
+        align-self: center;
+        margin-bottom: 12px !important;
+    }
+    .value-finance-schedule span {
+        font-size: 14px !important;
+        line-height: 18px;
+        color: #9E9E9E;
+        font-weight: normal;
+    }
+    .value-finance-schedule strong {
+        font-size: 20px !important;
+        line-height: 25px;
+    }
+
     .price {
         font-size: 16px;
     }
 
     .font-md-size-18 {
         font-size: 14px !important
-    }
-
-    .font-md-size-20 {
-        font-size: 10px !important
     }
 
     .btn-light-1, .btn-primary-1, .btn-success-1 {
@@ -559,20 +790,21 @@ select, .select-pad {
         width: 30% !important;
         margin: 2px 5px !important;
     }
-}
 
-/*MOBILE XS*/
-@media (max-width: 420px) {
-    .bold-mobile {
-        font-size: 9px;
+    .page-title svg {
+        width: 100%;
+        margin-left: 0;
     }
 
-    small.gray {
-        font-size: 9px;
+    .card.shadow {
+        border-radius: 0 0 8px 8px;
+    }
+    .nav-tabs .nav-link {
+        margin: 0;
     }
 
-    .font-md-size-20 {
-        font-size: 9px !important
+    .page-content {
+        padding: 10px !important;
     }
 }
 
@@ -639,24 +871,7 @@ select, .select-pad {
 #withdrawalsTable tr:last-of-type td:last-child {
     border-bottom-right-radius: 16px !important;
 }
-@media only screen and (min-width: 768px){
-    .col-md-3.card {
-        margin-right: 10px;
-        max-width: calc(25% - 10px);
-    }
-}
-@media only screen and (min-width: 576px) and (max-width : 767px){
-    .col-sm-6.card {
-        margin-right: 10px;
-        max-width: calc(50% - 10px);
-    }
-}
-@media only screen and (min-width: 768px){
-    .col-md-4.card {
-        margin-right: 10px;
-        max-width: calc(33.3% - 10px);
-    }
-}
+
 .popover {
     left: -50px !important;
 }
@@ -674,11 +889,4 @@ select, .select-pad {
     display: flex;
     align-items: center;
     color: #404040;
-}
-
-.page-title svg {
-    width: auto;
-    height: 20px;
-    margin-left: 10px;
-    margin-top: 5px;
 }

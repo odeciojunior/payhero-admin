@@ -10,6 +10,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\CurrencyQuotationService;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -41,8 +42,11 @@ class CompanyResource extends JsonResource
         $project = UserProject::whereHas('project', function ($query) {
             $query->where('status', 1);
         })
-            ->where('company_id', $this->resource->id)
-            ->first();
+        ->where('company_id', $this->resource->id)
+        ->first();
+
+        $currencyQuotationService = new CurrencyQuotationService();
+        $lastUsdQuotation = $currencyQuotationService->getLastUsdQuotation();
 
         return [
             'id_code' => Hashids::encode($this->resource->id),
@@ -90,11 +94,12 @@ class CompanyResource extends JsonResource
             'extra_document' => $this->extra_document ?? '',
             'active_flag' => $this->active_flag,
             'has_project' => !empty($project),
-            'capture_transaction_enabled' => $this->gatewayCredential(Gateway::GETNET_PRODUCTION_ID)->capture_transaction_enabled,
+            'capture_transaction_enabled' => $this->gatewayCredential(Gateway::GETNET_PRODUCTION_ID)->capture_transaction_enabled ?? '',
             'transaction_rate' => $this->transaction_rate,
             'gateway_tax' => $this->gateway_tax,
             'installment_tax' => $this->installment_tax,
-            'gateway_release_money_days' => $this->gateway_release_money_days
+            'gateway_release_money_days' => $this->gateway_release_money_days,
+            'currency_quotation' => $lastUsdQuotation->value
         ];
     }
 }

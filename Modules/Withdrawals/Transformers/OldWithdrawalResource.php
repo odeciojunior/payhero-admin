@@ -33,7 +33,7 @@ class OldWithdrawalResource extends JsonResource
         $realeaseTime = '';
         if (!empty($this->release_date)) {
             $realeaseDate = $this->release_date->format('d/m/Y');
-            $realeaseTime = $this->release_date->format('H:i:s');
+            $realeaseTime = $this->release_date->format('H:i');
         }
 
         return [
