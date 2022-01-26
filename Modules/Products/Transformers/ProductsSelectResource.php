@@ -16,7 +16,7 @@ class ProductsSelectResource extends JsonResource
      */
     public function toArray($request)
     {
-        $cost = ($this->currency_type_enum == 1 ? 'R$ ' : '$ ') .number_format(($this->cost ?? 0) / 100, 2, '.', ',');
+        $cost = ($this->currency_type_enum == 1 ? 'R$ ' : '$ ') .number_format((!empty($this->cost) ? $this->cost : 0) / 100, 2, '.', ',');
         if (count($this->productsPlans) > 0) {
             $cost = ($this->productsPlans->first()->currency_type_enum == 1 ? 'R$ ' : '$ ') .number_format(($this->productsPlans->first()->cost ?? 0) / 100, 2, '.', ',');
         }
