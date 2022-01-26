@@ -51,7 +51,7 @@
                     <div class="row align-items-baseline">
                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                             <label for="status">Status</label>
-                            <select name='sale_status' id="status" class="form-control select-pad">
+                            <select name='sale_status' id="status" class="sirius-select">
                                 <option value="">Todos status</option>
                                 <option value="1">Pendente</option>
                                 <option value="2">Enviado</option>
@@ -171,7 +171,7 @@
                      <div class="row" id="div_discount" style="display:none">
                          <div class="col-6">
                              <label for="discount_type"> Tipo:</label>
-                             <select id="discount_type" class="form-control">
+                             <select id="discount_type" class="sirius-select">
                                  <option value="percentage" selected>Porcentagem</option>
                                  <option value="value">Valor</option>
                              </select>

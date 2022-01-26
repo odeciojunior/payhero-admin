@@ -21,12 +21,12 @@ $(document).ready(function () {
                     $("#project-empty").show();
                     $("#integration-actions").hide();
                 } else {
-                    $(".select-pad").html("");
+                    $("#project_id, #select_projects_edit").html("");
 
                     $("#inputTokenWhats2").val(response.token_whatsapp2);
 
                     for (let project of response.projects) {
-                        $(".select-pad").append(`<option value="${project.id}">${project.name}</option>`);
+                        $("#project_id, #select_projects_edit").append(`<option value="${project.id}">${project.name}</option>`);
                     }
 
                     if (isEmpty(response.integrations)) {
@@ -67,7 +67,7 @@ $(document).ready(function () {
         $("#url_checkout").val("");
         $("#url_order").val("");
         $(":checkbox").prop("checked", true).val(1);
-        $(".select-pad").prop("selectedIndex", 0).change();
+        $("#project_id, #select_projects_edit").prop("selectedIndex", 0).change();
     }
 
     //draw the integration cards

@@ -7,13 +7,13 @@
             <div class="col-12">
                 <div class='form-group'>
                     <label for="select_projects_edit">Selecione seu projeto</label>
-                    <select class="select-pad" id="select_projects_edit" name="select_projects_edit" disabled> </select>
+                    <select class="sirius-select" id="select_projects_edit" name="select_projects_edit" disabled> </select>
                 </div>
             </div>
             <div class="col-12">
                 <div class='form-group'>
                     <label for="select_invoice_type_edit">Tipo de nota fiscal emitida para o projeto</label>
-                    <select class="select-pad" id="select_invoice_type_edit" name="select_invoice_type_edit" disabled>
+                    <select class="sirius-select" id="select_invoice_type_edit" name="select_invoice_type_edit" disabled>
                         <option value='1'>Nota de Serviço (nfse)</option>
                         <option value='2'>Nota de Produto (nfe)</option>
                     </select>
@@ -50,7 +50,7 @@
             <div class='form-group col-12'>
                 <label for="url_store">Dias em espera</label>
                 <div class="d-flex input-group">
-                    <select class="input-pad" id="select_pending_days_edit" name="select_pending_days_edit">
+                    <select class="sirius-select" id="select_pending_days_edit" name="select_pending_days_edit">
                         <option value='1'>1</option>
                         <option value='7'>7</option>
                         <option value='15'>15</option>
