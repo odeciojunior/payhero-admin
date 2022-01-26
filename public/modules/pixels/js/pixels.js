@@ -91,7 +91,7 @@ $(function () {
                             <td>${value.name}</td>
                             <td>${value.code}</td>
                             <td>${value.platform_enum}</td>
-                            <td><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
+                            <td class="text-center"><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
                             <td style='text-align:center'>
                                 <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
                                 <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>

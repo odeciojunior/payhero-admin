@@ -1,45 +1,56 @@
-<div class='row no-gutters mb-10'>
-    <div class="top-holder text-right mb-5" style="width: 100%;">
-        <div class="d-flex align-items-center justify-content-end">
-            <div class='div-config'>
-                <div id="config-review" class="btn-holder d-flex align-items-center pointer mr-20">
-                    <span class="link-button-dependent red"> Configurações Review </span>
-                    <a class="ml-10 btn-config rounded-add pointer bg-secondary text-white">
-                        <span class="o-cogwheel-1" style="font-size: 18px;"></span>
-                    </a>
+<div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">
+    <div class='row no-gutters mb-20'>
+        <div class="top-holder text-right mb-0" style="width: 100%;">
+            <div class='d-flex align-items-center'>
+                <div class='col-sm-12'>
+                    <div class="d-flex justify-content-end">
+                        <div class='div-config d-flex align-items-center' style="padding-right: 10px; border-right: 1px solid #EDEDED; margin-top: -20px; margin-bottom: -20px; margin-right: 20px;">
+                            <div id="config-review" class="btn-holder d-flex align-items-center pointer">
+                                <span class="link-button-dependent">Configurações </span>
+                                <a class="rounded-add pointer" style="background: none;">
+                                    <img src="{{ asset('modules/global/img/svg/settings.svg') }}" height="22">
+                                </a>
+                            </div>
+                        </div>
+                        <div id="add-review" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_review">
+                            <span class="link-button-dependent blue">Adicionar </span>
+                            <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
+                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="add-review" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_review">
-                <span class="link-button-dependent red"> Adicionar Review </span>
-                <a class="ml-10 rounded-add pointer">
-                    <i class="o-add-1" aria-hidden="true"></i></a>
+        </div>
+    </div>
+    <div class="card shadow" style="margin: 0 -1.429rem;">
+        <div style='min-height: 300px'>
+            <div class='page-invoice-table table-responsive' style='border-radius: 0 0 12px 12px;'>
+                <table id='table-reviews' class='table text-left table-striped unify' style='width: 100%; margin-bottom: 0px;'>
+                    <thead>
+                        <tr>
+                            <td class='table-title'>Nome</td>
+                            <td class='table-title'>Descrição</td>
+                            <td class='table-title'>Classificação</td>
+                            <td class='table-title text-center'>Status</td>
+                            <td class='table-title text-center options-column-width'>Opções</td>
+                        </tr>
+                    </thead>
+                    <tbody id='data-table-reviews' class='min-row-height'>
+                        {{-- js carregando dados --}}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
-<div class="card shadow mb-0">
-    <div style='min-height: 300px'>
-        <div class='table-responsive'>
-            <table id='table-reviews' class='table text-left table-striped unify' style='width:100%'>
-                <thead>
-                    <tr>
-                        <td class='table-title'>Nome</td>
-                        <td class='table-title'>Descrição</td>
-                        <td class='table-title'>Classificação</td>
-                        <td class='table-title'>Status</td>
-                        <td class='table-title text-center options-column-width'>Opções</td>
-                    </tr>
-                </thead>
-                <tbody id='data-table-reviews' class='min-row-height'>
-                    {{-- js carregando dados --}}
-                </tbody>
-            </table>
-        </div>
-    </div>
+
+<div class="d-flex justify-content-center justify-content-md-end">
+    <ul id="pagination-review" class="pagination-sm margin-chat-pagination text-right m-0">
+        {{-- js carrega... --}}
+    </ul>
 </div>
-<ul id="pagination-review" class="pagination-sm margin-chat-pagination text-right" style="margin-top:10px;position:relative;float:right">
-    {{-- js carrega... --}}
-</ul>
+
 {{-- Modal add-edit review --}}
 <div class="modal fade modal-3d-flip-vertical" id="modal_review" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog">
     <div class="modal-dialog modal-lg d-flex justify-content-center">

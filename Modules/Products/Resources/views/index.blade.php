@@ -28,7 +28,7 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="mb-10">
                             <label for="type-products">Tipo</label>
-                            <select class="form-control input-pad" id='type-products'>
+                            <select class="sirius-select" id='type-products'>
                                 <option value="0">Meus Produtos</option>
                                 <option value="1">Produtos Shopify</option>
                             </select>
@@ -37,13 +37,13 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="mb-10">
                             <label for="name">Nome do produto</label>
-                            <input id="name" class="form-control input-pad" placeholder="Digite o nome" maxlength="100">
+                            <input id="name" class="" placeholder="Digite o nome" maxlength="100" style="min-height: 49px;">
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div id="projects-list" class="mb-10 d-none">
                             <label id="select-projects-label" for="select-projects">Projeto</label>
-                            <select id='select-projects' class="form-control input-pad disabled" disabled>
+                            <select id='select-projects' class="sirius-select" disabled>
                                 <option>Carregando...</option>
                             </select>
                         </div>

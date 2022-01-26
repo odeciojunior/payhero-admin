@@ -39,7 +39,7 @@
 
                         <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                             <label for="type_recovery">Tipo de Recuperação</label>
-                            <select name='select_type_recovery' id="recovery_type" class="form-control input-pad default-border">
+                            <select name='select_type_recovery' id="recovery_type" class="sirius-select">
                                 <option value="1" selected>Carrinho Abandonado</option>
                                 <option value="5">Boleto Vencido</option>
                                 <option value="4">PIX Vencido</option>

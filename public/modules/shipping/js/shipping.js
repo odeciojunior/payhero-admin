@@ -377,8 +377,8 @@ $(document).ready(function () {
                                         <td style="vertical-align: middle;">${value.name}</td>
                                         <td style="vertical-align: middle;">${value.value}</td>
                                         <td style="vertical-align: middle;">${value.information}</td>
-                                        <td style="vertical-align: middle;">
-                                        <span class="badge badge-${statusShipping[value.status]}">${value.status_translated}</span>
+                                        <td class="text-center" style="vertical-align: middle;">
+                                            <span class="badge badge-${statusShipping[value.status]}">${value.status_translated}</span>
                                         </td>
                                         <td class="text-center display-sm-none display-m-none" style="vertical-align: middle;">
                                             <span class="badge badge-${activeShipping[value.pre_selected]}">${value.pre_selected_translated}</span>

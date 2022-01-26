@@ -197,33 +197,23 @@
                     <div class="tab-content">
                         <!-- Painel de Dominios -->
                         <div id="tab_domains" class="tab-pane active" role="tabpanel">
-                            <div class="card card-body">
-                                @include('domains::index')
-                            </div>
+                            @include('domains::index')
                         </div>
                         <!-- Painel de Pixels -->
                         <div class="tab-pane" id="tab_pixels-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('pixels::index')
-                            </div>
+                            @include('pixels::index')
                         </div>
                         <!-- Painel de Cupons de Descontos -->
                         <div class="tab-pane" id="tab_coupons-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('discountcoupons::index')
-                            </div>
+                            @include('discountcoupons::index')
                         </div>
                         <!-- Painel de Sms -->
                         <div class="tab-pane" id="tab_sms-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('projectnotification::index')
-                            </div>
+                            @include('projectnotification::index')
                         </div>
                         <!-- Painel de Fretes -->
                         <div class="tab-pane" id="tab-fretes-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('shipping::index')
-                            </div>
+                            @include('shipping::index')
                         </div>
                         <!--- Painel de Planos -->
                         <div class="tab-pane" id="tab_plans-panel" role="tabpanel">
@@ -231,21 +221,15 @@
                         </div>
                         <!--- Upsell -->
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('projectupsellrule::index')
-                            </div>
+                            @include('projectupsellrule::index')
                         </div>
                         <!--- Order Bump -->
                         <div class="tab-pane" id="tab-order-bump-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('orderbump::index')
-                            </div>
+                            @include('orderbump::index')
                         </div>
                         <!-- Reviews -->
                         <div class="tab-pane" id="tab_project_reviews" role="tabpanel">
-                            <div class="card card-body">
-                                @include('projectreviews::index')
-                            </div>
+                            @include('projectreviews::index')
                         </div>
                         <!-- Painel de Configurações  Abre a tela edit-->
                         <div class="tab-pane" id="tab_configuration_project" role="tabpanel">
