@@ -879,6 +879,18 @@ $(document).ready(function () {
         renderSiriusSelect(this);
     });
 
+    $(document).on('shown.bs.modal', function () {
+        let $target = $(this).find('.sirius-select');
+        let classes = Array.from($target).filter(e => e !== 'sirius-select').join(' ');
+        $target.removeClass(classes);
+        $target.wrap(`<div class="sirius-select-container ${classes}"></div>`);
+        $target.hide();
+        $target.after(`<div class="sirius-select-options"></div>`);
+        $target.after(`<div class="sirius-select-text"></div>`);
+
+        renderSiriusSelect($target);
+    })
+
     $(document).on('click', '.sirius-select-text', function () {
         let $target = $(this);
         $target.toggleClass('active');
