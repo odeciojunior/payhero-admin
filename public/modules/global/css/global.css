@@ -1220,11 +1220,11 @@ img.border-icon{
 }
 .modal-plans .box-products .box-details .head div:nth-child(3),
 .modal-plans .box-products .box-details .body .product .div-value:nth-child(3) {
-    width: 112px;
+    width: 120px;
 }
 .modal-plans .box-products .box-details .head div:nth-child(4),
 .modal-plans .box-products .box-details .body .product .div-currency:nth-child(4) {
-    width: 112px;
+    width: 120px;
     margin-right: 0;
 }
 .modal-plans .box-products .box-details .head,
