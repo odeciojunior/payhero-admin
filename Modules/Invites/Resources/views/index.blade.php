@@ -137,8 +137,7 @@
                                 <div class='row'>
                                     <div class='form-group col-12'>
                                         <label for='email'>Email do convidado</label>
-                                        <input name='email_invited' type='text' class='form-control' id='email'
-                                               placeholder='Email'>
+                                        <input name='email_invited' type='text' class='form-control' id='email' placeholder='Email' style="height: 50px !important;">
                                     </div>
                                 </div>
                                 <div class='row'>

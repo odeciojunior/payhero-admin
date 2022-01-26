@@ -40,12 +40,9 @@
             </div>
             <div class="col-sm-3">
                 <label for="custom-input-addon"> Valor a sacar</label>
-                <div class="input-group align-items-center input-custom-transfer">
+                <div class="input-group align-items-center input-custom-transfer" style="height: 49px;">
                     <div class="input-moeda">R$</div>
-                    <input id="custom-input-addon" type="text"
-                           class="form-control input-pad withdrawal-value"
-                           placeholder="Digite o valor" aria-label="Digite o valor"
-                           aria-describedby="basic-addon1">
+                    <input id="custom-input-addon" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" aria-describedby="basic-addon1">
                 </div>
             </div>
             <div class="col-sm-3 pt-1">
