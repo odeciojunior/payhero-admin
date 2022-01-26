@@ -70,10 +70,12 @@
 
                                 <div class="col-sm-12 col-md-3 mb-sm-0">
                                     <label for="date_type">Data</label>
-                                    <select name='date_type' id="date_type" class="form-control select-pad default-border">
+
+                                    <select name='date_type' id="date_type" class="sirius-select">
                                         <option value="start_date">Data do pedido</option>
                                         <option value="end_date">Data do pagamento</option>
                                     </select>
+
                                 </div>
 
                                 <div class="col-sm-12 col-md-3 form-icons mb-15 mb-sm-0">

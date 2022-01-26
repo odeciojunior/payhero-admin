@@ -101,7 +101,7 @@
                 <form id='form-modal-add-domain-record' class=''>
                     <div class="row">
                         <div class='form-group col-lg-2'>
-                            <select id='type-register' name='type-register' class='form-control input-pad'>
+                            <select id='type-register' name='type-register' class='sirius-select'>
                                 <option value='A'>A</option>
                                 <option value='AAA'>AAA</option>
                                 <option value='CNAME'>CNAME</option>
@@ -110,17 +110,17 @@
                             </select>
                         </div>
                         <div class='form-group col-lg-10'>
-                            <input id='name-register' name='name-register' class='input-pad' placeholder='Nome' required>
+                            <input id='name-register' name='name-register' class='input-pad' placeholder='Nome' required style="height: 49px;">
                             <p id='error-name-register-dns' class='text-primary' style='display:none;'>O campo nome é obrigatório</p>
                         </div>
                         <div class='form-group col-lg-3'>
-                            <select id='proxy-select' name='proxy' class='input-pad'>
+                            <select id='proxy-select' name='proxy' class='sirius-select'>
                                 <option id='proxy-active' value='1'>Proxy Ativado</option>
                                 <option id='proxy-inactive' value='0'>Proxy Desativado</option>
                             </select>
                         </div>
                         <div class='col-lg-8'>
-                            <input id='value-record' name='value-record' class='input-pad' placeholder='Valor' required>
+                            <input id='value-record' name='value-record' class='input-pad' placeholder='Valor' required style="height: 49px;">
                             <p id='error-value-record' class='text-primary' style='display:none;'>O campo valor é obrigatório</p>
                         </div>
                         <div class='col-lg-1'>
