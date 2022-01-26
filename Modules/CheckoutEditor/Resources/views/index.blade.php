@@ -330,7 +330,7 @@
                                     <label for="countdown-time" class="checkout-label">Descrição <span class="observation-span">Opcional</span></label>
                                     <textarea class="checkout-textarea" id="countdown_description" name="countdown_description" rows="4" required></textarea>
                                     <div class="textarea-observation">
-                                        <span class="dot"></span><span class="observation-span">Visível somente em desktop.</span>
+                                    <img class="dot" src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}"><span class="observation-span">Visível somente em desktop.</span>
                                     </div>
                                 </div>
 
@@ -794,6 +794,9 @@
                                 <h1 class="checkout-title" data-target="countdown-content">
                                     Descontos automáticos
                                 </h1>
+                                <div class="checkout-subtitle">
+                                    <p>O desconto em % será aplicado de acordo com o método de pagamento.</p>
+                                </div>
                             </div>
 
                             <div>
@@ -911,7 +914,7 @@
                             </div>
 
                             <div class="textarea-observation">
-                                <span class="dot"></span><span class="observation-span">Caso preenchido, esse número apareçerá para o cliente no envio da mensagem de WhatsApp.</span>
+                                <img class="dot" src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}"></span><span class="observation-span">Caso preenchido, esse número apareçerá para o cliente no envio da mensagem de WhatsApp.</span>
                             </div>
                         </div>
                     </div>
@@ -1489,6 +1492,6 @@
 <script src="{{asset('modules/checkouteditor/js/cropper.min.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/verifyPhone.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/checkoutEditor.js?v=' . uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/loadcheckoutdata.js?v=' . uniqid())}}"></script>
+<script src="{{asset('modules/checkouteditor/js/loadCheckoutData.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/scrollPreview.js?v=' . uniqid())}}"></script>
 @endpush

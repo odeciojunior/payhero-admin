@@ -101,12 +101,7 @@
 
 .preview-banner img {
     width: inherit;
-    object-fit: cover;
     background: #fff;
-}
-
-.preview-banner.desktop img {
-    height: 70px;
 }
 
 .preview-banner.mobile img {

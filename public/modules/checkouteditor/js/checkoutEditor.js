@@ -30,6 +30,7 @@ $(document).ready( function () {
 
     $("#download_template_banner").on("click", function (e) {
         e.preventDefault();
+        window.location.href = $(this).attr('data-href');
     });
 
     $(".accept-payment-type").on("change", function () {
@@ -378,7 +379,7 @@ $(document).ready( function () {
                 highlight: false,
                 movable: false,
                 viewMode: 3,
-                aspectRatio: 960 / 210,
+                aspectRatio: 960/150,
                 zoom: function (e) {
                     var ratio = Math.round(e.ratio * 1000) / 10;
                     $dataZoom.text(ratio);

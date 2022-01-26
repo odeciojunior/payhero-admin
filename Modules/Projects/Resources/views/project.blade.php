@@ -26,7 +26,7 @@
 
         <div style="display: none" class="page-header container">
             <h1 class="page-title my-10" style="min-height: 28px">
-                <a class="gray" href="/projects">
+                <a class="gray" href="/projects" style="outline: none">
                     <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
                     Meus projetos
                 </a>
