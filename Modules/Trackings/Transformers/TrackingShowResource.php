@@ -10,11 +10,22 @@ class TrackingShowResource extends JsonResource
 {
     public function toArray($request)
     {
-        $linkBase = $this->productPlanSale->plan->project->domains->first()->name ?? '';
-
         $trackingCode = $this->tracking_code == "CLOUDFOX000XX"
             ? ''
             : $this->tracking_code;
+
+        if(!empty($product)) {
+            $product = $this->product;
+            $linkBase = $this->productPlanSale->plan->project->domains->first()->name;
+        } else {
+            $productSaleApi = $this->productPlanSale->productSaleApi;
+            $product = (object) [
+                'name' => $productSaleApi->name,
+                'description' => '',
+                'photo' => asset('/modules/global/img/produto.svg')
+            ];
+            $linkBase = 'cloudfox.net';
+        }
 
         return [
             'id' => Hashids::encode($this->id),
@@ -24,9 +35,9 @@ class TrackingShowResource extends JsonResource
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y'),
             'amount' => $this->amount,
             'product' => [
-                'name' => $this->product->name,
-                'description' => $this->product->description,
-                'photo' => $this->product->photo,
+                'name' => $product->name,
+                'description' => $product->description,
+                'photo' => $product->photo,
             ],
             'delivery' => [
                 'street' => $this->delivery->street ?? '',

@@ -35,7 +35,7 @@ class TrackingCodeUpdatedActiveCampaignListener implements ShouldQueue
                 'sale.productsPlansSale.product',
             ])->find($event->trackingId);
 
-            if ($tracking) {
+            if ($tracking && $tracking->sale && $tracking->sale->project) {
 
                 $sale = $tracking->sale;
                 $customer = $sale->customer;
