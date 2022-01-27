@@ -9,6 +9,9 @@ $(() => {
         let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         link = '/api/orderbump' + (link || '');
 
+        $('#tab-order-bump-panel').find('.no-gutters').css('display', 'none');
+        $('#table-order-bump').find('thead').css('display', 'none');
+
         $.ajax({
             method: 'GET',
             url: link,
@@ -27,6 +30,9 @@ $(() => {
                 let table = $('#table-order-bump tbody');
                 if (rules.length) {
                     table.html('');
+                    $('#tab-order-bump-panel').find('.no-gutters').css('display', 'flex');
+                    $('#table-order-bump').find('thead').css('display', 'contents');
+
                     for (let rule of rules) {
                         let row = `<tr>
                                        <td>${rule.description}</td>
@@ -39,6 +45,7 @@ $(() => {
                                    </tr>`;
                         table.append(row);
                     }
+
                     pagination(resp, 'order-bump', index);
                 } else {
                     table.html(`
@@ -47,7 +54,7 @@ $(() => {
                                 <div class='d-flex justify-content-center align-items-center'>
                                     <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
                                     <div class='text-left'>
-                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem order bump</h1>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum order bump configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro order bump para poder
                                         <br>gerenciá-los nesse painel.</p>
                                         <button type='button' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-store-order-bump">Adicionar order bump</button>
