@@ -50,7 +50,7 @@ class CieloService implements Statement
             return 0;
         }
 
-        return $this->company->cielo_balance;
+        return $this->company->cielo_balance - $this->getBlockedBalance();
     }
 
     public function getPendingBalance() : int
@@ -112,8 +112,7 @@ class CieloService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $availableBalance += $pendingBalance;
-        $availableBalance -= $blockedBalance;
+        $availableBalance += $pendingBalance;        
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
@@ -132,9 +131,7 @@ class CieloService implements Statement
     public function withdrawalValueIsValid($withdrawalValue): bool
     {
         $availableBalance = $this->company->cielo_balance;
-        $blockedBalance = $this->getBlockedBalance();
-        $availableBalance -= $blockedBalance;
-
+        
         if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance) {
             return false;
         }
@@ -272,8 +269,7 @@ class CieloService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
-        $availableBalance -= $blockedBalance;
+        $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;        
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
 
         return [

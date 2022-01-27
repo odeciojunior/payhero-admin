@@ -123,7 +123,7 @@ class DashboardApiController extends Controller
             $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
             $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
 
-            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE) - $blockedBalance;
+            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE) ;
             $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
             $blockedBalanceTotal = $blockedBalance + $blockedBalancePending;
             $statusArray = [

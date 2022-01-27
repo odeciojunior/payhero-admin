@@ -388,7 +388,7 @@ class GetnetService implements Statement
         $pendingDebtBalance = $this->getPendingDebtBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
 
         return [
