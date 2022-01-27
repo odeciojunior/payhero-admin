@@ -57,6 +57,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
 
+        $schedule->command('getnet:release-unblocked-balance')->dailyAt('02:30');
+
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
 
