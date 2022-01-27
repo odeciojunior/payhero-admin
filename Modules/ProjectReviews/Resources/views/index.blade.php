@@ -12,7 +12,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div id="add-review" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_review">
+                        <div class="btn-holder add-review d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_review">
                             <span class="link-button-dependent blue">Adicionar </span>
                             <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
                                 <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
@@ -33,7 +33,7 @@
                             <td class='table-title'>Descrição</td>
                             <td class='table-title'>Classificação</td>
                             <td class='table-title text-center'>Status</td>
-                            <td class='table-title text-center options-column-width'>Opções</td>
+                            <td class='table-title text-center options-column-width'></td>
                         </tr>
                     </thead>
                     <tbody id='data-table-reviews' class='min-row-height'>

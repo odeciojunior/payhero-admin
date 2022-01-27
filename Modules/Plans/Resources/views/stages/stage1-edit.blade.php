@@ -91,7 +91,7 @@
             </div>
         </div>
         <div class="text-center description-tax">
-            <p class="m-0" style="line-height: 14px; font-size: 11px;">Simulação considerando compras à vista com taxa de <span></span> % + 1,00 (30D).</p>
+            <p class="m-0" style="line-height: 14px; font-size: 11px;">Simulação considerando compras à vista com taxa de <span></span> % + 1,00 (D+<span class="release_money_days"></span>).</p>
             <p class="font-weight-bold m-0" style="line-height: 14px; font-size: 11px;">Valor estimado sujeito à mudanças de acordo com as condições de pagamento.</p>
         </div>
     </div>

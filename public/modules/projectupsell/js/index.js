@@ -53,7 +53,21 @@ $(document).ready(function () {
                 dataTable.html('');
                 if (response.data == '') {
                     $('.div-config').hide();
-                    $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum upsell encontrado</td></tr>");
+                    $('#data-table-upsell').html(`
+                        <tr class='text-center'>
+                            <td colspan='3' style='height: 70px;vertical-align: middle'>
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem upsell</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro upsell para poder
+                                        <br>gerenciá-los nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-upsell' data-toggle="modal" data-target="#modal_add_upsell">Adicionar upsell</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
                     $('#table-upsell').addClass('table-striped');
                 } else {
                     $('#table-upsell').addClass('table-striped');
@@ -82,7 +96,7 @@ $(document).ready(function () {
         });
     }
 
-    $("#add-upsell").on('click', function () {
+    $(document).on('click', '.add-upsell', function () {
         $('#modal_add_upsell .modal-title').html("Novo upsell");
         $(".bt-upsell-save").show();
         $(".bt-upsell-update").hide();
@@ -174,10 +188,11 @@ $(document).ready(function () {
 
     $(document).on('click', '.delete-upsell', function (event) {
         event.preventDefault();
-        let upsellId = $(this).data('upsell');
-        $('.btn-delete-upsell').unbind('click');
-        $('.btn-delete-upsell').on('click', function () {
 
+        let upsellId = $(this).data('upsell');
+
+        $('#btn-delete-upsell').unbind('click');
+        $(document).on('click', '#btn-delete-upsell', function () {
             $.ajax({
                 method: "DELETE",
                 url: "/api/projectupsellrule/" + upsellId,
@@ -187,7 +202,7 @@ $(document).ready(function () {
                     'Accept': 'application/json',
                 },
                 error: function (response) {
-                    loadingOnScreenRemove()
+                    loadingOnScreenRemove();
                     errorAjaxResponse(response);
                 },
                 success: function (response) {

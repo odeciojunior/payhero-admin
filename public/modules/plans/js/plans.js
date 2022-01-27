@@ -11,6 +11,7 @@ $(function () {
     var products_plan = [];
     var plan_id = '';
     var gateway_tax = 0;
+    var gateway_release_money_days = 0;
     var currency_quotations = 0;
     var allow_change_in_block = false;
 
@@ -35,6 +36,7 @@ $(function () {
             },
             success: function success(response) {
                 gateway_tax = parseFloat(response.data.gateway_tax);
+                gateway_release_money_days = response.data.gateway_release_money_days;
                 currency_quotations = response.data.currency_quotation;
             }
         });
@@ -577,6 +579,7 @@ $(function () {
 
                 $(modal).find('.costs-plan').find('p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(calculateCostsPlan()));
                 $(modal).find('.box-review').find('.tax').html(gateway_tax.toString().replace('.', ','));
+                $(modal).find('.box-review').find('.release_money_days').html(gateway_release_money_days);
 
                 $(modal).find('#stage3').addClass('show active').promise().done( function() {
                     var autoHeight = $(modal).find('.height-auto').height() + 40;
@@ -750,6 +753,7 @@ $(function () {
                         $(modal).find('#stage1').find('.profit-plan p').html(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(return_value));
 
                         $(modal).find('#stage1').find('.description-tax p span').html(gateway_tax.toString().replace('.', ','));
+                        $(modal).find('#stage1').find('.release_money_days').html(gateway_release_money_days);
 
                         $(modal).find('#stage1').find('.products-edit').find('.title').find('span').html(' ' + response.data.products.length + (response.data.products.length > 1 ? ' produtos' : ' produto'));
 
@@ -1530,14 +1534,14 @@ $(function () {
     });
 
     // Add new Plan
-    $("#add-plan").on('click', function () {
+    $(document).on('click', '.add-plan', function () {
         selected_products = [];
 
         var modal = '#modal_add_plan';
 
         $(modal).find('.tab-pane').removeClass('show active');
 
-        $(modal).attr('data-backdrop', 'static');
+        $(modal).attr('data-backdrop', 'true');
         $(modal).modal('show');
 
         getProducts(modal, 'create');
@@ -2100,7 +2104,21 @@ $(function () {
             success: function success(response) {
                 $('#pagination-plans').html('');
                 if (isEmpty(response.data)) {
-                    $("#data-table-plan").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
+                    $("#data-table-plan").html(`
+                        <tr class='text-center'>
+                            <td colspan='11' style='height: 70px; vertical-align: middle;'>
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem planos</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro plano para poder
+                                        <br>gerenciá-los nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-plan' data-toggle="modal" data-target="#modal_add_plan">Adicionar plano</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
                     $('#table-plans').addClass('table-striped');
 
                 } else {

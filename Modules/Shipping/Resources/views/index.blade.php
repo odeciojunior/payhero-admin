@@ -5,7 +5,7 @@
             <div class='d-flex align-items-center'>
                 <div class='col-sm-12'>
                     <div class="d-flex justify-content-end">
-                        <div id="add-shipping" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal-create-shipping">
+                        <div class="btn-holder add-shipping d-flex align-items-center pointer" data-toggle="modal" data-target="#modal-create-shipping">
                             <span class="link-button-dependent blue"> Adicionar </span>
                             <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
                                 <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
@@ -28,7 +28,7 @@
                             <td class='table-title' >Informação</td>
                             <td class='table-title text-center' >Status</td>
                             <td class='table-title display-sm-none display-m-none' style='text-align:center' >Pré-Selecionado</td>
-                            <td class='table-title text-center options-column-width'>Opções</td>
+                            <td class='table-title text-center options-column-width'></td>
                         </tr>
                     </thead>
                     <tbody id='dados-tabela-frete' class='min-row-height'>
@@ -133,7 +133,7 @@
                 <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
                     <b>Cancelar</b>
                 </button>
-                <button  frete="" type="button" class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                <button id="btn-delete-frete" type="button" class="col-4 btn border-0 btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" frete="" style="width: 20%;">
                     <b class="mr-2">Excluir </b>
                     <span class="o-bin-1"></span>
                 </button>

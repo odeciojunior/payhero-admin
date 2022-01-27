@@ -921,7 +921,13 @@ function onlyNumbers(string) {
     if(string == undefined) {
         return 0;
     }
-    return string.replace(/\D/g,'');
+
+    let numbers = string.replace(/\D/g,'')
+    if(string.includes('-')){
+        return parseInt(`-${numbers}`)
+    }
+
+    return parseInt(numbers);
 }
 
 function removeMoneyCurrency(string) {

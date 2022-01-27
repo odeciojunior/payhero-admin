@@ -283,7 +283,7 @@ class AsaasService implements Statement
     }
 
     public function makeAnticipation(Sale $sale, $saveRequests = true, $simulate = false) {
-        $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
+        $this->getCompanyApiKey($sale);
 
         $data = [
             "agreementSignature"=> $sale->user->name,
@@ -331,9 +331,10 @@ class AsaasService implements Statement
 
     public function checkAnticipation(Sale $sale)
     {
-        $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
+        $this->getCompanyApiKey($sale);
 
-        $curl = curl_init('https://www.asaas.com/api/v3/anticipations/' . $sale->anticipation_id);
+        $url = 'https://www.asaas.com/api/v3/anticipations/' . $sale->anticipation_id;
+        $curl = curl_init($url);
 
         curl_setopt($curl, CURLOPT_ENCODING, '');
         //curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
@@ -346,18 +347,18 @@ class AsaasService implements Statement
         ]);
 
         $result = curl_exec($curl);
-
+        $httpStatus     = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
+        $response = json_decode($result, true);
+
+        $this->saveRequests($url, $response, $httpStatus, [], $sale->id);
         return json_decode($result, true);
     }
 
-    public function getCompanyApiKey($owner_id,$project_id)
+    public function getCompanyApiKey(Sale $sale)
     {
-        $company = UserProject::where('user_id', $owner_id)
-            ->where('project_id', $project_id)
-            ->first()
-            ->company;
+        $company = $sale->transactions()->where('type', Transaction::TYPE_PRODUCER)->first()->company;
 
         $this->companyId = $company->id;
         $this->apiKey = $company->getGatewayApiKey(foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID);

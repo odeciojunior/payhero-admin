@@ -150,7 +150,7 @@ $('#bt-withdrawal, #bt-withdrawal_m').on('click', function () {
             `);
 
         if (!isEmptyValue(debitValue)) {
-            const $newValueSelected = $modal.find(".s-btn.green")
+            const $newValueSelected = $modal.find(".value-select")
             const $value = $newValueSelected.text().trim();
 
             let result = $newValueSelected.data("value") - removeFormatNumbers(debitValue)

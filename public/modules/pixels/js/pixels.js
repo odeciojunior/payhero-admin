@@ -78,7 +78,15 @@ $(function () {
                     $("#data-table-pixel").html(`
                         <tr class="text-center">
                             <td colspan="8" style="height: 70px; vertical-align: middle;">
-                                Nenhum registro encontrado
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem pixels</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro pixel para poder
+                                        <br>gerenciá-los nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-pixel' data-toggle="modal" data-target="#modal-create-pixel">Adicionar pixel</button>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     `);
@@ -95,7 +103,7 @@ $(function () {
                             <td style='text-align:center'>
                                 <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
                                 <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
-                                <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class='o-bin-1'></span></a>
+                                <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' data-target='#modal-delete-pixel' type='a'><span class='o-bin-1'></span></a>
                             </td>
                         </tr>
                     `);
@@ -347,39 +355,40 @@ $(function () {
 
     // Open Modal Destroy Pixel
     $(document).on('click', '.delete-pixel', function (event) {
-        $("#modal-delete-pixel .btn-delete").attr("pixel", $(this).attr('pixel'));
-        $("#modal-delete-pixel").modal('show');
-    });
+        event.preventDefault();
 
-    // Delete Pixel
-    $(document).on('click', '#modal-delete-pixel .btn-delete', function () {
-        const pixel = $(this).attr('pixel');
-        $.ajax({
-            method: "DELETE",
-            url: "/api/project/" + projectId + "/pixels/" + pixel,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function (_error3) {
-                function error() {
-                    return _error3.apply(this, arguments);
+        let pixel = $(this).attr('pixel');
+
+        // Delete Pixel
+        $('#btn-delete').unbind('click');
+        $('#btn-delete').on('click', function () {
+            $.ajax({
+                method: "DELETE",
+                url: "/api/project/" + projectId + "/pixels/" + pixel,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: function (_error3) {
+                    function error() {
+                        return _error3.apply(this, arguments);
+                    }
+
+                    error.toString = function () {
+                        return _error3.toString();
+                    };
+
+                    return error;
+                }(function (response) {
+                    errorAjaxResponse(response);
+                }),
+                success: function success() {
+                    alertCustom("success", "Pixel Removido com sucesso");
+                    atualizarPixel(currentPage);
                 }
 
-                error.toString = function () {
-                    return _error3.toString();
-                };
-
-                return error;
-            }(function (response) {
-                errorAjaxResponse(response);
-            }),
-            success: function success() {
-                alertCustom("success", "Pixel Removido com sucesso");
-                atualizarPixel(currentPage);
-            }
-
+            });
         });
     });
 
@@ -388,7 +397,7 @@ $(function () {
      */
 
     // Open Modal New Pixel
-    $("#add-pixel").on('click', function () {
+    $(".add-pixel").on('click', function () {
         openModalCreatePixel();
         $("#modal-create-pixel").modal('show');
     });

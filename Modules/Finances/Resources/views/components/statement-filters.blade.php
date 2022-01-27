@@ -33,7 +33,7 @@
                     <div class="col-12 col-lg-3 px-0 px-lg-10">
                         <div class="form-group">
                             <label for="transaction">Transação</label>
-                            <input type="text" id="transaction" class="form-control select-pad" placeholder="Digite o código">
+                            <input type="text" id="transaction" class="form-control select-pad" placeholder="Digite o código" style="height: 49px !important;">
                         </div>
                     </div>
                     <div class="col-12 col-lg-3 px-0 px-lg-10">
@@ -56,13 +56,13 @@
                         <div class="col-12 col-lg-3 px-0 px-lg-10">
                             <div class="form-group">
                                 <label for="reason">Razão</label>
-                                <input type="text" id="reason" class="form-control select-pad" placeholder="Digite a razão. Ex.: Saque">
+                                <input type="text" id="reason" class="form-control select-pad" placeholder="Digite a razão. Ex.: Saque" style="height: 49px !important;">
                             </div>
                         </div>
                         <div class="col-12 col-lg-3 px-0 px-lg-10">
                             <div class="form-group">
                                 <label for="transaction-value">Valor</label>
-                                <input type="text" id="transaction-value" class="form-control select-pad withdrawal-value" placeholder="Digite o valor">
+                                <input type="text" id="transaction-value" class="form-control select-pad withdrawal-value" placeholder="Digite o valor" style="height: 49px !important;">
                             </div>
                         </div>
                         <div class="col-12 col-lg-3 px-0 px-lg-10">
