@@ -57,7 +57,10 @@ $(function () {
         }
 
         loadOnTable('#data-table-pixel', '#table-pixel');
+
         $("#pagination-pixels").html('');
+        $('#tab_pixels-panel').find('.no-gutters').css('display', 'none');
+        $('#table-pixel').find('thead').css('display', 'none');
 
         $.ajax({
             method: "GET",
@@ -81,7 +84,7 @@ $(function () {
                                 <div class='d-flex justify-content-center align-items-center'>
                                     <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
                                     <div class='text-left'>
-                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem pixels</h1>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum pixel configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro pixel para poder
                                         <br>gerenciá-los nesse painel.</p>
                                         <button type='button' class='btn btn-primary add-pixel' data-toggle="modal" data-target="#modal-create-pixel">Adicionar pixel</button>
@@ -90,27 +93,29 @@ $(function () {
                             </td>
                         </tr>
                     `);
-                    return;
+                } else {
+                    $('#tab_pixels-panel').find('.no-gutters').css('display', 'flex');
+                    $('#table-pixel').find('thead').css('display', 'contents');
+
+                    $.each(response.data, function (index, value) {
+                        $("#data-table-pixel").append(`
+                            <tr>
+                                <td>${value.name}</td>
+                                <td>${value.code}</td>
+                                <td>${value.platform_enum}</td>
+                                <td class="text-center"><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
+                                <td style='text-align:center'>
+                                    <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
+                                    <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
+                                    <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' data-target='#modal-delete-pixel' type='a'><span class='o-bin-1'></span></a>
+                                </td>
+                            </tr>
+                        `);
+                        $('#table-pixel').addClass('table-striped');
+                    });
+
+                    pagination(response, 'pixels', atualizarPixel);
                 }
-
-                $.each(response.data, function (index, value) {
-                    $("#data-table-pixel").append(`
-                        <tr>
-                            <td>${value.name}</td>
-                            <td>${value.code}</td>
-                            <td>${value.platform_enum}</td>
-                            <td class="text-center"><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
-                            <td style='text-align:center'>
-                                <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
-                                <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
-                                <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' data-target='#modal-delete-pixel' type='a'><span class='o-bin-1'></span></a>
-                            </td>
-                        </tr>
-                    `);
-                    $('#table-pixel').addClass('table-striped');
-                });
-
-                pagination(response, 'pixels', atualizarPixel);
             }
         });
     }

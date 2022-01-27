@@ -1,6 +1,6 @@
 $(document).ready(function () {
     let integrationTypeEnum = {
-        external: 'Profitfy',
+        external: 'Integração externa',
         checkout_api: 'Checkout API'
     };
     let integrationTypeEnumBadge = {
