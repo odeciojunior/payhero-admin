@@ -4,7 +4,7 @@
             <div class='d-flex align-items-center'>
                 <div class='col-md-12'>
                     <div class="d-flex justify-content-end">
-                        <div id="add-coupon" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal-create-coupon">
+                        <div class="btn-holder add-coupon d-flex align-items-center pointer" data-toggle="modal" data-target="#modal-create-coupon">
                             <span class="link-button-dependent blue"> Adicionar </span>
                             <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
                                 <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
@@ -26,7 +26,7 @@
                             <td class='table-title' >Valor</td>
                             <td class='table-title' >Código</td>
                             <td class='table-title text-center' >Status</td>
-                            <td class='table-title options-column-width text-center'>Opções</td>
+                            <td class='table-title options-column-width text-center'></td>
                         </tr>
                     </thead>
                     <tbody id='data-table-coupon' class='min-row-height'>
@@ -131,7 +131,7 @@
                 <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
                     <b>Cancelar</b>
                 </button>
-                <button frete="" type="button" data-dismiss="modal"  class="col-4 btn border-0 btn-delete btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" style="width: 20%;">
+                <button frete="" type="button" data-dismiss="modal" id="btn-delete" class="col-4 btn border-0 btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" style="width: 20%;">
                     <b class="mr-2">Excluir </b>
                     <span class="o-bin-1"></span>
                 </button>

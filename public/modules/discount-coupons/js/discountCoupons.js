@@ -112,11 +112,32 @@ $(function () {
         });
     });
 
-    // carregar modal delecao
+    // load delete modal
     $(document).on('click', '.delete-coupon', function (event) {
+        event.preventDefault();
+
         let coupon = $(this).attr('coupon');
-        $('#modal-delete-coupon .btn-delete').attr('coupon', coupon);
-        $("#modal-delete-coupon").modal('show');
+
+        $('#btn-delete').unbind('click');
+        $(document).on('click', '#btn-delete', function() {
+            $.ajax({
+                method: "DELETE",
+                url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    atualizarCoupon();
+
+                    alertCustom("success", "Cupom Removido com sucesso");
+                }
+            });
+        });
     });
 
     //cria novo cupom
@@ -181,29 +202,7 @@ $(function () {
         });
     });
 
-    //deletar cupom
-    $('#modal-delete-coupon .btn-delete').on('click', function () {
-        let coupon = $(this).attr('coupon');
 
-        $.ajax({
-            method: "DELETE",
-            url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(data) {
-
-                alertCustom("success", "Cupom Removido com sucesso");
-                atualizarCoupon();
-            }
-
-        });
-    });
 
     function atualizarCoupon() {
 
@@ -231,7 +230,21 @@ $(function () {
                 $("#data-table-coupon").html('');
 
                 if (response.data == '') {
-                    $("#data-table-coupon").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
+                    $("#data-table-coupon").html(`
+                        <tr class='text-center'>
+                            <td colspan='8' style='height: 70px; vertical-align: middle;'>
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem cupons</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro cupom para poder
+                                        <br>gerenciá-los nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-create-coupon">Adicionar cupom</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
                 } else {
                     $('#count-coupons').html(response.meta.total)
                     $.each(response.data, function (index, value) {
@@ -246,7 +259,7 @@ $(function () {
                             <td style="text-align:center">
                                 <a role="button" title='Visualizar' class="mg-responsive details-coupon pointer" coupon="${value.id}"><span class="o-eye-1"></span></a>
                                 <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" coupon="${value.id}"><span class="o-edit-1"></span> </a>
-                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}"><span class='o-bin-1'></span></a>
+                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}" data-toggle="modal" data-target="#modal-delete-coupon"><span class='o-bin-1'></span></a>
                             </td>
                         </tr>`;
 

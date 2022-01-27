@@ -132,7 +132,21 @@ $(document).ready(function () {
                 dataTable.html('');
 
                 if (response.data == '') {
-                    dataTable.html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum review encontrado</td></tr>");
+                    dataTable.html(`
+                        <tr class='text-center'>
+                            <td colspan='11' style='height: 70px;vertical-align: middle'>
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem reviews</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro review para poder
+                                        <br>gerenciá-los nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-review' data-toggle="modal" data-target="#modal_review">Adicionar review</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
                 } else {
                     let data = '';
                     $('#count-project-reviews').html(response.meta.total)
@@ -167,7 +181,7 @@ $(document).ready(function () {
         });
     }
 
-    $("#add-review").on('click', function () {
+    $(document).on('click', '.add-review', function () {
         $('#modal_review .modal-title').html("Novo review");
         $(".bt-review-save").show();
         $(".bt-review-update").hide();
@@ -189,7 +203,6 @@ $(document).ready(function () {
     $(document).on('click', '.bt-review-save', function () {
         var btReviewSave = $('.bt-review-save');
         btReviewSave.attr("disabled", "disabled");
-
 
         var form_data = new FormData(document.getElementById('form_review'));
         form_data.append('project_id', projectId);
