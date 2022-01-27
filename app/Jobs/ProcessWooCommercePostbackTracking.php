@@ -67,27 +67,39 @@ class ProcessWooCommercePostbackTracking implements ShouldQueue
             try {
                 $saleProducts = $productService->getProductsBySale($sale);
 
-                foreach ($this->postback['line_items'] as $line_item) {
+                foreach ($saleProducts as $product) {
+                        
                     $trackingCode = $this->postback["correios_tracking_code"];
+                    
                     if (!empty($trackingCode)) {
-
-                        //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
-                        $products = $saleProducts->where('shopify_variant_id', $line_item["sku"])
-                            ->where('amount', $line_item["quantity"])
-                            ->where('type_enum', (new Product)->present()->getType('physical'));
-
-                        if (!$products->count()) {
-                            $products = $saleProducts
-                                ->where('name', $line_item["name"])
-                                ->where('amount', $line_item["quantity"]);
-                        }
-                        if ($products->count()) {
-                            foreach ($products as $product) {
-                                $trackingService->createOrUpdateTracking($trackingCode, $product->product_plan_sale_id);
-                            }
-                        }
+                        
+                       
+                        $trackingService->createOrUpdateTracking($trackingCode, $product->product_plan_sale_id);
+                        
                     }
                 }
+
+                // foreach ($this->postback['line_items'] as $line_item) {
+                //     $trackingCode = $this->postback["correios_tracking_code"];
+                //     if (!empty($trackingCode)) {
+
+                //         //verifica se existem produtos na venda com mesmo variant_id e com mesma quantidade vendida
+                //         $products = $saleProducts->where('shopify_variant_id', $line_item["sku"])
+                //             ->where('amount', $line_item["quantity"])
+                //             ->where('type_enum', (new Product)->present()->getType('physical'));
+
+                //         if (!$products->count()) {
+                //             $products = $saleProducts
+                //                 ->where('name', $line_item["name"])
+                //                 ->where('amount', $line_item["quantity"]);
+                //         }
+                //         if ($products->count()) {
+                //             foreach ($products as $product) {
+                //                 $trackingService->createOrUpdateTracking($trackingCode, $product->product_plan_sale_id);
+                //             }
+                //         }
+                //     }
+                // }
             } catch (Exception $e) {
                 report($e);
             }
