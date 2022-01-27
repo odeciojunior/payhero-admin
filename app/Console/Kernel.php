@@ -176,6 +176,9 @@ class Kernel extends ConsoleKernel
         /** transfere saldo excedente no asaas*/
         $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('08:00');
 
+        /** Antifraud backfill Asaas chargebacks */
+        $schedule->command('antifraud:backfill-asaas-chargebacks')->hourly();
+
     }
 
 
