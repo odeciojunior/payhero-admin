@@ -227,7 +227,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/integrations/js/index.js?v='. versionsFile()) }}"></script>
+        <script src="{{ asset('modules/integrations/js/index.js?v='.uniqid()) }}"></script>
     @endpush
 
 @endsection
