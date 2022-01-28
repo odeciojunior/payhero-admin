@@ -220,29 +220,7 @@
 																	</div>
 																</div>
 															</div>
-															<div class="container">
-																<div class="data-holder b-bottom">
-																	<div class="box-payment-option">
-																		<div class="col-payment grey box-image-payment">
-																			<div class="box-ico">
-																				<span class="o-cash-dispenser-1"></span>
-																			</div> Boleto
-																		</div>
-																		<div class="box-payment-option option">
-																			<div class="col-payment grey" id='percent-values-boleto'>
-																				0
-																			</div>
-																			<div class="col-payment col-graph">
-																				<div class="bar pink">barrinha</div>
-																			</div>
-																			<div class="col-payment">
-																				<span class="money-td green bold grey" id='boleto-value'></span>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div>
-															<div class="container">
+                                                            <div class="container">
 																<div class="data-holder b-bottom">
 																	<div class="box-payment-option">
 																		<div class="col-payment grey box-image-payment">
@@ -281,6 +259,42 @@
 																	</div>
 																</div>
 															</div>
+															<div class="container">
+																<div class="data-holder b-bottom">
+																	<div class="box-payment-option">
+																		<div class="col-payment grey box-image-payment">
+																			<div class="box-ico">
+                                                                            <span class="">
+                                                                                <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                    <g clip-path="url(#clip0_386_407)">
+                                                                                        <rect x="-161.098" y="-1313.01" width="646" height="1962" rx="12" fill="white"/>
+                                                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M17.4016 2.27981H2.40165C2.07013 2.27981 1.75218 2.41555 1.51776 2.65717C1.28333 2.89878 1.15163 3.22648 1.15163 3.56817V13.875C1.15172 14.2167 1.28346 14.5443 1.51787 14.7858C1.75229 15.0274 2.07019 15.1631 2.40165 15.1631H17.4019C17.7334 15.1631 18.0514 15.0273 18.2858 14.7857C18.5202 14.5441 18.6519 14.2164 18.6519 13.8747V3.56817C18.6519 3.39895 18.6196 3.23139 18.5567 3.07506C18.4939 2.91873 18.4018 2.77668 18.2857 2.65704C18.1696 2.5374 18.0317 2.44251 17.88 2.37779C17.7283 2.31306 17.5658 2.27977 17.4016 2.27981ZM2.40165 0.991455C1.7386 0.991455 1.10271 1.26293 0.633857 1.74616C0.165008 2.22939 -0.0983887 2.88479 -0.0983887 3.56817L-0.0983887 13.875C-0.0983887 14.5584 0.165008 15.2138 0.633857 15.6971C1.10271 16.1803 1.7386 16.4518 2.40165 16.4518H17.4019C17.7302 16.4518 18.0553 16.3851 18.3586 16.2556C18.6619 16.1261 18.9376 15.9363 19.1697 15.6971C19.4019 15.4578 19.586 15.1737 19.7116 14.8611C19.8373 14.5485 19.9019 14.2134 19.9019 13.875V3.56817C19.9019 3.22979 19.8373 2.89473 19.7116 2.58211C19.586 2.26948 19.4019 1.98543 19.1697 1.74616C18.9376 1.50689 18.6619 1.31709 18.3586 1.1876C18.0553 1.0581 17.7302 0.991455 17.4019 0.991455H2.40165Z" fill="#636363"/>
+                                                                                        <path d="M4.34595 4.99976H6.27182V12.9399H4.34595V4.99976ZM7.23492 4.99976H8.19803V12.9399H7.23492V4.99976ZM14.9387 4.99976H15.9018V12.9399H14.9387V4.99976ZM11.087 4.99976H13.977V12.9399H11.087V4.99976ZM9.16113 4.99976H10.1242V12.9399H9.16113V4.99976Z" fill="#636363"/>
+                                                                                    </g>
+                                                                                    <defs>
+                                                                                        <clipPath id="clip0_386_407">
+                                                                                            <rect width="20.082" height="15.46" fill="white" transform="translate(0 0.991486)"/>
+                                                                                        </clipPath>
+                                                                                    </defs>
+                                                                                </svg>
+                                                                            </span>
+																			</div> Boleto
+																		</div>
+																		<div class="box-payment-option option">
+																			<div class="col-payment grey" id='percent-values-boleto'>
+																				0
+																			</div>
+																			<div class="col-payment col-graph">
+																				<div class="bar pink">barrinha</div>
+																			</div>
+																			<div class="col-payment">
+																				<span class="money-td green bold grey" id='boleto-value'></span>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															
 														</div>
                                                     </div>
 												</div>

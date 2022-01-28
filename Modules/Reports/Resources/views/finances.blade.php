@@ -145,7 +145,7 @@
 
                 <div class="row">
                     <div class="container d-flex box-chart-primary">
-                        <!-- /comission -->    
+                        <!-- comission -->    
                         <div class="commission">
                             <div class="card">
                                 <section class="container">
@@ -170,7 +170,7 @@
                                 </section>
 
                                 <section class="container">
-                                    <div class="graph-finance">
+                                    <div class="graph-reports">
                                         <div class="new-finance-graph"></div>
                                     </div>
                                 </section>
@@ -198,11 +198,11 @@
                                                             Recebido
                                                         </h6>
                                                         <small>R$</small>
-                                                        <strong class="total">1.655,00</strong>
+                                                        <strong class="total grey">1.655,00</strong>
                                                     </div>
                                                     <div class="balance col-6">
                                                         <h6 class="grey font-size-14 qtd">Quantidade</h6>
-                                                        <strong class="total">240 vendas</strong>
+                                                        <strong class="total grey">240 vendas</strong>
                                                     </div>
                                                 </div>
                                             </footer>

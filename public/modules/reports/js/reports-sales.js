@@ -18,68 +18,59 @@ function barGraph() {
         }
     };
 
-    const ctx = document.getElementById('financesChart').getContext('2d');
+    const ctx = document.getElementById('salesChart').getContext('2d');
         const myChart = new Chart(ctx, {
             plugins: [legendMargin],
             type: 'bar',
             data: {
-                labels: ['SET', 'AGO', 'JUL', 'JUN', 'MAY', 'ABR'],
+                labels: ['','','','', '', ''],
                 datasets: [
                     {
-                        label: 'Receitas',
-                        data: [35000,81650,30],
-                        color:'#636363',
-                        backgroundColor: "rgba(69, 208, 126, 1)",
+                        axis: 'x',
+                        label: '',
+                        data: [12, 15,20, 25,30,40],
+                        color:'#2E85EC',
+                        backgroundColor: ['rgba(46, 133, 236, 1)'],
                         borderRadius: 4,
-                        barThickness: 30,
-                    }, 
-                    {
-                        label: 'Saques',
-                        data: [50000,76650, 1150],
-                        color:'#636363',
-                        backgroundColor: "rgba(216, 245, 228, 1)",
-                        borderRadius: 4,
-                        barThickness: 30,
-                    }
+                        barThickness: 24,
+                        fill: false
+                    },
                 ]
             },
             options: {
+                indexAxis: 'x',
                 plugins: {
                     legend: {
-                        align: 'center',
-                        labels: {
-                            boxWidth: 16,
-                            color: '#636363',
-                            usePointStyle: true,
-                            pointStyle: 'rectRounded',
-                            font: {
-                                size: '12',
-                                family: "'Muli'"
-                            }
-                        }
+                        display: false,
                     },
                     title: {
+                        display: false,
+                    },
+                    subtitle: {
                         display: true,
-                        text: 'Últimos 6 meses',
-                        align: 'end',
-                        color: '#9E9E9E',
-                        fullSize: false,
+                        align: 'start',
+                        text: '32 clientes recorrentes',
+                        color: '#2E85EC',
+                        font: {
+                            size: '14',
+                            family: "'Muli'",
+                            weight: 'normal'
+                        },
                         padding: {
                             top: 0,
-                            bottom: -23,
+                            bottom: 15
                         }
-                    },
+                    }
                 },
                 
                 responsive: true,
                 scales: {
                     x: {
-                        stacked: true,
                         grid: {
                             display: false
                         },
                         ticks: {
-                            padding: 15,
+                            padding: 0,
                             color: "#747474",
                             align: 'center',
                             font: {
@@ -91,22 +82,18 @@ function barGraph() {
                     y: {
                         grid: {
                             color: '#ECE9F1',
-                            drawBorder: false
+                            drawBorder: true
                         },
-                        beginAtZero: true,
-                        min: 0,
-                        max: 100000,
+                        min: 10,
+                        max: 40,
                         ticks: {
                             padding: 0,
-              	            stepSize: 20000,
+              	            stepSize: 10,
                             font: {
                                 family: 'Muli',
-                                size: 12,
+                                size: 14,
                             },
-                            color: "#747474",
-                            callback: function(value){
-                                return (value / 1000) + 'K '
-                            }
+                            color: "#A2A3A5"
                         }
                     }
                 },

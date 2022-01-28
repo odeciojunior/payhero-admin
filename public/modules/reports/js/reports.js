@@ -7,6 +7,8 @@ $(function () {
     newGraphPie();
     newFinanceGraph();
     distributionGraph();
+    newSellGraph();
+    distributionGraphSeller();
 
     // show/hide modal de exportar relatórios
     $(".lk-export").on('click', function(e) {
@@ -678,6 +680,57 @@ $(function () {
             labelOffset: 0,
             height: 123
           });
+    }
+
+    function distributionGraphSeller() {
+        new Chartist.Pie('.distribution-graph-seller', {
+            series: [10, 20, 30, 15, 80, 70]
+          }, {
+            donut: true,
+            donutWidth: 30,
+            donutSolid: true,
+            startAngle: 270,
+            showLabel: false,
+            chartPadding: 0,
+            labelOffset: 0,
+            height: 123
+          });
+    }
+
+    function newSellGraph() {
+        new Chartist.Line('.new-sell-graph', {
+            labels: [1, 5, 10, 15, 20, 30 ],
+            series: [[1, 5, 10, 15, 20, 30]]
+        }, {
+            chartPadding: {
+                top: 40,
+                right: 0,
+                left: -3,
+                bottom: 20
+            },
+            axisX: {
+                labelOffset: {
+                    x: -15,
+                    y: 15
+                },
+                showGrid: false,
+            },
+            axisY: {
+                labelOffset: {
+                    x: 0,
+                    y: 0
+                },
+                offset: 55,
+                labelInterpolationFnc: function(value) {
+                    return 'R$ ' + value + 'K'
+                },
+                scaleMinSpace: 40
+            },
+            fullWidth: true,
+            low: 0,
+            height: 289,
+            showArea: true
+        });
     }
 
         
