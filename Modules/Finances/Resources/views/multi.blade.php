@@ -39,7 +39,7 @@
                         </p>
                     </div>
                     <div class="col-9 col-md-6 order-3 p-0 px-md-15" id="container-available">
-                        <p class="m-0 color-default">Disponível para saque</p>
+                        <p class="m-0 color-default" id="title_available_money">Disponível para saque</p>
                         <div id="val-skeleton"><div class="skeleton skeleton-text mb-0 my-5" style="width:207px !important;height: 40px !important;border-radius:20px !important"></div></div>
                         <div id="container_val" style="display:none;">
                             <div style="margin-right: 24px">
