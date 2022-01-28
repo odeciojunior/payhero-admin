@@ -44,16 +44,16 @@ class CieloService implements Statement
         return $this;
     }
 
-    public function getAvailableBalanceWithoutBlocking() : int{
+    public function getAvailableBalanceWithoutBlocking() : int
+    {
+        if (!$this->company->user->show_old_finances){
+            return 0;
+        }
         return $this->company->cielo_balance;
     }
 
     public function getAvailableBalance() : int
     {
-        if (!$this->company->user->show_old_finances){
-            return 0;
-        }
-
         return  $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
@@ -70,9 +70,10 @@ class CieloService implements Statement
                                     ->orWhere(function($query) {
                                         $query->where('gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('created_at', '<', '2021-09');
                                     });
+                            })                            
+                            ->whereDoesntHave('blockReasonSale',function ($query) {
+                                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
                             })
-                            ->where('is_waiting_withdrawal', 0)
-                            ->whereNull('withdrawal_id')
                             ->sum('value');
     }
 

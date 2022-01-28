@@ -47,7 +47,8 @@ class GetnetService implements Statement
         return $this;
     }
 
-    public function getAvailableBalanceWithoutBlocking() : int{
+    public function getAvailableBalanceWithoutBlocking() : int
+    {
         return Transaction::whereIn('gateway_id', $this->gatewayIds)
         ->where('company_id', $this->company->id)
         ->where('is_waiting_withdrawal', 1)
@@ -67,6 +68,9 @@ class GetnetService implements Statement
                             ->whereIn('gateway_id', $this->gatewayIds)
                             ->where('is_waiting_withdrawal', 0)
                             ->whereNull('withdrawal_id')
+                            ->whereDoesntHave('blockReasonSale',function ($query) {
+                                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
+                            })
                             ->sum('value');
     }
 

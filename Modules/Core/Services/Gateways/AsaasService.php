@@ -51,7 +51,8 @@ class AsaasService implements Statement
         return $this;
     }
 
-    public function getAvailableBalanceWithoutBlocking() : int{
+    public function getAvailableBalanceWithoutBlocking() : int
+    {
         return $this->company->asaas_balance;
     }
 
@@ -66,6 +67,9 @@ class AsaasService implements Statement
                             ->where('status_enum', Transaction::STATUS_PAID)
                             ->whereIn('gateway_id', $this->gatewayIds)
                             ->where('created_at', '>', '2021-09-20')
+                            ->whereDoesntHave('blockReasonSale',function ($query) {
+                                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
+                            })
                             ->sum('value');
     }
 
