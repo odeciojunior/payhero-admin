@@ -13,7 +13,7 @@
                 </div>
                 <div class='col-md-7'>
                     <div class="d-flex justify-content-end">
-                        <div id="add-domain" class="btn-holder d-flex align-items-center pointer">
+                        <div class="btn-holder add-domain d-flex align-items-center pointer">
                             <span class="link-button-dependent blue">Adicionar </span>
                             <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
                                 <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
@@ -32,7 +32,7 @@
                         <tr>
                             <td class='table-title text-center'>Nome</td>
                             <td class='table-title text-center'>Status</td>
-                            <td class='table-title options-column-width text-center'>Opções</td>
+                            <td class='table-title options-column-width text-center'></td>
                         </tr>
                     </thead>
                     <tbody id='domain-table-body' class='min-row-height'>

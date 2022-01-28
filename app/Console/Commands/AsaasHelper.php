@@ -3,8 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CheckoutGateway;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -47,6 +49,7 @@ class AsaasHelper extends Command
         $this->comment("[6] Company Anticipation");
         $this->comment("[7] Company Anticipations");   
         $this->comment('[8] Company Receivables Reserves');
+        $this->comment('[9] Update Company Balance Extract');
         $this->comment("[0] Sair");
         $this->comment("===========================");
         $this->comment("[2964,3442] - João, Dani");
@@ -79,6 +82,9 @@ class AsaasHelper extends Command
             break;
             case 8:
                 $this->getReceivablesReserves();
+            break;
+            case 9:
+                $this->updateAsaasBalance();
             break;
             case 0:  
                 $this->info('Bye!');              
@@ -133,6 +139,32 @@ class AsaasHelper extends Command
         $response = $this->api->getReceivablesReserves($companyId,$filters);
         
         VarDumper::dump($response->total);
+        
+    }
+
+    public function updateAsaasBalance(){
+        $companyId = $this->anticipate('Informe CompanyId', ['2964', '3442']);
+        $company = Company::find($companyId);
+        $gatewayService = new AsaasService();
+        $gatewayService->setCompany($company);
+
+        $filters = [            
+            'date_type'=> 'transfer_date',
+            'date_range'=> '01/01/2018 - '.Date('d/m/Y')    ,
+            'reason'=>'', 
+            'transaction'=>'', 
+            'type'=>'', 
+            'value'=>'',         
+        ];
+        $balance = $gatewayService->getPeriodBalance($filters)??0;
+        VarDumper::dump(['fantasy_name'=>$company->fantasy_name,'real_balance'=>$balance*100,'asaas_balance'=>$company->asaas_balance]);
+
+        $atualiza = $this->ask('Deseja corrigir [y/n]');
+        if($atualiza=='y'){
+            $company->update([
+                'asaas_balance'=>$balance*100
+            ]);
+        }
         
     }
 

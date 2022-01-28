@@ -243,6 +243,12 @@ class AsaasService implements Statement
         return (new StatementService)->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
     }
 
+    public function getPeriodBalance($filters)
+    {
+        return (new StatementService)->getPeriodBalance($this->company->id, $this->gatewayIds, $filters);
+    }
+
+
     public function getResume()
     {
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
@@ -430,7 +436,7 @@ class AsaasService implements Statement
             $saleService = new SaleService();
             $saleTax = 0;
             if(!empty($sale->anticipation_status)){
-                $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value:0;
+                $cashbackValue = $sale->cashback()->first()->value??0;
                 $saleTax = $saleService->getSaleTaxRefund($sale,$cashbackValue);
             }
             $totalSale = $saleService->getSaleTotalValue($sale);

@@ -26,7 +26,7 @@
                             <td class='table-title'>Tempo</td>
                             <td class='table-title'>Mensagem</td>
                             <td class='table-title text-center'>Status</td>
-                            <td class='table-title text-center options-column-width'>Opções</td>
+                            <td class='table-title text-center options-column-width'></td>
                         </tr>
                     </thead>
                     <tbody id='data-table-sms' class='min-row-height'>

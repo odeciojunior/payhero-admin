@@ -12,7 +12,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div id="add-upsell" class="btn-holder d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_add_upsell">
+                        <div class="btn-holder add-upsell d-flex align-items-center pointer" data-toggle="modal" data-target="#modal_add_upsell">
                             <span class="link-button-dependent blue">Adicionar </span>
                             <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
                                 <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
@@ -31,7 +31,7 @@
                         <tr>
                             <td class='table-title'>Descrição</td>
                             <td class='table-title text-center'>Status</td>
-                            <td class='table-title text-center options-column-width'>Opções</td>
+                            <td class='table-title text-center options-column-width'></td>
                         </tr>
                     </thead>
                     <tbody id='data-table-upsell' class='min-row-height'>
@@ -132,7 +132,7 @@
                 <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
                     <b>Cancelar</b>
                 </button>
-                <button type="button" class="col-4 btn border-0 btn-outline btn-delete-upsell btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                <button type="button" id="btn-delete-upsell" class="col-4 btn border-0 btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
                     <b class="mr-2">Excluir </b>
                     <span class="o-bin-1"></span>
                 </button>

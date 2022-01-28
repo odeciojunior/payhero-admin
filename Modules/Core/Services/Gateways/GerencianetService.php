@@ -46,11 +46,12 @@ class GerencianetService implements Statement
 
     public function getAvailableBalance() : int
     {
-        return Transaction::whereIn('gateway_id', $this->gatewayIds)
+        $availableBalance = Transaction::whereIn('gateway_id', $this->gatewayIds)
                             ->where('company_id', $this->company->id)
                             ->where('is_waiting_withdrawal', 1)
                             ->whereNull('withdrawal_id')
                             ->sum('value');
+        return $availableBalance - $this->getBlockedBalance();
     }
 
     public function getPendingBalance() : int
@@ -213,10 +214,8 @@ class GerencianetService implements Statement
     {
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
-        $blockedBalance = $this->getBlockedBalance();
         $availableBalance += $pendingBalance;
-        $availableBalance -= $blockedBalance;
-
+        
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
         return $availableBalance >= $transaction->value;
@@ -289,7 +288,7 @@ class GerencianetService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
 
         return [

@@ -10,6 +10,52 @@ class StatementService
 
     public function getDefaultStatement($companyId, $gatewayIds, $filters)
     {
+        $transfers = $this->queryBuilderFilters($companyId, $gatewayIds, $filters);
+        
+        $balanceInPeriod = $transfers->selectRaw(
+            "sum(CASE WHEN transfers.type_enum = 2 THEN (transfers.value * -1) ELSE transfers.value END) as balanceInPeriod"
+        )->first();
+
+        if (!empty($balanceInPeriod)) {
+            $balanceInPeriod = $balanceInPeriod->balanceInPeriod / 100;
+            $balanceInPeriod = number_format($balanceInPeriod, 2, ',', '.');
+        }
+        $transfers = $transfers->whereNull('transfers.customer_id');
+
+        $transfers = $transfers->select(
+            'transfers.*',
+            'transaction.sale_id',
+            'transaction.type as transaction_type',
+        )->orderBy('id', 'DESC')->paginate(10);
+
+        $statement = TransfersResource::collection($transfers);
+
+        $statement->additional(
+            [
+                'meta' => [
+                    'balance_in_period' => $balanceInPeriod,
+                ],
+            ]
+        );
+
+        return $statement;
+    }
+
+    public function getPeriodBalance($companyId, $gatewayIds, $filters){
+        $transfers = $this->queryBuilderFilters($companyId, $gatewayIds, $filters);
+        $balanceInPeriod = $transfers->selectRaw(
+            "sum(CASE WHEN transfers.type_enum = 2 THEN (transfers.value * -1) ELSE transfers.value END) as balanceInPeriod"
+        )->first();
+
+        $total = 0;
+        if (!empty($balanceInPeriod)) {
+            $total = $balanceInPeriod->balanceInPeriod / 100;            
+        }
+        return $total;
+    }
+
+    public function queryBuilderFilters($companyId, $gatewayIds, $filters)
+    {
         $transfers = Transfer::leftJoin('transactions as transaction','transaction.id','transfers.transaction_id')
                                 ->whereIn('transfers.gateway_id', $gatewayIds)
                                 ->where('transfers.company_id', $companyId);
@@ -54,33 +100,7 @@ class StatementService
             $transfers->where('transfers.value', $value);
         }
 
-        $balanceInPeriod = $transfers->selectRaw(
-            "sum(CASE WHEN transfers.type_enum = 2 THEN (transfers.value * -1) ELSE transfers.value END) as balanceInPeriod"
-        )->first();
-
-        if (!empty($balanceInPeriod)) {
-            $balanceInPeriod = $balanceInPeriod->balanceInPeriod / 100;
-            $balanceInPeriod = number_format($balanceInPeriod, 2, ',', '.');
-        }
-        $transfers = $transfers->whereNull('transfers.customer_id');
-
-        $transfers = $transfers->select(
-            'transfers.*',
-            'transaction.sale_id',
-            'transaction.type as transaction_type',
-        )->orderBy('id', 'DESC')->paginate(10);
-
-        $statement = TransfersResource::collection($transfers);
-
-        $statement->additional(
-            [
-                'meta' => [
-                    'balance_in_period' => $balanceInPeriod,
-                ],
-            ]
-        );
-
-        return $statement;
+        return $transfers;
     }
 
 }
