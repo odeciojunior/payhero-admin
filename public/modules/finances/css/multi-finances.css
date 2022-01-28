@@ -1,4 +1,3 @@
-
 *:focus,
 .bootstrap-select .dropdown-toggle:focus,
 .bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
@@ -580,6 +579,12 @@ input:checked + .slider::before {
     padding: 0;
 }
 
+.badge {
+    width: -moz-min-content;
+    width: -webkit-min-content;
+    width: min-content;
+    white-space: pre-line;
+}
 @media (max-width: 991px) {
     .new-title {
         margin-left: 0;
