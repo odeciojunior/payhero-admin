@@ -118,7 +118,7 @@ window.loadWithdrawalsTable = function(link = null) {
                                             <strong class="font-md-size-20"> ${data.value} </strong>`;
                     }
 
-                    if (window.gatewayCode == 'w7YL9jZD6gp4qmv' && data.debt_pending_value != null && data.debt_pending_value != "R$ 0,00") {
+                    if (window.gatewayCode == 'w7YL9jZD6gp4qmv' && data.debt_pending_value != null && data.debt_pending_value != "R$0,00") {
                         tableData += `<br> <a role='button' class='pending_debit_withdrawal_id' withdrawal_id='${data.id}'><small style="color: #ED1C24;">- ${data.debt_pending_value}</small></a>`;
                     }
                     tableData += '</td>';
