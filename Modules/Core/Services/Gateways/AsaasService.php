@@ -231,7 +231,7 @@ class AsaasService implements Statement
                 );
 
                 $company->update([
-                    'asaas_balance' => $company->asaas_balance??0 + intval($transaction->value)
+                    'asaas_balance' => intval($company->asaas_balance) + intval($transaction->value)
                 ]);
 
                 $transaction->update([
