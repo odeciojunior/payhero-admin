@@ -2012,6 +2012,25 @@ tbody td{
 .page-project .table:not(#table-plans) .options-column-width {
     width: 190px !important;
 }
+.page-project .table tbody tr td:last-child a {
+    display: inline-block;
+    height: 24px;
+    line-height: 24px;
+}
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+    .page-project .table:not(#table-plans) .options-column-width {
+        width: 100px !important;
+    }
+    .page-project .table tbody tr td:last-child a {
+        margin-bottom: 5px;
+    }
+    .page-project .table tbody tr td:last-child a:last-child {
+        margin-bottom: 0px;
+    }
+    .page-project .table tbody tr td:last-child a span::before {
+        line-height: 24px;
+    }
+}
 
 .modal-plans .btn-plus:not(:disabled):hover {
     background: #41DC8F;
