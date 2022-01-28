@@ -67,6 +67,9 @@
     z-index: 1;
 }
 
+.loadinModal {
+    height: 100px;
+}
 .loaderModal {
     border: 16px solid #F3F3F3;
     border-radius: 50%;

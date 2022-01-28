@@ -7,7 +7,7 @@
 
 .input-error {
   border: 1px solid red; }
- 
+
 .row-no-margin {
   display: -ms-flexbox;
   display: flex;
@@ -97,7 +97,8 @@ body {
 .holderProdutos {
   margin: 30px 10px;
   max-height: 300px;
-  overflow: auto; }
+  overflow: auto;
+}
 
 .listaPedido {
   padding: 20px 0px; }

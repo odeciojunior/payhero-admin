@@ -1,39 +1,50 @@
 <!-- Page -->
-<div class='row no-gutters mb-10'>
-    <div class="top-holder text-right mb-5" style="width: 100%;">
-        <div class="d-flex align-items-center justify-content-end">
-            <div id="add-shipping" class="btn-holder  d-flex align-items-center pointer" data-toggle="modal" data-target="#modal-create-shipping">
-                <span class="link-button-dependent red"> Adicionar Frete </span>
-                <a class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
+<div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">
+    <div class='row no-gutters mb-20'>
+        <div class="top-holder text-right mb-0" style="width: 100%;">
+            <div class='d-flex align-items-center'>
+                <div class='col-sm-12'>
+                    <div class="d-flex justify-content-end">
+                        <div class="btn-holder add-shipping d-flex align-items-center pointer" data-toggle="modal" data-target="#modal-create-shipping">
+                            <span class="link-button-dependent blue"> Adicionar </span>
+                            <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
+                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow" style="margin: 0 -1.429rem;">
+        <div style='min-height: 300px'>
+            <div class='page-invoice-table table-responsive'>
+                <table id='tabela-fretes' class='table text-left table-fretes table-striped unify' style="width: 100%; margin-bottom: 0px;">
+                    <thead>
+                        <tr>
+                            <td class='table-title' >Tipo</td>
+                            <td class='table-title' >Descrição</td>
+                            <td class='table-title' >Valor</td>
+                            <td class='table-title' >Informação</td>
+                            <td class='table-title text-center' >Status</td>
+                            <td class='table-title display-sm-none display-m-none' style='text-align:center' >Pré-Selecionado</td>
+                            <td class='table-title text-center options-column-width'></td>
+                        </tr>
+                    </thead>
+                    <tbody id='dados-tabela-frete' class='min-row-height'>
+                        {{-- js carregando dados --}}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
-<div class="card shadow">
-    <div style='min-height: 300px'>
-        <div class='page-invoice-table table-responsive'>
-            <table id='tabela-fretes' class='table text-left table-fretes table-striped unify' style='width:100%'>
-                <thead>
-                    <tr>
-                        <td class='table-title' >Tipo</td>
-                        <td class='table-title' >Descrição</td>
-                        <td class='table-title' >Valor</td>
-                        <td class='table-title' >Informação</td>
-                        <td class='table-title' >Status</td>
-                        <td class='table-title display-sm-none display-m-none' style='text-align:center' >Pré-Selecionado</td>
-                        <td class='table-title text-center options-column-width'>Opções</td>
-                    </tr>
-                </thead>
-                <tbody id='dados-tabela-frete' class='min-row-height'>
-                    {{-- js carregando dados --}}
-                </tbody>
-            </table>
-        </div>
-    </div>
+
+<div class="d-flex justify-content-center justify-content-md-end">
+    <ul id="pagination-shippings" class="pagination-sm margin-chat-pagination text-right m-0">
+        {{-- js carrega... --}}
+    </ul>
 </div>
-<ul id="pagination-shippings" class="pagination-sm margin-chat-pagination text-right" style="margin-top:10px;position:relative;float:right">
-    {{-- js carrega... --}}
-</ul>
 
 <!-- Details -->
 <div id="modal-detail-shipping" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
@@ -122,7 +133,7 @@
                 <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
                     <b>Cancelar</b>
                 </button>
-                <button  frete="" type="button" class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                <button id="btn-delete-frete" type="button" class="col-4 btn border-0 btn-outline btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" frete="" style="width: 20%;">
                     <b class="mr-2">Excluir </b>
                     <span class="o-bin-1"></span>
                 </button>

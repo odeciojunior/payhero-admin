@@ -37,13 +37,14 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=21') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=' .  versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v=28') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v='.  versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css?v=21') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css?v=' .  versionsFile()) }}">
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/placeholder-loading.min.css') }}">
 
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">--}}
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
@@ -61,8 +62,8 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=21') }}">
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}"> --}}
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=25') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=56') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=29') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=64') }}">
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}"> --}}
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
@@ -121,11 +122,10 @@
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=589') }}"></script>
+<script src="{{ asset('modules/global/js/global.js?v=' . versionsFile()) }}"></script>
 <script>
     verifyDocumentPending();
 </script>
-
 
 <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js?v=2') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js?v=2') }}"></script>
@@ -134,9 +134,23 @@
 @stack('scripts')
 
 @if(env('APP_ENV', 'production') == 'production')
-
     <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=13') }}"></script>
     <script src="{{ asset('modules/global/js/notifications.js?v=13') }}"></script>
+    <style>
+        .margin-chat-pagination {
+            display:block !important; height:20px  !important;
+        }
+    </style>
+
+    <script>
+        @if(\Auth::user())
+            (function(m,a,i,s,_i,_m){
+                m.addEventListener('load',function(){m.top.maisim||(function(){_m=a.createElement(i);
+                    i=a.getElementsByTagName(i)[0];_m.async=!0;_m.src=s;_m.id='maisim';_m.charset='utf-8';
+                    _m.setAttribute('data-token',_i);i.parentNode.insertBefore(_m,i)})()})
+            })(window,document,'script','https://app.mais.im/support/assets/js/core/embed.js','273c7ff74192d8dac2ef370dc930d643');
+        @endif
+    </script>
 
     @if(\Auth::user())
         <script>

@@ -272,19 +272,19 @@
                     {{-- WOOCOMMERCE --}}
                     <div class="tab-pane fade" id="nav-woo" role="tabpanel" aria-labelledby="nav-woo-tab">
                         <h4> Ordem Woocommerce  </h4>
-                        
+
                         <br>
 
-                        
+
                         <div id="woo_order" class="mb-20">
-                            
+
                         </div>
 
                         <br>
-                        
-                        
+
+
                     </div>
-                    
+
                     <!-- CLIENTE -->
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <h4> Dados Pessoais </h4>
@@ -344,7 +344,7 @@
                             <br>
                             <span id="delivery-city" class="table-title gray"></span>
                         </div>
-                        <div id='div_tracking_code' style='display:none;'>
+                        <div id='div_tracking_code' style='display:none; overflow: auto'>
                             <h4> Rastreio </h4>
                             <table class='table table-striped mb-10'>
                                 <thead>

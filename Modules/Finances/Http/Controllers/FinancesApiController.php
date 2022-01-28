@@ -12,6 +12,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Services\CompanyBalanceService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
+use Modules\Finances\Exports\Reports\ExtractReportExportGateway;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -44,13 +45,13 @@ class FinancesApiController extends Controller
 
             $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
             $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
-            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE) - $blockedBalancePending;
+            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
             $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
-            $totalBalance = $availableBalance + $pendingBalance;
-            $availableBalance -= $blockedBalance;
+            
             $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
+            $totalBalance = $availableBalance + $pendingBalance + $blockedBalanceTotal;            
             $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
-            // dd($companyService);
+
             return response()->json(
                 [
                     'available_balance' => foxutils()->formatMoney($availableBalance / 100),
@@ -71,25 +72,35 @@ class FinancesApiController extends Controller
         try {
             $dataRequest = $request->all();
 
-            activity()->tap(
-                function (Activity $activity) {
-                    $activity->log_name = 'visualization';
-                }
-            )->log('Exportou tabela ' . $dataRequest['format'] . ' de transferências');
-
             $user = auth()->user();
+            $company = Company::find(hashids_decode($dataRequest['company_id']));
+            $gateway = Gateway::find(hashids_decode($dataRequest['gateway_id']));
+
+            if(empty($company) || empty($gateway)) {
+                return response()->json([
+                    'message' => 'Empresa não encontrada',
+                ],403);
+            }
+
+            if (!Gate::allows('edit', [$company])) {
+                return response()->json([
+                    'message' => 'Sem permissão para visualizar saques',
+                ],403);
+            }
+
+            $gatewayService = $gateway->getService();
+            $gatewayService->setCompany($company);
 
             $filename = 'extract_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
-
-            (new ExtractReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
-
             $email = !empty($dataRequest['email']) ? $dataRequest['email'] : $user->email;
+            $transfers = $gatewayService->getStatement($dataRequest);
 
+            (new ExtractReportExportGateway($filename,$transfers))->queue($filename)->allOnQueue('high');
             return response()->json(['message' => 'A exportação começou', 'email' => $email]);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
+            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 400);
         }
     }
 

@@ -178,7 +178,7 @@ $(document).ready(function () {
                         let contCompaniesNotApproved = 0;
 
                         var selCompany = '';
-                        selCompany = '<select class="select-company-list">';
+                        selCompany = '<select id="select-company-list" class="sirius-select">';
 
                         disabledCompany = false;
                         $.each(response.data, function (index, value) {
@@ -224,12 +224,12 @@ $(document).ready(function () {
                             $("#company-list").html('').append(selCompany);
 
                             var linkInvite = '';
-                            var companyId = $(".select-company-list option:selected").val();
-                            linkInvite = 'https://accounts.cloudfox.net/signup?i=' + $(".select-company-list option:selected").val();
+                            var companyId = $("#select-company-list option:selected").val();
+                            linkInvite = 'https://accounts.cloudfox.net/signup?i=' + $("#select-company-list option:selected").val();
 
                             $("#invite-link").val(linkInvite);
 
-                            $(".select-company-list").on('change', function () {
+                            $("#select-company-list").on('change', function () {
                                 linkInvite = 'https://accounts.cloudfox.net/signup?i=' + $(this).val();
                                 $("#invite-link").val(linkInvite);
                                 companyId = $(this).val();

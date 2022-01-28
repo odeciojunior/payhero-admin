@@ -44,13 +44,18 @@ class GerencianetService implements Statement
         return $this;
     }
 
-    public function getAvailableBalance() : int
+    public function getAvailableBalanceWithoutBlocking() : int
     {
         return Transaction::whereIn('gateway_id', $this->gatewayIds)
                             ->where('company_id', $this->company->id)
                             ->where('is_waiting_withdrawal', 1)
                             ->whereNull('withdrawal_id')
                             ->sum('value');
+    }
+
+    public function getAvailableBalance() : int
+    {        
+        return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
     public function getPendingBalance() : int
@@ -78,7 +83,7 @@ class GerencianetService implements Statement
     {
         return Transaction::where('company_id', $this->company->id)
                             ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('status_enum', Transaction::STATUS_PENDING)
+                            ->where('status_enum', Transaction::STATUS_PAID)
                             ->whereHas('blockReasonSale',function ($query) {
                                     $query->where('status', BlockReasonSale::STATUS_BLOCKED);
                             })
@@ -213,10 +218,8 @@ class GerencianetService implements Statement
     {
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
-        $blockedBalance = $this->getBlockedBalance();
         $availableBalance += $pendingBalance;
-        $availableBalance -= $blockedBalance;
-
+        
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
         return $availableBalance >= $transaction->value;
@@ -285,18 +288,21 @@ class GerencianetService implements Statement
         if(empty($lastTransaction)) {
             return [];
         }
-
-        $availableBalance = $this->getAvailableBalance();
+        
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $availableBalance = $this->getAvailableBalanceWithoutBlocking() - $blockedBalance;
+        $blockedBalancePending = $this->getBlockedBalancePending();
+        
+        $totalBlockedBalance = $blockedBalance + $blockedBalancePending;
+        $totalBalance = $availableBalance + $pendingBalance + $totalBlockedBalance;
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
 
         return [
             'name' => 'Gerencianet',
             'available_balance' => foxutils()->formatMoney($availableBalance / 100),
             'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
-            'blocked_balance' => foxutils()->formatMoney($blockedBalance / 100),
+            'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
             'total_balance' => foxutils()->formatMoney($totalBalance / 100),
             'total_available' => $availableBalance,
             'last_transaction' => $lastTransactionDate,

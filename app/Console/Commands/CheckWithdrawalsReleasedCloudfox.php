@@ -57,7 +57,9 @@ class CheckWithdrawalsReleasedCloudfox extends Command
             where s.created_at >= '2021-07-30 15:41:28' and s.gateway_id = 15 and s.owner_id = t.user_id
                         and (t.status_enum = 2 or t.status_enum = 1)
                         and tc.gateway_released_at is null
-            order by s.id asc";
+                        and t.deleted_at IS NULL
+            order by s.id asc ";
+
 
             $dbResults = DB::select($query);
 
@@ -70,6 +72,7 @@ class CheckWithdrawalsReleasedCloudfox extends Command
             $aux = 0;
 
             foreach ($dbResults as $dbResult) {
+                $this->line($dbResult->sale_id);
 
                 if ($aux == 100) {
                     $getnetService = new GetnetBackOfficeService();
@@ -115,16 +118,18 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                                     );
                             }
 
-                            $this->line('Sale id: ' .  $sale->id . ', Transaction id: ' . $transaction->id . ', Transaction Cloudfox id: ' . $transactionCloudfox->id );
+                            if (!foxutils()->isProduction()) {
+                                $this->line('Sale id: ' .  $sale->id . ', Transaction id: ' . $transaction->id . ', Transaction Cloudfox id: ' . $transactionCloudfox->id );
+                            }
 
-                                if (!empty($transactionCloudfox->release_date)) {
-                                    $data = [
-                                        'transaction_cloudfox_id' => Hashids::encode($transactionCloudfox->id)
-                                    ];
+                            if (!empty($transactionCloudfox->release_date)) {
+                                $data = [
+                                    'transaction_cloudfox_id' => Hashids::encode($transactionCloudfox->id)
+                                ];
 
-                                $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
-                                //dd($responseCheckout);
-                                }
+                            $responseCheckout = (new CheckoutService())->releaseCloudfoxPaymentGetnet($data);
+                            //dd($responseCheckout);
+                            }
                         }
                     }
                 }else {
@@ -148,8 +153,10 @@ class CheckWithdrawalsReleasedCloudfox extends Command
                                 $errorGetnet = 'Comissão da cloudfox, venda na Getnet está como "CANCELADA NAO CONFIRMADA". $sale->id = ' . $sale->id . ' $orderId = ' . $orderId;
                             }
                         }
-                        $this->warn($errorGetnet);
-                        report(new Exception($errorGetnet));
+                        if (!foxutils()->isProduction()) {
+                            $this->warn($errorGetnet);
+                            //report(new Exception($errorGetnet));
+                        }
                     }
 
                     $this->tryFixGatewayOrderIdAndGatewayTransactionId($sale);

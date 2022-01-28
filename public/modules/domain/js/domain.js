@@ -427,13 +427,13 @@ $(document).ready(function () {
     function modalUpdateDomains(index, value) {
         var dados = '';
         dados += '<tr>';
-        dados += '<td class="text-center">' + value.domain + '</td>';
-        dados += '<td><span class="badge badge-' + statusDomain[value.status] + '">' + value.status_translated + '</span></td>';
-        dados += "<td style='text-align:center;'>"
-        dados += "<a role='button' class='mg-responsive details-domain pointer'       status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-eye-1'></span> </a>"
-        dados += "<a role='button' class='mg-responsive edit-domain    pointer'       status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-edit-1'></span> </a>"
-        dados += "<a role='button' class='mg-responsive delete-domain  pointer'       status=''                     domain='" + value.id + "' data-target='#modal-delete'  data-toggle='modal'><span class='o-bin-1'></span> </a>";
-        dados += "</td>";
+            dados += '<td class="text-center">' + value.domain + '</td>';
+            dados += '<td><span class="badge badge-' + statusDomain[value.status] + '">' + value.status_translated + '</span></td>';
+            dados += "<td style='text-align:center;'>"
+                dados += "<a role='button' class='mg-responsive details-domain pointer'       status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-eye-1'></span> </a>"
+                dados += "<a role='button' class='mg-responsive edit-domain    pointer'       status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><span class='o-edit-1'></span> </a>"
+                dados += "<a role='button' class='mg-responsive delete-domain  pointer'       status=''                     domain='" + value.id + "' data-target='#modal-delete'  data-toggle='modal'><span class='o-bin-1'></span> </a>";
+            dados += "</td>";
         dados += '</tr>';
         $("#domain-table-body").append(dados);
         $('#tabela-dominios').addClass('table-striped')

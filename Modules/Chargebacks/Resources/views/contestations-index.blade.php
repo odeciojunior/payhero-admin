@@ -3,6 +3,7 @@
 @section('content')
 
     @push('css')
+        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=123') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
@@ -84,7 +85,7 @@
                             <div class="col-sm-12 col-md-3 mt-10">
                                 <label for="is_expired">Expiração</label>
                                 <br>
-                                <select name='is_expired' id="is_expired" class="input-pad">
+                                <select name='is_expired' id="is_expired" class="sirius-select">
                                     <option value="0">Ambos</option>
                                     <option value="1">Expirado</option>
                                     <option value="2" selected>Não expirado</option>
@@ -93,7 +94,7 @@
 
                             <div class="col-sm-12 col-md-3 mt-10">
                                 <label for="date_type">Data</label>
-                                <select name='date_type' id="date_type" class="input-pad">
+                                <select name='date_type' id="date_type" class="sirius-select">
                                     <option value="expiration_date">Data da expiração</option>
                                     <option value="transaction_date">Data da compra</option>
                                     <option value="adjustment_date">Data da contestação</option>
@@ -113,7 +114,7 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-3 mt-10">
                                     <label for="project">Projeto</label><br>
-                                    <select name='project' id="project" class="input-pad">
+                                    <select name='project' id="project" class="sirius-select">
                                         <option value="">Todos projetos</option>
                                     </select>
                                 </div>
@@ -121,7 +122,7 @@
                                 <div class="col-sm-12 col-md-3 mt-10">
                                     <label for="is_contested">Concluído</label>
                                     <br>
-                                    <select name='is_contested' id="is_contested" class="input-pad">
+                                    <select name='is_contested' id="is_contested" class="sirius-select">
                                         <option value="0">Ambos</option>
                                         <option value="1">Concluído</option>
                                         <option value="2">Não concluído</option>
@@ -130,7 +131,7 @@
 
                                 <div class="col-sm-12 col-md-3 mt-10">
                                     <label for="contestation_situation">Situação</label>
-                                    <select name='contestation_situation' id="contestation_situation" class="input-pad">
+                                    <select name='contestation_situation' id="contestation_situation" class="sirius-select">
                                         <option value="">Todos status</option>
                                         <option value="1">Em Andamento</option>
                                         <option value="2">Perdida</option>
@@ -144,7 +145,7 @@
                                 </div>
                             </div>
                             <div class="row justify-content-end">
-                                <div class='col-sm-12 col-md-2 mt-10 px-0'>                                
+                                <div class='col-sm-12 col-md-2 mt-10 px-0'>
                                     <label for="sale_approve" class='pl-50 mb-10'>Vendas aprovadas</label>
                                     <br>
                                     <label class="switch mr-0" style="margin-left:140px">

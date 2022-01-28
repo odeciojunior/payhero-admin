@@ -150,7 +150,7 @@ class PostBackWooCommerceController extends Controller
 
     public function postBackProductUpdate(Request $request)
     {
-
+        
         if (empty($request->project_id)) {
             return response()->json(
                 [
@@ -159,7 +159,7 @@ class PostBackWooCommerceController extends Controller
                 200
             );
         }
-
+        
         if (empty($request['variations'])) {
             if (!empty($request['name'])) {
                 $newValues['name'] = $request['name'];
@@ -198,6 +198,9 @@ class PostBackWooCommerceController extends Controller
                     ->where('shopify_variant_id', $request['sku'])
                     ->first();
                 
+                
+                
+                
                 if(!empty($planExists)){
                     $planExists->update($newValues);
                 }else{
@@ -223,13 +226,15 @@ class PostBackWooCommerceController extends Controller
                     
                     Plan::create($newValues);
 
-                    return response()->json(
-                        [
-                            'message' => 'product updated',
-                        ],
-                        200
-                    );
+                    
                 }
+
+                return response()->json(
+                    [
+                        'message' => 'product updated',
+                    ],
+                    200
+                );
 
             }else{
                 
@@ -242,6 +247,13 @@ class PostBackWooCommerceController extends Controller
             }
 
 
+        }else{
+            return response()->json(
+                [
+                    'message' => 'Nothing to do',
+                ],
+                200
+            );
         }
 
         
@@ -255,6 +267,16 @@ class PostBackWooCommerceController extends Controller
     {
         try {
             
+            $postBackLogModel = new PostbackLog();
+            $projectModel = new Project();
+
+            $requestData = $request->all();
+
+            $postBackLogModel->create([
+                'origin' => 8,
+                'data' => json_encode($requestData),
+                'description' => 'woocommerce-tracking',
+            ]);
             
             if (empty($request->shipping['company']) ){
                 return response()->json(
@@ -342,7 +364,7 @@ class PostBackWooCommerceController extends Controller
         } catch (\Exception $e) {
             return response()->json(
                 [
-                    'message' => 'error processing postback',
+                    'message' => $e->getMessage(),
                 ],
                 200
             );

@@ -54,7 +54,10 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
 
                 $pps = ProductPlanSale::select('id')
                     ->where('sale_id', $saleId)
-                    ->where('product_id', $productId)
+                    ->where(function ($query) use ($productId) {
+                        $query->where('product_id', $productId)
+                            ->orWhere('products_sales_api_id', $productId);
+                    })
                     ->first();
 
                 if (!empty($pps) && !empty($trackingCode)) {

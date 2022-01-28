@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Gate;
 use Intervention\Image\Facades\Image;
 use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PixelConfig;
@@ -634,6 +635,23 @@ class ProjectsApiController extends Controller
         }
     }
 
+    public function getCompanieByProject($id)
+    {
+        try {
+            $projectID = hashids_decode($id);;
+            
+            $projectModel = new Project();
+            $project = $projectModel->with('usersProjects.company')->find($projectID);
+
+            return new CompanyResource($project->usersProjects->first()->company);
+        } catch(Exception $e) {
+            report($e);
+
+            return response()->json(['message' => $e->getMessage()], 400);
+            //return response()->json(['message' => 'Ocorreu um erro ao buscar os dados do projeto'], 400);
+        }
+    }
+
     public function getProjects()
     {
         try {
@@ -648,7 +666,7 @@ class ProjectsApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Ocorreu um erro, ao buscar dados das empresas'], 400);
+            return response()->json(['message' => 'Ocorreu um erro ao buscar dados das empresas'], 400);
         }
     }
 
