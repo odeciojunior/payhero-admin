@@ -1124,12 +1124,12 @@ $(() => {
     function renderProductsApi(products) {
         let div = "";
         $.each(products, function (index, value) {
-            div += '<div class="row align-items-baseline justify-content-between mb-15">';
+            div += '<div class="row justify-content-between mb-15">';
                 div += '<div class="col-lg-2">';
-                    div += '<img src="/modules/global/img/produto.svg" width="50px" style="border-radius: 6px;">';
+                    div += '<img src="/modules/global/img/produto.svg" width="50px" height="50px" style="border-radius: 6px;">';
                 div += '</div>';
                 div += '<div class="col-md-5 col-lg-6">';
-                    div += '<h4 class="table-title mb-0">' + value.name + '</h4>';
+                    div += '<h4 class="table-title m-0">' + value.name + '</h4>';
                     div += '<small>' + value.description + '</small>';
                 div += '</div>';
                 div += '<div class="col-md-3 col-lg-2 text-right">';
@@ -1150,12 +1150,12 @@ $(() => {
             if (!value.photo) {
                 value.photo = photo;
             }
-            div += `<div class="row align-items-baseline justify-content-between mb-15">
+            div += `<div class="row justify-content-between mb-15">
                         <div class="col-lg-2">
-                            <img src='${value.photo}' onerror=this.src='/modules/global/img/produto.png' width='50px' style='border-radius: 6px;'>
+                            <img src='${value.photo}' onerror=this.src='/modules/global/img/produto.png' width='50px' height='50px' style='border-radius: 6px;'>
                         </div>
                         <div class="col-md-5 col-lg-6">
-                            <h4 class="table-title mb-0">${value.name}</h4>
+                            <h4 class="table-title m-0">${value.name}</h4>
                             <small>${value.description}</small>
                         </div>
                         <div class="col-md-3 col-lg-2 text-right">

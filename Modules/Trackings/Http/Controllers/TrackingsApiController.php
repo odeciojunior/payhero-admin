@@ -84,6 +84,7 @@ class TrackingsApiController extends Controller
             $tracking = $trackingModel->with(
                 [
                     'productPlanSale.plan.project.domains',
+                    'productPlanSale.productSaleApi',
                     'product',
                     'delivery',
                 ]

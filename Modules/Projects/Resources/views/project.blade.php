@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=125') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=512') }}">
     <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
 
@@ -75,13 +76,13 @@
                                                 <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/icon-arrowback.svg') }}">
 
                                             </div>
-        
+
                                             <span class="s-data-project-values pl-5 pl-md-5 align-self-center" id="value-chargeback"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
                                                 <small class="font-size-10"> CHARGEBACKS </small>
                                             </div>
                                         </div>
-        
+
                                         <!-- CHAMADOS ABERTOS -->
                                         <div class="col-md-4 d-flex align-items-center py-10 rounded-0 product-info-color border-product-alert">
                                             <div class="d-flex pl-5 pl-lg-20">
@@ -93,23 +94,23 @@
                                                 <small class="font-size-10"> CHAMADOS ABERTOS </small>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- VENDAS S/ RASTREIO -->
                                         <div class="col-md-4 d-flex align-items-center py-10 tracking-sell product-info-color border-product-alert">
                                             <div class="d-flex pl-5 pl-lg-20">
                                                 <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/trackIcon.svg') }}">
                                             </div>
-                                            
+
                                             <span class="s-data-project-values pl-5 align-self-center" id="value-without-tracking"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
                                                 <small class="font-size-10"> VENDAS S/ RASTREIO </small>
                                             </div>
-        
+
                                         </div>
-        
+
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
 
@@ -125,12 +126,12 @@
                                         </div>
                                         <span class="d-flex align-items-center font-size-14"> Vendas Aprovadas </span>
                                     </div>
-            
+
                                     <div>
                                         <strong style="color: #707070" class="font-size-24" id="total-approved">0</strong>
                                     </div>
                                 </div>
-    
+
                                 <!-- RECEITA TOTAL -->
                                 <div class="pl-20 pl-md-30 pb-15 pl-lg-20 pl-xl-30 pb-xl-40 pb-lg-35">
                                     <div class="d-flex pt-10">
@@ -139,16 +140,16 @@
                                         </div>
                                         <span class="d-flex align-items-center font-size-14">Total em receita</span>
                                     </div>
-            
+
                                     <div style="color: #707070">
                                         <small> R$ </small>
                                         <strong class="font-size-24" id="total-approved-value">0</strong>
                                     </div>
-                                
+
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
 
                 </div>
@@ -232,7 +233,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="shadow" data-plugin="matchHeight">
                 <div class="tab-content">
                     <div class="tab-content">
@@ -250,51 +251,35 @@
                         </div>
                         <!-- Painel de Pixels -->
                         <div class="tab-pane" id="tab_pixels-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('pixels::index')
-                            </div>
+                            @include('pixels::index')
                         </div>
                         <!-- Painel de Cupons de Descontos -->
                         <div class="tab-pane" id="tab_coupons-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('discountcoupons::index')
-                            </div>
+                            @include('discountcoupons::index')
                         </div>
                         <!-- Painel de Sms -->
                         <div class="tab-pane" id="tab_sms-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('projectnotification::index')
-                            </div>
+                            @include('projectnotification::index')
                         </div>
                         <!-- Painel de Fretes -->
                         <div class="tab-pane" id="tab-fretes-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('shipping::index')
-                            </div>
+                            @include('shipping::index')
                         </div>
                         <!--- Painel de Planos -->
                         <div class="tab-pane" id="tab_plans-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('plans::index')
-                            </div>
+                            @include('plans::index')
                         </div>
                         <!--- Upsell -->
                         <div class="tab-pane" id="tab_upsell-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('projectupsellrule::index')
-                            </div>
+                            @include('projectupsellrule::index')
                         </div>
                         <!--- Order Bump -->
                         <div class="tab-pane" id="tab-order-bump-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('orderbump::index')
-                            </div>
+                            @include('orderbump::index')
                         </div>
                         <!-- Reviews -->
                         <div class="tab-pane" id="tab_project_reviews" role="tabpanel">
-                            <div class="card card-body">
-                                @include('projectreviews::index')
-                            </div>
+                            @include('projectreviews::index')
                         </div>
                         <!-- Painel de Configurações  Abre a tela edit-->
                         <div class="tab-pane" id="tab_configuration_project" role="tabpanel">
@@ -302,14 +287,11 @@
                         </div>
                     </div>
                     <!-- Modal para fazer-desfazer integração com shopify -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical"
-                         id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle"
-                         role="dialog" tabindex="-1">
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog  modal-dialog-centered  modal-simple">
                             <div class="modal-content p-10 s-border-radius">
                                 <div class="modal-header text-center">
-                                    <a class="pointer close" role="button" data-dismiss="modal"
-                                       aria-label="Close" id="bt-close-modal-change-shopify-integration">
+                                    <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="bt-close-modal-change-shopify-integration">
                                         <i class="material-icons md-16">close</i>
                                     </a>
                                 </div>
@@ -346,7 +328,7 @@
                                         <i class="material-icons md-16">close</i>
                                     </a>
                                 </div>
-                                
+
 
                                 <div class="modal-body p-10 ">
                                     <div class='col-md-12 col-sm-12 col-12'>
@@ -357,17 +339,17 @@
                                     <div class='col-md-10 col-sm-12 col-12'>
                                         <label class="control-label"> Consumer key </label>
                                         <input class="form-control" id="consumer_k"  type='text'   class="form-control">
-                                        
+
                                     </div>
-                                
+
                                     <div class='col-md-10 col-sm-12 col-12 mt-20'>
                                         <label class="control-label"> Consumer secret </label>
                                         <input class="form-control" id="consumer_s"  type='text'   class="form-control">
-                                        
+
                                     </div>
                                 </div>
 
-                                
+
 
                                 <div class="modal-footer d-flex align-items-center justify-content-center">
                                         <button id="close-modal" type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">
@@ -378,11 +360,11 @@
                                         </button>
                                     </div>
 
-                            </div>               
-                        </div>               
-                    </div>               
-                    
-                    
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical"
                          id="modal-woocom-integration" aria-hidden="true" aria-labelledby="exampleModalTitle"
                          role="dialog" tabindex="-1">
@@ -404,21 +386,21 @@
 
                                 <div id="_loading" style="display:none">
                                     <div class="modal-body text-center p-10">
-                                        
+
                                         <h3 class="black" id="modal-title">
                                             Processando requisição.
                                         </h3>
                                     </div>
-                                    
+
                                 </div>
 
                                 <div id="_content">
 
                                     <div class="modal-body text-center p-10">
-                                        
+
                                         <h3 class="black" id="modal-title">Selecione as opções para sincronizar</h3>
                                         <p class="gray pt-10" id="modal-text">
-                                        
+
                                             <div class="switch-holder">
                                                 <label class="switch" style="top:3px">
                                                     <input type="checkbox" id="opt_prod" name="product_amount_selector" class="check" value="1">
@@ -445,7 +427,7 @@
                                                 <label class="text-left" for="opt_webhooks" style="margin-right:15px;margin-bottom: 3px; width:346px">
                                                     Sincronizar webhooks com WooCommerce</label>
                                             </div>
-                                            
+
                                         </p>
                                     </div>
                                     <div class="modal-footer d-flex align-items-center justify-content-center">
@@ -465,14 +447,14 @@
         </div>
     </div>
 
-    @push('scripts')    
-{{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
+    @push('scripts')
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script>
         <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/plans/js/loading.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/shipping/js/shipping.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v='.uniqid())}}"></script>

@@ -27,8 +27,8 @@ class CieloService implements Statement
 
     public function __construct()
     {
-        $this->gatewayIds = [ 
-            Gateway::CIELO_PRODUCTION_ID, 
+        $this->gatewayIds = [
+            Gateway::CIELO_PRODUCTION_ID,
             Gateway::CIELO_SANDBOX_ID ,
             // extrato cielo engloba as vendas antigas zoop e pagarme
             Gateway::PAGARME_PRODUCTION_ID,
@@ -50,7 +50,7 @@ class CieloService implements Statement
             return 0;
         }
 
-        return $this->company->cielo_balance;
+        return $this->company->cielo_balance - $this->getBlockedBalance();
     }
 
     public function getPendingBalance() : int
@@ -104,7 +104,7 @@ class CieloService implements Statement
 
     public function getPendingDebtBalance() : int
     {
-        return 0;    
+        return 0;
     }
 
     public function hasEnoughBalanceToRefund(Sale $sale): bool
@@ -112,8 +112,7 @@ class CieloService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $availableBalance += $pendingBalance;
-        $availableBalance -= $blockedBalance;
+        $availableBalance += $pendingBalance;        
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
@@ -132,9 +131,7 @@ class CieloService implements Statement
     public function withdrawalValueIsValid($withdrawalValue): bool
     {
         $availableBalance = $this->company->cielo_balance;
-        $blockedBalance = $this->getBlockedBalance();
-        $availableBalance -= $blockedBalance;
-
+        
         if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance) {
             return false;
         }
@@ -142,7 +139,7 @@ class CieloService implements Statement
         return true;
     }
 
-    public function createWithdrawal($withdrawalValue): bool
+    public function createWithdrawal($withdrawalValue)
     {
         try {
             DB::beginTransaction();
@@ -188,7 +185,7 @@ class CieloService implements Statement
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            return false;                
+            return false;
         }
 
         return $withdrawal;
@@ -216,7 +213,7 @@ class CieloService implements Statement
 
             if (!empty($saleId)) {
                 $transactions->where('sale_id', $saleId);
-            }            
+            }
 
             foreach ($transactions->cursor() as $transaction) {
                 $company = $transaction->company;
@@ -272,8 +269,7 @@ class CieloService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
-        $availableBalance -= $blockedBalance;
+        $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;        
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
 
         return [

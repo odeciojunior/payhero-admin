@@ -15,7 +15,6 @@
     <!-- Page -->
     <div class="page">
         <div style="display: none" class="page-header container">
-
             <a href="/projects/create" class="btn btn-floating btn-primary" id="btn-add-project" style="position: relative; float: right; display:none" title='Adicionar projeto'>
                 <span style="color: white; font-size: 35px" class='o-add-1'></span>
             </a>
@@ -25,10 +24,7 @@
             </a>
 
             <h1 class="page-title">Meus projetos</h1>
-            
-            <div class="page-header-actions">
-
-            </div>
+            <div class="page-header-actions"></div>
         </div>
 
         @include('projects::empty')
@@ -36,16 +32,15 @@
 
         <div class="page-content container">
             <div id="data-table-projects" class="row" style="margin-top: 30px">
-            
+
             </div>
         </div>
 
     </div>
     <!-- Modal add integração -->
     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_config" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-        
         <div class="modal-dialog modal-lg d-flex justify-content-center modal-dialog-centered">
-            
+
             <div class="modal-content w-450" id="conteudo_modal_add">
 
                 <div class="modal-header">

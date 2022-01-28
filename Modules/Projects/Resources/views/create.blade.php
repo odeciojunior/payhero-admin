@@ -37,7 +37,7 @@
 
                                 <div class='form-group col-12'>
                                     <label for='company'>Empresa</label>
-                                    <select name='company' class='form-control select-pad' id='company' required>
+                                    <select name='company' class='sirius-select' id='company' required>
                                         <option value=''>Selecione</option>
                                     </select>
                                 </div>

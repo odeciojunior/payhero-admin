@@ -23,7 +23,7 @@ class ProductsSaleResource extends JsonResource
             'id' => $this->id_code ?? null,
             'photo' => $this->photo ?? null,
             'name' => $this->name,
-            'description' => !empty($this->description) ? Str::limit($this->description, 23) : '',
+            'description' => !empty($this->description) ? Str::limit($this->description, 22) : '',
             'sale_status' => $this->sale_status ?? null,
             'sale_id' => $this->sale_id ?? null,
             'amount' => $this->amount ?? null,

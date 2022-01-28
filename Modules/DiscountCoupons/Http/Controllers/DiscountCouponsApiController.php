@@ -82,7 +82,7 @@ class DiscountCouponsApiController extends Controller
                 $requestData['rule_value'] = preg_replace("/[^0-9]/", "", $requestData['rule_value']);
 
                 if (empty($requestData['rule_value'])) {
-                    $requestData['rule_value'] = 0;                    
+                    $requestData['rule_value'] = 0;
                 }
 
                 if($requestData['value']==0){
@@ -344,9 +344,8 @@ class DiscountCouponsApiController extends Controller
                     }
                 } else {
                     return response()->json([
-                                                'message' => 'Sem permissão para remover este cupom',
-
-                                            ], 400);
+                        'message' => 'Sem permissão para remover este cupom',
+                    ], 400);
                 }
             }
 

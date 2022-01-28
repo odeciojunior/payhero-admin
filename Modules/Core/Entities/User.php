@@ -113,6 +113,9 @@ class User extends Authenticable
     public const DOCUMENT_STATUS_APPROVED = 3;
     public const DOCUMENT_STATUS_REFUSED = 4;
 
+    public const CELLPHONE_VERIFIED = 1;
+    public const EMAIL_VERIFIED = 1;
+
     protected $presenter = UserPresenter::class;
     /**
      * @var array

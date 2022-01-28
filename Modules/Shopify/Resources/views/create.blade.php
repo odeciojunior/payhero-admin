@@ -21,7 +21,7 @@
         <div class="row" style="margin-top:30px">
             <div class="col-12">
                 <label for="company">Selecione sua empresa</label>
-                <select class="input-pad" id="select_companies" name="company">
+                <select class="sirius-select" id="select_companies" name="company">
                     {{--           JS LOAD           --}}
                 </select>
             </div>

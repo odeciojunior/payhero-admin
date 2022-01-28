@@ -1,8 +1,10 @@
 @extends("layouts.master")
 
 @push('css')
+    <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css?v=' . versionsFile()) }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=' . versionsFile()) }}">
 @endpush
 
@@ -63,7 +65,6 @@
 
         @include('sales::details')
 
-        <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css?v=' . versionsFile()) }}">
 
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js?v=' . versionsFile()) }}"></script>

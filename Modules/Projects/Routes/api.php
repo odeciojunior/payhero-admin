@@ -16,16 +16,19 @@ Route::group(
         Route::get('/projects/{id}', 'ProjectsApiController@show');
         Route::get('/projects/{id}/edit', 'ProjectsApiController@edit');
 
-          Route::apiResource('/projects', 'ProjectsApiController')
-               ->only('store', 'destroy')->middleware('permission:projects_manage');
+        Route::apiResource('/projects', 'ProjectsApiController')
+            ->only('store', 'destroy')->middleware('permission:projects_manage');
 
-          // Nova Edicao de projeto com novo metodo
-          Route::put("/projects/{id}/settings", "ProjectsApiController@updateSettings");
+        // Nova Edicao de projeto com novo metodo
+        Route::put("/projects/{id}/settings", "ProjectsApiController@updateSettings");
 
         Route::post('/projects/updateorder', 'ProjectsApiController@updateOrder')
             ->middleware('permission:projects_manage');
 
         Route::post('/projects/updateconfig', 'ProjectsApiController@updateConfig')
             ->middleware('permission:projects_manage');
+
+        Route::get('/projects/{id}/companie', 'ProjectsApiController@getCompanieByProject')
+            ->middleware('role:account_owner|admin');
     }
 );

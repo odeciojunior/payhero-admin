@@ -33,13 +33,17 @@ class BilletRefundedSendEmailListener implements ShouldQueue
     public function handle(BilletRefundedEvent $event)
     {
         try {
+            $sale = $event->sale;
+            if ($sale->api) {
+                return;
+            }
+
             $emailService = new SendgridService();
             $saleService = new SaleService();
             $projectModel = new Project();
             $domainModel = new Domain();
             $domainPresent = $domainModel->present();
 
-            $sale = $event->sale;
             $project = $projectModel->find($sale->project_id);
             $domain = $domainModel->where('project_id', $project->id)
                 ->where('status', $domainPresent->getStatus('approved'))->first();
