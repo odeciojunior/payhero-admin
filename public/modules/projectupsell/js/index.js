@@ -36,6 +36,10 @@ $(document).ready(function () {
         }
 
         loadOnTable('#data-table-upsell', '#table-upsell');
+
+        $('#tab_upsell-panel').find('.no-gutters').css('display', 'none');
+        $('#table-upsell').find('thead').css('display', 'none');
+
         $.ajax({
             method: "GET",
             url: link,
@@ -53,9 +57,26 @@ $(document).ready(function () {
                 dataTable.html('');
                 if (response.data == '') {
                     $('.div-config').hide();
-                    $('#data-table-upsell').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum upsell encontrado</td></tr>");
+                    $('#data-table-upsell').html(`
+                        <tr class='text-center'>
+                            <td colspan='3' style='height: 70px;vertical-align: middle'>
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum upsell configurado</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro upsell para poder
+                                        <br>gerenciá-los nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-upsell' data-toggle="modal" data-target="#modal_add_upsell">Adicionar upsell</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
                     $('#table-upsell').addClass('table-striped');
                 } else {
+                    $('#tab_upsell-panel').find('.no-gutters').css('display', 'flex');
+                    $('#table-upsell').find('thead').css('display', 'contents');
+
                     $('#table-upsell').addClass('table-striped');
                     $('#count-upsell').html(response.meta.total);
                     let data = '';
@@ -63,7 +84,7 @@ $(document).ready(function () {
                         data += `
                         <tr>
                             <td>${value.description}</td>
-                            <td>${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
+                            <td class="text-center">${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
                                 <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id}" data-target='#modal-detail-upsell' data-toggle='modal'><span class="o-eye-1"></span></a>
                                 <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id}"><span class='o-edit-1'></span></a>
@@ -82,7 +103,7 @@ $(document).ready(function () {
         });
     }
 
-    $("#add-upsell").on('click', function () {
+    $(document).on('click', '.add-upsell', function () {
         $('#modal_add_upsell .modal-title').html("Novo upsell");
         $(".bt-upsell-save").show();
         $(".bt-upsell-update").hide();
@@ -174,10 +195,11 @@ $(document).ready(function () {
 
     $(document).on('click', '.delete-upsell', function (event) {
         event.preventDefault();
-        let upsellId = $(this).data('upsell');
-        $('.btn-delete-upsell').unbind('click');
-        $('.btn-delete-upsell').on('click', function () {
 
+        let upsellId = $(this).data('upsell');
+
+        $('#btn-delete-upsell').unbind('click');
+        $(document).on('click', '#btn-delete-upsell', function () {
             $.ajax({
                 method: "DELETE",
                 url: "/api/projectupsellrule/" + upsellId,
@@ -187,7 +209,7 @@ $(document).ready(function () {
                     'Accept': 'application/json',
                 },
                 error: function (response) {
-                    loadingOnScreenRemove()
+                    loadingOnScreenRemove();
                     errorAjaxResponse(response);
                 },
                 success: function (response) {

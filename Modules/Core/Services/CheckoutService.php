@@ -32,7 +32,7 @@ class CheckoutService
 
         if (request('project') == 'all') {
             $projectIds = UserProject::where('user_id', auth()->user()->account_owner_id)->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)->pluck('project_id')->toArray();
-                
+
         } else {
             $projects = explode(',', request('project'));
             foreach($projects as $project){
@@ -51,7 +51,7 @@ class CheckoutService
         $plansIds = [];
         if (request('plan') == 'all') {
             $plansIds = '';
-                
+
         } else {
             $plans = explode(',', request('plan'));
             foreach($plans as $plan){
@@ -142,9 +142,9 @@ class CheckoutService
             } else {
                 $urlCancelPayment = env('CHECKOUT_URL') . "/api/payment/cancel/{$idEncoded}";
             }
-            
+
             $response = $this->runCurl($urlCancelPayment, 'POST');
-            
+
             if (($response->status ?? '') != 'success') {
                 return [
                     'status' => 'error',

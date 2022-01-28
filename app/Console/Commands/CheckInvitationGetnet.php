@@ -33,7 +33,91 @@ class CheckInvitationGetnet extends Command
 
     public  function  handle() {
         try {
-            $this->captureInvitonErro();
+
+            $sales = Sale::
+            with('transactions')
+            ->whereHas('transactions', function ($query) {
+                    $query->where('type', Transaction::TYPE_PRODUCER);
+                })
+                ->where('id', 1472286);
+
+            foreach ($sales->cursor() as $sale) {
+
+                $getnetService = new GetnetBackOfficeService();
+
+                $orderId = $sale->gateway_order_id;
+                $transaction = $sale->transactions()->first();
+
+                dump($sale->id);
+
+                $response = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                    ->setStatementSubSellerId(CompanyService::getSubsellerId($transaction->company))
+                    ->getStatement($orderId);
+
+                $getnetSale = json_decode($response);
+                dd($getnetSale);
+
+                if (
+                    !isset($getnetSale->list_transactions) ||
+                    !isset($getnetSale->list_transactions[0]) ||
+                    !isset($getnetSale->list_transactions[0]->details)
+                ) {
+                    //\Log::info("{$transaction->id} não possui detalhes na getnet - " . $sale->id);
+                    //$this->line(" {$transaction->id} não possui detalhes na getnet - " . $sale->id . " - User: " . $transaction->user->id . " - " . $transaction->user->name);
+
+                    $isWithdrawal = 'notWithdrawal';
+                    if(!empty($transaction->withdrawal_id)) {
+
+                        $isWithdrawal = 'isWithdrawal';
+                        $this->line("Tem saque");
+                        \Log::info("Saque {$transaction->withdrawal->id}, {$transaction->withdrawal->status}, {$transaction->withdrawal->is_released}");
+//                        $transaction->withdrawal->update(
+//                            [
+//                                'status' => Withdrawal::STATUS_PARTIALLY_LIQUIDATED,
+//                                'is_released' => 0,
+//                            ]
+//                        );
+                    }
+                    //$transaction->withdrawal->update(['status' => Withdrawal::STATUS_PARTIALLY_LIQUIDATED]);
+
+                    if (isset($arrayInvitation[$transaction->user->id])) {
+
+                        $arrayInvitation[$transaction->user->id]['count_sale'] += 1;
+                        $arrayInvitation[$transaction->user->id]['value'][$isWithdrawal] += $transaction->value;
+                        array_push($arrayInvitation[$transaction->user->id]['sale_ids'][$isWithdrawal], $transaction->sale_id);
+                        array_push($arrayInvitation[$transaction->user->id]['values'][$isWithdrawal], $transaction->value);
+                    } else {
+
+                        $arrayInvitation[$transaction->user->id] = [
+                            'user_id' => $transaction->user->id,
+                            'user_name' => $transaction->user->name,
+                            'company_id' => $transaction->company->id,
+                            'company_name' => $transaction->company->fantasy_name,
+                            'count_sale' => 1,
+                            'value' => [
+                                $isWithdrawal => $transaction->value
+                            ],
+                            'sale_ids' => [
+                                $isWithdrawal => [$transaction->sale_id]
+                            ],
+                            'values' => [
+                                $isWithdrawal => [$transaction->value]
+                            ]
+                        ];
+
+                    }
+
+                    $valueTotal += $transaction->value;
+
+                } else {
+                    $this->line(" {$transaction->id} possui detalhes na getnet - " . $sale->id . " - User: " . $transaction->user->id . " - " . $transaction->user->name);
+                }
+
+
+            }
+
+
+            //$this->captureInvitonErro();
         } catch (Exception $e) {
             dd($e);
         }
@@ -96,7 +180,7 @@ class CheckInvitationGetnet extends Command
 
                         $isWithdrawal = 'isWithdrawal';
                         $this->line("Tem saque");
-//                        \Log::info("Saque {$transaction->withdrawal->id}, {$transaction->withdrawal->status}, {$transaction->withdrawal->is_released}");
+                        \Log::info("Saque {$transaction->withdrawal->id}, {$transaction->withdrawal->status}, {$transaction->withdrawal->is_released}");
 //                        $transaction->withdrawal->update(
 //                            [
 //                                'status' => Withdrawal::STATUS_PARTIALLY_LIQUIDATED,
@@ -595,15 +679,6 @@ class CheckInvitationGetnet extends Command
     //Convites que não gerarm os detalhes na getnet
     public function  saleIdsCommnad()
     {
-//        return [
-//            1303532,
-//            1306178,
-//            1306186,
-//            1306191,
-//            1306203,
-//            1306205,
-//            1306207
-//        ];
         return [
             1303532,
             1306178,

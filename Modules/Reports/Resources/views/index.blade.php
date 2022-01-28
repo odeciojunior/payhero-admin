@@ -24,7 +24,7 @@
                 <div class="row align-items-center justify-content-between">
                     <div class="col-sm-6 col-m-3 col-lg-3">
                         <div class="">
-                            <select id='select_projects' class="form-control input-pad">
+                            <select id='select_projects' class="sirius-select">
                                 {{-- JS carrega.. --}}
                             </select>
                         </div>
@@ -32,7 +32,7 @@
                     <div class="col-sm-6 col-m-3 col-lg-3">
                         <div class="row align-items-center form-icons">
                             <i style="right:10%;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
-                            <input id="date-filter" type="text" name="daterange" class="input-pad text-center pr-30 font-size-14 ml-5" style="width: 92%" value="" readonly>
+                            <input id="date-filter" type="text" name="daterange" class="input-pad text-center pr-30 font-size-14 ml-5" style="width: 92%;height: 50px;" value="" readonly>
                         </div>
                     </div>
                 </div>
@@ -401,7 +401,7 @@
                                         <h4 class='float-left'> Origens</h4>
                                     </div>
                                     <div class="col-4">
-                                        <select class="form-control float-right" id='origin'>
+                                        <select class="sirius-select float-right" id='origin'>
                                             <option selected value="src">SRC</option>
                                             <option value="utm_source">UTM Source</option>
                                             <option value="utm_medium">UTM Medium</option>

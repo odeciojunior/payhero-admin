@@ -8,30 +8,30 @@ $(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
     //comportamento da tela
-    var cuponType = 0; 
-    $('.coupon-value').mask('00%', {reverse: true});    
+    var cuponType = 0;
+    $('.coupon-value').mask('00%', {reverse: true});
     $(document).on('change', '.coupon-type', function () {
         if ($(this).val() == 1) {
-            cuponType = 1;            
-            $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');            
+            cuponType = 1;
+            $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
         } else {
-            cuponType = 0;            
-            $('.coupon-value').mask('00%', {reverse: true});                       
+            cuponType = 0;
+            $('.coupon-value').mask('00%', {reverse: true});
         }
     });
     $(".rule-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
 
     $('.rule-value').on('blur', function () {
-        applyMaskManually(this); 
+        applyMaskManually(this);
     });
 
-    $('.coupon-value').on('blur', function () {            
+    $('.coupon-value').on('blur', function () {
         if(cuponType==1){
-            applyMaskManually(this);            
+            applyMaskManually(this);
         }
     });
 
-    function applyMaskManually(classValue){        
+    function applyMaskManually(classValue){
         if ($(classValue).val().length == 1) {
             let val = '0,0' + $(classValue).val();
             $(classValue).val(val);
@@ -112,11 +112,32 @@ $(function () {
         });
     });
 
-    // carregar modal delecao
+    // load delete modal
     $(document).on('click', '.delete-coupon', function (event) {
+        event.preventDefault();
+
         let coupon = $(this).attr('coupon');
-        $('#modal-delete-coupon .btn-delete').attr('coupon', coupon);
-        $("#modal-delete-coupon").modal('show');
+
+        $('#btn-delete').unbind('click');
+        $(document).on('click', '#btn-delete', function() {
+            $.ajax({
+                method: "DELETE",
+                url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                    atualizarCoupon();
+
+                    alertCustom("success", "Cupom Removido com sucesso");
+                }
+            });
+        });
     });
 
     //cria novo cupom
@@ -181,29 +202,7 @@ $(function () {
         });
     });
 
-    //deletar cupom
-    $('#modal-delete-coupon .btn-delete').on('click', function () {
-        let coupon = $(this).attr('coupon');
 
-        $.ajax({
-            method: "DELETE",
-            url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(data) {
-
-                alertCustom("success", "Cupom Removido com sucesso");
-                atualizarCoupon();
-            }
-
-        });
-    });
 
     function atualizarCoupon() {
 
@@ -216,6 +215,10 @@ $(function () {
         }
 
         loadOnTable('#data-table-coupon', '#tabela-coupom');
+
+        $('#tab_coupons-panel').find('.no-gutters').css('display', 'none');
+        $('#tabela-coupon').find('thead').css('display', 'none');
+
         $.ajax({
             method: "GET",
             url: link,
@@ -231,8 +234,25 @@ $(function () {
                 $("#data-table-coupon").html('');
 
                 if (response.data == '') {
-                    $("#data-table-coupon").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
+                    $("#data-table-coupon").html(`
+                        <tr class='text-center'>
+                            <td colspan='8' style='height: 70px; vertical-align: middle;'>
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum cupom configurado</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro cupom para poder
+                                        <br>gerenciá-los nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-create-coupon">Adicionar cupom</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
                 } else {
+                    $('#tab_coupons-panel').find('.no-gutters').css('display', 'flex');
+                    $('#tabela-coupon').find('thead').css('display', 'contents');
+
                     $('#count-coupons').html(response.meta.total)
                     $.each(response.data, function (index, value) {
                         let data = `<tr>
@@ -240,13 +260,13 @@ $(function () {
                             <td class="shipping-type">${value.type}</td>
                             <td class="shipping-value">${value.value}</td>
                             <td class="shipping-zip-code-origin">${value.code}</td>
-                            <td class="shipping-status" style="vertical-align: middle">
+                            <td class="shipping-status text-center" style="vertical-align: middle">
                                 <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
                             </td>
                             <td style="text-align:center">
                                 <a role="button" title='Visualizar' class="mg-responsive details-coupon pointer" coupon="${value.id}"><span class="o-eye-1"></span></a>
                                 <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" coupon="${value.id}"><span class="o-edit-1"></span> </a>
-                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}"><span class='o-bin-1'></span></a>
+                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}" data-toggle="modal" data-target="#modal-delete-coupon"><span class='o-bin-1'></span></a>
                             </td>
                         </tr>`;
 

@@ -55,7 +55,7 @@ class ImportWooCommerceProduct implements ShouldQueue
 
 
 
-            report($e);
+            //report($e);
 
 
         }

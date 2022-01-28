@@ -29,7 +29,7 @@
             </div>
             <div class='form-group col-12 mb-20'>
                 <label for="link">Status</label>
-                <select name="active_flag" id="edit_active_flag" class='form-control'>
+                <select name="active_flag" id="edit_active_flag" class='sirius-select'>
                     <option value='1'>Ativo</option>
                     <option value='0'>Desativado</option>
                 </select>

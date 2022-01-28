@@ -23,15 +23,14 @@
             <div id="reports-content" class="page-content container">
                 <div class="row align-items-center justify-content-between">
                     <div class="col-sm-6 col-m-3 col-lg-3">
-                        <select id='select_projects' class="form-control input-pad">
+                        <select id='select_projects' class="sirius-select">
                             {{-- JS carrega.. --}}
                         </select>
                     </div>
                     <div class="col-sm-6 col-m-3 col-lg-3">
                             <div class="row align-items-center form-icons">
                                 <i class="form-control-icon form-control-icon-right o-agenda-1 font-size-18" style="right: 10%;"></i>
-                                <input id="date-filter" type="text" name="daterange" class="input-pad text-center font-size-14 pr-30 ml-5" 
-                                value="" readonly style="width: 92%">
+                                <input id="date-filter" type="text" name="daterange" class="input-pad text-center font-size-14 pr-30 ml-5" value="" readonly style="width: 92%; height: 50px;">
                             </div>
                         {{-- <div class="row align-items-center">
                             <span class="o-agenda-1"></span>
@@ -187,7 +186,7 @@
                                                 <h4 class='float-left'> Origens</h4>
                                             </div>
                                             <div class="col-4">
-                                                <select class="form-control float-right" id='origin'>
+                                                <select class="sirius-select float-right" id='origin'>
                                                     <option selected value="src">SRC</option>
                                                     <option value="utm_source">UTM Source</option>
                                                     <option value="utm_medium">UTM Medium</option>

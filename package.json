@@ -19,5 +19,8 @@
         "popper.js": "^1.12",
         "pusher-js": "^5.0.2",
         "vue": "^2.5.7"
+    },
+    "dependencies": {
+        "placeholder-loading": "^0.5.0"
     }
 }

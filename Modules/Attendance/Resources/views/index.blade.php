@@ -3,10 +3,10 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v='.uniqid()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/global/select3/select3.css?v='.uniqid()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css?v='.uniqid()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/attendance/css/index.css?v='.uniqid()) }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v='. versionsFile()) }}">
+        <link rel="stylesheet" href="{{ asset('/modules/global/select3/select3.css?v='. versionsFile()) }}">
+        <link rel="stylesheet" href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css?v='. versionsFile()) }}">
+        <link rel="stylesheet" href="{{ asset('/modules/attendance/css/index.css?v='. versionsFile()) }}">
     @endpush
 
     <div class="page mb-0" id="project-not-empty" style="display: none !important;">
@@ -213,12 +213,11 @@
     @include('projects::empty')
 
     @push('scripts')
-        <script src="{{asset('modules/global/select3/select3.js?v=' . uniqid())}}"></script>
+        <script src="{{asset('modules/global/select3/select3.js?v=' . versionsFile())}}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script
-            src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js?v=' . uniqid()) }}"></script>
+        <script src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js?v=' . versionsFile()) }}"></script>
         <script src="{{asset('/modules/tickets/js/emoji-button.min.js')}}"></script>
-        <script src="{{asset('/modules/tickets/js/index.js?v=' . uniqid())}}"></script>
+        <script src="{{asset('/modules/tickets/js/index.js?v=' . versionsFile())}}"></script>
     @endpush
 
 @endsection

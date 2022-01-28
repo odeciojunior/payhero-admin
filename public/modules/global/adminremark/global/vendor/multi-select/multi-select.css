@@ -21,7 +21,8 @@
   font-size: 0;
   line-height: 0;
   visibility: hidden;
-  content: "."; }
+  content: ".";
+}
 
 .ms-container .ms-selectable, .ms-container .ms-selection {
   float: left;

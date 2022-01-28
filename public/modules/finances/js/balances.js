@@ -1,10 +1,14 @@
 $(window).on('load', function () {
 
-    $(document).on("change", "#transfers_company_select", function () {
-        $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]").prop("selected", true);
+    $(document).on("change", "#transfers_company_select, #transfers_company_select_mobile", function () {
+        let value = $(this);
+        let option = value.find('option:selected').val();
+        let text = value.find('option:selected').text();
+
+        $(".transfers_company_select .sirius-select-text, .transfers_company_select_mobile .sirius-select-text").text(text)
         $('#custom-input-addon').val('');
-        updateBalances();
-        if ($(this).children("option:selected").attr('country') != 'brazil') {
+        updateBalances(option);
+        if (value.children("option:selected").attr('country') != 'brazil') {
             $("#col_transferred_value").show();
         } else {
             $("#col_transferred_value").hide();
@@ -13,7 +17,7 @@ $(window).on('load', function () {
 
 });
 
-window.updateBalances = function() {
+window.updateBalances = function(company_code = '') {
 
     loadOnAny(".number", false, {
         styles: {
@@ -31,11 +35,12 @@ window.updateBalances = function() {
 
     loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
 
+    let companyCode = company_code ? company_code :  $("#transfers_company_select option:selected").val();
     $.ajax({
         url: "/api/finances/getbalances",
         type: "GET",
         data: {
-               company: $("#transfers_company_select option:selected").val(), 
+               company: companyCode,
                gateway_id: gatewayCode
         },
         dataType: "json",
@@ -53,6 +58,7 @@ window.updateBalances = function() {
             $('.removeSpan').remove();
 
             $(".available-balance").html(removeMoneyCurrency(response.available_balance));
+            $('.available-balance-mobile').html(removeMoneyCurrency(response.available_balance));
             $(".pending-balance").html(removeMoneyCurrency(response.pending_balance));
             $(".total-balance").html(removeMoneyCurrency(response.total_balance));
             $(".blocked-balance").html(removeMoneyCurrency(response.blocked_balance));
@@ -71,6 +77,7 @@ window.updateBalances = function() {
                     return;
                 }
                 $("#custom-input-addon").val(removeMoneyCurrency(response.available_balance));
+                $(".custom-input-addon-m").val(removeMoneyCurrency(response.available_balance));
             });
 
             loadWithdrawalsTable();

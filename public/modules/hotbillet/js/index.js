@@ -20,10 +20,10 @@ $(document).ready(function () {
                     $("#project-empty").show();
                     $("#integration-actions").hide();
                 } else {
-                    $(".select-pad").html("");
+                    $("#project_id").html("");
                     let projects = response.projects;
                     for (let i = 0; i < projects.length; i++) {
-                        $(".select-pad").append(
+                        $("#project_id").append(
                             '<option value="' +
                                 projects[i].id +
                                 '">' +
@@ -62,7 +62,7 @@ $(document).ready(function () {
     function clearForm() {
         $(":text").val("");
         $(":checkbox").prop("checked", true).val(1);
-        $(".select-pad").prop("selectedIndex", 0).change();
+        $("#project_id").prop("selectedIndex", 0).change();
     }
 
     //draw the integration cards

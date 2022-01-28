@@ -6,7 +6,7 @@ Route::group(
     [
         'middleware' => ['auth:api', 'scopes:admin'],
     ],
-    function() {        
+    function() {
         //   Route::apiResource('/project/{projectId}/plans', 'PlansApiController')
         //   ->only('index', 'show', 'store', 'update', 'destroy')->names('api.plans');
 
@@ -22,11 +22,19 @@ Route::group(
           Route::post('/plans/update-bulk-cost', 'PlansApiController@updateBulkCost')
           ->middleware('permission:projects_manage');
 
+          Route::post('/plans/search', 'PlansApiController@getPlanFilter')
+          ->middleware('permission:projects_manage');
+
           Route::post('/plans/update-config-cost', 'PlansApiController@updateConfigCost')
           ->middleware('permission:projects_manage');
-          
+
           Route::post('/plans/config-custom-product', 'PlansApiController@saveConfigCustomProducts')
           ->middleware('permission:projects_manage');
 
+        Route::put('/plans/{planId}/informations', 'PlansApiController@updateInformations')
+        ->middleware('role:account_owner|admin|attendance');
+
+        Route::put('/plans/{planId}/products', 'PlansApiController@updateProducts')
+        ->middleware('role:account_owner|admin|attendance');
     }
 );

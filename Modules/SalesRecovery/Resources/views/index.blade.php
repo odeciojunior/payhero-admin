@@ -3,6 +3,7 @@
 @section('content')
 
     @push('css')
+        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=' . random_int(100, 10000)) }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=101') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
@@ -15,7 +16,7 @@
                 <div class="col-6">
                     <h1 class="page-title">Recuperação de vendas</h1>
                 </div>
-                @can('recovery')                
+                @can('recovery')
                     <div class="col-6 text-right">
                         <div class="justify-content-end align-items-center" id="export-excel">
                             <div class="p-2 d-flex justify-content-end align-items-center">
@@ -38,7 +39,7 @@
 
                         <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
                             <label for="type_recovery">Tipo de Recuperação</label>
-                            <select name='select_type_recovery' id="recovery_type" class="form-control input-pad default-border">
+                            <select name='select_type_recovery' id="recovery_type" class="sirius-select">
                                 <option value="1" selected>Carrinho Abandonado</option>
                                 <option value="5">Boleto Vencido</option>
                                 <option value="4">PIX Vencido</option>
@@ -71,7 +72,7 @@
                     </div>
 
                     <div id="bt_collapse" class="collapse">
-                        
+
                         <div class="row pt-15">
 
                             <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">

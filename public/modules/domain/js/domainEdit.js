@@ -1,6 +1,6 @@
 $(document).ready(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
-    let btnAddDomain = $("#add-domain");
+    let btnAddDomain = $(".add-domain");
     let btnDeleteDomain = $("#btn-delete-domain");
     let btnAddDomainModal = $("#btn-modal-add-domain");
 
@@ -22,6 +22,9 @@ $(document).ready(function () {
             link = '/api/project/' + projectId + '/domains' + link;
         }
 
+        $('#tab_domains').find('.no-gutters').css('display', 'none');
+        $('#tabela-dominios').find('thead').css('display', 'none');
+
         $.ajax({
             method: 'GET',
             url: link,
@@ -34,10 +37,27 @@ $(document).ready(function () {
             }, success: function (response) {
                 $("#domain-table-body").html('');
                 if (isEmpty(response.data) || response.data == '') {
-                    $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum domínio encontrado</td></tr>")
-                    $('#tabela-dominios').addClass('table-striped');
+                    $("#domain-table-body").html(`
+                        <tr class='text-center'>
+                            <td colspan='4' style='height: 70px; vertical-align: middle;'>
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum domínio configurado</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro domínio para poder
+                                        <br>gerenciá-los nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-domain' data-toggle="modal" data-target="#modal-add-domain">Adicionar domínio</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
 
+                    $('#tabela-dominios').addClass('table-striped');
                 } else {
+                    $('#tab_domains').find('.no-gutters').css('display', 'flex');
+                    $('#tabela-dominios').find('thead').css('display', 'contents');
+
                     $('#count-cupons').html(response.meta.total)
                     $.each(response.data, function (index, value) {
                         tableDomains(value);
@@ -159,24 +179,24 @@ $(document).ready(function () {
     /**
      * Verifica dados e exibi modal para adicionar novo dominio
      */
-    btnAddDomain.unbind('click');
-    btnAddDomain.on('click', function () {
+     $('.add-domain').unbind('click');
+     $(document).on('click', '.add-domain', function () {
         $("#btn-modal-add-input").show();
         $("#loaderModal").remove();
 
-        $("#modal-title-add-domain").html('Novo domínio').show();
-        $("#form-add-domain, #btn-modal-add-domain").show();
+        $("#modal-title-add-domain").html('Novo domínio');
+        $("#btn-modal-add-domain").show();
 
         $("#form-add-domain").submit(function () {
             return false;
         });
 
-        $('#modal-body-add-domain, #btn-modal-add-domain').show();
+        $('#modal-body-add-domain').show();
 
         $("#modal-add-domain").modal('show');
 
-        btnAddDomainModal.unbind('click');
-        btnAddDomainModal.on('click', function () {
+        $('#btn-modal-add-domain').unbind('click');
+        $(document).on('click', '#btn-modal-add-domain', function () {
 
             if ($.trim($(".name-domain").val()).length === 0) {
                 infoDomain.addClass('text-danger').html('Preencha corretamente o domínio').show();
@@ -455,18 +475,18 @@ $(document).ready(function () {
                         <div class="row align-items-center">
                             <!-- Target -->
                             <input id="copy-data-${index}"
-                                   class="col-8 mr-1 input-pad" 
-                                   data-toggle="tooltip" 
-                                   data-placement="left"  
-                                   title="${value.content_complete}" 
+                                   class="col-8 mr-1 input-pad"
+                                   data-toggle="tooltip"
+                                   data-placement="left"
+                                   title="${value.content_complete}"
                                    value="${value.content_complete}"
                                    readonly>
-        
+
                                 <!-- Trigger -->
                                 <button class="btn copy-data col-2" data-clipboard-target="#copy-data-${index}">
                                     <span class="material-icons icon-copy-1"> content_copy </span>
                                 </button>
-                        </div> 
+                        </div>
                     </td>`;
 
             if (!value.proxy) {

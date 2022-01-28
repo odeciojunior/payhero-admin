@@ -49,11 +49,12 @@ class GetnetService implements Statement
 
     public function getAvailableBalance() : int
     {
-        return Transaction::whereIn('gateway_id', $this->gatewayIds)
+        $availableBalance = Transaction::whereIn('gateway_id', $this->gatewayIds)
                             ->where('company_id', $this->company->id)
                             ->where('is_waiting_withdrawal', 1)
                             ->whereNull('withdrawal_id')
                             ->sum('value');
+        return $availableBalance - $this->getBlockedBalance();
     }
 
     public function getPendingBalance() : int
@@ -225,7 +226,7 @@ class GetnetService implements Statement
     public function getLowerAndBiggerAvailableValues(int $withdrawalValueRequested): array
     {
 
-        $availableBalance = $this->getAvailableBalance() - $this->getBlockedBalance();
+        $availableBalance = $this->getAvailableBalance();
 
         $transactionsSum = $this->company->transactions()
             ->whereIn('gateway_id', $this->gatewayIds)
@@ -272,9 +273,7 @@ class GetnetService implements Statement
     {
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
-        $blockedBalance = $this->getBlockedBalance();
-        $availableBalance += $pendingBalance;
-        $availableBalance -= $blockedBalance;
+        $availableBalance += $pendingBalance;      
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
@@ -389,7 +388,7 @@ class GetnetService implements Statement
         $pendingDebtBalance = $this->getPendingDebtBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
 
         return [
@@ -438,8 +437,7 @@ class GetnetService implements Statement
             );
 
             $refundTransactions = $sale->transactions;
-            $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
-
+           
             $saleService = new SaleService();
 
             foreach ($refundTransactions as $refundTransaction) {
