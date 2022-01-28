@@ -150,6 +150,11 @@
 }
 
 .badge {
+    width: -moz-min-content;
+    width: -webkit-min-content;
+    width: min-content;
+    white-space: pre-line;
+
     color: white;
     padding: 5px 15px;
     border-radius: 16px;

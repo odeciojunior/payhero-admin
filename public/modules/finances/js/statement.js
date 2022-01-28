@@ -439,7 +439,7 @@ $(window).on("load", function() {
 
     function getFilters(urlParams = false) {
         let data = {
-            'company_id': $("#extract_company_select").val(),
+            'company': $("#extract_company_select").val(),
             'reason': $("#reason").val(),
             'transaction': $("#transaction").val().replace('#', ''),
             'type': $("#type").val(),
@@ -492,11 +492,12 @@ $(window).on("load", function() {
         });
     }
 
-    let exportFinanceFormat = 'xls'
+    let exportFinanceFormat = ''
     $("#bt_get_xls").on("click", function () {
         $("#bt_get_csv").prop("disabled", true);
         $("#bt_get_xls").prop("disabled", true);
         $('#modal-export-old-finance-getnet').modal('show');
+        exportFinanceFormat = 'xls';
     });
 
     $("#bt_get_csv").on("click", function () {

@@ -57,6 +57,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
 
+        $schedule->command('getnet:release-unblocked-balance')->dailyAt('02:30');
+
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
 
@@ -175,6 +177,9 @@ class Kernel extends ConsoleKernel
 
         /** transfere saldo excedente no asaas*/
         $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('08:00');
+
+        /** Antifraud backfill Asaas chargebacks */
+        $schedule->command('antifraud:backfill-asaas-chargebacks')->hourly();
 
     }
 

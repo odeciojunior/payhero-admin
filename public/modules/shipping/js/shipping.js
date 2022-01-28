@@ -253,9 +253,31 @@ $(document).ready(function () {
 
     //carregar modal delecao
     $(document).on('click', '.excluir-frete', function (event) {
+        event.preventDefault();
+
         let frete = $(this).attr('frete');
-        $("#modal-delete-shipping .btn-delete").attr('frete', frete);
-        $("#modal-delete-shipping").modal('show');
+
+        //deletar frete
+        $('#btn-delete').unbind('click');
+        $(document).on('click', '#btn-delete-frete', function () {
+            $.ajax({
+                method: "DELETE",
+                url: "/api/project/" + projectId + "/shippings/" + frete,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
+                success: function success(data) {
+                    atualizarFrete();
+
+                    alertCustom("success", "Frete Removido com sucesso");
+                }
+            });
+        });
     });
 
     //cria novo frete
@@ -316,26 +338,7 @@ $(document).ready(function () {
         });
     });
 
-    //deletar frete
-    $(document).on("click", '#modal-delete-shipping .btn-delete', function () {
-        let frete = $(this).attr('frete');
-        $.ajax({
-            method: "DELETE",
-            url: "/api/project/" + projectId + "/shippings/" + frete,
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function (response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(data) {
-                alertCustom("success", "Frete Removido com sucesso");
-                atualizarFrete();
-            }
-        });
-    });
+
 
     function atualizarFrete() {
 
@@ -348,6 +351,9 @@ $(document).ready(function () {
         }
 
         loadOnTable('#dados-tabela-frete', '#tabela_fretes');
+
+        $('#tab-fretes-panel').find('.no-gutters').css('display', 'none');
+        $('#tabela-fretes').find('thead').css('display', 'none');
 
         $.ajax({
             method: "GET",
@@ -366,9 +372,26 @@ $(document).ready(function () {
                 $("#dados-tabela-frete").html('');
 
                 if (response.data == '') {
-                    $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
+                    $("#dados-tabela-frete").html(`
+                        <tr class='text-center'>
+                            <td colspan='8' style='height: 70px; vertical-align: middle;'>
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum frete configurado</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro frete para poder
+                                        <br>gerenciá-los nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-shipping' data-toggle="modal" data-target="#modal-create-shipping">Adicionar frete</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
                 } else {
+                    $('#tab-fretes-panel').find('.no-gutters').css('display', 'flex');
+                    $('#tabela-fretes').find('thead').css('display', 'contents');
                     $('#count-fretes').html(response.meta.total);
+
                     $.each(response.data, function (index, value) {
 
                         let dados = `<tr>
@@ -386,11 +409,17 @@ $(document).ready(function () {
                                         <td style='text-align:center'>
                                             <a role='button' title='Visualizar' class='pointer detalhes-frete mg-responsive' frete="${value.shipping_id}"><span class="o-eye-1"></span></a>
                                             <a role='button' title='Editar' class='pointer editar-frete mg-responsive' frete="${value.shipping_id}"><span class='o-edit-1'></span></a>
-                                            <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}"><span class='o-bin-1'></span></a>
+                                            <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}" data-toggle='modal' data-target='#modal-delete-shipping'><span class='o-bin-1'></span></a>
                                         </td>
                                      </tr>`;
                         $("#dados-tabela-frete").append(dados);
                     });
+
+                    if ($('#dados-tabela-frete').children('tr:first').children('td:first').css('display') == 'none') {
+                        $('#dados-tabela-frete').children('tr').children('td:nth-child(2)').css('padding-left', '30px');
+                    } else {
+                        $('#dados-tabela-frete').children('tr').children('td:nth-child(2)').css('padding-left', '');
+                    }
 
                     pagination(response, 'shippings', atualizarFrete);
                 }

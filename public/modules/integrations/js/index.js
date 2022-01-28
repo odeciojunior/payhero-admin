@@ -1,6 +1,6 @@
 $(document).ready(function () {
     let integrationTypeEnum = {
-        external: 'Profitfy',
+        external: 'Integração externa',
         checkout_api: 'Checkout API'
     };
     let integrationTypeEnumBadge = {
@@ -277,7 +277,7 @@ $(document).ready(function () {
             $("#btn-save-integration").unbind();
             $("#btn-save-integration").on('click', function () {
                 let description = $("#modal-integrate").find("input[name='description']").val();
-                let tokenTypeEnum = $(".select-enum-list").val();
+                let tokenTypeEnum = $("#select-enum-list").val();
                 let postback = $("#modal-integrate").find("input[name='postback']").val();
                 let companyHash = $("#companies").val();
                 if (description == '') {

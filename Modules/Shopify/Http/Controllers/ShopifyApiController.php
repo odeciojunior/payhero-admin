@@ -80,7 +80,7 @@ class ShopifyApiController extends Controller
                 ], 400);
             }
 
-            if (auth()->user()->account_is_approved) {
+            if (!auth()->user()->account_is_approved) {
                 return response()->json(['message' => 'Finalize seu cadastro para integrar com Shopify'], 400);
             }
 

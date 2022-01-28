@@ -47,13 +47,18 @@ class GetnetService implements Statement
         return $this;
     }
 
-    public function getAvailableBalance() : int
+    public function getAvailableBalanceWithoutBlocking() : int
     {
         return Transaction::whereIn('gateway_id', $this->gatewayIds)
-                            ->where('company_id', $this->company->id)
-                            ->where('is_waiting_withdrawal', 1)
-                            ->whereNull('withdrawal_id')
-                            ->sum('value');
+        ->where('company_id', $this->company->id)
+        ->where('is_waiting_withdrawal', 1)
+        ->whereNull('withdrawal_id')
+        ->sum('value');
+    }
+
+    public function getAvailableBalance() : int
+    {        
+        return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
     public function getPendingBalance() : int
@@ -63,6 +68,9 @@ class GetnetService implements Statement
                             ->whereIn('gateway_id', $this->gatewayIds)
                             ->where('is_waiting_withdrawal', 0)
                             ->whereNull('withdrawal_id')
+                            ->whereDoesntHave('blockReasonSale',function ($query) {
+                                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
+                            })
                             ->sum('value');
     }
 
@@ -272,9 +280,7 @@ class GetnetService implements Statement
     {
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
-        $blockedBalance = $this->getBlockedBalance();
-        $availableBalance += $pendingBalance;
-        $availableBalance -= $blockedBalance;
+        $availableBalance += $pendingBalance;      
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
@@ -385,11 +391,14 @@ class GetnetService implements Statement
             return [];
         }
 
-        $availableBalance = $this->getAvailableBalance();
         $pendingDebtBalance = $this->getPendingDebtBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $availableBalance = $this->getAvailableBalanceWithoutBlocking() - $blockedBalance;
+        $blockedBalancePending = $this->getBlockedBalancePending();
+        
+        $totalBlockedBalance = $blockedBalance + $blockedBalancePending;
+        $totalBalance = $availableBalance + $pendingBalance + $totalBlockedBalance;
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
 
         return [
@@ -397,7 +406,7 @@ class GetnetService implements Statement
             'available_balance' => foxutils()->formatMoney($availableBalance / 100),
             'pending_debt_balance' => foxutils()->formatMoney($pendingDebtBalance / 100),
             'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
-            'blocked_balance' => foxutils()->formatMoney($blockedBalance / 100),
+            'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
             'total_balance' => foxutils()->formatMoney($totalBalance / 100),
             'total_available' => $availableBalance,
             'last_transaction' => $lastTransactionDate,
@@ -438,8 +447,7 @@ class GetnetService implements Statement
             );
 
             $refundTransactions = $sale->transactions;
-            $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
-
+           
             $saleService = new SaleService();
 
             foreach ($refundTransactions as $refundTransaction) {

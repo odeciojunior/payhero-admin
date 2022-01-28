@@ -9,6 +9,9 @@ $(() => {
         let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         link = '/api/orderbump' + (link || '');
 
+        $('#tab-order-bump-panel').find('.no-gutters').css('display', 'none');
+        $('#table-order-bump').find('thead').css('display', 'none');
+
         $.ajax({
             method: 'GET',
             url: link,
@@ -27,6 +30,9 @@ $(() => {
                 let table = $('#table-order-bump tbody');
                 if (rules.length) {
                     table.html('');
+                    $('#tab-order-bump-panel').find('.no-gutters').css('display', 'flex');
+                    $('#table-order-bump').find('thead').css('display', 'contents');
+
                     for (let rule of rules) {
                         let row = `<tr>
                                        <td>${rule.description}</td>
@@ -34,14 +40,29 @@ $(() => {
                                        <td>
                                            <a class="pointer mg-responsive show-order-bump" data-id="${rule.id}" title="Visualizar"><i class="o-eye-1"></i></a>
                                            <a class="pointer mg-responsive edit-order-bump" data-id="${rule.id}" title="Editar" ><i class="o-edit-1"></i></a>
-                                           <a class="pointer mg-responsive destroy-order-bump" data-id="${rule.id}" title="Excluir"><i class="o-bin-1"></i></a>
+                                           <a class="pointer mg-responsive destroy-order-bump" data-id="${rule.id}" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><i class="o-bin-1"></i></a>
                                        </td>
                                    </tr>`;
                         table.append(row);
                     }
+
                     pagination(resp, 'order-bump', index);
                 } else {
-                    table.html('<tr class="text-center"><td colspan="3">Nenhum order bump configurado</td></tr>');
+                    table.html(`
+                        <tr class="text-center">
+                            <td colspan="3">
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum order bump configurado</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro order bump para poder
+                                        <br>gerenciá-los nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-store-order-bump">Adicionar order bump</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
                     table.parent().addClass('table-striped');
                 }
             }
@@ -182,33 +203,33 @@ $(() => {
             }
         })
     });
+
     // load delete modal
     $(document).on('click', '.destroy-order-bump', function (event) {
+        event.preventDefault();
+
         let id = $(this).data('id');
-        $('#modal-delete-order-bump .btn-delete').attr('order-bump-id', id);
-        $("#modal-delete-order-bump").modal('show');
-    });
-    $(document).on('click', '#modal-delete-order-bump .btn-delete', function () {
-        // let id = $(this).data('id');
-        let id = $('#modal-delete-order-bump .btn-delete').attr('order-bump-id');
-        $.ajax({
-            method: 'POST',
-            url: '/api/orderbump/' + id,
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            data: {
-                _method: 'DELETE'
-            },
-            error: resp => {
-                errorAjaxResponse(resp);
-            },
-            success: resp => {
-                alertCustom('success', resp.message);
-                index();
-            }
-        })
+
+        $('#btn-delete-orderbump').unbind('click');
+        $(document).on('click', '#btn-delete-orderbump', function () {
+            $.ajax({
+                method: 'DELETE',
+                url: '/api/orderbump/' + id,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
+                success: function (response) {
+                    index();
+
+                    alertCustom('success', response.message);
+                }
+            })
+        });
     });
 
     $('#store-apply-on-plans-order-bump, #update-apply-on-plans-order-bump').on('select2:select', function () {
