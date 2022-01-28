@@ -3,8 +3,8 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('/modules/products/css/edit.css?v=07') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ asset('/modules/products/css/edit.css?v=' . versionsFile()) }}">
     @endpush
 
     <!-- Page -->
@@ -61,7 +61,7 @@
                                  class="img-fluid"
                                  alt="novo produto fisico">
                         </div>
-                        
+
                         <div class="row col-12 col-md-8 col-lg-10 col-xl-8">
                             <div class="col-12 col-sm-6 col-lg-3 pl-0">
                                 <label for="height">Altura</label>
@@ -207,9 +207,9 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=123') }}"></script>
-        <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
-        <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
+        <script src="{{asset('modules/products/js/products.js?v=' . versionsFile()) }}"></script>
+        <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js?v=' . versionsFile()) }}"></script>
+        <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js?v=' . versionsFile()) }}"></script>
     @endpush
 
 @endsection
