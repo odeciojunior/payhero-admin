@@ -47,9 +47,9 @@ class FinancesApiController extends Controller
             $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
             $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
             $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
-            
+
             $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalanceTotal;            
+            $totalBalance = $availableBalance + $pendingBalance + $blockedBalanceTotal;
             $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
 
             return response()->json(
@@ -73,34 +73,17 @@ class FinancesApiController extends Controller
             $dataRequest = $request->all();
 
             $user = auth()->user();
-            $company = Company::find(hashids_decode($dataRequest['company_id']));
-            $gateway = Gateway::find(hashids_decode($dataRequest['gateway_id']));
-
-            if(empty($company) || empty($gateway)) {
-                return response()->json([
-                    'message' => 'Empresa não encontrada',
-                ],403);
-            }
-
-            if (!Gate::allows('edit', [$company])) {
-                return response()->json([
-                    'message' => 'Sem permissão para visualizar saques',
-                ],403);
-            }
-
-            $gatewayService = $gateway->getService();
-            $gatewayService->setCompany($company);
-
             $filename = 'extract_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
-            $email = !empty($dataRequest['email']) ? $dataRequest['email'] : $user->email;
-            $transfers = $gatewayService->getStatement($dataRequest);
 
-            (new ExtractReportExportGateway($filename,$transfers))->queue($filename)->allOnQueue('high');
+            (new ExtractReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+
+            $email = !empty($dataRequest['email']) ? $dataRequest['email'] : $user->email;
+
             return response()->json(['message' => 'A exportação começou', 'email' => $email]);
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 400);
+            return response()->json(['message' => 'Erro ao tentar gerar o relatório.'], 400);
         }
     }
 
@@ -113,14 +96,14 @@ class FinancesApiController extends Controller
 
     public function getAcquirers($companyId=null)
     {
-        $companies = null;        
+        $companies = null;
         if(empty($companyId)){
             $companies = Company::with('user')->where('user_id', auth()->user()->account_owner_id)->get();
         }else{
             $companies = Company::where('id',$companyId)->get();
         }
         $gatewayIds = [];
-        
+
         foreach($companies as $company){
             $companyService = new CompanyBalanceService($company);
             $gatewayIds = array_merge($gatewayIds,$companyService->getAcquirers());

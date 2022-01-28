@@ -57,6 +57,8 @@ window.updateBalances = function(company_code = '') {
             loadOnAny(".number", true);
             $('.removeSpan').remove();
 
+            let $titleAvailableBalance = onlyNumbers(response.available_balance) > 0 ? 'Saldo Disponível' : 'Saldo Atual'
+            $('#title_available_money').html($titleAvailableBalance);
             $(".available-balance").html(removeMoneyCurrency(response.available_balance));
             $('.available-balance-mobile').html(removeMoneyCurrency(response.available_balance));
             $(".pending-balance").html(removeMoneyCurrency(response.pending_balance));
