@@ -334,6 +334,35 @@ class ProductsApiController extends Controller
         }
     }
 
+    public function updateProductType($id)
+    {
+        try {
+            $productModel = new Product();
+            $productId = current(Hashids::decode($id));
+
+            if (empty($productId) && empty($data['category'])) {
+                return response()->json([
+                    'message' => 'Ocorreu um erro produto não encontrado, tente novamente mais tarde',
+                ], 400);
+            }
+
+            $product = $productModel->find($productId);
+            if (!Gate::allows('update', [$product])) {
+                return response()->json(['message' => 'Sem permissão para atualizar este produto!'], 400);
+            }
+
+            $data['type_enum'] = $productModel->present()->getType('digital');
+            $data['status_enum'] = $productModel->present()->getStatus('analyzing');
+            $product->update($data);
+
+            return response()->json(['message' => 'Produto convertido para digital com sucesso!'], 200);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
+        }
+    }
+
     public function destroy($id)
     {
         try {
