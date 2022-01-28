@@ -14,7 +14,7 @@ class TrackingShowResource extends JsonResource
             ? ''
             : $this->tracking_code;
 
-        if(!empty($product)) {
+        if(!empty($this->product)) {
             $product = $this->product;
             $linkBase = $this->productPlanSale->plan->project->domains->first()->name;
         } else {
