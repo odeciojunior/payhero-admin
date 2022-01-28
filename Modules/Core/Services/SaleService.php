@@ -1067,8 +1067,7 @@ class SaleService
             ',',
             [
                 $transactionModel->present()->getStatusEnum('transfered'),
-                $transactionModel->present()->getStatusEnum('paid'),
-                $transactionModel->present()->getStatusEnum('pending'),
+                $transactionModel->present()->getStatusEnum('paid'),                
             ]
         );
 

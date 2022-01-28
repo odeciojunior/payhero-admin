@@ -45,11 +45,11 @@ class FinancesApiController extends Controller
 
             $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
             $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
-            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE) - $blockedBalancePending;
+            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
             $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
             
-            $totalBalance = $availableBalance + $pendingBalance;            
             $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
+            $totalBalance = $availableBalance + $pendingBalance + $blockedBalanceTotal;            
             $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
 
             return response()->json(
