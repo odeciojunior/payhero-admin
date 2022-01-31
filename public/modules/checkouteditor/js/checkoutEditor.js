@@ -582,9 +582,7 @@ $(document).ready( function () {
             $('#selectable-all-notification').removeClass('dash-check');
         }
     });
-    // ---------------- Functions Table - END ---------------------
-
-    
+    // ---------------- Functions Table - END ---------------------    
 
 });
 

@@ -128,6 +128,8 @@
     outline: 1px solid #ff3434 !important;
 }
 
+
+
 .tag {
     font-size: 10px;
     padding: 3.5px 5px 3.5px 5px;
@@ -599,6 +601,19 @@ textarea:focus {
     -ms-outline: 1px solid #2bb2ff;
     -o-outline: 1px solid #2bb2ff;
     outline: 1px solid #2bb2ff;
+}
+
+input:focus,
+textarea:focus {
+    -webkit-outline: 1px solid #2bb2ff;
+    -moz-outline: 1px solid #2bb2ff;
+    -ms-outline: 1px solid #2bb2ff;
+    -o-outline: 1px solid #2bb2ff;
+    outline: 1px solid #2bb2ff;
+}
+
+.focus-in {
+    outline: 1px solid #2bb2ff !important;
 }
 
 .modal-dialog.modal-crop {

@@ -321,7 +321,7 @@
                                 <div class="input-container">
                                     <label for="countdown_time" class="checkout-label">Tempo</label>
                                     <div class="tagged-input-div">
-                                        <input class="tagged-input" type="number" id="countdown_time" value="15" name="countdown_time" min="0" max="99" maxlength="2"   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                        <input class="tagged-input" type="number" id="countdown_time" value="15" name="countdown_time" min="0" max="99" maxlength="2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                         <div class=" input-tag">min</div>
                                     </div>
                                     <div id="countdown_time_error" class="checkout-error" style="display: none">
@@ -331,7 +331,7 @@
 
                                 <div class="input-container">
                                     <label for="countdown-time" class="checkout-label">Descrição <span class="observation-span">Opcional</span></label>
-                                    <textarea class="checkout-textarea" id="countdown_description" name="countdown_description" rows="4"  ></textarea>
+                                    <textarea class="checkout-textarea" id="countdown_description" name="countdown_description" rows="4" maxlength="250" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
 
                                     <div id="countdown_description_error" class="checkout-error" style="display: none;">
                                         <p>Preencha o campo de descrição.</p>
@@ -344,7 +344,7 @@
 
                                 <div class="input-container">
                                     <label for="timeout-message" class="checkout-label">Mensagem ao encerrar o tempo</label>
-                                    <textarea class="checkout-textarea" id="countdown_finish_message" name="countdown_finish_message" rows="3"></textarea>
+                                    <textarea class="checkout-textarea" id="countdown_finish_message" name="countdown_finish_message" rows="3" maxlength="250" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
 
                                     <div id="countdown_finish_message_error" class="checkout-error" style="display: none">
                                         <p>Preencha o campo de mensagem.</p>

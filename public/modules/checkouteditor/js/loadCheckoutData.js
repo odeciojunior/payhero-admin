@@ -37,13 +37,20 @@ $(() => {
             if (quillTextbar.getLength() > limit) {
                 quillTextbar.deleteText(limit, quillTextbar.getLength());
             }
-
-            
-        });
-
-        quillTextbar.on("change", function () {
             $("#save_changes").fadeIn("slow", "swing");
         });
+
+        quillTextbar.on('selection-change', function(range, oldRange, source) {
+            if (range === null && oldRange !== null) {
+                console.log('blur');
+                $('#topbar_content').removeClass('focus-in');
+            } else if (range !== null && oldRange === null){
+                console.log('focus');
+                $('#topbar_content').addClass('focus-in');
+            }
+                
+        });
+
 
         var quillThanksPage = new Quill("#post_purchase_message_content", {
             modules: {
@@ -54,17 +61,27 @@ $(() => {
         });
 
         quillThanksPage.on("text-change", function () {
-            $(".shop-message-preview-content").empty();
-            $(".shop-message-preview-content").append(
-                $(quillThanksPage.root.innerHTML)
-            );
+            if (quillThanksPage.getLength() < limit) {
+                $(".shop-message-preview-content").empty();
+                $(".shop-message-preview-content").append(
+                    $(quillThanksPage.root.innerHTML)
+                );
+                $("#save_changes").fadeIn("slow", "swing");    
+            }else{
+                quillThanksPage.deleteText(limit, quillThanksPage.getLength());
+            }
+            
         });
 
-        quillThanksPage.on("text-change", function () {
-            if (quillTextbar.getLength() > limit) {
-                quillTextbar.deleteText(limit, quillTextbar.getLength());
+        quillThanksPage.on('selection-change', function(range, oldRange, source) {
+            if (range === null && oldRange !== null) {
+                console.log('blur');
+                $('#post_purchase_message_content').removeClass('focus-in');
+            } else if (range !== null && oldRange === null) {
+                console.log('focus');
+                $('#post_purchase_message_content').addClass('focus-in');
             }
-        });    
+        });
   
         $.ajax({
             method: "GET",
@@ -79,6 +96,8 @@ $(() => {
                 if(checkout) {
                     fillForm(checkout);
                 }
+
+                
                 
 
                 $(document).on("submit", "#checkout_editor", function (e) {
@@ -199,6 +218,11 @@ $(() => {
 
                     
                 });
+
+                setTimeout(()=>{
+                   $('#save_changes').hide();
+                },0)
+                
 
                 loadOnAny(".checkout-container", true);
             },
@@ -745,7 +769,7 @@ $(() => {
                 if(quillTextbar.getText().trim().length > 0){
                     validated = true;
                 }else{
-                    $('.quill-editor').addClass('error-input');
+                    $('#topbar_content').addClass('error-input');
                     scrollToElement('topbar_content');
                     $('#topbar_content_error').show('slow', 'linear');
                     return false;
@@ -838,7 +862,7 @@ $(() => {
                 if(quillThanksPage.getText().trim().length > 0){
                     validated = true;
                 }else{
-                    $('.quill-editor').addClass('error-input');
+                    $('#post_purchase_message_content_toolbar_container').addClass('error-input');
                     scrollToElement('post_purchase_message_content_toolbar_container');
                     $('#post_purchase_message_content_toolbar_container_error').show('slow', 'linear');
                     return false;
