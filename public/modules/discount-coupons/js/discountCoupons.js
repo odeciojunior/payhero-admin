@@ -215,6 +215,10 @@ $(function () {
         }
 
         loadOnTable('#data-table-coupon', '#tabela-coupom');
+
+        $('#tab_coupons-panel').find('.no-gutters').css('display', 'none');
+        $('#tabela-coupon').find('thead').css('display', 'none');
+
         $.ajax({
             method: "GET",
             url: link,
@@ -236,7 +240,7 @@ $(function () {
                                 <div class='d-flex justify-content-center align-items-center'>
                                     <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
                                     <div class='text-left'>
-                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem cupons</h1>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum cupom configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro cupom para poder
                                         <br>gerenciá-los nesse painel.</p>
                                         <button type='button' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-create-coupon">Adicionar cupom</button>
@@ -246,6 +250,9 @@ $(function () {
                         </tr>
                     `);
                 } else {
+                    $('#tab_coupons-panel').find('.no-gutters').css('display', 'flex');
+                    $('#tabela-coupon').find('thead').css('display', 'contents');
+
                     $('#count-coupons').html(response.meta.total)
                     $.each(response.data, function (index, value) {
                         let data = `<tr>

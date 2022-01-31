@@ -112,6 +112,10 @@ $(document).ready(function () {
         }
 
         loadOnTable('#data-table-reviews', '#table-reviews');
+
+        $('#tab_project_reviews').find('.no-gutters').css('display', 'none');
+        $('#table-reviews').find('thead').css('display', 'none');
+
         $.ajax({
             method: "GET",
             url: url,
@@ -138,7 +142,7 @@ $(document).ready(function () {
                                 <div class='d-flex justify-content-center align-items-center'>
                                     <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
                                     <div class='text-left'>
-                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem reviews</h1>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum review configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro review para poder
                                         <br>gerenciá-los nesse painel.</p>
                                         <button type='button' class='btn btn-primary add-review' data-toggle="modal" data-target="#modal_review">Adicionar review</button>
@@ -149,7 +153,11 @@ $(document).ready(function () {
                     `);
                 } else {
                     let data = '';
+                    $('#tab_project_reviews').find('.no-gutters').css('display', 'flex');
+                    $('#table-reviews').find('thead').css('display', 'contents');
+
                     $('#count-project-reviews').html(response.meta.total)
+
                     $.each(response.data, function (index, value) {
                         data = `
                         <tr>

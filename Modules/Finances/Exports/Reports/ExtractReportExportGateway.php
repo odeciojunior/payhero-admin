@@ -14,6 +14,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\SalesExportedEvent;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ExtractReportExportGateway implements FromCollection, WithHeadings, ShouldAutoSize, WithEvents, WithMapping
 {
@@ -40,7 +41,7 @@ class ExtractReportExportGateway implements FromCollection, WithHeadings, Should
         $transfer = $row;
 
         $type = $transfer->type_enum == 2 ? '-' : '';
-        $sale = (new SaleService())->getSaleWithDetails($transfer->sale_id);
+        $sale = (new SaleService())->getSaleWithDetails(hashids_encode($transfer->sale_id, 'sale_id'));
         return [
             'transfers_id' => '#' . hashids_encode($transfer->id),
             'type'   => $this->getType($transfer->type_enum),
@@ -95,7 +96,7 @@ class ExtractReportExportGateway implements FromCollection, WithHeadings, Should
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $cellRange = 'A1:R1';
+                $cellRange = 'A1:S1';
                 $event->sheet->getDelegate()->getStyle($cellRange)
                     ->getFill()
                     ->setFillType('solid')

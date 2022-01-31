@@ -22,6 +22,9 @@ $(document).ready(function () {
             link = '/api/project/' + projectId + '/domains' + link;
         }
 
+        $('#tab_domains').find('.no-gutters').css('display', 'none');
+        $('#tabela-dominios').find('thead').css('display', 'none');
+
         $.ajax({
             method: 'GET',
             url: link,
@@ -40,7 +43,7 @@ $(document).ready(function () {
                                 <div class='d-flex justify-content-center align-items-center'>
                                     <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
                                     <div class='text-left'>
-                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem domínios</h1>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum domínio configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro domínio para poder
                                         <br>gerenciá-los nesse painel.</p>
                                         <button type='button' class='btn btn-primary add-domain' data-toggle="modal" data-target="#modal-add-domain">Adicionar domínio</button>
@@ -49,9 +52,12 @@ $(document).ready(function () {
                             </td>
                         </tr>
                     `);
-                    $('#tabela-dominios').addClass('table-striped');
 
+                    $('#tabela-dominios').addClass('table-striped');
                 } else {
+                    $('#tab_domains').find('.no-gutters').css('display', 'flex');
+                    $('#tabela-dominios').find('thead').css('display', 'contents');
+
                     $('#count-cupons').html(response.meta.total)
                     $.each(response.data, function (index, value) {
                         tableDomains(value);

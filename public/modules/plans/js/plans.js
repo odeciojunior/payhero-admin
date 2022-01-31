@@ -276,7 +276,7 @@ $(function () {
                     } else {
                         append += '<div class="col-sm-12">';
                             append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
-                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
+                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhum resultado encontrado.</p>';
                             append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A;">Por aqui, nenhum produto com esse nome.</p>';
                         append += '</div>';
                     }
@@ -2075,6 +2075,9 @@ $(function () {
             }
         }
 
+        $('#tab_plans-panel').find('.no-gutters').css('display', 'none');
+        $('#table-plans').find('thead').css('display', 'none');
+
         $.ajax({
             method: "GET",
             url: link,
@@ -2110,7 +2113,7 @@ $(function () {
                                 <div class='d-flex justify-content-center align-items-center'>
                                     <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
                                     <div class='text-left'>
-                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem planos</h1>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum plano configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro plano para poder
                                         <br>gerenciá-los nesse painel.</p>
                                         <button type='button' class='btn btn-primary add-plan' data-toggle="modal" data-target="#modal_add_plan">Adicionar plano</button>
@@ -2122,7 +2125,10 @@ $(function () {
                     $('#table-plans').addClass('table-striped');
 
                 } else {
+                    $('#tab_plans-panel').find('.no-gutters').css('display', 'flex');
+                    $('#table-plans').find('thead').css('display', 'contents');
                     $("#data-table-plan").html('');
+
                     $('#count-plans').html(response.meta.total);
 
                     if (response.data[0].document_status == 'approved') {

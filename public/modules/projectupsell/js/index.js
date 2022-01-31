@@ -36,6 +36,10 @@ $(document).ready(function () {
         }
 
         loadOnTable('#data-table-upsell', '#table-upsell');
+
+        $('#tab_upsell-panel').find('.no-gutters').css('display', 'none');
+        $('#table-upsell').find('thead').css('display', 'none');
+
         $.ajax({
             method: "GET",
             url: link,
@@ -59,7 +63,7 @@ $(document).ready(function () {
                                 <div class='d-flex justify-content-center align-items-center'>
                                     <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
                                     <div class='text-left'>
-                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Você ainda não tem upsell</h1>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum upsell configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro upsell para poder
                                         <br>gerenciá-los nesse painel.</p>
                                         <button type='button' class='btn btn-primary add-upsell' data-toggle="modal" data-target="#modal_add_upsell">Adicionar upsell</button>
@@ -70,6 +74,9 @@ $(document).ready(function () {
                     `);
                     $('#table-upsell').addClass('table-striped');
                 } else {
+                    $('#tab_upsell-panel').find('.no-gutters').css('display', 'flex');
+                    $('#table-upsell').find('thead').css('display', 'contents');
+
                     $('#table-upsell').addClass('table-striped');
                     $('#count-upsell').html(response.meta.total);
                     let data = '';
