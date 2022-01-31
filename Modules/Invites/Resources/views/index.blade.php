@@ -2,6 +2,7 @@
 
 @section('content')
     @push('css')
+        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4546') }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
         <style>
@@ -17,8 +18,8 @@
             }
             #content-error{
                 display:none;
-                height: 100%; 
-                width: 100%; 
+                height: 100%;
+                width: 100%;
                 position: absolute;
                 display: -webkit-flex;
                 display: flex;
@@ -93,7 +94,7 @@
                     <strong>ganhe 1% de tudo que seu convidado vender durante 6 meses!</strong></p>
             </div>
         <div class="page-content container" id='page-invites'>
-            
+
             <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none; padding-bottom: 5px'>
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
                     <table class="table table-striped unify">
@@ -136,8 +137,7 @@
                                 <div class='row'>
                                     <div class='form-group col-12'>
                                         <label for='email'>Email do convidado</label>
-                                        <input name='email_invited' type='text' class='form-control' id='email'
-                                               placeholder='Email'>
+                                        <input name='email_invited' type='text' class='form-control' id='email' placeholder='Email' style="height: 50px !important;">
                                     </div>
                                 </div>
                                 <div class='row'>
@@ -145,7 +145,7 @@
                                         <label for='company'>
                                             Empresa para receber
                                         </label>
-                                        <div id='company-list'></div>
+                                        <div id='company-list' class="mb-10"></div>
                                         Para enviar convites todos os documentos da empresa precisam estar aprovados
                                     </div>
                                 </div>

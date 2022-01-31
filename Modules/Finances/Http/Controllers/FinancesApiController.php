@@ -12,6 +12,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Services\CompanyBalanceService;
 use Modules\Finances\Exports\Reports\ExtractReportExport;
+use Modules\Finances\Exports\Reports\ExtractReportExportGateway;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -44,13 +45,13 @@ class FinancesApiController extends Controller
 
             $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
             $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
-            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE) - $blockedBalancePending;
+            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
             $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
-            $totalBalance = $availableBalance + $pendingBalance;
-            $availableBalance -= $blockedBalance;
+
             $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
+            $totalBalance = $availableBalance + $pendingBalance + $blockedBalanceTotal;
             $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
-            // dd($companyService);
+
             return response()->json(
                 [
                     'available_balance' => foxutils()->formatMoney($availableBalance / 100),
@@ -71,14 +72,7 @@ class FinancesApiController extends Controller
         try {
             $dataRequest = $request->all();
 
-            activity()->tap(
-                function (Activity $activity) {
-                    $activity->log_name = 'visualization';
-                }
-            )->log('Exportou tabela ' . $dataRequest['format'] . ' de transferências');
-
             $user = auth()->user();
-
             $filename = 'extract_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
 
             (new ExtractReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
@@ -89,7 +83,7 @@ class FinancesApiController extends Controller
         } catch (Exception $e) {
             report($e);
 
-            return response()->json(['message' => 'Erro ao tentar gerar o arquivo Excel.'], 200);
+            return response()->json(['message' => 'Erro ao tentar gerar o relatório.'], 400);
         }
     }
 
@@ -102,14 +96,14 @@ class FinancesApiController extends Controller
 
     public function getAcquirers($companyId=null)
     {
-        $companies = null;        
+        $companies = null;
         if(empty($companyId)){
             $companies = Company::with('user')->where('user_id', auth()->user()->account_owner_id)->get();
         }else{
             $companies = Company::where('id',$companyId)->get();
         }
         $gatewayIds = [];
-        
+
         foreach($companies as $company){
             $companyService = new CompanyBalanceService($company);
             $gatewayIds = array_merge($gatewayIds,$companyService->getAcquirers());

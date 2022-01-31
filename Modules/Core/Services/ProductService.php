@@ -4,8 +4,10 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
@@ -24,14 +26,82 @@ class ProductService
      */
     public function getProductsMyProject(int $projectId)
     {
-        $productModel = new Product();
         $projectModel = new Project();
         $project = $projectModel->find($projectId);
+
+        $productModel = Product::query();
+
         if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
-            return $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id)->where('project_id', $projectId)->take(2000)->get();
+            $productModel->where('project_id', $projectId);
         } else {
-            return $productModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id)->whereNull('shopify_variant_id')->take(2000)->get();
+            $productModel->where('shopify', 0)->whereNull('shopify_variant_id');
         }
+
+        return $productModel
+        ->with('productsPlans')
+        ->where('user_id', auth()->user()->account_owner_id)
+        ->take(16)
+        ->get();
+    }
+
+    public function getTopSellingProducts(int $projectId, string $product, string $description)
+    {
+        $projectModel = new Project();
+        $project = $projectModel->find($projectId);
+
+        $productModel = Product::query();
+
+        if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
+            $productModel->where('project_id', $projectId);
+        } else {
+            $productModel->where('shopify', 0)->whereNull('shopify_variant_id');
+        }
+
+        if (!empty($product)) {
+            $productModel->where('name', 'like', '%'. $product .'%');
+        }
+
+        if (!empty($description)) {
+            $productModel->where('description', 'like', '%'. $description .'%');
+        }
+
+        return $productModel
+        ->with('productsPlanSales')
+        ->with('productsPlans')
+        ->where('user_id', auth()->user()->account_owner_id)
+        ->get()
+        ->sortByDesc(function($query) {
+            return $query->productsPlanSales->count();
+        })->take(16);
+    }
+
+    public function getProductsFilter(int $projectId, string $product, bool $variants = false)
+    {
+        $projectModel = new Project();
+        $project = $projectModel->find($projectId);
+
+        $productModel = Product::query();
+
+        $productModel
+        ->with('productsPlanSales')
+        ->with('productsPlans')
+        ->where('user_id', auth()->user()->account_owner_id);
+
+        if (!empty($projectId) && !empty($project->shopify_id) || !empty($project->woocommerce_id)) {
+            $productModel->where('project_id', $projectId);
+        } else {
+            $productModel->where('shopify', 0)->whereNull('shopify_variant_id');
+        }
+
+        if (!empty($product)) {
+            $productModel->where('name', 'like', '%'. $product .'%');
+        }
+
+        return $productModel
+        ->get()
+        ->sortByDesc(function($query) {
+            return $query->productsPlanSales->count();
+        })->take(16);
     }
 
     public function getProductsBySale($saleParam)

@@ -19,32 +19,29 @@ class TransfersResource extends JsonResource
         $type = $this->type_enum == 2 ? '-' : '';
 
         return [
-            'id' => $this->id, // hashids_encode($this->id),
+            'id' => hashids_encode($this->id),
             'sale_id' => hashids_encode($this->sale_id, 'sale_id'),
             'type_enum' => $this->type_enum,
             'value' => number_format(intval($type . $this->value) / 100, 2, ',', '.'),
             'reason' => $this->getReason(),
             'anticipation_id' => $this->getAnticipatedCode(),
-            'date' => $this->created_at->format('d/m/Y'),
             'is_owner' => $this->transaction_type == Transaction::TYPE_PRODUCER || is_null($this->transaction_type),
-            'sale_date' => !empty($this->transaction) ? Carbon::parse($this->transaction->sale->start_date)->format('d/m/Y') : '',
+            'date_request' => !empty($this->transaction) ? Carbon::parse($this->transaction->sale->start_date)->format('d/m/Y') : '',
+            'date_request_time' => !empty($this->transaction) ? Carbon::parse($this->transaction->sale->start_date)->format('H:i') : '',
+            'date_release' => $this->created_at->format('d/m/Y'),
+            'date_release_time' => $this->created_at->format('H:i'),
             'tax' => !empty($this->anticipation_id) ? number_format(intval($this->anticipation->tax) / 100, 2, ',', '.') : '',
         ];
     }
 
     public function getReason()
     {
-        if (!empty($this->transaction) && empty($this->reason)) {
-            return 'Transação';
-        } elseif (!empty($this->transaction) && $this->reason == 'chargedback') {
-            return 'Chargeback';
-        } elseif ($this->reason == 'refunded') {
-            return 'Estorno da transação';
-        } elseif ($this->reason == 'canceled_antifraud') {
-            return 'Chargeback';
-        } else {
-            return $this->reason;
-        }
+        if (!empty($this->transaction) && empty($this->reason))               return 'Transação';
+        elseif (!empty($this->transaction) && $this->reason == 'chargedback') return 'Chargeback';
+        elseif ($this->reason == 'refunded')                                  return 'Estorno da transação';
+        elseif ($this->reason == 'canceled_antifraud')                        return 'Chargeback';
+
+        return $this->reason;
     }
 
     public function getAnticipatedCode()

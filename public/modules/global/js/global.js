@@ -54,6 +54,112 @@ $(document).ready(function () {
     // })
 });
 
+function stringToMoney(string, currency = 'BRL') {
+    let value = parseInt(string, 10);
+
+    return value.toLocaleString('pt-br', { style: 'currency', currency: currency });
+}
+
+function scrollCustom(div, padding = false, type = '') {
+    var scroll = 0;
+    var scrollDiv = 0;
+    var valuePadding = 0;
+    var heightAdjust = 0;
+
+    $(div).css('padding-right', '12px');
+    $(div).append('<div class="scrollbox"></div>');
+    $(div).append('<div class="scrollbox-bar"></div>');
+
+    $(div).on('wheel', function(event) {
+        if(event.originalEvent.deltaY !== 0) {
+            if (padding == true) {
+                valuePadding = 40;
+            }
+
+            if (type == 'modal-body') {
+                heightAdjust = 20;
+            }
+
+            var heightDivScroll = $(div).height() + valuePadding;
+            var heightDivScrollTotal = $(div).children(":first").height() + valuePadding;
+
+            var heightCalculateScroll = ((heightDivScroll - 60) / 20) * 2;
+            var heightCalculateTotal = ((heightDivScrollTotal - heightDivScroll) / 20) * 2;
+
+            if(event.originalEvent.deltaY < 0) {
+                // wheeled up
+                if (scroll > heightCalculateScroll) {
+                    scroll -= heightCalculateScroll;
+                    scrollDiv -= heightCalculateTotal;
+                } else if (scroll == heightCalculateScroll || scroll > 0) {
+                    scroll = 0;
+                    scrollDiv = 0;
+                }
+            } else {
+                // wheeled down
+                var sumScroll = scroll + heightCalculateScroll;
+                if (sumScroll <= (heightDivScroll - 60)) {
+                    scroll += heightCalculateScroll;
+                    scrollDiv += heightCalculateTotal;
+                } else {
+                    scroll = heightDivScroll - 60;
+                    scrollDiv = (heightDivScrollTotal - heightDivScroll);
+                }
+            }
+
+            $(div).find('.scrollbox-bar').css('top', scroll + 'px');
+            $(div).children(":first").css('margin-top', '-' + scrollDiv + 'px');
+        }
+    });
+}
+
+function scrollCustomX(div, addScroll = true, changePosition = false) {
+    if ($(div).find('.scrollbox').length == 0 && $(div).find('.scrollbox-bar').length == 0) {
+        $(div).css('padding-bottom', '12px');
+        $(div).append('<div class="scrollbox"></div>');
+        $(div).append('<div class="scrollbox-bar"></div>');
+    }
+
+    if ($(div).find('.scrollbox').length > 0 && $(div).find('.scrollbox-bar').length > 0) {
+        var scroll = changePosition ? $(div).find('.scrollbox-bar').css('left').replace('px', '') : 0;
+        var scrollDiv = changePosition ? $(div).children(":first").css('margin-left').replace('px', '') : 0;
+    }
+
+    $(div).on('wheel', function(event) {
+        if(event.originalEvent.deltaY !== 0) {
+            var widthDivScroll = $(div).width();
+            var widthDivScrollTotal = $(div).children(":first").width() - 12;
+
+            var widthtCalculateScroll = ((widthDivScroll - 60) / 20) * 2;
+            var widthCalculateTotal = ((widthDivScrollTotal - widthDivScroll) / 20) * 2;
+
+            if(event.originalEvent.deltaY < 0) {
+                // wheeled left
+                if (scroll > widthtCalculateScroll) {
+                    scroll -= widthtCalculateScroll;
+                    scrollDiv -= widthCalculateTotal;
+                } else if (scroll == widthtCalculateScroll || scroll > 0) {
+                    scroll = 0;
+                    scrollDiv = 0;
+                }
+            } else {
+                // wheeled right
+                var sumScroll = scroll + widthtCalculateScroll;
+                if (sumScroll <= (widthDivScroll - 60)) {
+                    scroll += widthtCalculateScroll;
+                    scrollDiv += widthCalculateTotal;
+                } else {
+                    scroll = widthDivScroll - 60;
+                    scrollDiv = (widthDivScrollTotal - widthDivScroll);
+                }
+            }
+
+            $(div).find('.scrollbox-bar').css('left', scroll + 'px');
+            $(div).children(":first").css('margin-left', '-' + scrollDiv + 'px');
+        }
+    });
+}
+
 function alertCustom(type, message) {
     swal({
         position: 'bottom',
@@ -92,7 +198,6 @@ function loading(elementId, loaderClass) {
 }
 
 function loadingOnScreen() {
-    // $('.page').addClass('d-none')
     $('#loadingOnScreen').append(
         `<div class="sirius-loading">
             <img style="height: 125px; width: 125px" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
@@ -105,7 +210,7 @@ function loadingOnScreen() {
 
 function loadingOnChart(target) {
     $(target).fadeIn().append(
-        `<div style="z-index: 5; border-radius: 16px;" class="sirius-loading">
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading">
             <img style="height: 125px; width: 125px;" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
@@ -114,7 +219,7 @@ function loadingOnChart(target) {
 
 function loadingOnAccountsHealth(target) {
     $(target).fadeIn().append(
-        `<div style="z-index: 100; border-radius: 16px;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center">
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center">
             <img style="height: 125px; width: 125px; top: auto;" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
@@ -176,9 +281,16 @@ function loadOnAnyEllipsis(target, remove = false, options = {}) {
     }
 }
 
+function heightAnimate(element, height){
+  	var curHeight = element.height(); // Get Default Height
+    var autoHeight = element.css('height', 'auto').height(); // Get Auto Height
+
+    element.height(curHeight); // Reset to Default Height
+    element.stop().animate({ height: autoHeight }, time); // Animate to Auto Height
+}
+
 function loadingOnScreenRemove() {
     window.setTimeout(function () {
-        // $('.page').removeClass('d-none')
         $('#loadingOnScreen').fadeOut(function () {
             $(this).html('')
             $('body').css('overflow-y', 'unset')
@@ -199,14 +311,47 @@ function loadOnNotification(whereToLoad) {
 }
 
 function loadOnModal(whereToLoad) {
-
     $(whereToLoad).children().hide('fast');
-    $('#modal-title').html('Carregando ...')
-    $(whereToLoad).append("<div id='loaderModal' class='loadinModal'>" +
-        "<div class='loaderModal'>" +
-        "</div>" +
-        "</div>");
+    $('#modal-title').html('Carregando...')
+    $(whereToLoad).append("<div id='loaderModal' class='loadinModal'><div class='loaderModal'></div></div>");
     $('#loadingOnScreen').append("<div class='blockScreen'></div>");
+}
+
+function loadModalPlaceholderLoading(modal, whereToLoad, htmlLoad) {
+    if (whereToLoad) {
+        $(modal).find(whereToLoad).children().fadeOut('fast');
+        $(modal).find(whereToLoad).append(htmlLoad);
+    } else {
+        $(modal).find('.modal-title').html('Carregando...');
+        $(modal).find('.modal-body').children().fadeOut('fast');
+        $(modal).find('.modal-footer').fadeOut('fast');
+        $(modal).find('.modal-body').append(htmlLoad);
+    }
+}
+
+function loadOnModalNewLayout(modal, whereToLoad) {
+    $(modal).find('.modal-body').removeClass('show');
+
+    if (whereToLoad) {
+        $(modal).find(whereToLoad).children().fadeOut('fast');
+        $(modal).find(whereToLoad).append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
+    } else {
+        $(modal).find('.modal-title').html('Carregando...');
+        $(modal).find('.modal-body').children().fadeOut('fast');
+        $(modal).find('.modal-footer').fadeOut('fast');
+        $(modal).find('.modal-body').append("<div id='loaderModal' class='loadingModal' style='height: 80px; position: relative;'><div class='loaderModal' style='position: absolute;'></div></div>");
+    }
+
+    $(modal).modal('show');
+}
+
+function loadOnModalRemove(modal) {
+    $(modal).find('.modal-body').addClass('show');
+    $(modal).find('.ph-item').fadeOut(3000, function(){ this.remove(); });
+
+    $(modal).find('.modal-body').children().fadeIn(3000);
+
+    $(modal).find('.modal-footer').fadeIn(3000);
 }
 
 function loadOnTable(whereToLoad, tableReference) {
@@ -284,10 +429,8 @@ function messageSwalSuccess(swalType, swalTitle, swalHtml, swalCloseButton, swal
 }
 
 $(document).ajaxComplete(function (jqXHR, textStatus) {
-
     switch (textStatus.status) {
         case 200:
-
             break;
         case 401:
             window.location.href = "/";
@@ -647,6 +790,20 @@ $.fn.shake = function () {
     }
 };
 
+// sirius select
+function renderSiriusSelect(target) {
+    let $target = $(target);
+    let $wrapper = $target.parent();
+    let $text = $wrapper.find('.sirius-select-text');
+    let $options = $wrapper.find('.sirius-select-options');
+    $options.html('');
+    $target.children('option').each(function () {
+        let option = $(this);
+        $options.append(`<div data-value="${option.val()}">${option.text()}</div>`);
+    });
+    $text.text($target.children('option:selected').eq(0).text());
+}
+
 /**
  * Menu implementation
  */
@@ -709,20 +866,6 @@ $(document).ready(function () {
         document.querySelector('body').style.overflowY = 'unset';
     });
 
-    // sirius select
-    function renderSiriusSelect(target) {
-        let $target = $(target);
-        let $wrapper = $target.parent();
-        let $text = $wrapper.find('.sirius-select-text');
-        let $options = $wrapper.find('.sirius-select-options');
-        $options.html('');
-        $target.children('option').each(function () {
-            let option = $(this);
-            $options.append(`<div data-value="${option.val()}">${option.text()}</div>`);
-        });
-        $text.text($target.children('option:selected').eq(0).text());
-    }
-
     $('.sirius-select').each(function () {
         let $target = $(this);
         let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
@@ -735,7 +878,7 @@ $(document).ready(function () {
         renderSiriusSelect(this);
     });
 
-    $(document).on('DOMSubtreeModified propertychange', '.sirius-select', function () {
+    $(document).on('DOMSubtreeModified propertychange change', '.sirius-select', function () {
         renderSiriusSelect(this);
     });
 
@@ -779,7 +922,13 @@ function onlyNumbers(string) {
     if(string == undefined) {
         return 0;
     }
-    return string.replace(/\D/g,'');
+
+    let numbers = string.replace(/\D/g,'')
+    if(string.includes('-')){
+        return parseInt(`-${numbers}`)
+    }
+
+    return parseInt(numbers);
 }
 
 function removeMoneyCurrency(string) {

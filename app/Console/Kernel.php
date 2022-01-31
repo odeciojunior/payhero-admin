@@ -57,6 +57,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
 
+        $schedule->command('getnet:release-unblocked-balance')->dailyAt('02:30');
+
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
 
@@ -154,12 +156,13 @@ class Kernel extends ConsoleKernel
         /** Check GatewayTax invitations Diogo */
         $schedule->command('check:gateway-tax-company-after-month')->dailyAt('06:30');
 
-        $schedule->command('check:sales-refunded')->weeklyOn(1, '23:00');
+        //Henrique: Remove, not working on getnet
+        //$schedule->command('check:sales-refunded')->weeklyOn(1, '23:00');
 
         /** Libera o dinheiro da azx */
-        $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00');
+        $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00')->withoutOverlapping();;
         /** Confirma a transferencia do dinheiro da azx */
-        $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30');
+        $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30')->withoutOverlapping();;
 
         /** Antecipações Asaas */
         $schedule->command('asaas:anticipations')->dailyAt('4:00');
@@ -174,6 +177,9 @@ class Kernel extends ConsoleKernel
 
         /** transfere saldo excedente no asaas*/
         $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('08:00');
+
+        /** Antifraud backfill Asaas chargebacks */
+        $schedule->command('antifraud:backfill-asaas-chargebacks')->hourly();
 
     }
 

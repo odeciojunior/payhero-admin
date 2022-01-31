@@ -25,10 +25,10 @@ class TrackingResource extends JsonResource
                 'is_chargeback_recovered' => $this->sale->is_chargeback_recovered,
                 'approved_date' => Carbon::parse($this->sale->end_date)->format('d/m/Y'),
                 'product' => [
-                    'id' => Hashids::encode($this->product->id),
-                    'name' => $this->product->name,
-                    'description' => $this->product->description,
-                    'amount' => $this->tracking->amount,
+                    'id' => !empty($this->product) ? Hashids::encode($this->product->id) : Hashids::encode($this->productSaleApi->id),
+                    'name' => !empty($this->product) ? $this->product->name : $this->productSaleApi->name,
+                    'description' => !empty($this->product) ? $this->product->description : '',
+                    'amount' => $this->amount ?? '',
                 ]
             ];
         } else {
@@ -43,9 +43,9 @@ class TrackingResource extends JsonResource
                 'is_chargeback_recovered' => $this->sale->is_chargeback_recovered,
                 'approved_date' => Carbon::parse($this->sale->end_date)->format('d/m/Y'),
                 'product' => [
-                    'id' => Hashids::encode($this->product->id),
-                    'name' => $this->product->name,
-                    'description' => $this->product->description,
+                    'id' => !empty($this->product) ? Hashids::encode($this->product->id) : Hashids::encode($this->productSaleApi->id),
+                    'name' => !empty($this->product) ? $this->product->name : $this->productSaleApi->name,
+                    'description' => !empty($this->product) ? $this->product->description : '',
                     'amount' => $this->amount ?? '',
                 ]
             ];

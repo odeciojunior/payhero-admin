@@ -108,7 +108,7 @@ $(document).ready(function () {
 
                     $("#modal-reverse-title").html('Novo Convite');
                     let selCompany = '';
-                    selCompany = '<select class="select-company-list">';
+                    selCompany = '<select id="select-company-list" class="sirius-select">';
                     let option = '';
 
                     $.each(response.data, function (index, value) {
@@ -120,12 +120,12 @@ $(document).ready(function () {
                     $("#company-list").html('').append(selCompany);
 
                     let linkInvite = '';
-                    let companyId = $(".select-company-list option:selected").val();
-                    linkInvite = 'https://accounts.cloudfox.net/signup?i=' + $(".select-company-list option:selected").val();
+                    let companyId = $("#select-company-list option:selected").val();
+                    linkInvite = 'https://accounts.cloudfox.net/signup?i=' + $("#select-company-list option:selected").val();
 
                     $("#invite-link").val(linkInvite);
 
-                    $(".select-company-list").on('change', function () {
+                    $("#select-company-list").on('change', function () {
                         linkInvite = 'https://accounts.cloudfox.net/signup?i=' + $(this).val();
                         $("#invite-link").val(linkInvite);
                         companyId = $(this).val();

@@ -249,6 +249,10 @@ $(function () {
         }
 
         loadOnTable('#data-table-sms', '#tabela-sms');
+
+        $('#tab_sms-panel').find('.no-gutters').css('display', 'none');
+        $('#tabela-sms').find('thead').css('display', 'none');
+
         $.ajax({
             method: "GET",
             url: link,
@@ -263,9 +267,27 @@ $(function () {
             success: function success(response) {
                 $("#data-table-sms").html('');
                 if (response.data == '') {
-                    $("#data-table-sms").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
+                    $("#data-table-sms").html(`
+                        <tr class='text-center'>
+                            <td colspan='8' style='height: 70px; vertical-align: middle;'>
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhuma notificação configurada</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre a sua primeiro notificação para poder
+                                        <br>gerenciá-las nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-review' data-toggle="modal" data-target="#modal_review">Adicionar notificação</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
                 } else {
-                    $('#count-notifications').html(response.meta.total)
+                    $('#tab_sms-panel').find('.no-gutters').css('display', 'flex');
+                    $('#tabela-sms').find('thead').css('display', 'contents');
+
+                    $('#count-notifications').html(response.meta.total);
+
                     $.each(response.data, function (index, value) {
                         let check = (value.status == 1) ? 'checked' : '';
                         let data = `<tr>
@@ -277,15 +299,15 @@ $(function () {
 
                             <td class="project-notification-zip-code-origin">${value.message}</td>
 
-                            <td class="project-notification-status notification-status-${value.id}" style="vertical-align: middle">
+                            <td class="text-center project-notification-status notification-status-${value.id}" style="vertical-align: middle">
                                 <span class="badge badge-${statusNotification[value.status]}">${value.status_translated}</span>
                             </td>
 
                             <td style="text-align:center" class="justify-content-between align-items-center mb-0">
 
-                                <div style="display: flex; justify-content: center; flex-direction: row;">
+                                <div style="display: flex; justify-content: center; align-items-center; flex-direction: row;">
 
-                                    <a role="button" title='Visualizar' class="details-project-notification pointer pt-5 mr-30" project-notification="${value.id}">
+                                    <a role="button" title='Visualizar' class="details-project-notification mg-responsive pointer" project-notification="${value.id}">
                                         <span class="o-eye-1"></span>
                                     </a>
 
@@ -295,13 +317,13 @@ $(function () {
                                             <span class="o-edit-1"></span>
                                         </button>`
                                         :
-                                        `<a role="button" title="Editar" class="edit-project-notification pointer pt-10 mr-30" project-notification='${value.id}'>
+                                        `<a role="button" title="Editar" class="edit-project-notification mg-responsive pointer" project-notification='${value.id}'>
                                             <span class="o-edit-1"></span>
                                         </a>`
                                     }
-                                    <div class="switch-holder d-inline pt-20 mr-10" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
+                                    <div class="switch-holder d-inline mg-responsive pointer" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
 
-                                        <label class="switch" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}>
+                                        <label class="switch mr-0" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}>
 
                                             <input type="checkbox" class="project_notification_status" data-id="${value.id}" ${check}
                                             ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'disabled' : ''}>

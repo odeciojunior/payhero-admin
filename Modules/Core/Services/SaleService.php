@@ -101,7 +101,7 @@ class SaleService
                 foreach($projects as $project){
                     array_push($projectIds, current(Hashids::decode($project)));
                 }
-                
+
                 //$projectId = current(Hashids::decode($filters["project"]));
                 $transactions->whereHas(
                     'sale',
@@ -235,7 +235,7 @@ class SaleService
                     array_push($planIds, current(Hashids::decode($plan)));
                 }
                 // $planId = current(Hashids::decode($filters["plan"]));
-                
+
                 $transactions->whereHas(
                     'sale.plansSales',
                     function ($query) use ($planIds) {
@@ -243,14 +243,14 @@ class SaleService
                     }
                 );
             }
-            
+
             if (empty($filters['status'])) {
                 $status = [1, 2, 4, 7, 8, 12, 20, 21, 22, 24];
             } else {
                 $status = explode(',', $filters['status']);
                 //$status = in_array(7, $status) ? [7, 22] : $status; //REMOVER ESTA LINHA PARA APARECER TODOS OS STATUS
             }
-            
+
             if(!empty($status)) {
                 $transactions->whereHas(
                     'sale',
@@ -464,7 +464,7 @@ class SaleService
             }
         }
 
-        if ($sale->status == 1) {
+        if (!empty($userTransaction->release_date)) {
             $userTransaction->release_date = Carbon::parse($userTransaction->release_date);
         } else {
             $userTransaction->release_date = null;
@@ -486,7 +486,7 @@ class SaleService
             'taxaReal' => FoxUtils::formatMoney($taxaReal / 100),
             'release_date' => $userTransaction->release_date != null ? $userTransaction->release_date->format(
                 'd/m/Y'
-            ) : '',
+            ) : 'Processando',
             'has_withdrawal' => $userTransaction->withdrawal_id,
             'affiliate_comission' => $affiliateComission,
             'refund_value' => FoxUtils::formatMoney(intval($sale->refund_value) / 100),
@@ -634,16 +634,16 @@ class SaleService
         $foxValue = $sale->transactions->whereNull('company_id')->first()->value??0;
         $inviteValue = $sale->transactions->whereNotNull('company_id')->where('type',3)->first()->value??0;
 
-        $saleTax = $foxValue + $cashbackValue + $inviteValue;           
+        $saleTax = $foxValue + $cashbackValue + $inviteValue;
 
         if (!empty(foxutils()->onlyNumbers($sale->interest_total_value))) {
             $saleTax -= foxutils()->onlyNumbers($sale->interest_total_value);
         }
-        
+
         if (!empty(foxutils()->onlyNumbers($sale->installment_tax_value))) {
-            $saleTax -= foxutils()->onlyNumbers($sale->installment_tax_value);        
+            $saleTax -= foxutils()->onlyNumbers($sale->installment_tax_value);
         }
-        
+
         return $saleTax;
     }
 
@@ -652,25 +652,25 @@ class SaleService
         $saleTax = $this->getSaleTax($sale,$cashbackValue);
 
         if (!empty(foxutils()->onlyNumbers($sale->installment_tax_value))) {
-            $saleTax += foxutils()->onlyNumbers($sale->installment_tax_value);        
+            $saleTax += foxutils()->onlyNumbers($sale->installment_tax_value);
         }
 
         return $saleTax;
     }
 
     public function getSaleTotalValue($sale){
-        $total = foxutils()->onlyNumbers($sale->sub_total); 
-        
+        $total = foxutils()->onlyNumbers($sale->sub_total);
+
         if (!empty(foxutils()->onlyNumbers($sale->shipment_value))) {
-            $total += foxutils()->onlyNumbers($sale->shipment_value);        
+            $total += foxutils()->onlyNumbers($sale->shipment_value);
         }
 
         if (!empty(foxutils()->onlyNumbers($sale->installment_tax_value))) {
-            $total -= foxutils()->onlyNumbers($sale->installment_tax_value);        
+            $total -= foxutils()->onlyNumbers($sale->installment_tax_value);
         }
 
         if (!empty(foxutils()->onlyNumbers($sale->automatic_discount))) {
-            $total -= foxutils()->onlyNumbers($sale->automatic_discount);        
+            $total -= foxutils()->onlyNumbers($sale->automatic_discount);
         }
         return $total;
     }
@@ -859,7 +859,7 @@ class SaleService
             ]
         );
 
-        
+
 
         if ( !$sale->api_flag ) {
             event(new BilletRefundedEvent($sale));
@@ -1067,7 +1067,7 @@ class SaleService
             ',',
             [
                 $transactionModel->present()->getStatusEnum('transfered'),
-                $transactionModel->present()->getStatusEnum('paid'),
+                $transactionModel->present()->getStatusEnum('paid'),                
             ]
         );
 
@@ -1135,7 +1135,7 @@ class SaleService
             }
 
             if (!empty($filters["project"])) {
-                
+
                 $projectId = current(Hashids::decode($filters["project"]));
                 $transactions->where('sales.project_id', $projectId);
             }
@@ -1280,7 +1280,7 @@ class SaleService
                 }
 
                 switch($filters['acquirer']){
-                    case 'Asaas';                        
+                    case 'Asaas';
                         $transactions->where('transactions.created_at', '>', '2021-09-20');
                     break;
                     case 'Getnet':
@@ -1295,7 +1295,7 @@ class SaleService
                                 });
                             });
                         }
-                    break;                   
+                    break;
                 }
             }else{
                 $transactions->where(function($qr){
@@ -1305,11 +1305,11 @@ class SaleService
                     })
                     ->orWhere(function($qr2){
                         $qr2->whereIn('transactions.gateway_id',$this->getGatewayIdsByFilter('Gerencianet'));
-                    }) 
+                    })
                     ->orWhere(function($qr3){
                         $qr3->where('is_waiting_withdrawal', 0)
                         ->whereIn('transactions.gateway_id',$this->getGatewayIdsByFilter('Getnet'));
-                    })                    
+                    })
                     ->orWhere(function($qr2){
                         if(auth()->user()->show_old_finances){
                             $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Cielo'))
@@ -1540,7 +1540,7 @@ class SaleService
                 ];
             case 'Gerencianet':
                 return [
-                    Gateway::GERENCIANET_PRODUCTION_ID, 
+                    Gateway::GERENCIANET_PRODUCTION_ID,
                     Gateway::GERENCIANET_SANDBOX_ID
                 ];
             case 'Cielo':

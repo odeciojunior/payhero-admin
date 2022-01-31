@@ -191,12 +191,15 @@ $(() => {
                     $("#project-not-empty").show();
                     $("#export-excel").show()
 
-                    $.each(response.data, function (i, project) {
-                        $("#project-select").append($('<option>', {
-                            value: project.id,
-                            text: project.name
-                        }));
-                    });
+                    if(response.data != 'api sales') {
+                        
+                        $.each(response.data, function (i, project) {
+                            $("#project-select").append($('<option>', {
+                                value: project.id,
+                                text: project.name
+                            }));
+                        });
+                    }
 
                     index();
                     getResume();
@@ -782,6 +785,10 @@ $(() => {
     });
 
     $(document).on('focusout', '.select2-selection__rendered', function () {
+        $('.select2-selection.select2-selection--multiple').scrollTop(0);
+    });
+
+    $(document).on('focusin', '.select2-selection__rendered', function () {
         $('.select2-selection.select2-selection--multiple').scrollTop(0);
     });
 

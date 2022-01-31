@@ -169,11 +169,10 @@ class WooCommerceService
 
             }else{
 
-                $variations = $this->woocommerce->get('products/'.$_product->id.'/variations');
 
-                foreach($variations as $variation){
-
-                    ImportWooCommerceProductVariation::dispatch($projectId, $userId, $_product, $variation);
+                foreach($_product->variations as $variationId){
+                    
+                    ImportWooCommerceProductVariation::dispatch($projectId, $userId, $_product, $variationId);
 
                 }
 
@@ -197,7 +196,7 @@ class WooCommerceService
 
 
         $_product->price = $variation->price;
-        $_product->images[0]->src = $variation->image->src;
+        $_product->images[0]->src = $variation->images[0]->src;
 
         $this->createProduct($projectId, $userId, $_product, $description, $variation->id);
 
@@ -571,7 +570,7 @@ class WooCommerceService
             $start_date = strtotime($integration->synced_at);
             $diff = (time() - $start_date) / 60;
 
-            if($diff < 45) {
+            if($diff < 30) {
                 return '{"status":false,"msg":""}';
                 // !
             } else {

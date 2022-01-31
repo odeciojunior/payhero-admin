@@ -48,8 +48,38 @@ a:hover,
 }
 
 .btn-cancelar:hover,
-.btn-excluir:hover {
+.btn-excluir:hover, 
+.btn-converter:hover {
     background-color: #FFF;
+}
+
+.btn-converter:hover, .btn-converter:hover > .svg-converter > path {
+    color: #2E85EC;
+    fill:  #2E85EC;
+}
+
+#modal-converte h3, #modal-converte p.title{
+    color: #707070;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px;
+    letter-spacing: 0em;
+}
+
+#modal-converte h3{
+    font-size: 22px;
+}
+
+#modal-converte p.title{
+    font-size: 24px;
+    margin-top: 16px;
+}
+
+#modal-converte p.aviso{
+    color: #87898E;
+    font-size: 16px;
+    font-style: Medium;
+    line-height: 24px;
 }
 
 .o-bin-1::before {

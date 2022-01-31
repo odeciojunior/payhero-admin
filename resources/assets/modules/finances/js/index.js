@@ -116,7 +116,7 @@ $(document).ready(function () {
                         $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                     } else {
                         $('#modal-withdrawal').modal('show');
-                        $('#modal-withdrawal-title').text("Confirmar Saque")
+                        $('#modal-withdrawal-title').text("Confirmar saque")
                         $('#modal_body').html('<div>' +
                             '<h5>Verifique os dados da conta:</h5>' +
                             '<h4>Banco:<span id="modal-withdrawal-bank"></span></h4>' +
@@ -179,7 +179,7 @@ $(document).ready(function () {
                                     }
 
                                 },
-                                
+
                                 success: function (response) {
                                     loadingOnScreenRemove()
                                     $('#modal-withdrawal').modal('show');

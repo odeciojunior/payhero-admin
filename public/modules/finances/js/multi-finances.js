@@ -1,11 +1,42 @@
 $(document).ready(function(){
+    getProjects();
+
+    function getProjects() {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: '/api/projects?select=true',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+
+                    getCompanies();
+                } else {
+                    $("#project-empty").show();
+                    $("#project-not-empty").hide();
+                }
+
+                loadingOnScreenRemove();
+            }
+        });
+    }
 
     $(document).on('click','.img-gateway', function(evt){
         let id=$(this).attr('href');
         window.location.href ='/finances/'+id;
     });
 
-    let statusWithdrawals = {
+    const statusWithdrawals = {
         1: 'warning',
         2: 'primary',
         3: 'success',
@@ -17,9 +48,10 @@ $(document).ready(function(){
         9: "partially-liquidating",
     };
 
-    function getCompanies() {
-        loadingOnScreen();
+    const GETNET = 'w7YL9jZD6gp4qmv';
+    const GERENCIA_NET = 'oXlqv13043xbj4y';
 
+    function getCompanies() {
         $.ajax({
             method: "GET",
             url: "/api/companies?select=true",
@@ -29,7 +61,6 @@ $(document).ready(function(){
                 'Accept': 'application/json',
             },
             error: (response) => {
-                loadingOnScreenRemove();
                 errorAjaxResponse(response);
             },
             success: (response) => {
@@ -37,7 +68,6 @@ $(document).ready(function(){
                 if (isEmpty(response.data)) {
                     $('.page-content').hide();
                     $('.content-error').show();
-                    loadingOnScreenRemove();
                     return;
                 }
 
@@ -53,13 +83,9 @@ $(document).ready(function(){
 
                 updateStatements();
                 updateWithdrawals();
-
-                loadingOnScreenRemove();
             }
         });
     }
-
-    getCompanies();
 
     $(document).on("change","#transfers_company_select", function () {
         $("#extract_company_select").val($(this).val());
@@ -152,7 +178,7 @@ $(document).ready(function(){
                     $('.container-history').css('padding-top','28px');
                     let emptyStates = 3 - (Object.values(response).length - 1 );
                     $('#gateway-skeleton').hide();
-                    $('#container-all-gateways').html('<div class="owl-carousel owl-carousel-shortcode owl-loaded owl-drag"></div>');
+                    $('#container-all-gateways').html('<div id="all-gateways" class="owl-carousel owl-carousel-shortcode owl-loaded owl-drag"></div>');
                     $.each(response, function(index, data) {
                         if (data.name) {
                             let img_gateway = getGatewayImg(data.name.toLowerCase());
@@ -164,47 +190,72 @@ $(document).ready(function(){
                             if(data.pending_debt_balance) {
                                 pendingDebt = "<input id='pending-debt-" + data.id + "' type='hidden' value='" + data.pending_debt_balance + "' >";
                             }
+                            let $titleAvailableBalance = onlyNumbers(data.available_balance) > 0 ? 'Disponível' : 'Saldo Atual'
+
                             $('.owl-carousel').append(`
                                 <div class="item">
                                     <p style="color: #9E9E9E;font-size: 12px;line-height: 15px;">${html_transaction}</p>
                                     <div class="card card-gateway">
                                         <div class="card-body p-0 pt-20">
                                             <div class="col-sm-12 p-0" id="container_info_${data.name}">
-                                                <div class="row mb-25 d-flex align-items-center m-0" style="padding: 0 15px;">
+                                                <div style="padding: 0 15px;" class="row mb-25 d-flex align-items-center m-0">
                                                     <div class="col-6 p-0">${img_gateway}</div>
                                                     <div class="col-6 p-0 d-flex justify-content-end">
-                                                        <button id="gateway-redirection" class="img-gateway" href="${data.id}">
-                                                          <span>Acessar&nbsp&nbsp</span>
+                                                        <button id="gateway-redirection" class="img-gateway d-none d-md-flex font-md-size-12 " href="${data.id}">
+                                                          <span class="d-none d-xl-inline-block">Acessar&nbsp&nbsp</span>
                                                           <i class="o-arrow-right-1 redirect"></i>
                                                         </button>
+
+                                                       <i class="o-angle-down-1 d-md-none"
+                                                          data-toggle="collapse"
+                                                          data-target=".multi-collapse-${data.name}"
+                                                          aria-expanded="false"
+                                                          aria-controls="collapse-data-${data.name} collapse-withdrawal-${data.name}"></i>
                                                     </div>
                                                 </div>
-                                                <h6 class="font-size-16 m-0 px-20"><span class="radio-badge green"></span>Saldo Disponível</h6>
-                                                <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span></h4>
+                                                <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge green"></span>${$titleAvailableBalance}</h6>
+                                                <h4 class="row m-0 px-20">
+                                                    <div class="col-9 p-0 col-md-12">
+                                                        <span class="font-size-16">R$</span>
+                                                        <span class="font-size-24 bold" id="available-balance-${data.id}">${removeMoneyCurrency(data.available_balance)}</span>
+                                                    </div>
+                                                    <div class="col-3 p-0 d-flex justify-content-end d-md-none">
+                                                        <button id="gateway-redirection" class="img-gateway font-md-size-12 " href="${data.id}">
+                                                              <i class="o-arrow-right-1 redirect"></i>
+                                                        </button>
+                                                    </div>
+                                                </h4>
                                                 ${pendingDebt}
-                                                <div id="balance-not-available-${data.name}">
-                                                    <h6 class="font-size-16 m-0 px-20"><span class="radio-badge orange"></span>Saldo Pendente</h6>
-                                                    <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
-                                                    <h6 class="font-size-16 m-0 px-20"><span class="radio-badge red"></span>Saldo Bloqueado</h6>
-                                                    <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.blocked_balance)}</span></h4>
-                                                    <h6 class="font-size-16 m-0 px-20"><span class="radio-badge blue"></span>Total</h6>
-                                                    <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.total_balance)}</span></h4>
+
+                                                <div class="collapse multi-collapse-${data.name}" id="collapse-data-${data.name}">
+                                                    <div id="balance-not-available-${data.name}">
+                                                        <h6 style="margin-top: 18px !important" class="font-size-16 m-md-0 px-20"><span class="radio-badge orange"></span>Saldo Pendente</h6>
+                                                        <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
+                                                        <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge red"></span>Saldo Bloqueado</h6>
+                                                        <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.blocked_balance)}</span></h4>
+                                                        <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge blue"></span>Total</h6>
+                                                        <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.total_balance)}</span></h4>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div id="container-withdrawal-${data.name}" style="display:none">
-                                                <label class="ml-20" style="font-size:16px;color: #636363;">Valor a sacar</label>
-                                                <div class="input-group mb-3 withdrawal-value px-20">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">R$</span>
+                                            <div class="collapse multi-collapse-${data.name} mb-25 mb-md-0" id="collapse-withdrawal-${data.name}">
+                                                <div id="container-withdrawal-${data.name}" style="display:none">
+                                                    <label class="ml-20" style="font-size:16px;color: #636363;">Valor a sacar</label>
+                                                    <div class="input-group mb-3 withdrawal-value px-20">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">R$</span>
+                                                        </div>
+                                                        <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque" placeholder="Digite o valor">
                                                     </div>
-                                                    <input id="withdrawal-value-${data.id}" type="text" class="form-control" aria-label="Valor do saque">
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 mb-10 pb-10">
-                                            <a href="#" class="col-12 btn-outline-success btn font-weight-bold" id="request-withdrawal-${data.id}" style="font-size:16px">Solicitar saque</a>
-                                            <a href="#" class="btn btn-saque font-weight-bold" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
-                                            <a href="#" class="btn btn-cancel" id="cancel-withdrawal-${data.name}" style="display:none;">Cancelar</a>
+                                        <div class="collapse multi-collapse-${data.name}" id="collapse-withdrawal-${data.name}">
+                                            <div class="col-sm-12 mb-10 pb-10">
+                                                <a href="#" class="col-12 btn-outline-success btn font-weight-bold" id="request-withdrawal-${data.id}" style="font-size:16px">Solicitar saque</a>
+                                                <a href="#" class="btn btn-saque font-weight-bold" id="new-withdrawal-${data.name}" style="display:none">Realizar Saque</a>
+                                                <a href="#" class="btn btn-cancel" id="cancel-withdrawal-${data.name}" style="display:none;">Cancelar</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -239,50 +290,27 @@ $(document).ready(function(){
                                 $("#cancel-withdrawal-" + data.name).fadeOut();
 
                                 setTimeout(() => {
-                                    $("#balance-not-available-" + data.name).fadeIn().css("display","inline-block");
+                                    $("#balance-not-available-" + data.name).fadeIn().css("display","block");
                                     $("#request-withdrawal-" + data.id).fadeIn();
                                 }, 400)
                             });
 
-                            if(data.id == 'w7YL9jZD6gp4qmv' || data.id == 'oXlqv13043xbj4y') {
-                                $(document).off("click","#new-withdrawal-" + data.name);
-                                $(document).on("click","#new-withdrawal-" + data.name,function(){
-                                    let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
-                                    if(withdrawalValue <= 0 || withdrawalValue == ''){
-                                        alertCustom('error', 'Valor do saque inválido!');
-                                        return;
-                                    }
-
-                                    // if(withdrawalValue <= 5000){
-                                    //     alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
-                                    //     return;
-                                    // }
-
-                                    customWithdrawal(data.id);
-                                });
-                            } else {
-                                $(document).off("click","#new-withdrawal-" + data.name);
-                                $(document).on("click","#new-withdrawal-" + data.name,function(){
-                                    let withdrawalValue = onlyNumbers($("#withdrawal-value-" + data.id).val());
-                                    if(withdrawalValue <= 0 || withdrawalValue == ''){
-                                        alertCustom('error', 'Valor do saque inválido!');
-                                        return;
-                                    }
-
-                                    // if(withdrawalValue <= 5000){
-                                    //     alertCustom('error', 'Valor mínimo de saque  R$ 50,00');
-                                    //     return;
-                                    // }
-
+                            $(document).off("click","#new-withdrawal-" + data.name);
+                            $(document).on("click","#new-withdrawal-" + data.name,function(){
+                                if(data.id == GETNET || data.id == GERENCIA_NET) {
+                                    customWithdrawal(data.id)
+                                } else {
                                     defaultWithdrawal(data.id);
-                                });
-                            }
+                                }
+                            });
                         }else{
                             $('#val-skeleton').hide();
                             $('#container_val').css({
                                 'display':'flex',
                                 'align-items':'center'
                             });
+                            let $titleAvailableBalance = onlyNumbers(data.data) > 0 ? 'Disponível para saque' : 'Saldo Atual'
+                            $('#title_available_money').html($titleAvailableBalance);
                             $('.total-available-balance').html(removeMoneyCurrency(data));
                         }
                     });
@@ -295,7 +323,17 @@ $(document).ready(function(){
                                     <div class="card bg-transparent" style="border: 2px dashed #B0AFAF; color: #A2A2A2;">
                                         <div class="card-body text-center d-flex align-items-center">
                                             <div class="col-sm-12 p-0">
-                                                <div class="d-flex justify-content-center mb-30"><img src="/modules/global/img/logos/2021/svg/icon-multi.svg" alt="Image" style="width: 90px"></div>
+                                                <div class="d-flex justify-content-center mb-30">
+                                                    <svg width="89" height="95" viewBox="0 0 89 95" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M44.5 0C35.0045 0 27.3068 7.53117 27.3068 16.8213C27.3068 25.0986 33.4174 31.9795 41.4659 33.3816V45.5255H23.2614C18.2343 45.5255 14.1591 49.5126 14.1591 54.4309V61.6184C6.11063 63.0205 0 69.9014 0 78.1787C0 87.4688 7.69765 95 17.1932 95C26.6887 95 34.3864 87.4688 34.3864 78.1787C34.3864 69.9014 28.2757 63.0205 20.2273 61.6184V54.4309C20.2273 52.7915 21.5857 51.4624 23.2614 51.4624H65.7386C67.4143 51.4624 68.7727 52.7915 68.7727 54.4309V61.6184C60.7243 63.0205 54.6136 69.9014 54.6136 78.1787C54.6136 87.4688 62.3113 95 71.8068 95C81.3023 95 89 87.4688 89 78.1787C89 69.9014 82.8894 63.0205 74.8409 61.6184V54.4309C74.8409 49.5126 70.7657 45.5255 65.7386 45.5255H47.534V33.3816C55.5825 31.9796 61.6932 25.0986 61.6932 16.8213C61.6932 7.53117 53.9955 0 44.5 0ZM33.375 16.8213C33.375 10.8101 38.3558 5.93694 44.5 5.93694C50.6442 5.93694 55.625 10.8101 55.625 16.8213C55.625 22.8326 50.6442 27.7057 44.5 27.7057C38.3558 27.7057 33.375 22.8326 33.375 16.8213ZM6.06818 78.1787C6.06818 72.1674 11.049 67.2943 17.1932 67.2943C23.3373 67.2943 28.3182 72.1674 28.3182 78.1787C28.3182 84.1899 23.3373 89.0631 17.1932 89.0631C11.049 89.0631 6.06818 84.1899 6.06818 78.1787ZM71.8068 67.2943C77.951 67.2943 82.9318 72.1674 82.9318 78.1787C82.9318 84.1899 77.951 89.0631 71.8068 89.0631C65.6627 89.0631 60.6818 84.1899 60.6818 78.1787C60.6818 72.1674 65.6627 67.2943 71.8068 67.2943Z" fill="url(#paint0_linear_117:379)"/>
+                                                        <defs>
+                                                            <linearGradient id="paint0_linear_117:379" x1="45" y1="77.5" x2="44.5" y2="95" gradientUnits="userSpaceOnUse">
+                                                                <stop stop-color="white"/>
+                                                                <stop offset="1" stop-color="#F5F5F5" stop-opacity="0"/>
+                                                            </linearGradient>
+                                                        </defs>
+                                                    </svg>
+                                                </div>
                                                <span> <strong> O Sirius é multiadquirente.</strong> <br/> Sempre tem espaço pra mais uma :) </span>
                                             </div>
                                         </div>
@@ -309,24 +347,18 @@ $(document).ready(function(){
                         mouseDrag: false,
                         margin : 10,
                         navText : ["<i class='fa fa-chevron-left text-info'></i>","<i class='fa fa-chevron-right text-info'></i>"],
-                        dots    : false,
                         responsive:{
-                            0:{
-                                items:1,
-                                nav    : false,
+                            768:{
+                                items: 3,
+                                nav: true,
                             },
-                            600:{
-                                items:3,
-                                nav    : true,
-                            }
-                        }
+                        },
                     });
+                    createCarousel();
                 }
             }
         });
-
     }
-
      window.updateWithdrawals = function() {
         let companyId = $("#transfers_company_select").val()
 
@@ -346,18 +378,11 @@ $(document).ready(function(){
                         'justify-content':'center',
                         'align-items':'center',
                         'flex-direction':'column',
-                    });
+                    }).addClass('px-10');
             },
             success: function (response) {
                 if(response.data.length){
                     $('#empty-history').hide();
-                    // if (response.data.length ==2) {
-                    //     $('#skeleton-withdrawal').hide();
-                    //     $('#skeleton-withdrawal2').show();
-                    //     $('#skeleton-withdrawal3').show();
-                    // }else if (response.data.length > 2) {
-                    //     $('.skeleton-withdrawal').hide();
-                    // }
                     $('.skeleton-withdrawal').hide();
                     $('#container-withdraw').html('');
                     $('#container-withdraw').show();
@@ -367,11 +392,47 @@ $(document).ready(function(){
                         let img_gateway = getGatewayImg(data.gateway_name.toLowerCase());
 
                         $('#container-withdraw').append(`
-                            <div class="row mx-0 py-20">
-                                <div class="col-sm-6 px-20">${img_gateway}</div>
-                                <div class="col-sm-6 px-20"><span class="label label-warning float-right"><span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated}</span></span></div>
-                                <div class="col-sm-12 px-20" style="margin-top:10px"><h4 style="margin-top:3px"><span class="font-size-16 gray">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.value)}</span></h4></div>
-                                <div class="col-sm-12 px-20 overflow-bank-name">${data.bank_name.replace('BANCO ', '')}</div>
+                            <div class="row mx-0 py-20 px-md-20">
+                                <div class="col-6 col-md-3 col-xl-6
+                                            px-20 px-md-0
+                                            d-flex order-0
+                                            justify-content-start justify-content-md-center justify-content-xl-start
+                                            align-items-center">
+                                    ${img_gateway}
+                                </div>
+                                <div class="col-6 col-md-3 col-xl-6
+                                            px-20 px-md-0 mt-sm-0 text-sm-right
+                                            d-flex order-1 order-md-2 order-xl-1
+                                            justify-content-end justify-content-md-center justify-content-xl-end
+                                            align-items-center">
+                                    <span class="label label-warning">
+                                        <span class="badge badge-round badge-${statusWithdrawals[data.status]}">${data.status_translated.trim()}</span>
+                                    </span>
+                                </div>
+                                <div class="col-12 col-md-3 col-xl-12
+                                            px-20 px-md-0 mt-10
+                                            d-flex order-2 order-md-1 order-xl-2
+                                            align-items-center">
+                                        <span class="money-label">R$ ${removeMoneyCurrency(data.value)}</span>
+                                </div>
+                                <div class="col-12 col-md-3 col-xl-6
+                                            px-20 px-md-0
+                                            d-flex order-4
+                                            justify-content-start justify-content-md-center justify-content-xl-start
+                                            align-items-center">
+                                    <span class="overflow-bank-name">
+                                        ${data.bank_name.replace('BANCO ', '')}
+                                    </span>
+                                </div>
+                                <div class="col-12 col-md-3 col-xl-6
+                                            px-20 px-md-0
+                                            d-flex order-4
+                                            justify-content-end justify-content-md-center justify-content-xl-end
+                                            align-items-center">
+                                    <span class="date-label">
+                                        ${data.date}
+                                    </span>
+                                </div>
                             </div>
                         `);
                         c++;
@@ -406,7 +467,7 @@ $(document).ready(function(){
                             'justify-content':'center',
                             'align-items':'center',
                             'flex-direction':'column',
-                        });
+                        }).addClass('px-15');
                 }
             }
         });
@@ -424,6 +485,7 @@ $(document).ready(function(){
             iconNoEye.removeClass('d-none')
         } else {
             availableBalance.removeClass('hide-withdraw').css('color', '#636363')
+
             iconEye.removeClass('d-none')
             iconNoEye.addClass('d-none')
         }
@@ -431,6 +493,7 @@ $(document).ready(function(){
 
     $(document).on('click','#container-return',function(){
         if($('#container-config').is(':visible')){
+            $('#btn-config-all').removeClass('active-outline');
             $('#container-config').hide();
             $('#container-return').hide();
             $('#container-gateways').show();
@@ -453,4 +516,34 @@ $(document).ready(function(){
             $('#container-available').show();
         }
     });
+
+    function createCarousel() {
+        let checkWidth = $(window).width();
+        let owl = $("#all-gateways");
+        let gatewayCards = $("[class*=multi-collapse-]");
+        if (checkWidth < 767) {
+            if (typeof owl.data('owl.carousel') != 'undefined') {
+                owl.data('owl.carousel').destroy();
+            }
+            owl.removeClass('owl-carousel');
+            gatewayCards.addClass('collapse');
+        } else if (checkWidth > 768) {
+            owl.addClass('owl-carousel');
+            gatewayCards.removeClass('collapse');
+            owl.owlCarousel({
+                mouseDrag: false,
+                margin : 10,
+                navText : ["<i class='fa fa-chevron-left text-info'></i>","<i class='fa fa-chevron-right text-info'></i>"],
+                responsive:{
+                    768:{
+                        items: 3,
+                        nav: true,
+                    },
+                },
+            });
+        }
+    }
+
+    createCarousel();
+    $(window).resize(createCarousel);
 });

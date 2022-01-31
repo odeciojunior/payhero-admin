@@ -45,7 +45,6 @@ class ActiveCampaignEventApiController extends Controller
                 $event->event_text = $eventText[0]['name'];
             }
 
-            // dd( ActivecampaignEventResource::collection($events));
             return ActivecampaignEventResource::collection($events);
         } catch (Exception $e) {
 
@@ -55,24 +54,28 @@ class ActiveCampaignEventApiController extends Controller
 
     /**
      * @param $id
-     * @return ActivecampaignResource
+     * @return ActivecampaignEventResource
      */
-    public function show($id)
+    public function show(Request $request)
     {
         try {
 
+            $data = current($request->only('integration'));
+            $id = current(Hashids::decode($data));
+
             $activecampaignEventModel        = new ActivecampaignEvent();
-            $activecampaignEvent             = $activecampaignEventModel->find(current(Hashids::decode($id)));
+            $activecampaignEvent             = $activecampaignEventModel->find($id);
             $event                           = $this->getEventsName([$activecampaignEvent->event_sale]);
             $activecampaignEvent->event_text = $event[0]['name'];
 
             activity()->on($activecampaignEventModel)->tap(function(Activity $activity) use ($id, $event) {
                 $activity->log_name   = 'visualization';
-                $activity->subject_id = current(Hashids::decode($id));
+                $activity->subject_id = current($id);
             })->log('Visualizou evento ' . $event[0]['name'] . ' do ActiveCampaign');
 
             return new ActivecampaignEventResource($activecampaignEvent);
         } catch (Exception $e) {
+            report($e);
 
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }

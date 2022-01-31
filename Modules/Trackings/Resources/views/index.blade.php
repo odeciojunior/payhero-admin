@@ -3,9 +3,10 @@
 @section('content')
 
 @push('css')
-<link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=149') !!}">
+<link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=101') !!}">
 <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
 <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v='.uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
 <link rel="stylesheet" href="{{ asset('modules/trackings/css/index.css?v='.uniqid()) }}">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
 
@@ -217,7 +218,7 @@
                     <div class="col-6 col-xl-3 mt-20">
                         <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
                             <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} " />
-                            Aplicar filtros
+                            Aplicar <br class="d-flex d-sm-none"> filtros
                         </div>
                     </div>
                 </div>

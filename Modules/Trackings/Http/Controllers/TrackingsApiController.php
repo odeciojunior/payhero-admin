@@ -47,13 +47,6 @@ class TrackingsApiController extends Controller
 
 
             if (!empty($data["date_updated"])) {
-                $saleId = current(Hashids::connection('sale_id')->decode($data['sale']));
-
-                $saleModel = new Sale();
-                $sale = $saleModel->find($saleId);
-                if ( !empty($sale) && $sale->api_flag ) {
-                    return response()->json(['message' => 'Venda por api não contém códigos de rastreio'], 400);
-                }
 
                 $trackings = $trackingService->getPaginatedTrackings($data);
 
@@ -91,6 +84,7 @@ class TrackingsApiController extends Controller
             $tracking = $trackingModel->with(
                 [
                     'productPlanSale.plan.project.domains',
+                    'productPlanSale.productSaleApi',
                     'product',
                     'delivery',
                 ]

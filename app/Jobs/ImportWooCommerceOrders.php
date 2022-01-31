@@ -72,7 +72,7 @@ class ImportWooCommerceOrders implements ShouldQueue
 
         } catch (Exception $e) {    
 
-            report($e);
+            //report($e);
             
         }
     }

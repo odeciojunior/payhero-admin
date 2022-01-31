@@ -3,19 +3,26 @@
 namespace Modules\Products\Http\Controllers;
 
 use Exception;
+use Google\Service\AdExchangeBuyer\Resource\Products;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Category;
+use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
+use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\CacheService;
 use Modules\Core\Services\FoxUtils;
@@ -28,6 +35,7 @@ use Modules\Products\Transformers\EditProductResource;
 use Modules\Products\Transformers\ProductsResource;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Products\Transformers\ProductsSelectResource;
+use Modules\Products\Transformers\ProductVariantResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -68,17 +76,19 @@ class ProductsApiController extends Controller
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todos os produtos');
 
-            $productsSearch = $productsModel->where('user_id', auth()->user()->account_owner_id);
+            $productsSearch = $productsModel->with('productsPlans')->where('user_id', auth()->user()->account_owner_id);
 
-            if (isset($filters['shopify'])) {
+            if (isset($filters['shopify']) && $filters['shopify'] == 1) {
                 $productsSearch->where('shopify', $filters['shopify']);
+            } else {
+                $productsSearch->where('shopify', 0);
             }
 
             if (isset($filters['name'])) {
                 $productsSearch->where('name', 'LIKE', '%' . $filters['name'] . '%');
             }
 
-            if (isset($filters['project']) && $filters['shopify'] == 1) {
+            if (isset($filters['project']) && $filters['project'] > 0 && $filters['shopify'] == 1) {
                 $projectId = current(Hashids::decode($filters['project']));
                 $productsSearch->where('project_id', $projectId);
             }
@@ -334,6 +344,57 @@ class ProductsApiController extends Controller
         }
     }
 
+    public function updateProductType($id)
+    {
+        try {
+            $productModel = new Product();
+            $productId = current(Hashids::decode($id));
+
+            if (empty($productId) && empty($data['category'])) {
+                return response()->json([
+                    'message' => 'Ocorreu um erro produto não encontrado, tente novamente mais tarde',
+                ], 400);
+            }
+
+            $product = $productModel->find($productId);
+            if (!Gate::allows('update', [$product])) {
+                return response()->json(['message' => 'Sem permissão para atualizar este produto!'], 400);
+            }
+
+            $data['type_enum'] = $productModel->present()->getType('digital');
+            $data['status_enum'] = $productModel->present()->getStatus('analyzing');
+            $product->update($data);
+
+            return response()->json(['message' => 'Produto convertido para digital com sucesso!'], 200);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
+        }
+    }
+
+    public function updateCustom($id, Request $request)
+    {
+        try {
+            $productId = current(Hashids::decode($id));
+            $planId = current(Hashids::decode($request->plan));
+
+            $productPlanModel = new ProductPlan();
+            $productPlanModel
+            ->where('plan_id', $planId)
+            ->where('product_id', $productId)
+            ->update([
+                'is_custom' => $request->productCustom
+            ]);
+
+            return response()->json(['message' => 'Configurações atualizadas com sucesso'], 200);
+        } catch(Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde!'], 400);
+        }
+    }
+
     public function destroy($id)
     {
         try {
@@ -372,17 +433,101 @@ class ProductsApiController extends Controller
         }
     }
 
-    public function getProducts(Request $request)
+    public function getProductsVariants(Request $request)
     {
         try {
             $data = $request->all();
 
-            if (empty($data['project'])) {
+            $projectId = current(Hashids::decode($data['project_id']));
+            $products = Product::query();
+            $projectModel = new Project();
+            $project = $projectModel->find($projectId);
+
+            $products->with('productsPlanSales')->with('productsPlans')->where('user_id', auth()->user()->account_owner_id);
+
+            if (!empty($projectId) && (!empty($project->shopify_id) || !empty($project->woocommerce_id))) {
+                $products->where('project_id', $projectId);
+
+                $groupByVariants = $data['variants'];
+
+                if ($groupByVariants) {
+                    $products->select('name',
+                        DB::raw("min(id) as id"),
+                        DB::raw("if(shopify_id is not null, concat(count(*), ' variantes'), group_concat(description)) as description"))
+                        ->groupBy('name', 'shopify_id', DB::raw('if(shopify_id is null, id, 0)'));
+                }
+            } else {
+                $products->where('shopify', 0)->whereNull('shopify_variant_id');
+            }
+
+            if (!empty($data['search'])) {
+                $products->where('name', 'like', '%' . $data['search'] . '%');
+            }
+
+            if (!empty($data['description'])) {
+                $products->where('description', 'like', '%' . $data['description'] . '%');
+            }
+
+            $products = $products->get()->sortByDesc(function($query) {
+                return $query->productsPlanSales->count();
+            })->take(10);
+
+            foreach($products as $p) {
+                $product = Product::find($p->id);
+                $p->photo = $product->photo;
+                $p->type_enum = $product->type_enum;
+                $p->status_enum = $product->status_enum;
+                $p->cost = $product->cost;
+            }
+
+            return ProductVariantResource::collection($products);
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados dos produtos (ProductsApiController - getProductsVariants)');
+            report($e);
+
+            return response()->json([
+                'message' => 'Ocorreu um erro, ao buscar dados dos produtos',
+            ], 400);
+        }
+    }
+
+    public function getTopSellingProducts(Request $request)
+    {
+        try {
+            $project = $request->input('project') ?? '';
+            $product = $request->input('product') ?? '';
+            $description = $request->input('description') ?? '';
+
+            if (empty($project)) {
                 return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
             }
 
             $productService = new ProductService();
-            $projectId = current(Hashids::decode($data['project']));
+            $projectId = current(Hashids::decode($project));
+
+            $products = $productService->getTopSellingProducts($projectId, $product, $description);
+
+            return ProductsSelectResource::collection($products);
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
+        }
+    }
+
+    public function getProducts(Request $request)
+    {
+        try {
+            $project = $request->input('project') ?? '';
+
+            if (empty($project)) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde'], 400);
+            }
+
+            $productService = new ProductService();
+            $projectId = current(Hashids::decode($project));
+
             $products = $productService->getProductsMyProject($projectId);
 
             return ProductsSelectResource::collection($products);
@@ -401,7 +546,6 @@ class ProductsApiController extends Controller
             }
 
             $productService = new ProductService();
-
             $products = $productService->getProductsBySale($saleId);
 
             return ProductsSaleResource::collection($products);
@@ -449,6 +593,56 @@ class ProductsApiController extends Controller
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao verificar produto'], 400);
+        }
+    }
+
+    public function verifyProductInPlanSale(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+            $productPlanSaleModel = new ProductPlanSale();
+
+            $productId = current(Hashids::decode($requestData['product_id']));
+            $plan_id = current(Hashids::decode($requestData['plan_id']));
+
+            if (empty($productId)) {
+                return response()->json(['message' => 'Produto não encontrado'], 400);
+            }
+
+            $productInPlanSale = $productPlanSaleModel
+                                ->where('product_id', $productId)
+                                ->where('plan_id', $plan_id)
+                                ->exists();
+
+            return response()->json(['product_in_plan_sale' => $productInPlanSale], 200);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao verificar produto'], 400);
+        }
+    }
+
+    public function getProductById($id, Request $request)
+    {
+        try {
+            $plan_id = $request->input('plan_id');
+
+            $productModel = Product::query();
+
+            if (!empty($plan_id)) {
+                $plan_id = current(Hashids::decode($plan_id));
+
+                $products = $productModel->whereHas('productsPlans', function(Builder $query) use ($plan_id) {
+                    $query->where('plan_id', $plan_id);
+                })->find(current(Hashids::decode($id)));
+            } else {
+                $products = $productModel->with('productsPlans')->find(current(Hashids::decode($id)));
+            }
+
+            return new ProductsSelectResource($products);
+        } catch (Exception $e) {
+            report($e);
+            //return response()->json(['message' => 'Erro ao tentar buscar produto'], 400);
+            return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 }

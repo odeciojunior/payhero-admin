@@ -182,25 +182,25 @@ class GetNetStatementService
                 if ($hasOrderId && !$isTransactionCredit && $transactionStatusCode == self::TRANSACTION_STATUS_CODE_APROVADO) {
 
                     $details->setStatus('Estornado')
-                        ->setDescription('Solicitação do estorno: ' . $this->formatDate($summary->transaction_date))
+                        ->setDescription($this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_REVERSED);
 
                 } elseif ($hasOrderId && $isTransactionCredit && !$isReleaseStatus && !$hasValidTracking) {
 
                     $details->setStatus('Aguardando postagem válida')
-                        ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
+                        ->setDescription($this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_WAITING_FOR_VALID_POST);
 
                 } elseif ($hasOrderId && $isTransactionCredit && $hasValidTracking && !$isReleaseStatus && $paymentDateNumeric && ($paymentDateNumeric > date('Ymd'))) {
 
                     $details->setStatus('Aguardando Liberação')
-                        ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
+                        ->setDescription($this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_WAITING_RELEASE);
 
                 } elseif ($hasOrderId && $isTransactionCredit && $hasValidTracking && !$isReleaseStatus) {
 
                     $details->setStatus('Aguardando saque')
-                        ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
+                        ->setDescription($this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_WAITING_WITHDRAWAL);
 
                 } elseif (
@@ -214,7 +214,7 @@ class GetNetStatementService
                 ) {
 
                     $details->setStatus('Aguardando liquidação')
-                        ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
+                        ->setDescription($this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_WAITING_LIQUIDATION);
 
                 } elseif (
@@ -230,7 +230,7 @@ class GetNetStatementService
                 ) {
 
                     $details->setStatus('Liquidado')
-                        ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
+                        ->setDescription($this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_PAID);
 
                 } else {
@@ -244,7 +244,7 @@ class GetNetStatementService
                         'subSellerRateConfirmDate' => $subSellerRateConfirmDate,
                     ]))*/
                     $details->setStatus('-')
-                        ->setDescription('Data da venda: ' . $this->formatDate($summary->transaction_date))
+                        ->setDescription($this->formatDate($summary->transaction_date))
                         ->setType(Details::STATUS_ERROR);
                 }
 
@@ -683,8 +683,8 @@ class GetNetStatementService
     {
         $credential = GatewaysCompaniesCredential::where('company_id',$companyId)
                                 ->where('gateway_id',FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID)
-                                ->where('gateway_status',GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED)        
-                                ->with('company',function($qr){            
+                                ->where('gateway_status',GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED)
+                                ->with('company',function($qr){
                                     $qr->where('user_id', auth()->user()->account_owner_id);
                                 })->first();
 

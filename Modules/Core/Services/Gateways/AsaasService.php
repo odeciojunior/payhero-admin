@@ -51,9 +51,14 @@ class AsaasService implements Statement
         return $this;
     }
 
-    public function getAvailableBalance() : int
+    public function getAvailableBalanceWithoutBlocking() : int
     {
         return $this->company->asaas_balance;
+    }
+
+    public function getAvailableBalance() : int
+    {
+        return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
     public function getPendingBalance() : int
@@ -62,6 +67,9 @@ class AsaasService implements Statement
                             ->where('status_enum', Transaction::STATUS_PAID)
                             ->whereIn('gateway_id', $this->gatewayIds)
                             ->where('created_at', '>', '2021-09-20')
+                            ->whereDoesntHave('blockReasonSale',function ($query) {
+                                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
+                            })
                             ->sum('value');
     }
 
@@ -80,7 +88,7 @@ class AsaasService implements Statement
     {
         return Transaction::where('company_id', $this->company->id)
                             ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('status_enum', Transaction::STATUS_PENDING)
+                            ->where('status_enum', Transaction::STATUS_PAID)
                             ->whereHas('blockReasonSale',function ($query) {
                                     $query->where('status', BlockReasonSale::STATUS_BLOCKED);
                             })
@@ -96,9 +104,7 @@ class AsaasService implements Statement
     {
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
-        $blockedBalance = $this->getBlockedBalance();
         $availableBalance += $pendingBalance;
-        $availableBalance -= $blockedBalance;
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
@@ -225,7 +231,7 @@ class AsaasService implements Statement
                 );
 
                 $company->update([
-                    'asaas_balance' => $company->asaas_balance + $transaction->value
+                    'asaas_balance' => $company->asaas_balance+= $transaction->value
                 ]);
 
                 $transaction->update([
@@ -245,23 +251,32 @@ class AsaasService implements Statement
         return (new StatementService)->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
     }
 
+    public function getPeriodBalance($filters)
+    {
+        return (new StatementService)->getPeriodBalance($this->company->id, $this->gatewayIds, $filters);
+    }
+
+
     public function getResume()
     {
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
                                         ->where('company_id', $this->company->id)
                                         ->orderBy('id', 'desc')->first();
 
-        $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $totalBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $availableBalance = $this->getAvailableBalanceWithoutBlocking() - $blockedBalance;
+        $blockedBalancePending = $this->getBlockedBalancePending();
+        
+        $totalBlockedBalance = $blockedBalance + $blockedBalancePending;
+        $totalBalance = $availableBalance + $pendingBalance + $totalBlockedBalance;
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
 
         return [
             'name' => 'Asaas',
             'available_balance' => foxutils()->formatMoney($availableBalance / 100),
             'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
-            'blocked_balance' => foxutils()->formatMoney($blockedBalance / 100),
+            'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
             'total_balance' => foxutils()->formatMoney($totalBalance / 100),
             'total_available' => $availableBalance,
             'last_transaction' => $lastTransactionDate,
@@ -278,7 +293,7 @@ class AsaasService implements Statement
     }
 
     public function makeAnticipation(Sale $sale, $saveRequests = true, $simulate = false) {
-        $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
+        $this->getCompanyApiKey($sale);
 
         $data = [
             "agreementSignature"=> $sale->user->name,
@@ -313,8 +328,7 @@ class AsaasService implements Statement
         $response = json_decode($result, true);
 
         if(($httpStatus < 200 || $httpStatus > 299) && (!isset($response['errors']))) {
-            \Log::info($sale->id);
-            report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus . ' -- $sale->id = ' . $sale->id . ' -- ' . json_encode($response));
+            //report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus . ' -- $sale->id = ' . $sale->id . ' -- ' . json_encode($response));
         }
 
         if($saveRequests) {
@@ -325,11 +339,12 @@ class AsaasService implements Statement
         return $response;
     }
 
-    public function checkAnticipation(Sale $sale)
+    public function checkAnticipation(Sale $sale, $saveRequests = true)
     {
-        $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
+        $this->getCompanyApiKey($sale);
 
-        $curl = curl_init('https://www.asaas.com/api/v3/anticipations/' . $sale->anticipation_id);
+        $url = 'https://www.asaas.com/api/v3/anticipations/' . $sale->anticipation_id;
+        $curl = curl_init($url);
 
         curl_setopt($curl, CURLOPT_ENCODING, '');
         //curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
@@ -342,18 +357,21 @@ class AsaasService implements Statement
         ]);
 
         $result = curl_exec($curl);
-
+        $httpStatus     = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
+
+        $response = json_decode($result, true);
+
+        if($saveRequests) {
+            $this->saveRequests($url, $response, $httpStatus, [], $sale->id);
+        }
 
         return json_decode($result, true);
     }
 
-    public function getCompanyApiKey($owner_id,$project_id)
+    public function getCompanyApiKey(Sale $sale)
     {
-        $company = UserProject::where('user_id', $owner_id)
-            ->where('project_id', $project_id)
-            ->first()
-            ->company;
+        $company = $sale->transactions()->where('type', Transaction::TYPE_PRODUCER)->first()->company;
 
         $this->companyId = $company->id;
         $this->apiKey = $company->getGatewayApiKey(foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID);
@@ -431,7 +449,7 @@ class AsaasService implements Statement
             $saleService = new SaleService();
             $saleTax = 0;
             if(!empty($sale->anticipation_status)){
-                $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value:0;
+                $cashbackValue = $sale->cashback()->first()->value??0;
                 $saleTax = $saleService->getSaleTaxRefund($sale,$cashbackValue);
             }
             $totalSale = $saleService->getSaleTotalValue($sale);
