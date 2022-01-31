@@ -323,7 +323,7 @@
 										Marketing
 									</a>
 								</h3>
-                                <a href="" class="box-link">
+                                <a href="{!! route('reports.marketing') !!}" class="box-link">
                                     <span>Acessar&nbsp&nbsp</span>
                                     <i class="o-arrow-right-1 redirect"></i>
                                 </a>
@@ -345,7 +345,9 @@
 																<li>
 																	<div class="donut-pie blue">
 																		<figure>
-																			<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" style="&#10;&#10;"/></svg>
+                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#2E85EC" stroke-width="3"/>
+                                                                            </svg>
 																		</figure>
 																		<div>Mariana</div>
 																	</div>
@@ -353,17 +355,21 @@
 																</li>
 																<li>
 																	<div class="donut-pie pink">
-																		<figure>
-																			<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" style="&#10;&#10;"/></svg>
-																		</figure>
+                                                                        <figure>
+                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#F43F5E" stroke-width="3"/>
+                                                                            </svg>
+                                                                        </figure>
 																		<div>Cassio</div>
 																	</div>
 																	<div class="grey bold">16</div>
 																</li>
 																<li>
 																	<div class="donut-pie purple">
-																		<figure>
-																			<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" style="&#10;&#10;"/></svg>
+                                                                        <figure>
+                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#665FE8" stroke-width="3"/>
+                                                                            </svg>																			
 																		</figure>
 																		<div>Agosto</div>
 																	</div>
@@ -371,8 +377,10 @@
 																</li>
 																<li>
 																	<div class="donut-pie orange">
-																		<figure>
-																			<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z" style="&#10;&#10;"/></svg>
+                                                                        <figure>
+                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#FF7900" stroke-width="3"/>
+                                                                            </svg>																			
 																		</figure>
 																		<div>meuaniversario</div>
 																	</div>

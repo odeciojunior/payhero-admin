@@ -514,6 +514,12 @@ h4.number{
 .new-graph-pie  .ct-series-c { fill: #665FE8; }
 .new-graph-pie  .ct-series-d { fill: #FF7900; }
 
+.new-graph-pie-mkt  .ct-series-a { fill: #868686; }
+.new-graph-pie-mkt .ct-series-b { fill: #2E85EC; }
+.new-graph-pie-mkt  .ct-series-c { fill: #665FE8; }
+.new-graph-pie-mkt  .ct-series-d { fill: #FF7900; }
+.new-graph-pie-mkt  .ct-series-e { fill: #F43F5E; }
+
 
 .data-pie { 
     display: flex;
@@ -539,6 +545,8 @@ h4.number{
     align-items: center;
 }
 .data-pie svg { width: 14px; }
+
+.donut-pie svg rect { stroke-width: 3; }
 
 .donut-pie figure { 
     width: 20px; 
@@ -621,6 +629,19 @@ h4.number{
     border-color: #F43F5E !important;
 }
 .finance-card.pink .number { color: #F54A68; }
+
+.finance-card.purple {
+    background-color: #FCFCFF;
+    border-color: #665FE8 !important;
+}
+.finance-card.purple .number { color: #665FE8; }
+
+.finance-card .percent {
+    line-height: 25px;
+    padding: 0 5px;
+    color: #9E9E9E;
+    font-size: 14px;
+}
 
 /* graphs primary finance */
 .box-chart-primary {

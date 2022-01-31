@@ -40,6 +40,11 @@ class ReportsController extends Controller
         return view('reports::finances');
     }
 
+    public function marketing()
+    {
+        return view('reports::marketing');
+    }
+
     public function checkouts()
     {
         return view('reports::checkouts');
