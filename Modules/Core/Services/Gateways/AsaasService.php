@@ -339,7 +339,7 @@ class AsaasService implements Statement
         return $response;
     }
 
-    public function checkAnticipation(Sale $sale)
+    public function checkAnticipation(Sale $sale, $saveRequests = true)
     {
         $this->getCompanyApiKey($sale);
 
@@ -362,7 +362,10 @@ class AsaasService implements Statement
 
         $response = json_decode($result, true);
 
-        $this->saveRequests($url, $response, $httpStatus, [], $sale->id);
+        if($saveRequests) {
+            $this->saveRequests($url, $response, $httpStatus, [], $sale->id);
+        }
+
         return json_decode($result, true);
     }
 
