@@ -51,17 +51,6 @@ $(() => {
         }
     }
 
-    // FRETE
-    $("#shippement").on('change', function () {
-        if ($(this).val() == 0) {
-            $("#div-carrier").hide();
-            $("#div-shipment-responsible").hide();
-        } else {
-            $("#div-carrier").show();
-            $("#div-shipment-responsible").show();
-        }
-    });
-
     // CARD 1 FOTO, NOME, CRIADO EM, DESCRICAO E RESUMO
     const getImageProject = projectPhoto => projectPhoto ? dropifyOptions.defaultFile = projectPhoto : "/modules/global/img/projeto.svg";
 
@@ -262,12 +251,15 @@ $(() => {
             toolbar: ['bold', 'italic', 'underline']
         }
     });
+
     $(document).ready(function() {
         $(".ql-toolbar.ql-snow").addClass("d-flex justify-content-center")
     });
+
     $(".ql-editor").on("focus", function(){
         $(".h-200, .ql-container, .ql-snow").css("border-color", "#88BFFF");
     });
+
     $(".ql-editor").on("focusout", function(){
         $(".h-200, .ql-container, .ql-snow").css("border-color", "#cccccc");
     });
@@ -379,7 +371,7 @@ $(() => {
 
         // COMPORTAMENTO CARD SALVAR / CANCELAR
         if(!onChangeSet){
-            $("#update-project :input").on('change', function() {
+            $("#update-project").on('input change', function() {
                 $( "#confirm-changes" ).fadeIn( "slow" );
             });
             onChangeSet = true;
