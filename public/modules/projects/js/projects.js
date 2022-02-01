@@ -272,6 +272,14 @@ $(() => {
         $(".h-200, .ql-container, .ql-snow").css("border-color", "#cccccc");
     });
 
+    $("#status-url-affiliates").on("click", function(){
+        if($(this).prop("checked") == true ){
+            $("#affiliation-access").show();
+        }else{
+            $("#affiliation-access").hide();
+        }
+    });
+
     //CONFIGURACOES CARD 3 & 4
     function renderProjectConfig(data) {
 
@@ -282,13 +290,16 @@ $(() => {
         if (project.status_url_affiliates == 1 && getStatusAffiliation == false) {
             $('#update-project .status-url-affiliates').trigger('click');
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg").css("background-color", "#F2F8FF");
+            $("#affiliation-access").show();
         }
 
         if(project.status_url_affiliates == 0){
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/affiliationDisable.svg").css("background-color", "#F2F8FF");
-
+            $("#affiliation-access").hide();
+            
             if(project.status_url_affiliates == 0 && getStatusAffiliation == true){
                 $('#update-project .status-url-affiliates').trigger('click');
+
             }
         }
 
@@ -381,11 +392,9 @@ $(() => {
         let affiliationStatus = $("#status-url-affiliates").prop("checked")
         if(affiliationStatus == false){
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/affiliationDisable.svg");
-            $(".bg-afiliate-icon").css("background-color", "#F4F4F4");
 
         }else if(affiliationStatus == true){
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg");
-            $(".bg-afiliate-icon").css("background-color", "#F2F8FF");
         }
     });
 
