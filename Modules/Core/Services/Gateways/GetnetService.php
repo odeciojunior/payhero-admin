@@ -5,6 +5,8 @@ namespace Modules\Core\Services\Gateways;
 use App\Jobs\ProcessWithdrawal;
 use Carbon\Carbon;
 use Exception;
+use Modules\Core\Entities\Task;
+use Modules\Core\Services\TaskService;
 use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
@@ -57,7 +59,7 @@ class GetnetService implements Statement
     }
 
     public function getAvailableBalance() : int
-    {        
+    {
         return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
@@ -134,10 +136,17 @@ class GetnetService implements Statement
                 throw new Exception('Saque negado devido ao saldo negativo no Asaas');
             }
 
-            $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
-
             if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID)) {
                 return false;
+            }
+
+            $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
+
+            if ($isFirstUserWithdrawal) {
+                TaskService::setCompletedTask(
+                    $this->company->user,
+                    Task::find(Task::TASK_FIRST_WITHDRAWAL)
+                );
             }
 
             $withdrawal = Withdrawal::create(
@@ -280,7 +289,7 @@ class GetnetService implements Statement
     {
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
-        $availableBalance += $pendingBalance;      
+        $availableBalance += $pendingBalance;
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
@@ -396,7 +405,7 @@ class GetnetService implements Statement
         $blockedBalance = $this->getBlockedBalance();
         $availableBalance = $this->getAvailableBalanceWithoutBlocking() - $blockedBalance;
         $blockedBalancePending = $this->getBlockedBalancePending();
-        
+
         $totalBlockedBalance = $blockedBalance + $blockedBalancePending;
         $totalBalance = $availableBalance + $pendingBalance + $totalBlockedBalance;
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
@@ -447,7 +456,7 @@ class GetnetService implements Statement
             );
 
             $refundTransactions = $sale->transactions;
-           
+
             $saleService = new SaleService();
 
             foreach ($refundTransactions as $refundTransaction) {
