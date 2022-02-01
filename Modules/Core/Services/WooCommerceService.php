@@ -570,7 +570,7 @@ class WooCommerceService
             $start_date = strtotime($integration->synced_at);
             $diff = (time() - $start_date) / 60;
 
-            if($diff < 1) {
+            if($diff < 30) {
                 return '{"status":false,"msg":""}';
                 // !
             } else {
