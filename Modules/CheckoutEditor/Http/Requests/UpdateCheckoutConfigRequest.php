@@ -20,7 +20,7 @@ class UpdateCheckoutConfigRequest extends FormRequest
             'countdown_description' => 'nullable|string',
             'countdown_finish_message' => 'required_if:countdown_enabled,1|string|nullable',
             'topbar_enabled' => 'required|boolean',
-            'topbar_content' => 'required_if:topbar_enabled,1|string',
+            'topbar_content' => 'required_if:topbar_enabled,1|string|nullable',
             'notifications_enabled' => 'required|boolean',
             'notifications_interval' => 'required_if:notifications_enabled,1|integer',
             'notification_buying_enabled' => 'required_if:notifications_enabled,1|boolean',

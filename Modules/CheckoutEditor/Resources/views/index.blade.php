@@ -331,7 +331,7 @@
 
                                 <div class="input-container">
                                     <label for="countdown-time" class="checkout-label">Descrição <span class="observation-span">Opcional</span></label>
-                                    <textarea class="checkout-textarea" id="countdown_description" name="countdown_description" rows="4" maxlength="250" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
+                                    <textarea class="checkout-textarea" id="countdown_description" name="countdown_description" rows="4" maxlength="150" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
 
                                     <div id="countdown_description_error" class="checkout-error" style="display: none;">
                                         <p>Preencha o campo de descrição.</p>
@@ -344,7 +344,7 @@
 
                                 <div class="input-container">
                                     <label for="timeout-message" class="checkout-label">Mensagem ao encerrar o tempo</label>
-                                    <textarea class="checkout-textarea" id="countdown_finish_message" name="countdown_finish_message" rows="3" maxlength="250" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
+                                    <textarea class="checkout-textarea" id="countdown_finish_message" name="countdown_finish_message" rows="3" maxlength="150" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
 
                                     <div id="countdown_finish_message_error" class="checkout-error" style="display: none">
                                         <p>Preencha o campo de mensagem.</p>
@@ -909,7 +909,7 @@
 
                                 <div id="post_purchase_message_content" class="quill-editor">
                                 </div>
-                                <div id="post_purchase_message_content_toolbar_container_error" class="checkout-error" style="display: none;">
+                                <div id="post_purchase_message_content_error" class="checkout-error" style="display: none;">
                                     <p>Preencha o campo de mensagem.</p>
                                 </div>
                             </div>
@@ -1538,4 +1538,5 @@
 <script src="{{asset('modules/checkouteditor/js/checkoutEditor.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/loadCheckoutData.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/scrollPreview.js?v=' . uniqid())}}"></script>
+
 @endpush
