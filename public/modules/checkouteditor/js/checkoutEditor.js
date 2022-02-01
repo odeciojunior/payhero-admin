@@ -495,7 +495,7 @@ $(document).ready( function () {
         }
     });
 
-    $("#checkout_editor").on("change", function () {
+    $("#checkout_editor").on("input", function () {
         $("#save_changes").fadeIn("slow", "swing");
     });
 

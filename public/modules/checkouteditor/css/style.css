@@ -560,7 +560,7 @@ input[type="number"] {
     height: 50px;
     max-height: 50px;
     font-weight: bold !important;
-    padding: 40px 10px!important;
+    padding: 10px 40px!important;
 }
 
 #notification-table tr {
