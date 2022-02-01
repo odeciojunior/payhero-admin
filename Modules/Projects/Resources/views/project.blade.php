@@ -5,9 +5,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=125') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=512') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
 
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
@@ -53,11 +53,11 @@
                                 </div>
 
                                 <div class="col-md-8 d-flex flex-column justify-content-between pl-0 pr-25">
-                                    <div alt="titulo" class="pt-25 mr-20">
+                                    <div alt="titulo" class="pt-25 mr-15">
                                         <!-- TITULO CRIADO EM -->
                                         <div class="row row-title justify-content-between pt-0">
                                             <h4 class="title-pad mr-5 s-title pl-10 pl-sm-0"></h4>
-                                            <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill mr-10"></span>
+                                            <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill"></span>
                                         </div>
                                         <div style="color: #C8C8C8" class="card-text gray font-size-14 pl-10 pl-sm-0" id="created_at"></div>
                                     </div>
@@ -79,7 +79,7 @@
 
                                             <span class="s-data-project-values pl-5 pl-md-5 align-self-center" id="value-chargeback"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
-                                                <small class="font-size-10"> CHARGEBACKS </small>
+                                                <small class="font-size-12">chargebacks</small>
                                             </div>
                                         </div>
 
@@ -91,7 +91,7 @@
 
                                             <span class="s-data-project-values pl-5 align-self-center" id="value-open-tickets"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
-                                                <small class="font-size-10"> CHAMADOS ABERTOS </small>
+                                                <small class="font-size-12">chamados abertos</small>
                                             </div>
                                         </div>
 
@@ -103,7 +103,7 @@
 
                                             <span class="s-data-project-values pl-5 align-self-center" id="value-without-tracking"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
-                                                <small class="font-size-10"> VENDAS S/ RASTREIO </small>
+                                                <small class="font-size-12">vendas sem rastreio</small>
                                             </div>
 
                                         </div>

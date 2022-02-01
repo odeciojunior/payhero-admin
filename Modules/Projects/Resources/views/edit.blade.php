@@ -28,7 +28,7 @@
         <div class="row">
             <!-- TITULO CABECALHO -->
             <div class="col-md p-0">
-                <div class="row no-gutters d-flex pt-30 pb-20 pl-30">
+                <div class="row no-gutters d-flex d-flex align-items-center pt-30 pb-20 pl-30">
                     <div class="bg-afiliate-icon mr-15">
                         <img src="{{asset('/modules/global/img/projects/imgIcon.svg')}}" class="p-10">
                     </div>
@@ -86,6 +86,7 @@
                     </div>
 
                     <div class="col-md-6 d-flex justify-content-end align-items-center">
+                        <div id="affiliation-access" class="font-size-16 mr-10">Habilitadas</div>
                         <label class="switch">
                             <input type="checkbox" id="status-url-affiliates" name="status-url-affiliates" class="status-url-affiliates" data-toggle="collapse" data-target="#affiliation" aria-expanded="false" aria-controls="affiliation" value='0'>
                             <span class="slider round"></span>
@@ -231,22 +232,22 @@
                             <div class="col-12 col-md-6 col-lg-7 col-xl-8 py-10 pl-0 pr-0 align-items-center border-top border-right">
                                 <div class="row no-gutters mt-3 d-flex justify-content-sm-start pl-0 pl-md-0 pl-lg-0">
                                     
-                                    <div class="col-sm-12 col-lg-3 col-xl-6 font-weight-bold pr-0 pl-5 d-flex justify-content-lg-end align-items-center">Convide afiliados:</div>
+                                    <div class="col-sm-12 col-lg-3 col-xl-5 font-weight-bold pr-0 pl-5 d-flex justify-content-lg-end align-items-center">Convide afiliados:</div>
 
-                                    <div class="col-md-12 col-lg-9 col-xl-6">
-                                        <input type="text" class="text-lg-right pl-5 pl-sm-5 pr-10 pr-xl-40 border-0" id="url-affiliates" readonly>
+                                    <div class="col-md-12 col-lg-9 col-xl-7">
+                                        <input type="text" class="text-lg-right text-xl-left pl-5 pl-sm-5 pr-10 pr-xl-40 border-0" id="url-affiliates" readonly>
                                     </div>
 
                                 </div>
                             </div>
 
                             <!-- COPIAR LINK -->
-                            <div class="col-md-2 col-lg-2 col-xl-1 p-10 border-top d-flex align-items-center">
-                                <button id="copy-link-affiliation" class="mx-0 bg-white border-0 pl-md-10" type="button">
+                            <div class="col-md-2 col-lg-2 col-xl-1 border-top d-flex align-items-center justify-content-end">
+                                <button id="copy-link-affiliation" class="mx-0 bg-white border-0 pl-md-10 font-size-16" type="button">
                                     <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M1.5028 2.62704L1.5 4.75V15.2542C1.5 17.0491 2.95507 18.5042 4.75 18.5042L13.3663 18.5045C13.0573 19.3782 12.224 20.0042 11.2444 20.0042H4.75C2.12665 20.0042 0 17.8776 0 15.2542V4.75C0 3.76929 0.627445 2.93512 1.5028 2.62704ZM13.75 0C14.9926 0 16 1.00736 16 2.25V15.25C16 16.4926 14.9926 17.5 13.75 17.5H4.75C3.50736 17.5 2.5 16.4926 2.5 15.25V2.25C2.5 1.00736 3.50736 0 4.75 0H13.75ZM13.75 1.5H4.75C4.33579 1.5 4 1.83579 4 2.25V15.25C4 15.6642 4.33579 16 4.75 16H13.75C14.1642 16 14.5 15.6642 14.5 15.25V2.25C14.5 1.83579 14.1642 1.5 13.75 1.5Z" fill="#37474F"/>
                                     </svg>
-                                    Copiar
+                                    <b>Copiar</b>
                                 </button>
                             </div>
 
@@ -271,7 +272,7 @@
 
                     <a id="bt-delete-project" role="button" class="pointer align-items-center mt-3 ml-10" data-toggle="modal" data-target="#modal-delete-project" style="float: left;">
                         <span class="orion-icon-lixo"></span>
-                        <span>Excluir projeto</span>
+                        <span class="font-size-16"><b>Excluir projeto</b></span>
                     </a>
                 </div>
             </div>
@@ -286,19 +287,19 @@
 
                 <div class="col-md-12">
 
-                    <div class="row bg-primary no-gutters final-card py-10">
+                    <div class="row bg-primary no-gutters final-card py-15">
 
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
-                                    <span class="pl-30">Você tem alterações que <b>não estão salvas</b> </span>
+                                    <span class="pl-25">Você tem alterações que <b>não estão salvas</b> </span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
                             <div class="row no-gutters">
-                                <div class="col-md-12 d-flex justify-content-end pr-0 pr-md-30">
+                                <div class="col-md-12 d-flex justify-content-end pr-0 pr-md-25">
                                     <button type="button" id="cancel-edit" class="btn btn-primary border border-white mr-25 px-15 px-sm-40">Cancelar</button>
 
                                     <button type="button" id="bt-update-project" class="btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alteração</button>
