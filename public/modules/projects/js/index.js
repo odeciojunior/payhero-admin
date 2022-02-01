@@ -1,4 +1,4 @@
-$(() => {
+$(function () {
     index();
 
     function index() {
@@ -139,6 +139,7 @@ $(() => {
             $("#deleted_project_filter").attr("checked", false);
         }
     });
+
     $("#btn_save_config").on("click", function () {
         $.ajax({
             method: "POST",

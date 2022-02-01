@@ -112,6 +112,10 @@ $(document).ready(function () {
         }
 
         loadOnTable('#data-table-reviews', '#table-reviews');
+
+        $('#tab_project_reviews').find('.no-gutters').css('display', 'none');
+        $('#table-reviews').find('thead').css('display', 'none');
+
         $.ajax({
             method: "GET",
             url: url,
@@ -132,10 +136,28 @@ $(document).ready(function () {
                 dataTable.html('');
 
                 if (response.data == '') {
-                    dataTable.html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum review encontrado</td></tr>");
+                    dataTable.html(`
+                        <tr class='text-center'>
+                            <td colspan='11' style='height: 70px;vertical-align: middle'>
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum review configurado</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro review para poder
+                                        <br>gerenciá-los nesse painel.</p>
+                                        <button type='button' class='btn btn-primary add-review' data-toggle="modal" data-target="#modal_review">Adicionar review</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
                 } else {
                     let data = '';
+                    $('#tab_project_reviews').find('.no-gutters').css('display', 'flex');
+                    $('#table-reviews').find('thead').css('display', 'contents');
+
                     $('#count-project-reviews').html(response.meta.total)
+
                     $.each(response.data, function (index, value) {
                         data = `
                         <tr>
@@ -148,7 +170,7 @@ $(document).ready(function () {
                             <td>
                                 <div id="stars-${value.id}" data-score="${value.stars}"></div>
                             </td>
-                            <td>${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
+                            <td class='text-center'>${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
                                 <a role='button' title='Visualizar' class='mg-responsive details-review pointer' data-review="${value.id}" data-target='#modal-detail-review' data-toggle='modal'><span class="o-eye-1"></span></a>
                                 <a role='button' title='Editar' class='pointer edit-review mg-responsive' data-review="${value.id}"><span class='o-edit-1'></span></a>
@@ -167,7 +189,7 @@ $(document).ready(function () {
         });
     }
 
-    $("#add-review").on('click', function () {
+    $(document).on('click', '.add-review', function () {
         $('#modal_review .modal-title').html("Novo review");
         $(".bt-review-save").show();
         $(".bt-review-update").hide();
@@ -189,7 +211,6 @@ $(document).ready(function () {
     $(document).on('click', '.bt-review-save', function () {
         var btReviewSave = $('.bt-review-save');
         btReviewSave.attr("disabled", "disabled");
-
 
         var form_data = new FormData(document.getElementById('form_review'));
         form_data.append('project_id', projectId);
@@ -295,11 +316,11 @@ $(document).ready(function () {
                     function error() {
                         return _error3.apply(this, arguments);
                     }
-    
+
                     error.toString = function () {
                         return _error3.toString();
                     };
-    
+
                     return error;
                 }(function (response) {
                     errorAjaxResponse(response);

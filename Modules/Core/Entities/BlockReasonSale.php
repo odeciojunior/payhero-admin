@@ -75,6 +75,11 @@ class BlockReasonSale extends Model
         return $this->hasMany(Sale::class);
     }
 
+    public function sale()
+    {
+        return $this->BelongsTo(Sale::class);
+    }
+
     /**
      * @return BelongsTo
      */

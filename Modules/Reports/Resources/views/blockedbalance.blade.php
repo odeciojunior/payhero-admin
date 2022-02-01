@@ -72,10 +72,10 @@
                 <form id='filter_form'>
                     <div id="" class="card shadow p-20">
                         <div class="row">
-                            
+
                             <div class="col-sm-6 col-md-3">
                                 <label for="projeto">Projeto</label>
-                                <select name='select_project' id="projeto" class="form-control input-pad">
+                                <select name='select_project' id="projeto" class="sirius-select">
                                     <option value="">Todos projetos</option>
                                 </select>
                             </div>
@@ -89,7 +89,7 @@
 
                             <div class="col-sm-6 col-md-3">
                                 <label for="forma">Forma de pagamento</label>
-                                <select name='select_payment_method' id="forma" class="form-control input-pad">
+                                <select name='select_payment_method' id="forma" class="sirius-select">
                                     <option value="">Boleto e cartão de crédito</option>
                                     <option value="1">Cartão de crédito</option>
                                     <option value="2">Boleto</option>
@@ -99,7 +99,7 @@
 
                             <div class="col-sm-6 col-md-3">
                                 <label for="status">Status</label>
-                                <select name='sale_status' id="status" class="form-control input-pad">
+                                <select name='sale_status' id="status" class="sirius-select">
                                     <option value="">Todos status</option>
                                     <option value="1">Aprovado</option>
                                     <option value="24">Em disputa</option>
@@ -126,7 +126,7 @@
 
                                 <div class="col-sm-6 col-md-3">
                                     <label for="date_type">Data</label>
-                                    <select name='date_type' id="date_type" class="form-control input-pad">
+                                    <select name='date_type' id="date_type" class="sirius-select">
                                         <option value="start_date">Data do pedido</option>
                                         <option value="end_date">Data do pagamento</option>
                                     </select>

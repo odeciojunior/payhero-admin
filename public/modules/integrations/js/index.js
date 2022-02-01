@@ -1,6 +1,6 @@
 $(document).ready(function () {
     let integrationTypeEnum = {
-        external: 'Profitfy',
+        external: 'Integração externa',
         checkout_api: 'Checkout API'
     };
     let integrationTypeEnumBadge = {
@@ -100,7 +100,7 @@ $(document).ready(function () {
                     dados += '<div class="input-group input-group-lg">';
                         dados += '<input type="text" class="form-control font-sm brr inptToken" id="inputToken-' + value.id_code + '" value="' + value.access_token + '" disabled="disabled" style="background: #F1F1F1;">';
                         dados += '<div class="input-group-append">';
-                            dados += '<button class="btn btn-primary bg-white btnCopiarLink" data-code="' + value.id_code + '" type="button" data-placement="top" data-toggle="tooltip" title="Copiar token" style="width: 46px;">';
+                            dados += '<button class="btn btn-primary bg-white btnCopiarLink" data-code="' + value.id_code + '" type="button" data-placement="top" data-toggle="tooltip" title="Copiar token" style="width: 48px; height: 48px;">';
                                 dados += '<img src="/modules/global/img/icon-copy-b.svg">';
                             dados += '</button>';
                         dados += '</div>';
@@ -277,7 +277,7 @@ $(document).ready(function () {
             $("#btn-save-integration").unbind();
             $("#btn-save-integration").on('click', function () {
                 let description = $("#modal-integrate").find("input[name='description']").val();
-                let tokenTypeEnum = $(".select-enum-list").val();
+                let tokenTypeEnum = $("#select-enum-list").val();
                 let postback = $("#modal-integrate").find("input[name='postback']").val();
                 let companyHash = $("#companies").val();
                 if (description == '') {
@@ -437,7 +437,7 @@ $(document).ready(function () {
         }
     }
 
-    $('.select-enum-list').on('change', handleIntegrationTypeChange);
+    $('#select-enum-list').on('change', handleIntegrationTypeChange);
 
     // Obtem os campos dos filtros
     function getCompanies() {

@@ -3,9 +3,10 @@
 @section('content')
 
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=' . random_int(100, 10000)) }}"> --}}
+        <link rel="stylesheet" href='{{asset('/modules/sales/css/index.css?v=' . uniqid())}}'>
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=101') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
+        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=101') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
     @endpush
@@ -69,10 +70,12 @@
 
                                 <div class="col-sm-12 col-md-3 mb-sm-0">
                                     <label for="date_type">Data</label>
-                                    <select name='date_type' id="date_type" class="form-control select-pad default-border">
+
+                                    <select name='date_type' id="date_type" class="sirius-select">
                                         <option value="start_date">Data do pedido</option>
                                         <option value="end_date">Data do pagamento</option>
                                     </select>
+
                                 </div>
 
                                 <div class="col-sm-12 col-md-3 form-icons mb-15 mb-sm-0">
@@ -145,14 +148,14 @@
                                 </div>
 
                                 <div class="row mb-md-15 d-flex justify-content-between">
-                                    
+
                                     <div class="col-sm-12 col-md-3">
                                         <label for="email_cliente">Email do cliente</label>
                                         <input name="email_client" id="email_cliente" class="input-pad" placeholder="Email">
                                     </div>
 
                                     <div class="col-sm-12 col-md-8 mt-20 pr-0 pl-20" style="flex-grow: 2.134 !important;">
-                                    
+
                                         <div class="row pt-15 d-flex justify-content-end mr-0">
 
                                             <div class='col-sm-4 col-md-3 mb-10 mb-sm-0 d-flex align-items-center justify-content-sm-center justify-content-md-start'>

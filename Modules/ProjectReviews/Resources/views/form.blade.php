@@ -31,17 +31,14 @@
                         <div class='form-group col-12 mb-20'>
                             <label for="link">Nome</label>
                             <div class="d-flex input-group">
-                                <input type="text" class="form-control" name="name" id="name"
-                                       maxlength="255" placeholder="Informe o nome">
+                                <input type="text" class="form-control" name="name" id="name" maxlength="255" placeholder="Informe o nome" style="height: 50px !important; border-radius: 8px;">
                             </div>
                         </div>
 
                         <div class='form-group col-12 mb-20'>
                             <label for="description_review">Descrição</label>
                             <div class="d-flex input-group">
-                                <textarea type="text" class="form-control" name="description"
-                                          id="description_review" maxlength="255"
-                                          placeholder="Digite a descrição"></textarea>
+                                <textarea type="text" class="form-control" name="description" id="description_review" maxlength="255" placeholder="Digite a descrição" style="height: 50px !important; border-radius: 8px;"></textarea>
                             </div>
                         </div>
 
@@ -59,7 +56,7 @@
 
                         <div class='form-group col-12 col-sm-6 mb-20'>
                             <label for="link">Status</label>
-                            <select name="active_flag" id="active_flag" class='form-control'>
+                            <select name="active_flag" id="active_flag" class='sirius-select'>
                                 <option value='1' selected='selected'>Ativo</option>
                                 <option value='0'>Inativo</option>
                             </select>

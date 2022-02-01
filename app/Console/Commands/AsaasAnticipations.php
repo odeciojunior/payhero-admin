@@ -26,7 +26,7 @@ class AsaasAnticipations extends Command
      */
     protected $description = 'Command description';
 
-    public $saveRequests = false;
+    public $saveRequests = true;
     public $simulate = false;
 
     /**
@@ -165,7 +165,7 @@ class AsaasAnticipations extends Command
             $bar->finish();
 
         } catch (Exception $e) {
-            dd($e);
+            report($e);
         }
     }
 }

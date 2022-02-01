@@ -949,6 +949,10 @@ button:active {
     opacity: .5;
 }
 
+.sirius-select-container {
+    width: 285px;
+}
+
 /* Responsive adjusts */
 
 @media (max-width: 768px) {
@@ -1054,7 +1058,4 @@ button:active {
 }
 .date-picker-wrapper.no-topbar.no-gap.single-month{
     border-color: #88BFFF;
-}
-.sirius-select-options{
-    border-color: #88BFFF !important;
 }

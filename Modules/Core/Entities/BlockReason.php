@@ -26,6 +26,8 @@ class BlockReason extends Model
     /**
      * @var string
      */
+    public const IN_DISPUTE = 1;
+    
     protected $presenter = BlockReasonPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.

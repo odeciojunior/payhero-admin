@@ -95,8 +95,8 @@ class AsaasService implements Statement
     public function hasEnoughBalanceToRefund(Sale $sale): bool
     {
         $availableBalance = $this->getAvailableBalance();
-        $pendingBalance = $this->getPendingBalance();        
-        $availableBalance += $pendingBalance;        
+        $pendingBalance = $this->getPendingBalance();
+        $availableBalance += $pendingBalance;
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
@@ -243,6 +243,12 @@ class AsaasService implements Statement
         return (new StatementService)->getDefaultStatement($this->company->id, $this->gatewayIds, $filters);
     }
 
+    public function getPeriodBalance($filters)
+    {
+        return (new StatementService)->getPeriodBalance($this->company->id, $this->gatewayIds, $filters);
+    }
+
+
     public function getResume()
     {
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
@@ -252,7 +258,7 @@ class AsaasService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-                
+
         $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
 
@@ -277,7 +283,7 @@ class AsaasService implements Statement
     }
 
     public function makeAnticipation(Sale $sale, $saveRequests = true, $simulate = false) {
-        $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
+        $this->getCompanyApiKey($sale);
 
         $data = [
             "agreementSignature"=> $sale->user->name,
@@ -312,8 +318,7 @@ class AsaasService implements Statement
         $response = json_decode($result, true);
 
         if(($httpStatus < 200 || $httpStatus > 299) && (!isset($response['errors']))) {
-            \Log::info($sale->id);
-            report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus . ' -- $sale->id = ' . $sale->id . ' -- ' . json_encode($response));
+            //report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus . ' -- $sale->id = ' . $sale->id . ' -- ' . json_encode($response));
         }
 
         if($saveRequests) {
@@ -326,9 +331,10 @@ class AsaasService implements Statement
 
     public function checkAnticipation(Sale $sale)
     {
-        $this->getCompanyApiKey($sale->owner_id, $sale->project_id);
+        $this->getCompanyApiKey($sale);
 
-        $curl = curl_init('https://www.asaas.com/api/v3/anticipations/' . $sale->anticipation_id);
+        $url = 'https://www.asaas.com/api/v3/anticipations/' . $sale->anticipation_id;
+        $curl = curl_init($url);
 
         curl_setopt($curl, CURLOPT_ENCODING, '');
         //curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
@@ -341,18 +347,18 @@ class AsaasService implements Statement
         ]);
 
         $result = curl_exec($curl);
-
+        $httpStatus     = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
+        $response = json_decode($result, true);
+
+        $this->saveRequests($url, $response, $httpStatus, [], $sale->id);
         return json_decode($result, true);
     }
 
-    public function getCompanyApiKey($owner_id,$project_id)
+    public function getCompanyApiKey(Sale $sale)
     {
-        $company = UserProject::where('user_id', $owner_id)
-            ->where('project_id', $project_id)
-            ->first()
-            ->company;
+        $company = $sale->transactions()->where('type', Transaction::TYPE_PRODUCER)->first()->company;
 
         $this->companyId = $company->id;
         $this->apiKey = $company->getGatewayApiKey(foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID);
@@ -430,7 +436,7 @@ class AsaasService implements Statement
             $saleService = new SaleService();
             $saleTax = 0;
             if(!empty($sale->anticipation_status)){
-                $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value:0;
+                $cashbackValue = $sale->cashback()->first()->value??0;
                 $saleTax = $saleService->getSaleTaxRefund($sale,$cashbackValue);
             }
             $totalSale = $saleService->getSaleTotalValue($sale);

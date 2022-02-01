@@ -1,4 +1,5 @@
 $(document).ready( function () {
+
     // ----------------------- Funções de Botão ----------------------------
     $("#default_finish_color").on("change", function () {
         if ($(this).is(":checked")) {
@@ -494,7 +495,7 @@ $(document).ready( function () {
         }
     });
 
-    $("#checkout_editor").on("change", function () {
+    $("#checkout_editor").on("input", function () {
         $("#save_changes").fadeIn("slow", "swing");
     });
 
@@ -582,9 +583,7 @@ $(document).ready( function () {
             $('#selectable-all-notification').removeClass('dash-check');
         }
     });
-    // ---------------- Functions Table - END ---------------------
-
-    
+    // ---------------- Functions Table - END ---------------------    
 
 });
 

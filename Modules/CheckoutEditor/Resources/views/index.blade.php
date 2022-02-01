@@ -318,25 +318,37 @@
                             </div>
 
                             <div class="countdown-content">
-                                <div class="input-container" style="width: 100px;">
+                                <div class="input-container">
                                     <label for="countdown_time" class="checkout-label">Tempo</label>
                                     <div class="tagged-input-div">
-                                        <input class="tagged-input" type="number" id="countdown_time" value="15" name="countdown_time" min="0" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                        <input class="tagged-input" type="number" id="countdown_time" value="15" name="countdown_time" min="0" max="99" maxlength="2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                         <div class=" input-tag">min</div>
+                                    </div>
+                                    <div id="countdown_time_error" class="checkout-error" style="display: none">
+                                        <p>Preencha o campo de tempo mínimo.</p>
                                     </div>
                                 </div>
 
                                 <div class="input-container">
                                     <label for="countdown-time" class="checkout-label">Descrição <span class="observation-span">Opcional</span></label>
-                                    <textarea class="checkout-textarea" id="countdown_description" name="countdown_description" rows="4" required></textarea>
+                                    <textarea class="checkout-textarea" id="countdown_description" name="countdown_description" rows="4" maxlength="150" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
+
+                                    <div id="countdown_description_error" class="checkout-error" style="display: none;">
+                                        <p>Preencha o campo de descrição.</p>
+                                    </div>
+
                                     <div class="textarea-observation">
-                                    <img class="dot" src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}"><span class="observation-span">Visível somente em desktop.</span>
+                                        <img class="dot" src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}"><span class="observation-span">Visível somente em desktop.</span>
                                     </div>
                                 </div>
 
                                 <div class="input-container">
                                     <label for="timeout-message" class="checkout-label">Mensagem ao encerrar o tempo</label>
-                                    <textarea class="checkout-textarea" id="countdown_finish_message" name="countdown_finish_message" rows="3"></textarea>
+                                    <textarea class="checkout-textarea" id="countdown_finish_message" name="countdown_finish_message" rows="3" maxlength="150" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"></textarea>
+
+                                    <div id="countdown_finish_message_error" class="checkout-error" style="display: none">
+                                        <p>Preencha o campo de mensagem.</p>
+                                    </div>
                                 </div>
 
                             </div>
@@ -369,7 +381,9 @@
                                         <button class="ql-underline" data-toggle="tooltip" data-placement="bottom" title="Sublinhar"></button>
                                     </div>
                                     <div id="topbar_content" class="quill-editor">
-
+                                    </div>
+                                    <div id="topbar_content_error" class="checkout-error" style="display: none">
+                                        <p>Preencha o campo de texto na barra.</p>
                                     </div>
                                 </div>
                             </div>
@@ -482,33 +496,36 @@
                                                 <tr>
                                                     <td><b>XX</b> pessoas estão comprando <b>{produto}</b> nesse momento.</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification_buying_minimum" name="notification_buying_minimum" value="1" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                                        <input class="table-number-input" type="number" id="notification_buying_minimum" name="notification_buying_minimum" value="1" min="1" max="99" maxlength="2"   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                     </td>
                                                 </tr>
 
                                                 <tr>
                                                     <td><b>XX</b> pessoas compraram <b>{produto}</b> nos últimos 30 minutos.</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification_bought_30_minutes_minimum" name="notification_bought_30_minutes_minimum" value="1" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                                        <input class="table-number-input" type="number" id="notification_bought_30_minutes_minimum" name="notification_bought_30_minutes_minimum" value="1" min="1" max="99" maxlength="2"   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                     </td>
                                                 </tr>
 
                                                 <tr>
                                                     <td><b>XX</b> pessoas compraram <b>{produto}</b> na última hora.</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification_bought_last_hour_minimum" name="notification_bought_last_hour_minimum" value="1" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                                        <input class="table-number-input" type="number" id="notification_bought_last_hour_minimum" name="notification_bought_last_hour_minimum" value="1" min="1" max="99" maxlength="2"   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                     </td>
                                                 </tr>
 
                                                 <tr>
                                                     <td><b>{nome}</b> de <b>{cidade}</b> acabou de comprar esse produto</td>
                                                     <td>
-                                                        <input class="table-number-input" type="number" id="notification_just_bought_minimum" name="notification_just_bought_minimum" value="1" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                                        <input class="table-number-input" type="number" id="notification_just_bought_minimum" name="notification_just_bought_minimum" value="1" min="1" max="99" maxlength="2"   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                     </td>
                                                 </tr>
 
                                             </tbody>
                                         </table>
+                                    </div>
+                                    <div id="notification_error" class="checkout-error" style="display: none;">
+                                        <p>Preencha os campos da tabela.</p>
                                     </div>
 
                                 </div>
@@ -540,6 +557,9 @@
                                 <div class="input-container">
                                     <label for="social_proof_message" class="checkout-label">Mensagem</label>
                                     <textarea class="checkout-textarea" id="social_proof_message" name="social_proof_message" rows="1">Outros { num-visitantes } estão finalizando esta compra nesse momento.</textarea>
+                                    <div id="social_proof_message_error" class="checkout-error" style="display: none;">
+                                        <p>Preencha o campo de mensagem.</p>
+                                    </div>
                                 </div>
 
                                 <div>
@@ -554,9 +574,12 @@
                                 <div class="input-container" style="width: 150px;">
                                     <label for="social_proof_minimum" class="checkout-label">Mínimo de vistantes</label>
                                     <div class="tagged-input-div">
-                                        <input class="tagged-input" type="number" id="social_proof_minimum" name="social_proof_minimum" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                        <input class="tagged-input" type="number" id="social_proof_minimum" name="social_proof_minimum" min="1" max="99" maxlength="2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                         <div class=" input-tag">visitantes</div>
                                     </div>
+                                </div>
+                                <div id="social_proof_minimum_error" class="checkout-error" style="display: none;">
+                                    <p>Preencha o campo de mínimo de visitantes.</p>
                                 </div>
 
                             </div>
@@ -583,7 +606,7 @@
 
                         <div class="row-flex">
                             <div class="input-container" style="flex: 3; min-width: 200px;">
-                                <label for="invoice_description" class="checkout-label">Descrição na fatura</label>
+                                <label for="invoice_description" class="checkout-label">Descrição na fatura <span class="observation-span">Opcional</span></label>
                                 <input type="text" class="checkout-input-text" id="invoice_description" name="invoice_description" />
                             </div>
 
@@ -770,17 +793,18 @@
                             </div>
                         </div>
 
-                        <div style="display: flex; gap: 20px;">
+                        <div>
                             <div class="input-container">
-                                <label for="company_billing" class="checkout-label">Dias para vencimento</label>
+                                <label for="bank_slip_due_days" class="checkout-label">Dias para vencimento</label>
                                 <div class="tagged-input-div">
-                                    <input class="tagged-input" type="number" id="bank_slip_due_days" name="bank_slip_due_days" value="3" min="1" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                    <input class="tagged-input" type="number" id="bank_slip_due_days" name="bank_slip_due_days" value="3" min="1" max="99" maxlength="2"   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <div class=" input-tag">dias</div>
                                 </div>
+                                <div id="bank_slip_due_days_error" class="checkout-error" style="display: none;">
+                                    <p>Preencha o campo de dias para vencimento.</p>
+                                </div>
                             </div>
-
-                            <div style="flex: 1">
-                            </div>
+                            
                         </div>
 
 
@@ -808,7 +832,7 @@
                             <div class="input-container credit-card-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">Cartão de crédito</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="automatic_discount_credit_card" name="automatic_discount_credit_card" value="0" min="0" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                    <input class="tagged-input" type="number" id="automatic_discount_credit_card" name="automatic_discount_credit_card" value="0" min="0" max="99" maxlength="2"   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
@@ -816,7 +840,7 @@
                             <div class="input-container bank-billet-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">Boleto</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="automatic_discount_bank_slip" name="automatic_discount_bank_slip" value="0" min="0" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                    <input class="tagged-input" type="number" id="automatic_discount_bank_slip" name="automatic_discount_bank_slip" value="0" min="0" max="99" maxlength="2"   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
@@ -824,7 +848,7 @@
                             <div class="input-container pix-container" style="flex: 1">
                                 <label for="company_billing" class="checkout-label">PIX</label>
                                 <div class="tagged-input-div" style="width: 100px;">
-                                    <input class="tagged-input" type="number" id="automatic_discount_pix" name="automatic_discount_pix" value="0" min="0" max="99" maxlength="2" required oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                    <input class="tagged-input" type="number" id="automatic_discount_pix" name="automatic_discount_pix" value="0" min="0" max="99" maxlength="2"   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                     <div class=" input-tag">%</div>
                                 </div>
                             </div>
@@ -867,9 +891,15 @@
                         </div>
 
                         <div class="thanks-page-content">
-                            <label for="post_purchase_message_content" class="checkout-label">Título da sua mensagem</label>
-                            <input type="text" class="checkout-input-text" id="post_purchase_message_title" name="post_purchase_message_title" style="margin-bottom: 15px;">
-
+                            <div style="margin-bottom: 15px;">
+                                <label for="post_purchase_message_content" class="checkout-label">Título da sua mensagem</label>
+                                <input type="text" class="checkout-input-text" id="post_purchase_message_title" name="post_purchase_message_title">
+                                <div id="post_purchase_message_title_error" class="checkout-error" style="display: none;">
+                                    <p>Preencha o campo de título da mensagem.</p>
+                                </div>    
+                            </div>
+                            
+                            
                             <div class="editor-container">
                                 <div id="post_purchase_message_content_toolbar_container" class="editor-toolbar-container">
                                     <button class="ql-bold" data-toggle="tooltip" data-placement="bottom" title="Negrito"></button>
@@ -878,6 +908,9 @@
                                 </div>
 
                                 <div id="post_purchase_message_content" class="quill-editor">
+                                </div>
+                                <div id="post_purchase_message_content_error" class="checkout-error" style="display: none;">
+                                    <p>Preencha o campo de mensagem.</p>
                                 </div>
                             </div>
                         </div>
@@ -1347,17 +1380,6 @@
                 </div>
 
                 <div class="editor-buttons position-fixed container page-content" style="width: inhe;">
-                    <div class="save-changes " id="save_changes" style="display: none;">
-
-                        <p>
-                            Você tem alterações que <strong>não estão salvas</strong>
-                        </p>
-
-                        <div class="save-changes-button-group">
-                            <button id="cancel_button" type="button" class="change-button cancel-changes-button">Cancelar</button>
-                            <button type="submit" form="checkout_editor" class="change-button save-changes-button">Salvar alterações</button>
-                        </div>
-                    </div>
 
                     <div class="save-changes" id="save_success" style="display: none;">
                         <p>
@@ -1376,6 +1398,28 @@
 
                         <div>
                             <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-error.svg') }}">
+                        </div>
+                    </div>
+
+                    <div class="save-changes" id="save_empty_fields" style="display: none;">
+                        <p>
+                            <strong>Ops!</strong> Você precisa preencher os campos indícados.
+                        </p>
+
+                        <div>
+                            <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-error.svg') }}">
+                        </div>
+                    </div>
+
+                    <div class="save-changes " id="save_changes" style="display: none;">
+
+                        <p>
+                            Você tem alterações que <strong>não estão salvas</strong>
+                        </p>
+
+                        <div class="save-changes-button-group">
+                            <button id="cancel_button" type="button" class="change-button cancel-changes-button">Cancelar</button>
+                            <button type="submit" form="checkout_editor" class="change-button save-changes-button">Salvar alterações</button>
                         </div>
                     </div>
 
@@ -1449,12 +1493,12 @@
 
                     <fieldset class='number-code'>
                         <div class="code-input-container">
-                            <input type="text" name='verify-phone-code' class='code-input' required />
-                            <input type="text" name='verify-phone-code' class='code-input' required />
-                            <input type="text" name='verify-phone-code' class='code-input' required />
-                            <input type="text" name='verify-phone-code' class='code-input' required />
-                            <input type="text" name='verify-phone-code' class='code-input' required />
-                            <input type="text" name='verify-phone-code' class='code-input' required />
+                            <input type="text" name='verify-phone-code' class='code-input'   />
+                            <input type="text" name='verify-phone-code' class='code-input'   />
+                            <input type="text" name='verify-phone-code' class='code-input'   />
+                            <input type="text" name='verify-phone-code' class='code-input'   />
+                            <input type="text" name='verify-phone-code' class='code-input'   />
+                            <input type="text" name='verify-phone-code' class='code-input'   />
                         </div>
                     </fieldset>
                     <p class="verify-error" style="display: none">Código inválido ou vencido.</p>
@@ -1494,4 +1538,5 @@
 <script src="{{asset('modules/checkouteditor/js/checkoutEditor.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/loadCheckoutData.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/scrollPreview.js?v=' . uniqid())}}"></script>
+
 @endpush

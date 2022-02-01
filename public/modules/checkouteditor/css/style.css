@@ -109,6 +109,27 @@
     color: #878787;
 }
 
+.checkout-error {
+    display: flex;
+    align-items: center;
+}
+
+.checkout-error > p {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px !important;
+    margin: 0 !important;
+    line-height: 18px;
+    color: #ff3434;
+    margin: 5px 0 0 0 !important;
+}
+
+.error-input {
+    outline: 1px solid #ff3434 !important;
+}
+
+
+
 .tag {
     font-size: 10px;
     padding: 3.5px 5px 3.5px 5px;
@@ -255,6 +276,7 @@ input[type="number"] {
 
 .checkout-textarea {
     width: 100%;
+    max-width: 665px;
     height: 100px;
     border: 1px solid #c4c4c4;
     box-sizing: border-box;
@@ -302,7 +324,6 @@ input[type="number"] {
 
 .tagged-input {
     height: 40px;
-    width: 100%;
     border: 1px solid #c4c4c4;
     box-sizing: border-box;
     border-radius: 8px 0px 0px 8px;
@@ -343,19 +364,18 @@ input[type="number"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 70px;
+    height: fit-content;
     width: 95%;
-    padding: 10px 20px 10px 20px;
+    padding: 16px 24px;
     bottom: 0;
     border-radius: 10px 10px 0 0;
     background-color: #2e85ec;
     color: #fff;
-
     position: absolute;
 }
 
 .save-changes p {
-    margin: 0 50px 0 0; 
+    margin: 0 50px 0 0;
     font-size: 18px;
 }
 
@@ -365,8 +385,8 @@ input[type="number"] {
 }
 
 .change-button {
-    width: 160px;
-    height: 45px;
+    width: 197px;
+    height: 52px;
     border-radius: 10px;
     font-size: 16px;
     font-weight: bold;
@@ -398,7 +418,8 @@ input[type="number"] {
     background-color: #41dc8f;
 }
 
-#save_error {
+#save_error,
+#save_empty_fields {
     background-color: #ff3347;
 }
 
@@ -406,6 +427,20 @@ input[type="number"] {
     height: 40px;
     width: 40px;
 }
+
+@media (max-width: 1350px) {
+    .save-changes p {
+        font-size: 16px;
+    }
+
+    .change-button {
+        width: 160px;
+        height: 40px;
+        font-size: 14px;
+    }
+
+}
+
 
 /* ------------ Crop -------------- */
 
@@ -525,6 +560,7 @@ input[type="number"] {
     height: 50px;
     max-height: 50px;
     font-weight: bold !important;
+    padding: 10px 40px!important;
 }
 
 #notification-table tr {
@@ -580,6 +616,19 @@ textarea:focus {
     -ms-outline: 1px solid #2bb2ff;
     -o-outline: 1px solid #2bb2ff;
     outline: 1px solid #2bb2ff;
+}
+
+input:focus,
+textarea:focus {
+    -webkit-outline: 1px solid #2bb2ff;
+    -moz-outline: 1px solid #2bb2ff;
+    -ms-outline: 1px solid #2bb2ff;
+    -o-outline: 1px solid #2bb2ff;
+    outline: 1px solid #2bb2ff;
+}
+
+.focus-in {
+    outline: 1px solid #2bb2ff !important;
 }
 
 .modal-dialog.modal-crop {
@@ -991,6 +1040,32 @@ input[type="color"]::-moz-color-swatch {
     opacity: 0.7;
 }
 
+/* QuillJS */
+
+#checkout_editor .quill-editor {
+    height: 70px;
+    border-radius: 0 0 8px 8px;
+}
+
+#checkout_editor .quill-editor.error-input {
+    border: 1px solid #ff3434 !important;
+}
+
+#checkout_editor .ql-toolbar {
+    border-radius: 8px 8px 0 0;
+}
+
+#checkout_editor .quill-editor p {
+    color: #454545;
+    text-align: left;
+}
+
+#checkout_editor .editor-toolbar-container {
+    display: flex;
+    justify-content: center;
+    height: 40px;
+}
+
 /* ----------- Animated Loader ------------- */
 
 .lds-ring {
@@ -1028,3 +1103,6 @@ input[type="color"]::-moz-color-swatch {
         transform: rotate(360deg);
     }
 }
+
+
+

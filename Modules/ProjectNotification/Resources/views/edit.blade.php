@@ -6,14 +6,14 @@
     <div class="row">
         <div class="form-group col-xl-6">
             <label for="type">Tipo</label>
-            <select name="type" class="form-control project-notification-type" disabled>
+            <select name="type" class="sirius-select project-notification-type" disabled>
                 <option value="1">Email</option>
                 <option value="2">SMS</option>
             </select>
         </div>
         <div class="form-group col-xl-6">
             <label for="value">Evento</label>
-            <select name="event" class="form-control project-notification-event" disabled>
+            <select name="event" class="sirius-select project-notification-event" disabled>
                 <option value="1">Boleto gerado</option>
                 <option value="2">Boleto compensado</option>
                 <option value="3">Compra no cartão</option>
@@ -30,11 +30,11 @@
     <div class="row">
         <div class="form-group col-xl-6">
             <label for="code">Tempo</label>
-            <input value="" name="time" type="text" class="form-control project-notification-time" placeholder="Tempo" disabled>
+            <input value="" name="time" type="text" class="form-control project-notification-time" placeholder="Tempo" disabled style="height: 50px !important; border-radius: 8px;">
         </div>
         <div class="form-group col-xl-6">
             <label for="status">Status</label>
-            <select name="status" class="form-control project-notification-status" required>
+            <select name="status" class="sirius-select project-notification-status" required>
                 <option value="1">Ativo</option>
                 <option value="0">Inativo</option>
             </select>

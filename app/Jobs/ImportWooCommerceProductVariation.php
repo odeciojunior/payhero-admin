@@ -63,7 +63,7 @@ class ImportWooCommerceProductVariation implements ShouldQueue
             
             
 
-            report($e);
+            // report($e);
 
             
         }

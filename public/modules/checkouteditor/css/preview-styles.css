@@ -104,10 +104,6 @@
     background: #fff;
 }
 
-.preview-banner.mobile img {
-    height: 40px;
-}
-
 .wide-banner {
     padding: 0;
     border-radius: 0;
@@ -700,7 +696,7 @@
 }
 
 .preview-body.post-purchase {
-    padding: 20px 100px 20px 100px;
+    padding: 20px 80px 20px 80px;
 }
 
 .post-purchase > img {

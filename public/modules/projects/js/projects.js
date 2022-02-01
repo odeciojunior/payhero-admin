@@ -2,7 +2,7 @@ $(() => {
     let projectId = $(window.location.pathname.split('/')).get(-1);
     $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
     let onChangeSet = false;
-    
+
     // COMPORTAMENTOS DA TELA
     $('#tab-info').click(() => {
         show();
@@ -93,6 +93,11 @@ $(() => {
             success: (response) => {
 
                 let project = response.data;
+                let project_type = 'my_products';
+                if (project.shopify_id != null) project_type = 'shopify';
+                if (project.woocommerce_id != null) project_type = 'woocommerce';
+
+                $('#project_type').val(project_type);
                 $('.title-pad').text(project.name);
                 $('#show-photo').attr('src', getImageProject(project.photo));
                 $('#created_at').text('Criado em ' + project.created_at);
@@ -125,7 +130,7 @@ $(() => {
     function updateConfiguracoes() {
         // loadOnAny('#tab_configuration_project .card');
         $("#update-project").addClass("low-opacity");
-        
+
         $.ajax({
             method: "GET",
             url: "/api/projects/" + projectId + '/edit',
@@ -218,9 +223,9 @@ $(() => {
 
     $('.slick-track').on('click', function () {
         $('.nav-tabs-horizontal .tab-pane').removeClass('active show');
-    });   
+    });
     // FIM COMPORTAMENTOS DA TELA
-    
+
 
     // CARD 3 CONFIGURACAO DO PLUGIN DE ADD FOTO
     dropifyOptions = {
@@ -249,7 +254,7 @@ $(() => {
     $("img").on("error", function () {
         $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
     });
-    
+
     // CARD 4 - TEXTAREA TERMOS DE AFILIACAO
     var quill = new Quill("#termsaffiliates", {
         theme: "snow",
@@ -286,7 +291,7 @@ $(() => {
                 $('#update-project .status-url-affiliates').trigger('click');
             }
         }
-        
+
         //IMAGEM DO PROJETO
         $('#update-project #product_photo').attr('src', getImageProject(project.photo));
         $('#product_photo').dropify(dropifyOptions);
@@ -330,7 +335,7 @@ $(() => {
             $('.sirius-select').prop("selectedIndex", 6).change();
             $(".sirius-select-text").text("1 ano");
         }
-        
+
 
         // PORCENTAGEM
         $('#percentage-affiliates').mask('000', {
@@ -344,7 +349,7 @@ $(() => {
         $('#update-project #percentage-affiliates').val(project.percentage_affiliates);
 
 
-        // TIPO DE COMISSAO 
+        // TIPO DE COMISSAO
         $('#update-project .commission-type-enum input').filter(`[value=${project.commission_type_enum}]`).prop("checked", true);
 
 
@@ -356,7 +361,7 @@ $(() => {
         // AFILIACAO AUTOMATICA
         if (project.automatic_affiliation == 1) {
             $('#update-project .automatic-affiliation input').prop("checked", true);
-        } 
+        }
 
         // URL CONVIDE AFILIADOS
         $('#update-project #url-affiliates').val(project.url_affiliates);
@@ -377,7 +382,7 @@ $(() => {
         if(affiliationStatus == false){
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/affiliationDisable.svg");
             $(".bg-afiliate-icon").css("background-color", "#F4F4F4");
-            
+
         }else if(affiliationStatus == true){
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg");
             $(".bg-afiliate-icon").css("background-color", "#F2F8FF");
@@ -429,13 +434,13 @@ $(() => {
         });
 
     });
-    
+
     // SALVAR AS CONFIGURACOES DO PROJETO
     $("#bt-update-project").on('click', function (event) {
-        
+
         $( "#confirm-changes" ).hide();
         event.preventDefault();
-        
+
         // $('html, body').animate({
         //     scrollTop: 0
         // });
@@ -443,16 +448,16 @@ $(() => {
         // loadingOnScreen();
 
         // Pega tags e texto joga no input pra salvar no banco
-        let formatedText = quill.root.innerHTML;        
+        let formatedText = quill.root.innerHTML;
         $('#terms_affiliates').val(formatedText);
 
         let verify = verificaParcelas(parcelas, parcelasJuros);
-        
+
         let statusUrlAffiliates = 0;
         if ($('#status-url-affiliates').prop('checked')) {
             statusUrlAffiliates = 1;
         }
-        
+
         let automaticAffiliation = 0;
         if($('#update-project .automatic-affiliation input').prop("checked")){
             automaticAffiliation = 1;
@@ -461,7 +466,7 @@ $(() => {
         let formData = new FormData(document.getElementById("update-project"));
         formData.append('status_url_affiliates', statusUrlAffiliates);
         formData.append("automatic_affiliation", automaticAffiliation);
-        
+
         if (!verify) {
             $.ajax({
                 method: "POST",
@@ -488,7 +493,7 @@ $(() => {
                         $("#saved-alterations").fadeIn('slow').delay(4000).fadeOut('slow');
                         $( "#confirm-changes" ).hide();
                     },1500);
-                    
+
                     show();
                     $(".page").removeClass("low-opacity");
                     // loadingOnScreenRemove();

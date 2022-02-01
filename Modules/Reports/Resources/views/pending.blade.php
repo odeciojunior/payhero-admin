@@ -45,13 +45,13 @@
                                 <div class="row align-items-baseline">
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                         <label for="company">Empresa</label>
-                                        <select name='select_company' id="company" class="form-control input-pad default-border">
+                                        <select name='select_company' id="company" class="sirius-select">
                                             <option value="0">Todas as empresas</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                         <label for="project">Projeto</label>
-                                        <select name='select_project' id="project" class="form-control input-pad default-border">
+                                        <select name='select_project' id="project" class="sirius-select">
                                             <option value="0">Todas os projetos</option>
                                         </select>
                                     </div>
@@ -68,7 +68,7 @@
                                     <div class="row">
                                         <div class="col-sm-6 col-md-3">
                                             <label for="forma">Forma de pagamento</label>
-                                            <select name='select_payment_method' id="forma" class="form-control input-pad default-border">
+                                            <select name='select_payment_method' id="forma" class="sirius-select">
                                                 <option value="">Boleto e cartão de crédito</option>
                                                 <option value="1">Cartão de crédito</option>
                                                 <option value="2">Boleto</option>
@@ -81,7 +81,7 @@
                                         </div>
                                         <div class="col-sm-6 col-md-3">
                                             <label for="date_type">Data</label>
-                                            <select name='date_type' id="date_type" class="form-control input-pad default-border">
+                                            <select name='date_type' id="date_type" class="sirius-select">
                                                 <option value="start_date">Data do pedido</option>
                                                 <option value="end_date">Data do pagamento</option>
                                             </select>
@@ -108,7 +108,7 @@
                                         </div>
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12  pt-20">
                                             <label for="acquirer">Adquirente</label>
-                                            <select name='select_acquirer' id="acquirer" class="form-control input-pad default-border">
+                                            <select name='select_acquirer' id="acquirer" class="sirius-select">
                                                 <option value="0">Todas os adquirentes</option>
                                             </select>
                                         </div>
