@@ -862,9 +862,9 @@ $(() => {
                 if(quillThanksPage.getText().trim().length > 0){
                     validated = true;
                 }else{
-                    $('#post_purchase_message_content_toolbar_container').addClass('error-input');
-                    scrollToElement('post_purchase_message_content_toolbar_container');
-                    $('#post_purchase_message_content_toolbar_container_error').show('slow', 'linear');
+                    $('#post_purchase_message_content').addClass('error-input');
+                    scrollToElement('post_purchase_message_content');
+                    $('#post_purchase_message_content_error').show('slow', 'linear');
                     return false;
                 }
 

@@ -1,4 +1,5 @@
 $(document).ready( function () {
+
     // ----------------------- Funções de Botão ----------------------------
     $("#default_finish_color").on("change", function () {
         if ($(this).is(":checked")) {
