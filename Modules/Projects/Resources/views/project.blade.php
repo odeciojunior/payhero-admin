@@ -124,7 +124,7 @@
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">
                                         </div>
-                                        <span class="d-flex align-items-center font-size-14"> Vendas Aprovadas </span>
+                                        <span class="d-flex align-items-center font-size-14"> Vendas aprovadas </span>
                                     </div>
 
                                     <div>
