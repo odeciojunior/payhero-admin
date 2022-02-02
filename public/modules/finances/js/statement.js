@@ -352,12 +352,23 @@ window.updateAccountStatementData = function() {
                         class="badge badge-sm badge-${statusExtract[item.details.type]}">
                             ${item.details.status}
                         </span>
-                     </td>
-                    <td class="text-left value-finance-schedule" style="grid-area: value;">
-<!--                        <span class="font-md-size-20 bold" style="color:green"> R$ </span>-->
-                        <strong class="font-md-size-20" style="color:green"> ${formatMoney(item.amount)} </strong>
-                    </td>
-                </tr>`;
+                     </td>`
+
+                    let amount = onlyNumbers(item.amount.toString());
+                if(item.amount > 0) {
+                    dataTable += `
+                        <td class="text-left value-finance-schedule" style="grid-area: value;">
+                            <strong class="font-md-size-20" style="color:green"> ${formatMoney(amount)} </strong>
+                        </td>
+                    </tr>`;
+                } else {
+                    dataTable += `
+                        <td class="text-left value-finance-schedule" style="grid-area: value;">
+                            <strong class="font-md-size-20" style="color:red"> ${formatMoney(amount)} </strong>
+                        </td>
+                    </tr>`;
+                }
+
 
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();
