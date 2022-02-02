@@ -38,9 +38,11 @@ $(() => {
                                        <td>${rule.description}</td>
                                        <td class="text-center">${rule.active_flag ? `<span class="badge badge-success">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                                        <td>
-                                           <a class="pointer mg-responsive show-order-bump" data-id="${rule.id}" title="Visualizar"><i class="o-eye-1"></i></a>
-                                           <a class="pointer mg-responsive edit-order-bump" data-id="${rule.id}" title="Editar" ><i class="o-edit-1"></i></a>
-                                           <a class="pointer mg-responsive destroy-order-bump" data-id="${rule.id}" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><i class="o-bin-1"></i></a>
+                                            <div class='d-flex justify-content-end align-items-center'>
+                                                <a class="pointer mg-responsive show-order-bump" data-id="${rule.id}" title="Visualizar"><span class="o-eye-1"></span></a>
+                                                <a class="pointer mg-responsive edit-order-bump" data-id="${rule.id}" title="Editar" ><span class="o-edit-1"></span></a>
+                                                <a class="pointer mg-responsive destroy-order-bump" data-id="${rule.id}" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><span class="o-bin-1"></span></a>
+                                            </div>
                                        </td>
                                    </tr>`;
                         table.append(row);
@@ -57,7 +59,7 @@ $(() => {
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum order bump configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro order bump para poder
                                         <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-store-order-bump">Adicionar order bump</button>
+                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-store-order-bump">Adicionar order bump</button>
                                     </div>
                                 </div>
                             </td>
