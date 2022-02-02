@@ -354,17 +354,32 @@ window.updateAccountStatementData = function() {
                         </span>
                      </td>`
 
-                    let amount = onlyNumbers(item.amount.toString());
                 if(item.amount > 0) {
                     dataTable += `
                         <td class="text-left value-finance-schedule" style="grid-area: value;">
-                            <strong class="font-md-size-20" style="color:green"> ${formatMoney(amount)} </strong>
+                            <strong class="font-md-size-20" style="color:green">
+                                ${
+                                    item.amount.toLocaleString("pt-BR", {
+                                    style: "currency",
+                                    currency: "BRL"})
+                                    .replace(/\s+/g, '')
+                                    .replace('-', '- ')
+                                }
+                            </strong>
                         </td>
                     </tr>`;
                 } else {
                     dataTable += `
                         <td class="text-left value-finance-schedule" style="grid-area: value;">
-                            <strong class="font-md-size-20" style="color:red"> ${formatMoney(amount)} </strong>
+                            <strong class="font-md-size-20" style="color:red">
+                                ${
+                                    item.amount.toLocaleString("pt-BR", {
+                                    style: "currency",
+                                    currency: "BRL"})
+                                    .replace(/\s+/g, '')
+                                    .replace('-', '- ')
+                                }
+                            </strong>
                         </td>
                     </tr>`;
                 }
