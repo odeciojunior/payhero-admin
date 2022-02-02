@@ -381,7 +381,7 @@ $(document).ready(function () {
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum frete configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro frete para poder
                                         <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-shipping' data-toggle="modal" data-target="#modal-create-shipping">Adicionar frete</button>
+                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-shipping' data-toggle="modal" data-target="#modal-create-shipping">Adicionar frete</button>
                                     </div>
                                 </div>
                             </td>
@@ -407,9 +407,11 @@ $(document).ready(function () {
                                             <span class="badge badge-${activeShipping[value.pre_selected]}">${value.pre_selected_translated}</span>
                                         </td>
                                         <td style='text-align:center'>
-                                            <a role='button' title='Visualizar' class='pointer detalhes-frete mg-responsive' frete="${value.shipping_id}"><span class="o-eye-1"></span></a>
-                                            <a role='button' title='Editar' class='pointer editar-frete mg-responsive' frete="${value.shipping_id}"><span class='o-edit-1'></span></a>
-                                            <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}" data-toggle='modal' data-target='#modal-delete-shipping'><span class='o-bin-1'></span></a>
+                                            <div class='d-flex justify-content-end align-items-center'>
+                                                <a role='button' title='Visualizar' class='pointer detalhes-frete mg-responsive' frete="${value.shipping_id}"><span class="o-eye-1"></span></a>
+                                                <a role='button' title='Editar' class='pointer editar-frete mg-responsive' frete="${value.shipping_id}"><span class='o-edit-1'></span></a>
+                                                <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}" data-toggle='modal' data-target='#modal-delete-shipping'><span class='o-bin-1'></span></a>
+                                            </div>
                                         </td>
                                      </tr>`;
                         $("#dados-tabela-frete").append(dados);
