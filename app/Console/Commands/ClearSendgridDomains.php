@@ -27,7 +27,8 @@ class ClearSendgridDomains extends Command
                 $query->whereHas('sales', function ($query) use ($lastMonths) {
                     $query->whereDate('start_date', '>=', now()->subMonths($lastMonths));
                 });
-            })->get();
+            })
+            ->get();
 
         $sendgrid = new SendgridService();
 
@@ -53,6 +54,7 @@ class ClearSendgridDomains extends Command
                     } else {
                         $this->warn("Não tem vendas nos últimos {$lastMonths} meses! Excluindo...");
                         $sendgrid->deleteZone($zone->domain, true);
+                        $sendgrid->deleteLinkBrand($zone->domain);
                     }
                 } catch (\Exception $e) {
                     $this->error('ERROR: ' . $e->getMessage());

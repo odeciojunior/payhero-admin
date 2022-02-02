@@ -106,12 +106,15 @@ window.customWithdrawal = function(gatewayId) {
             let lowerValueIsZero = dataWithdrawal.lower_value - removeFormatNumbers(debitValue);
             let debitVerify = removeFormatNumbers(currentBalance) - removeFormatNumbers(debitValue);
 
-            if (debitVerify < 1) {
+            if (debitVerify < 1 && debitValue > 1) {
                 totalBalanceNegative = true;
                 modalDebitPending(currentBalance, debitValue);
-            } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1) {
+            } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1 && debitValue > 1) {
                 withdrawRequestValid = true;
                 modalDebitWithdrawal(dataWithdrawal.bigger_value, debitValue, withdrawal);
+            } else if (biggerValueIsZero < 1 && lowerValueIsZero < 1 ) {
+                withdrawRequestValid = true;
+                modalEmptyWithdrawal(withdrawal);
             }
         }
 
@@ -275,6 +278,44 @@ function modalDebitWithdrawal(currentBalance, debitValue, withdrawal) {
                         </div>
                     </div>
                 </div>
+            `)
+        .show();
+
+    $footer
+        .html(`
+            <hr>
+            <div class="row justify-content-center w-p100">
+                <button class="btn col-auto s-btn-border" data-dismiss="modal" aria-label="Close"
+                style="background-color: #2E85EC; color: #FFF">
+                    Ok, entendi!
+                </button>
+            </div>
+        `);
+}
+function modalEmptyWithdrawal(withdrawal) {
+    const $modal = $("#debit-pending-informations")
+    const $footer = $("#modal-withdrawal-custom-footer")
+
+    const $modalCustomBody = $("#modal-body-withdrawal-custom")
+    const $modalCustomTitle = $("#modal-title-withdrawal-custom")
+
+    $modalCustomBody
+        .html('')
+        .addClass('d-none')
+    $modalCustomTitle
+        .text("Não é possivel realizar este saque")
+        .parent()
+        .addClass('debit-pending');
+
+    const $amountWithdrawal = $("#requested-amount-withdrawal")
+    $amountWithdrawal.text(formatMoney(withdrawal));
+
+    $modal
+        .removeClass('d-none')
+        .html(`
+                <h3 class="text-center mt-10" id="text-title-debit-pending">
+                    Você não possui nenhuma venda com o valor inferior ao saldo disponível para efetuar o saque.
+                </h3>
             `)
         .show();
 
@@ -572,7 +613,6 @@ function verifyWithdrawalIsValid(toTransfer, availableBalance, gatewayId) {
         return false;
     }
 
-    console.log(toTransfer, availableBalance)
     if (toTransfer > availableBalance) {
         alertCustom("error", "O valor requerido ultrapassa o limite disponivel");
         $("#withdrawal-value-" + gatewayId).val("");

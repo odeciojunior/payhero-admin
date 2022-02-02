@@ -310,10 +310,9 @@ window.updateAccountStatementData = function() {
             };
 
             items.forEach(function (item) {
-
                 let data = {
-                    date_request: item.details.description,
-                    date_release: item.details.description
+                    date_request: item.transactionDate,
+                    date_release: item.date
                 }
 
                 let dateRequest = getRequestTime(data);
@@ -321,38 +320,42 @@ window.updateAccountStatementData = function() {
 
                 let dataTable =
                     `<tr class="s-table table-finance-schedule">`;
-                if (item.order && item.order.hashId) {
-                    if (item.isInvite) {
-                        dataTable += `
-                            <td class="text-center sale-finance-schedule">
-                                <a>
-                                    <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale;">#${item.order.hashId}</span>
-                                </a>
-                            </td>
-                        `;
-                    } else {
-                        dataTable += `
-                            <td class="text-center sale-finance-schedule">
-                                 <a class="detalhes_venda disabled pointer-md" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
-                                    <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale;">#${item.order.hashId}</span>
-                                </a>
-                            </td>
-                        `;
-                    }
+                if (item.order && item.order.hashId && item.isInvite) {
+                    dataTable += `
+                        <td class="text-center sale-finance-schedule">
+                            <a>
+                                <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale;">#${item.order.hashId}</span>
+                            </a>
+                        </td>
+                    `;
+                } else if(item.order && item.order.hashId) {
+                    dataTable += `
+                        <td class="text-center sale-finance-schedule">
+                             <a class="detalhes_venda disabled pointer-md" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
+                                <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale;">#${item.order.hashId}</span>
+                            </a>
+                        </td>
+                    `;
+                } else {
+                    dataTable += `
+                        <td class="text-center sale-finance-schedule">
+                            <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale; color: #5D5D5D">${item.details.description}</span>
+                        </td>
+                    `;
                 }
 
                 dataTable += `
                     <td class="date-start-finance-transfers text-left" style="grid-area: date-start">${dateRequest}</td>
                     <td class="date-end-finance-transfers text-left" style="grid-area: date-end">${dateRelease}</td>
-                     <td class="text-center status-finance-schedule">
+                     <td style="grid-area: status;align-self: center;" class="text-center status-finance-schedule">
                         <span data-toggle="tooltip" data-placement="left" title="${item.details.status}"
-                        class="badge badge-sm badge-${statusExtract[item.details.type]} p-2">
+                        class="badge badge-sm badge-${statusExtract[item.details.type]}">
                             ${item.details.status}
                         </span>
                      </td>
                     <td class="text-left value-finance-schedule" style="grid-area: value;">
-                        <span class="font-md-size-20 bold" style="color:green"> R$ </span>
-                        <strong class="font-md-size-20" style="color:green"> ${item.amount} </strong>
+<!--                        <span class="font-md-size-20 bold" style="color:green"> R$ </span>-->
+                        <strong class="font-md-size-20" style="color:green"> ${formatMoney(item.amount)} </strong>
                     </td>
                 </tr>`;
 
@@ -439,7 +442,7 @@ $(window).on("load", function() {
 
     function getFilters(urlParams = false) {
         let data = {
-            'company_id': $("#extract_company_select").val(),
+            'company': $("#extract_company_select").val(),
             'reason': $("#reason").val(),
             'transaction': $("#transaction").val().replace('#', ''),
             'type': $("#type").val(),
@@ -492,11 +495,12 @@ $(window).on("load", function() {
         });
     }
 
-    let exportFinanceFormat = 'xls'
+    let exportFinanceFormat = ''
     $("#bt_get_xls").on("click", function () {
         $("#bt_get_csv").prop("disabled", true);
         $("#bt_get_xls").prop("disabled", true);
         $('#modal-export-old-finance-getnet').modal('show');
+        exportFinanceFormat = 'xls';
     });
 
     $("#bt_get_csv").on("click", function () {

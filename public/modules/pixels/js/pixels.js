@@ -87,7 +87,7 @@ $(function () {
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum pixel configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro pixel para poder
                                         <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-pixel' data-toggle="modal" data-target="#modal-create-pixel">Adicionar pixel</button>
+                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-pixel' data-toggle="modal" data-target="#modal-create-pixel">Adicionar pixel</button>
                                     </div>
                                 </div>
                             </td>
@@ -105,9 +105,11 @@ $(function () {
                                 <td>${value.platform_enum}</td>
                                 <td class="text-center"><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
                                 <td style='text-align:center'>
-                                    <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
-                                    <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
-                                    <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' data-target='#modal-delete-pixel' type='a'><span class='o-bin-1'></span></a>
+                                    <div class='d-flex justify-content-end align-items-center'>
+                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
+                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
+                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' data-target='#modal-delete-pixel' type='a'><span class='o-bin-1'></span></a>
+                                    </div>
                                 </td>
                             </tr>
                         `);

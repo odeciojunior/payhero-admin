@@ -161,6 +161,11 @@
     font-weight: 700;
 }
 
+#table-statement-body .badge {
+    width: auto;
+    white-space: unset;
+}
+
 .badge.badge-success {
     background-color: #5EE2A1;
 }
@@ -218,22 +223,29 @@
     padding: 15px;
 }
 
-.nav-btn {
+.nav-btn, #pagination-statement a {
     margin-right: 5px !important;
     background: #FFF;
     color: #3D4456;
     border-radius: 11px !important;
     border: 1px solid #D2D2D2 !important;
     font-weight: normal !important;
+    display: inline-block;
+    height: auto;
+    width: auto;
+    min-width: unset;
+    padding: .429rem 1rem;
+    font-size: 1rem;
 }
 
-.nav-btn.active {
+.nav-btn.active, #pagination-statement .jp-current {
     background: #FFF !important;
     border: 1px solid #2E85EC !important;
     border-radius: 11px;
     opacity: 1 !important;
     color: #2E85EC !important;
     font-weight: 700 !important;
+    cursor: no-drop;
 }
 
 

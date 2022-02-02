@@ -275,7 +275,7 @@ $(function () {
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhuma notificação configurada</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre a sua primeiro notificação para poder
                                         <br>gerenciá-las nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-review' data-toggle="modal" data-target="#modal_review">Adicionar notificação</button>
+                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-review' data-toggle="modal" data-target="#modal_review">Adicionar notificação</button>
                                     </div>
                                 </div>
                             </td>
@@ -304,7 +304,7 @@ $(function () {
 
                             <td style="text-align:center" class="justify-content-between align-items-center mb-0">
 
-                                <div style="display: flex; justify-content: center; align-items-center; flex-direction: row;">
+                                <div class='d-flex justify-content-end align-items-center'>
 
                                     <a role="button" title='Visualizar' class="details-project-notification mg-responsive pointer" project-notification="${value.id}">
                                         <span class="o-eye-1"></span>
@@ -312,7 +312,7 @@ $(function () {
 
                                     ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ?
 
-                                        `<button style="background-color: transparent;" role="button" class="px-0 pb-0 mr-30 btn  disabled="">
+                                        `<button style="background-color: transparent;" role="button" class="px-0 pb-0 btn  disabled="">
                                             <span class="o-edit-1"></span>
                                         </button>`
                                         :
@@ -320,7 +320,7 @@ $(function () {
                                             <span class="o-edit-1"></span>
                                         </a>`
                                     }
-                                    <div class="switch-holder d-inline mg-responsive pointer" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
+                                    <div class="switch-holder d-inline mg-responsive pointer mr-0" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
 
                                         <label class="switch mr-0" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}>
 

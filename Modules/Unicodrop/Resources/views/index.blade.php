@@ -4,7 +4,7 @@
     {{-- <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}"> --}}
 @endpush
 @section('content')
-  
+
     <div class='page'  id='project-content'>
         <div style="display: none" class="page-header container">
             <div class="row jusitfy-content-between">
@@ -72,9 +72,9 @@
                 <p class="desc gray">Integre seus projetos com Unicodrop de forma totalmente automatizada!</p>
             </div>
         </div>
-    </div>    
+    </div>
 
     @push('scripts')
-        <script src="/modules/unicodrop/js/index.js?v=s0"></script>
+        <script src="{{ asset('modules/unicodrop/js/index.js?v='.uniqid()) }}"></script>
     @endpush
 @endsection

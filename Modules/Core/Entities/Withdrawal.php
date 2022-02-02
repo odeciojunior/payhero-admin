@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\WithdrawalPresenter;
 use Spatie\Activitylog\Models\Activity;
@@ -30,8 +31,7 @@ use Spatie\Activitylog\Models\Activity;
  */
 class Withdrawal extends Model
 {
-    use LogsActivity;
-    use PresentableTrait;
+    use LogsActivity, PresentableTrait, SoftDeletes;
 
     const STATUS_PENDING = 1;
     const STATUS_APPROVED = 2;
@@ -51,6 +51,7 @@ class Withdrawal extends Model
         'release_date',
         'created_at',
         'updated_at',
+        'deleted_at',
         'release_date_new'
     ];
 
@@ -78,6 +79,7 @@ class Withdrawal extends Model
         'debt_pending_value',
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
 
     /**

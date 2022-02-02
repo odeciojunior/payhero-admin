@@ -41,7 +41,7 @@ class ExtractReportExportGateway implements FromCollection, WithHeadings, Should
         $transfer = $row;
 
         $type = $transfer->type_enum == 2 ? '-' : '';
-        $sale = (new SaleService())->getSaleWithDetails(Hashids::connection('sale_id')->enconde($transfer->sale_id));
+        $sale = (new SaleService())->getSaleWithDetails(hashids_encode($transfer->sale_id, 'sale_id'));
         return [
             'transfers_id' => '#' . hashids_encode($transfer->id),
             'type'   => $this->getType($transfer->type_enum),

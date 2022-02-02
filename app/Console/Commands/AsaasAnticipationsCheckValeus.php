@@ -84,11 +84,14 @@ class AsaasAnticipationsCheckValeus extends Command
 
                         if (str_contains($description, 'limite para antecipação de cartão de crédito e o valor escolhido') ) {
                             $description = 'limite para antecipação de cartão de crédito e o valor escolhido';
-                            //continue;
+                            $bar->advance();
+                            continue;
                         }
 
                         if (str_contains($description, 'este recebível já está reservado para a institui') ) {
                             $description = 'este recebível já está reservado para a institui';
+                            $bar->advance();
+                            continue;
                         }
 
                         if (isset($cannotAnticipate[$description])) {
