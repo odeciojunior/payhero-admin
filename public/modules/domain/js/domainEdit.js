@@ -46,7 +46,7 @@ $(document).ready(function () {
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum domínio configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro domínio para poder
                                         <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-domain' data-toggle="modal" data-target="#modal-add-domain">Adicionar domínio</button>
+                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-domain' data-toggle="modal" data-target="#modal-add-domain">Adicionar domínio</button>
                                     </div>
                                 </div>
                             </td>
@@ -165,13 +165,15 @@ $(document).ready(function () {
     function tableDomains(value) {
         var dados = '';
         dados += '<tr>';
-        dados += '<td class="text-center">' + value.domain + '</td>';
-        dados += '<td class="text-center"><span class="badge badge-' + statusDomain[value.status] + '">' + value.status_translated + '</span></td>';
-        dados += "<td style='text-align:center;'>"
-        dados += "<a title='Visualizar' role='button' class='mg-responsive details-domain pointer' status='" + value.status + "' domain='" + value.id + "' ><span class='o-eye-1'></span> </a>"
-        dados += "<a title='Editar' role='button' class='mg-responsive edit-domain    pointer' status='" + value.status + "' domain='" + value.id + "' data-toggle='modal'><span class='o-edit-1'></span> </a>"
-        dados += "<a title='Excluir' role='button' class='mg-responsive delete-domain  pointer' status='' domain='" + value.id + "' data-toggle='modal'><span class='o-bin-1'></span> </a>";
-        dados += "</td>";
+            dados += '<td class="text-center">' + value.domain + '</td>';
+            dados += '<td class="text-center"><span class="badge badge-' + statusDomain[value.status] + '">' + value.status_translated + '</span></td>';
+            dados += "<td style='text-align:center;'>"
+                dados += "<div class='d-flex justify-content-end align-items-center'>";
+                    dados += "<a title='Visualizar' role='button' class='mg-responsive details-domain pointer' status='" + value.status + "' domain='" + value.id + "' ><span class='o-eye-1'></span> </a>"
+                    dados += "<a title='Editar' role='button' class='mg-responsive edit-domain    pointer' status='" + value.status + "' domain='" + value.id + "' data-toggle='modal'><span class='o-edit-1'></span> </a>"
+                    dados += "<a title='Excluir' role='button' class='mg-responsive delete-domain  pointer' status='' domain='" + value.id + "' data-toggle='modal'><span class='o-bin-1'></span> </a>";
+                dados += "</div>";
+            dados += "</td>";
         dados += '</tr>';
         $("#domain-table-body").append(dados);
     }

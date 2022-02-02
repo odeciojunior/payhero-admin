@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Gateway;
@@ -23,6 +24,8 @@ class AsaasAnticipationsPending extends Command
      * @var string
      */
     protected $description = 'Command description';
+
+    public $saveRequests = false;
 
     /**
      * Create a new command instance.
@@ -57,7 +60,8 @@ class AsaasAnticipationsPending extends Command
 
 
             foreach ($sales as $sale) {
-                $response = $service->checkAnticipation($sale);
+
+                $response = $service->checkAnticipation($sale, $this->saveRequests);
 
                 if (isset($response['status'])) {
                     $sale->update(['anticipation_status' => $response['status']]);

@@ -275,7 +275,7 @@
 
 /* /////////// CARD 1 PROJECT DETAILS /////////// */
 .card-img-edit{
-    width: 90%;
+    width: 100%;
 }
 
 .product-chargeback{
@@ -331,17 +331,27 @@
     color: #2E85EC !important;
 }
 
+.dropify-errors-container{
+    font-weight: bold;
+    margin-top: 32%;
+}
+.dropify-errors-container>ul{
+    list-style-type: none;
+    padding: 0;
+    color: #E81414;
+}
+
 /* ///////////////////////////////// END CARD 3 */
 
 
 
 /* /////////// CARD 4 AFFILIATIONS /////////// */
 .bg-afiliate-icon{
-    background-color: #F2F8FF;
+    background-color: #F8F8F8;
     border-radius: 8px;
 }
 .affiliation{
-    background-color: #F2F8FF;
+    background-color: #F8F8F8;
     border-radius: 8px;
 }
 
@@ -388,6 +398,7 @@
 }
 #auto-afiliation{
     transform: scale(1.3);
+    outline: none;
 }
 
 #copy-link-affiliation{

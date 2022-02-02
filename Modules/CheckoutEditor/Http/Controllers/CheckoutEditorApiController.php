@@ -106,7 +106,7 @@ class CheckoutEditorApiController extends Controller
             $verificationCode = random_int(100000, 999999);
             $message = "Código de verificação Sirius: " . $verificationCode;
             $smsService = new SmsService();
-            $smsService->sendSms($supportPhone, $message, '', 'aws-sns');
+            $smsService->sendSms($supportPhone, $message);
 
             $cookieName = "supportphoneverificationcode_" . hashids_encode(auth()->id()) . "_" . hashids_encode($config->project_id);
 

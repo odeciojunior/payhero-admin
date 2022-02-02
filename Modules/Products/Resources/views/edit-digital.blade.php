@@ -3,8 +3,8 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!!  asset('/modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('/modules/products/css/edit.css?v=123') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/global/adminremark/global/vendor/dropify/dropify.min.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ asset('/modules/products/css/edit.css?v=' . versionsFile()) }}">
     @endpush
 
     <!-- Page -->
@@ -45,7 +45,7 @@
                                     <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
                                 </div>
 
-                                <div class="form-group col-12 col-md-7 input-file-container">  
+                                <div class="form-group col-12 col-md-7 input-file-container">
                                     <label>Arquivo do produto</label>
                                     <input class="input-file" name="digital_product_url" id="digital_product_url" type="file" title="">
                                     <div class="form-group d-flex pt-10">
@@ -80,7 +80,7 @@
                     </div>
                 </div>
             </form>
-            
+
             <!-- Modal padrão para excluir -->
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog  modal-dialog-centered  modal-simple">
@@ -128,9 +128,9 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/products.js?v=15') }}"></script>
-        <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
-        <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
+        <script src="{{ asset('modules/products/js/products.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js?v=' . versionsFile()) }}"></script>
     @endpush
 
 @endsection

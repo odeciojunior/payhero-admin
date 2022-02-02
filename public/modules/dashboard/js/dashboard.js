@@ -220,6 +220,10 @@ $(document).ready(function () {
                 $('#total_sales_approved').text(data.total_sales_approved);
                 $('#total_sales_chargeback').text(data.total_sales_chargeback);
 
+                let $titleAvailableMoney = onlyNumbers(data.available_balance) > 0 ? 'Disponível' : 'Saldo Atual'
+                $("#title_available_money").html($titleAvailableMoney)
+
+
                 let title = "Valor incluindo o saldo bloqueado de R$ " + data.blocked_balance_total;
 
                 $('#info-total-balance').attr('title', title).tooltip({placement: 'bottom'});

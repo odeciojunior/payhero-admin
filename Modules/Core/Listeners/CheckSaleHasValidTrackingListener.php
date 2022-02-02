@@ -23,9 +23,13 @@ class CheckSaleHasValidTrackingListener implements ShouldQueue
     {
         $sale = Sale::select('sales.id', 'sales.has_valid_tracking')
             ->join('products_plans_sales as pps', 'sales.id', '=', 'pps.sale_id')
-            ->join('products as p', function ($join) {
+            ->leftJoin('products as p', function ($join) {
                 $join->on('pps.product_id', '=', 'p.id')
                     ->where('p.type_enum', Product::TYPE_PHYSICAL);
+            })
+            ->leftJoin('products_sales_api as psa', function ($join) {
+                $join->on('pps.products_sales_api_id', '=', 'psa.id')
+                    ->where('psa.product_type', 'physical_goods');
             })
             ->leftJoin('trackings as t', function ($join) {
                 $join->on('pps.id', '=', 't.product_plan_sale_id')

@@ -25,14 +25,14 @@ class ImportWooCommerceProductVariation implements ShouldQueue
     private $projectId;
     private $userId;
     private $_product;
-    private $variation;
+    private $variationId;
 
-    public function __construct($projectId, $userId, $_product, $variation)
+    public function __construct($projectId, $userId, $_product, $variationId)
     {
         $this->projectId = $projectId;
         $this->userId = $userId;
         $this->_product = $_product;
-        $this->variation = $variation;
+        $this->variationId = $variationId;
     }
 
     public function handle()
@@ -43,10 +43,12 @@ class ImportWooCommerceProductVariation implements ShouldQueue
 
             if(!empty($integration)){
 
-                $woocommerce = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+                $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
                 
-                $woocommerce->importProductVariation(
-                    $this->variation,
+                $variation = $service->woocommerce->get('products/'.$this->variationId);
+                
+                $service->importProductVariation(
+                    $variation,
                     $this->_product,
                     $this->projectId, 
                     $this->userId, 
@@ -62,7 +64,7 @@ class ImportWooCommerceProductVariation implements ShouldQueue
         } catch (Exception $e) {
             
             
-
+            Log::debug($e);
             // report($e);
 
             

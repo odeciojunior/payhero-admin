@@ -4,12 +4,12 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=11') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=12') }}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=11') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=11') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=11') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=12') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=12') }}">
+        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=12') }}">
     @endpush
 
     <div class="page dashboard">
@@ -26,8 +26,8 @@
                         {{--                        <div class="mr-10 mb-5 text-lg-right">--}}
                         {{--                            Empresa:--}}
                         {{--                        </div>--}}
-                        <div class=" text-lg-right">
-                            <select id="company" class="form-control new-select"> </select>
+                        <div>
+                            <select id="company" class="sirius-select"> </select>
                         </div>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                                 <div
                                     class="card-header d-flex justify-content-start align-items-center bg-white pt-20 pb-0">
                                     <div class="font-size-14 gray-600">
-                                        <span class="card-desc">Disponível</span>
+                                        <span class="card-desc" id="title_available_money"></span>
                                     </div>
                                 </div>
                                 <div class="card-body font-size-24 d-flex align-items-topline">
@@ -240,9 +240,9 @@
         <script src='{{ asset('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
         <script src='{{ asset('modules/global/js/confetti.browser.min.js') }}'></script>
 {{--        <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>--}}
-        <script src="{{ asset('modules/dashboard/js/dashboard-performance.js?v=1' . random_int(100, 10000)) }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=2' . random_int(100, 10000)) }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard-account-health.js?v=1' . random_int(100, 10000)) }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard-performance.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ asset('modules/dashboard/js/dashboard-account-health.js?v=' . versionsFile()) }}"></script>
     @endpush
 
 @endsection

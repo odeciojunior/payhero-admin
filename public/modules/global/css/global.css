@@ -2015,6 +2015,38 @@ tbody td{
 .page-project .table:not(#table-plans) .options-column-width {
     width: 190px !important;
 }
+.page-project .table tbody tr td:last-child a:not(.loaderTable),
+.page-project .table tbody tr td:last-child .btn {
+    display: inline-block;
+    height: 24px;
+    width: 34px;
+    margin: 0px 5px;
+    padding: 0 !important;
+    border: none !important;
+    text-align: right;
+    line-height: 24px;
+}
+.page-project .table tbody tr td:last-child a:not(.loaderTable) span,
+.page-project .table tbody tr td:last-child .btn span,
+.page-project .table tbody tr td:last-child a:not(.loaderTable) span::before,
+.page-project .table tbody tr td:last-child .btn span::before {
+    line-height: 24px;
+    display: inline-block;
+}
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+    .page-project .table:not(#table-plans) .options-column-width {
+        width: 100px !important;
+    }
+    .page-project .table tbody tr td:last-child a {
+        margin-bottom: 5px;
+    }
+    .page-project .table tbody tr td:last-child a:last-child {
+        margin-bottom: 0px;
+    }
+    .page-project .table tbody tr td:last-child a span::before {
+        line-height: 24px;
+    }
+}
 
 .modal-plans .btn-plus:not(:disabled):hover {
     background: #41DC8F;

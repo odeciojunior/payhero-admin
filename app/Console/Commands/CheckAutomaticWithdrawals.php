@@ -12,6 +12,7 @@ use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
+
 class CheckAutomaticWithdrawals extends Command
 {
     /**

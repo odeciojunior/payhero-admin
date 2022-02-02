@@ -5,9 +5,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=125') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=512') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
 
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
@@ -29,7 +29,7 @@
             <h1 class="page-title my-10" style="min-height: 28px">
                 <a class="gray" href="/projects" style="outline: none">
                     <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
-                    Meus projetos
+                    Meus projetos 
                 </a>
             </h1>
         </div>
@@ -52,18 +52,18 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-8 d-flex flex-column justify-content-between pl-0 pr-25">
-                                    <div alt="titulo" class="pt-25 mr-20">
+                                <div class="col-md-8 d-flex flex-column justify-content-between pl-25 pr-25">
+                                    <div alt="titulo" class="pt-md-15 pt-lg-20 pt-xl-25 mr-15">
                                         <!-- TITULO CRIADO EM -->
                                         <div class="row row-title justify-content-between pt-0">
                                             <h4 class="title-pad mr-5 s-title pl-10 pl-sm-0"></h4>
-                                            <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill mr-10"></span>
+                                            <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill"></span>
                                         </div>
                                         <div style="color: #C8C8C8" class="card-text gray font-size-14 pl-10 pl-sm-0" id="created_at"></div>
                                     </div>
 
                                     <!-- DESCRISAO PRODUTO -->
-                                    <div class="my-20 pl-10 pl-sm-0">
+                                    <div class="my-10 pl-10 pl-sm-0">
                                         <h5 style="line-height: unset" class="sm-title s-title-description mb-5"><strong> Descrição da loja </strong></h5>
                                         <p id="show-description" class="card-text sm s-description"></p>
                                     </div>
@@ -79,7 +79,7 @@
 
                                             <span class="s-data-project-values pl-5 pl-md-5 align-self-center" id="value-chargeback"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
-                                                <small class="font-size-10"> CHARGEBACKS </small>
+                                                <small class="font-size-12">chargebacks</small>
                                             </div>
                                         </div>
 
@@ -91,7 +91,7 @@
 
                                             <span class="s-data-project-values pl-5 align-self-center" id="value-open-tickets"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
-                                                <small class="font-size-10"> CHAMADOS ABERTOS </small>
+                                                <small class="font-size-12">chamados abertos</small>
                                             </div>
                                         </div>
 
@@ -103,7 +103,7 @@
 
                                             <span class="s-data-project-values pl-5 align-self-center" id="value-without-tracking"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
-                                                <small class="font-size-10"> VENDAS S/ RASTREIO </small>
+                                                <small class="font-size-12">vendas sem rastreio</small>
                                             </div>
 
                                         </div>
@@ -119,12 +119,12 @@
                             <div class="card d-flex justify-content-between col-sm-12 col-md-6 col-lg col-xl px-0">
 
                                 <!-- VENDAS APROVADAS -->
-                                <div class="pl-20 pl-md-30 pt-15 pt-lg-30 pt-md-20 pl-lg-20 pl-xl-30 pt-xl-35 pb-xl-25">
+                                <div class="pl-20 pl-md-30 pt-15 pt-lg-30 pt-md-20 pl-lg-20 pl-xl-30 pt-xl-45 pb-xl-25">
                                     <div class="d-flex">
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">
                                         </div>
-                                        <span class="d-flex align-items-center font-size-14"> Vendas Aprovadas </span>
+                                        <span class="d-flex align-items-center font-size-14"> Vendas aprovadas </span>
                                     </div>
 
                                     <div>
@@ -133,7 +133,7 @@
                                 </div>
 
                                 <!-- RECEITA TOTAL -->
-                                <div class="pl-20 pl-md-30 pb-15 pl-lg-20 pl-xl-30 pb-xl-40 pb-lg-35">
+                                <div class="pl-20 pl-md-30 pb-15 pl-lg-20 pl-xl-30 pb-lg-30 pb-xl-50">
                                     <div class="d-flex pt-10">
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="mr-5" src="{{ asset('/modules/global/img/projects/arrowBalance.svg') }}">
