@@ -52,8 +52,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-8 d-flex flex-column justify-content-between pl-0 pr-25">
-                                    <div alt="titulo" class="pt-25 mr-15">
+                                <div class="col-md-8 d-flex flex-column justify-content-between pl-25 pr-25">
+                                    <div alt="titulo" class="pt-md-15 pt-lg-20 mr-15">
                                         <!-- TITULO CRIADO EM -->
                                         <div class="row row-title justify-content-between pt-0">
                                             <h4 class="title-pad mr-5 s-title pl-10 pl-sm-0"></h4>
@@ -63,7 +63,7 @@
                                     </div>
 
                                     <!-- DESCRISAO PRODUTO -->
-                                    <div class="my-20 pl-10 pl-sm-0">
+                                    <div class="my-10 pl-10 pl-sm-0">
                                         <h5 style="line-height: unset" class="sm-title s-title-description mb-5"><strong> Descrição da loja </strong></h5>
                                         <p id="show-description" class="card-text sm s-description"></p>
                                     </div>
@@ -119,7 +119,7 @@
                             <div class="card d-flex justify-content-between col-sm-12 col-md-6 col-lg col-xl px-0">
 
                                 <!-- VENDAS APROVADAS -->
-                                <div class="pl-20 pl-md-30 pt-15 pt-lg-30 pt-md-20 pl-lg-20 pl-xl-30 pt-xl-35 pb-xl-25">
+                                <div class="pl-20 pl-md-30 pt-15 pt-lg-30 pt-md-20 pl-lg-20 pl-xl-30 pt-xl-45 pb-xl-25">
                                     <div class="d-flex">
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">
@@ -133,7 +133,7 @@
                                 </div>
 
                                 <!-- RECEITA TOTAL -->
-                                <div class="pl-20 pl-md-30 pb-15 pl-lg-20 pl-xl-30 pb-xl-40 pb-lg-35">
+                                <div class="pl-20 pl-md-30 pb-15 pl-lg-20 pl-xl-30 pb-lg-30 pb-xl-50">
                                     <div class="d-flex pt-10">
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="mr-5" src="{{ asset('/modules/global/img/projects/arrowBalance.svg') }}">
