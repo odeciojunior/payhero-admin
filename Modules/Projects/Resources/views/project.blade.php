@@ -53,7 +53,7 @@
                                 </div>
 
                                 <div class="col-md-8 d-flex flex-column justify-content-between pl-25 pr-25">
-                                    <div alt="titulo" class="pt-md-15 pt-lg-20 mr-15">
+                                    <div alt="titulo" class="pt-md-15 pt-lg-20 pt-xl-25 mr-15">
                                         <!-- TITULO CRIADO EM -->
                                         <div class="row row-title justify-content-between pt-0">
                                             <h4 class="title-pad mr-5 s-title pl-10 pl-sm-0"></h4>
