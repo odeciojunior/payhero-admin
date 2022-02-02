@@ -99,6 +99,15 @@
     transition: all 0.1s;
 }
 
+.preview-banner.desktop {
+    max-height: 85px;
+}
+
+.preview-banner.mobile {
+    max-height: 38px;
+}
+
+
 .preview-banner img {
     width: inherit;
     background: #fff;

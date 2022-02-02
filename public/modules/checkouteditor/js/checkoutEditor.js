@@ -252,7 +252,6 @@ $(document).ready( function () {
         messages: {
             default: "",
             replace: "",
-            remove: "Remover",
             error: "",
         },
         error: {
@@ -499,6 +498,10 @@ $(document).ready( function () {
         $("#save_changes").fadeIn("slow", "swing");
     });
 
+    $('.sirius-select').on("change", function () {
+        $("#save_changes").fadeIn("slow", "swing");
+    });
+
     $('#checkout_banner_enabled').on('change', function(){
         if($(this).is(':checked')){
             $("#banner_type").fadeIn("slow", "swing");
@@ -584,7 +587,8 @@ $(document).ready( function () {
         }
     });
     // ---------------- Functions Table - END ---------------------    
-
+    
+    $('.dropify-clear').hide();
 });
 
 function replacePreview(name, src, fname = "") {

@@ -4,8 +4,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 150px !important;
-  width: 150px !important;
+  height: 200px !important;
+  width: 200px !important;
   border: 2px dashed #2E85EC;
   border-radius: 8px;
   font-weight: bold;
@@ -16,7 +16,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 138px !important;
+  min-height: 110px !important;
+  height: fit-content !important;
   width: 100% !important;
   border: 2px dashed #2E85EC;
   border-radius: 8px;
