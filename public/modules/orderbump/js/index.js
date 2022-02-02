@@ -59,7 +59,7 @@ $(() => {
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum order bump configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro order bump para poder
                                         <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-store-order-bump">Adicionar order bump</button>
+                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-store-order-bump">Adicionar order bump</button>
                                     </div>
                                 </div>
                             </td>

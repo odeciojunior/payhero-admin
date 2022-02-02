@@ -46,7 +46,7 @@ $(document).ready(function () {
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum domínio configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro domínio para poder
                                         <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-domain' data-toggle="modal" data-target="#modal-add-domain">Adicionar domínio</button>
+                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-domain' data-toggle="modal" data-target="#modal-add-domain">Adicionar domínio</button>
                                     </div>
                                 </div>
                             </td>
