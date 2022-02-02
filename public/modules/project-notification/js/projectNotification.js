@@ -305,7 +305,7 @@ $(function () {
 
                             <td style="text-align:center" class="justify-content-between align-items-center mb-0">
 
-                                <div style="display: flex; justify-content: center; align-items-center; flex-direction: row;">
+                                <div class='d-flex justify-content-end align-items-center'>
 
                                     <a role="button" title='Visualizar' class="details-project-notification mg-responsive pointer" project-notification="${value.id}">
                                         <span class="o-eye-1"></span>
@@ -313,7 +313,7 @@ $(function () {
 
                                     ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ?
 
-                                        `<button style="background-color: transparent;" role="button" class="px-0 pb-0 mr-30 btn  disabled="">
+                                        `<button style="background-color: transparent;" role="button" class="px-0 pb-0 btn  disabled="">
                                             <span class="o-edit-1"></span>
                                         </button>`
                                         :
@@ -321,7 +321,7 @@ $(function () {
                                             <span class="o-edit-1"></span>
                                         </a>`
                                     }
-                                    <div class="switch-holder d-inline mg-responsive pointer" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
+                                    <div class="switch-holder d-inline mg-responsive pointer mr-0" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style=" opacity: 0.5;"' : ''}>
 
                                         <label class="switch mr-0" ${value.notification_enum == 11 || value.notification_enum == 12 || value.notification_enum == 13 || value.notification_enum == 17 ? 'style="cursor: not-allowed"' : ''}>
 

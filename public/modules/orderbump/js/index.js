@@ -38,9 +38,11 @@ $(() => {
                                        <td>${rule.description}</td>
                                        <td class="text-center">${rule.active_flag ? `<span class="badge badge-success">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                                        <td>
-                                           <a class="pointer mg-responsive show-order-bump" data-id="${rule.id}" title="Visualizar"><i class="o-eye-1"></i></a>
-                                           <a class="pointer mg-responsive edit-order-bump" data-id="${rule.id}" title="Editar" ><i class="o-edit-1"></i></a>
-                                           <a class="pointer mg-responsive destroy-order-bump" data-id="${rule.id}" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><i class="o-bin-1"></i></a>
+                                            <div class='d-flex justify-content-end align-items-center'>
+                                                <a class="pointer mg-responsive show-order-bump" data-id="${rule.id}" title="Visualizar"><span class="o-eye-1"></span></a>
+                                                <a class="pointer mg-responsive edit-order-bump" data-id="${rule.id}" title="Editar" ><span class="o-edit-1"></span></a>
+                                                <a class="pointer mg-responsive destroy-order-bump" data-id="${rule.id}" title="Excluir" data-toggle="modal" data-target="#modal-delete-order-bump"><span class="o-bin-1"></span></a>
+                                            </div>
                                        </td>
                                    </tr>`;
                         table.append(row);
