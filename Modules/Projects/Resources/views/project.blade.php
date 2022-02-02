@@ -79,7 +79,7 @@
 
                                             <span class="s-data-project-values pl-5 pl-md-5 align-self-center" id="value-chargeback"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
-                                                <small class="font-size-12">chargebacks teste de alterarcao</small>
+                                                <small class="font-size-12">chargebacks</small>
                                             </div>
                                         </div>
 
