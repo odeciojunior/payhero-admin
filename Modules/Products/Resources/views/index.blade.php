@@ -11,7 +11,7 @@
     <div style="display: none" class="page-header container">
         <div class="row align-items-center" style="min-height:4rem">
             <div class="col-6">
-                <h1 class="page-title" style="color: #707070">Produtos</h1>
+                <h1 class="page-title">Produtos</h1>
             </div>
             <div id='div-create' class="col-6" style="display:none;">
                 <a data-toggle="modal" data-target="#new-product-modal" class="btn btn-floating btn-primary" style="position: relative; float: right; box-shadow: none; width: 47px; height: 47px">
