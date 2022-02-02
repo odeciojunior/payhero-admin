@@ -29,7 +29,7 @@
             <h1 class="page-title my-10" style="min-height: 28px">
                 <a class="gray" href="/projects" style="outline: none">
                     <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
-                    Meus projetos
+                    Meus projetos 
                 </a>
             </h1>
         </div>
@@ -79,7 +79,7 @@
 
                                             <span class="s-data-project-values pl-5 pl-md-5 align-self-center" id="value-chargeback"></span>
                                             <div class="d-flex align-items-center pl-5 font-size-10">
-                                                <small class="font-size-12">chargebacks</small>
+                                                <small class="font-size-12">chargebacks teste de alterarcao</small>
                                             </div>
                                         </div>
 
