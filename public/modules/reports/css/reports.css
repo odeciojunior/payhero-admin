@@ -417,6 +417,8 @@ h4.number{
     font-size: 14px; 
     color: #636363; 
 }
+.box-payment span.silver { color: #A1A1A1; }
+
 .box-payment small {
     font-size: 11px; 
     color: #636363; 
@@ -505,10 +507,9 @@ h4.number{
         flex-direction: column;
     }
 }
+.new-graph-pie,
+.new-graph-pie-mkt { flex: 1; }
 
-.new-graph-pie {
-    flex: 1;
-}
 .new-graph-pie  .ct-series-a { fill: #F43F5E; }
 .new-graph-pie  .ct-series-b { fill: #2E85EC; }
 .new-graph-pie  .ct-series-c { fill: #665FE8; }
@@ -838,7 +839,6 @@ h4.number{
     height:38px; 
     margin-right: 15px;
 }
-
 .align-items { align-items: center; }
 .align-items .qtd {
     height: 33px;
@@ -906,5 +906,59 @@ h4.number{
     overflow: scroll;
     height: 212px;
 }
-
 .scroll-212 .box-payment-option { margin-bottom: 20px; }
+
+/* marketing */
+.box-resume { 
+    flex-wrap: wrap; 
+    min-height: 142px; 
+}
+
+.box-resume .balance:nth-child(1),
+.box-resume .balance:nth-child(2) { margin-bottom: 20px; }
+
+.header-resume { display: flex; }
+
+
+.header-resume .ico-coin{ 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    width: 47px;
+    height: 47px;
+    margin-right: 15px;
+}
+.header-resume h6 { 
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    margin: 0;
+}
+.header-resume strong {
+    color: #636363;
+    font-size: 24px;
+}
+
+.header-resume small {
+    color: #A1A1A1;
+    font-size: 12px;
+}
+
+.ico-coin.mkt {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mkt-msg-conversion {
+    color: #797979;
+    font-size: 12px;
+}
+.container-devices .container { margin-bottom: 22px; }
+
+.value-percent {
+    width: 100%;
+    display: block;
+    text-align: right;
+}
