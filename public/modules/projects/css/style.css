@@ -322,7 +322,7 @@
 
 
 /* /////////// CARD 3 IDENTIFICATION /////////// */
-.dropify-wrapper{
+#product_photo > .dropify-wrapper{
     height: 246px !important;
     border: 1px dashed #2E85EC !important;
     border-radius: 8px !important;
@@ -332,11 +332,11 @@
     color: #2E85EC !important;
 }
 
-.dropify-errors-container{
+#product_photo > .dropify-errors-container{
     font-weight: bold;
     margin-top: 32%;
 }
-.dropify-errors-container>ul{
+#product_photo > .dropify-errors-container>ul{
     list-style-type: none;
     padding: 0;
     color: #E81414;
