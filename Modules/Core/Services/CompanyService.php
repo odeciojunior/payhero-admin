@@ -12,6 +12,7 @@ use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\User;
 use Modules\Core\Events\UpdateCompanyGetnetEvent;
 
 /**
@@ -45,12 +46,22 @@ class CompanyService
 
     public function haveAnyDocumentPending(): bool
     {
-        return Company::where([
-            'user_id' => auth()->user()->account_owner_id,
+        $user = User::find(auth()->user()->account_owner_id);
+
+        $check_PJ =  Company::where([
+            'user_id' => $user->id,
             'bank_document_status' => Company::DOCUMENT_STATUS_APPROVED,
             'address_document_status' => Company::DOCUMENT_STATUS_APPROVED,
             'contract_document_status' => Company::DOCUMENT_STATUS_APPROVED,
         ])->exists();
+
+        $check_PF = Company::where([
+            'user_id' => $user->id,
+            'document' => $user->document,
+            'bank_document_status' => Company::DOCUMENT_STATUS_APPROVED,
+        ])->exists();
+
+        return $check_PJ || $check_PF;
     }
 
     public function getRefusedDocuments(int $companyId)

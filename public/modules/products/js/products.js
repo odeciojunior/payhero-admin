@@ -58,11 +58,21 @@ $(document).ready(function () {
                     $("#select-categories  option[value='" + response.data.product.category_id + "']").prop("selected", true);
 
                     /**
+                     * Se nao for produto shopify o botao converter nao aparece
+                     *
+                    */
+                     if (!response.data.product.shopify_id) {
+                        $(".converte-product").parent().hide();
+                    }
+                    $('.converte-product').attr('product', response.data.product.id);
+                    $('.converte-product').attr('productname', response.data.product.name);
+
+                    /**
                      * Se for produto shopify o botao delete nao aparece
                      *
                     */
                     if (response.data.product.shopify_id) {
-                        $(".delete-product").hide();
+                        $(".delete-product").parent().hide();
                     }
                     $('.delete-product').attr('product', response.data.product.id);
                     $('.delete-product').attr('productname', response.data.product.name);
@@ -227,6 +237,47 @@ $(document).ready(function () {
             $.ajax({
                 method: 'DELETE',
                 url: '/api/products/' + product,
+                dataType: "json",
+                headers: {
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
+                },
+                error: function (_error) {
+                    function error(_x) {
+                        return _error.apply(this, arguments);
+                    }
+
+                    error.toString = function () {
+                        return _error.toString();
+                    };
+
+                    return error;
+                }(function (response) {
+                    loadingOnScreenRemove();
+                    errorAjaxResponse(response);
+                }),
+                success: function success(response) {
+                    loadingOnScreenRemove();
+
+                    alertCustom('success', response.message);
+                    window.location = "/products";
+                }
+            });
+        });
+    });
+
+    $(".converte-product").on('click', function (event) {
+        event.preventDefault();
+
+        var product = $('.converte-product').attr('product');
+        $("#bt_converter").unbind('click');
+        $("#bt_converter").on('click', function () {
+            $("#close-modal-converte").click();
+            loadingOnScreen();
+
+            $.ajax({
+                method: 'POST',
+                url: '/api/products/updateproducttype/' + product,
                 dataType: "json",
                 headers: {
                     'Authorization': $('meta[name="access-token"]').attr('content'),

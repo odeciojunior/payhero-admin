@@ -44,13 +44,17 @@ class CieloService implements Statement
         return $this;
     }
 
-    public function getAvailableBalance() : int
+    public function getAvailableBalanceWithoutBlocking() : int
     {
         if (!$this->company->user->show_old_finances){
             return 0;
         }
+        return $this->company->cielo_balance;
+    }
 
-        return $this->company->cielo_balance - $this->getBlockedBalance();
+    public function getAvailableBalance() : int
+    {
+        return  $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
     public function getPendingBalance() : int
@@ -66,9 +70,10 @@ class CieloService implements Statement
                                     ->orWhere(function($query) {
                                         $query->where('gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('created_at', '<', '2021-09');
                                     });
+                            })                            
+                            ->whereDoesntHave('blockReasonSale',function ($query) {
+                                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
                             })
-                            ->where('is_waiting_withdrawal', 0)
-                            ->whereNull('withdrawal_id')
                             ->sum('value');
     }
 
@@ -266,17 +271,20 @@ class CieloService implements Statement
             return [];
         }
 
-        $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $totalBalance = $availableBalance + $pendingBalance + $blockedBalance;        
+        $availableBalance = $this->getAvailableBalanceWithoutBlocking() - $blockedBalance;
+        $blockedBalancePending = $this->getBlockedBalancePending();
+
+        $totalBlockedBalance = $blockedBalance + $blockedBalancePending;
+        $totalBalance = $availableBalance + $pendingBalance + $totalBlockedBalance;
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
 
         return [
             'name' => 'Cielo',
             'available_balance' => foxutils()->formatMoney($availableBalance / 100),
             'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
-            'blocked_balance' => foxutils()->formatMoney($blockedBalance / 100),
+            'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
             'total_balance' => foxutils()->formatMoney($totalBalance / 100),
             'total_available' => $availableBalance,
             'last_transaction' => $lastTransactionDate,

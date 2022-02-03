@@ -545,14 +545,20 @@ input[type="number"] {
     color: #2e85ec;
 }
 
-.notification-table-cointainer .table thead > tr > td:last-child,
-.table thead > tr > th:last-child,
-.notification-table-cointainer .table thead > tr > td:first-child,
-.table thead > tr > th:first-child {
-    border-radius: 0;
+#notification-table thead > tr > td:last-child,
+#notification-table thead > tr > th:last-child,
+#notification-table thead > tr > td:first-child,
+#notification-table thead > tr > th:first-child,
+#notification-table tbody tr:last-child td:last-child,
+#notification-table tbody tr:last-child td:first-child {
+    border-radius: 0 !important;
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
     padding: 20px 20px 30px 20px;
+}
+
+.table tbody tr:last-child td:last-child {
+    border-radius: 0;
 }
 
 .th-notification {

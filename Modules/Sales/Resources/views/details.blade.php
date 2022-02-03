@@ -268,7 +268,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="tab-content p-10" id="nav-tabContent">
+                <div class="tab-content p-10 sales-details" id="nav-tabContent">
                     {{-- WOOCOMMERCE --}}
                     <div class="tab-pane fade" id="nav-woo" role="tabpanel" aria-labelledby="nav-woo-tab">
                         <h4> Ordem Woocommerce  </h4>

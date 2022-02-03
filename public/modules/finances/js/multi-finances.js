@@ -190,6 +190,8 @@ $(document).ready(function(){
                             if(data.pending_debt_balance) {
                                 pendingDebt = "<input id='pending-debt-" + data.id + "' type='hidden' value='" + data.pending_debt_balance + "' >";
                             }
+                            let $titleAvailableBalance = onlyNumbers(data.available_balance) > 0 ? 'Disponível' : 'Saldo Atual'
+
                             $('.owl-carousel').append(`
                                 <div class="item">
                                     <p style="color: #9E9E9E;font-size: 12px;line-height: 15px;">${html_transaction}</p>
@@ -211,7 +213,7 @@ $(document).ready(function(){
                                                           aria-controls="collapse-data-${data.name} collapse-withdrawal-${data.name}"></i>
                                                     </div>
                                                 </div>
-                                                <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge green"></span>Saldo Disponível</h6>
+                                                <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge green"></span>${$titleAvailableBalance}</h6>
                                                 <h4 class="row m-0 px-20">
                                                     <div class="col-9 p-0 col-md-12">
                                                         <span class="font-size-16">R$</span>
@@ -307,6 +309,8 @@ $(document).ready(function(){
                                 'display':'flex',
                                 'align-items':'center'
                             });
+                            let $titleAvailableBalance = onlyNumbers(data.data) > 0 ? 'Disponível para saque' : 'Saldo Atual'
+                            $('#title_available_money').html($titleAvailableBalance);
                             $('.total-available-balance').html(removeMoneyCurrency(data));
                         }
                     });

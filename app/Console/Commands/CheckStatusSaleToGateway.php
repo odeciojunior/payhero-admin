@@ -11,21 +11,21 @@ use Modules\Core\Services\CieloService;
 use Modules\Core\Services\Gerencianet\GerencianetService;
 use Modules\Core\Services\Getnet\GetnetBackOfficeService;
 
-class CheckStatusSaleToAcquirer extends Command
+class CheckStatusSaleToGateway extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'check:status-sale-acquirer';
+    protected $signature = 'check:status-sale-gateway';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = ' CheckStatusSaleToAcquirer';
+    protected $description = ' CheckStatusSaleToGateway';
 
     public $gateways = [Gateway::GETNET_PRODUCTION_ID];
 
@@ -96,17 +96,10 @@ class CheckStatusSaleToAcquirer extends Command
     }
 
     public function checkSaleGetnet($bar, $sales) {
-//        $total = $sales->count();
-//        $bar = $this->output->createProgressBar($total);
-//        $bar->start();
+
         foreach ($sales->cursor() as $sale) {
             $bar->advance();
         }
-
-        //dd($sales->count());
-        //dd('checkSaleGetnet');
-
-        //$bar->finish();
         return null;
     }
 }

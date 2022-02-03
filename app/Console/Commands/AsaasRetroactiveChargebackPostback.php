@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\BlockReason;
 use Modules\Core\Entities\BlockReasonSale;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewayPostback;
 use Modules\Core\Entities\Sale;
@@ -16,6 +17,7 @@ use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
+use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CheckoutGateway;
 use Vinkla\Hashids\Facades\Hashids;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -54,8 +56,46 @@ class AsaasRetroactiveChargebackPostback extends Command
      */
     public function handle()
     {
-        $this->createBlockSaleRetroactiveGetnet();
+        $this->verifyAsaasBalance();
     } 
+
+    public function verifyAsaasBalance(){
+        $companies =  Company::whereHas('gatewayCompanyCredential',function($qr){
+            $qr->where('gateway_id',8)->whereNotNull('gateway_api_key');
+        })->get();
+
+        $gatewayService = new AsaasService();
+        $dtNow = Date('d/m/Y');
+        foreach($companies as $company)
+        {
+            $this->line('avaliando empresa '.$company->id);
+            $gatewayService->setCompany($company);
+        
+            $filters = [            
+                'date_type'=> 'transfer_date',
+                'date_range'=> '01/01/2018 - '.$dtNow,
+                'reason'=>'', 
+                'transaction'=>'', 
+                'type'=>'', 
+                'value'=>'',         
+            ];
+            $balance = ($gatewayService->getPeriodBalance($filters)??0)*100;
+           
+            if($balance <> $company->asaas_balance){
+                \Log::info(
+                    str_pad($company->id,5,' ',STR_PAD_RIGHT).
+                    str_pad($company->fantasy_name,80,' ',STR_PAD_RIGHT).
+                    str_pad($balance,10,' ',STR_PAD_RIGHT).
+                    str_pad($company->asaas_balance,10,' ',STR_PAD_RIGHT).                    
+                    'Divergente'
+                );
+                $this->error('Divergencia na empresa '.$company->id);
+            }
+        }
+
+
+        
+    }
     
     public function createBlockSaleRetroactiveGetnet()
     {

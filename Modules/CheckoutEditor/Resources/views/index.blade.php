@@ -13,7 +13,7 @@
 <!-- Page -->
 <div class="checkout-container" style="max-height: 3585px;  margin-bottom: 20px;">
 
-    <div class="title-container">
+    <div class="card card-body">
         <h1 class="checkout-title">
             Editor de Checkout
         </h1>
@@ -236,12 +236,11 @@
 
                                 </div>
                             </div>
-
-                            <div class="checkbox-container">
+                        </div>
+                        <div class="checkbox-container">
                                 <input class="checkbox" id="default_finish_color" type="checkbox" />
                                 <label for="default_finish_color">Manter “Finalizar compra” verde</label>
                             </div>
-                        </div>
                     </div>
 
                     <hr>
@@ -654,7 +653,7 @@
 
                         <div class="row-flex">
                             <div class="input-container" style="flex: 2">
-                                <label class="quantity-selector-label">Seletor de Quantidade
+                                <label class="quantity-selector-label">Seletor de quantidade
                                     <div class="quantity-selector-tooltip">
                                         <img id="selector-tooltip" src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}">
                                         <div class="tooltip-container" style="display: none">
@@ -865,7 +864,7 @@
                     <span class="title-icon">
                         <img class="icon-title" src="{{ asset('/modules/checkouteditor/img/svg/paid-page.svg') }}">
                         <h1 class="checkout-title">
-                            Páginas Pós-compra
+                            Páginas pps-compra
                         </h1>
                     </span>
 
@@ -1015,8 +1014,8 @@
                             <div id="preview-desktop-visual" class="preview-content desktop">
 
                                 <div class="preview-header">
-                                    <div class="header-colorbar desktop secondary-color countdown-preview"></div>
-                                    <div class="header-colorbar desktop primary-color textbar-preview"> </div>
+                                    <div class="header-colorbar desktop primary-color  countdown-preview"></div>
+                                    <div class="header-colorbar desktop secondary-color textbar-preview"> </div>
 
                                     <div class="preview-banner wide-banner desktop">
                                         <img id="preview_banner_img_desktop" class="preview-banner-img" />
@@ -1025,7 +1024,9 @@
 
                                 <div id="logo_preview_desktop_div" class="logo-desktop-div desktop">
                                     <div class="logo-desktop logo-preview-container">
-                                        <img id="logo_preview_desktop" class="preview-logo desktop" />
+                                        
+                                            <img id="logo_preview_desktop" class="preview-logo desktop" alt="Logo"/>
+                                        
                                     </div>
                                 </div>
 
@@ -1081,8 +1082,8 @@
                             <div id="preview-mobile-visual" class="preview-content mobile" style="display: none;">
                                 <div id="preview-mobile-visual-collapse" class="preview-mobile-collapse">
                                     <div class="preview-header">
-                                        <div class="header-colorbar mobile secondary-color countdown-preview"></div>
-                                        <div class="header-colorbar mobile primary-color textbar-preview"> </div>
+                                        <div class="header-colorbar mobile primary-color   countdown-preview"></div>
+                                        <div class="header-colorbar mobile secondary-color textbar-preview"> </div>
 
 
                                         <div class="menu-bar-mobile">
@@ -1157,8 +1158,8 @@
                             <div id="preview-desktop-payment" class="preview-content desktop">
 
                                 <div class="preview-header">
-                                    <div class="header-colorbar desktop secondary-color countdown-preview"></div>
-                                    <div class="header-colorbar desktop primary-color textbar-preview"> </div>
+                                    <div class="header-colorbar desktop primary-color countdown-preview"></div>
+                                    <div class="header-colorbar desktop secondary-color textbar-preview"> </div>
                                 </div>
 
                                 <div class="preview-body desktop payment">
@@ -1224,8 +1225,8 @@
                             <div id="preview-mobile-payment" class="preview-content mobile" style="display: none">
                                 <div id="preview-mobile-payment-collapse" class="preview-mobile-collapse">
                                     <div class="preview-header">
-                                        <div class="header-colorbar mobile secondary-color countdown-preview"></div>
-                                        <div class="header-colorbar mobile primary-color textbar-preview"> </div>
+                                        <div class="header-colorbar mobile primary-color countdown-preview"></div>
+                                        <div class="header-colorbar mobile secondary-color textbar-preview"> </div>
                                     </div>
 
                                     <div class="preview-body mobile payment">
@@ -1434,7 +1435,6 @@
                             <div></div>
                             <div></div>
                         </div>
-
                     </div>
                 </div>
 

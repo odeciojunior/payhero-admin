@@ -51,17 +51,6 @@ $(() => {
         }
     }
 
-    // FRETE
-    $("#shippement").on('change', function () {
-        if ($(this).val() == 0) {
-            $("#div-carrier").hide();
-            $("#div-shipment-responsible").hide();
-        } else {
-            $("#div-carrier").show();
-            $("#div-shipment-responsible").show();
-        }
-    });
-
     // CARD 1 FOTO, NOME, CRIADO EM, DESCRICAO E RESUMO
     const getImageProject = projectPhoto => projectPhoto ? dropifyOptions.defaultFile = projectPhoto : "/modules/global/img/projeto.svg";
 
@@ -262,14 +251,25 @@ $(() => {
             toolbar: ['bold', 'italic', 'underline']
         }
     });
+
     $(document).ready(function() {
         $(".ql-toolbar.ql-snow").addClass("d-flex justify-content-center")
     });
+
     $(".ql-editor").on("focus", function(){
         $(".h-200, .ql-container, .ql-snow").css("border-color", "#88BFFF");
     });
+
     $(".ql-editor").on("focusout", function(){
         $(".h-200, .ql-container, .ql-snow").css("border-color", "#cccccc");
+    });
+
+    $("#status-url-affiliates").on("click", function(){
+        if($(this).prop("checked") == true ){
+            $("#affiliation-access").show();
+        }else{
+            $("#affiliation-access").hide();
+        }
     });
 
     //CONFIGURACOES CARD 3 & 4
@@ -282,13 +282,16 @@ $(() => {
         if (project.status_url_affiliates == 1 && getStatusAffiliation == false) {
             $('#update-project .status-url-affiliates').trigger('click');
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg").css("background-color", "#F2F8FF");
+            $("#affiliation-access").show();
         }
 
         if(project.status_url_affiliates == 0){
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/affiliationDisable.svg").css("background-color", "#F2F8FF");
-
+            $("#affiliation-access").hide();
+            
             if(project.status_url_affiliates == 0 && getStatusAffiliation == true){
                 $('#update-project .status-url-affiliates').trigger('click');
+
             }
         }
 
@@ -368,7 +371,7 @@ $(() => {
 
         // COMPORTAMENTO CARD SALVAR / CANCELAR
         if(!onChangeSet){
-            $("#update-project :input").on('change', function() {
+            $("#update-project").on('input change', function() {
                 $( "#confirm-changes" ).fadeIn( "slow" );
             });
             onChangeSet = true;
@@ -381,11 +384,9 @@ $(() => {
         let affiliationStatus = $("#status-url-affiliates").prop("checked")
         if(affiliationStatus == false){
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/affiliationDisable.svg");
-            $(".bg-afiliate-icon").css("background-color", "#F4F4F4");
 
         }else if(affiliationStatus == true){
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg");
-            $(".bg-afiliate-icon").css("background-color", "#F2F8FF");
         }
     });
 

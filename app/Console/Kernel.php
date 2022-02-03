@@ -164,9 +164,9 @@ class Kernel extends ConsoleKernel
         /** Confirma a transferencia do dinheiro da azx */
         $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30')->withoutOverlapping();;
 
-        /** Antecipações Asaas */
-        $schedule->command('asaas:anticipations')->dailyAt('4:00');
-        $schedule->command('asaas:anticipations-pending')->dailyAt('14:00');
+        /** Antecipações Asaas descontinuado temporariamente*/
+        //$schedule->command('asaas:anticipations')->dailyAt('4:00');
+        //$schedule->command('asaas:anticipations-pending')->dailyAt('14:00');
         $schedule->command('asaas:anticipations-pending')->dailyAt('16:00');
 
         /** Sincronizar códigos de rastreio com WooCommerce */

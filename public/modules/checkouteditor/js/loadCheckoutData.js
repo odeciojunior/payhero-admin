@@ -95,6 +95,7 @@ $(() => {
                 checkout = response.data;
                 if(checkout) {
                     fillForm(checkout);
+                    $('#checkout_editor_id').val(checkout.id)
                 }
 
                 
@@ -152,9 +153,9 @@ $(() => {
                     });
 
                     // Printar Form
-                    // for (var form of formData.entries()) {
-                    //     console.log(form[0] + ": " + form[1]);
-                    // }
+                    for (var form of formData.entries()) {
+                        console.log(form[0] + ": " + form[1]);
+                    }
 
                     if(validadeForm(formData)) {
                         $.ajax({
@@ -866,14 +867,8 @@ $(() => {
                     scrollToElement('post_purchase_message_content');
                     $('#post_purchase_message_content_error').show('slow', 'linear');
                     return false;
-                }
-
-
-                
+                }   
             }
-
-            
-
             return validated;
         }
     }
