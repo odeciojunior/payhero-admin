@@ -23,7 +23,8 @@ class AddSafe2payOnGatewaysTable extends Migration
                 "json_config"     => FoxUtils::xorEncrypt(
                     json_encode(
                         [
-                            "api_key"  => "38c00b1d6be707d39a31dd59404feb02ac6fbf6ab5b111669c8ed3263c5e3ac2",
+                            "token"  => "902F8C28AF904CA2BFAF20C9EA403CFF",
+                            "secret_key"  => "1F991670D3434E3EB45721C255B4A01545A1B2FBA39549AB9D8828C8853E8E02"
                         ]
                     )),
                 "production_flag" => 0,
@@ -41,10 +42,11 @@ class AddSafe2payOnGatewaysTable extends Migration
                 "json_config"     => FoxUtils::xorEncrypt(
                     json_encode(
                         [
-                            "api_key"  => "38c00b1d6be707d39a31dd59404feb02ac6fbf6ab5b111669c8ed3263c5e3ac2",
+                            "token"  => "902F8C28AF904CA2BFAF20C9EA403CFF",
+                            "secret_key"  => "1F991670D3434E3EB45721C255B4A01545A1B2FBA39549AB9D8828C8853E8E02"
                         ]
                     )),
-                "production_flag" => 0,
+                "production_flag" => 1,
                 "enabled_flag"    => 1,
             ]
         );

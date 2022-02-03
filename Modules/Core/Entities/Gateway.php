@@ -51,6 +51,8 @@ class Gateway extends Model
     public const GERENCIANET_SANDBOX_ID = 19;
     public const ASAAS_PRODUCTION_ID = 8;
     public const ASAAS_SANDBOX_ID = 20;
+    public const SAFE2PAY_PRODUCTION_ID = 21;
+    public const SAFE2PAY_SANDBOX_ID = 22;
 
     public const PAYMENT_STATUS_CONFIRMED = 'CONFIRMED';
 
