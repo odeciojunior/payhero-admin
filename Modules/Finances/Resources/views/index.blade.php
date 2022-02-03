@@ -76,7 +76,7 @@
             {{-- <script src="{{ asset('modules/finances/js/withdrawal-custom.js?v=' . versionsFile()) }}"></script> --}}
             {{-- <script src="{{ asset('modules/finances/js/withdrawal-default.js?v=' . versionsFile()) }}"></script> --}}
             <script src="{{ asset('modules/finances/js/withdrawal-handler.js?v=' . versionsFile()) }}"></script>
-            <script src="{{ asset('modules/finances/js/statement.js?v=' . versionsFile()) }}"></script>
+            <script src="{{ asset('modules/finances/js/statement.js?v=2' . versionsFile()) }}"></script>
         @endpush
     </div>
 

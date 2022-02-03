@@ -507,12 +507,6 @@ function modalValueIsSingleValue(dataWithdrawal, currentBalance, withdrawal, deb
         currentBalance == dataWithdrawal.bigger_value
     );
 }
-
-function removeFormatNumbers(number) {
-    number += '';
-    return number.replace(/,/g, "").replace(/\./g, "");
-}
-
 function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
     const biggerValue = formatMoney(dataWithdrawal.bigger_value);
     const lowerValue = formatMoney(dataWithdrawal.lower_value);
@@ -541,7 +535,10 @@ function optionsValuesWithdrawal(singleValue, dataWithdrawal) {
             </div>
         `;
 }
-
+function removeFormatNumbers(number) {
+    number += '';
+    return number.replace(/,/g, "").replace(/\./g, "");
+}
 function formatMoney(value) {
     return (value / 100).toLocaleString("pt-BR", {
         style: "currency",
