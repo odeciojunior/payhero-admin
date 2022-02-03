@@ -30,7 +30,7 @@ $(document).ready(function () {
                     options += `<option class="menv${integration.id}" value="melhorenvio-${integration.id}">${integration.name} (integração com a API do Melhor Envio)</option>`;
                 }
                 $('.shipping-type').each(function () {
-                    $(this).append(options);
+                    $(this).children('select').append(options);
                 });
             },
             error: resp => {
@@ -45,7 +45,7 @@ $(document).ready(function () {
         atualizarFrete();
     });
 
-    $(document).on('change', '.shipping-type', function () {
+    $(document).on('change', '.shipping-type select', function () {
         // altera campo value dependendo do tipo do frete
         let selected = $(this).val();
         if (selected === 'static') {
@@ -167,8 +167,11 @@ $(document).ready(function () {
                     case 'pac':
                         $('#modal-detail-shipping .shipping-type').html('PAC - Caculado automaticamente');
                         break;
-                    default:
+                    case 'sedex':
                         $('#modal-detail-shipping .shipping-type').html('SEDEX - Caculado automaticamente');
+                        break;
+                    case 'melhorenvio':
+                        $('#modal-detail-shipping .shipping-type').html('MelhorEnvio - Caculado automaticamente');
                         break;
                 }
                 $('#modal-detail-shipping .shipping-description').html(response.name);
@@ -204,17 +207,17 @@ $(document).ready(function () {
 
                 switch (response.type) {
                     case 'static':
-                        $('#modal-edit-shipping .shipping-type').prop("selectedIndex", 0).change();
+                        $('#modal-edit-shipping .shipping-type select').prop("selectedIndex", 0).change();
                         break;
                     case 'pac':
-                        $('#modal-edit-shipping .shipping-type').prop("selectedIndex", 1).change();
+                        $('#modal-edit-shipping .shipping-type select').prop("selectedIndex", 1).change();
                         break;
                     case 'sedex':
-                        $('#modal-edit-shipping .shipping-type').prop("selectedIndex", 2).change();
+                        $('#modal-edit-shipping .shipping-type select').prop("selectedIndex", 2).change();
                         break;
                     case 'melhorenvio':
                         $('#modal-edit-shipping .menv'+response.melhorenvio_integration_id).prop('selected', true);
-                        $('#modal-edit-shipping .shipping-type').change();
+                        $('#modal-edit-shipping .shipping-type select').change();
                         break;
                 }
                 $('#modal-edit-shipping .shipping-description').val(response.name);
