@@ -27,5 +27,19 @@ Route::group(
 
         Route::get('/reports/blockedresume', 'ReportsApiController@resumeBlockedBalance')->middleware('permission:report_blockedbalance');
 
+        // Reports Finances
+        Route::get('/reports/finances/comission-balance', 'ReportsApiController@getComissionBalanceFinances');
+        Route::get('/reports/finances/pending-balance', 'ReportsApiController@getPendingBalanceFinances');
+        Route::get('/reports/finances/cashback-balance', 'ReportsApiController@getCashbackBalanceFinances');
+
+        // Reports Sales
+        Route::get('/reports/sales/total-sales', 'ReportsApiController@getTotalSales');
+        Route::get('/reports/sales/payments-type', 'ReportsApiController@getPaymentsTypeSales');
+        Route::get('/reports/sales/products-topselling', 'ReportsApiController@getProductsTopsellingSales');
+
+        // Reports Marketing
+        Route::get('/reports/marketing/coupons', 'ReportsApiController@getCouponsMarketing');
+        Route::get('/reports/marketing/regions', 'ReportsApiController@getRegionsMarketing');
+        Route::get('/reports/marketing/origins', 'ReportsApiController@getOriginsMarketing');
     }
 );

@@ -315,7 +315,7 @@ class ReportsApiController extends Controller
 
                 if ($userProject || $affiliate) {
                     $itens = $checkoutsModel
-                        ->select(\DB::raw('count(*) as count'), 'plan_checkout.plan_id')
+                        ->select(DB::raw('count(*) as count'), 'plan_checkout.plan_id')
                         ->leftJoin('checkout_plans as plan_checkout', function ($join) {
                             $join->on('plan_checkout.checkout_id', '=', 'checkouts.id');
                         })
@@ -453,7 +453,7 @@ class ReportsApiController extends Controller
                 return response()->json('projeto nao encontrado!');
             }
 
-            $orders = Checkout::select(\DB::raw('count(*) as qtd_checkout, '.$request->origin.' as origin'));
+            $orders = Checkout::select(DB::raw('count(*) as qtd_checkout, '.$request->origin.' as origin'));
             $affiliate = Affiliate::select('id')->where('user_id', auth()->user()->account_owner_id);
 
             if($request->project_id != "all"){
@@ -797,5 +797,53 @@ class ReportsApiController extends Controller
 
             return response()->json(['error' => 'Erro ao exibir resumo das vendas'], 400);
         }
+    }
+
+    // Reports Finances
+    public function getComissionBalanceFinances()
+    {
+        return 'comission balance - finances';
+    }
+
+    public function getPendingBalanceFinances()
+    {
+        return 'pending balance - finances';
+    }
+
+    public function getCashbackBalanceFinances()
+    {
+        return 'cashback balance - finances';
+    }
+
+    // Reports Sales
+    public function getTotalSales()
+    {
+        return 'total sales - sales';
+    }
+
+    public function getPaymentsTypeSales()
+    {
+        return 'payments type - sales';
+    }
+
+    public function getProductsTopsellingSales()
+    {
+        return 'products top selling - sales';
+    }
+
+    // Reports Marketing
+    public function getCouponsMarketing()
+    {
+        return 'coupons - marketing';
+    }
+
+    public function getRegionsMarketing()
+    {
+        return 'regions - marketing';
+    }
+
+    public function getOriginsMarketing()
+    {
+        return 'origins - marketing';
     }
 }
