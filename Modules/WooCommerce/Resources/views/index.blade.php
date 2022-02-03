@@ -218,17 +218,8 @@
                                                 line-height: 18px;
                                                 color: #2E85EC;">A sincronização pode demorar algumas horas.</div>
 
-                                            <div style="margin-bottom: 16px">
-
-                                                Você tem certeza que quer sincronizar <span style="font-weight: bold"
-                                                    id="sync-name"></span>?
-                                            </div>
-
-                                            <button id="bt-confirm" data-dismiss="" style="padding: 9px 32px; font-weight: bold" aria-label=""
-                                                class="btn btn-primary" style="">Sim</button>
-                                            <button id="bt-cancel" data-dismiss=""
-                                                style="font-weight: bold; margin-left:6px; padding: 9px 32px; color:#636363; background-color: #FFFFFF; border:none"
-                                                class="btn btn-secondary" style="">Não</button>
+                                            
+                                            
 
                                         </div>
                                     </div>
@@ -300,6 +291,91 @@
                 </div>
             </div>
             <!-- End Modal -->
+
+
+
+
+
+
+
+            {{-- Modal confirm --}}
+            <div class="modal fade modal-slide-bottom" id="modal-confirm" aria-hidden="true"
+                aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered" style="width: 517px; min-height: 453px">
+                    <div class="modal-content" id="" style="border-radius: 12px">
+
+                        <div style="width: 517px; height:70px; font-size: 22px; font-weight: bold; color:#636363"
+                            class="" id="">
+                            <div style="width: 72px; height:70px; float: left; border-right: 1px solid #F4F4F4"
+                                class="" id="">
+
+                                <svg style="position: absolute; top:24px; left:22px" width="26" height="29"
+                                    viewBox="0 0 26 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M16.8933 28.4755L25.312 26.6543C25.312 26.6543 22.274 6.10583 22.2495 5.96933C22.2285 5.834 22.1165 5.74533 22.0033 5.74533C21.8901 5.74533 19.7528 5.58667 19.7528 5.58667C19.7528 5.58667 18.2653 4.10033 18.074 3.9405C18.0215 3.89733 17.9865 3.874 17.9328 3.85417L16.8665 28.4755H16.8933ZM12.6618 13.6892C12.6618 13.6892 11.7168 13.1945 10.5921 13.1945C8.90395 13.1945 8.83745 14.2515 8.83745 14.5257C8.83745 15.963 12.6175 16.5265 12.6175 19.9262C12.6175 22.6037 10.9375 24.3128 8.64379 24.3128C5.89745 24.3128 4.51379 22.6037 4.51379 22.6037L5.26745 20.17C5.26745 20.17 6.71995 21.4137 7.92745 21.4137C8.71495 21.4137 9.06495 20.7778 9.06495 20.3263C9.06495 18.4375 5.96862 18.35 5.96862 15.2408C5.92895 12.631 7.80145 10.0888 11.6001 10.0888C13.0666 10.0888 13.7876 10.51 13.7876 10.51L12.6851 13.6775L12.6618 13.6892ZM12.0318 1.46833C12.1905 1.46833 12.348 1.51267 12.5043 1.62583C11.3563 2.16833 10.0963 3.538 9.57829 6.28317C8.81295 6.53167 8.06979 6.75567 7.37445 6.9575C7.97995 4.875 9.44295 1.48 12.0318 1.48V1.46833ZM13.4726 4.90883V5.06633C12.593 5.337 11.6258 5.631 10.6796 5.925C11.2233 3.85183 12.2348 2.83917 13.1121 2.45883C13.3373 3.04333 13.4726 3.83083 13.4726 4.90883ZM14.1015 2.3025C14.9111 2.38883 15.4326 3.314 15.7686 4.35C15.3615 4.483 14.9111 4.6195 14.4176 4.777V4.483C14.4176 3.60567 14.3056 2.8835 14.1015 2.30017V2.3025ZM17.5921 3.80633C17.5688 3.80633 17.5221 3.83083 17.5011 3.83083C17.4801 3.83083 17.164 3.91833 16.6681 4.07583C16.1746 2.63733 15.2961 1.31083 13.7421 1.31083H13.608C13.1576 0.743833 12.614 0.5 12.1426 0.5C8.51895 0.5 6.78762 5.02317 6.24512 7.32033C4.85212 7.74617 3.83829 8.06233 3.72512 8.10667C2.93762 8.35517 2.91545 8.37733 2.82445 9.12167C2.73695 9.66067 0.689453 25.5285 0.689453 25.5285L16.5106 28.5L17.5921 3.80633Z"
+                                        fill="#424245" />
+                                </svg>
+
+                            </div>
+                            <span style="line-height:72px; margin-left: 25px ">
+
+                                Confirme a sincronização
+                            </span>
+
+                            <svg data-dismiss="modal" aria-label="Close" style="position: absolute; top:27px; right:24px"
+                                class="close" width="16" height="17" viewBox="0 0 16 17" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 1.75L1 15.75M1 1.75L15 15.75L1 1.75Z" stroke="#636363" stroke-width="2"
+                                    stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+
+                        </div>
+
+                        <div style="padding: 25px 25px 15px 25px; border-top: 1px solid #F4F4F4" class=""
+                            id="">
+                            
+                            <div class="text-center">
+                                <svg width="93" height="93" viewBox="0 0 93 93" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="46.5" cy="46.5" r="46.5" fill="#F2F8FF"/>
+                                    <path d="M57.6587 28.6022C56.9697 29.4907 57.1435 30.7603 58.0469 31.4379C62.952 35.1171 65.8857 40.8175 65.8857 47C65.8857 57.0785 58.1348 65.3764 48.1759 66.4424L50.0311 64.6167C50.8345 63.8266 50.8345 62.5455 50.0311 61.7554C49.3008 61.0371 48.1579 60.9718 47.3526 61.5595L47.1219 61.7554L41.6361 67.1507C40.9058 67.869 40.8394 68.9931 41.437 69.7851L41.6361 70.0121L47.1219 75.4074C47.9252 76.1975 49.2277 76.1975 50.0311 75.4074C50.7614 74.6891 50.8278 73.5651 50.2303 72.773L50.0311 72.5461L47.9733 70.526C60.3051 69.539 70 59.383 70 47C70 39.5416 66.4568 32.657 60.5419 28.2203C59.6385 27.5427 58.3476 27.7136 57.6587 28.6022ZM41.9689 18.5926C41.1655 19.3827 41.1655 20.6638 41.9689 21.4539L44.024 23.4742C31.6935 24.4625 22 34.6179 22 47C22 54.1339 25.24 60.7512 30.7245 65.2069C31.6004 65.9185 32.8971 65.797 33.6206 64.9355C34.3442 64.074 34.2207 62.7987 33.3447 62.0871C28.7966 58.3921 26.1143 52.9138 26.1143 47C26.1143 36.9225 33.8637 28.6251 43.8213 27.5579L41.9689 29.3833C41.1655 30.1734 41.1655 31.4545 41.9689 32.2446C42.7723 33.0347 44.0748 33.0347 44.8781 32.2446L50.3639 26.8493C51.1672 26.0591 51.1672 24.7781 50.3639 23.9879L44.8781 18.5926C44.0748 17.8025 42.7723 17.8025 41.9689 18.5926Z" fill="#2E85EC"/>
+                                    </svg>
+                                    
+
+                            </div>
+
+                            
+                            <div class="text-center p-20" style=" margin-bottom: 16px; font-weight: bold;
+                            font-size: 18px;
+                            line-height: 150%; ">
+                                
+                                Você tem certeza que quer sincronizar <span style="font-weight: bold"
+                                id="sync-name"></span>?
+
+                                <div style="height: 8px"></div>
+
+                                <span style="font-weight: normal;
+                                font-size: 14px;
+                                line-height: 150%;" id="sync-desc"></span>
+
+                            </div>
+
+
+
+
+
+                        </div>
+
+                        <div id="footer" style="border-top: 1px solid #F4F4F4; padding:20px; text-align:center">
+                            <button id="bt-close-confirm" data-dismiss="modal" aria-label="Close" class="btn btn-primary"
+                                style="padding: 12px 32px; font-size: 16px; font-weight: 600; color:#636363; background-color: #FFFFFF; border:none; font-weight: bold">Fechar</button>
+                            <button id='bt-confirm' class="btn btn-primary"
+                                style=" padding: 12px 32px; font-size: 16px; font-weight: 600">Sincronizar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {{-- end modal --}}
 
         </div>
 

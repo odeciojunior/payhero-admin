@@ -234,7 +234,25 @@ $(document).ready(function () {
         token = $(this).attr("data-token");
 
         $("#modal_edit").modal("show");
+
+        function imageFound() {
+
+        }
+        
+        function imageNotFound() {
+
+            img = '/modules/global/img/produto.png';
+            $("#project-img").attr("src", img);
+
+        }
+
+        var tester=new Image();
+        tester.onload=imageFound;
+        tester.onerror=imageNotFound;
+        tester.src=img;
+        
         $("#project-img").attr("src", img);
+        img = null
         $("#project-name").html(name);
         $("#project-token").val(token);
 
@@ -341,23 +359,31 @@ $(document).ready(function () {
 
     $(".sync-tracking").click(function () {
         syncAction = "tracking";
-        toggle_bts("Rastreios");
+        toggle_confirm("Rastreios", 'A sincronização pode demorar algumas horas.');
     });
 
     $(".sync-products").click(function () {
         syncAction = "products";
-        toggle_bts("Produtos");
+        toggle_confirm("Produtos", 'A sincronização pode demorar algumas horas.');
     });
 
     $(".sync-template").click(function () {
         syncAction = "template";
-        toggle_bts(
+        toggle_confirm(
             "Template",
-            "Antes de sincronizar um novo tema em sua loja, tenha em mente que as configurações feitas antes serão atualizadas, podendo alterar o funcionamento de sua loja. Em caso de dúvidas, entre em contato com o suporte pelo chat."
+            "Antes de sincronizar um novo tema em sua loja, tenha em mente que as configurações feitas antes serão atualizadas, <strong> podendo alterar o funcionamento de sua loja.</strong>"
         );
     });
 
-    function toggle_bts(name, desc) {
+    $('#bt-close-confirm').on('click', function () {
+        $("#modal_edit").modal('show');
+
+    })
+    function toggle_confirm(name, desc) {
+
+        $("#modal_edit").modal('hide');
+        $("#modal-confirm").modal('show');
+
         function fill() {
             
             $("#sync-name").html(name);
@@ -370,14 +396,16 @@ $(document).ready(function () {
             }
         }
         if ($("#bts-confirm").is(":visible")) {
-            $("#bts-confirm").slideUp('fast',null, function () {
-                fill()
-                $("#bts-confirm").slideDown();
-            });
-
+            // $("#bts-confirm").fadeOut('fast',null, function () {
+            //     fill()
+            //     $("#bts-confirm").slideDown();
+            // });
+            fill()
+            
         } else {
             fill()
-            $("#bts-confirm").slideDown();
+            //$("#bts-confirm").show()
+            //$("#bts-confirm").slideDown();
         }
     }
 
@@ -456,6 +484,7 @@ $(document).ready(function () {
             default:
                 break;
         }
+        $("#modal-confirm").modal('hide');
 
         $("#bt-cancel").trigger("click");
         $("#bt-close").trigger("click");
