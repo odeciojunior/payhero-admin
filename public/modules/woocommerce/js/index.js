@@ -210,7 +210,26 @@ $(document).ready(function () {
         var name = $(this).attr('data-name')
         
         $("#modal_edit").modal('show');
-        $('#project-img').attr('src', img)
+        
+        function imageFound() {
+
+        }
+        
+        function imageNotFound() {
+
+            img = '/modules/global/img/produto.png';
+            $("#project-img").attr("src", img);
+
+        }
+
+        var tester=new Image();
+        tester.onload=imageFound;
+        tester.onerror=imageNotFound;
+        tester.src=img;
+        
+        $("#project-img").attr("src", img);
+        img = null
+        
         $('#project-name').html(name)
 
         
