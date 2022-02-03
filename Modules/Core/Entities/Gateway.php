@@ -114,6 +114,9 @@ class Gateway extends Model
         elseif(str_contains($this->name, 'cielo')) {
             return new CieloService();
         }
+        elseif(str_contains($this->name, 'safe2pay')) {
+            return new CieloService();
+        }
         else {
             throw new LogicException("Gateway {$this->name} não encontrado");
         }

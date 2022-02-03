@@ -9,6 +9,7 @@ use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
+use Modules\Core\Services\Gateways\Safe2PayService;
 
 /**
  * Class CompanyService
@@ -30,6 +31,7 @@ class CompanyBalanceService
         GetnetService::class,
         GerencianetService::class,
         CieloService::class,
+        Safe2PayService::class
     ];
 
     public function __construct(Company $company, Statement $gatewayStatementService = null)
@@ -64,9 +66,9 @@ class CompanyBalanceService
     {
         $gatewaysBalances = [];
 
-        if (!auth()->user()->show_old_finances) {
-            array_pop($this->defaultGateways);
-        }
+        // if (!auth()->user()->show_old_finances) {
+        //     array_pop($this->defaultGateways);
+        // }
 
         $totalAvailable = 0;
         foreach($this->defaultGateways as $gatewayClass) 
@@ -80,13 +82,14 @@ class CompanyBalanceService
                 $totalAvailable += intval($gatewayResume['total_available']);
             }
         }
-        
+
         $gatewaysBalances['total_gateways_available'] = foxutils()->formatMoney($totalAvailable / 100);
 
         return $gatewaysBalances;
     }
 
-    public function getAcquirers(){
+    public function getAcquirers()
+    {
         $gatewayIds = [];
         foreach($this->defaultGateways as $gatewayClass) {
             $gatewayService = app()->make($gatewayClass);

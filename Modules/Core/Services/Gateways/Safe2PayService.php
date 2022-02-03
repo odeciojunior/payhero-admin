@@ -9,16 +9,13 @@ use Modules\Core\Services\TaskService;
 use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\AsaasAnticipationRequests;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
-use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Withdrawal;
-use Modules\Core\Entities\SaleGatewayRequest;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
@@ -51,7 +48,7 @@ class Safe2PayService implements Statement
 
     public function getAvailableBalanceWithoutBlocking() : int
     {
-        return $this->company->asaas_balance;
+        return $this->company->safe2pay_balance;
     }
 
     public function getAvailableBalance() : int
@@ -134,7 +131,7 @@ class Safe2PayService implements Statement
             DB::beginTransaction();
 
             $this->company->update([
-                'asaas_balance' => $this->company->asaas_balance -= $value
+                'safe2pay_balance' => $this->company->safe2pay_balance -= $value
             ]);
 
             $withdrawal = Withdrawal::where([
@@ -167,7 +164,7 @@ class Safe2PayService implements Statement
                         'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
                         'tax' => 0,
                         'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                        'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
+                        'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
                     ]
                 );
             } else {
@@ -193,7 +190,6 @@ class Safe2PayService implements Statement
             DB::beginTransaction();
 
             $transactions = Transaction::with('company')
-                ->where('created_at', '>', '2021-09-15')
                 ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
                 ->where('status_enum', Transaction::STATUS_PAID)
                 ->whereIn('gateway_id', $this->gatewayIds)
@@ -223,12 +219,12 @@ class Safe2PayService implements Statement
                         'type_enum' => Transfer::TYPE_IN,
                         'value' => $transaction->value,
                         'type' => 'in',
-                        'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
+                        'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
                     ]
                 );
 
                 $company->update([
-                    'asaas_balance' => $company->asaas_balance+= $transaction->value
+                    'safe2pay_balance' => $company->safe2pay_balance += $transaction->value
                 ]);
 
                 $transaction->update([
@@ -270,14 +266,14 @@ class Safe2PayService implements Statement
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
 
         return [
-            'name' => 'Asaas',
+            'name' => 'Safe2pay',
             'available_balance' => foxutils()->formatMoney($availableBalance / 100),
             'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
             'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
             'total_balance' => foxutils()->formatMoney($totalBalance / 100),
             'total_available' => $availableBalance,
             'last_transaction' => $lastTransactionDate,
-            'id' => 'NzJqoR32egVj5D6'
+            'id' => 'BeYEwR3AdgdKykA'
         ];
     }
 
@@ -286,84 +282,7 @@ class Safe2PayService implements Statement
                                         ->where('company_id', $this->company->id)
                                         ->orderBy('id', 'desc')->first();
 
-        return !empty($lastTransaction) ? ['Asaas']:[];
-    }
-
-    public function makeAnticipation(Sale $sale, $saveRequests = true, $simulate = false) {
-        $this->getCompanyApiKey($sale);
-
-        $data = [
-            "agreementSignature"=> $sale->user->name,
-        ];
-
-        if($sale->installments_amount == 1) {
-            $data["payment"] =$sale->gateway_transaction_id;
-        } else {
-            $saleInstallmentId = $this->saleInstallmentId($sale);
-            $data["installment"] = $saleInstallmentId;
-        }
-
-        $url = 'https://www.asaas.com/api/v3/anticipations';
-        if($simulate) $url = 'https://www.asaas.com/api/v3/anticipations/simulate';
-
-        $curl = curl_init($url);
-
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            'Content-Type: multipart/form-data',
-            'access_token: ' . $this->apiKey,
-        ]);
-
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-
-        $result = curl_exec($curl);
-        $httpStatus     = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $response = json_decode($result, true);
-
-        if(($httpStatus < 200 || $httpStatus > 299) && (!isset($response['errors']))) {
-            //report('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus . ' -- $sale->id = ' . $sale->id . ' -- ' . json_encode($response));
-        }
-
-        if($saveRequests) {
-            $this->saveRequests($url, $response, $httpStatus, $data, $sale->id);
-        }
-
-
-        return $response;
-    }
-
-    public function checkAnticipation(Sale $sale, $saveRequests = true)
-    {
-        $this->getCompanyApiKey($sale);
-
-        $url = 'https://www.asaas.com/api/v3/anticipations/' . $sale->anticipation_id;
-        $curl = curl_init($url);
-
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        //curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($curl, CURLOPT_HEADER, FALSE);
-
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            "Content-Type: application/json",
-            'access_token: ' . $this->apiKey,
-        ]);
-
-        $result = curl_exec($curl);
-        $httpStatus     = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        $response = json_decode($result, true);
-
-        if($saveRequests) {
-            $this->saveRequests($url, $response, $httpStatus, [], $sale->id);
-        }
-
-        return json_decode($result, true);
+        return !empty($lastTransaction) ? ['Safe2pay']:[];
     }
 
     public function getCompanyApiKey(Sale $sale)
@@ -371,55 +290,13 @@ class Safe2PayService implements Statement
         $company = $sale->transactions()->where('type', Transaction::TYPE_PRODUCER)->first()->company;
 
         $this->companyId = $company->id;
-        $this->apiKey = $company->getGatewayApiKey(foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID);
+        $this->apiKey = $company->getGatewayApiKey(foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID);
 
-    }
-
-    private function saleInstallmentId(Sale $sale): ?string
-    {
-        $gatewayRequest = $sale->saleGatewayRequests()
-            ->where('gateway_result->status', Gateway::PAYMENT_STATUS_CONFIRMED)
-            ->latest()
-            ->first();
-
-        $result = json_decode($gatewayRequest->gateway_result, true);
-
-        if (isset($result['id']) and $sale->gateway_transaction_id == $result['id'] and !empty($result['installment'])) {
-            return $result['installment'];
-        }
-
-        if (empty($gatewayRequest)) {
-            throw new Exception("Venda não tem o installment para antecipar !");
-        }
-        return null;
-    }
-
-    private function saveRequests($url, $result, $httpStatus, $data, $saleId)
-    {
-        AsaasAnticipationRequests::create(
-            [
-                'company_id' => $this->companyId,
-                'sale_id' => $saleId,
-                'sent_data' => json_encode(
-                    [
-                        'url' => $url,
-                        'data' => $data
-                    ]
-                ),
-                'response' => json_encode(
-                    [
-                        'result' => $result,
-                        'status' => $httpStatus
-                    ]
-                )
-            ]
-
-        );
     }
 
     public function getGatewayId()
     {
-        return FoxUtils::isProduction() ? Gateway::ASAAS_PRODUCTION_ID:Gateway::ASAAS_SANDBOX_ID;
+        return FoxUtils::isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID:Gateway::SAFE2PAY_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool
@@ -480,7 +357,7 @@ class Safe2PayService implements Statement
                         ]);
 
                         $company->update([
-                            'asaas_balance' => $company->asaas_balance -= $refundValue
+                            'safe2pay_balance' => $company->safe2pay_balance -= $refundValue
                         ]);
 
                     } elseif(!empty($sale->anticipation_status))
@@ -495,12 +372,12 @@ class Safe2PayService implements Statement
                                 'type_enum' => Transfer::TYPE_IN,
                                 'value' => $refundTransaction->value,
                                 'type' => 'in',
-                                'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID
+                                'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
                             ]
                         );
 
                         $company->update([
-                            'asaas_balance' => $company->asaas_balance += $refundTransaction->value
+                            'safe2pay_balance' => $company->safe2pay_balance += $refundTransaction->value
                         ]);
 
                         $refundValue = $refundTransaction->value + $saleTax;
@@ -522,7 +399,7 @@ class Safe2PayService implements Statement
                         ]);
 
                         $company->update([
-                            'asaas_balance' => $company->asaas_balance -= $refundValue
+                            'safe2pay_balance' => $company->safe2pay_balance -= $refundValue
                         ]);
                     }
 
