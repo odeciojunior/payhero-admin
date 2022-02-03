@@ -113,8 +113,15 @@
                 .bt-action:hover,
                 .bt-action:focus {
                     background-image: url('/modules/apps/imgs/bt-action-hover.svg');
+                    border: none;
+
 
                 }
+
+                .bt-action:active{
+                    border: none;
+                }
+
 
                 .form-group label {
                     color: #636363;
@@ -176,34 +183,34 @@
 
                             <div style="padding-top: 18px;">
 
-                                <div id="bts-holder" class="row">
+                                <div id="bts-holder" class="d-flex justify-content-between">
 
-                                    <div class="col-sm">
+                                    {{-- <div class="col-sm"> --}}
                                         <div tabindex="1" class="bt-action sync-products">
                                             <span
-                                                style="line-height:34px; font-size: 16px; font-weight: bold; color:#2E85EC">
+                                                style="line-height:36px; font-size: 16px; font-weight: bold; color:#2E85EC">
                                                 Produtos
                                             </span>
                                         </div>
-                                    </div>
-                                    <div class="col-sm">
+                                    {{-- </div> --}}
+                                    {{-- <div class="col-sm"> --}}
 
                                         <div tabindex="2" class="bt-action sync-tracking">
                                             <span
-                                                style="line-height:34px; font-size: 16px; font-weight: bold; color:#2E85EC">
+                                                style="line-height:36px; font-size: 16px; font-weight: bold; color:#2E85EC">
                                                 Rastreios
                                             </span>
                                         </div>
-                                    </div>
-                                    <div class="col-sm">
+                                    {{-- </div> --}}
+                                    {{-- <div class="col-sm"> --}}
 
                                         <div tabindex="3" class="bt-action sync-webhooks">
                                             <span
-                                                style="line-height:34px; font-size: 16px; font-weight: bold; color:#2E85EC">
+                                                style="line-height:36px; font-size: 16px; font-weight: bold; color:#2E85EC">
                                                 Webhooks
                                             </span>
                                         </div>
-                                    </div>
+                                    {{-- </div> --}}
                                 </div>
 
                                 <div id="bts-confirm" class="row" style="display: none; margin-top: 16px ">
