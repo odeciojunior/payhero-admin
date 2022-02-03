@@ -117,8 +117,8 @@ $(() => {
 
     // CARD 2 CARREGA TELA DE EDITAR PROJETO
     function updateConfiguracoes() {
-        // loadOnAny('#tab_configuration_project .card');
         $("#update-project").addClass("low-opacity");
+        // loadOnAny('#tab_configuration_project .card');
 
         $.ajax({
             method: "GET",
@@ -127,18 +127,18 @@ $(() => {
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
+                
             }, error: function (response) {
-                $("#update-project").removeClass("low-opacity");
                 // loadOnAny('#tab_configuration_project .card', true);
+                $("#update-project").removeClass("low-opacity");
                 errorAjaxResponse(response);
 
             }, success: function (data) {
                 localStorage.setItem('projectConfig',JSON.stringify(data));
                 renderProjectConfig(data);
 
-                //manter o card azul escondido
-                $("#update-project").removeClass("low-opacity");
                 // loadOnAny('#tab_configuration_project .card', true);
+                $("#update-project").removeClass("low-opacity");
             }
         });
     }
@@ -439,13 +439,18 @@ $(() => {
     // SALVAR AS CONFIGURACOES DO PROJETO
     $("#bt-update-project").on('click', function (event) {
 
-        $( "#confirm-changes" ).hide();
+        let getTextSaveChanges = $(".final-card span").html();
+        $(".final-card span").html("Um momento... <strong>Estamos salvando suas alterações.</strong>");
+        
+        $("#options-buttons").children().hide();
+        $(".loader").show();
+
         event.preventDefault();
+        $(".page").addClass("low-opacity");
 
         // $('html, body').animate({
         //     scrollTop: 0
         // });
-        $(".page").addClass("low-opacity");
         // loadingOnScreen();
 
         // Pega tags e texto joga no input pra salvar no banco
@@ -482,17 +487,21 @@ $(() => {
                 },
                 data: formData,
                 error: function (response) {
-                    $(".page").removeClass("low-opacity");
-
                     // loadingOnScreenRemove();
+                    $(".page").removeClass("low-opacity");
                     errorAjaxResponse(response);
 
                 }, success: function (response) {
                     //chamando atualizacao do projeto
                     updateConfiguracoes();
                     setTimeout(function () {
-                        $("#saved-alterations").fadeIn('slow').delay(4000).fadeOut('slow');
                         $( "#confirm-changes" ).hide();
+                        
+                        $(".final-card span").html(getTextSaveChanges);
+                        $("#options-buttons").children().show();
+                        $(".loader").hide();
+
+                        $("#saved-alterations").fadeIn('slow').delay(2500).fadeOut('slow');
                     },1500);
 
                     show();
@@ -510,7 +519,7 @@ $(() => {
     //CANCELAR
     $("#cancel-edit").on("click", function(){
         renderProjectConfig(JSON.parse(localStorage.getItem("projectConfig")))
-        $( "#confirm-changes" ).fadeOut( "slow" );
+        $("#confirm-changes").fadeOut("slow");
     })
     show();
 });

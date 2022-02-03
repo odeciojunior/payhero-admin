@@ -276,6 +276,7 @@
 /* /////////// CARD 1 PROJECT DETAILS /////////// */
 .card-img-edit{
     width: 100%;
+    height: 300px;
 }
 
 .product-chargeback{
@@ -443,5 +444,18 @@
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     background-color: #41DC8F;
+}
+
+.loader {
+    display: none;
+    border: 5px solid #2e85ec;
+    animation: spin 2s linear infinite;
+    border-top: 5px solid #eee;
+    border-right: 5px solid #eee;
+    border-bottom: 5px solid #eee;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    margin-left: 89%;
 }
 /* /////////////////////////// END FOOTER CARD */

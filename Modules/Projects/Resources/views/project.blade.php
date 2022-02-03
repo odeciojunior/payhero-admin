@@ -53,12 +53,16 @@
                                 </div>
 
                                 <div class="col-md-8 d-flex flex-column justify-content-between pl-25 pr-25">
-                                    <div alt="titulo" class="pt-md-15 pt-lg-20 pt-xl-25 mr-15">
-                                        <!-- TITULO CRIADO EM -->
-                                        <div class="row row-title justify-content-between pt-0">
-                                            <h4 class="title-pad mr-5 s-title pl-10 pl-sm-0"></h4>
-                                            <span id="show-status" class="text-white details-text md p-2 pr-4 pl-4 badge-pill"></span>
+
+                                    <div alt="titulo" class="pt-10 pt-md-10 pt-lg-15 pt-xl-20 mr-15">
+
+                                        <!-- TITULO -->
+                                        <div class="row d-flex row-title justify-content-between pt-0 align-items-start">
+                                            <div class="col-lg-9 col-xl-10 title-pad s-title pl-10 pl-sm-0"></div>
+                                            <div id="show-status" class="col-3 col-md-3 col-lg-3 col-xl-2 text-white text-center details-text my-5 ml-10 ml-sm-0 badge-pill badge-success"></div>
                                         </div>
+                                        
+                                        <!-- CRIADO EM -->
                                         <div style="color: #C8C8C8" class="card-text gray font-size-14 pl-10 pl-sm-0" id="created_at"></div>
                                     </div>
 
