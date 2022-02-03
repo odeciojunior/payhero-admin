@@ -27,11 +27,11 @@ class CompanyBalanceService
     private ?Statement $gatewayStatementService;
 
     private $defaultGateways = [
+        Safe2PayService::class,
         AsaasService::class,
         GetnetService::class,
         GerencianetService::class,
         CieloService::class,
-        Safe2PayService::class
     ];
 
     public function __construct(Company $company, Statement $gatewayStatementService = null)

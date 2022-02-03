@@ -14,6 +14,7 @@ use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
+use Modules\Core\Services\Gateways\Safe2PayService;
 
 /**
  * Class Gateway
@@ -115,7 +116,7 @@ class Gateway extends Model
             return new CieloService();
         }
         elseif(str_contains($this->name, 'safe2pay')) {
-            return new CieloService();
+            return new Safe2PayService();
         }
         else {
             throw new LogicException("Gateway {$this->name} não encontrado");
