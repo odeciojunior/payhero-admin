@@ -776,8 +776,7 @@
                             </div>
                             <div style=' max-height: 150px; overflow-y: auto; height: 150px;'>
                                 <div style="padding: 0 20px;" class=" card-body data-holder">
-                                    <table class="table-vendas-itens table table-striped"
-                                           style="width:100%;margin: auto; margin-top:15px">
+                                    <table class="table-vendas-itens table table-striped" style="width:100%;margin: auto; margin-top:15px">
                                         <tbody id="origins-table-itens" img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
                                             {{-- js carrega... --}}
                                         </tbody>
