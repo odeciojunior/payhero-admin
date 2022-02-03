@@ -321,7 +321,7 @@ $(document).ready(function () {
         track = false
         webhook = false
 
-        toggle_bts('Produtos')
+        toggle_confirm('Produtos')
         
 
     })
@@ -332,7 +332,7 @@ $(document).ready(function () {
         track = true
         webhook = false
 
-        toggle_bts('Rastreios')
+        toggle_confirm('Rastreios')
         
 
     })
@@ -341,6 +341,8 @@ $(document).ready(function () {
         sync_data(prod, track, webhook)
         $('#bt-cancel').trigger('click')
         $('#bt-close').trigger('click')
+        $("#modal-confirm").modal('hide');
+
     })
 
     $('#bt-cancel').on('click', function () {
@@ -353,26 +355,37 @@ $(document).ready(function () {
         track = false
         webhook = true
         
-        toggle_bts('Webhooks')
+        toggle_confirm('Webhooks')
     })
 
-    function toggle_bts(name){
+    function toggle_confirm(name, desc) {
+
+        $("#modal_edit").modal('hide');
+        $("#modal-confirm").modal('show');
+
         function fill() {
             
             $("#sync-name").html(name);
-            
+            if (desc) {
+                $("#sync-desc").html(
+                    '<div style="padding:2px 0">' + desc + "</div>"
+                );
+            } else {
+                $("#sync-desc").html("");
+            }
         }
         if ($("#bts-confirm").is(":visible")) {
-            // $("#bts-confirm").slideUp('fast',null, function () {
-                //     $("#bts-confirm").slideDown();
-                // });
-                    fill()
-
+            // $("#bts-confirm").fadeOut('fast',null, function () {
+            //     fill()
+            //     $("#bts-confirm").slideDown();
+            // });
+            fill()
+            
         } else {
             fill()
-            $("#bts-confirm").slideDown();
+            //$("#bts-confirm").show()
+            //$("#bts-confirm").slideDown();
         }
-        
     }
 
     function sync_data(prod, track, webhook) {
@@ -407,4 +420,10 @@ $(document).ready(function () {
             }
         });
     }
+
+
+    $('#bt-close-confirm').on('click', function () {
+        $("#modal_edit").modal('show');
+
+    })
 });
