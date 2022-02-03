@@ -22,7 +22,7 @@
     </div>
 
     <div id="project-not-empty" style="display:none !important;">
-        <div style="display: none !important;" class="page-header container">
+        <div style="display: none !important; padding-top:0" class="page-header container">
             <div class="card" id="filter-products">
                 <div class="row">
                     <div class="col-lg-3 col-md-6">
