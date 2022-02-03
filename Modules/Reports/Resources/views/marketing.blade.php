@@ -99,9 +99,9 @@
 
             <section class="container box-reports" id="reports-content">
 				<div class="row">
-					<div class="col-12 box-items-finance">
+					<div class="col-12 box-items-finance mkt">
                         <div class="row mb-20">
-                            <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
+                            <div class="fianance-items col-md-4 col-6 pr-5 pr-md-15">
                                 <div class="finance-card border blue mb-10">
                                     <span class="title">Acessos</span>
                                     <div class="d-flex">
@@ -110,7 +110,7 @@
                                 </div>
                             </div>
 
-                            <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
+                            <div class="fianance-items col-md-4 col-6 pr-5 pr-md-15">
                                 <div class="finance-card border purple mb-10">
                                     <span class="title">Vendas</span>
                                     <div class="d-flex">
@@ -121,7 +121,7 @@
                                 </div>
                             </div>
 
-                            <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
+                            <div class="fianance-items col-md-4 col-6 pr-5 pr-md-15">
                                 <div class="finance-card border green mb-10">
                                     <span class="title">Receita</span>
                                     <div class="d-flex">
@@ -137,7 +137,7 @@
                 <div class="row">
                     <div class="container d-flex box-chart-primary">
                         <!-- comission -->    
-                        <div class="commission">
+                        <div class="commission mkt">
                             <div class="card">
                                 <section class="container">
                                     <header class="d-flex title-graph">
@@ -501,7 +501,57 @@
                         <!-- /comission -->
                         
                         <!-- distribtion -->
-                        <div class="distribution">
+                        <div class="distribution mkt">
+                            <div class="card inner">
+                                <header class="d-flex title-graph">
+                                    <h5 class="grey font-size-16">
+                                        <strong>Origem</strong>
+                                    </h5>
+                                    <select class="form-control float-right origin-sel" id='origin'>
+                                        <option selected value="src">SRC</option>
+                                        <option value="utm_source">UTM Source</option>
+                                        <option value="utm_medium">UTM Medium</option>
+                                        <option value="utm_campaign">UTM Campaign</option>
+                                        <option value="utm_term">UTM Term</option>
+                                        <option value="utm_content">UTM Content</option>
+                                    </select>
+                                </header>
+
+                                <div class="card-body card-origin">
+                                    <div class="row">
+                                        <div>
+                                            
+                                        </div>
+
+                                        <!-- <div class="col-4">
+                                            
+                                        </div> -->
+                                    </div>
+                                    <div class="row">
+                                        <div class="data-holder">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <table class="table-vendas table table-striped "
+                                                        style="width:100%;margin: auto; margin-top:15px">
+                                                        <!-- <tbody id="origins-table">
+                                                            {{-- js carrega... --}}
+                                                        </tbody> -->
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11">
+                                                <ul id="pagination-origins" class="pagination-sm float-right margin-chat-pagination"
+                                                    style="margin-top:10px; margin-left: 5%">
+                                                    {{-- js carrega... --}}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="card inner">
                                 <header class="d-flex title-graph">
                                     <h5 class="grey font-size-16">
@@ -573,50 +623,169 @@
                                     <div class="card inner">
                                         <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
-                                                <strong>Pendente</strong>
+                                                <strong>Vendas mais frequentes</strong>
                                             </h5>
-                                            <a href="#" class="box-link silver">
-                                                <span>Acessar&nbsp&nbsp</span>
-                                                <i class="o-arrow-right-1 redirect"></i>
-                                            </a>
                                         </header>
-                                        <footer class="">
-                                            <div class="d-flex">
-                                                <div class="balance col-3">
-                                                    <h6 class="grey font-size-14">Total</h6>
-                                                    <strong class="grey total">1.2K</strong>
-                                                </div>
-                                                <div class="balance col-9">
-                                                    <h6 class="font-size-14">Saldo</h6>
-                                                    <small>R$</small>
-                                                    <strong class="total orange">24.588,52</strong>
+                                        <div id="" class="custom-table scrollbar pb-0 pt-0">
+                                            <div class="row">
+                                                <div class="container">
+                                                    <div class="data-holder b-bottom scroll-212">
+                                                        <div class="box-payment-option pad-0">
+                                                            <div class="d-flex align-items list-sales">
+                                                                <div class="d-flex align-items">
+                                                                    <div>
+                                                                        <figure class="box-ico">
+                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                        </figure>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span>Casaco Tiles Neon F...</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="grey font-size-14">000</div>
+                                                                <div class="grey font-size-14"><strong>9.5K</strong></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="box-payment-option pad-0">
+                                                            <div class="d-flex align-items list-sales">
+                                                                <div class="d-flex align-items">
+                                                                    <div>
+                                                                        <figure class="box-ico">
+                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                        </figure>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span>Casaco Tiles Neon F...</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="grey font-size-14">000</div>
+                                                                <div class="grey font-size-14"><strong>9.5K</strong></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="box-payment-option pad-0">
+                                                            <div class="d-flex align-items list-sales">
+                                                                <div class="d-flex align-items">
+                                                                    <div>
+                                                                        <figure class="box-ico">
+                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                        </figure>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span>Casaco Tiles Neon F...</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="grey font-size-14">000</div>
+                                                                <div class="grey font-size-14"><strong>9.5K</strong></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="box-payment-option pad-0">
+                                                            <div class="d-flex align-items list-sales">
+                                                                <div class="d-flex align-items">
+                                                                    <div>
+                                                                        <figure class="box-ico">
+                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                        </figure>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span>Casaco Tiles Neon F...</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="grey font-size-14">000</div>
+                                                                <div class="grey font-size-14"><strong>9.5K</strong></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="box-payment-option pad-0">
+                                                            <div class="d-flex align-items list-sales">
+                                                                <div class="d-flex align-items">
+                                                                    <div>
+                                                                        <figure class="box-ico">
+                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                        </figure>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span>Casaco Tiles Neon F...</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="grey font-size-14">000</div>
+                                                                <div class="grey font-size-14"><strong>9.5K</strong></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="box-payment-option pad-0">
+                                                            <div class="d-flex align-items list-sales">
+                                                                <div class="d-flex align-items">
+                                                                    <div>
+                                                                        <figure class="box-ico">
+                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                        </figure>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span>Casaco Tiles Neon F...</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="grey font-size-14">000</div>
+                                                                <div class="grey font-size-14"><strong>9.5K</strong></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="box-payment-option pad-0">
+                                                            <div class="d-flex align-items list-sales">
+                                                                <div class="d-flex align-items">
+                                                                    <div>
+                                                                        <figure class="box-ico">
+                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                        </figure>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span>Casaco Tiles Neon F...</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="grey font-size-14">000</div>
+                                                                <div class="grey font-size-14"><strong>9.5K</strong></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="box-payment-option pad-0">
+                                                            <div class="d-flex align-items list-sales">
+                                                                <div class="d-flex align-items">
+                                                                    <div>
+                                                                        <figure class="box-ico">
+                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                        </figure>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span>Casaco Tiles Neon F...</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="grey font-size-14">000</div>
+                                                                <div class="grey font-size-14"><strong>9.5K</strong></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="box-payment-option pad-0">
+                                                            <div class="d-flex align-items list-sales">
+                                                                <div class="d-flex align-items">
+                                                                    <div>
+                                                                        <figure class="box-ico">
+                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                        </figure>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span>Casaco Tiles Neon F...</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="grey font-size-14">000</div>
+                                                                <div class="grey font-size-14"><strong>9.5K</strong></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </footer>
-                                    </div>
-                                    <div class="card inner">
-                                        <header class="d-flex title-graph">
-                                            <h5 class="grey font-size-16">
-                                                <strong>Bloqueado</strong>
-                                            </h5>
-                                            <a href="#" class="box-link silver">
-                                                <span>Acessar&nbsp&nbsp</span>
-                                                <i class="o-arrow-right-1 redirect"></i>
-                                            </a>
-                                        </header>
-                                        <footer class="">
-                                            <div class="d-flex">
-                                                <div class="balance col-3">
-                                                    <h6 class="grey font-size-14">Total</h6>
-                                                    <strong class="grey total">748</strong>
-                                                </div>
-                                                <div class="balance col-9">
-                                                    <h6 class="font-size-14">Saldo</h6>
-                                                    <small>R$</small>
-                                                    <strong class="total red">4.588,52</strong>
-                                                </div>
-                                            </div>
-                                        </footer>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
