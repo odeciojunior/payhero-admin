@@ -352,12 +352,38 @@ window.updateAccountStatementData = function() {
                         class="badge badge-sm badge-${statusExtract[item.details.type]}">
                             ${item.details.status}
                         </span>
-                     </td>
-                    <td class="text-left value-finance-schedule" style="grid-area: value;">
-<!--                        <span class="font-md-size-20 bold" style="color:green"> R$ </span>-->
-                        <strong class="font-md-size-20" style="color:green"> ${formatMoney(item.amount)} </strong>
-                    </td>
-                </tr>`;
+                     </td>`
+
+                if(item.amount > 0) {
+                    dataTable += `
+                        <td class="text-left value-finance-schedule" style="grid-area: value;">
+                            <strong class="font-md-size-20" style="color:green">
+                                ${
+                                    item.amount.toLocaleString("pt-BR", {
+                                    style: "currency",
+                                    currency: "BRL"})
+                                    .replace(/\s+/g, '')
+                                    .replace('-', '- ')
+                                }
+                            </strong>
+                        </td>
+                    </tr>`;
+                } else {
+                    dataTable += `
+                        <td class="text-left value-finance-schedule" style="grid-area: value;">
+                            <strong class="font-md-size-20" style="color:red">
+                                ${
+                                    item.amount.toLocaleString("pt-BR", {
+                                    style: "currency",
+                                    currency: "BRL"})
+                                    .replace(/\s+/g, '')
+                                    .replace('-', '- ')
+                                }
+                            </strong>
+                        </td>
+                    </tr>`;
+                }
+
 
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();

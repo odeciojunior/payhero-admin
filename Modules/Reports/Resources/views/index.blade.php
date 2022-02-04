@@ -12,7 +12,7 @@
 
     <div class="page mb-0">
         <div style="display: none" class="page-header container">
-            <div class="row">
+            <div class="row align-items-center justify-content-between" style="min-height: 50px;">
                 <div class="col-12">
                     <h1 class="page-title">Relatório de Vendas</h1>
                     <span type="hidden" class="error-data"></span>
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div id="project-not-empty" style="display: none">
-            <div id="reports-content" class="page-content container">
+            <div id="reports-content" class="page-content container" style="padding-top: 0">
                 <div class="row align-items-center justify-content-between">
                     <div class="col-sm-6 col-m-3 col-lg-3">
                         <div class="">

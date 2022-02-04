@@ -39,7 +39,6 @@
             <div id="project-not-empty" style="display:none">
                 <div class="page-content container">
                     <!-- Filtro -->
-                    <div class="fixhalf"></div>
                     <form id='filter_form'>
                         <div id="" class="card shadow p-20">
 

@@ -2,10 +2,10 @@
     <table id="transfersTable" class="table table-striped table-condensed unify">
         <thead>
             <tr>
-                <td class='col headCenter table-title text-center'>Razão</td>
-                <td class='col headCenter table-title'>Data da venda</td>
-                <td class='col headCenter table-title'>Data da transferência</td>
-                <td class='col headCenter table-title'>Valor</td>
+                <td class='col-auto headCenter table-title text-center' style="width: 300px;">Razão</td>
+                <td class='col-auto headCenter table-title'>Data da venda</td>
+                <td class='col-auto headCenter table-title'>Data da transferência</td>
+                <td class='col-auto headCenter table-title'>Valor</td>
             </tr>
         </thead>
         <tbody id="table-transfers-body" class="custom-t-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}"></tbody>
@@ -13,15 +13,15 @@
     <table id="statementTable" class="table table-condensed unify table-striped" style="display: none">
         <thead>
             <tr>
-                <td class="col headCenter table-title text-center">Razão</td>
-                <td class="col headCenter table-title">Data da venda</td>
-                <td class="col headCenter table-title">Data prevista
+                <td class="col-auto headCenter table-title text-center" style="width: 300px;">Razão</td>
+                <td class="col-auto headCenter table-title">Data da venda</td>
+                <td class="col-auto headCenter table-title">Data prevista
                     <i style="font-weight: normal" class="o-question-help-1 ml-5 font-size-14" data-toggle="tooltip"
                        title="" data-original-title="A comissão será transferida somente após informar códigos de rastreio válidos">
                     </i>
                 </td>
-                <td class="col headCenter table-title text-center">Status</td>
-                <td class="col headCenter table-title">Valor</td>
+                <td class="col-auto headCenter table-title text-center">Status</td>
+                <td class="col-auto headCenter table-title">Valor</td>
             </tr>
         </thead>
         <tbody id="table-statement-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}"
