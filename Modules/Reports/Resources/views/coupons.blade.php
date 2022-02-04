@@ -12,7 +12,7 @@
 
         <div class="page">
             <div style="display: none" class="page-header container">
-                <div class="row">
+                <div class="row align-items-center justify-content-between" style="min-height: 50px;">
                     <div class="col-8">
                         <h1 class="page-title">Utilização de Cupons</h1>
                         <span type="hidden" class="error-data"></span>
@@ -20,8 +20,8 @@
                 </div>
             </div>
             <div id="project-not-empty" style="display: none">
-                <div id="reports-content" class="page-content container">
-                    <div class="row justify-content-between mt-20">
+                <div id="reports-content" class="page-content container" style="padding-top: 0">
+                    <div class="row justify-content-between">
                         <div class="col-lg-12">
                             <form id='filter_form'>
                                 <div id="" class="card shadow p-20">

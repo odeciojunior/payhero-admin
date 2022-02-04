@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Auth\Access\Gate;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\Gateways\CheckoutGateway;
@@ -46,41 +48,52 @@ class AsaasTransfersChargebacks extends Command
      */
     public function handle()
     {
-        $transfers = Transfer::whereDoesntHave('asaasTransfer',function($qr){
-            $qr->where('status','DONE');
-        })
-        ->whereHas('transaction',function($q){
-            $q->where('gateway_id',Gateway::GETNET_PRODUCTION_ID);
-        })
-        ->where('reason','chargedback')
-        ->where('gateway_id',$this->gatewayId)
-        ->get();
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-        $total = count($transfers);
+        try {
 
-        $output = new ConsoleOutput();
-        $progress = new ProgressBar($output, $total);
-        $progress->start();
+            $transfers = Transfer::whereDoesntHave('asaasTransfer',function($qr){
+                $qr->where('status','DONE');
+            })
+                ->whereHas('transaction',function($q){
+                    $q->where('gateway_id',Gateway::GETNET_PRODUCTION_ID);
+                })
+                ->where('reason','chargedback')
+                ->where('gateway_id',$this->gatewayId)
+                ->get();
 
-        $checkoutGateway = new CheckoutGateway($this->gatewayId);
+            $total = count($transfers);
 
-        foreach($transfers as $transfer){
+            $output = new ConsoleOutput();
+            $progress = new ProgressBar($output, $total);
+            $progress->start();
 
-            $progress->advance();
+            $checkoutGateway = new CheckoutGateway($this->gatewayId);
 
-            $response = $checkoutGateway->transferSubSellerToSeller(
-                $transfer->company_id, $transfer->value, $transfer->id
-            );
-            
-            if(empty($response) || empty($response->status) || $response->status=='error'){                
-                $this->error(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Error');
-                continue;
+            foreach($transfers as $transfer){
+
+                $progress->advance();
+
+                $response = $checkoutGateway->transferSubSellerToSeller(
+                    $transfer->company_id, $transfer->value, $transfer->id
+                );
+
+                if(empty($response) || empty($response->status) || $response->status=='error'){
+                    $this->error(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Error');
+                    continue;
+                }
+
+                $this->line(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Done');
             }
 
-            $this->line(str_pad($transfer->id,10,'.',STR_PAD_RIGHT).' Done');                           
+            $progress->finish();
+
+        } catch (Exception $e) {
+            report($e);
         }
 
-        $progress->finish();
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }
 

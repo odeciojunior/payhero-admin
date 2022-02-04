@@ -9,6 +9,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\Gateways\AsaasService;
+use Illuminate\Support\Facades\Log;
 
 class AsaasAnticipationsCheckValeus extends Command
 {
@@ -46,6 +47,8 @@ class AsaasAnticipationsCheckValeus extends Command
      */
     public function handle()
     {
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
 
             $service = new AsaasService();
@@ -132,24 +135,21 @@ class AsaasAnticipationsCheckValeus extends Command
                                 'values' => [$transaction->value],
                                 'messages' => [strtolower(trim($response['errors'][0]['description']))]
                             ];
-
                         }
-
-                        //\Log::info(print_r($cannotAnticipate, true));
-                        //\Log::info(print_r($response, true));
-
                     }
                 }
 
                 $bar->advance();
             }
-            \Log::info("--------------------------------------------------------------------------------");
-            \Log::info(print_r($cannotAnticipate, true));
+            Log::info("--------------------------------------------------------------------------------");
+            Log::info(print_r($cannotAnticipate, true));
 
             $bar->finish();
 
         } catch (Exception $e) {
             report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 }

@@ -9,6 +9,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\Gateways\AsaasService;
+use Illuminate\Support\Facades\Log;
 
 class AsaasAnticipations extends Command
 {
@@ -46,6 +47,8 @@ class AsaasAnticipations extends Command
      */
     public function handle()
     {
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
 
             $service = new AsaasService();
@@ -167,5 +170,7 @@ class AsaasAnticipations extends Command
         } catch (Exception $e) {
             report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 }
