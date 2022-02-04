@@ -119,7 +119,7 @@ $(function () {
         let coupon = $(this).attr('coupon');
 
         $('#btn-delete-coupon').unbind('click');
-        $(document).on('click', '#btn-delete-coupon', function() {
+        $('#btn-delete-coupon').on('click', function () {
             $.ajax({
                 method: "DELETE",
                 url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,

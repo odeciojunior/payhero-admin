@@ -199,7 +199,7 @@ $(document).ready(function () {
         let upsellId = $(this).data('upsell');
 
         $('#btn-delete-upsell').unbind('click');
-        $(document).on('click', '#btn-delete-upsell', function () {
+        $('#btn-delete-upsell').on('click', function () {
             $.ajax({
                 method: "DELETE",
                 url: "/api/projectupsellrule/" + upsellId,
