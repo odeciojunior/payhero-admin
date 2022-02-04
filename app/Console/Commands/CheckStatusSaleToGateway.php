@@ -25,7 +25,7 @@ class CheckStatusSaleToGateway extends Command
      *
      * @var string
      */
-    protected $description = ' CheckStatusSaleToGateway';
+    protected $description = 'CheckStatusSaleToGateway';
 
     public $gateways = [Gateway::GETNET_PRODUCTION_ID];
 

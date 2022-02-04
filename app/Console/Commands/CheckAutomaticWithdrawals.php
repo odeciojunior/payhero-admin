@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\WithdrawalSettings;
 use Modules\Core\Events\WithdrawalRequestEvent;
@@ -48,6 +50,8 @@ class CheckAutomaticWithdrawals extends Command
 
     public function handle()
     {
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         $service = new WithdrawalService();
         $withdrawalSettingsModel = new WithdrawalSettings();
         $withdrawalsSettings = $withdrawalSettingsModel->whereNull('deleted_at')->orderBy('id', 'DESC')->get();
@@ -77,7 +81,7 @@ class CheckAutomaticWithdrawals extends Command
                 }
 
                 DB::commit();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 report($e);
                 DB::rollBack();
             }
@@ -85,6 +89,7 @@ class CheckAutomaticWithdrawals extends Command
 
         settings()->group('withdrawal_request')->set('withdrawal_request', true);
 
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
         return 0;
     }
 
