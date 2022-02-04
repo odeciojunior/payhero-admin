@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=13') }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=15') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v='. versionsFile()) }}">
     <style>
         @font-face {
             font-family: raty;
@@ -22,8 +22,8 @@
     <div class="page">
         <div style="display: none" class="page-header container">
             <h1 class="page-title my-10" style="min-height: 28px">
-                <a class="gray" href="/projects">
-                    <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
+                <a href="/projects">
+                    <span class="o-arrow-right-1 font-size-30 ml-2" aria-hidden="true"></span>
                     Meus projetos
                 </a>
             </h1>
