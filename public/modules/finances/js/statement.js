@@ -587,4 +587,10 @@ $(window).on("load", function() {
             document.getElementById("transaction-value").value = null;
         }
     }
+
+    $('#custom-input-addon, .custom-input-addon-m').on("input change", (e) => {
+        let value = e.target.value
+        $('#custom-input-addon').val(value)
+        $('.custom-input-addon-m').val(value)
+    });
 });
