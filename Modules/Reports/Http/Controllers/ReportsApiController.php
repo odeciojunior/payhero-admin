@@ -23,12 +23,16 @@ use Modules\Reports\Transformers\SalesByOriginResource;
 use Modules\Reports\Transformers\CheckoutsByOriginResource;
 use Modules\Core\Entities\Transaction;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Core\Entities\Gateway;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Reports\Exports\Reports\ReportExport;
 use Modules\Reports\Transformers\ReportCouponResource;
 use Spatie\Activitylog\Models\Activity;
 use Modules\Core\Services\SaleService;
 use Modules\Reports\Transformers\TransactionBlockedResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReportsApiController extends Controller
 {
@@ -800,19 +804,125 @@ class ReportsApiController extends Controller
     }
 
     // Reports Finances
-    public function getComissionBalanceFinances()
+    public function getComissionBalanceFinances(Request $request)
     {
-        return 'comission balance - finances';
+        try {
+            if (empty($request->input('company'))) {
+                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
+            }
+
+            $company = Company::find(hashids_decode($request->input('company')));
+            $gateway = Gateway::find(hashids_decode($request->input('gateway_id')));
+
+            if (empty($company) || empty($gateway)) {
+                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
+            }
+
+            if (Gate::denies('edit', [$company])) {
+                return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
+            }
+
+            $companyService = new CompanyBalanceService($company, $gateway->getService());
+
+            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
+            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
+            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
+            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
+
+            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
+            $totalBalance = $availableBalance + $pendingBalance + $blockedBalanceTotal;
+            $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
+
+            return response()->json(
+                [
+                    'available_balance' => foxutils()->formatMoney($availableBalance / 100),
+                    'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+                    'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
+                    'blocked_balance' => foxutils()->formatMoney($blockedBalanceTotal / 100),
+                    'pending_debt_balance' => foxutils()->formatMoney($pendingDebtBalance / 100)
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Ocorreu algum erro, tente novamente!',], 400);
+        }
     }
 
-    public function getPendingBalanceFinances()
+    public function getPendingBalanceFinances(Request $request)
     {
-        return 'pending balance - finances';
+        try {
+            if (empty($request->input('company'))) {
+                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
+            }
+
+            $company = Company::find(hashids_decode($request->input('company')));
+            $gateway = Gateway::find(hashids_decode($request->input('gateway_id')));
+
+            if (empty($company) || empty($gateway)) {
+                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
+            }
+
+            if (Gate::denies('edit', [$company])) {
+                return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
+            }
+
+            $companyService = new CompanyBalanceService($company, $gateway->getService());
+
+            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
+
+            return response()->json(
+                [
+                    'response' => foxutils()->formatMoney($pendingBalance / 100)
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Ocorreu algum erro, tente novamente!',], 400);
+        }
     }
 
-    public function getCashbackBalanceFinances()
+    public function getCashbackBalanceFinances(Request $request)
     {
-        return 'cashback balance - finances';
+        try {
+            if (empty($request->input('company'))) {
+                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
+            }
+
+            $company = Company::find(hashids_decode($request->input('company')));
+            $gateway = Gateway::find(hashids_decode($request->input('gateway_id')));
+
+            if (empty($company) || empty($gateway)) {
+                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
+            }
+
+            if (Gate::denies('edit', [$company])) {
+                return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
+            }
+
+            $companyService = new CompanyBalanceService($company, $gateway->getService());
+
+            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
+            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
+            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
+            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
+
+            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
+            $totalBalance = $availableBalance + $pendingBalance + $blockedBalanceTotal;
+            $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
+
+            return response()->json(
+                [
+                    'available_balance' => foxutils()->formatMoney($availableBalance / 100),
+                    'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+                    'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
+                    'blocked_balance' => foxutils()->formatMoney($blockedBalanceTotal / 100),
+                    'pending_debt_balance' => foxutils()->formatMoney($pendingDebtBalance / 100)
+                ]
+            );
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Ocorreu algum erro, tente novamente!',], 400);
+        }
     }
 
     // Reports Sales
