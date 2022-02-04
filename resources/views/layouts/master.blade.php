@@ -67,6 +67,13 @@
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}"> --}}
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-TDM6SV5');</script>
+    <!-- End Google Tag Manager -->
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
@@ -74,111 +81,114 @@
     </script>
 </head>
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TDM6SV5"
+                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    @include("layouts.loading")
 
-@include("layouts.loading")
+    @include("layouts.menu-principal")
 
-@include("layouts.menu-principal")
-
-<div class="top-alert-container">
-    <div class="top-alert warning col-sm-12 col-md-5" id="document-pending" style="display:none;">
-        <div class="top-alert-message-container">
-            <div class="col-4 text-center">
-                <img class="top-alert-img" src=" " alt="">
+    <div class="top-alert-container">
+        <div class="top-alert warning col-sm-12 col-md-5" id="document-pending" style="display:none;">
+            <div class="top-alert-message-container">
+                <div class="col-4 text-center">
+                    <img class="top-alert-img" src=" " alt="">
+                </div>
+                <div class="col-8 pr-20 d-flex flex-wrap">
+                    <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
+                    <a href="/companies" data-url-value="/companies" class="top-alert-action redirect-to-accounts">Corrigir documento</a>
+                </div>
+                <a class="top-alert-close">
+                    <i class="material-icons">close</i>
+                </a>
             </div>
-            <div class="col-8 pr-20 d-flex flex-wrap">
-                <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
-                <a href="/companies" data-url-value="/companies" class="top-alert-action redirect-to-accounts">Corrigir documento</a>
-            </div>
-            <a class="top-alert-close">
-                <i class="material-icons">close</i>
-            </a>
         </div>
     </div>
-</div>
-<input type="hidden" id="accountStatus">
-@yield('content')
+    <input type="hidden" id="accountStatus">
+    @yield('content')
 
-<!-- Plugins -->
-<script src="{{ asset('modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.js') }}"></script>
-{{--<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>--}}
-{{--<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>--}}
-{{--<script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>--}}
-<script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
-<script src="{{ asset('modules/global/js-extra/jquery.mask.min.js') }}"></script>
-<script src="{{ asset('modules/global/js-extra/jquery.maskMoney.js') }}"></script>
-<script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Component.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Plugin.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Base.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Config.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/js/Section/Menubar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/js/Section/Sidebar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/js/Section/PageAside.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/js/Section/GridMenu.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
-<script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ asset('modules/global/js/global.js?v=' . versionsFile()) }}"></script>
-<script>
-    verifyDocumentPending();
-</script>
-
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js?v=2') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js?v=2') }}"></script>
-
-
-@stack('scripts')
-
-@if(env('APP_ENV', 'production') == 'production')
-    <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=13') }}"></script>
-    <script src="{{ asset('modules/global/js/notifications.js?v=13') }}"></script>
-    <style>
-        .margin-chat-pagination {
-            display:block !important; height:20px  !important;
-        }
-    </style>
-
+    <!-- Plugins -->
+    <script src="{{ asset('modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.js') }}"></script>
+    {{--<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>--}}
+    {{--<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>--}}
+    {{--<script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>--}}
+    <script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
+    <script src="{{ asset('modules/global/js-extra/jquery.mask.min.js') }}"></script>
+    <script src="{{ asset('modules/global/js-extra/jquery.maskMoney.js') }}"></script>
+    <script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/global/js/Component.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/global/js/Plugin.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/global/js/Base.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/global/js/Config.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/assets/js/Section/Menubar.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/assets/js/Section/Sidebar.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/assets/js/Section/PageAside.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/assets/js/Section/GridMenu.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
+    <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
+    <script src="{{ asset('modules/global/js/global.js?v=' . versionsFile()) }}"></script>
     <script>
-        @if(\Auth::user())
-            (function(m,a,i,s,_i,_m){
-                m.addEventListener('load',function(){m.top.maisim||(function(){_m=a.createElement(i);
-                    i=a.getElementsByTagName(i)[0];_m.async=!0;_m.src=s;_m.id='maisim';_m.charset='utf-8';
-                    _m.setAttribute('data-token',_i);i.parentNode.insertBefore(_m,i)})()})
-            })(window,document,'script','https://app.mais.im/support/assets/js/core/embed.js','273c7ff74192d8dac2ef370dc930d643');
-        @endif
+        verifyDocumentPending();
     </script>
 
-    @if(\Auth::user())
+    <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js?v=2') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js?v=2') }}"></script>
+
+
+    @stack('scripts')
+
+    @if(env('APP_ENV', 'production') == 'production')
+        <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=13') }}"></script>
+        <script src="{{ asset('modules/global/js/notifications.js?v=13') }}"></script>
+        <style>
+            .margin-chat-pagination {
+                display:block !important; height:20px  !important;
+            }
+        </style>
+
         <script>
-            function initFreshChat() {
-                window.fcWidget.init(@json(\Modules\Core\Services\ChatService::getData()));
-                window.fcWidget.user.setProperties(@json(\Modules\Core\Services\ChatService::getExtraData()));
-            }
-
-            function initialize(i, t) {
-                var e;
-                i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e))
-            }
-
-            function initiateCall() {
-                initialize(document, "freshchat-js-sdk")
-            }
-
-            window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
+            @if(\Auth::user())
+                (function(m,a,i,s,_i,_m){
+                    m.addEventListener('load',function(){m.top.maisim||(function(){_m=a.createElement(i);
+                        i=a.getElementsByTagName(i)[0];_m.async=!0;_m.src=s;_m.id='maisim';_m.charset='utf-8';
+                        _m.setAttribute('data-token',_i);i.parentNode.insertBefore(_m,i)})()})
+                })(window,document,'script','https://app.mais.im/support/assets/js/core/embed.js','273c7ff74192d8dac2ef370dc930d643');
+            @endif
         </script>
+
+        @if(\Auth::user())
+            <script>
+                function initFreshChat() {
+                    window.fcWidget.init(@json(\Modules\Core\Services\ChatService::getData()));
+                    window.fcWidget.user.setProperties(@json(\Modules\Core\Services\ChatService::getExtraData()));
+                }
+
+                function initialize(i, t) {
+                    var e;
+                    i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e))
+                }
+
+                function initiateCall() {
+                    initialize(document, "freshchat-js-sdk")
+                }
+
+                window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
+            </script>
+        @endif
+
     @endif
 
-@endif
-
-@if(!Modules\Core\Services\FoxUtils::isProduction())
-    <script>
-        console.log('{{Modules\Core\Services\FoxUtils::gitInfo()}}')
-    </script>
-@endif
+    @if(!Modules\Core\Services\FoxUtils::isProduction())
+        <script>
+            console.log('{{Modules\Core\Services\FoxUtils::gitInfo()}}')
+        </script>
+    @endif
 
 </body>
 </html>
