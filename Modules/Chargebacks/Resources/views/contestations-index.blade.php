@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=123') }}">
-        <link rel="stylesheet" href="{{ asset('modules/chargebacks/css/contestations-index.css?v=12') }}">
+        <link rel="stylesheet" href="{{ asset('modules/chargebacks/css/contestations-index.css?v='. versionsFile()) }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
             .select2-selection--single {
@@ -65,7 +65,7 @@
     <!-- Page -->
     <div class="page" style="margin-bottom: 0 !important;">
         <div style="display: none" class="page-header container pt-35" id="page_header">
-            <div class="row align-items-center justify-content-between">
+            <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-md-6">
                     <h1 class="page-title">Contestações</h1>
                 </div>
