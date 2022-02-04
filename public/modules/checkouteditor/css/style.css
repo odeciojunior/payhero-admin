@@ -752,6 +752,12 @@ textarea:focus {
     margin-bottom: 0;
 }
 
+#modal_verify_phone .modal-title {
+    margin-left: auto;
+}
+
+
+
 .warning-input {
     border: 1px solid #f50000;
 }
@@ -777,11 +783,6 @@ textarea:focus {
 .icon-verified-modal {
     width: 115px;
     margin-bottom: 10px;
-}
-
-#checkout_banner_hidden {
-    position: absolute;
-    left: -9999px;
 }
 
 /* ---------- Select Sirius ---------- */

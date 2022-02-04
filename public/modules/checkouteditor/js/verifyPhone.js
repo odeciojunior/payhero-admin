@@ -20,6 +20,10 @@ $(() => {
         }
     });
 
+    $("#modal_verify_phone").on("hidden.bs.modal", function () {
+        $('.code-input').val("");
+    });
+
     $("#modal_verify_phone").on("shown.bs.modal", function () {
 
         $('#modal_verify_content').show();
@@ -86,7 +90,7 @@ $(() => {
                 startTimer();
                 $(".code-input").addClass("warning-input");
                 $(".verify-error").show("fast", "linear");
-                errorAjaxResponse(response);
+                // errorAjaxResponse(response);
                 loadOnAny("#modal_verify_content", true);
                 
             },

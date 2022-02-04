@@ -31,13 +31,13 @@ $(() => {
             formats: formats,
         });
 
-        const limit = 1000;
+        const limit = 250;
 
         quillTextbar.on("text-change", function () {
             if (quillTextbar.getLength() > limit) {
                 quillTextbar.deleteText(limit, quillTextbar.getLength());
             }
-            $("#save_changes").fadeIn("slow", "swing");
+            // $("#save_changes").fadeIn("slow", "swing");
         });
 
         quillTextbar.on('selection-change', function(range, oldRange, source) {
@@ -50,7 +50,6 @@ $(() => {
             }
                 
         });
-
 
         var quillThanksPage = new Quill("#post_purchase_message_content", {
             modules: {
@@ -97,9 +96,6 @@ $(() => {
                     fillForm(checkout);
                     $('#checkout_editor_id').val(checkout.id)
                 }
-
-                
-                
 
                 $(document).on("submit", "#checkout_editor", function (e) {
                     e.preventDefault();
@@ -153,9 +149,9 @@ $(() => {
                     });
 
                     // Printar Form
-                    for (var form of formData.entries()) {
-                        console.log(form[0] + ": " + form[1]);
-                    }
+                    // for (var form of formData.entries()) {
+                    //     console.log(form[0] + ": " + form[1]);
+                    // }
 
                     if(validadeForm(formData)) {
                         $.ajax({
@@ -869,6 +865,22 @@ $(() => {
                     return false;
                 }   
             }
+
+
+            if(form.get('whatsapp_enabled') == "1"){
+                if($('#support_phone') == ''){
+                    return validated;        
+                }else{
+                    if(testRegex(/^\([1-9]{2}\)\s(?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/,$('#support_phone').val())){
+                        return validated;
+                    }else{
+                        $('#support_phone').addClass('error-input');
+                        $('#support_phone_error').show('slow', 'linear');
+                        scrollToElement('support_phone');
+                        return false;
+                    }
+                }
+            }
             return validated;
         }
     }
@@ -877,5 +889,13 @@ $(() => {
         $([document.documentElement, document.body]).animate({
             scrollTop: ($(`#${elementId}`).position().top - 200)
         }, 2000);
+    }
+
+    function testRegex(re, str) {
+        if (re.test(str)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 });
