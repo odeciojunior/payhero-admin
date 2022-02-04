@@ -1,44 +1,56 @@
-<div class='row no-gutters mb-10'>
-    <div class="top-holder text-right mb-5" style="width: 100%;">
-        <div class='d-flex align-items-center justify-content-end'>
-                <div class="input-group">
-                    <input type="text" class="form-control" id='plan-name' name="plan" placeholder="Nome">
-                    <span class="input-group-append" id='btn-search-link'>
-                      <button type="submit" class="btn btn-primary btn-sm"><i class="icon wb-search" aria-hidden="true"></i></button>
-                    </span>
+<div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">
+    <div class='row no-gutters mb-20'>
+        <div class="top-holder text-right mb-0" style="width: 100%;">
+            <div class='d-flex align-items-center justify-content-end'>
+                <div class='col-md-5'>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id='plan-name' name="plan" placeholder="Pesquisa por nome">
+                        <span class="input-group-append" id='btn-search-link'>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <img src="/modules/global/img/icon-search_.svg">
+                            </button>
+                        </span>
+                    </div>
                 </div>
-            <div class='col-md-6'>
-                <div class="d-flex align-items-center justify-content-end">
-                    <span class="link-button-dependent red"> Adicionar Link </span>
-                    <a id="add-link"  data-toggle="modal" data-target="#modal-create-link" class="ml-10 rounded-add pointer"><i class="o-add-1" aria-hidden="true"></i></a>
+                <div class='col-md-7'>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="btn-holder add-plan d-flex align-items-center pointer">
+                            <span class="link-button-dependent blue">Adicionar </span>
+                            <a class="ml-10 rounded-add pointer add-link" data-toggle="modal" data-target="#modal-create-link" style="display: inline-flex;">
+                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="card shadow">
-    <div style='min-height: 300px'>
-        <div class='page-invoice-table table-responsive'>
-            <table id='table-links' class='table text-left table-links table-striped unify' style='width:100%'>
-                <thead>
-                    <tr>
-                        <td class='table-title'>Descrição</td>
-                        <td class='table-title'>Link Afiliado</td>
-                        <td class='table-title text-center'>Preço</td>
-                        <td class='table-title text-center'>Ações</td>
-                    </tr>
-                </thead>
-                <tbody id='data-table-link' class='min-row-height'>
-                    {{-- js carregando dados --}}
-                </tbody>
-            </table>
+    <div class="card shadow" style="margin: 0 -1.429rem;">
+        <div style='min-height: 300px'>
+            <div class='page-invoice-table table-responsive'>
+                <table id='table-links' class='table text-left table-links table-striped unify' style='width:100%; margin-bottom: 0px;'>
+                    <thead>
+                        <tr>
+                            <td class='table-title'>Descrição</td>
+                            <td class='table-title'>Link Afiliado</td>
+                            <td class='table-title text-center'>Preço</td>
+                            <td class='table-title options-column-width text-center'></td>
+                        </tr>
+                    </thead>
+                    <tbody id='data-table-link' class='min-row-height'>
+                        {{-- js carregando dados --}}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-<ul id="pagination-links"  class="pagination-sm margin-chat-pagination text-right"
-        style="margin-top:10px;position:relative;float:right">
-    {{-- js pagination carrega --}}
-</ul>
+
+<div class="d-flex justify-content-center justify-content-md-end">
+    <ul id="pagination-links" class="pagination-sm margin-chat-pagination text-right m-0">
+        {{-- js pagination carrega --}}
+    </ul>
+</div>
 
 <!-- Create -->
 <div id="modal-create-link" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
