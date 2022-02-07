@@ -334,7 +334,7 @@
                         </div>
 
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
-                            <div class="pr-10 mr-15">
+                            <div class="pt-15 pr-25">
                                 <img src="{{ asset('/modules/global/img/projects/successIcon.svg') }}" alt="icone success">
                             </div>
                         </div>
