@@ -11,8 +11,12 @@ Route::group(
                ->middleware('permission:projects_manage');
 
           Route::apiResource('/projects', 'ProjectsApiController')
-               ->only('index', 'create', 'store', 'edit', 'destroy', 'update', 'show')
-               ->middleware('permission:projects_manage');
+               ->only('index','show')
+               ->middleware('permission:projects|sales');
+
+          Route::apiResource('/projects', 'ProjectsApiController')
+          ->only('create', 'store', 'edit', 'destroy', 'update')
+          ->middleware('permission:projects_manage');
 
           // Verificação de telefone de suporte
           Route::post('/projects/{projectId}/verifysupportphone', 'ProjectsApiController@verifySupportphone')
