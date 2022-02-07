@@ -340,7 +340,7 @@ $(document).ready(function () {
         track = false
         webhook = false
 
-        toggle_confirm('Produtos')
+        toggle_confirm('Produtos', 'A sincronização pode demorar algumas horas.')
         
 
     })
@@ -351,7 +351,7 @@ $(document).ready(function () {
         track = true
         webhook = false
 
-        toggle_confirm('Rastreios')
+        toggle_confirm('Rastreios', 'A sincronização pode demorar algumas horas.')
         
 
     })
@@ -374,7 +374,7 @@ $(document).ready(function () {
         track = false
         webhook = true
         
-        toggle_confirm('Webhooks')
+        toggle_confirm('Webhooks', 'A sincronização pode demorar algumas horas.')
     })
 
     function toggle_confirm(name, desc) {
