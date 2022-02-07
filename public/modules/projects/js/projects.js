@@ -299,7 +299,9 @@ $(() => {
         }
 
         //IMAGEM DO PROJETO
-        $('#update-project #product_photo').attr('src', getImageProject(project.photo));
+        // $('#update-project #product_photo').attr('src', getImageProject(project.photo));
+        replacePreview("product_photo",project.photo,"image.jpg");
+
         $('#product_photo').dropify(dropifyOptions);
 
 
@@ -384,6 +386,22 @@ $(() => {
             onChangeSet = true;
         }
         $( "#confirm-changes" ).hide();
+
+    }
+
+    function replacePreview(name, src, fname = "") {
+        let input = $('input[id="' + name + '"]');
+        let wrapper = input.closest(".dropify-wrapper");
+        let preview = wrapper.find(".dropify-preview");
+        let filename = wrapper.find(".dropify-filename-inner");
+        let render = wrapper.find(".dropify-render").html("");
+    
+        input.val("").attr("title", fname);
+        wrapper.removeClass("has-error").addClass("has-preview");
+        filename.html(fname);
+    
+        render.append($('<img style="width: 100%; border-radius: 8px; object-fit: cover;" />').attr("src", src).css("height", input.attr("height")));
+        preview.fadeIn();
     }
 
     // INPUT AFFILIATION
@@ -527,8 +545,6 @@ $(() => {
     $("#cancel-edit").on("click", function(){
         renderProjectConfig(JSON.parse(localStorage.getItem("projectConfig")))
         $("#confirm-changes").fadeOut("slow");
-
-        $('#update-project #product_photo').attr('src', getImageProject(project.photo));
         
         $('html, body').animate({
             scrollTop: 410
