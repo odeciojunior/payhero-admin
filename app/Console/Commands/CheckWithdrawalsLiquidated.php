@@ -6,13 +6,10 @@ use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Gateway;
-use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
-use Modules\Core\Services\TaskService;
 
 class CheckWithdrawalsLiquidated extends Command
 {
@@ -79,11 +76,6 @@ class CheckWithdrawalsLiquidated extends Command
 
                     if ($countTransactionsLiquidated == $withdrawalTransactionsCount) {
                         $withdrawal->update(['status' => Withdrawal::STATUS_TRANSFERRED]);
-
-                        TaskService::setCompletedTask(
-                            User::find($sale->owner_id),
-                            Task::find(Task::TASK_FIRST_WITHDRAWAL)
-                        );
                     } elseif ($countTransactionsLiquidated > 0) {
                         $withdrawal->update(['status' => Withdrawal::STATUS_PARTIALLY_LIQUIDATED]);
                     }

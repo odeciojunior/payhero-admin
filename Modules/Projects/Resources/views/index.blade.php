@@ -15,19 +15,25 @@
     <!-- Page -->
     <div class="page">
         <div style="display: none" class="page-header container">
-            <a href="/projects/create" class="btn btn-floating btn-primary" id="btn-add-project" style="position: relative; float: right; display:none" title='Adicionar projeto'>
-                <span style="color: white; font-size: 35px" class='o-add-1'></span>
-            </a>
-            <a id="btn-config" class="mr-20 btn-config btn btn-floating bg-secondary d-flex justify-content-center align-items-center" style="position: relative; float: right;" title='Configurações'>
-                <span class="o-cogwheel-1 text-white" style="font-size: 26px; font-weight: 900 !important;"></span>
-            </a>
-            <h1 class="page-title">Meus projetos</h1>
-            <div class="page-header-actions"></div>
+            <div class="row align-items-center justify-content-between" style="min-height:50px">
+                <div class="col-8">
+                    <h1 class="page-title">Meus projetos</h1>
+                    <div class="page-header-actions"></div>
+                </div>
+                <div class="col-4 text-right">
+                    <a href="/projects/create" class="btn btn-floating btn-primary" id="btn-add-project" style="position: relative; float: right; display:none" title='Adicionar projeto'>
+                        <span style="color: white; font-size: 35px" class='o-add-1'></span>
+                    </a>
+                    <a id="btn-config" class="mr-20 btn-config btn btn-floating bg-secondary d-flex justify-content-center align-items-center" style="position: relative; float: right;" title='Configurações'>
+                        <span class="o-cogwheel-1 text-white" style="font-size: 26px; font-weight: 900 !important;"></span>
+                    </a>
+                </div>
+            </div>
         </div>
         @include('projects::empty')
         @include('projects::empty-company')
-        <div class="page-content container">
-            <div id="data-table-projects" class="row" style="margin-top: 30px">
+        <div class="page-content container" style="padding-top: 0">
+            <div id="data-table-projects" class="row" style="margin-top: 0">
             </div>
         </div>
 

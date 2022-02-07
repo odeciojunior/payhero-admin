@@ -31,6 +31,7 @@ class EditProductResource extends JsonResource
             'sku'                 => $this->resource['product']->sku,
             'category_id'         => Hashids::encode($this->resource['product']->category_id),
             'shopify_id'          => $this->resource['product']->shopify_id,
+            'shopify_variant_id'  => $this->resource['product']->shopify_variant_id,
             'cost'                => $this->resource['product']->cost,
             'price'               => $this->resource['product']->price,
             'width'               => $this->resource['product']->width,

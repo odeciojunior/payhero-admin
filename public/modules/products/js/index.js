@@ -106,9 +106,6 @@ $(document).ready(function () {
                             );
                         }
                     });
-                    $("#select-projects").prepend(
-                        '<option value="0" id="opcao-vazia" selected></option>'
-                    );
                 }
                 handleLocalStorage();
             },

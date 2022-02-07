@@ -243,7 +243,7 @@ $(function () {
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum cupom configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro cupom para poder
                                         <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-create-coupon">Adicionar cupom</button>
+                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-create-coupon">Adicionar cupom</button>
                                     </div>
                                 </div>
                             </td>
@@ -264,9 +264,11 @@ $(function () {
                                 <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
                             </td>
                             <td style="text-align:center">
-                                <a role="button" title='Visualizar' class="mg-responsive details-coupon pointer" coupon="${value.id}"><span class="o-eye-1"></span></a>
-                                <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" coupon="${value.id}"><span class="o-edit-1"></span> </a>
-                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}" data-toggle="modal" data-target="#modal-delete-coupon"><span class='o-bin-1'></span></a>
+                                <div class='d-flex justify-content-end align-items-center'>
+                                    <a role="button" title='Visualizar' class="mg-responsive details-coupon pointer" coupon="${value.id}"><span class="o-eye-1"></span></a>
+                                    <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" coupon="${value.id}"><span class="o-edit-1"></span> </a>
+                                    <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}" data-toggle="modal" data-target="#modal-delete-coupon"><span class='o-bin-1'></span></a>
+                                </div>
                             </td>
                         </tr>`;
 

@@ -30,9 +30,9 @@ $(function () {
     function isChecked(input, pixelAttribute = null) {
         if (pixelAttribute != null) {
             if (pixelAttribute == '1' || pixelAttribute == 'true') {
-                input.prop('checked', true);
+                input.prop('checked', true).change();
             } else {
-                input.prop('checked', false);
+                input.prop('checked', false).change();
             }
         } else {
             if (input.is(':checked')) {
@@ -87,7 +87,7 @@ $(function () {
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum pixel configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro pixel para poder
                                         <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-pixel' data-toggle="modal" data-target="#modal-create-pixel">Adicionar pixel</button>
+                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-pixel' data-toggle="modal" data-target="#modal-create-pixel">Adicionar pixel</button>
                                     </div>
                                 </div>
                             </td>
@@ -105,9 +105,11 @@ $(function () {
                                 <td>${value.platform_enum}</td>
                                 <td class="text-center"><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
                                 <td style='text-align:center'>
-                                    <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
-                                    <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
-                                    <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' data-target='#modal-delete-pixel' type='a'><span class='o-bin-1'></span></a>
+                                    <div class='d-flex justify-content-end align-items-center'>
+                                        <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
+                                        <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
+                                        <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' data-target='#modal-delete-pixel' type='a'><span class='o-bin-1'></span></a>
+                                    </div>
                                 </td>
                             </tr>
                         `);
@@ -172,7 +174,6 @@ $(function () {
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 const pixel = response.data;
-                console.log(pixel);
                 pixelEdit = pixel;
                 renderModalPixelEdit(pixel);
                 openModalEditPixel();
@@ -463,6 +464,8 @@ $(function () {
     $("img.logo-pixels-create").on('click', function () {
         const platform = $(this).data('value');
         $("#platform").val('').val(platform);
+        $('.form-control').val('');
+
         $(".img-logo").attr('src', this.src);
 
         $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div, .url_facebook_api_div").hide();
@@ -491,6 +494,14 @@ $(function () {
                 $("#facebook-token-api").attr('readonly', true)
             }
         });
+
+        $("#add_pixel_plans").val(null).trigger("change");
+
+        isChecked($("#modal-create-pixel .status"), true);
+        isChecked($("#modal-create-pixel .checkout"), true);
+        isChecked($("#modal-create-pixel .purchase-boleto"), true);
+        isChecked($("#modal-create-pixel .purchase-card"), true);
+        isChecked($("#modal-create-pixel .purchase-pix"), true);
 
         $("#select-platform-pixel").hide();
         $("#configure-new-pixel").show();
