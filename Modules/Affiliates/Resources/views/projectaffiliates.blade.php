@@ -33,7 +33,7 @@
                         </div>
                     </div>
 
-                <div class="shadow" data-plugin="matchHeight">
+                <div class="shadow" data-plugin="matchHeight" style="margin-top: 2px;">
                     <div class="tab-content">
                         <div class="tab-content">
                             <div id="tab_affiliates_panel" class="tab-pane active" role="tabpanel">

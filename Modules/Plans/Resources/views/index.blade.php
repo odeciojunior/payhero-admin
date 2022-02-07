@@ -1,7 +1,7 @@
 <div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">
     <div class='row no-gutters mb-20'>
         <div class="top-holder text-right mb-0" style="width: 100%;">
-            <div class='d-flex align-items-center'>
+            <div class='d-flex align-items-center justify-content-end'>
                 <div class='col-md-5'>
                     <div class="input-group">
                         <input type="text" class="form-control" id='plan-name' name="plan" placeholder="Pesquisa por nome">
