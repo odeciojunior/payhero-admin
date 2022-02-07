@@ -459,8 +459,8 @@
 
                                     <div class="input-group mb-3">
                                         <input id="project-token"
-                                            style="border: 1px solid #C4C4C4; padding: 12px 16px; border-top-left-radius:8px; border-bottom-left-radius: 8px; "
-                                            disabled type="text" class="form-control" placeholder="" aria-label=""
+                                            style="padding: 12px 16px; border-top-left-radius:8px; border-bottom-left-radius: 8px; "
+                                            disabled type="text" class="input-pad form-control" placeholder="" aria-label=""
                                             aria-describedby="basic-addon2">
                                         <div class="input-group-append">
                                             <button id="token-change"
@@ -599,7 +599,7 @@
 
                         <div id="footer" style="border-top: 1px solid #F4F4F4; padding:20px; text-align:center">
                             <button id="bt-close-confirm" data-dismiss="modal" aria-label="Close" class="btn btn-primary"
-                                style="padding: 12px 32px; font-size: 16px; font-weight: 600; color:#636363; background-color: #FFFFFF; border:none; font-weight: bold">Fechar</button>
+                                style="padding: 12px 32px; font-size: 16px; font-weight: 600; color:#636363; background-color: #FFFFFF; border:none; font-weight: bold">Voltar</button>
                             <button id='bt-confirm' class="btn btn-primary"
                                 style=" padding: 12px 32px; font-size: 16px; font-weight: 600">Sincronizar</button>
                         </div>
