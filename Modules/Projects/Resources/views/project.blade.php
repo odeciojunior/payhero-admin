@@ -89,7 +89,7 @@
 
                                         <!-- CHAMADOS ABERTOS -->
                                         <div class="col-md-4 d-flex align-items-center py-10 rounded-0 product-info-color border-product-alert">
-                                            <div class="d-flex pl-5 pl-lg-20">
+                                            <div class="d-flex pl-5 pl-lg-10">
                                                 <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/icon-chat.svg') }}">
                                             </div>
 
@@ -101,7 +101,7 @@
 
                                         <!-- VENDAS S/ RASTREIO -->
                                         <div class="col-md-4 d-flex align-items-center py-10 tracking-sell product-info-color border-product-alert">
-                                            <div class="d-flex pl-5 pl-lg-20">
+                                            <div class="d-flex pl-5 pl-lg-10">
                                                 <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/trackIcon.svg') }}">
                                             </div>
 
@@ -123,7 +123,7 @@
                             <div class="card d-flex justify-content-between col-sm-12 col-md-6 col-lg col-xl px-0">
 
                                 <!-- VENDAS APROVADAS -->
-                                <div class="pl-20 pl-md-30 pt-15 pt-lg-30 pt-md-20 pl-lg-20 pl-xl-30 pt-xl-45 pb-xl-25">
+                                <div class="pl-20 pl-md-30 pt-15 pt-lg-40 pt-md-20 pl-lg-20 pl-xl-30 pt-xl-45 pb-xl-25">
                                     <div class="d-flex">
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">
@@ -137,7 +137,7 @@
                                 </div>
 
                                 <!-- RECEITA TOTAL -->
-                                <div class="pl-20 pl-md-30 pb-15 pl-lg-20 pl-xl-30 pb-lg-30 pb-xl-50">
+                                <div class="pl-20 pl-md-30 pb-15 pl-lg-20 pl-xl-30 pb-lg-40 pb-xl-50">
                                     <div class="d-flex pt-10">
                                         <div class="p-5 resume-sales mr-10">
                                             <img class="mr-5" src="{{ asset('/modules/global/img/projects/arrowBalance.svg') }}">

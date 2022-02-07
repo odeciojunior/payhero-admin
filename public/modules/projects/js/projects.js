@@ -98,12 +98,15 @@ $(() => {
                 $('#show-description').text(project.description);
 
                 // $('#value-cancel').text('1.2K')
-                let approvedSalesValue = parseFloat(project.approved_sales_value).toLocaleString('pt-BR')
+                let approvedSalesValue = parseFloat(project.approved_sales_value).toLocaleString('pt-BR');
+                let chargeback = parseFloat(project.chargeback_count).toLocaleString('pt-BR');
+                let trackings = parseFloat(project.without_tracking).toLocaleString('pt-BR');
+                let TotalOfSales = parseFloat(project.approved_sales).toLocaleString('pt-BR');
 
-                $('#value-chargeback').text(project.chargeback_count)
+                $('#value-chargeback').text(chargeback)
                 $('#value-open-tickets').text(project.open_tickets)
-                $('#value-without-tracking').text(project.without_tracking)
-                $('#total-approved').text(project.approved_sales)
+                $('#value-without-tracking').text(trackings)
+                $('#total-approved').text(TotalOfSales)
                 $('#total-approved-value').text(approvedSalesValue)
 
                 $('.page-content').show()
@@ -374,6 +377,10 @@ $(() => {
             $("#update-project").on('input change', function() {
                 $( "#confirm-changes" ).fadeIn( "slow" );
             });
+
+            $(".dropify-clear, .o-bin-1").on("click", function(){
+                $( "#confirm-changes" ).fadeIn( "slow" );
+            });
             onChangeSet = true;
         }
         $( "#confirm-changes" ).hide();
@@ -448,9 +455,6 @@ $(() => {
         event.preventDefault();
         $(".page").addClass("low-opacity");
 
-        // $('html, body').animate({
-        //     scrollTop: 0
-        // });
         // loadingOnScreen();
 
         // Pega tags e texto joga no input pra salvar no banco
@@ -506,6 +510,9 @@ $(() => {
 
                     show();
                     $(".page").removeClass("low-opacity");
+                    $('html, body').animate({
+                        scrollTop: 410
+                    });
                     // loadingOnScreenRemove();
                 }
             });
@@ -520,6 +527,12 @@ $(() => {
     $("#cancel-edit").on("click", function(){
         renderProjectConfig(JSON.parse(localStorage.getItem("projectConfig")))
         $("#confirm-changes").fadeOut("slow");
+
+        $('#update-project #product_photo').attr('src', getImageProject(project.photo));
+        
+        $('html, body').animate({
+            scrollTop: 410
+        });
     })
     show();
 });
