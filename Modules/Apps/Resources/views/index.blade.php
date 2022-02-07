@@ -7,10 +7,14 @@
 
     <div class="page">
         <div style="display: none !important;" class="page-header container">
-            <h1 class="page-title">Aplicativos</h1>
+            <div class="row align-items-center justify-content-between" style="min-height:50px">
+                <div class="col-6">
+                    <h1 class="page-title">Aplicativos</h1>
+                </div>
+            </div>
         </div>
         <div id="project-not-empty" style="display: none !important;">
-            <div class="page-content container">
+            <div class="page-content container" style="padding-top: 0">
                 <div class="row">
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch div-notazz-integration">
                         <div class="card app-integration" data-url="/apps/notazz/" style='width: 270px;'>
@@ -160,7 +164,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     {{--
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration" data-url="/integrations" style='width:270px;'>
@@ -174,7 +178,7 @@
                         </div>
                     </div>
                     --}}
-                    
+
                     {{--
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                         <div class="card app-integration" data-url="/apps/digitalmanager" style='width: 270px;'>

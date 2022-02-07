@@ -17,8 +17,8 @@
         @include('dashboard::onboarding.presentation')
         @include('dashboard::pix.pix')
         <div style="display: none" class="page-header container">
-            <div class="row align-items-center justify-content-between">
-                <div class="col-lg-8 mb-15">
+            <div class="row align-items-center justify-content-between" style="min-height:50px">
+                <div class="col-lg-8">
                     <h1 class="page-title">Dashboard</h1>
                 </div>
                 <div class="col-lg-4" id="company-select" style="display:none">

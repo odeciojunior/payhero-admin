@@ -1279,6 +1279,7 @@ class SaleService
                         $transactions->where('transactions.created_at', '>', '2021-09-20');
                     break;
                     case 'Getnet':
+                    case 'Gerencianet':
                         $transactions->where('is_waiting_withdrawal', 0);
                         break;
                     case 'Cielo':
@@ -1299,7 +1300,8 @@ class SaleService
                         ->where('transactions.created_at', '>', '2021-09-20');
                     })
                     ->orWhere(function($qr2){
-                        $qr2->whereIn('transactions.gateway_id',$this->getGatewayIdsByFilter('Gerencianet'));
+                        $qr2->whereIn('transactions.gateway_id',$this->getGatewayIdsByFilter('Gerencianet'))
+                            ->where('is_waiting_withdrawal', 0);
                     })
                     ->orWhere(function($qr3){
                         $qr3->where('is_waiting_withdrawal', 0)

@@ -29,7 +29,7 @@
 
     <div class="page mb-0">
         <div style="display: none" class="page-header container">
-            <div class="row">
+            <div class="row align-items-center justify-content-between" style="min-height: 50px;">
                 <div class="col-8">
                     <h1 class="page-title">Saldo Pendente</h1>
                     <span type="hidden" class="error-data"></span>
@@ -38,7 +38,7 @@
         </div>
         <div id="project-not-empty" style="display: none">
             <div id="reports-content" class="page-content container">
-                <div class="row justify-content-between mt-20">
+                <div class="row justify-content-between">
                     <div class="col-lg-12">
                         <form id='filter_form'>
                             <div id="" class="card shadow p-20">

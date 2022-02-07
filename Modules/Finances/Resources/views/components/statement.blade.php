@@ -2,7 +2,7 @@
     <table id="transfersTable" class="table table-striped table-condensed unify">
         <thead>
             <tr>
-                <td class='col-auto headCenter table-title text-center'>Razão</td>
+                <td class='col-auto headCenter table-title text-center' style="width: 300px;">Razão</td>
                 <td class='col-auto headCenter table-title'>Data da venda</td>
                 <td class='col-auto headCenter table-title'>Data da transferência</td>
                 <td class='col-auto headCenter table-title'>Valor</td>
@@ -13,7 +13,7 @@
     <table id="statementTable" class="table table-condensed unify table-striped" style="display: none">
         <thead>
             <tr>
-                <td class="col-auto headCenter table-title text-center">Razão</td>
+                <td class="col-auto headCenter table-title text-center" style="width: 300px;">Razão</td>
                 <td class="col-auto headCenter table-title">Data da venda</td>
                 <td class="col-auto headCenter table-title">Data prevista
                     <i style="font-weight: normal" class="o-question-help-1 ml-5 font-size-14" data-toggle="tooltip"

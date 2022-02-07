@@ -7,6 +7,7 @@ $(window).on('load', function () {
 
         $(".transfers_company_select .sirius-select-text, .transfers_company_select_mobile .sirius-select-text").text(text)
         $('#custom-input-addon').val('');
+        $('.custom-input-addon-m').val('');
         updateBalances(option);
         if (value.children("option:selected").attr('country') != 'brazil') {
             $("#col_transferred_value").show();
