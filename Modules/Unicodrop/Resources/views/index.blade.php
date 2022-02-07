@@ -2,6 +2,18 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/digitalmanager/css/index.css?v=' .  versionsFile()) }}">
     {{-- <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}"> --}}
+    <style>
+        .o-arrow-right-1 {
+            font-size: 30px;
+        }
+
+        .o-arrow-right-1::before {
+            transform: rotate(180deg);
+        }
+        .gray:hover{
+            color:#a1a1a1 !important;
+        }
+     </style>
 @endpush
 @section('content')
 
