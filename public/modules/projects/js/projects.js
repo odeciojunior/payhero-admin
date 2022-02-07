@@ -300,7 +300,7 @@ $(() => {
 
         //IMAGEM DO PROJETO
         // $('#update-project #product_photo').attr('src', getImageProject(project.photo));
-        replacePreview("product_photo",project.photo,"image.jpg");
+        replacePreview("product_photo",project.photo,"");
 
         $('#product_photo').dropify(dropifyOptions);
 
