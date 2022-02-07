@@ -1,5 +1,4 @@
 $(document).ready( function () {
-
     // ----------------------- Funções de Botão ----------------------------
     $("#default_finish_color").on("change", function () {
         if ($(this).is(":checked")) {
@@ -233,6 +232,16 @@ $(document).ready( function () {
         );
     });
 
+    $(".code-input").on("input", () => {
+        $(this).attr(
+            "value",
+            $(this)
+                .val()
+                .replace(/[^0-9.]/g, "")
+                .replace(/(\..*)\./g, "$1")
+        );
+    });
+
     $(".preview-type").on("change", function () {
         if ($(this).add(":checked")) {
             $("#" + $(this).attr("data-toggle")).fadeOut("slow", "swing");
@@ -256,12 +265,7 @@ $(document).ready( function () {
         },
         error: {
             fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
-            minWidth: "",
-            maxWidth: "A imagem deve ter largura menor que 300px.",
-            minHeight: "",
-            maxHeight: "A imagem deve ter altura menor que 300px.",
-            fileExtension:
-                "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+            fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
         },
         tpl: {
             message:
@@ -277,6 +281,9 @@ $(document).ready( function () {
         var done = function (url) {
             $("#logo_preview_mobile").attr("src", url);
             $("#logo_preview_desktop").attr("src", url);
+
+            $("#logo_preview_mobile").fadeIn('slow');
+            $("#logo_preview_desktop").fadeIn('slow');
         };
         if (files && files.length > 0) {
             file = files[0];
@@ -293,16 +300,12 @@ $(document).ready( function () {
         }
     });
 
-    drEventLogo.on("dropify.beforeClear", function (event, element) {
-        $("#logo_preview_mobile").attr("src", '');
-        $("#logo_preview_desktop").attr("src", '');
-
-        $("#checkout_banner_hidden").val("");
-    });
-
     drEventLogo.on('dropify.errors', function(event, element){
         $("#logo_preview_mobile").attr("src", '');
         $("#logo_preview_desktop").attr("src", '');
+
+        $("#logo_preview_mobile").fadeOut('slow');
+        $("#logo_preview_desktop").fadeOut('slow');
     });
 
     var drEventBanner = $("#checkout_banner").dropify({
@@ -314,18 +317,11 @@ $(document).ready( function () {
         },
         error: {
             fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
-            minWidth: "A imagem deve ter largura maior que 651px.",
-            maxWidth: "A imagem deve ter largura menor que 651px.",
-            minHeight: "A imagem deve ter altura maior que 651px.",
-            maxHeight: "A imagem deve ter altura menor que 651px.",
-            fileExtension:
-                "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+            fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
         },
         tpl: {
-            message:
-                '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">Faça upload do seu banner</span></p></div>',
-            clearButton:
-                '<button type="button" class="dropify-clear o-bin-1"></button>',
+            message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">Faça upload do seu banner</span></p></div>',
+            clearButton: '<button type="button" class="dropify-clear o-bin-1"></button>',
         },
         imgFileExtensions: ["png", "jpg", "jpeg"],
     });
@@ -356,19 +352,14 @@ $(document).ready( function () {
         }
     });
 
-    drEventBanner.on("dropify.beforeClear", function (event, element) {
-        var imgPreviewDesktop = document.getElementById(
-            "preview_banner_img_desktop"
-        );
-        var imgPreviewMobile = document.getElementById(
-            "preview_banner_img_mobile"
-        );
+    drEventBanner.on('dropify.errors', function(event, element){
+        $("#preview_banner_img_mobile").attr("src", '');
+        $("#preview_banner_img_desktop").attr("src", '');
 
-        imgPreviewDesktop.src = "";
-        imgPreviewMobile.src = "";
-
-        $("#checkout_banner_hidden").val("");
+        $("#preview_banner_img_mobile").fadeOut('slow');
+        $("#preview_banner_img_desktop").fadeOut('slow');
     });
+
 
     //  ----------------- Crop Modal ----------------------
 
@@ -441,21 +432,13 @@ $(document).ready( function () {
             var canvas = cropper.getCroppedCanvas();
             var src = canvas.toDataURL();
 
-            var imgPreviewDesktop = document.getElementById(
-                "preview_banner_img_desktop"
-            );
-            var imgPreviewMobile = document.getElementById(
-                "preview_banner_img_mobile"
-            );
+            $("#preview_banner_img_mobile").attr("src", src);
+            $("#preview_banner_img_desktop").attr("src", src);
 
-            imgPreviewDesktop.src = src;
-            imgPreviewMobile.src = src;
+            $("#preview_banner_img_mobile").fadeIn('slow');
+            $("#preview_banner_img_desktop").fadeIn('slow');
 
             replacePreview("checkout_banner", src, "Image.jpg");
-
-            $("#checkout_banner_hidden").prop("type", "hidden");
-            $("#checkout_banner_hidden").val(src);
-            $("#checkout_banner_hidden").prop("type", "file");
 
             cropper.getCroppedCanvas().toBlob((blob) => {
                 let dt = new DataTransfer();

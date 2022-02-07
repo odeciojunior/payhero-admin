@@ -515,7 +515,7 @@
 
                                                 <tr>
                                                     <td><b>{nome}</b> de <b>{cidade}</b> acabou de comprar esse produto</td>
-                                                    <td>
+                                                    <td style="padding: 20px 20px 30px 10px;">
                                                         <input class="table-number-input" type="number" id="notification_just_bought_minimum" name="notification_just_bought_minimum" value="1" min="1" max="99" maxlength="2"   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                     </td>
                                                 </tr>
@@ -864,7 +864,7 @@
                     <span class="title-icon">
                         <img class="icon-title" src="{{ asset('/modules/checkouteditor/img/svg/paid-page.svg') }}">
                         <h1 class="checkout-title">
-                            Páginas pps-compra
+                            Páginas pós-compra
                         </h1>
                     </span>
 
@@ -943,6 +943,9 @@
                                 <input type="text" class="checkout-input-text" id="support_phone" name="support_phone" placeholder="Digite o telefone com DDD do suporte" data-mask="(00) 00000-0000"></input>
                                 <button id="verify_phone_open" class="verify-button" type="button">Validar telefone</button>
                                 <button id="verified_phone_open" class="verified-button" type="button" style="display: none;">Trocar telefone</button>
+                            </div>
+                            <div id="support_phone_error" class="checkout-error" style="display: none">
+                                <p>Preencha o campo com um telefone válido.</p>
                             </div>
 
                             <div class="textarea-observation">
@@ -1024,9 +1027,7 @@
 
                                 <div id="logo_preview_desktop_div" class="logo-desktop-div desktop">
                                     <div class="logo-desktop logo-preview-container">
-                                        
                                             <img id="logo_preview_desktop" class="preview-logo desktop" alt="Logo"/>
-                                        
                                     </div>
                                 </div>
 
@@ -1493,12 +1494,12 @@
 
                     <fieldset class='number-code'>
                         <div class="code-input-container">
-                            <input type="text" name='verify-phone-code' class='code-input'   />
-                            <input type="text" name='verify-phone-code' class='code-input'   />
-                            <input type="text" name='verify-phone-code' class='code-input'   />
-                            <input type="text" name='verify-phone-code' class='code-input'   />
-                            <input type="text" name='verify-phone-code' class='code-input'   />
-                            <input type="text" name='verify-phone-code' class='code-input'   />
+                            <input type="number" name='verify-phone-code' class='code-input'   />
+                            <input type="number" name='verify-phone-code' class='code-input'   />
+                            <input type="number" name='verify-phone-code' class='code-input'   />
+                            <input type="number" name='verify-phone-code' class='code-input'   />
+                            <input type="number" name='verify-phone-code' class='code-input'   />
+                            <input type="number" name='verify-phone-code' class='code-input'   />
                         </div>
                     </fieldset>
                     <p class="verify-error" style="display: none">Código inválido ou vencido.</p>

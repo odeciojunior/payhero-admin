@@ -438,6 +438,12 @@ input[type=radio] {
     transition: all 0.3s;
 }
 
+.nav-link svg:hover {
+    filter: invert(33%) sepia(64%) saturate(1981%) hue-rotate(199deg) brightness(102%) contrast(107%);
+}
+
+
+
 .nav-tabs-line .nav-link {
     padding: .715rem 1.1rem;
 }
