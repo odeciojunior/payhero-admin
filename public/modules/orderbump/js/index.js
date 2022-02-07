@@ -213,7 +213,7 @@ $(() => {
         let id = $(this).data('id');
 
         $('#btn-delete-orderbump').unbind('click');
-        $(document).on('click', '#btn-delete-orderbump', function () {
+        $('#btn-delete-orderbump').on('click', function () {
             $.ajax({
                 method: 'DELETE',
                 url: '/api/orderbump/' + id,
