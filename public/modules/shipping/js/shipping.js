@@ -261,8 +261,8 @@ $(document).ready(function () {
         let frete = $(this).attr('frete');
 
         //deletar frete
-        $('#btn-delete').unbind('click');
-        $(document).on('click', '#btn-delete-frete', function () {
+        $('#btn-delete-frete').unbind('click');
+        $('#btn-delete-frete').on('click', function () {
             $.ajax({
                 method: "DELETE",
                 url: "/api/project/" + projectId + "/shippings/" + frete,
