@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=123') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=124') }}">
         <link rel="stylesheet" href="{{ asset('/modules/projects/css/index.css') }}">
         <style>
             .card{
