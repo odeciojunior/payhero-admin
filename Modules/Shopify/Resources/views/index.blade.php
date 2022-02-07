@@ -599,9 +599,11 @@
 
                         <div id="footer" style="border-top: 1px solid #F4F4F4; padding:20px; text-align:center">
                             <button id="bt-close-confirm" data-dismiss="modal" aria-label="Close" class="btn btn-primary"
-                                style="padding: 12px 32px; font-size: 16px; font-weight: 600; color:#636363; background-color: #FFFFFF; border:none; font-weight: bold">Voltar</button>
+                                style="
+                                width:80px; margin-right:8px;
+                                padding: 12px 0; font-size: 16px; font-weight: 600; color:#636363; background-color: #FAFAFA; border:none; font-weight: bold">Voltar</button>
                             <button id='bt-confirm' class="btn btn-primary"
-                                style=" padding: 12px 32px; font-size: 16px; font-weight: 600">Sincronizar</button>
+                                style=" padding: 12px 16px; font-size: 16px; font-weight: 600">Sincronizar</button>
                         </div>
 
                     </div>
