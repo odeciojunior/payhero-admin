@@ -976,3 +976,139 @@ h4.number{
     margin-top: -8px;
     background: url('/modules/global/img/reports/ico-select.png') 123px center no-repeat !important;
 }
+
+.tt-data {
+    color: #636363;
+    font-size: 16px;
+    font-weight: 700 !important;
+}
+
+.no-data-origin {
+    color: #828282;
+    font-size: 14px;
+}
+.no-data-origin strong {
+    color: #2E85EC;
+    font-size: 16px;
+    display: block;
+    padding-bottom: 5px;
+}
+
+.box-conversion-state { width: 100%; }
+
+.box-states, .brazil-map { flex:1; }
+
+.brazil-map { padding: 20px; }
+
+.box-states { border-right: 1px solid #F2F2F2; }
+
+.box-states ul { 
+    padding: 0; 
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.states-list { padding: 10px 0; }
+.states-list:nth-child(even) { background: #FBFBFB; }
+
+.states-list div:first-child { 
+    min-height: 50px; 
+    align-items: center;
+}
+.states-list ul {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+.item-state { flex-grow: 1; }
+
+.item-state dl {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+.item-state dd { 
+    margin: 0 5px; 
+    color: #636363;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+}
+.item-state dl dd:first-child { margin-left: 0px; }
+
+.item-state dd span { color: #A1A1A1; }
+
+.dd-state {
+    text-align: center;
+    background-color: #F5F5FA;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    font-weight: bold;
+}
+/* mapa brasil */
+#svg-map path {
+    fill: #f9f9f9;
+    stroke: #c5c5c5;
+}
+  
+#svg-map text {
+    fill: #636363;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+#svg-map a {
+    text-decoration: none
+}
+
+#svg-map a:hover {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+#svg-map a:hover path {
+    fill: #c5c5c5;
+}
+
+#svg-map .active path {
+    fill: #e0edfc;
+    stroke: #2e85ec;
+}
+#svg-map a:hover.active path {
+    fill: #2e85ec !important;
+    stroke: #e0edfc; 
+}
+#svg-map .active2 path {
+    fill: #b6d5f9;
+    stroke: #2e85ec;
+}
+#svg-map a:hover.active2 path {
+    fill: #2e85ec;
+    stroke: #e0edfc; 
+}
+
+#svg-map .active text,
+#svg-map .active2 text { fill: #2e85ec; }
+
+#svg-map a:hover.active text,
+#svg-map a:hover.active2 text { fill: #e0edfc;}
+
+/* #svg-map .circle {} */
+
+#svg-map a:hover .circle {
+    stroke: #c5c5c5;
+    cursor: pointer;
+}
+
+#svg-map a:hover:active .circle {
+    fill: #2e85ec !important;
+    stroke: #e0edfc;
+    cursor: pointer;
+}
+  
