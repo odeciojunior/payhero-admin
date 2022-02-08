@@ -294,7 +294,7 @@
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
-                                    <span class="pl-25">Você tem alterações que <b>não estão salvas</b> </span>
+                                    <span class="pl-25 font-size-18">Você tem alterações que <b>não estão salvas</b> </span>
                                 </div>
                             </div>
                         </div>

@@ -26,6 +26,17 @@ $(() => {
         }
     });
 
+    // FRETE
+    $("#shippement").on('change', function () {
+        if ($(this).val() == 0) {
+            $("#div-carrier").hide();
+            $("#div-shipment-responsible").hide();
+        } else {
+            $("#div-carrier").show();
+            $("#div-shipment-responsible").show();
+        }
+    });
+
     // PARCELAS
     let parcelas = '';
     let parcelasJuros = '';
@@ -236,7 +247,7 @@ $(() => {
             'fileExtension': 'A imagem deve ser algum dos formatos permitidos. ({{ value }}).'
         },
         tpl: {
-            message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span class="text-primary font-size-16">Clique ou arraste seu <br> arquivo aqui</span></p></div>',
+            message: '<div class="dropify-message"><span class="file-icon" /> <p class="msg">{{ default }}<span class="text-primary font-size-16">Clique ou arraste seu <br> arquivo aqui</span></p></div>',
             clearButton: '<button type="button" class="dropify-clear o-bin-1"></button>',
         },
         imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'],
@@ -301,7 +312,11 @@ $(() => {
         //IMAGEM DO PROJETO
         // $('#update-project #product_photo').attr('src', getImageProject(project.photo));
         replacePreview("product_photo",project.photo,"");
-
+        if(!project.photo){
+            $(".dropify-render > img").remove();
+            $(".dropify-wrapper").removeClass("has-preview")
+            $(".dropify-preview").css("display","none");
+        }
         $('#product_photo').dropify(dropifyOptions);
 
 
@@ -386,9 +401,7 @@ $(() => {
             onChangeSet = true;
         }
         $( "#confirm-changes" ).hide();
-
     }
-
     function replacePreview(name, src, fname = "") {
         let input = $('input[id="' + name + '"]');
         let wrapper = input.closest(".dropify-wrapper");
@@ -400,7 +413,11 @@ $(() => {
         wrapper.removeClass("has-error").addClass("has-preview");
         filename.html(fname);
     
-        render.append($('<img style="width: 100%; border-radius: 8px; object-fit: cover;" />').attr("src", src).css("height", input.attr("height")));
+        render.append(
+            $('<img style="width: 100%; border-radius: 8px; object-fit: cover;" />')
+                .attr("src", src)
+                .css("height", input.attr("height"))
+        );
         preview.fadeIn();
     }
 
@@ -544,8 +561,7 @@ $(() => {
     //CANCELAR
     $("#cancel-edit").on("click", function(){
         renderProjectConfig(JSON.parse(localStorage.getItem("projectConfig")))
-        $("#confirm-changes").fadeOut("slow");
-        
+        $("#confirm-changes").fadeOut("slow");        
         $('html, body').animate({
             scrollTop: 410
         });
