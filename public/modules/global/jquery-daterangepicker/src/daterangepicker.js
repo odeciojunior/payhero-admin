@@ -955,12 +955,12 @@
                 return $(this).val();
             },
             setValue: function(s) {
-                if (!$(this).attr('readonly') && !$(this).is(':disabled') && s != $(this).val()) {
+                if (!$(this).is(':disabled') && s != $(this).val()) {
                     $(this).val(s);
                 }
             },
-            startDate: false,
-            endDate: moment().endOf('day').toDate(),
+            startDate: moment().subtract(30, "days"),
+            endDate: moment(),
             time: {
                 enabled: false
             },
@@ -988,7 +988,7 @@
                 },
                 {
                     name: 'Último mês',
-                    dates: () => [moment().subtract(29, 'days').toDate(), new Date()]
+                    dates: () => [moment().subtract(30, 'days').toDate(), new Date()]
                 },
                 {
                     name: 'Desde o início',
