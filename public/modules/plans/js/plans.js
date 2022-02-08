@@ -2143,6 +2143,7 @@ $(function () {
                     }
 
                     $('#table-plans').addClass('table-striped');
+                    $('#pagination-plans').html('');
 
                 } else {
                     $('#tab_plans-panel').find('.no-gutters').css('display', 'flex');

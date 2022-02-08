@@ -108,7 +108,7 @@ $(function () {
                     }
                     $("#data-table-pixel").append(`
                         <tr>
-                            <td>${value.name}</td>
+                            <td>${value.name_short}</td>
                             <td>${value.code}</td>
                             <td>${value.platform_enum}</td>
                             <td>
