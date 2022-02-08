@@ -347,6 +347,12 @@
     transition: background 0.6s ease-in-out;
 }
 
+.dropify-clear.o-bin-1{
+    border-radius: 5px !important;
+    border: solid 1px #2E85EC !important;
+    color: #2E85EC !important;
+}
+
 #div-img-project .dropify-wrapper{
     height: 246px !important;
     border: 1px dashed #2E85EC !important;
