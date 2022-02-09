@@ -67,16 +67,6 @@ $(() => {
 
     function show() {
         $(".page").addClass("low-opacity");
-
-        //loadingOnScreen();
-        // loadOnAny('#tab_info_geral .card', false, {
-        //     styles: {
-        //         container: {
-        //             minHeight: '250px'
-        //         }
-        //     }
-        // });
-
         $.ajax({
             url: '/api/projects/' + projectId,
             dataType: "json",
@@ -88,10 +78,9 @@ $(() => {
                 window.location.replace(`${location.origin}/projects`);
                 $('.page-content').show()
                 $(".page").removeClass("low-opacity");
-                //loadingOnScreenRemove();
+
             },
             success: (response) => {
-
                 let project = response.data;
                 let project_type = 'my_products';
                 if (project.shopify_id != null) project_type = 'shopify';
@@ -479,7 +468,7 @@ $(() => {
     });
 
     // SALVAR AS CONFIGURACOES DO PROJETO
-    $("#bt-update-project").on('click', function (event) {
+    $("#update-project").on('submit', function (event) {
 
         let getTextSaveChanges = $(".final-card span").html();
         $(".final-card span").html("Um momento... <strong>Estamos salvando suas alterações.</strong>");
@@ -489,8 +478,6 @@ $(() => {
 
         event.preventDefault();
         $(".page").addClass("low-opacity");
-
-        // loadingOnScreen();
 
         // Pega tags e texto joga no input pra salvar no banco
         let formatedText = quill.root.innerHTML;
@@ -526,12 +513,10 @@ $(() => {
                 },
                 data: formData,
                 error: function (response) {
-                    // loadingOnScreenRemove();
                     $(".page").removeClass("low-opacity");
                     errorAjaxResponse(response);
 
                 }, success: function (response) {
-                    //chamando atualizacao do projeto
                     updateConfiguracoes();
                     setTimeout(function () {
                         $( "#confirm-changes" ).hide();
@@ -546,9 +531,9 @@ $(() => {
                     show();
                     $(".page").removeClass("low-opacity");
                     $('html, body').animate({
-                        scrollTop: 410
+                        scrollTop: 100
                     });
-                    // loadingOnScreenRemove();
+                    loadingOnScreenRemove();
                 }
             });
         } else {
