@@ -25,6 +25,7 @@ class PixService
     public function changePixToCanceled()
     {
         try {
+
             $sales = Sale::where(
                 [
                     ['payment_method', '=', Sale::PIX_PAYMENT],
@@ -49,7 +50,7 @@ class PixService
                 $responseCheckout = (new CheckoutService())->checkPaymentPix($data);
 
                 if ($responseCheckout->status == 'success' and $responseCheckout->payment == true) {
-                    
+
                     foreach($responseCheckout->response->pix as $row){
                         $pixCharge = PixCharge::where('sale_id',$sale->id)->where('txid',$row->txid)->first();
                         if(!empty($row->endToEndId) && !empty($pixCharge)){
@@ -58,7 +59,7 @@ class PixService
                             }
                         }
                     }
-                    
+
                     // $saleModel = Sale::select('id','gateway_transaction_id')
                     // ->where(
                     //     [
