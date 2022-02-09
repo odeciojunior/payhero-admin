@@ -41,10 +41,10 @@
             <!-- FOTO -->
             <div class="col-md-5 col-lg-4 col-xl-3 px-15 pl-xl-15 d-flex flex-column" id='div-img-project' style='position: relative;'>
 
-                <label for='product_photo' class="pl-0 pl-lg-10 pl-xl-0 mb-3 font-size-16">Capa da loja</label>
+                <label for='project_photo' class="pl-0 pl-lg-10 pl-xl-0 mb-3 font-size-16">Capa da loja</label>
 
                 <div style="width:100%" class="text-center">
-                    <input type="file" id="product_photo" name="product_photo" data-height="651" data-max-width="651" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
+                    <input type="file" id="project_photo" name="project_photo" data-height="651" data-max-width="651" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                 </div>
             </div>
 
@@ -53,7 +53,7 @@
 
                 <div class='form-group col-md-12'>
                     <label for='name' class="font-size-16">Nome do projeto</label>
-                    <input name='name' value="" type='text' class='input-pad font-size-16' id='name' placeholder='Nome do Projeto' maxlength='40' required>
+                    <input name='name' value="" type='text' class='input-pad font-size-16 name-project' id='name' placeholder='Nome do Projeto' maxlength='40' required />
                     <span id='name-error' class='text-danger'></span>
                     <p class='info pt-5' style='font-size: 10px;'></p>
                 </div>
@@ -294,7 +294,7 @@
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
-                                    <span class="pl-25">Você tem alterações que <b>não estão salvas</b> </span>
+                                    <span class="pl-25 font-size-18">Você tem alterações que <b>não estão salvas</b> </span>
                                 </div>
                             </div>
                         </div>
@@ -302,8 +302,8 @@
                         <div id="options-buttons" class="buttons-container col-md-6 d-flex justify-content-end align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 d-flex justify-content-end pr-0 pr-md-25">
-                                    <button type="button" id="cancel-edit" class="btn btn-primary border border-white mr-25 px-15 px-sm-40">Cancelar</button>
-                                    <button type="button" id="bt-update-project" class="btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alteração</button>
+                                    <button type="button" id="cancel-edit" class="font-size-16 btn btn-primary border border-white mr-25 px-15 px-sm-40">Cancelar</button>
+                                    <button type="submit" id="bt-update-project" class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alteração</button>
                                 </div>
                             </div>
                             <div class="loader"></div>

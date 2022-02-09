@@ -4,10 +4,10 @@
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
     @endpush
-    
+
     <div class='page'>
         <div style="display: none" class="page-header container">
-            <div class="row align-items-center justify-content-between">
+            <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">
                     <h1 class="page-title">Afiliação</h1>
                 </div>
@@ -16,7 +16,7 @@
             </div>
         </div>
             <div id="project-not-empty" style="display:none !important;">
-                <div class="page-content container">
+                <div class="page-content container" style="padding-top: 0">
                     <div class="mb-15">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
                             <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #2E85EC">
@@ -33,13 +33,13 @@
                         </div>
                     </div>
 
-                <div class="shadow" data-plugin="matchHeight">
+                <div class="shadow" data-plugin="matchHeight" style="margin-top: 2px;">
                     <div class="tab-content">
                         <div class="tab-content">
                             <div id="tab_affiliates_panel" class="tab-pane active" role="tabpanel">
                                 <div class="fixhalf"></div>
                                 <div class="card card-body shadow " style="min-height: 300px">
-                                    <div class="row mb-15">                                        
+                                    <div class="row mb-15">
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Projeto</label>
@@ -47,20 +47,20 @@
                                                     <option value="0">Todos projetos</option>
                                                 </select>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="name">Nome do afiliado</label>
                                                 <input id="name-affiliate" class="input-pad form-control" placeholder="Nome" maxlength="100" style="height: 50px !important;">
                                             </div>
-                                        </div>                
+                                        </div>
                                         <div class="col-lg-2 col-md-6" style="margin-top: 28px">
                                             <button id="btn-filter-affiliates" class="btn btn-primary w-full px-10" style="height: 50px;">
                                                 <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
                                             </button>
                                         </div>
                                     </div>
-                                    
+
                                     <table class='table text-left table-striped unify table-affiliate' style='width:100%'>
                                         <thead>
                                             <tr>
@@ -92,7 +92,7 @@
                             <div id="tab_affiliates_request_panel" class="tab-pane" role="tabpanel">
                                 <div class="fixhalf"></div>
                                 <div class="card card-body shadow " style="min-height: 300px">
-                                    <div class="row mb-15">                                        
+                                    <div class="row mb-15">
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="type-products">Projeto</label>
@@ -100,13 +100,13 @@
                                                     <option value="0">Todos projetos</option>
                                                 </select>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
                                                 <label for="name">Nome do afiliado</label>
                                                 <input id="name-affiliate-request" class="input-pad form-control" placeholder="Nome" maxlength="100" style="height: 50px !important">
                                             </div>
-                                        </div>                
+                                        </div>
                                         <div class="col-lg-2 col-md-6" style="margin-top: 28px">
                                             <button id="btn-filter-affiliates-request" class="btn btn-primary w-full px-10" style="height: 50px;">
                                                 <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros

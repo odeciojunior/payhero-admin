@@ -26,6 +26,17 @@ $(() => {
         }
     });
 
+    // FRETE
+    $("#shippement").on('change', function () {
+        if ($(this).val() == 0) {
+            $("#div-carrier").hide();
+            $("#div-shipment-responsible").hide();
+        } else {
+            $("#div-carrier").show();
+            $("#div-shipment-responsible").show();
+        }
+    });
+
     // PARCELAS
     let parcelas = '';
     let parcelasJuros = '';
@@ -56,16 +67,6 @@ $(() => {
 
     function show() {
         $(".page").addClass("low-opacity");
-
-        //loadingOnScreen();
-        // loadOnAny('#tab_info_geral .card', false, {
-        //     styles: {
-        //         container: {
-        //             minHeight: '250px'
-        //         }
-        //     }
-        // });
-
         $.ajax({
             url: '/api/projects/' + projectId,
             dataType: "json",
@@ -77,10 +78,9 @@ $(() => {
                 window.location.replace(`${location.origin}/projects`);
                 $('.page-content').show()
                 $(".page").removeClass("low-opacity");
-                //loadingOnScreenRemove();
+
             },
             success: (response) => {
-
                 let project = response.data;
                 let project_type = 'my_products';
                 if (project.shopify_id != null) project_type = 'shopify';
@@ -98,12 +98,15 @@ $(() => {
                 $('#show-description').text(project.description);
 
                 // $('#value-cancel').text('1.2K')
-                let approvedSalesValue = parseFloat(project.approved_sales_value).toLocaleString('pt-BR')
+                let approvedSalesValue = parseFloat(project.approved_sales_value).toLocaleString('pt-BR');
+                let chargeback = parseFloat(project.chargeback_count).toLocaleString('pt-BR');
+                let trackings = parseFloat(project.without_tracking).toLocaleString('pt-BR');
+                let TotalOfSales = parseFloat(project.approved_sales).toLocaleString('pt-BR');
 
-                $('#value-chargeback').text(project.chargeback_count)
+                $('#value-chargeback').text(chargeback)
                 $('#value-open-tickets').text(project.open_tickets)
-                $('#value-without-tracking').text(project.without_tracking)
-                $('#total-approved').text(project.approved_sales)
+                $('#value-without-tracking').text(trackings)
+                $('#total-approved').text(TotalOfSales)
                 $('#total-approved-value').text(approvedSalesValue)
 
                 $('.page-content').show()
@@ -233,7 +236,7 @@ $(() => {
             'fileExtension': 'A imagem deve ser algum dos formatos permitidos. ({{ value }}).'
         },
         tpl: {
-            message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span class="text-primary font-size-16">Clique ou arraste seu <br> arquivo aqui</span></p></div>',
+            message: '<div class="dropify-message"><span class="file-icon" /> <p class="msg">{{ default }}<span class="text-primary font-size-16">Clique ou arraste seu <br> arquivo aqui</span></p></div>',
             clearButton: '<button type="button" class="dropify-clear o-bin-1"></button>',
         },
         imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'],
@@ -296,8 +299,16 @@ $(() => {
         }
 
         //IMAGEM DO PROJETO
-        $('#update-project #product_photo').attr('src', getImageProject(project.photo));
-        $('#product_photo').dropify(dropifyOptions);
+        // $('#update-project #project_photo').attr('src', getImageProject(project.photo));
+        replacePreview("project_photo",project.photo,"");
+        
+        if(!project.photo){
+            $(".dropify-render > img").remove();
+            $(".dropify-wrapper").removeClass("has-preview")
+            $(".dropify-preview").css("display","none");
+        }
+
+        $('#project_photo').dropify(dropifyOptions);
 
 
         //NOME E DESCRICAO
@@ -374,9 +385,31 @@ $(() => {
             $("#update-project").on('input change', function() {
                 $( "#confirm-changes" ).fadeIn( "slow" );
             });
+
+            $(".dropify-clear, .o-bin-1").on("click", function(){
+                localStorage.setItem("photo_remove", true)
+                $( "#confirm-changes" ).fadeIn( "slow" );
+            });
             onChangeSet = true;
         }
         $( "#confirm-changes" ).hide();
+    }
+
+    function replacePreview(name, src, fname = "") {
+        let input = $('input[id="' + name + '"]');
+        let wrapper = input.closest(".dropify-wrapper");
+        let preview = wrapper.find(".dropify-preview");
+        let filename = wrapper.find(".dropify-filename-inner");
+        let render = wrapper.find(".dropify-render").html("");
+    
+        input.val("").attr("title", fname);
+        wrapper.removeClass("has-error").addClass("has-preview");
+        filename.html(fname);
+    
+        render.append(
+            $('<img style="width: 100%; border-radius: 8px; object-fit: cover;" />').attr("src", src).css("height", input.attr("height"))
+        );
+        preview.fadeIn();
     }
 
     // INPUT AFFILIATION
@@ -437,7 +470,7 @@ $(() => {
     });
 
     // SALVAR AS CONFIGURACOES DO PROJETO
-    $("#bt-update-project").on('click', function (event) {
+    $("#update-project").on('submit', function (event) {
 
         let getTextSaveChanges = $(".final-card span").html();
         $(".final-card span").html("Um momento... <strong>Estamos salvando suas alterações.</strong>");
@@ -447,11 +480,6 @@ $(() => {
 
         event.preventDefault();
         $(".page").addClass("low-opacity");
-
-        // $('html, body').animate({
-        //     scrollTop: 0
-        // });
-        // loadingOnScreen();
 
         // Pega tags e texto joga no input pra salvar no banco
         let formatedText = quill.root.innerHTML;
@@ -472,6 +500,13 @@ $(() => {
         let formData = new FormData(document.getElementById("update-project"));
         formData.append('status_url_affiliates', statusUrlAffiliates);
         formData.append("automatic_affiliation", automaticAffiliation);
+        
+        if(!$("#project_photo").prop("files").length){
+            formData.delete("project_photo");
+        }
+        if(localStorage.getItem("photo_remove") == "true"){
+            formData.append("remove_project_photo", true)
+        }
 
         if (!verify) {
             $.ajax({
@@ -487,12 +522,11 @@ $(() => {
                 },
                 data: formData,
                 error: function (response) {
-                    // loadingOnScreenRemove();
                     $(".page").removeClass("low-opacity");
                     errorAjaxResponse(response);
 
                 }, success: function (response) {
-                    //chamando atualizacao do projeto
+                    localStorage.setItem("photo_remove",false);
                     updateConfiguracoes();
                     setTimeout(function () {
                         $( "#confirm-changes" ).hide();
@@ -506,7 +540,10 @@ $(() => {
 
                     show();
                     $(".page").removeClass("low-opacity");
-                    // loadingOnScreenRemove();
+                    $('html, body').animate({
+                        scrollTop: 100
+                    });
+                    loadingOnScreenRemove();
                 }
             });
         } else {
@@ -519,7 +556,11 @@ $(() => {
     //CANCELAR
     $("#cancel-edit").on("click", function(){
         renderProjectConfig(JSON.parse(localStorage.getItem("projectConfig")))
-        $("#confirm-changes").fadeOut("slow");
+        $("#confirm-changes").fadeOut("slow");        
+        $('html, body').animate({
+            scrollTop: 410
+        });
     })
+    
     show();
 });

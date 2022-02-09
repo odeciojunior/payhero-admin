@@ -48,11 +48,17 @@
     @endpush
     <div class="page">
         <div style="display: none" class="page-header container">
-            <button id="store-invite" title='Adicionar convite' type="button" class="btn btn-floating btn-primary"
+            <div class="row align-items-center justify-content-between" style="min-height:50px">
+                <div class="col-8">
+                    <h1 class="page-title">Convites</h1>
+                </div>
+                <div class="col-4 text-right">
+                    <button id="store-invite" title='Adicionar convite' type="button" class="btn btn-floating btn-primary"
                     style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
-                <i class="o-add-1" aria-hidden="true"></i></button>
-            <h2 class="page-title">Convites</h2>
-            <p id='text-info' style="margin-top: 12px;">A cada convite aceito, você vai ganhar 1% de
+                    <i class="o-add-1" aria-hidden="true"></i></button>
+                </div>
+            </div>
+            <p id='text-info' style="margin-top: 20px; margin-bottom:30px">A cada convite aceito, você vai ganhar 1% de
                 comissão das vendas efetuadas pelos novos usuários que você convidou durante 6 meses.</p>
 
             <div class='container col-sm-12 d-lg-block' id='card-invitation-data' style='display:none;'>

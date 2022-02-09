@@ -31,7 +31,7 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
             ->whereNull('u.deleted_at')
             ->orderBy('withdrawals.id')
             ->get();
-        $this->comment(json_encode($withdrawals->pluck('id')));
+        
         $managerUrl = env('MANAGER_URL', 'http://dev.manager.com.br') . '/api/release/withdrawalsgetfaster';
 
         foreach ($withdrawals as $withdrawal) {

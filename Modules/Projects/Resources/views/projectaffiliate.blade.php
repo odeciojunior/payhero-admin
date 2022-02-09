@@ -18,7 +18,7 @@
                 </a>
             </h1>
         </div>
-        <div class="page-content container">
+        <div class="page-content container page-project">
             <div class="mt-15">
                 <!-- Painel de informações gerais -->
                 <div class="card">
@@ -83,26 +83,20 @@
                     </ul>
                 </div>
             </div>
-            <div class="shadow" data-plugin="matchHeight">
+            <div class="shadow" data-plugin="matchHeight" style="margin-top: 2px;">
                 <div class="tab-content">
                     <div class="tab-content">
                         <!-- Painel de Pixels -->
                         <div class="tab-pane active" id="tab_pixels-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('pixels::index')
-                            </div>
+                            @include('pixels::index')
                         </div>
                         <!--- Painel de Planos -->
                         <div class="tab-pane" id="tab_links-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('affiliates::links')
-                            </div>
+                            @include('affiliates::links')
                         </div>
                         <!--- Painel de Configurações -->
                         <div class="tab-pane" id="tab_settings_affiliate-panel" role="tabpanel">
-                            <div class="card card-body">
-                                @include('projects::editprojectaffiliate')
-                            </div>
+                            @include('projects::editprojectaffiliate')
                         </div>
                     </div>
                 </div>

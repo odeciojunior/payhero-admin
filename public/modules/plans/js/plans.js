@@ -17,8 +17,16 @@ $(function () {
 
     var selected_plans = [];
 
+    function hideTable() {
+        $('#tab_plans-panel').find('.no-gutters').css('display', 'none');
+        $('#table-plans').find('thead').css('display', 'none');
+    }
+
     $('.tab_plans').on('click', function () {
-        $("#previewimage").imgAreaSelect({remove: true});
+        hideTable();
+
+        $("#previewimage").imgAreaSelect({ remove: true });
+        $("#plan-name").val('');
         index();
         $(this).off();
 
@@ -153,7 +161,7 @@ $(function () {
 
                         append += '<div class="col-sm-12">';
                             append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
-                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
+                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhum resultado encontrado.</p>';
                             append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A; margin-bottom: 20px;">Por aqui, nenhum produto com esse nome.</p>';
                         append += '</div>';
                     }
@@ -1541,7 +1549,7 @@ $(function () {
 
         $(modal).find('.tab-pane').removeClass('show active');
 
-        $(modal).attr('data-backdrop', 'true');
+        $(modal).attr('data-backdrop', 'static');
         $(modal).modal('show');
 
         getProducts(modal, 'create');
@@ -1809,6 +1817,7 @@ $(function () {
         $("#btn-delete-plan").unbind('click');
         $("#btn-delete-plan").on('click', function () {
             modalID.modal('hide');
+
             $.ajax({
                 method: "DELETE",
                 url: '/api/project/' + projectId + '/plans/' + plan,
@@ -1832,8 +1841,10 @@ $(function () {
 
                 }),
                 success: function success(response) {
-                    alertCustom('success', response.message);
+                    hideTable();
                     index();
+
+                    alertCustom('success', response.message);
                 }
             });
         });
@@ -2075,15 +2086,13 @@ $(function () {
             }
         }
 
-        $('#tab_plans-panel').find('.no-gutters').css('display', 'none');
-        $('#table-plans').find('thead').css('display', 'none');
-
+        var planName = $("#plan-name").val();
         $.ajax({
             method: "GET",
             url: link,
             dataType: "json",
             data: {
-                plan: $("#plan-name").val()
+                plan: planName
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -2107,21 +2116,32 @@ $(function () {
             success: function success(response) {
                 $('#pagination-plans').html('');
                 if (isEmpty(response.data)) {
-                    $("#data-table-plan").html(`
-                        <tr class='text-center'>
-                            <td colspan='11' style='height: 70px; vertical-align: middle;'>
-                                <div class='d-flex justify-content-center align-items-center'>
-                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
-                                    <div class='text-left'>
-                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum plano configurado</h1>
-                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro plano para poder
-                                        <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-plan' data-toggle="modal" data-target="#modal_add_plan">Adicionar plano</button>
+                    if (planName != '') {
+                        $("#data-table-plan").html(`
+                            <tr class='text-center'>
+                                <td colspan='11' style='height: 70px; vertical-align: middle;'>
+                                    Nenhum dado encontrado
+                                </td>
+                            </tr>
+                        `);
+                    } else {
+                        $("#data-table-plan").html(`
+                            <tr class='text-center'>
+                                <td colspan='11' style='height: 70px; vertical-align: middle;'>
+                                    <div class='d-flex justify-content-center align-items-center'>
+                                        <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                        <div class='text-left'>
+                                            <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum plano configurado</h1>
+                                            <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro plano para poder
+                                            <br>gerenciá-los nesse painel.</p>
+                                            <button type='button' style='margin: 0; width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-plan' data-toggle="modal" data-target="#modal_add_plan">Adicionar plano</button>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    `);
+                                </td>
+                            </tr>
+                        `);
+                    }
+
                     $('#table-plans').addClass('table-striped');
 
                 } else {
@@ -2289,7 +2309,7 @@ $(function () {
 
                         append += '<div class="col-sm-12">';
                             append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
-                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
+                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhum resultado encontrado.</p>';
                             append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A; margin-bottom: 40px;">Por aqui, nenhum plano com esse nome.</p>';
                         append += '</div>';
                     }
@@ -2456,7 +2476,7 @@ $(function () {
 
                                 append += '<div class="col-sm-12">';
                                     append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
-                                    append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
+                                    append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhum resultado encontrado.</p>';
                                     append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A;">Por aqui, nenhum plano com esse nome.</p>';
                                 append += '</div>';
                             }

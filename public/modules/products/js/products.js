@@ -61,7 +61,7 @@ $(document).ready(function () {
                      * Se nao for produto shopify o botao converter nao aparece
                      *
                     */
-                     if (!response.data.product.shopify_id) {
+                    if (!response.data.product.shopify_variant_id) {
                         $(".converte-product").parent().hide();
                     }
                     $('.converte-product').attr('product', response.data.product.id);
@@ -71,7 +71,7 @@ $(document).ready(function () {
                      * Se for produto shopify o botao delete nao aparece
                      *
                     */
-                    if (response.data.product.shopify_id) {
+                    if (response.data.product.shopify_variant_id) {
                         $(".delete-product").parent().hide();
                     }
                     $('.delete-product').attr('product', response.data.product.id);
