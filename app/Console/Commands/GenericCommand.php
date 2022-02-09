@@ -18,8 +18,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $pix = new PixService();
-
-        $pix->changePixToCanceled();
+       
     }
 }
