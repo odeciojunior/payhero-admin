@@ -181,8 +181,6 @@ class CreateAccountSafe2Pay extends Command
 //                ],
             ];
 
-            //dd($data);
-
             $result = $this->api->createAccount($data);
 
             return $this->updateToReviewStatus($result,$company);
