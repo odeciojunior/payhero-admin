@@ -9,8 +9,12 @@ $(document).ready(function () {
             'Accept': 'application/json',
         },
         error: (response) => {
+            if (response?.responseJSON.account_is_approved == false) {
+                $('#card-project').hide();
+                $('#empty-companies-error').show();
+                $('.content-error').show()
+            }
             $('.page').show()
-
             loadingOnScreenRemove();
             errorAjaxResponse(response);
         },
