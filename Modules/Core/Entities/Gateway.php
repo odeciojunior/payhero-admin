@@ -101,48 +101,35 @@ class Gateway extends Model
      */
     protected static $submitEmptyLogs = false;
 
-    public function getService() : Statement
-    {
-        if(str_contains($this->name, 'getnet')) {
-            return new GetnetService();
-        }
-        elseif(str_contains($this->name, 'gerencianet')) {
-            return new GerencianetService();
-        }
-        elseif(str_contains($this->name, 'asaas')) {
-            return new AsaasService();
-        }
-        elseif(str_contains($this->name, 'cielo')) {
-            return new CieloService();
-        }
-        elseif(str_contains($this->name, 'safe2pay')) {
-            return new Safe2PayService();
-        }
-        else {
-            throw new LogicException("Gateway {$this->name} não encontrado");
-        }
-    }
     
-    public function getServiceById($gatewayId){
-        if(!empty($gatewayId)){
-            switch($gatewayId){
-                case self::ASAAS_PRODUCTION_ID:
-                    case self::ASAAS_SANDBOX_ID:
-                        return new AsaasService();
-                case self::GERENCIANET_PRODUCTION_ID:
-                    case self::GERENCIANET_SANDBOX_ID:
-                        return new GerencianetService();
-                case self::GETNET_PRODUCTION_ID:
-                    case self::GETNET_SANDBOX_ID:
-                        return new GetnetService();
-                case self::CIELO_PRODUCTION_ID:
-                    case self::CIELO_SANDBOX_ID:
-                        return new CieloService();
-                default:
-                    throw new LogicException("Gateway {self->name} não encontrado");
-                break;
-            }
-        }             
+    public static function getServiceById($gatewayId){
+        
+        switch($gatewayId){
+            case self::ASAAS_PRODUCTION_ID:
+            case self::ASAAS_SANDBOX_ID:
+                return new AsaasService();
+
+            case self::GERENCIANET_PRODUCTION_ID:
+            case self::GERENCIANET_SANDBOX_ID:
+                return new GerencianetService();
+
+            case self::GETNET_PRODUCTION_ID:
+            case self::GETNET_SANDBOX_ID:
+                return new GetnetService();
+
+            case self::CIELO_PRODUCTION_ID:
+            case self::CIELO_SANDBOX_ID:
+                return new CieloService();
+            
+            case self::SAFE2PAY_PRODUCTION_ID:
+            case self::SAFE2PAY_SANDBOX_ID:
+                return new Safe2PayService();
+
+            default:
+                throw new LogicException("Gateway {self->name} não encontrado");
+            break;
+        }
+                 
     }
 
     /**

@@ -60,7 +60,7 @@ class SalesController extends Controller
                 throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
             }
             
-            $service = (new Gateway)->getServiceById($transaction->gateway_id);
+            $service = Gateway::getServiceById($transaction->gateway_id);
             $pdf = $service->refundReceipt($hashid,$transaction);
             
             return $pdf->stream('comprovante.pdf');
