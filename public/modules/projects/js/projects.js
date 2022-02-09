@@ -299,14 +299,16 @@ $(() => {
         }
 
         //IMAGEM DO PROJETO
-        // $('#update-project #product_photo').attr('src', getImageProject(project.photo));
-        replacePreview("product_photo",project.photo,"");
+        // $('#update-project #project_photo').attr('src', getImageProject(project.photo));
+        replacePreview("project_photo",project.photo,"");
+        
         if(!project.photo){
             $(".dropify-render > img").remove();
             $(".dropify-wrapper").removeClass("has-preview")
             $(".dropify-preview").css("display","none");
         }
-        $('#product_photo').dropify(dropifyOptions);
+
+        $('#project_photo').dropify(dropifyOptions);
 
 
         //NOME E DESCRICAO
@@ -385,12 +387,14 @@ $(() => {
             });
 
             $(".dropify-clear, .o-bin-1").on("click", function(){
+                localStorage.setItem("photo_remove", true)
                 $( "#confirm-changes" ).fadeIn( "slow" );
             });
             onChangeSet = true;
         }
         $( "#confirm-changes" ).hide();
     }
+
     function replacePreview(name, src, fname = "") {
         let input = $('input[id="' + name + '"]');
         let wrapper = input.closest(".dropify-wrapper");
@@ -403,9 +407,7 @@ $(() => {
         filename.html(fname);
     
         render.append(
-            $('<img style="width: 100%; border-radius: 8px; object-fit: cover;" />')
-                .attr("src", src)
-                .css("height", input.attr("height"))
+            $('<img style="width: 100%; border-radius: 8px; object-fit: cover;" />').attr("src", src).css("height", input.attr("height"))
         );
         preview.fadeIn();
     }
@@ -498,6 +500,13 @@ $(() => {
         let formData = new FormData(document.getElementById("update-project"));
         formData.append('status_url_affiliates', statusUrlAffiliates);
         formData.append("automatic_affiliation", automaticAffiliation);
+        
+        if(!$("#project_photo").prop("files").length){
+            formData.delete("project_photo");
+        }
+        if(localStorage.getItem("photo_remove") == "true"){
+            formData.append("remove_project_photo", true)
+        }
 
         if (!verify) {
             $.ajax({
@@ -517,6 +526,7 @@ $(() => {
                     errorAjaxResponse(response);
 
                 }, success: function (response) {
+                    localStorage.setItem("photo_remove",false);
                     updateConfiguracoes();
                     setTimeout(function () {
                         $( "#confirm-changes" ).hide();
@@ -551,5 +561,6 @@ $(() => {
             scrollTop: 410
         });
     })
+    
     show();
 });

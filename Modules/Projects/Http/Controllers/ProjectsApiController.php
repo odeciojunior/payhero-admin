@@ -352,7 +352,8 @@ class ProjectsApiController extends Controller
             $requestValidated['status'] = 1;
 
 
-            $projectPhoto = $request->file('product_photo');
+            $projectPhoto = $request->file('project_photo');
+            $removeProjectPhoto = $request->get('remove_project_photo');
 
             if ($projectPhoto == null) {
                 try{
@@ -364,7 +365,7 @@ class ProjectsApiController extends Controller
                 }
             }
 
-            if($projectPhoto != null){
+            if($projectPhoto != null && !$removeProjectPhoto){
                 try{
                     $amazonFileService->deleteFile($project->photo);
                     $img = Image::make($projectPhoto->getPathname());

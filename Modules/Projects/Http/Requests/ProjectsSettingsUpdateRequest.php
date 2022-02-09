@@ -9,7 +9,7 @@ class ProjectsSettingsUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "product_photo" => 'nullable',
+            "project_photo" => 'sometimes|nullable',
             "name" => "nullable|string|max:100",
             "description" => "nullable|string|max:255",
             "url_page" => "nullable|string|max:255",
