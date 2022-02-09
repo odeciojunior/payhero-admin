@@ -468,16 +468,7 @@ $(function () {
                                         template: '<div class="tooltip product-details" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
                                     });
 
-                                    $(modal).find('.sirius-select').each(function () {
-                                        let $target = $(this);
-                                        let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
-                                        $target.wrap(`<div class="sirius-select-container"></div>`);
-                                        $target.hide();
-                                        $target.after(`<div class="sirius-select-options"></div>`);
-                                        $target.after(`<div class="sirius-select-text ${classes}"></div>`);
-
-                                        renderSiriusSelect(this);
-                                    });
+                                    $(modal).find('.sirius-select').siriusSelect();
 
                                     $(modal).find(find_stage).find('.product-photo').on('error', function() {
                                         $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
