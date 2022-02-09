@@ -54,9 +54,9 @@ class PixService
                     foreach($responseCheckout->response->pix as $row){
                         $pixCharge = PixCharge::where('sale_id',$sale->id)->where('txid',$row->txid)->first();
                         if(!empty($row->endToEndId) && !empty($pixCharge)){
-                            if($pixCharge->status == 'RECEBIDO'){
+                            //if($pixCharge->status == 'RECEBIDO'){
                                 report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
-                            }
+                            //}
                         }
                     }
 
