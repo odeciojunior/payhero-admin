@@ -116,7 +116,7 @@
 
 .checkout-error > p {
     font-style: normal;
-    font-weight: normal;
+    font-weight: bold;
     font-size: 12px !important;
     margin: 0 !important;
     line-height: 18px;
@@ -365,6 +365,7 @@ input[type="number"] {
     justify-content: space-between;
     align-items: center;
     height: fit-content;
+    min-height: 85px;
     width: 95%;
     padding: 16px 24px;
     bottom: 0;
@@ -634,7 +635,7 @@ textarea:focus {
 }
 
 .focus-in {
-    outline: 1px solid #2bb2ff !important;
+    border: 1px solid #2bb2ff !important;
 }
 
 .modal-dialog.modal-crop {
@@ -656,7 +657,7 @@ textarea:focus {
 }
 
 .editor-container {
-    max-width: 670px;
+    max-width: 664px;
 }
 
 .switch-holder.labeled {
@@ -688,16 +689,29 @@ textarea:focus {
     color: #ffffff;
     border: none;
     border-radius: 8px;
+    font-weight: bold;
+    width: 200px;
+    height: 42px;
+    padding: 5px;
+}
+
+.remove-button {
+    background-color: #ffffff;
+    color: #454545;
+    border: 1px solid #454545;
+    border-radius: 8px;
+    font-weight: bold;
     width: 200px;
     height: 42px;
     padding: 5px;
 }
 
 .verified-button {
-    background-color: #ffffff;
-    color: #454545;
-    border: 1px solid #454545;
+    background-color: #4B8FEF;
+    color: #fff;
+    border: none;
     border-radius: 8px;
+    font-weight: bold;
     width: 200px;
     height: 42px;
     padding: 5px;
@@ -752,11 +766,10 @@ textarea:focus {
     margin-bottom: 0;
 }
 
-#modal_verify_phone .modal-title {
+.modal-title {
     margin-left: auto;
+    font-weight: bold;
 }
-
-
 
 .warning-input {
     border: 1px solid #f50000;
@@ -1047,10 +1060,9 @@ input[type="color"]::-moz-color-swatch {
     opacity: 0.7;
 }
 
-/* QuillJS */
-
+/* ------------------- QuillJS ------------------- */
 #checkout_editor .quill-editor {
-    height: 70px;
+    height: 100px;
     border-radius: 0 0 8px 8px;
 }
 

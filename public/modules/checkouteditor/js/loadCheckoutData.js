@@ -120,9 +120,24 @@ $(() => {
                     }else{
                         formData.append( "topbar_content", $("#topbar_content").children().html());
                     }                   
-                    
-
+                
                     formData.append("post_purchase_message_content", $("#post_purchase_message_content").children().html());
+
+
+                    if(!formData.get('automatic_discount_credit_card')){
+                        $('#automatic_discount_credit_card').val(0);
+                        formData.append("automatic_discount_credit_card", 0);
+                    }
+
+                    if(!formData.get('automatic_discount_bank_slip')){
+                        $('#automatic_discount_bank_slip').val(0);
+                        formData.append("automatic_discount_bank_slip", 0);
+                    }
+
+                    if(!formData.get('automatic_discount_pix')){
+                        $('#automatic_discount_pix').val(0);
+                        formData.append("automatic_discount_pix", 0);
+                    }
 
                     if (!$("#theme_ready_enabled").is(":checked")) {
                         var primaryColor = $('label[for="' + $("input[name=theme_enum]:checked").attr("id") +'"]').children(".theme-primary-color").attr("data-color");
@@ -149,9 +164,9 @@ $(() => {
                     });
 
                     // Printar Form
-                    // for (var form of formData.entries()) {
-                    //     console.log(form[0] + ": " + form[1]);
-                    // }
+                    for (var form of formData.entries()) {
+                        console.log(form[0] + ": " + form[1]);
+                    }
 
                     if(validadeForm(formData)) {
                         $.ajax({
@@ -467,18 +482,29 @@ $(() => {
                 $("#checkout_editor #notification-table .selectable-all").prop("checked",true);
             }
 
-            $("#checkout_editor #notification_buying_minimum").val(
-                checkout.notification_buying_minimum || 0
-            );
-            $("#checkout_editor #notification_bought_30_minutes_minimum").val(
-                checkout.notification_bought_30_minutes_minimum || 0
-            );
-            $("#checkout_editor #notification_bought_last_hour_minimum").val(
-                checkout.notification_bought_last_hour_minimum || 0
-            );
-            $("#checkout_editor #notification_just_bought_minimum").val(
-                checkout.notification_just_bought_minimum || 0
-            );
+            $("#checkout_editor #notification_buying_minimum").val(checkout.notification_buying_minimum || 0);
+            $("#checkout_editor #notification_bought_30_minutes_minimum").val(checkout.notification_bought_30_minutes_minimum || 0);
+            $("#checkout_editor #notification_bought_last_hour_minimum").val(checkout.notification_bought_last_hour_minimum || 0);
+            $("#checkout_editor #notification_just_bought_minimum").val(checkout.notification_just_bought_minimum || 0);
+
+
+            const form = document.querySelector("#checkout_editor");
+            const selectableCheckboxes = form.querySelectorAll(".selectable-notification:checked");
+
+            if(selectableCheckboxes.length > 0 && selectableCheckboxes.length < 4) {
+                $('#selectable-all-notification').addClass('dash-check');
+                $('#selectable-all-notification').prop('checked', true);
+            }
+    
+            if(selectableCheckboxes.length == 0) {
+                $('#selectable-all-notification').prop('checked', false);
+                $('#selectable-all-notification').removeClass('dash-check');
+            }
+            
+            if (selectableCheckboxes.length == 4){
+                $('#selectable-all-notification').removeClass('dash-check');
+                $('#selectable-all-notification').prop('checked', true);
+            }
 
             if (checkout.social_proof_enabled) {
                 $("#checkout_editor #social_proof_enabled").prop(
@@ -488,10 +514,7 @@ $(() => {
                 $("#checkout_editor #social_proof_enabled").prop("value", 1);
                 $("#checkout_editor .social-proof-content").show();
             } else {
-                $("#checkout_editor #social_proof_enabled").prop(
-                    "checked",
-                    false
-                );
+                $("#checkout_editor #social_proof_enabled").prop("checked",false);
                 $("#checkout_editor #social_proof_enabled").prop("value", 0);
                 $("#checkout_editor .social-proof-content").hide();
             }
@@ -643,12 +666,15 @@ $(() => {
             $("#checkout_editor #bank_slip_due_days").val(
                 checkout.bank_slip_due_days || 1
             );
+
             $("#checkout_editor #installments_limit").val(
                 checkout.installments_limit || 1
             );
+
             $("#checkout_editor #interest_free_installments").val(
                 checkout.interest_free_installments || 1
             );
+
             $("#checkout_editor #preselected_installment").val(
                 checkout.preselected_installment || 1
             );
@@ -656,9 +682,11 @@ $(() => {
             $("#checkout_editor #automatic_discount_credit_card").val(
                 checkout.automatic_discount_credit_card || 1
             );
+
             $("#checkout_editor #automatic_discount_bank_slip").val(
                 checkout.automatic_discount_bank_slip || 1
             );
+
             $("#checkout_editor #automatic_discount_pix").val(
                 checkout.automatic_discount_pix || 1
             );
@@ -702,9 +730,11 @@ $(() => {
             if (checkout.support_phone_verified == 1) {
                 $("#verify_phone_open").hide();
                 $("#verified_phone_open").show();
+                $("#remove_phone").show();
             } else {
                 $("#verify_phone_open").show();
                 $("#verified_phone_open").hide();
+                $("#remove_phone").hide();
             }
 
             if (checkout.theme_enum == 0 || !checkout.theme_enum) {
@@ -860,19 +890,33 @@ $(() => {
                     validated = true;
                 }else{
                     $('#post_purchase_message_content').addClass('error-input');
-                    scrollToElement('post_purchase_message_content');
                     $('#post_purchase_message_content_error').show('slow', 'linear');
+                    scrollToElement('post_purchase_message_content');
                     return false;
                 }   
             }
 
+            console.log('-------------------------------------------');
+            console.log(form.get('checkout_logo').size);
+
+            if(form.get('checkout_logo_enabled') == "1"){
+                if(form.get('checkout_logo')){
+                    console.log('Valido')
+                    validated = true;  
+                }else{
+                    console.log('não válido')
+                    scrollToElement('checkout_logo_enabled');
+                    $('#checkout_logo_error').show('slow', 'linear');
+                    return false;
+                }
+            }
 
             if(form.get('whatsapp_enabled') == "1"){
-                if($('#support_phone') == ''){
-                    return validated;        
+                if($('#support_phone').val() == ''){
+                    validated = true;      
                 }else{
                     if(testRegex(/^\([1-9]{2}\)\s(?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/,$('#support_phone').val())){
-                        return validated;
+                        validated = true;      
                     }else{
                         $('#support_phone').addClass('error-input');
                         $('#support_phone_error').show('slow', 'linear');
@@ -881,6 +925,9 @@ $(() => {
                     }
                 }
             }
+
+
+            
             return validated;
         }
     }

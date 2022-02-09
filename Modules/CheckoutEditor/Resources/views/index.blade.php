@@ -1,8 +1,7 @@
 @push('css')
 <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
 <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-<link rel="stylesheet" href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/quill-editor.css?v='.uniqid()) }}">
+<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/quill.snow.css?v=' . uniqid()) }}">
 <link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/dropfy.css?v=' . uniqid()) }}">
 <link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/custom-inputs.css?v='.uniqid()) }}">
 <link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/cropper.css?v='.uniqid()) }}">
@@ -79,6 +78,10 @@
                                     Imagem de 300x300px
                                     Formatos: JPEG ou PNG
                                 </div>
+                            </div>
+
+                            <div id="checkout_logo_error" class="checkout-error" style="display: none">
+                                <p>Por favor,carregue uma imagem de formato válido (jpg, jpeg ou png).</p>
                             </div>
                         </div>
                     </div>
@@ -616,7 +619,6 @@
                                         <div class="sirius-select-text" style="height: 43px;">
                                             Empresas
                                         </div>
-                                        
                                     </select>
                                 </div>
                             </div>
@@ -730,7 +732,7 @@
                                         <option value="9">9x</option>
                                         <option value="10">10x</option>
                                         <option value="11">11x</option>
-                                        <option value="12"selected>12x</option>
+                                        <option value="12" select>12x</option>
                                     </select>
                                 </div>
                             </div>
@@ -750,7 +752,7 @@
                                         <option value="9">9x</option>
                                         <option value="10">10x</option>
                                         <option value="11">11x</option>
-                                        <option value="12"selected>12x </option>
+                                        <option value="12" select>12x </option>
                                     </select>
                                 </div>
                             </div>
@@ -770,7 +772,7 @@
                                         <option value="9">9x</option>
                                         <option value="10">10x</option>
                                         <option value="11">11x</option>
-                                        <option value="12"selected>12x</option>
+                                        <option value="12" select>12x</option>
                                     </select>
                                 </div>
                             </div>
@@ -864,12 +866,12 @@
                     <span class="title-icon">
                         <img class="icon-title" src="{{ asset('/modules/checkouteditor/img/svg/paid-page.svg') }}">
                         <h1 class="checkout-title">
-                            Páginas pós-compra
+                            Página pós-compra
                         </h1>
                     </span>
 
                     <div class="checkout-subtitle">
-                        <p>Altere o destino do cliente após a compra, personalize mensagens e mais.</p>
+                        <p>Personalize sua página de obrigado.</p>
                     </div>
 
 
@@ -941,6 +943,7 @@
                             <label for="support_phone" class="checkout-label">Telefone do suporte <span class="observation-span">Opcional</span></label>
                             <div class="row-flex">
                                 <input type="text" class="checkout-input-text" id="support_phone" name="support_phone" placeholder="Digite o telefone com DDD do suporte" data-mask="(00) 00000-0000"></input>
+                                <button id="remove_phone" class="remove-button" type="button">Remover</button>
                                 <button id="verify_phone_open" class="verify-button" type="button">Validar telefone</button>
                                 <button id="verified_phone_open" class="verified-button" type="button" style="display: none;">Trocar telefone</button>
                             </div>
@@ -1413,7 +1416,7 @@
                         </div>
                     </div>
 
-                    <div class="save-changes " id="save_changes" style="display: none;">
+                    <div class="save-changes " id="save_changes" style="">
 
                         <p>
                             Você tem alterações que <strong>não estão salvas</strong>
@@ -1532,8 +1535,7 @@
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin/cropper.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
-<script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
-<script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script src="{{asset('modules/checkouteditor/js/quill.min.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/cropper.min.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/verifyPhone.js?v=' . uniqid())}}"></script>
 <script src="{{asset('modules/checkouteditor/js/checkoutEditor.js?v=' . uniqid())}}"></script>

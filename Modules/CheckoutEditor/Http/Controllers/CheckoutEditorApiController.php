@@ -74,6 +74,10 @@ class CheckoutEditorApiController extends Controller
                 $data['pix_enabled'] = $company->has_pix_key && $company->pix_key_situation === 'VERIFIED' && $data['pix_enabled'];
             }
 
+            if(empty($data['support_phone'])){
+                $data['support_phone_verified'] = 0;
+            }
+
             $config->update($data);
 
             return new CheckoutConfigResource($config);
