@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\CompanyAdjustments;
+use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
@@ -55,8 +56,8 @@ class CheckAdjustmentGateway extends Command
                 ->whereHas('gatewayCompanyCredential')
                 //->onlyTrashed()
                 ->withTrashed()
-                //->where('id', '>=', 40)
-                ->where('id', '=', 41)
+                ->where('id', '>=', 718)
+                ->where('id', '<=', 1000)
             ;
 
             $total = $companies->count();
@@ -69,7 +70,15 @@ class CheckAdjustmentGateway extends Command
                 foreach ($this->gateways as $gateway) {
                     switch ($gateway) {
                         case Gateway::GETNET_PRODUCTION_ID:
-                            $this->checkGetnet($company);
+                            if((GatewaysCompaniesCredential::where('company_id', $company->id)
+                                ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
+                                ->whereNotNull('gateway_subseller_id')
+                                ->exists())
+                            ) {
+
+                                $this->checkGetnet($company);
+                            }
+
                             break;
                     }
                 }
@@ -131,6 +140,15 @@ class CheckAdjustmentGateway extends Command
                     if (!in_array($adjustment, $adjustments)) {
 
                         $adjustments[] = $adjustment;
+
+                        if((CompanyAdjustments::where('company_id', $company->id)
+                            ->where('adjustment_id', $adjustment->adjustment_id)
+                            ->exists())
+                        ) {
+                            continue;
+                        }
+
+                        if(!empty($companyAdjustment))  $value_total = (int) $companyAdjustment->adjustment_amount_total;
 
                         $companyAdjustment = CompanyAdjustments::select('adjustment_amount_total')->where('company_id', $company->id)->latest()->first();
                         //$companyAdjustment = CompanyAdjustments::select('adjustment_amount_total')->where('company_id', $company->id)->where('adjustment_id', (int)$adjustment->adjustment_id)->latest()->first();

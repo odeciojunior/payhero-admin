@@ -44,7 +44,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $bank_document_status
  * @property int $address_document_status
  * @property int $contract_document_status
- * @property int $get_net_status
  * @property int $boleto_release_money
  * @property int $credit_card_release_money
  * @property int $capture_transaction_enabled
@@ -154,10 +153,7 @@ class Company extends Model
         'pix_key_situation',
         'has_pix_key',
         'order_priority',
-        'get_net_status',
         'capture_transaction_enabled',
-        'subseller_getnet_id',
-        'subseller_getnet_homolog_id',
         'account_type',
         'extra_document',
         'document_issue_date',
@@ -173,8 +169,6 @@ class Company extends Model
         'updated_at',
         'id_wall_result',
         'block_checkout',
-        'asaas_id',
-        'asaas_homolog_id',
 ];
     /**
      * @var bool

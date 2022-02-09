@@ -10,6 +10,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Illuminate\Support\Facades\Log;
 
 class CheckWithdrawalsLiquidated extends Command
 {
@@ -24,6 +25,8 @@ class CheckWithdrawalsLiquidated extends Command
 
     public function handle()
     {
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
             $withdrawals = Withdrawal::with('transactions', 'transactions.sale', 'transactions.company')
                 ->where('gateway_id', Gateway::GETNET_PRODUCTION_ID)
@@ -84,5 +87,8 @@ class CheckWithdrawalsLiquidated extends Command
         } catch (Exception $e) {
             report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

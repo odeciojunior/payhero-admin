@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
@@ -10,6 +11,7 @@ use Modules\Core\Services\Asaas\AsaasService;
 use Modules\Core\Services\CieloService;
 use Modules\Core\Services\Gerencianet\GerencianetService;
 use Modules\Core\Services\Getnet\GetnetBackOfficeService;
+use Illuminate\Support\Facades\Log;
 
 class CheckStatusSaleToGateway extends Command
 {
@@ -54,6 +56,9 @@ class CheckStatusSaleToGateway extends Command
      */
     public function handle()
     {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
 
             $salesQuery = Sale::
@@ -88,11 +93,14 @@ class CheckStatusSaleToGateway extends Command
                 }
             }
             $bar->finish();
-            dd('checkSaleGetnet');
+
             return 0;
         } catch (Exception $e) {
-            dd($e);
+            report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 
     public function checkSaleGetnet($bar, $sales) {
