@@ -790,6 +790,17 @@ $.fn.shake = function () {
 };
 
 // sirius select
+
+function initSiriusSelect(target) {
+    let $target = $(target);
+    let classes = Array.from(target[0].classList).filter(e => e !== 'sirius-select').join(' ');
+    $target.removeClass(classes);
+    $target.wrap(`<div class="sirius-select-container ${classes}"></div>`);
+    $target.hide();
+    $target.after(`<div class="sirius-select-options"></div>`);
+    $target.after(`<div class="sirius-select-text"></div>`);
+}
+
 function renderSiriusSelect(target) {
     let $target = $(target);
     let $wrapper = $target.parent();
@@ -802,6 +813,12 @@ function renderSiriusSelect(target) {
     });
     $text.text($target.children('option:selected').eq(0).text());
 }
+
+$.fn.siriusSelect = function () {
+    initSiriusSelect(this);
+    renderSiriusSelect(this);
+};
+// END sirius select
 
 /**
  * Menu implementation
@@ -865,16 +882,9 @@ $(document).ready(function () {
         document.querySelector('body').style.overflowY = 'unset';
     });
 
+    // sirius select
     $('.sirius-select').each(function () {
-        let $target = $(this);
-        let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
-        $target.removeClass(classes);
-        $target.wrap(`<div class="sirius-select-container ${classes}"></div>`);
-        $target.hide();
-        $target.after(`<div class="sirius-select-options"></div>`);
-        $target.after(`<div class="sirius-select-text"></div>`);
-
-        renderSiriusSelect(this);
+        $(this).siriusSelect();
     });
 
     $(document).on('DOMSubtreeModified propertychange change', '.sirius-select', function () {
@@ -908,6 +918,8 @@ $(document).ready(function () {
             $('.sirius-select-container .sirius-select-options').fadeOut();
         }
     });
+
+    // END sirius select
 })
 
 function verifyAccountFrozen() {
