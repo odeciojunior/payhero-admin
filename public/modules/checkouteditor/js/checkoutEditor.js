@@ -257,6 +257,8 @@ $(document).ready( function () {
         }
     });
 
+    // ------------------------------- Dropify 
+
     var drEventLogo = $("#checkout_logo").dropify({
         messages: {
             default: "",
@@ -301,6 +303,8 @@ $(document).ready( function () {
     });
 
     drEventLogo.on('dropify.errors', function(event, element){
+        $("#checkout_logo").val(''); 
+
         $("#logo_preview_mobile").attr("src", '');
         $("#logo_preview_desktop").attr("src", '');
 
@@ -359,6 +363,10 @@ $(document).ready( function () {
         $("#preview_banner_img_mobile").fadeOut('slow');
         $("#preview_banner_img_desktop").fadeOut('slow');
     });
+
+    $('.dropify-clear').hide();
+
+
 
 
     //  ----------------- Crop Modal ----------------------
@@ -447,7 +455,7 @@ $(document).ready( function () {
                     "banner." + blob.type.split("/")[1]
                 );
                 dt.items.add(file);
-                document.querySelector("#upload-banner input").files = dt.files;
+                document.querySelector("#checkout_banner").files = dt.files;
 
                 let reader = new FileReader();
                 reader.onload = function (e) {
@@ -545,7 +553,6 @@ $(document).ready( function () {
         const form = document.querySelector("#checkout_editor");
         const selectableCheckboxes = form.querySelectorAll(".selectable-notification:checked");
 
-        console.log(selectableCheckboxes.length);
         if(selectableCheckboxes.length > 0 && selectableCheckboxes.length < 4) {
             $('#selectable-all-notification').addClass('dash-check');
             $('#selectable-all-notification').prop('checked', true);
@@ -570,8 +577,9 @@ $(document).ready( function () {
         }
     });
     // ---------------- Functions Table - END ---------------------    
+
+
     
-    $('.dropify-clear').hide();
 });
 
 function replacePreview(name, src, fname = "") {
