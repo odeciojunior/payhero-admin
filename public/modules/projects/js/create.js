@@ -16,7 +16,6 @@ $(document).ready(function () {
             }
             $('.page').show()
             loadingOnScreenRemove();
-            errorAjaxResponse(response);
         },
         success: (response) => {
             if (!isEmpty(response)) {
