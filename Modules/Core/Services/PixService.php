@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Exception;
 use Carbon\Carbon;
+use Modules\Core\Entities\PixCharge;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\Transaction;
@@ -48,23 +49,33 @@ class PixService
                 $responseCheckout = (new CheckoutService())->checkPaymentPix($data);
 
                 if ($responseCheckout->status == 'success' and $responseCheckout->payment == true) {
-                    $saleModel = Sale::select('id','gateway_transaction_id')
-                    ->where(
-                        [
-                            ['payment_method', '=', Sale::PIX_PAYMENT],
-                            ['status', '=', Sale::STATUS_APPROVED],
-                        ]
-                    )
-                    ->whereHas('customer', function($q) use($sale){
-                        $q->where('document', $sale->customer->document);
-                    })
-                    ->whereDate('start_date', \Carbon\Carbon::parse($sale->start_date)->format("Y-m-d"))->first();
-
-
-                    if(empty($saleModel)) {
-                        report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
-                        continue;
+                    
+                    foreach($responseCheckout->response->pix as $row){
+                        $pixCharge = PixCharge::where('sale_id',$sale->id)->where('txid',$row->txid)->first();
+                        if(!empty($row->endToEndId) && !empty($pixCharge)){
+                            if($pixCharge->status == 'RECEBIDO'){
+                                report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
+                            }
+                        }
                     }
+                    
+                    // $saleModel = Sale::select('id','gateway_transaction_id')
+                    // ->where(
+                    //     [
+                    //         ['payment_method', '=', Sale::PIX_PAYMENT],
+                    //         ['status', '=', Sale::STATUS_APPROVED],
+                    //     ]
+                    // )
+                    // ->whereHas('customer', function($q) use($sale){
+                    //     $q->where('document', $sale->customer->document);
+                    // })
+                    // ->whereDate('start_date', \Carbon\Carbon::parse($sale->start_date)->format("Y-m-d"))->first();
+
+
+                    // if(empty($saleModel)) {
+                    //     report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
+                    //     continue;
+                    // }
 
                 }
 
@@ -95,7 +106,9 @@ class PixService
                     //Atualizar o e2id
                     $pix->update(['status' => 'EXPIRED']);
                 }
+
                 event(new PixExpiredEvent($sale));
+
             }
         } catch (Exception $e) {
             report($e);
