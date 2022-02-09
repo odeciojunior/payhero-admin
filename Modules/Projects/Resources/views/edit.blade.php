@@ -37,7 +37,7 @@
             </div>
         </div>
 
-        <div class="row no-gutters">
+        <div class="row no-gutters z-index-0">
             <!-- FOTO -->
             <div class="col-md-5 col-lg-4 col-xl-3 px-15 pl-xl-15 d-flex flex-column" id='div-img-project' style='position: relative;'>
 

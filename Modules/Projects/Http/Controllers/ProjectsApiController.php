@@ -355,7 +355,7 @@ class ProjectsApiController extends Controller
             $projectPhoto = $request->file('project_photo');
             $removeProjectPhoto = $request->get('remove_project_photo');
 
-            if ($projectPhoto == null) {
+            if ($projectPhoto == null && $removeProjectPhoto == "true") {
                 try{
                     $amazonFileService->deleteFile($project->photo);
                     $project->update(['photo' => null]);

@@ -299,15 +299,12 @@ $(() => {
         }
 
         //IMAGEM DO PROJETO
-        // $('#update-project #project_photo').attr('src', getImageProject(project.photo));
         replacePreview("project_photo",project.photo,"");
-        
         if(!project.photo){
             $(".dropify-render > img").remove();
             $(".dropify-wrapper").removeClass("has-preview")
             $(".dropify-preview").css("display","none");
         }
-
         $('#project_photo').dropify(dropifyOptions);
 
 
@@ -504,6 +501,7 @@ $(() => {
         if(!$("#project_photo").prop("files").length){
             formData.delete("project_photo");
         }
+
         if(localStorage.getItem("photo_remove") == "true"){
             formData.append("remove_project_photo", true)
         }
@@ -528,9 +526,12 @@ $(() => {
                 }, success: function (response) {
                     localStorage.setItem("photo_remove",false);
                     updateConfiguracoes();
+                    $('html, body').animate({
+                        scrollTop: 410
+                    });
                     setTimeout(function () {
                         $( "#confirm-changes" ).hide();
-                        
+            
                         $(".final-card span").html(getTextSaveChanges);
                         $("#options-buttons").children().show();
                         $(".loader").hide();
@@ -540,10 +541,6 @@ $(() => {
 
                     show();
                     $(".page").removeClass("low-opacity");
-                    $('html, body').animate({
-                        scrollTop: 100
-                    });
-                    loadingOnScreenRemove();
                 }
             });
         } else {
@@ -560,6 +557,7 @@ $(() => {
         $('html, body').animate({
             scrollTop: 410
         });
+        localStorage.setItem("photo_remove", false);
     })
     
     show();
