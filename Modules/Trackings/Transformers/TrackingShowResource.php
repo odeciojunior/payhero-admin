@@ -16,7 +16,8 @@ class TrackingShowResource extends JsonResource
 
         if(!empty($this->product)) {
             $product = $this->product;
-            $linkBase = $this->productPlanSale->plan->project->domains->first()->name;
+            $domain =  $this->productPlanSale->plan->project->domains->first();
+            $linkBase = $domain ? $domain->name : 'cloudfox.net';
         } else {
             $productSaleApi = $this->productPlanSale->productSaleApi;
             $product = (object) [
