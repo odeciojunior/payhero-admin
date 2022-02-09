@@ -28,9 +28,9 @@ class WithdrawalsApiController
     {
         try {
             $company = Company::find(hashids_decode($request->company_id));
-            $gateway = Gateway::find(hashids_decode($request->gateway_id));
+            $gatewayId = hashids_decode($request->gateway_id);
 
-            if(empty($company) || empty($gateway)) {
+            if(empty($company) || empty($gatewayId)) {
                 return response()->json([
                     'message' => 'Empresa não encontrada',
                 ],403);
@@ -42,7 +42,7 @@ class WithdrawalsApiController
                     ],403);
             }
 
-            return $gateway->getService()
+            return Gateway::getServiceById($gatewayId)
                             ->setCompany($company)
                             ->getWithdrawals();
 
@@ -69,18 +69,17 @@ class WithdrawalsApiController
             }
 
             $company = Company::find(hashids_decode($request->company_id));
-            $gateway = Gateway::find(hashids_decode($request->gateway_id));
+            $gatewayId = hashids_decode($request->gateway_id);
 
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para saques'], 403);
             }
 
-            if ((new WithdrawalService)->isNotFirstWithdrawalToday($company->id, $gateway->id)) {
+            if ((new WithdrawalService)->isNotFirstWithdrawalToday($company->id, $gatewayId)) {
                 return response()->json(['message' => 'Você só pode fazer um pedido de saque por dia.'], 403);
             }
 
-            $gatewayService = $gateway->getService();
-            $gatewayService->setCompany($company);
+            $gatewayService = Gateway::getServiceById($gatewayId)->setCompany($company);
 
             activity()->on((new Withdrawal()))->tap(
                 function (Activity $activity) {
@@ -116,7 +115,7 @@ class WithdrawalsApiController
             $data = $request->all();
 
             $company = Company::find(hashids_decode($data['company_id']));
-            $gateway = Gateway::find(hashids_decode($data['gateway_id']));
+            $gatewayId = hashids_decode($data['gateway_id']);
 
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
@@ -124,8 +123,7 @@ class WithdrawalsApiController
 
             $withdrawalValueRequested = (int) FoxUtils::onlyNumbers($data['withdrawal_value']);
 
-            $gatewayService = $gateway->getService();
-            $gatewayService->setCompany($company);
+            $gatewayService = Gateway::getServiceById($gatewayId)->setCompany($company);
 
             return response()->json($gatewayService->getLowerAndBiggerAvailableValues($withdrawalValueRequested));
 

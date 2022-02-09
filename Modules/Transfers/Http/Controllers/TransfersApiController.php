@@ -18,12 +18,11 @@ class TransfersApiController
     {
         try {
             $company = Company::find(hashids_decode($request->company_id));
-            $gateway = Gateway::find(hashids_decode($request->gateway_id));
+            $gatewayId = hashids_decode($request->gateway_id);
 
-            $gatewayService = $gateway->getService();
-            $gatewayService->setCompany($company);
-
-            return $gatewayService->getStatement($request->all());
+            return Gateway::getServiceById($gatewayId)
+                    ->setCompany($company)
+                    ->getStatement($request->all());
 
         } catch (Exception $e) {
             report($e);
