@@ -30,9 +30,9 @@ $(function () {
     function isChecked(input, pixelAttribute = null) {
         if (pixelAttribute != null) {
             if (pixelAttribute == '1' || pixelAttribute == 'true') {
-                input.prop('checked', true);
+                input.prop('checked', true).change();
             } else {
-                input.prop('checked', false);
+                input.prop('checked', false).change();
             }
         } else {
             if (input.is(':checked')) {
@@ -174,7 +174,6 @@ $(function () {
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 const pixel = response.data;
-                console.log(pixel);
                 pixelEdit = pixel;
                 renderModalPixelEdit(pixel);
                 openModalEditPixel();
@@ -465,6 +464,8 @@ $(function () {
     $("img.logo-pixels-create").on('click', function () {
         const platform = $(this).data('value');
         $("#platform").val('').val(platform);
+        $('.form-control').val('');
+
         $(".img-logo").attr('src', this.src);
 
         $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div, .url_facebook_api_div").hide();
@@ -493,6 +494,14 @@ $(function () {
                 $("#facebook-token-api").attr('readonly', true)
             }
         });
+
+        $("#add_pixel_plans").val(null).trigger("change");
+
+        isChecked($("#modal-create-pixel .status"), true);
+        isChecked($("#modal-create-pixel .checkout"), true);
+        isChecked($("#modal-create-pixel .purchase-boleto"), true);
+        isChecked($("#modal-create-pixel .purchase-card"), true);
+        isChecked($("#modal-create-pixel .purchase-pix"), true);
 
         $("#select-platform-pixel").hide();
         $("#configure-new-pixel").show();

@@ -196,12 +196,13 @@ $(function () {
             link = '/api/affiliatelinks' + link;
         }
 
+        var planName = $("#plan-name").val();
         $.ajax({
             method: "GET",
             url: link,
             dataType: "json",
             data: {
-                plan: $("#plan-name").val(),
+                plan: planName,
                 projectId: projectId
             },
             headers: {
@@ -225,10 +226,36 @@ $(function () {
             }),
             success: function success(response) {
                 if (isEmpty(response.data)) {
-                    $("#data-table-link").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
-                    $('#table-links').addClass('table-striped');
+                    if (planName != '') {
+                        $("#data-table-link").html(`
+                            <tr class='text-center'>
+                                <td colspan='11' style='height: 70px; vertical-align: middle;'>
+                                    Nenhum dado encontrado
+                                </td>
+                            </tr>
+                        `);
+                    } else {
+                        $("#data-table-link").html(`
+                            <tr class='text-center'>
+                                <td colspan='11' style='height: 70px; vertical-align: middle;'>
+                                    <div class='d-flex justify-content-center align-items-center'>
+                                        <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                        <div class='text-left'>
+                                            <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum link configurado</h1>
+                                            <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro link para poder<br>gerenciá-los nesse painel.</p>
+                                            <button data-toggle="modal" data-target="#modal-create-link" type='button' style='margin: 0; width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-link' data-toggle="modal" data-target="#modal_add_plan">Adicionar link</button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        `);
+                    }
 
+                    $('#table-links').addClass('table-striped');
+                    $('#pagination-links').html('');
                 } else {
+                    $('#tab_links-panel').find('.no-gutters').css('display', 'flex');
+                    $('#table-links').find('thead').css('display', 'contents');
                     $("#data-table-link").html('');
 
                     if (response.data[0].document_status == 'approved') {
@@ -245,11 +272,11 @@ $(function () {
                                 // } else {
                                 //     data += limitLink(value.link_plan, 50) + ' <br><small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
                                 // }
-                                data += '<small>' + value.plan_name + ' <br> ' + value.description + '</small> </td>';
+                                data += value.plan_name_short + '<br><small>' + value.description + '</small> </td>';
 
                                 data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="pointer copy_link_plan" link="' + value.link + '"> <span class="material-icons icon-copy-1"> content_copy </span> </a></td>';
 
-                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">' + limitLink(value.link_affiliate, 40) + '</td>';
+                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">Copiar </span><img src="/modules/global/img/icon-copy-c.svg"></td>';
                                 data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="' + value.link_affiliate + '"> </a></td>';
                                 if (value.price != '' && value.commission != '') {
                                     data += '<td class="text-center" >' + value.price + '<br><small>(' + value.commission + ' comissão)<small></td>';
@@ -257,15 +284,16 @@ $(function () {
                                     data += '<td class="text-center" ></td>';
                                 }
                                 data += '<td style="text-align:center">';
-                                data += '<a title="Visualizar" class="mg-responsive details-link pointer" link="' + value.id + '" data-target="#modal-details-link" data-toggle="modal"><span class="o-eye-1"></span></a>';
-
-                                if (value.plan_name == '' && value.link != null) {
-                                    data += '<a title="Editar" class="mg-responsive edit-link pointer" link="' + value.id + '" data-toggle="modal"><span class="o-edit-1"></span></a>';
-                                    data += '<a title="Excluir" class="mg-responsive delete-link pointer" link="' + value.id + '" data-toggle="modal"><span class="o-bin-1"></span></a>';
-                                } else {
-                                    data += '<a title="Editar" class="mg-responsive pointer disabled"><span class="o-edit-1"></span></a>';
-                                    data += '<a title="Excluir" class="mg-responsive pointer disabled"><span class="o-bin-1"></span></a>';
-                                }
+                                    data += "<div class='d-flex justify-content-end align-items-center'>";
+                                        data += '<a title="Visualizar" class="mg-responsive details-link pointer" link="' + value.id + '" data-target="#modal-details-link" data-toggle="modal"><span class="o-eye-1"></span></a>';
+                                        if (value.plan_name == '' && value.link != null) {
+                                            data += '<a title="Editar" class="mg-responsive edit-link pointer" link="' + value.id + '" data-toggle="modal"><span class="o-edit-1"></span></a>';
+                                            data += '<a title="Excluir" class="mg-responsive delete-link pointer" link="' + value.id + '" data-toggle="modal"><span class="o-bin-1"></span></a>';
+                                        } else {
+                                            data += '<a title="Editar" class="mg-responsive pointer disabled"><span class="o-edit-1"></span></a>';
+                                            data += '<a title="Excluir" class="mg-responsive pointer disabled"><span class="o-bin-1"></span></a>';
+                                        }
+                                    data += "</div>";
                                 data += '</td>';
                                 data += '</tr>';
                                 $("#data-table-link").append(data);
@@ -279,7 +307,6 @@ $(function () {
                         $("#data-table-link").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Link de pagamento só ficará disponível quando seus documentos e da sua empresa estiverem aprovados</td></tr>");
                         $('#table-links').addClass('table-striped');
                     }
-
                 }
             }
         });

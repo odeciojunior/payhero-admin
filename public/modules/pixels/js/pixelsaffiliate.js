@@ -58,8 +58,11 @@ $(function () {
             link = '/api/project/' + projectId + '/pixels' + link;
         }
 
-        loadOnTable('#data-table-pixel', '#table-pixel');
         $("#pagination-pixels").html('');
+        $('#tab_pixels-panel').find('.no-gutters').css('display', 'none');
+        $('#table-pixel').find('thead').css('display', 'none');
+
+        loadOnTable('#data-table-pixel', '#table-pixel');
 
         $.ajax({
             method: "GET",
@@ -80,11 +83,23 @@ $(function () {
                     $("#data-table-pixel").html(`
                         <tr class="text-center">
                             <td colspan="8" style="height: 70px; vertical-align: middle;">
-                                Nenhum registro encontrado
+                                <div class='d-flex justify-content-center align-items-center'>
+                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <div class='text-left'>
+                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum pixel configurado</h1>
+                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro pixel para poder<br>gerenciá-los nesse painel.</p>
+                                        <button type='button' style='margin: 0; width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-pixel' data-toggle="modal" data-target="#modal_add_plan">Adicionar pixel</button>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     `);
                     return;
+                }
+
+                if (response.data != '') {
+                    $('#tab_pixels-panel').find('.no-gutters').css('display', 'flex');
+                    $('#table-pixel').find('thead').css('display', 'contents');
                 }
 
                 $.each(response.data, function (index, value) {
@@ -93,7 +108,7 @@ $(function () {
                     }
                     $("#data-table-pixel").append(`
                         <tr>
-                            <td>${value.name}</td>
+                            <td>${value.name_short}</td>
                             <td>${value.code}</td>
                             <td>${value.platform_enum}</td>
                             <td>
@@ -102,9 +117,11 @@ $(function () {
                                 </span>
                             </td>
                             <td style='text-align:center'>
-                                <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
-                                <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
-                                <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class='o-bin-1'></span></a>
+                                <div class='d-flex justify-content-end align-items-center'>
+                                    <a role='button' title='Visualizar' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><span class="o-eye-1"></span></a>
+                                    <a role='button' title='Editar' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class="o-edit-1"></span></a>
+                                    <a role='button' title='Excluir' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><span class='o-bin-1'></span></a>
+                                </div>
                             </td>
                         </tr>
                     `);
@@ -355,11 +372,11 @@ $(function () {
      * Delete Pixel
      */
     $(document).on('click', '.delete-pixel', function (event) {
-        $("#modal-delete-pixel .btn-delete").attr("pixel", $(this).attr('pixel'));
+        $("#modal-delete-pixel #btn-delete").attr("pixel", $(this).attr('pixel'));
         $("#modal-delete-pixel").modal('show');
     });
 
-    $(document).on('click', '#modal-delete-pixel .btn-delete', function () {
+    $(document).on('click', '#modal-delete-pixel #btn-delete', function () {
         loadingOnScreen();
         let pixel = $(this).attr('pixel');
         $.ajax({
@@ -402,7 +419,7 @@ $(function () {
      */
 
     // Open Modal New Pixel
-    $("#add-pixel").on('click', function () {
+    $(document).on('click', '.add-pixel', function () {
         openModalCreatePixel();
         $("#modal-create-pixel").modal('show');
     });

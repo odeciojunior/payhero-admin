@@ -71,12 +71,12 @@
             <script src="{{ asset('modules/global/js/daterangepicker.min.js?v=' . versionsFile()) }}"></script>
             <script src="{{ asset('modules/finances/js/jPages.min.js?v=' . versionsFile()) }}"></script>
             <script src="{{ asset('modules/finances/js/statement-index.js?v=' . versionsFile()) }}"></script>
-            <script src="{{ asset('modules/finances/js/balances.js?v=' . versionsFile()) }}"></script>
+            <script src="{{ asset('modules/finances/js/balances.js?v=1' . versionsFile()) }}"></script>
             <script src="{{ asset('modules/finances/js/withdrawals-table.js?v=' . versionsFile()) }}"></script>
             {{-- <script src="{{ asset('modules/finances/js/withdrawal-custom.js?v=' . versionsFile()) }}"></script> --}}
             {{-- <script src="{{ asset('modules/finances/js/withdrawal-default.js?v=' . versionsFile()) }}"></script> --}}
             <script src="{{ asset('modules/finances/js/withdrawal-handler.js?v=' . versionsFile()) }}"></script>
-            <script src="{{ asset('modules/finances/js/statement.js?v=2' . versionsFile()) }}"></script>
+            <script src="{{ asset('modules/finances/js/statement.js?v=3' . versionsFile()) }}"></script>
         @endpush
     </div>
 

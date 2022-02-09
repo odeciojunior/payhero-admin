@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css?v=' .  versionsFile()) }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
     <style>
         .gray:hover{
@@ -17,8 +17,8 @@
             <div class="row jusitfy-content-between">
                 <div class="col-lg-8">
                     <h1 class="page-title my-10" style="min-height: 28px">
-                        <a class="gray" href="/apps">
-                            <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
+                        <a href="/apps">
+                            <span class="o-arrow-right-1 font-size-30 ml-2" aria-hidden="true"></span>
                             Integrações com ConvertaX
                         </a>
                     </h1>

@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Lang;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\UserService;
+use Illuminate\Support\Str;
 
 /**
  * @property mixed id
@@ -43,21 +44,23 @@ class AffiliateLinkResource extends JsonResource
         }
 
         return [
-            'id'              => Hashids::encode($this->id),
-            'plan_name'       => $this->plan->name ?? '',
-            'description'     => $this->plan->description ?? '',
-            'link'            => $this->link ?? null,
-            'clicks'          => $this->clicks_amount ?? null,
-            'link_project'    => $this->affiliate->project->url_page ?? null,
-            'project_name'    => $this->affiliate->project->name ?? null,
-            'link_plan'       => $linkPlan,
-            'link_affiliate'  => $linkAffiliate,
-            'status_affiliate'=> $this->affiliate->status_enum ?? '',
-            'domain'          => $this->affiliate->project->domains[0]->name ?? '',
-            'price'           => $this->plan ? 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->plan->price ?? 0)) / 100, 2, ',', '.') : '',
-            'commission'      => $this->plan ? 'R$ ' . number_format((preg_replace("/[^0-9]/", "", $this->plan->price) / 100) * $this->affiliate->percentage / 100, 2, ',', '.') : '',
-            'document_status' => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
-            'status'          => $this->affiliate->project->domains[0]->status ?? 0,
+            'id'                => Hashids::encode($this->id),
+            'plan_name'         => $this->plan->name ?? '',
+            'plan_name_short'   => Str::limit($this->plan->name, 24),
+            'description'       => $this->plan->description ?? '',
+            'description_short' => Str::limit($this->plan->description, 24),
+            'link'              => $this->link ?? null,
+            'clicks'            => $this->clicks_amount ?? null,
+            'link_project'      => $this->affiliate->project->url_page ?? null,
+            'project_name'      => $this->affiliate->project->name ?? null,
+            'link_plan'         => $linkPlan,
+            'link_affiliate'    => $linkAffiliate,
+            'status_affiliate'  => $this->affiliate->status_enum ?? '',
+            'domain'            => $this->affiliate->project->domains[0]->name ?? '',
+            'price'             => $this->plan ? 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->plan->price ?? 0)) / 100, 2, ',', '.') : '',
+            'commission'        => $this->plan ? 'R$ ' . number_format((preg_replace("/[^0-9]/", "", $this->plan->price) / 100) * $this->affiliate->percentage / 100, 2, ',', '.') : '',
+            'document_status'   => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
+            'status'            => $this->affiliate->project->domains[0]->status ?? 0,
         ];
     }
 }

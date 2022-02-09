@@ -17,3 +17,6 @@
 .o-arrow-right-1:before {
     transform: rotate(180deg);
 }
+
+/* Page titles */
+.page-title > a, .page-title > a > span { color: #707070 }

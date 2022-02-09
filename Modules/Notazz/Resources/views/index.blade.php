@@ -1,6 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css?v=03') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css?v=' .  versionsFile()) }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
     <style>
         .gray:hover{
@@ -14,8 +14,8 @@
             <div class="row justify-content-between">
                 <div class="col-lg-8">
                     <h1 class="page-title my-10" style="min-height: 28px">
-                        <a class="gray" href="/apps">
-                            <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
+                        <a href="/apps">
+                            <span class="o-arrow-right-1 font-size-30 ml-2" aria-hidden="true"></span>
                             Integrações com Notazz
                         </a>
                     </h1>
@@ -31,7 +31,7 @@
             <div class="row" id="content">
                 {{-- js load dynamically --}}
             </div>
-            
+
             {{-- Modal add-edit integration --}}
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-lg d-flex justify-content-center">
@@ -56,8 +56,8 @@
             {{-- End Modal  --}}
         </div>
         <div id="no-integration-found" class='justify-content-center' style="display:none !important;
-                                                                height: 100%; 
-                                                                width: 100%; 
+                                                                height: 100%;
+                                                                width: 100%;
                                                                 position: absolute;
                                                                 display: -webkit-flex;
                                                                 display: flex;
