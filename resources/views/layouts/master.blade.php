@@ -63,8 +63,7 @@
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}"> --}}
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=29') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=81') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=83') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
     <!-- Google Tag Manager -->
@@ -132,7 +131,7 @@
     <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
     <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-    <script src="{{ asset('modules/global/js/global.js?v=' . uniqid()) }}"></script>
+    <script src="{{ asset('modules/global/js/global.js?v=83')}}"></script>
     <script>
         verifyDocumentPending();
     </script>
