@@ -167,7 +167,7 @@ class Kernel extends ConsoleKernel
         /** Antecipações Asaas descontinuado temporariamente*/
         //$schedule->command('asaas:anticipations')->dailyAt('4:00');
         //$schedule->command('asaas:anticipations-pending')->dailyAt('14:00');
-        $schedule->command('asaas:anticipations-pending')->dailyAt('16:00');
+        //$schedule->command('asaas:anticipations-pending')->dailyAt('16:00');
 
         /** Sincronizar códigos de rastreio com WooCommerce */
         $schedule->command('woocommerce:check-tracking-codes')->sundays()->at('07:00');
