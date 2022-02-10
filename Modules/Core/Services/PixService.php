@@ -53,9 +53,16 @@ class PixService
                 {
                     foreach($responseCheckout->response->pix as $row){
                         $pixCharge = PixCharge::where('sale_id',$sale->id)->where('txid',$row->txid)->first();
+<<<<<<< HEAD
                         if(!empty($row->endToEndId) && !empty($pixCharge)){                            
                             report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
                             continue 2;       
+=======
+                        if(!empty($row->endToEndId) && !empty($pixCharge)){
+                            //if($pixCharge->status == 'RECEBIDO'){
+                                report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
+                            //}
+>>>>>>> 56d1eb2afe72b874077214893511f70b3404a833
                         }
                     }
                 }
