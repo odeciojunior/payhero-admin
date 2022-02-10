@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/scrollbar-plugin-master/jquery.mCustomScrollbar.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=13') }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v='. versionsFile()) }}">
@@ -398,7 +399,6 @@
     </div>
 
     @push('scripts')
-{{--        <script src="{{asset('modules/partners/js/partners.js?v='.uniqid())}}"></script>--}}
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
         <script type="text/javascript" src="{{asset('modules/global/ckeditor5/ckeditor.js')}}"></script>
@@ -418,5 +418,8 @@
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
         <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>
         <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.versionsFile())}}"></script>
+
+        <script src="{{ asset('modules/global/adminremark/global/vendor/scrollbar-plugin-master/jquery.mousewheel.min.js') }}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/vendor/scrollbar-plugin-master/jquery.mCustomScrollbar.js?v='.versionsFile()) }}"></script>
     @endpush
 @endsection
