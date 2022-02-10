@@ -62,15 +62,17 @@
                 </form>
             </div>
         </div>
-        <div class="text-center" id="empty-companies-error" style="display:none;color: black;display: flex;align-content: center;align-items: center;justify-content: center;flex-direction: column;text-align: center;padding: 20px;">
-            <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">
-            <p class="desc gray" style='font-size:20px;'>Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar
-                e todos os documentos da empresa e do seu perfil precisam estar aprovados! </p>
+        <div id="empty-companies-error" style="display:none;position: absolute; top: 25%;">
+            <div class="text-center" style="display:flex;color: black;align-content: center;align-items: center;justify-content: center;flex-direction: column;text-align: center;padding: 20px;">
+                <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">
+                <p class="desc gray" style='font-size:20px;'>Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar
+                    e todos os documentos da empresa e do seu perfil precisam estar aprovados! </p>
+            </div>
         </div>
     </div>
 
     @push('scripts')
-        <script src="{!! asset('modules/projects/js/create.js?v='.versionsFile()) !!}"></script>
+        <script src="{!! asset('modules/projects/js/create.js?v=0'.versionsFile()) !!}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

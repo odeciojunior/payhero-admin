@@ -552,7 +552,6 @@ class ProjectsApiController extends Controller
     public function show($id)
     {
         try {
-
             $userId = auth()->user()->account_owner_id;
 
             if (empty($id)) {
@@ -575,7 +574,10 @@ class ProjectsApiController extends Controller
                 )->first();
 
             if (empty($project)) {
-                return response()->json(['message' => 'Projeto não encontrado!'], 400);
+                return response()->json([
+                    'message' => 'Projeto não encontrado!',
+                    'account_is_approved' => (bool) auth()->user()->account_is_approved
+                ], 400);
             }
 
             $project->chargeback_count = Sale::where('project_id', $project->id)
