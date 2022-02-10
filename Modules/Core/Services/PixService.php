@@ -49,35 +49,15 @@ class PixService
 
                 $responseCheckout = (new CheckoutService())->checkPaymentPix($data);
 
-                if ($responseCheckout->status == 'success' and $responseCheckout->payment == true) {
-
+                if ($responseCheckout->status == 'success' and $responseCheckout->payment == true)
+                {
                     foreach($responseCheckout->response->pix as $row){
                         $pixCharge = PixCharge::where('sale_id',$sale->id)->where('txid',$row->txid)->first();
-                        if(!empty($row->endToEndId) && !empty($pixCharge)){
-                            if($pixCharge->status == 'RECEBIDO'){
-                                report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
-                            }
+                        if(!empty($row->endToEndId) && !empty($pixCharge)){                            
+                            report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
+                            continue 2;       
                         }
                     }
-
-                    // $saleModel = Sale::select('id','gateway_transaction_id')
-                    // ->where(
-                    //     [
-                    //         ['payment_method', '=', Sale::PIX_PAYMENT],
-                    //         ['status', '=', Sale::STATUS_APPROVED],
-                    //     ]
-                    // )
-                    // ->whereHas('customer', function($q) use($sale){
-                    //     $q->where('document', $sale->customer->document);
-                    // })
-                    // ->whereDate('start_date', \Carbon\Carbon::parse($sale->start_date)->format("Y-m-d"))->first();
-
-
-                    // if(empty($saleModel)) {
-                    //     report(new Exception('Venda paga na Gerencianet e com problema no pagamento. $sale->id = ' . $sale->id . ' $gatewayTransactionId = ' . $sale->gateway_transaction_id));
-                    //     continue;
-                    // }
-
                 }
 
                 $sale->update(['status' => Sale::STATUS_CANCELED]);
