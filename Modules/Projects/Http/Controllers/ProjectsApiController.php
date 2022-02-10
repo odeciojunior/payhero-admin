@@ -399,13 +399,16 @@ class ProjectsApiController extends Controller
     public function show($id)
     {
         try {
+            $userId = auth()->user()->account_owner_id;
+
             if (empty($id)) {
-                return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
+                return response()->json([
+                    'message' => 'Erro ao exibir detalhes do projeto',
+                    'account_is_approved' => (bool) auth()->user()->account_is_approved
+                ], 400);
             }
 
-            $userId = auth()->user()->account_owner_id;
             $id = hashids_decode($id);
-
             $project = Project::where('id', $id)
                 ->where('status', Project::STATUS_ACTIVE)
                 ->with(
@@ -418,7 +421,10 @@ class ProjectsApiController extends Controller
                 )->first();
 
             if (empty($project)) {
-                return response()->json(['message' => 'Projeto não encontrado!'], 400);
+                return response()->json([
+                    'message' => 'Projeto não encontrado!',
+                    'account_is_approved' => (bool) auth()->user()->account_is_approved
+                ], 400);
             }
 
             $project->chargeback_count = Sale::where('project_id', $project->id)
@@ -486,7 +492,7 @@ class ProjectsApiController extends Controller
     {
         try {
             $projectID = hashids_decode($id);;
-            
+
             $projectModel = new Project();
             $project = $projectModel->with('usersProjects.company')->find($projectID);
 

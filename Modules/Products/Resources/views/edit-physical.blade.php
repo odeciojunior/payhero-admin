@@ -8,11 +8,12 @@
     @endpush
 
     <!-- Page -->
-    <div class="page p-50" style="margin-bottom: 0 !important;">
+    <div class="page">
         <div class="page-header container">
-            <h1 class="page-title">
+            <h1 class="page-title my-10" style="min-height: 28px">
                 <a href="/products">
-                    <span class="o-arrow-right-1 font-size-30 mr-2" aria-hidden="true"></span>Editar produto físico
+                    <span class="o-arrow-right-1 font-size-30 ml-2" aria-hidden="true"></span>
+                    Editar produto físico
                 </a>
             </h1>
             <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>

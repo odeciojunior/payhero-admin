@@ -503,3 +503,5 @@
     margin-left: 89%;
 }
 /* /////////////////////////// END FOOTER CARD */
+/* Page titles */
+.page-title > a, .page-title > a > span { color: #707070 }

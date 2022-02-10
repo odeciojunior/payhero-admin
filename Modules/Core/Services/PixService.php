@@ -47,9 +47,9 @@ class PixService
 
                 $responseCheckout = (new CheckoutService())->checkPaymentPix($data);
 
-
                 if ($responseCheckout->status == 'success' and $responseCheckout->payment == true) {
-                    $saleModel = Sale::where(
+                    $saleModel = Sale::select('id','gateway_transaction_id')
+                    ->where(
                         [
                             ['payment_method', '=', Sale::PIX_PAYMENT],
                             ['status', '=', Sale::STATUS_APPROVED],

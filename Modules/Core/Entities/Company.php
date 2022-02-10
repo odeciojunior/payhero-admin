@@ -39,6 +39,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $support_telephone
  * @property int $cielo_balance
  * @property int $asaas_balance
+ * @property int $safe2pay_balance
  * @property int $company_type
  * @property int $bank_document_status
  * @property int $address_document_status
@@ -145,6 +146,7 @@ class Company extends Model
         'support_telephone',
         'cielo_balance',
         'asaas_balance',
+        'safe2pay_balance',
         'bank_document_status',
         'address_document_status',
         'contract_document_status',

@@ -31,9 +31,9 @@ class FinancesApiController extends Controller
             }
 
             $company = Company::find(hashids_decode($request->input('company')));
-            $gateway = Gateway::find(hashids_decode($request->input('gateway_id')));
+            $gatewayId = hashids_decode($request->input('gateway_id'));
 
-            if (empty($company) || empty($gateway)) {
+            if (empty($company) || empty($gatewayId)) {
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
@@ -41,7 +41,7 @@ class FinancesApiController extends Controller
                 return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
             }
 
-            $companyService = new CompanyBalanceService($company, $gateway->getService());
+            $companyService = new CompanyBalanceService($company, Gateway::getServiceById($gatewayId));
 
             $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
             $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);

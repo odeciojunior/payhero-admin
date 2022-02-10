@@ -10,3 +10,6 @@
 .grad {
     background-image: linear-gradient(11deg, rgba(230,119,76,0.4), rgba(249, 34, 120,0.4));
 }
+
+/* Page titles */
+.page-title > a, .page-title > a > span { color: #707070 }

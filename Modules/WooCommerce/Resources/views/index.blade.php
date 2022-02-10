@@ -15,7 +15,10 @@
             color: #a1a1a1 !important;
         }
 
-    </style>
+        /* Page titles */
+        .page-title > a, .page-title > a > span { color: #707070 }
+
+     </style>
 @endpush
 @section('content')
 
@@ -26,8 +29,8 @@
 
                 <div class="col-lg-8">
                     <h1 class="page-title my-10" style="min-height: 28px">
-                        <a class="gray" href="/apps">
-                            <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
+                        <a href="/apps">
+                            <span class="o-arrow-right-1 font-size-30 ml-2" aria-hidden="true"></span>
                             Integrações com WooCommerce
                         </a>
                     </h1>
@@ -47,6 +50,7 @@
 
 
                     <div class="w-200 mt-2" style="">
+<<<<<<< HEAD
                         <div class="d-flex align-items-center">
                             <span class="o-download-cloud-1 mr-2"></span>
                             <div class="dropdown">
@@ -63,6 +67,21 @@
                                         href="https://sirius.cloudfox.net/modules/woocommerce/plugins/plugin_cloudfox_skip_to_checkout.zip">Envia
                                         direto pro checkout</a>
                                 </div>
+=======
+                            <div class="d-flex align-items-center">
+                                <span class="o-download-cloud-1 mr-2"></span>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Download plugin
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                      <a class="dropdown-item" href="https://sirius.cloudfox.net/modules/woocommerce/plugins/plugin_cloudfox.zip">Adiciona ao carrinho de compras</a>
+                                      <a class="dropdown-item" href="https://sirius.cloudfox.net/modules/woocommerce/plugins/plugin_cloudfox_skip_to_checkout.zip">Envia direto pro checkout</a>
+                                    </div>
+                                  </div>
+
+>>>>>>> master
                             </div>
 
                         </div>

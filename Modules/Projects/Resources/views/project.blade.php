@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v='. versionsFile()) }}">
-    <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-
     <style>
         @font-face {
             font-family: raty;
@@ -27,9 +23,9 @@
 
         <div style="display: none" class="page-header container">
             <h1 class="page-title my-10" style="min-height: 28px">
-                <a class="gray" href="/projects" style="outline: none">
-                    <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
-                    Meus projetos 
+                <a href="/projects">
+                    <span class="o-arrow-right-1 font-size-30 ml-2" aria-hidden="true"></span>
+                    Meus projetos
                 </a>
             </h1>
         </div>
