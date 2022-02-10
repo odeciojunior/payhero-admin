@@ -1,4 +1,6 @@
 $(() => {
+    loadingOnScreen();
+
     let projectId = $(window.location.pathname.split('/')).get(-1);
     $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
     let onChangeSet = false;
@@ -121,7 +123,6 @@ $(() => {
     // CARD 2 CARREGA TELA DE EDITAR PROJETO
     function updateConfiguracoes() {
         $("#update-project").addClass("low-opacity");
-        // loadOnAny('#tab_configuration_project .card');
 
         $.ajax({
             method: "GET",
@@ -132,7 +133,7 @@ $(() => {
                 'Accept': 'application/json',
                 
             }, error: function (response) {
-                // loadOnAny('#tab_configuration_project .card', true);
+                loadingOnScreenRemove();
                 $("#update-project").removeClass("low-opacity");
                 errorAjaxResponse(response);
 
@@ -140,7 +141,7 @@ $(() => {
                 localStorage.setItem('projectConfig',JSON.stringify(data));
                 renderProjectConfig(data);
 
-                // loadOnAny('#tab_configuration_project .card', true);
+                loadingOnScreenRemove();
                 $("#update-project").removeClass("low-opacity");
             }
         });
@@ -470,6 +471,26 @@ $(() => {
     $("#update-project").on('submit', function (event) {
 
         let getTextSaveChanges = $(".final-card span").html();
+        
+        if($(".dropify-render > img").length <= 0 && $(".dropify-errors-container > ul > li").length >= 1 ){
+            $("#options-buttons").children().hide();
+            $(".final-card").removeClass("bg-primary").addClass("bg-danger");
+            $(".final-card span").html("<strong>Oops </strong>algo nao esta correto");
+
+            setTimeout(function () {
+                $( "#confirm-changes" ).fadeOut("slow");
+                setTimeout(function () {
+                    $(".final-card span").html(getTextSaveChanges);
+                    $("#options-buttons").children().show();
+                    $(".final-card").removeClass("bg-danger").addClass("bg-primary");
+                    $(".loader").hide();
+                },3000);
+            },2000);
+    
+            event.preventDefault();
+            return;
+        }
+
         $(".final-card span").html("Um momento... <strong>Estamos salvando suas alterações.</strong>");
         
         $("#options-buttons").children().hide();

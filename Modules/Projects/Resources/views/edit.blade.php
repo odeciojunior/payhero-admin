@@ -302,7 +302,7 @@
                         <div id="options-buttons" class="buttons-container col-md-6 d-flex justify-content-end align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 d-flex justify-content-end pr-0 pr-md-25">
-                                    <button type="button" id="cancel-edit" class="font-size-16 btn btn-primary border border-white mr-25 px-15 px-sm-40">Cancelar</button>
+                                    <button type="button" id="cancel-edit" class="font-size-16 btn btn-primary border border-white mr-10 px-15 px-sm-40">Cancelar</button>
                                     <button type="submit" id="bt-update-project" class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alteração</button>
                                 </div>
                             </div>

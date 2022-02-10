@@ -322,68 +322,10 @@
 
 
 /* /////////// CARD 3 IDENTIFICATION /////////// */
-#project_photo .dropify-wrapper{
-    padding: 5px !important;
-}
 
-#project_photo .dropify-wrapper.has-preview:hover .dropify-message{
-    z-index: 2;
-    background: rgba(255,255,255,0.7);
-    height: 100%;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-#project_photo .dropify-wrapper.has-preview:hover .dropify-message .msg{
-    display: none;
-}
-
-#project_photo .dropify-wrapper .dropify-message .msg{
-    display: block;
-}
-
-#project_photo .dropify-wrapper .dropify-message{
-    transition: background 0.6s ease-in-out;
-}
-
-#project_photo .dropify-clear.o-bin-1{
-    border-radius: 5px !important;
-    border: solid 1px #2E85EC !important;
-    color: #2E85EC !important;
-}
-
-#div-img-project .dropify-wrapper{
-    height: 246px !important;
-    border: 1px dashed #2E85EC !important;
-    border-radius: 8px !important;
-}
-#project_photo .dropify-render > img{
-    width: 100%;
-    max-height: 235px !important;
-    border-radius: 8px;
-    object-fit: cover;
-}
-
-#project_photo .file-icon{
-    color: #2E85EC !important;
-}
-
-#div-img-project .dropify-errors-container{
-    font-weight: bold;
-    margin-top: 32%;
-}
-#div-img-project .dropify-errors-container>ul{
-    list-style-type: none;
-    padding: 0;
-    color: #E81414;
-}
-#project_photo .dropify-infos{
-    display: none;
-}
+/* editProject.css */
 
 /* ///////////////////////////////// END CARD 3 */
-
 
 
 /* /////////// CARD 4 AFFILIATIONS /////////// */
