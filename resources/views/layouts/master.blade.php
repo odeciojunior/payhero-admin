@@ -132,7 +132,7 @@
     <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
     <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-    <script src="{{ asset('modules/global/js/global.js?v=' . versionsFile()) }}"></script>
+    <script src="{{ asset('modules/global/js/global.js?v=' . uniqid()) }}"></script>
     <script>
         verifyDocumentPending();
     </script>
