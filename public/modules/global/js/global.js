@@ -805,7 +805,8 @@ function initSiriusSelect(target) {
     renderSiriusSelect($target)
 }
 
-function renderSiriusSelect($target) {
+function renderSiriusSelect(target) {
+    let $target = $(target);
     let $wrapper = $target.parent();
     let $text = $wrapper.find('.sirius-select-text');
     let $options = $wrapper.find('.sirius-select-options');

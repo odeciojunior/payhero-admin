@@ -70,7 +70,7 @@ class ActiveCampaignEventApiController extends Controller
 
             activity()->on($activecampaignEventModel)->tap(function(Activity $activity) use ($id, $event) {
                 $activity->log_name   = 'visualization';
-                $activity->subject_id = current($id);
+                $activity->subject_id = $id;
             })->log('Visualizou evento ' . $event[0]['name'] . ' do ActiveCampaign');
 
             return new ActivecampaignEventResource($activecampaignEvent);

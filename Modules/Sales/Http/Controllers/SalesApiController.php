@@ -138,7 +138,9 @@ class SalesApiController extends Controller
                 Gateway::GERENCIANET_PRODUCTION_ID,
                 Gateway::GERENCIANET_SANDBOX_ID,
                 Gateway::ASAAS_PRODUCTION_ID,
-                Gateway::ASAAS_SANDBOX_ID
+                Gateway::ASAAS_SANDBOX_ID,
+                Gateway::SAFE2PAY_PRODUCTION_ID,
+                Gateway::SAFE2PAY_SANDBOX_ID
             ])) {
                 return response()->json(
                     ['status' => 'error', 'message' => 'Esta venda não pode mais ser estornada.'],
@@ -175,8 +177,7 @@ class SalesApiController extends Controller
                 return response()->json(['message' => $result['message']], 400);
             }
 
-            Gateway::getServiceById($sale->gateway_id)
-            ->cancel($sale,$result['response'], $refundObservation);
+            $gatewayService->cancel($sale,$result['response'], $refundObservation);
 
             if ( !$sale->api_flag ) {
                 event(new SaleRefundedEvent($sale));

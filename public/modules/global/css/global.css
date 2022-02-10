@@ -1124,12 +1124,9 @@ img.border-icon{
 
 .modal-plans .box-products,
 .modal-plans .box-plans {
-    max-height: 276px;
+    height: 276px;
     overflow: hidden;
     position: relative;
-}
-.modal-plans .box-plans {
-    max-height: 222px;
 }
 .modal-plans .box-products:not(.customizations) .col-sm-6:nth-child(odd),
 .modal-plans .box-plans .col-sm-6:nth-child(odd) {
@@ -1758,6 +1755,50 @@ input[type="checkbox"], input[type="radio"] {
 }
 .nav-tabs-horizontal-custom .nav-tabs .nav-link:hover {
     background-color: #fff;
+}
+
+.mCSB_horizontal.mCSB_inside > .mCSB_container {
+    margin-bottom: 12px !important;
+}
+.mCSB_scrollTools.mCSB_scrollTools_horizontal {
+    width: auto !important;
+    height: 10px !important;
+}
+.mCSB_scrollTools.mCSB_scrollTools_horizontal .mCSB_draggerRail {
+    width: 100% !important;
+    height: 4px !important;
+    margin: 6px 0 !important;
+}
+
+.mCSB_inside > .mCSB_container {
+    margin-right: 12px !important;
+}
+.mCSB_scrollTools {
+    width: 4px !important;
+}
+.mCSB_scrollTools .mCSB_draggerRail {
+    width: 4px !important;
+    -webkit-border-radius: 8px !important;
+    -moz-border-radius: 8px !important;
+    border-radius: 8px !important;
+    background-color: #D4D4D4 !important;
+}
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+    background-color: #9E9E9E !important;
+}
+
+.modal-body.mCustomScrollbar {
+    padding: 0 !important;
+}
+.modal-body.mCustomScrollbar .mCSB_inside > .mCSB_container {
+    margin-right: 0 !important;
+}
+.modal-body.mCustomScrollbar .height-auto {
+    padding: 0 20px 20px !important;
+}
+
+.box-products.customizations .mCustomScrollBox {
+    width: calc(100% - 15px);
 }
 
 .scrollbox {

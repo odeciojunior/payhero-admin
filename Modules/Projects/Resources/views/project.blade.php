@@ -5,7 +5,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+<<<<<<< HEAD
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v='. versionsFile()) }}">
+=======
+    <link rel="stylesheet" href="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.css?v='. uniqid()) }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=13') }}">
+>>>>>>> master
     <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v='. versionsFile()) }}">
     <style>
@@ -452,14 +457,11 @@
     </div>
 
     @push('scripts')
-        <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
-        <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script>
-        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/plans/js/loading.js?v='.versionsFile())}}"></script>
-        <script src="{{asset('modules/plans/js/plans.js?v='.versionsFile())}}"></script>
+        <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
         <script src="{{asset('modules/shipping/js/shipping.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.versionsFile())}}"></script>
@@ -474,5 +476,8 @@
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
         <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>
         <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.versionsFile())}}"></script>
+
+        <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mousewheel.min.js') }}"></script>
+        <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.js?v='.uniqid()) }}"></script>
     @endpush
 @endsection

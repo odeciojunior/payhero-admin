@@ -100,7 +100,7 @@
                                 <div class="search-type"></div>
                             </div>
 
-                            <div class="box-plans" style="max-height: 220px;">
+                            <div class="box-plans">
                                 {{-- JS carrega --}}
                             </div>
                         </div>
