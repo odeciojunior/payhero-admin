@@ -921,8 +921,26 @@ $(document).ready(function () {
             $('.sirius-select-container .sirius-select-options').fadeOut();
         }
     });
-
     // END sirius select
+
+    // vertical scroll
+    $('.vertical-scroll').on({
+        'mousewheel wheel': function (e) {
+            e.preventDefault();
+            this.scrollLeft += e.originalEvent.deltaY;
+        },
+        'mousedown': function (e) {
+            $(this).addClass('scrolling').data('x', e.clientX).data('left', this.scrollLeft);
+        },
+        'mouseup mouseleave': function (e) {
+            $(this).removeClass('scrolling').data('x', 0).data('left', 0);
+        }
+    });
+    $(document).on('mousemove', '.vertical-scroll.scrolling', function (e) {
+        const dx = e.clientX - $(this).data('x');
+        this.scrollLeft = $(this).data('left') - dx;
+    });
+    // END vertical scroll
 })
 
 function verifyAccountFrozen() {
