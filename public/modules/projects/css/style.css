@@ -34,11 +34,7 @@
     font-size: 14px !important;
     border-radius: 8px 8px 0 0 !important;
     padding: 15px;
-}
-
-.nav-link {
     text-transform: none;
-    font-size: 16px;
 }
 
 .nav-tabs .nav-link {
@@ -50,13 +46,20 @@
     border-left: none;
     background-color: #FAFAFA;
     padding: 15px;
-    color: #9C9C9C;
+    white-space: nowrap !important;
 
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     -ms-transition: all 0.3s;
     -o-transition: all 0.3s;
     transition: all 0.3s;
+
+    -webkit-user-select: none; /* Safari 3.1+ */
+    -moz-user-select: none; /* Firefox 2+ */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
+    user-drag: none;
+    -webkit-user-drag: none;
 }
 
 .nav-tabs .nav-link:not(.active) {
