@@ -452,20 +452,7 @@ $(() => {
         let getTextSaveChanges = $(".final-card span").html();
         
         if($(".dropify-render > img").length <= 0 && $(".dropify-errors-container > ul > li").length >= 1 ){
-            $("#options-buttons").children().hide();
-            $(".final-card").removeClass("bg-primary").addClass("bg-danger");
-            $(".final-card span").html("<strong>Oops </strong>algo nao esta correto");
-
-            setTimeout(function () {
-                $( "#confirm-changes" ).fadeOut("slow");
-                setTimeout(function () {
-                    $(".final-card span").html(getTextSaveChanges);
-                    $("#options-buttons").children().show();
-                    $(".final-card").removeClass("bg-danger").addClass("bg-primary");
-                    $(".loader").hide();
-                },3000);
-            },2000);
-    
+            alertCustom('error', 'Imagem invalida');
             event.preventDefault();
             return;
         }
