@@ -63,7 +63,7 @@
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}"> --}}
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=29') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=80') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=81') }}">
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css?v=22') }}"> --}}
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')

@@ -130,7 +130,7 @@ $(() => {
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
-                
+
             }, error: function (response) {
                 // loadOnAny('#tab_configuration_project .card', true);
                 $("#update-project").removeClass("low-opacity");
@@ -145,27 +145,6 @@ $(() => {
             }
         });
     }
-
-    // CARD 2 COMPORTAMENTO ABAS (Principal, Marketing e Recuperacao)
-    $('#slick-tabs').slick({
-        infinite: false,
-        speed: 300,
-        slidesToShow: 7,
-        variableWidth: true,
-        nextArrow: false,
-        prevArrow: false,
-        swipeToSlide: true,
-
-        responsive: [
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                }
-            },
-        ]
-    });
 
     let firstCategory = [
         "tab-domains",
@@ -291,7 +270,7 @@ $(() => {
         if(project.status_url_affiliates == 0){
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/affiliationDisable.svg").css("background-color", "#F2F8FF");
             $("#affiliation-access").hide();
-            
+
             if(project.status_url_affiliates == 0 && getStatusAffiliation == true){
                 $('#update-project .status-url-affiliates').trigger('click');
 
@@ -398,11 +377,11 @@ $(() => {
         let preview = wrapper.find(".dropify-preview");
         let filename = wrapper.find(".dropify-filename-inner");
         let render = wrapper.find(".dropify-render").html("");
-    
+
         input.val("").attr("title", fname);
         wrapper.removeClass("has-error").addClass("has-preview");
         filename.html(fname);
-    
+
         render.append(
             $('<img style="width: 100%; border-radius: 8px; object-fit: cover;" />').attr("src", src).css("height", input.attr("height"))
         );
@@ -471,7 +450,7 @@ $(() => {
 
         let getTextSaveChanges = $(".final-card span").html();
         $(".final-card span").html("Um momento... <strong>Estamos salvando suas alterações.</strong>");
-        
+
         $("#options-buttons").children().hide();
         $(".loader").show();
 
@@ -497,7 +476,7 @@ $(() => {
         let formData = new FormData(document.getElementById("update-project"));
         formData.append('status_url_affiliates', statusUrlAffiliates);
         formData.append("automatic_affiliation", automaticAffiliation);
-        
+
         if(!$("#project_photo").prop("files").length){
             formData.delete("project_photo");
         }
@@ -531,7 +510,7 @@ $(() => {
                     });
                     setTimeout(function () {
                         $( "#confirm-changes" ).hide();
-            
+
                         $(".final-card span").html(getTextSaveChanges);
                         $("#options-buttons").children().show();
                         $(".loader").hide();
@@ -553,12 +532,12 @@ $(() => {
     //CANCELAR
     $("#cancel-edit").on("click", function(){
         renderProjectConfig(JSON.parse(localStorage.getItem("projectConfig")))
-        $("#confirm-changes").fadeOut("slow");        
+        $("#confirm-changes").fadeOut("slow");
         $('html, body').animate({
             scrollTop: 410
         });
         localStorage.setItem("photo_remove", false);
     })
-    
+
     show();
 });
