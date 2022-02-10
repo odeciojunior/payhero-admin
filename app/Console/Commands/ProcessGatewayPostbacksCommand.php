@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\GatewayPostback;
+use Illuminate\Support\Facades\Log;
 
 class ProcessGatewayPostbacksCommand extends Command
 {
@@ -22,8 +23,19 @@ class ProcessGatewayPostbacksCommand extends Command
      */
     public function handle()
     {
-        $this->processPostBackGetnet();
-        $this->processPostbackAsaas();
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
+        try {
+
+            $this->processPostBackGetnet();
+            $this->processPostbackAsaas();
+
+        } catch (Exception $e) {
+            report($e);
+        }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 
     private function processPostBackGetnet()
@@ -61,9 +73,9 @@ class ProcessGatewayPostbacksCommand extends Command
                         ->get()->toArray();
 
             $url = getenv('CHECKOUT_URL') . '/api/postback/process/asaas';
-            
+
             foreach ($postbacks as $postback)
-            {                
+            {
                 $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback['id'])]);
             }
 

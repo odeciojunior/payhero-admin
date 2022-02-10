@@ -9,6 +9,7 @@ use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Services\Gateways\CheckoutGateway;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Illuminate\Support\Facades\Log;
 
 class RegisterWebhookAsaas extends Command
 {
@@ -34,7 +35,7 @@ class RegisterWebhookAsaas extends Command
         parent::__construct();
 
         $this->gatewayId = foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID:Gateway::ASAAS_SANDBOX_ID;
-        $this->api = new CheckoutGateway($this->gatewayId);            
+        $this->api = new CheckoutGateway($this->gatewayId);
     }
 
     /**
@@ -44,50 +45,62 @@ class RegisterWebhookAsaas extends Command
      */
     public function handle()
     {
-        $credentials = GatewaysCompaniesCredential::where('gateway_id',$this->gatewayId)->whereNotNull('gateway_api_key')
-        ->where(function($qr){
-            $qr->whereNull('has_transfers_webhook')->orWhere('has_transfers_webhook',0)
-            ->orWhereNull('has_charges_webhook')->orWhere('has_charges_webhook',0);
-        })->get();
 
-        $output = new ConsoleOutput();
-        $progress = new ProgressBar($output, $credentials->count());
-        $progress->start();
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-        foreach($credentials as $credential){
-            $this->registerTransferWebhook($credential);
-            $this->registerChargeWebhook($credential);
-            $progress->advance();
+        try {
+
+            $credentials = GatewaysCompaniesCredential::where('gateway_id',$this->gatewayId)->whereNotNull('gateway_api_key')
+                ->where(function($qr){
+                    $qr->whereNull('has_transfers_webhook')->orWhere('has_transfers_webhook',0)
+                        ->orWhereNull('has_charges_webhook')->orWhere('has_charges_webhook',0);
+                })->get();
+
+            $output = new ConsoleOutput();
+            $progress = new ProgressBar($output, $credentials->count());
+            $progress->start();
+
+            foreach($credentials as $credential){
+                $this->registerTransferWebhook($credential);
+                $this->registerChargeWebhook($credential);
+                $progress->advance();
+            }
+            $progress->finish();
+
+        } catch (Exception $e) {
+            report($e);
         }
-        $progress->finish();
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 
     public function registerTransferWebhook(GatewaysCompaniesCredential $credential){
         try{
 
             if($credential->has_transfers_webhook <> 1){
-                $response = $this->api->registerTransfersWebhookAsaas($credential->company_id);            
+                $response = $this->api->registerTransfersWebhookAsaas($credential->company_id);
                 if($response->status =='success'){
                     $credential->update(['has_transfers_webhook' => 1]);
                 }
             }
         }
-        catch(Exception $ex) {            
-            $credential->update(['has_transfers_webhook' => 0]);            
+        catch(Exception $ex) {
+            $credential->update(['has_transfers_webhook' => 0]);
         }
     }
 
     public function registerChargeWebhook(GatewaysCompaniesCredential $credential)
-    {        
+    {
         try{
             if($credential->has_charges_webhook <> 1){
-                $response = $this->api->registerChargesWebhookAsaas($credential->company_id);            
+                $response = $this->api->registerChargesWebhookAsaas($credential->company_id);
                 if($response->status =='success'){
                     $credential->update(['has_charges_webhook' => 1]);
                 }
             }
         }
-        catch(Exception $ex) {            
+        catch(Exception $ex) {
             $credential->update(['has_charges_webhook' => 0]);
         }
     }

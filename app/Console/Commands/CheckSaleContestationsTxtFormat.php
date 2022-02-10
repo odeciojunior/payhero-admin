@@ -10,6 +10,7 @@ use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Entities\SaleGatewayRequest;
 use Modules\Core\Services\Antifraud\CloudfoxAntifraudService;
 use Modules\Core\Services\Email\Gmail\GmailService;
+use Illuminate\Support\Facades\Log;
 
 class CheckSaleContestationsTxtFormat extends Command
 {
@@ -26,6 +27,9 @@ class CheckSaleContestationsTxtFormat extends Command
 
     public function handle()
     {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
             $gmailService = new GmailService();
             $attachmentPaths = $gmailService->getFilesFromEmail(200, false);
@@ -130,6 +134,9 @@ class CheckSaleContestationsTxtFormat extends Command
         } catch (Exception $e) {
             report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 
     private function updateCodeByLine($line)
