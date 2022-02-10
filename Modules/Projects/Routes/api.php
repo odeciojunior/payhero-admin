@@ -10,14 +10,6 @@ Route::group(
           Route::get('/projects/user-projects', 'ProjectsApiController@getProjects')
                ->middleware('permission:projects_manage');
 
-          Route::apiResource('/projects', 'ProjectsApiController')
-               ->only('index','show')
-               ->middleware('permission:projects|sales');
-
-          Route::apiResource('/projects', 'ProjectsApiController')
-          ->only('create', 'store', 'edit', 'destroy', 'update')
-          ->middleware('permission:projects_manage');
-
           // Verificação de telefone de suporte
           Route::post('/projects/{projectId}/verifysupportphone', 'ProjectsApiController@verifySupportphone')
                ->middleware('permission:projects_manage');
@@ -40,5 +32,13 @@ Route::group(
 
           Route::get('/projects/{id}/companie', 'ProjectsApiController@getCompanieByProject')
                ->middleware('permission:projects_manage');
+
+         Route::apiResource('/projects', 'ProjectsApiController')
+             ->only('create', 'store', 'edit', 'destroy', 'update')
+             ->middleware('permission:projects_manage');
+
+         Route::apiResource('/projects', 'ProjectsApiController')
+             ->only('index','show')
+             ->middleware('permission:projects|sales');
      }
 );
