@@ -150,7 +150,7 @@
                                                     </h5>
                                                 </header>
 
-                                                <ul style="display: none" class="list-states">
+                                                <ul class="list-states">
                                                     <li class="states-list">
                                                         <div class="d-flex container">
                                                             <ul>
@@ -256,7 +256,7 @@
                                                 <div class="inside-state">
                                                     <header class="header-state container">
                                                         <h4>
-                                                            <a href="">
+                                                            <a href="" class="back-list" title="Voltar">
                                                                 <span class="ico-arrow-left">arrow</span>
                                                             </a>                                                            
                                                             <strong>2°</strong>

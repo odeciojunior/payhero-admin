@@ -463,7 +463,6 @@ h4.number{
     align-items: center;
     font-size: 12px;
     flex: 1;
-
 }
 
 .col-graph { flex: 2; }
@@ -999,10 +998,7 @@ h4.number{
     flex-direction: column;
 }
 @media only screen and (min-width: 1227px){
-    .box-conversion-state { 
-        flex-direction: row; 
-        align-items: center;
-    }
+    .box-conversion-state { flex-direction: row; }
 }
 
 .box-states, .brazil-map { flex:1; }
@@ -1027,7 +1023,6 @@ h4.number{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%;
 }
 
 .states-list { padding: 10px 0; }
@@ -1133,6 +1128,8 @@ h4.number{
     stroke: #e0edfc;
     cursor: pointer;
 }
+
+.inside-state { display: none; }
 
 .header-state {
     display: flex;
