@@ -138,7 +138,9 @@ class SalesApiController extends Controller
                 Gateway::GERENCIANET_PRODUCTION_ID,
                 Gateway::GERENCIANET_SANDBOX_ID,
                 Gateway::ASAAS_PRODUCTION_ID,
-                Gateway::ASAAS_SANDBOX_ID
+                Gateway::ASAAS_SANDBOX_ID,
+                Gateway::SAFE2PAY_PRODUCTION_ID,
+                Gateway::SAFE2PAY_SANDBOX_ID
             ])) {
                 return response()->json(
                     ['status' => 'error', 'message' => 'Esta venda não pode mais ser estornada.'],
@@ -162,7 +164,7 @@ class SalesApiController extends Controller
             }
 
             $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
-            $gatewayService = $sale->gateway->getService();
+            $gatewayService = Gateway::getServiceById($sale->gateway_id);
             $gatewayService->setCompany($producerCompany);
 
             if (!$gatewayService->hasEnoughBalanceToRefund($sale)) {
@@ -175,9 +177,7 @@ class SalesApiController extends Controller
                 return response()->json(['message' => $result['message']], 400);
             }
 
-            ((new Gateway)->getServiceById($sale->gateway_id))
-            ->cancel($sale,$result['response'], $refundObservation);
-
+            $gatewayService->cancel($sale,$result['response'], $refundObservation);
 
             if ( !$sale->api_flag ) {
                 event(new SaleRefundedEvent($sale));

@@ -4,6 +4,7 @@ namespace Modules\Pixels\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 
 class PixelsResource extends JsonResource
 {
@@ -15,6 +16,7 @@ class PixelsResource extends JsonResource
         return [
             'id' => hashids_encode($this->id),
             'name' => $this->name,
+            'name_short' => Str::limit($this->name, 24),
             'code' => $this->code,
             'platform' => $this->platform,
             'platform_enum' => $platform,

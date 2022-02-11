@@ -113,6 +113,7 @@ class ShopifyApiController extends Controller
                     ], 400);
                 }
             } catch (Exception $e) {
+                report($e);
                 return response()->json([
                     'message' => (new ShopifyErrors())->FormatDataInvalidShopifyIntegration($e)
                 ], 400);
@@ -850,6 +851,7 @@ class ShopifyApiController extends Controller
                 return response()->json(['message' => 'Token inválido, revise o dado informado'], 400);
             }
         } catch (Exception $e) {
+            report($e);
             return response()->json([
                 'message' => (new ShopifyErrors())->FormatDataInvalidShopifyIntegration($e)
             ], 400);

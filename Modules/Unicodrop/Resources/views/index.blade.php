@@ -1,7 +1,19 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/digitalmanager/css/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/digitalmanager/css/index.css?v=' .  versionsFile()) }}">
     {{-- <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}"> --}}
+    <style>
+        .o-arrow-right-1 {
+            font-size: 30px;
+        }
+
+        .o-arrow-right-1::before {
+            transform: rotate(180deg);
+        }
+        .gray:hover{
+            color:#a1a1a1 !important;
+        }
+     </style>
 @endpush
 @section('content')
 
@@ -9,7 +21,12 @@
         <div style="display: none" class="page-header container">
             <div class="row jusitfy-content-between">
                 <div class="col-lg-8">
-                    <h1 class="page-title">Integrações Unicodrop</h1>
+                    <h1 class="page-title">
+                        <a href="/apps">
+                            <span class="o-arrow-right-1 font-size-30 ml-2" aria-hidden="true"></span>
+                            Integrações Unicodrop
+                        </a>
+                    </h1>
                 </div>
                 <div class="col text-right" id="integration-actions" style="display:none">
                     <a id='btn-add-integration' class="btn btn-floating btn-primary"

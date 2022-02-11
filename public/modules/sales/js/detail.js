@@ -44,7 +44,7 @@ $(() => {
 
     $(document).on("click", ".btn-copy-thank-page-url", function () {
         let temp = $("<input>");
-        $("#nav-tabContent").append(temp);
+        $(".sales-details").append(temp);
         temp.val($(this).attr("link")).select();
         document.execCommand("copy");
         temp.remove();
@@ -211,7 +211,7 @@ $(() => {
             },
             success: (response) => {
                 getSale(response.data);
-                
+
                 $("#refundAmount").val(response.data.total);
                 $("#refundBilletAmount").text(response.data.total);
                 $(".btn_refund_transaction").unbind("click");
@@ -224,7 +224,7 @@ $(() => {
 
                     $('#asaas_message').html('');
                     if(response.data.asaas_amount_refund!= ''){
-                        $('#asaas_message').html(`<p class="gray"> Esta venda já foi antecipada, o valor a ser debitado no extrato será de <strong>${response.data.asaas_amount_refund}</strong></p>`)   
+                        $('#asaas_message').html(`<p class="gray"> Esta venda já foi antecipada, o valor a ser debitado no extrato será de <strong>${response.data.asaas_amount_refund}</strong></p>`)
                     }
 
                     $("#radioTotalRefund").on("click", function () {
@@ -679,7 +679,7 @@ $(() => {
         ) {
             $("#comission-value").text(sale.affiliate_comission);
         }
-        
+
         //Ordem Woocommerce
         if (sale.has_woocommerce_integration) {
             $('#nav-woo-tab').show()
@@ -695,7 +695,7 @@ $(() => {
                 $('#woo_order').html('Ordem não encontrada!')
 
                 if(sale.woocommerce_retry_order){
-                    
+
                     $("#resendWoocommerceOrder").removeClass("d-none");
                     $("#resendWoocommerceOrder").addClass("d-block");
                     $("#resendWoocommerceOrderButton").attr("sale", sale.id);
@@ -1441,7 +1441,7 @@ $(() => {
 
     //Gera ordem woocommerce
     function newOrderWooClick(sale) {
-        
+
         loadingOnScreen();
         $.ajax({
             method: "POST",

@@ -246,14 +246,14 @@ class ChargebackService
             return 1.2;
         }
 
-        $getnetChargebacks = GetnetChargeback::whereHas('sale', function ($q) use ($startDate, $endDate) {
+        $chargebacksAmount = Sale::where('status', Sale::STATUS_CHARGEBACK)->whereHas('saleLogs', function($q) use ($startDate, $endDate) {
             $q->whereBetween(
-                'start_date',
+                'created_at',
                 [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-            );
-        })->where('user_id', $user->account_owner_id);
+            )->where('status_enum', 4);
+        })->where('owner_id', $user->account_owner_id);
 
-        $chargebacksAmount = $getnetChargebacks->count();
+        $chargebacksAmount = $chargebacksAmount->count();
         $approvedSalesAmount = $approvedSales->count();
 
         return $chargebacksAmount > 0 ? round(($chargebacksAmount * 100 / $approvedSalesAmount), 2) : 0;

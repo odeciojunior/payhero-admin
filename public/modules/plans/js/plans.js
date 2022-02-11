@@ -17,8 +17,16 @@ $(function () {
 
     var selected_plans = [];
 
+    function hideTable() {
+        $('#tab_plans-panel').find('.no-gutters').css('display', 'none');
+        $('#table-plans').find('thead').css('display', 'none');
+    }
+
     $('.tab_plans').on('click', function () {
-        $("#previewimage").imgAreaSelect({remove: true});
+        hideTable();
+
+        $("#previewimage").imgAreaSelect({ remove: true });
+        $("#plan-name").val('');
         index();
         $(this).off();
 
@@ -102,8 +110,9 @@ $(function () {
         $(modal).find('.modal-body').css('height', 'auto');
         $(modal).find(find_stage).find('.box-review').html('').css('margin-bottom', '0px');
 
-        $(modal).find(find_stage).find('.box-products').html('').css({'max-height': '316px', 'padding-right': '0px'});
-        $(modal).find(find_stage).find('.box-products').find('.scrollbox').remove();
+        $(modal).find(find_stage).find('.box-products').html('').css({'height': 'auto', 'padding-right': '0px'});
+        $(modal).find(find_stage).find('.box-products').mCustomScrollbar('destroy');
+        $(modal).find(find_stage).find('.box-products').mCustomScrollbar('update');
 
         $(modal).find(find_stage).find('.box-products').html(loadingProducts).promise().done(function() {
             $.ajax({
@@ -153,7 +162,7 @@ $(function () {
 
                         append += '<div class="col-sm-12">';
                             append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
-                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
+                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhum resultado encontrado.</p>';
                             append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A; margin-bottom: 20px;">Por aqui, nenhum produto com esse nome.</p>';
                         append += '</div>';
                     }
@@ -167,9 +176,7 @@ $(function () {
                         });
 
                         if (response.data.length > 6) {
-                            scrollCustom(modal + ' ' + find_stage + ' .box-products');
-                        } else {
-                            $(modal + ' ' + find_stage + ' .box-products').off('wheel');
+                            $(modal).find(find_stage).find('.box-products').mCustomScrollbar();
                         }
 
                         $(modal).find('.product-photo').on('error', function() {
@@ -179,6 +186,10 @@ $(function () {
                         $(modal).find(find_stage).find('.product-photo').on('load', function() {
                             $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                                 $(modal).find(find_stage).find('.box-products').find('.row').css('display', 'flex').promise().done(function() {
+                                    if (response.data.length > 6) {
+                                        $(modal).find(find_stage).find('.box-products').css({'height': '316px'});
+                                    }
+
                                     var autoHeight = $(modal).find('.height-auto').height() + 18;
                                     $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
                                         $(modal).find('.product-photo').unbind('load');
@@ -203,10 +214,6 @@ $(function () {
 
         $(modal).find('.modal-body').find('.height-auto').css('margin-top', '');
 
-        $(modal).find('.modal-body').off('wheel');
-        $(modal).find('.modal-body').find('.scrollbox').remove();
-        $(modal).find('.modal-body').find('.scrollbox-bar').remove();
-
         var find_stage = type == 'create' ? '#stage1' : '#stage2';
 
         removeProductArraySelecteds(modal);
@@ -224,7 +231,13 @@ $(function () {
         }
 
         $(modal).find('.tab-pane').removeClass('show active');
-        $(modal).find(find_stage).find('.box-products').html('').css({'max-height': '316px', 'padding-right': '0px'});
+        $(modal).find(find_stage).find('.box-products').html('').css({'height': '316px', 'padding-right': '0px'});
+
+        $(modal).find(find_stage).find('.box-products').mCustomScrollbar('destroy');
+        $(modal).find(find_stage).find('.box-products').mCustomScrollbar('update');
+        $(modal).find('.modal-body').mCustomScrollbar('destroy');
+        $(modal).find('.modal-body').mCustomScrollbar('update');
+
         $(modal).find(find_stage).find('#search-product').val('');
         $(modal).find(find_stage).find('.box-review').html('');
 
@@ -290,9 +303,7 @@ $(function () {
                         });
 
                         if (response.data.length > 6) {
-                            scrollCustom(modal + ' ' + find_stage + ' .box-products');
-                        } else {
-                            $(modal + ' ' + find_stage + ' .box-products').off('wheel');
+                            $(modal).find(find_stage).find('.box-products').mCustomScrollbar();
                         }
 
                         if (type == 'edit') {
@@ -319,7 +330,10 @@ $(function () {
                                 var widthBoxPhotosProducts = 'auto';
                                 if (selected_products.length > 8) {
                                     widthBoxPhotosProducts = '' + (selected_products.length * 68) + 'px';
-                                    scrollCustomX(modal + ' .box-photos-products');
+
+                                    $(modal).find('.box-photos-products').mCustomScrollbar({
+                                        axis: 'x'
+                                    });
                                 }
 
                                 $(modal).find('.box-photos-products').find('.d-flex').css('width', widthBoxPhotosProducts);
@@ -359,7 +373,9 @@ $(function () {
         var find_stage = type == 'create' ? '#stage2' : '#stage3';
 
         $(modal).find('.modal-body').css('height', 'auto');
-        $(modal).find(find_stage).find('.box-products').html('').css({'overflow': 'unset', 'max-height': 'unset', 'padding-right': '0px'});
+        $(modal).find(find_stage).find('.box-products').html('').css({'overflow': 'unset', 'height': 'unset', 'padding-right': '0px'});
+        $(modal).find(find_stage).find('.box-products').find('.body').mCustomScrollbar('destroy');
+        $(modal).find(find_stage).find('.box-products').find('.body').mCustomScrollbar('update');
         $(modal).find(find_stage).find('.box-review').html('');
         $(modal).find('#btn-modal-plan-return').html('Voltar');
         if (type == 'create') {
@@ -460,16 +476,7 @@ $(function () {
                                         template: '<div class="tooltip product-details" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
                                     });
 
-                                    $(modal).find('.sirius-select').each(function () {
-                                        let $target = $(this);
-                                        let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
-                                        $target.wrap(`<div class="sirius-select-container"></div>`);
-                                        $target.hide();
-                                        $target.after(`<div class="sirius-select-options"></div>`);
-                                        $target.after(`<div class="sirius-select-text ${classes}"></div>`);
-
-                                        renderSiriusSelect(this);
-                                    });
+                                    $(modal).find('.sirius-select').siriusSelect();
 
                                     $(modal).find(find_stage).find('.product-photo').on('error', function() {
                                         $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
@@ -490,11 +497,9 @@ $(function () {
                                     });
 
                                     if (selected_products.length > 4) {
-                                        $(modal).find(find_stage).find('.box-products').find('.body').css({'max-height': '278px', 'position': 'relative', 'overflow': 'hidden'});
+                                        $(modal).find(find_stage).find('.box-products').find('.body').css({'height': '278px', 'position': 'relative', 'overflow': 'hidden'});
 
-                                        scrollCustom(modal + ' ' + find_stage + ' .box-products .body');
-                                    } else {
-                                        $(modal + ' ' + find_stage + ' .box-products .body').off('wheel');
+                                        $(modal).find(find_stage).find('.box-products').find('.body').mCustomScrollbar();
                                     }
 
                                     if (selected_products.length > 1) {
@@ -605,10 +610,10 @@ $(function () {
         $(modal).find('.nav-tabs-horizontal').css('display', 'block');
         $(modal).find('#tab-general-data_panel').removeClass('show active');
 
-        $(modal + ' .modal-body').off('wheel');
-        $(modal + ' #stage1 .box-products').off('wheel');
-        $(modal).find('.scrollbox').remove();
-        $(modal).find('.scrollbox-bar').remove();
+        $(modal).find('.modal-body').mCustomScrollbar('destroy');
+        $(modal).find('.modal-body').mCustomScrollbar('update');
+        $(modal).find('#stage1').find('.box-products').mCustomScrollbar('destroy');
+        $(modal).find('#stage1').find('.box-products').mCustomScrollbar('update');
 
         $(modal).find('.products-data').css('height', '148px');
 
@@ -710,7 +715,7 @@ $(function () {
 
                     $(modal).find('#stage1').find('.box-products').html(append).promise().done(function() {
                         if (products.length > 4 && products.length <= 10) {
-                            scrollCustom(modal + ' #stage1 .box-products');
+                            $(modal).find('#stage1').find('.box-products').mCustomScrollbar();
                         }
 
                         $(modal).find('#tab-customizations').removeClass('disabled');
@@ -775,7 +780,7 @@ $(function () {
                                 });
 
                                 $('#modal_edit_plan .modal-body').css('overflow', 'hidden');
-                                scrollCustom('#modal_edit_plan .modal-body', true, 'modal-body');
+                                $(modal).find('.modal-body').mCustomScrollbar();
 
                                 $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
                                     $(modal).find('#stage1').addClass('show active').promise().done(function() {
@@ -793,11 +798,14 @@ $(function () {
     function getCustom(modal, showLoading = true) {
         $(modal).find('.product-photo').unbind('load');
 
-        $(modal + ' .modal-body').off('wheel');
-        $(modal).find('.scrollbox').remove();
-        $(modal).find('.scrollbox-bar').remove();
+        $(modal).find('.modal-body').mCustomScrollbar('destroy');
+        $(modal).find('.modal-body').mCustomScrollbar('update');
+
+        $(modal).find('#stage1-customization').find('.body-products').mCustomScrollbar('destroy');
+        $(modal).find('#stage1-customization').find('.body-products').mCustomScrollbar('update');
 
         $(modal).find('.modal-body').css('height', 'auto').attr('style', 'padding-bottom: 0px !important').attr('style', 'padding-top: 0 !important');
+        $(modal).find('#stage1-customization').find('.box-products').css({'height': 'auto'});
 
         $(modal).find('.modal-footer').html(
             '<button plan="' + plan_id + '" id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">' +
@@ -894,14 +902,9 @@ $(function () {
             var curHeight = $(modal).find('.modal-body').height();
             $(modal).find('#stage1-customization').find('.box-products').html(append).promise().done(function() {
                 if (products_plan.length > 2) {
-                    $(modal).find('#stage1-customization').find('.body-products').css({'max-height': '214px', 'position': 'relative', 'overflow': 'hidden'});
+                    $(modal).find('#stage1-customization').find('.body-products').css({'height': '214px', 'position': 'relative', 'overflow': 'hidden'});
 
-                    scrollCustom(modal + ' #stage1-customization .body-products');
-                    $(modal).find('#stage1-customization').find('.body-products').css({'padding-right': '0'});
-                    $(modal).find('#stage1-customization').find('.body-products').find('.scrollbox').css({'right': '15px'});
-                    $(modal).find('#stage1-customization').find('.body-products').find('.scrollbox-bar').css({'right': '15px'});
-                } else {
-                    $(modal + ' #stage1-customization .body-products').off('wheel');
+                    $(modal).find('#stage1-customization').find('.body-products').mCustomScrollbar();
                 }
 
                 $(modal).find('.customizations').find('.product-photo').on('error', function() {
@@ -1307,14 +1310,19 @@ $(function () {
                             widthBoxPhotosProducts = '' + (selected_products.length * 68) + 'px';
 
                             $(modal).find('.box-photos-products').find('.d-flex').css('width', widthBoxPhotosProducts);
-                            scrollCustomX(modal + ' .box-photos-products', true, true);
+
+                            $(modal).find('.box-photos-products').mCustomScrollbar({
+                                axis: 'x',
+                                advanced: {
+                                    autoExpandHorizontalScroll: true
+                                }
+                            });
                         } else {
                             $(modal).find('.box-photos-products').children(":first").css('margin-left', '');
                             $(modal).find('.box-photos-products').find('.d-flex').css('width', '586px');
 
-                            $(modal + ' .box-photos-products').off('wheel');
-                            $(modal).find('.box-photos-products').find('.scrollbox').remove();
-                            $(modal).find('.box-photos-products').find('.scrollbox-bar').remove();
+                            $(modal).find('.box-photos-products').mCustomScrollbar('destroy');
+                            $(modal).find('.box-photos-products').mCustomScrollbar('update');
                         }
                     }
 
@@ -1356,14 +1364,19 @@ $(function () {
                                         widthBoxPhotosProducts = '' + (selected_products.length * 68) + 'px';
 
                                         $(modal).find('.box-photos-products').find('.d-flex').css('width', widthBoxPhotosProducts);
-                                        scrollCustomX(modal + ' .box-photos-products', false, true);
+
+                                        $(modal).find('.box-photos-products').mCustomScrollbar({
+                                            axis: 'x',
+                                            advanced: {
+                                                autoExpandHorizontalScroll: true
+                                            }
+                                        });
                                     } else {
                                         $(modal).find('.box-photos-products').children(":first").css('margin-left', '');
                                         $(modal).find('.box-photos-products').find('.d-flex').css('width', '586px');
 
-                                        $(modal + ' .box-photos-products').off('wheel');
-                                        $(modal).find('.box-photos-products').find('.scrollbox').remove();
-                                        $(modal).find('.box-photos-products').find('.scrollbox-bar').remove();
+                                        $(modal).find('.box-photos-products').mCustomScrollbar('destroy');
+                                        $(modal).find('.box-photos-products').mCustomScrollbar('update');
                                     }
 
                                     removeProductArraySelecteds(modal, product_id);
@@ -1541,7 +1554,7 @@ $(function () {
 
         $(modal).find('.tab-pane').removeClass('show active');
 
-        $(modal).attr('data-backdrop', 'true');
+        $(modal).attr('data-backdrop', 'static');
         $(modal).modal('show');
 
         getProducts(modal, 'create');
@@ -1809,6 +1822,7 @@ $(function () {
         $("#btn-delete-plan").unbind('click');
         $("#btn-delete-plan").on('click', function () {
             modalID.modal('hide');
+
             $.ajax({
                 method: "DELETE",
                 url: '/api/project/' + projectId + '/plans/' + plan,
@@ -1832,8 +1846,10 @@ $(function () {
 
                 }),
                 success: function success(response) {
-                    alertCustom('success', response.message);
+                    hideTable();
                     index();
+
+                    alertCustom('success', response.message);
                 }
             });
         });
@@ -1889,10 +1905,8 @@ $(function () {
 
         $(modal).find('.nav-tabs-horizontal').css('display', 'block');
 
-        $(modal + ' .modal-body').off('wheel');
-        $(modal + ' #stage1 .box-products').off('wheel');
-        $(modal).find('.scrollbox').remove();
-        $(modal).find('.scrollbox-bar').remove();
+        $(modal).find('#stage4').find('.body-products').mCustomScrollbar('destroy');
+        $(modal).find('#stage4').find('.body-products').mCustomScrollbar('update');
 
         $(modal).find('.box-breadcrumbs').find('span').html(' ' + products_plan.length + ' produtos');
 
@@ -1929,8 +1943,7 @@ $(function () {
             $(modal).find('#stage4').find('.box-products').html(append).promise().done(function() {
                 $(modal).find('#stage4').find('.box-products').css({'max-height': '314px', 'position': 'relative', 'overflow': 'hidden'});
 
-                scrollCustom(modal + ' #stage4 .box-products');
-                $(modal).find('#stage4 .box-products').css('padding-right', '0');
+                $(modal).find('#stage4').find('.body-products').mCustomScrollbar();
 
                 $(modal).find('#stage4').find('.product-photo').on('error', function() {
                     $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
@@ -2034,7 +2047,7 @@ $(function () {
                     parents.find('.informations-data').height(curHeight).animate({ height: autoHeight }, 300);
 
                     if (response.plan.products.length > 4 && response.plan.products.length <= 10) {
-                        scrollCustom('#modal_edit_plan #stage1 .box-products');
+                        $(modal).find('#stage1').find('.body-products').mCustomScrollbar();
                     }
                 });
 
@@ -2075,15 +2088,13 @@ $(function () {
             }
         }
 
-        $('#tab_plans-panel').find('.no-gutters').css('display', 'none');
-        $('#table-plans').find('thead').css('display', 'none');
-
+        var planName = $("#plan-name").val();
         $.ajax({
             method: "GET",
             url: link,
             dataType: "json",
             data: {
-                plan: $("#plan-name").val()
+                plan: planName
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -2107,22 +2118,34 @@ $(function () {
             success: function success(response) {
                 $('#pagination-plans').html('');
                 if (isEmpty(response.data)) {
-                    $("#data-table-plan").html(`
-                        <tr class='text-center'>
-                            <td colspan='11' style='height: 70px; vertical-align: middle;'>
-                                <div class='d-flex justify-content-center align-items-center'>
-                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
-                                    <div class='text-left'>
-                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum plano configurado</h1>
-                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro plano para poder
-                                        <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-plan' data-toggle="modal" data-target="#modal_add_plan">Adicionar plano</button>
+                    if (planName != '') {
+                        $("#data-table-plan").html(`
+                            <tr class='text-center'>
+                                <td colspan='11' style='height: 70px; vertical-align: middle;'>
+                                    Nenhum dado encontrado
+                                </td>
+                            </tr>
+                        `);
+                    } else {
+                        $("#data-table-plan").html(`
+                            <tr class='text-center'>
+                                <td colspan='11' style='height: 70px; vertical-align: middle;'>
+                                    <div class='d-flex justify-content-center align-items-center'>
+                                        <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                        <div class='text-left'>
+                                            <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum plano configurado</h1>
+                                            <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro plano para poder
+                                            <br>gerenciá-los nesse painel.</p>
+                                            <button type='button' style='margin: 0; width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-plan' data-toggle="modal" data-target="#modal_add_plan">Adicionar plano</button>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    `);
+                                </td>
+                            </tr>
+                        `);
+                    }
+
                     $('#table-plans').addClass('table-striped');
+                    $('#pagination-plans').html('');
 
                 } else {
                     $('#tab_plans-panel').find('.no-gutters').css('display', 'flex');
@@ -2231,8 +2254,10 @@ $(function () {
         $(modal).find('.product-photo').unbind('load');
         $(modal).find('.modal-body').css('height', 'auto');
 
-        $(modal).find('.box-plans').css({ 'max-height': '222px', 'padding-right': '0px' });
-        $(modal).find('.box-plans').find('.scrollbox').remove();
+        $(modal).find('.box-plans').css({ 'height': 'auto', 'padding-right': '0px' });
+
+        $(modal).find('.box-plans').mCustomScrollbar('destroy');
+        $(modal).find('.box-plans').mCustomScrollbar('update');
 
         $(modal).find('.box-plans').html(loadingPlans).promise().done(function() {
             $.ajax({
@@ -2265,7 +2290,7 @@ $(function () {
                                 append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'review' : '') + ' ' + (select_all == 'true' ? 'selected' : '') + '">';
                                     append += '<div class="d-flex align-items-center">';
                                         append += '<div class="background-photo">';
-                                            append += '<img class="product-photo" src="' + plan.photo + '">';
+                                            append += '<img class="product-photo" src="' + plan.photo + '" style="display: none;">';
                                         append += '</div>';
                                         append += '<div>';
                                             append += '<h1 class="title" ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C5C5C5"' : '') + '>' + plan.name_short + '</h1>';
@@ -2285,11 +2310,11 @@ $(function () {
                     } else {
                         $('.tooltip').remove();
 
-                        $(modal).find('.modal-body').find('.box-plans').css('max-height', '274px');
+                        $(modal).find('.modal-body').find('.box-plans').css('height', '274px');
 
                         append += '<div class="col-sm-12">';
                             append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
-                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
+                            append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhum resultado encontrado.</p>';
                             append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A; margin-bottom: 40px;">Por aqui, nenhum plano com esse nome.</p>';
                         append += '</div>';
                     }
@@ -2302,21 +2327,25 @@ $(function () {
                         });
 
                         if (response.data.length > 4) {
-                            scrollCustom(modal + ' #tab_update_cost_block-panel .box-plans');
-                        } else {
-                            $(modal + ' #tab_update_cost_block-panel .box-plans').off('wheel');
+                            $(modal).find('.box-plans').mCustomScrollbar();
                         }
 
-                        $(modal).find(".product-photo").on("error", function () {
-                            $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                        $(modal).find('.product-photo').on('error', function() {
+                            $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
+                        });
+
+                        $(modal).find('.product-photo').on('load', function() {
+                            $(this).fadeIn(300);
                         });
 
                         $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                             $(modal).find('.tab-content').css('display', 'block').promise().done(function() {
+                                if (response.data.length > 4) {
+                                    $(modal).find('#tab_update_cost_block-panel').find('.box-plans').css({'height': '232px'});
+                                }
+
                                 var autoHeight = $(modal).find('.height-auto').height() + 20;
-                                $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300).promise().done(function() {
-                                    $(modal).find('.product-photo').unbind('load');
-                                });
+                                $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300);
                             });
                         });
                     });
@@ -2378,6 +2407,8 @@ $(function () {
         $(modal).find('#search-product_config').val('');
         $(modal).find('#search-product-description_config').val('');
 
+        $(modal).find('.box-plans').css({'height': '232px'});
+
         $(modal).find('.tab-pane').removeClass('active show').promise().done(function() {
             $(modal).find('#tab_update_cost_block-panel').css('display', 'none').promise().done(function() {
                 $(modal).find('.modal-body').append(loadingPlansConfigCost).promise().done(function(e) {
@@ -2434,7 +2465,7 @@ $(function () {
                                         append += '<div ' + (plan.name_short_flag ? 'data-toggle="tooltip" data-placement="top" title="' + plan.name + '"' : '') + ' data-code="' + plan.id + '" class="box-plan d-flex justify-content-between align-items-center ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'review' : '') + '">';
                                             append += '<div class="d-flex align-items-center">';
                                                 append += '<div class="background-photo">';
-                                                    append += '<img class="product-photo" src="' + plan.photo + '">';
+                                                    append += '<img class="product-photo" src="' + plan.photo + '" style="display: none;">';
                                                 append += '</div>';
                                                 append += '<div>';
                                                 append += '<h1 class="title" ' + (plan.status_enum == 1 || plan.status_enum == 3 ? 'style="color: #C5C5C5"' : '') + '>' + plan.name_short + '</h1>';
@@ -2456,7 +2487,7 @@ $(function () {
 
                                 append += '<div class="col-sm-12">';
                                     append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
-                                    append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhuma resultado encontrado.</p>';
+                                    append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhum resultado encontrado.</p>';
                                     append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A;">Por aqui, nenhum plano com esse nome.</p>';
                                 append += '</div>';
                             }
@@ -2469,13 +2500,15 @@ $(function () {
                                 });
 
                                 if (response.data.length > 4) {
-                                    scrollCustom(modal + ' #tab_update_cost_block-panel .box-plans');
-                                } else {
-                                    $(modal + ' #tab_update_cost_block-panel .box-plans').off('wheel');
+                                    $(modal).find('#tab_update_cost_block-panel').find('.box-plans').mCustomScrollbar();
                                 }
 
                                 $(modal).find(".product-photo").on("error", function () {
-                                    $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
+                                    $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg").fadeIn(300);
+                                });
+
+                                $(modal).find(".product-photo").on("load", function () {
+                                    $(this).fadeIn(300);
                                 });
 
                                 $(modal).find('.product-photo').on('load', function() {

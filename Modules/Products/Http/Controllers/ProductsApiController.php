@@ -88,7 +88,7 @@ class ProductsApiController extends Controller
                 $productsSearch->where('name', 'LIKE', '%' . $filters['name'] . '%');
             }
 
-            if (isset($filters['project']) && $filters['project'] > 0 && $filters['shopify'] == 1) {
+            if (isset($filters['project']) && $filters['shopify'] == 1) {
                 $projectId = current(Hashids::decode($filters['project']));
                 $productsSearch->where('project_id', $projectId);
             }

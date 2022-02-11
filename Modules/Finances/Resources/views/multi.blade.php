@@ -5,21 +5,20 @@
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/multi-finances.css?v=?v=' . versionsFile()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/finances/css/multi-finances.css?v=0' . versionsFile()) }}">
 @endpush
 
 @section('content')
     <div class="page">
         <div id="project-not-empty" style="display:none">
-            <div class="page-header container px-25 px-md-30" style="padding-bottom: 0">
-                <div class="row">
-                    <div class="col-12 col-md-7 order-0 p-0 px-md-15" style="margin-top: 30px">
+            <div class="page-header container px-25 px-md-30" style="padding-bottom: 0; padding-top:30px">
+                <div class="row align-items-center justify-content-between" style="min-height:50px">
+                    <div class="col-12 col-md-7 order-0 px-md-15" style="padding: 10px 0 20px">
                         <h1 class="page-title d-flex">
                             Finanças
-                            <span class="badge badge-info new-badge d-inline-block d-md-none ml-10">NOVO!</span>
                         </h1>
                     </div>
-                    <div class="col-12 col-md-5 d-flex d-fall align-items-end justify-content-end order-2 order-md-1 mt-20 p-0">
+                    <div class="col-12 col-md-5 d-flex d-fall align-items-end justify-content-end order-2 order-md-1 p-0">
                         <div class="col-12 col-md-11 float-right px-0">
                             {{--                        <div class="skeleton skeleton-gateway-logo" style="height: 50px" id="skeleton-select"></div>--}}
                             <div class="input-holder">
@@ -34,7 +33,7 @@
                     </div>
                     <div class="col-sm-12 order-1 order-md-2 p-0 px-md-15">
                         <p class="mt-10 mb-0">
-                            <span class="badge badge-info new-badge d-none d-md-inline-block">NOVO!</span>
+                            <span class="badge badge-primary d-none d-md-inline-block">NOVO!</span>
                             <span class="new-title">Uma nova central para você controlar seus extratos em diferentes adquirentes.</span>
                         </p>
                     </div>

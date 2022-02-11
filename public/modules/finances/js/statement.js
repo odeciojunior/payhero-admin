@@ -310,10 +310,9 @@ window.updateAccountStatementData = function() {
             };
 
             items.forEach(function (item) {
-
                 let data = {
-                    date_request: item.details.description,
-                    date_release: item.details.description
+                    date_request: item.transactionDate,
+                    date_release: item.date
                 }
 
                 let dateRequest = getRequestTime(data);
@@ -321,40 +320,70 @@ window.updateAccountStatementData = function() {
 
                 let dataTable =
                     `<tr class="s-table table-finance-schedule">`;
-                if (item.order && item.order.hashId) {
-                    if (item.isInvite) {
-                        dataTable += `
-                            <td class="text-center sale-finance-schedule">
-                                <a>
-                                    <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale;">#${item.order.hashId}</span>
-                                </a>
-                            </td>
-                        `;
-                    } else {
-                        dataTable += `
-                            <td class="text-center sale-finance-schedule">
-                                 <a class="detalhes_venda disabled pointer-md" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
-                                    <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale;">#${item.order.hashId}</span>
-                                </a>
-                            </td>
-                        `;
-                    }
+                if (item.order && item.order.hashId && item.isInvite) {
+                    dataTable += `
+                        <td class="text-center sale-finance-schedule">
+                            <a>
+                                <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale;">#${item.order.hashId}</span>
+                            </a>
+                        </td>
+                    `;
+                } else if(item.order && item.order.hashId) {
+                    dataTable += `
+                        <td class="text-center sale-finance-schedule">
+                             <a class="detalhes_venda disabled pointer-md" data-target="#modal_detalhes" data-toggle="modal" venda="${item.order.hashId}">
+                                <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale;">#${item.order.hashId}</span>
+                            </a>
+                        </td>
+                    `;
+                } else {
+                    dataTable += `
+                        <td class="text-center sale-finance-schedule">
+                            <span class="transfers-sale m-0 p-0 border-0" style="grid-area: sale; color: #5D5D5D">${item.details.description}</span>
+                        </td>
+                    `;
                 }
 
                 dataTable += `
                     <td class="date-start-finance-transfers text-left" style="grid-area: date-start">${dateRequest}</td>
                     <td class="date-end-finance-transfers text-left" style="grid-area: date-end">${dateRelease}</td>
-                     <td class="text-center status-finance-schedule">
+                     <td style="grid-area: status;align-self: center;" class="text-center status-finance-schedule">
                         <span data-toggle="tooltip" data-placement="left" title="${item.details.status}"
-                        class="badge badge-sm badge-${statusExtract[item.details.type]} p-2">
+                        class="badge badge-sm badge-${statusExtract[item.details.type]}">
                             ${item.details.status}
                         </span>
-                     </td>
-                    <td class="text-left value-finance-schedule" style="grid-area: value;">
-                        <span class="font-md-size-20 bold" style="color:green"> R$ </span>
-                        <strong class="font-md-size-20" style="color:green"> ${item.amount} </strong>
-                    </td>
-                </tr>`;
+                     </td>`
+
+                if(item.amount > 0) {
+                    dataTable += `
+                        <td class="text-left value-finance-schedule" style="grid-area: value;">
+                            <strong class="font-md-size-20" style="color:green">
+                                ${
+                                    item.amount.toLocaleString("pt-BR", {
+                                    style: "currency",
+                                    currency: "BRL"})
+                                    .replace(/\s+/g, '')
+                                    .replace('-', '- ')
+                                }
+                            </strong>
+                        </td>
+                    </tr>`;
+                } else {
+                    dataTable += `
+                        <td class="text-left value-finance-schedule" style="grid-area: value;">
+                            <strong class="font-md-size-20" style="color:red">
+                                ${
+                                    item.amount.toLocaleString("pt-BR", {
+                                    style: "currency",
+                                    currency: "BRL"})
+                                    .replace(/\s+/g, '')
+                                    .replace('-', '- ')
+                                }
+                            </strong>
+                        </td>
+                    </tr>`;
+                }
+
 
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();
@@ -558,4 +587,10 @@ $(window).on("load", function() {
             document.getElementById("transaction-value").value = null;
         }
     }
+
+    $('#custom-input-addon, .custom-input-addon-m').on("input change", (e) => {
+        let value = e.target.value
+        $('#custom-input-addon').val(value)
+        $('.custom-input-addon-m').val(value)
+    });
 });

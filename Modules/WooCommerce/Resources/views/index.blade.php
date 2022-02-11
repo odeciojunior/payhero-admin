@@ -13,6 +13,10 @@
         .gray:hover{
             color:#a1a1a1 !important;
         }
+
+        /* Page titles */
+        .page-title > a, .page-title > a > span { color: #707070 }
+
      </style>
 @endpush
 @section('content')
@@ -21,16 +25,16 @@
     <div class="page">
         <div style="display: none" class="page-header container">
             <div class="row jusitfy-content-between" style="min-height:56px">
-                
+
                 <div class="col-lg-8">
                     <h1 class="page-title my-10" style="min-height: 28px">
-                        <a class="gray" href="/apps">
-                            <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
+                        <a href="/apps">
+                            <span class="o-arrow-right-1 font-size-30 ml-2" aria-hidden="true"></span>
                             Integrações com WooCommerce
                         </a>
                     </h1>
                 </div>
-                
+
                 <div class="col text-right" id="integration-actions" style="display:none">
                     <a data-toggle="modal" id='btn-integration-model' class="btn btn-floating btn-primary ml-10"
                        style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
@@ -52,12 +56,12 @@
                                       Download plugin
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                      
+
                                       <a class="dropdown-item" href="https://sirius.cloudfox.net/modules/woocommerce/plugins/plugin_cloudfox.zip">Adiciona ao carrinho de compras</a>
                                       <a class="dropdown-item" href="https://sirius.cloudfox.net/modules/woocommerce/plugins/plugin_cloudfox_skip_to_checkout.zip">Envia direto pro checkout</a>
                                     </div>
                                   </div>
-                              
+
                             </div>
                         </div>
 

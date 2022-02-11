@@ -66,7 +66,7 @@ $(document).ready(function () {
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum upsell configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro upsell para poder
                                         <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-upsell' data-toggle="modal" data-target="#modal_add_upsell">Adicionar upsell</button>
+                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-upsell' data-toggle="modal" data-target="#modal_add_upsell">Adicionar upsell</button>
                                     </div>
                                 </div>
                             </td>
@@ -86,9 +86,11 @@ $(document).ready(function () {
                             <td>${value.description}</td>
                             <td class="text-center">${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
-                                <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id}" data-target='#modal-detail-upsell' data-toggle='modal'><span class="o-eye-1"></span></a>
-                                <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id}"><span class='o-edit-1'></span></a>
-                                <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${value.id}" data-toggle="modal" data-target="#modal-delete-upsell"><span class='o-bin-1'></span></a>
+                                <div class='d-flex justify-content-end align-items-center'>
+                                    <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id}" data-target='#modal-detail-upsell' data-toggle='modal'><span class="o-eye-1"></span></a>
+                                    <a role='button' title='Editar' class='pointer edit-upsell mg-responsive' data-upsell="${value.id}"><span class='o-edit-1'></span></a>
+                                    <a role='button' title='Excluir' class='pointer delete-upsell mg-responsive' data-upsell="${value.id}" data-toggle="modal" data-target="#modal-delete-upsell"><span class='o-bin-1'></span></a>
+                                </div>
                             </td>
                         </tr>
                         `;
@@ -199,7 +201,7 @@ $(document).ready(function () {
         let upsellId = $(this).data('upsell');
 
         $('#btn-delete-upsell').unbind('click');
-        $(document).on('click', '#btn-delete-upsell', function () {
+        $('#btn-delete-upsell').on('click', function () {
             $.ajax({
                 method: "DELETE",
                 url: "/api/projectupsellrule/" + upsellId,

@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <div class="box-products products-data" style="margin-top: 23px; padding-bottom: 2px;">
+    <div class="box-products products-data" style="margin-top: 23px;">
         {{-- js carrega --}}
     </div>
 </div>

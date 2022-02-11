@@ -58,6 +58,9 @@ class GatewayPresenter extends Presenter
         elseif(in_array($this->id,  [Gateway::GERENCIANET_PRODUCTION_ID, Gateway::GERENCIANET_SANDBOX_ID])) {
             return 'Gerencianet';
         }
+        elseif(in_array($this->id,  [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID])) {
+            return 'Safe2pay';
+        }
         else {
             return 'Cielo';
         }

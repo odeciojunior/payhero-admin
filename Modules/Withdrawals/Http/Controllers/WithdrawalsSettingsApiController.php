@@ -102,17 +102,18 @@ class WithdrawalsSettingsApiController
                 return response()->json(['message' => 'Sem permissão para salvar configurações de saques'], 403);
             }
 
-            $withdrawalSettings = WithdrawalSettings::create(
+            $withdrawalSettings = WithdrawalSettings::firstOrNew(
                 [
                     'company_id' => $company->id,
-                    'rule' => $requestData['rule'],
-                    'frequency' => $requestData['frequency'] ?? null,
-                    'weekday' => $requestData['weekday'] ?? null,
-                    'day' => $requestData['day'] ?? null,
-                    'amount' => !empty($requestData['amount']) ? FoxUtils::onlyNumbers($requestData['amount']) : null
                 ]
             );
 
+            $withdrawalSettings->rule = $requestData['rule'];
+            $withdrawalSettings->frequency = $requestData['frequency'] ?? null;
+            $withdrawalSettings->weekday = $requestData['weekday'] ?? null;
+            $withdrawalSettings->day = $requestData['day'] ?? null;
+            $withdrawalSettings->amount = !empty($requestData['amount']) ? FoxUtils::onlyNumbers($requestData['amount']) : null;
+            $withdrawalSettings->save();
             return response()->json([
                 'message' => 'Configurações de saques automáticos salvos com sucesso',
                 'data' => WithdrawalSettingsResource::make($withdrawalSettings)

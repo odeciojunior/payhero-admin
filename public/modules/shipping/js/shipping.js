@@ -30,7 +30,7 @@ $(document).ready(function () {
                     options += `<option class="menv${integration.id}" value="melhorenvio-${integration.id}">${integration.name} (integração com a API do Melhor Envio)</option>`;
                 }
                 $('.shipping-type').each(function () {
-                    $(this).append(options);
+                    $(this).children('select').append(options);
                 });
             },
             error: resp => {
@@ -45,7 +45,7 @@ $(document).ready(function () {
         atualizarFrete();
     });
 
-    $(document).on('change', '.shipping-type', function () {
+    $(document).on('change', '.shipping-type select', function () {
         // altera campo value dependendo do tipo do frete
         let selected = $(this).val();
         if (selected === 'static') {
@@ -167,8 +167,11 @@ $(document).ready(function () {
                     case 'pac':
                         $('#modal-detail-shipping .shipping-type').html('PAC - Caculado automaticamente');
                         break;
-                    default:
+                    case 'sedex':
                         $('#modal-detail-shipping .shipping-type').html('SEDEX - Caculado automaticamente');
+                        break;
+                    case 'melhorenvio':
+                        $('#modal-detail-shipping .shipping-type').html('MelhorEnvio - Caculado automaticamente');
                         break;
                 }
                 $('#modal-detail-shipping .shipping-description').html(response.name);
@@ -204,17 +207,17 @@ $(document).ready(function () {
 
                 switch (response.type) {
                     case 'static':
-                        $('#modal-edit-shipping .shipping-type').prop("selectedIndex", 0).change();
+                        $('#modal-edit-shipping .shipping-type select').prop("selectedIndex", 0).change();
                         break;
                     case 'pac':
-                        $('#modal-edit-shipping .shipping-type').prop("selectedIndex", 1).change();
+                        $('#modal-edit-shipping .shipping-type select').prop("selectedIndex", 1).change();
                         break;
                     case 'sedex':
-                        $('#modal-edit-shipping .shipping-type').prop("selectedIndex", 2).change();
+                        $('#modal-edit-shipping .shipping-type select').prop("selectedIndex", 2).change();
                         break;
                     case 'melhorenvio':
                         $('#modal-edit-shipping .menv'+response.melhorenvio_integration_id).prop('selected', true);
-                        $('#modal-edit-shipping .shipping-type').change();
+                        $('#modal-edit-shipping .shipping-type select').change();
                         break;
                 }
                 $('#modal-edit-shipping .shipping-description').val(response.name);
@@ -258,8 +261,8 @@ $(document).ready(function () {
         let frete = $(this).attr('frete');
 
         //deletar frete
-        $('#btn-delete').unbind('click');
-        $(document).on('click', '#btn-delete-frete', function () {
+        $('#btn-delete-frete').unbind('click');
+        $('#btn-delete-frete').on('click', function () {
             $.ajax({
                 method: "DELETE",
                 url: "/api/project/" + projectId + "/shippings/" + frete,
@@ -381,7 +384,7 @@ $(document).ready(function () {
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum frete configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro frete para poder
                                         <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' class='btn btn-primary add-shipping' data-toggle="modal" data-target="#modal-create-shipping">Adicionar frete</button>
+                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-shipping' data-toggle="modal" data-target="#modal-create-shipping">Adicionar frete</button>
                                     </div>
                                 </div>
                             </td>
@@ -407,9 +410,11 @@ $(document).ready(function () {
                                             <span class="badge badge-${activeShipping[value.pre_selected]}">${value.pre_selected_translated}</span>
                                         </td>
                                         <td style='text-align:center'>
-                                            <a role='button' title='Visualizar' class='pointer detalhes-frete mg-responsive' frete="${value.shipping_id}"><span class="o-eye-1"></span></a>
-                                            <a role='button' title='Editar' class='pointer editar-frete mg-responsive' frete="${value.shipping_id}"><span class='o-edit-1'></span></a>
-                                            <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}" data-toggle='modal' data-target='#modal-delete-shipping'><span class='o-bin-1'></span></a>
+                                            <div class='d-flex justify-content-end align-items-center'>
+                                                <a role='button' title='Visualizar' class='pointer detalhes-frete mg-responsive' frete="${value.shipping_id}"><span class="o-eye-1"></span></a>
+                                                <a role='button' title='Editar' class='pointer editar-frete mg-responsive' frete="${value.shipping_id}"><span class='o-edit-1'></span></a>
+                                                <a role='button' title='Excluir' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}" data-toggle='modal' data-target='#modal-delete-shipping'><span class='o-bin-1'></span></a>
+                                            </div>
                                         </td>
                                      </tr>`;
                         $("#dados-tabela-frete").append(dados);

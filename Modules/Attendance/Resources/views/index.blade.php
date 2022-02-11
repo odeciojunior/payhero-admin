@@ -11,9 +11,13 @@
 
     <div class="page mb-0" id="project-not-empty" style="display: none !important;">
         <div class="page-header container pb-0" style="display: none !important;">
-            <h1 class="page-title mt-25 mt-md-0">
-                Atendimento <span class="new-circle"></span>
-            </h1>
+            <div class="row align-items-center justify-content-between" style="min-height:50px">
+                <div class="col-md-12">
+                    <h1 class="page-title mt-25 mt-md-0">
+                        Atendimento <span class="new-circle"></span>
+                    </h1>
+                </div>
+            </div>
             <div class="d-flex align-items-center flex-wrap mt-15 mb-30">
                 <div class="d-flex align-items-center mb-lg-0 mb-15 mr-auto">
                     <span class="badge badge-primary d-none d-md-block mr-10">NOVO!</span>
@@ -67,7 +71,7 @@
                     <div class="filter-icon">
                         <i class="material-icons">filter_list</i>
                     </div>
-                    <div class="filter-container">
+                    <div class="filter-container vertical-scroll">
                         <span id="filter-plan" class="filter-badge editable dropdown"
                               data-target="#input-plan">Por plano</span>
                         <span class="vertical-line"></span>

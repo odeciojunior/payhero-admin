@@ -12,7 +12,7 @@
 
     <div class="page mb-0">
         <div style="display: none" class="page-header container">
-            <div class="row">
+            <div class="row align-items-center justify-content-between" style="min-height: 50px;">
                 <div class="col-12">
                     <div class="row">
                         <div class="col-lg-4 col-sm-12 col-xs-12">
@@ -64,8 +64,8 @@
                             <fieldset>
                                 <div class="form-group form-icons">
                                     <i class="form-control-icon form-control-icon-right o-agenda-1 mt-5 font-size-18"></i>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         placeholder="E-mail para enviar os relatórios"
                                         class="modal-email"
                                     >
@@ -94,7 +94,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div style="overflow: hidden;" id="project-not-empty" style="display: none">
 
             <section class="container box-reports" id="reports-content">
@@ -145,7 +145,7 @@
 
                 <div class="row">
                     <div class="container d-flex box-chart-primary">
-                        <!-- comission -->    
+                        <!-- comission -->
                         <div class="commission">
                             <div class="card">
                                 <section class="container">
@@ -179,7 +179,7 @@
                             <div class="">
                                 <div class="d-flex justify-content-between sub-comission">
                                     <div class="inner-comission">
-                                        
+
                                         <div class="card inner pad-bottom-0">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
@@ -191,13 +191,13 @@
                                                     <div class="container">
                                                         <div class="data-holder b-bottom">
                                                             <div class="box-payment-option pad-0">
-                                                                
+
                                                                 <div class="col-payment grey box-image-payment">
                                                                     <div class="box-ico">
                                                                         <i class="ms-Icon ms-Icon--PaymentCard grey" aria-hidden="true"></i>
                                                                     </div>Cartão
                                                                 </div>
-                                                                
+
                                                                 <div class="box-payment-option option">
                                                                     <div class="col-payment grey" id='percent-credit-card'>
                                                                         0
@@ -212,17 +212,17 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    
+
                                                     <div class="container">
                                                         <div class="data-holder b-bottom">
                                                             <div class="box-payment-option pad-0">
                                                                 <div class="col-payment grey box-image-payment">
                                                                     <div class="box-ico">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" 
-                                                                            width="38.867" 
-                                                                            height="40.868" 
-                                                                            viewBox="0 0 38.867 40.868" 
-                                                                            style="width: 24px;" 
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            width="38.867"
+                                                                            height="40.868"
+                                                                            viewBox="0 0 38.867 40.868"
+                                                                            style="width: 24px;"
                                                                         >
                                                                             <g id="Grupo_61" data-name="Grupo 61" transform="translate(-2948.5 213.743)">
                                                                                 <g id="g992" transform="translate(2956.673 -190.882)">
@@ -302,7 +302,7 @@
                                                 </div>
                                                 <div>
                                                     <span class="font-size-12">
-                                                        Cartão representa <strong>45%</strong> das vendas 
+                                                        Cartão representa <strong>45%</strong> das vendas
                                                         aprovadas e tem um indíce de conversão de <strong>86%.</strong>
                                                     </span>
                                                 </div>
@@ -319,13 +319,13 @@
                                                     <div class="container">
                                                         <div class="data-holder b-bottom">
                                                             <div class="box-payment-option pad-0">
-                                                                
+
                                                                 <div class="col-payment grey box-image-payment">
                                                                     <div class="box-ico">
                                                                         <i class="ms-Icon ms-Icon--PaymentCard grey" aria-hidden="true"></i>
                                                                     </div>Cartão
                                                                 </div>
-                                                                
+
                                                                 <div class="box-payment-option option">
                                                                     <div class="col-payment">
                                                                         <div class="box-payment center">
@@ -342,17 +342,17 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    
+
                                                     <div class="container">
                                                         <div class="data-holder b-bottom">
                                                             <div class="box-payment-option pad-0">
                                                                 <div class="col-payment grey box-image-payment">
                                                                     <div class="box-ico">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" 
-                                                                            width="38.867" 
-                                                                            height="40.868" 
-                                                                            viewBox="0 0 38.867 40.868" 
-                                                                            style="width: 24px;" 
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            width="38.867"
+                                                                            height="40.868"
+                                                                            viewBox="0 0 38.867 40.868"
+                                                                            style="width: 24px;"
                                                                         >
                                                                             <g id="Grupo_61" data-name="Grupo 61" transform="translate(-2948.5 213.743)">
                                                                                 <g id="g992" transform="translate(2956.673 -190.882)">
@@ -427,7 +427,7 @@
                                         </div>
                                     </div>
                                     <div class="inner-comission">
-                                        
+
                                         <div class="card inner">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
@@ -444,7 +444,7 @@
                                                                         <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 15.7143C4.08579 15.7143 3.75 16.0341 3.75 16.4286C3.75 16.8231 4.08579 17.1429 4.5 17.1429H7.5C7.91421 17.1429 8.25 16.8231 8.25 16.4286C8.25 16.0341 7.91421 15.7143 7.5 15.7143H4.5ZM2.625 0C1.17525 0 0 1.11929 0 2.5V17.5C0 18.8807 1.17525 20 2.625 20H9.375C10.8247 20 12 18.8807 12 17.5V2.5C12 1.11929 10.8247 0 9.375 0H2.625ZM1.5 2.5C1.5 1.90827 2.00368 1.42857 2.625 1.42857H9.375C9.99632 1.42857 10.5 1.90827 10.5 2.5V17.5C10.5 18.0917 9.99632 18.5714 9.375 18.5714H2.625C2.00368 18.5714 1.5 18.0917 1.5 17.5V2.5Z" fill="#636363"/></svg>
                                                                     </div>Smartphones
                                                                 </div>
-                                                                
+
                                                                 <div class="box-payment-option option">
                                                                     <div class="col-payment">
                                                                         <div class="box-payment center">
@@ -461,7 +461,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    
+
                                                     <div class="container">
                                                         <div class="data-holder b-bottom">
                                                             <div class="box-payment-option pad-0">
@@ -532,10 +532,10 @@
                                                             <div class="box-payment-option pad-0">
                                                                 <div class="col-payment grey box-image-payment">
                                                                     <div class="box-ico">
-                                                                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.11982 0.436309C0.64062 0.432235 0.255174 0.841681 0.251702 1.34176C0.248229 1.84184 0.64062 2.24314 1.11982 2.24722C1.7605 2.25265 2.27269 2.69985 2.66595 3.5488C3.03404 4.34243 3.14167 4.99554 3.1547 5.07676L4.18517 12.0091C4.50116 13.66 6.00126 14.9236 7.57691 14.9236H13.7614C15.3371 14.9236 16.8441 13.6483 17.1532 12.0374L18.2114 4.68062C18.4571 3.40049 17.5508 2.24722 16.2581 2.24722H3.96814C3.31531 1.12545 2.32044 0.446451 1.11982 0.436309ZM4.72774 4.05812H16.2581C16.4552 4.05812 16.5403 4.16705 16.5021 4.36942L15.4438 11.7262C15.3041 12.4479 14.5097 13.1127 13.7614 13.1127H7.57691C6.82945 13.1127 6.04121 12.4624 5.8945 11.6979L4.89094 4.7938C4.86056 4.60121 4.79025 4.29598 4.72774 4.05812ZM6.76262 15.829C6.04381 15.829 5.46043 16.4371 5.46043 17.1872C5.46043 17.9373 6.04381 18.5454 6.76262 18.5454C7.48142 18.5454 8.0648 17.9373 8.0648 17.1872C8.0648 16.4371 7.48142 15.829 6.76262 15.829ZM14.5757 15.829C13.8569 15.829 13.2735 16.4371 13.2735 17.1872C13.2735 17.9373 13.856 18.5454 14.5757 18.5454C15.2945 18.5454 15.8779 17.9373 15.8779 17.1872C15.8779 16.4371 15.2954 15.829 14.5757 15.829Z" fill="#636363"/></svg>                                                                        
+                                                                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.11982 0.436309C0.64062 0.432235 0.255174 0.841681 0.251702 1.34176C0.248229 1.84184 0.64062 2.24314 1.11982 2.24722C1.7605 2.25265 2.27269 2.69985 2.66595 3.5488C3.03404 4.34243 3.14167 4.99554 3.1547 5.07676L4.18517 12.0091C4.50116 13.66 6.00126 14.9236 7.57691 14.9236H13.7614C15.3371 14.9236 16.8441 13.6483 17.1532 12.0374L18.2114 4.68062C18.4571 3.40049 17.5508 2.24722 16.2581 2.24722H3.96814C3.31531 1.12545 2.32044 0.446451 1.11982 0.436309ZM4.72774 4.05812H16.2581C16.4552 4.05812 16.5403 4.16705 16.5021 4.36942L15.4438 11.7262C15.3041 12.4479 14.5097 13.1127 13.7614 13.1127H7.57691C6.82945 13.1127 6.04121 12.4624 5.8945 11.6979L4.89094 4.7938C4.86056 4.60121 4.79025 4.29598 4.72774 4.05812ZM6.76262 15.829C6.04381 15.829 5.46043 16.4371 5.46043 17.1872C5.46043 17.9373 6.04381 18.5454 6.76262 18.5454C7.48142 18.5454 8.0648 17.9373 8.0648 17.1872C8.0648 16.4371 7.48142 15.829 6.76262 15.829ZM14.5757 15.829C13.8569 15.829 13.2735 16.4371 13.2735 17.1872C13.2735 17.9373 13.856 18.5454 14.5757 18.5454C15.2945 18.5454 15.8779 17.9373 15.8779 17.1872C15.8779 16.4371 15.2954 15.829 14.5757 15.829Z" fill="#636363"/></svg>
                                                                     </div>Carrinhos
                                                                 </div>
-                                                                
+
                                                                 <div class="box-payment-option option">
                                                                     <div class="col-payment">
                                                                         <div class="box-payment center">
@@ -617,7 +617,7 @@
                             </div>
                         </div>
                         <!-- /comission -->
-                        
+
                         <!-- distribtion -->
                         <div class="distribution">
                             <div class="card inner">
@@ -652,7 +652,7 @@
                                         </div>
                                         <div class="item right"><small class="grey font-size-14">46%</small></div>
                                     </div>
-                                    
+
                                     <div class="distribution-area">
                                         <div class="item">
                                             <span>

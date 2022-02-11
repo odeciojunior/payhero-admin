@@ -14,6 +14,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
+use Modules\Core\Entities\Task;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
@@ -21,6 +22,7 @@ use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
+use Modules\Core\Services\TaskService;
 use Modules\Withdrawals\Services\WithdrawalService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 
@@ -54,7 +56,7 @@ class GerencianetService implements Statement
     }
 
     public function getAvailableBalance() : int
-    {        
+    {
         return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
@@ -122,10 +124,17 @@ class GerencianetService implements Statement
     {
         try {
 
-            $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
-
             if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID : Gateway::GERENCIANET_SANDBOX_ID)) {
                 return false;
+            }
+
+            $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
+
+            if ($isFirstUserWithdrawal) {
+                TaskService::setCompletedTask(
+                    $this->company->user,
+                    Task::find(Task::TASK_FIRST_WITHDRAWAL)
+                );
             }
 
             DB::beginTransaction();
@@ -222,7 +231,7 @@ class GerencianetService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $availableBalance += $pendingBalance;
-        
+
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
         return $availableBalance >= $transaction->value;
@@ -291,12 +300,12 @@ class GerencianetService implements Statement
         if(empty($lastTransaction)) {
             return [];
         }
-        
+
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
         $availableBalance = $this->getAvailableBalanceWithoutBlocking() - $blockedBalance;
         $blockedBalancePending = $this->getBlockedBalancePending();
-        
+
         $totalBlockedBalance = $blockedBalance + $blockedBalancePending;
         $totalBalance = $availableBalance + $pendingBalance + $totalBlockedBalance;
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');

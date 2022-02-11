@@ -28,7 +28,7 @@ $(document).ready(function () {
             },
             success: response => {
                 let url = response.url
-                if(url_data)
+                if (url_data)
                     url = url + url_data
                 window.location.href = url
             },
@@ -57,7 +57,7 @@ $(document).ready(function () {
 function stringToMoney(string, currency = 'BRL') {
     let value = parseInt(string, 10);
 
-    return value.toLocaleString('pt-br', { style: 'currency', currency: currency });
+    return value.toLocaleString('pt-br', {style: 'currency', currency: currency});
 }
 
 function scrollCustom(div, padding = false, type = '') {
@@ -70,8 +70,8 @@ function scrollCustom(div, padding = false, type = '') {
     $(div).append('<div class="scrollbox"></div>');
     $(div).append('<div class="scrollbox-bar"></div>');
 
-    $(div).on('wheel', function(event) {
-        if(event.originalEvent.deltaY !== 0) {
+    $(div).on('wheel', function (event) {
+        if (event.originalEvent.deltaY !== 0) {
             if (padding == true) {
                 valuePadding = 40;
             }
@@ -86,7 +86,7 @@ function scrollCustom(div, padding = false, type = '') {
             var heightCalculateScroll = ((heightDivScroll - 60) / 20) * 2;
             var heightCalculateTotal = ((heightDivScrollTotal - heightDivScroll) / 20) * 2;
 
-            if(event.originalEvent.deltaY < 0) {
+            if (event.originalEvent.deltaY < 0) {
                 // wheeled up
                 if (scroll > heightCalculateScroll) {
                     scroll -= heightCalculateScroll;
@@ -125,15 +125,15 @@ function scrollCustomX(div, addScroll = true, changePosition = false) {
         var scrollDiv = changePosition ? $(div).children(":first").css('margin-left').replace('px', '') : 0;
     }
 
-    $(div).on('wheel', function(event) {
-        if(event.originalEvent.deltaY !== 0) {
+    $(div).on('wheel', function (event) {
+        if (event.originalEvent.deltaY !== 0) {
             var widthDivScroll = $(div).width();
             var widthDivScrollTotal = $(div).children(":first").width() - 12;
 
             var widthtCalculateScroll = ((widthDivScroll - 60) / 20) * 2;
             var widthCalculateTotal = ((widthDivScrollTotal - widthDivScroll) / 20) * 2;
 
-            if(event.originalEvent.deltaY < 0) {
+            if (event.originalEvent.deltaY < 0) {
                 // wheeled left
                 if (scroll > widthtCalculateScroll) {
                     scroll -= widthtCalculateScroll;
@@ -281,12 +281,12 @@ function loadOnAnyEllipsis(target, remove = false, options = {}) {
     }
 }
 
-function heightAnimate(element, height){
-  	var curHeight = element.height(); // Get Default Height
+function heightAnimate(element, height) {
+    var curHeight = element.height(); // Get Default Height
     var autoHeight = element.css('height', 'auto').height(); // Get Auto Height
 
     element.height(curHeight); // Reset to Default Height
-    element.stop().animate({ height: autoHeight }, time); // Animate to Auto Height
+    element.stop().animate({height: autoHeight}, time); // Animate to Auto Height
 }
 
 function loadingOnScreenRemove() {
@@ -347,7 +347,9 @@ function loadOnModalNewLayout(modal, whereToLoad) {
 
 function loadOnModalRemove(modal) {
     $(modal).find('.modal-body').addClass('show');
-    $(modal).find('.ph-item').fadeOut(3000, function(){ this.remove(); });
+    $(modal).find('.ph-item').fadeOut(3000, function () {
+        this.remove();
+    });
 
     $(modal).find('.modal-body').children().fadeIn(3000);
 
@@ -388,7 +390,7 @@ function loadOnAny(target, remove = false, options = {}) {
         }
 
         //add message load
-        if ( options.message) {
+        if (options.message) {
             container.append(`<p class='mb-30'>${options.message}</p>`);
             container.addClass('d-flex').addClass('flex-column');
         }
@@ -408,7 +410,7 @@ function loadOnAny(target, remove = false, options = {}) {
         if (!target.hasClass('tab-pane') ||
             (target.hasClass('tab-pane') &&
                 target.hasClass('active'))) {
-                $(target).fadeIn();
+            $(target).fadeIn();
         }
     }
 }
@@ -560,7 +562,7 @@ function copyToClipboard(elem) {
     var succeed;
     try {
         succeed = document.execCommand("copy");
-    } catch(e) {
+    } catch (e) {
         succeed = false;
     }
     // restore original focus
@@ -693,7 +695,7 @@ function ajaxVerifyDocumentPending() {
             //     $('#document-pending .top-alert-action').attr('href', response.link);
             // }
             $('#accountStatus').val(response.accountStatus);
-            if(response.accountType == 'owner') {
+            if (response.accountType == 'owner') {
                 if (response.analyzing) {
                     $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-amar.svg');
                     $('.top-alert-message').html('Seu acesso ainda é <strong>restrito</strong> pois sua conta está <strong>em análise</strong>');
@@ -712,7 +714,7 @@ function ajaxVerifyDocumentPending() {
                     $('.top-alert-message').html('Seu acesso é <strong>restrito</strong>, sua conta está <strong>congelada</strong>');
                     $('#document-pending .top-alert-action').hide();
                     $('#document-pending').show();
-                 }
+                }
             }
         },
     });
@@ -791,6 +793,19 @@ $.fn.shake = function () {
 };
 
 // sirius select
+
+function initSiriusSelect(target) {
+    let $target = $(target);
+    let classes = Array.from(target[0].classList).filter(e => e !== 'sirius-select').join(' ');
+    $target.removeClass(classes);
+    $target.wrap(`<div class="sirius-select-container ${classes}"></div>`);
+    $target.hide();
+    $target.after(`<div class="sirius-select-options"></div>`);
+    $target.after(`<div class="sirius-select-text"></div>`);
+
+    renderSiriusSelect($target)
+}
+
 function renderSiriusSelect(target) {
     let $target = $(target);
     let $wrapper = $target.parent();
@@ -803,6 +818,11 @@ function renderSiriusSelect(target) {
     });
     $text.text($target.children('option:selected').eq(0).text());
 }
+
+$.fn.siriusSelect = function () {
+    initSiriusSelect(this);
+};
+// END sirius select
 
 /**
  * Menu implementation
@@ -866,16 +886,9 @@ $(document).ready(function () {
         document.querySelector('body').style.overflowY = 'unset';
     });
 
+    // sirius select
     $('.sirius-select').each(function () {
-        let $target = $(this);
-        let classes = Array.from(this.classList).filter(e => e !== 'sirius-select').join(' ');
-        $target.removeClass(classes);
-        $target.wrap(`<div class="sirius-select-container ${classes}"></div>`);
-        $target.hide();
-        $target.after(`<div class="sirius-select-options"></div>`);
-        $target.after(`<div class="sirius-select-text"></div>`);
-
-        renderSiriusSelect(this);
+        $(this).siriusSelect();
     });
 
     $(document).on('DOMSubtreeModified propertychange change', '.sirius-select', function () {
@@ -904,35 +917,49 @@ $(document).ready(function () {
 
     $(document).on('click', function (e) {
         let target = $(e.target);
-        if(!target.parents('.sirius-select-container').length) {
+        if (!target.parents('.sirius-select-container').length) {
             $('.sirius-select-container .sirius-select-text').removeClass('active');
             $('.sirius-select-container .sirius-select-options').fadeOut();
         }
     });
+    // END sirius select
+
+    // vertical scroll
+    $('.vertical-scroll').on({
+        'mousewheel wheel': function (e) {
+            e.preventDefault();
+            this.scrollLeft += e.originalEvent.deltaY;
+        },
+        'mousedown': function (e) {
+            $(this).addClass('scrolling').data('x', e.clientX).data('left', this.scrollLeft);
+        },
+        'mouseup mouseleave': function (e) {
+            $(this).removeClass('scrolling').data('x', 0).data('left', 0);
+        }
+    });
+    $(document).on('mousemove', '.vertical-scroll.scrolling', function (e) {
+        const dx = e.clientX - $(this).data('x');
+        this.scrollLeft = $(this).data('left') - dx;
+    });
+    // END vertical scroll
 })
 
 function verifyAccountFrozen() {
-    if($('#accountStatus').val() == 'account frozen') {
+    if ($('#accountStatus').val() == 'account frozen') {
         return true;
     }
     return false;
 }
 
 function onlyNumbers(string) {
-    if(string == undefined) {
+    if (string == undefined) {
         return 0;
     }
-
-    let numbers = string.replace(/\D/g,'')
-    if(string.includes('-')){
-        return parseInt(`-${numbers}`)
-    }
-
-    return parseInt(numbers);
+    return string.replace(/\D/g, '');
 }
 
 function removeMoneyCurrency(string) {
-    if(string.charAt(0) == '-') {
+    if (string.charAt(0) == '-') {
         return '-' + string.substring(4);
     }
     return string.substring(3);

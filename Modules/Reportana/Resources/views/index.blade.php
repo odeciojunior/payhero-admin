@@ -1,6 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/digitalmanager/css/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/digitalmanager/css/index.css?v=' .  versionsFile()) }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
     <style>
         .o-arrow-right-1 {
@@ -21,8 +21,8 @@
             <div class="row jusitfy-content-between">
                 <div class="col-lg-8">
                     <h1 class="page-title my-10" style="min-height: 28px">
-                        <a class="gray" href="/apps">
-                            <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
+                        <a href="/apps">
+                            <span class="o-arrow-right-1 font-size-30 ml-2" aria-hidden="true"></span>
                             Integrações Reportana
                         </a>
                     </h1>
@@ -82,8 +82,8 @@
         </div>
         @include('projects::empty')
         <div id="no-integration-found" class='justify-content-center' style="display:none !important;
-                                                                        height: 100%; 
-                                                                        width: 100%; 
+                                                                        height: 100%;
+                                                                        width: 100%;
                                                                         position: absolute;
                                                                         display: -webkit-flex;
                                                                         display: flex;

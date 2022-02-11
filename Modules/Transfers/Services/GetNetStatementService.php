@@ -500,32 +500,30 @@ class GetNetStatementService
 
                 if ($pix_sale->has_valid_tracking == false) {
                     $details->setStatus('Aguardando postagem válida')
-                        ->setDescription('Data da venda: ' .  ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
+                        ->setDescription($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : '')
                         ->setType(Details::STATUS_WAITING_FOR_VALID_POST);
                 } elseif ($pix_sale->transaction_status == 'transfered') {
                     $details->setStatus('Liquidado')
-                        ->setDescription('Data da venda: ' .  ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
+                        ->setDescription($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : '')
                         ->setType(Details::STATUS_PAID);
                 } else {
                     $details->setStatus('Aguardando saque')
-                        ->setDescription('Data da venda: ' .  ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
+                        ->setDescription($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : '')
                         ->setType(Details::STATUS_WAITING_WITHDRAWAL);
                 }
 
+            } elseif (empty($pix_sale->release_date) || $pix_sale->release_date <= Carbon::now()->format('Y-m-d')) {
+                $details->setStatus('Aguardando liquidação')
+                    ->setDescription($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : '')
+                    ->setType(Details::STATUS_WAITING_LIQUIDATION);
+            } elseif (empty($pix_sale->withdrawal_id)) {
+                $details->setStatus('Aguardando saque')
+                    ->setDescription($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : '')
+                    ->setType(Details::STATUS_WAITING_WITHDRAWAL);
             } else {
-                if (empty($pix_sale->release_date) || $pix_sale->release_date <= \Carbon\Carbon::now()->format('Y-m-d')) {
-                    $details->setStatus('Aguardando liquidação')
-                        ->setDescription('Data da venda: ' . ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
-                        ->setType(Details::STATUS_WAITING_LIQUIDATION);
-                } elseif (empty($pix_sale->withdrawal_id)) {
-                    $details->setStatus('Aguardando saque')
-                        ->setDescription('Data da venda: ' . ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
-                        ->setType(Details::STATUS_WAITING_WITHDRAWAL);
-                } else {
-                    $details->setStatus('Liquidado')
-                        ->setDescription('Data da venda: ' . ($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : ''))
-                        ->setType(Details::STATUS_PAID);
-                }
+                $details->setStatus('Liquidado')
+                    ->setDescription($pix_sale->start_date ? $this->formatDate($pix_sale->start_date) : '')
+                    ->setType(Details::STATUS_PAID);
             }
 
             $sequence = $pix_sale->end_date ? Carbon::parse($pix_sale->end_date)->format('Ymd') : 0;
@@ -541,8 +539,8 @@ class GetNetStatementService
             $statementItem->order = $order;
             $statementItem->details = $details;
             $statementItem->type = StatementItem::TYPE_TRANSACTION;
-            $statementItem->transactionDate = $pix_sale->end_date ? \Carbon\Carbon::parse($pix_sale->end_date)->format('d/m/Y') : '';
-            $statementItem->date = $pix_sale->end_date ? \Carbon\Carbon::parse($pix_sale->end_date)->format('d/m/Y') : '';
+            $statementItem->transactionDate = $pix_sale->end_date ? Carbon::parse($pix_sale->end_date)->format('d/m/Y') : '';
+            $statementItem->date = $pix_sale->end_date ? Carbon::parse($pix_sale->end_date)->format('d/m/Y') : '';
             $statementItem->subSellerRateConfirmDate = $pix_sale->gateway_released_at ?? '';
             $statementItem->sequence = $sequence;
 
@@ -743,7 +741,7 @@ class GetNetStatementService
         $filters['company_id'] = $credential->company_id;
         $filters['status'] = request()->get('status');
         $filters['payment_method'] = request()->get('payment_method');
-        $filters['withdrawal_id'] = current(Hashids::decode(request()->get('withdrawal_id')));;
+        $filters['withdrawal_id'] = current(Hashids::decode(request()->get('withdrawal_id')));
 
         return [
             'filters' => $filters,
