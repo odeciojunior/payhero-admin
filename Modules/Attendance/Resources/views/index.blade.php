@@ -71,7 +71,7 @@
                     <div class="filter-icon">
                         <i class="material-icons">filter_list</i>
                     </div>
-                    <div class="filter-container">
+                    <div class="filter-container vertical-scroll">
                         <span id="filter-plan" class="filter-badge editable dropdown"
                               data-target="#input-plan">Por plano</span>
                         <span class="vertical-line"></span>

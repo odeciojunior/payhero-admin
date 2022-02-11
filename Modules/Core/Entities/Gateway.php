@@ -104,7 +104,8 @@ class Gateway extends Model
     
     public static function getServiceById($gatewayId){
         
-        switch($gatewayId){
+        switch($gatewayId)
+        {
             case self::ASAAS_PRODUCTION_ID:
             case self::ASAAS_SANDBOX_ID:
                 return new AsaasService();
