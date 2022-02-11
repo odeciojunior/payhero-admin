@@ -71,6 +71,7 @@
                                 <div id='upload_logo'>
                                     <label for="checkout_logo"></label>
                                     <input type="file" id="checkout_logo" name="checkout_logo" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
+                                    <input type="hidden" id="has_checkout_logo" value="false">
                                 </div>
 
                                 <div class="instrunctios">
@@ -279,6 +280,7 @@
                         <div class="banner-top-content">
                             <div id='upload-banner'>
                                 <input type="file" id="checkout_banner" name="checkout_banner" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
+                                <input type="hidden" id="has_checkout_banner" value="false">
                             </div>
 
 
@@ -1039,7 +1041,7 @@
                                     <div class="checkout-step-type">
                                         <div class="steps-lines">
                                             <div class="step-one primary-color"></div>
-                                            <div class="step-two"></div>
+                                            <div class="step-two secondary-color"></div>
                                             <div class="step-three"></div>
                                         </div>
 

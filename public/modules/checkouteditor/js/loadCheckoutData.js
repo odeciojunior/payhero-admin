@@ -285,12 +285,14 @@ $(() => {
                 replacePreview("checkout_logo", checkout.checkout_logo, "Image.jpg");
                 $("#logo_preview_mobile").attr("src", checkout.checkout_logo);
                 $("#logo_preview_desktop").attr("src", checkout.checkout_logo);
+                $("#has_checkout_logo").val("true");
             }
 
             if (checkout.checkout_banner) {
                 replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
                 $("#preview_banner_img_desktop").attr("src", checkout.checkout_banner);
                 $("#preview_banner_img_mobile").attr("src", checkout.checkout_banner);
+                $("#has_checkout_banner").val("true");
             }
 
             if (checkout.checkout_banner_enabled) {
@@ -669,15 +671,15 @@ $(() => {
 
             $("#checkout_editor #installments_limit").val(
                 checkout.installments_limit || 1
-            );
+            ).change();
 
             $("#checkout_editor #interest_free_installments").val(
                 checkout.interest_free_installments || 1
-            );
+            ).change();
 
             $("#checkout_editor #preselected_installment").val(
                 checkout.preselected_installment || 1
-            );
+            ).change();
 
             $("#checkout_editor #automatic_discount_credit_card").val(
                 checkout.automatic_discount_credit_card || 1
@@ -896,16 +898,13 @@ $(() => {
                 }   
             }
 
-            console.log('-------------------------------------------');
-            console.log(form.get('checkout_logo').size);
-
             if(form.get('checkout_logo_enabled') == "1"){
-                if(form.get('checkout_logo')){
+                if($("#has_checkout_logo").val() == "true"){
                     console.log('Valido')
                     validated = true;  
                 }else{
                     console.log('não válido')
-                    scrollToElement('checkout_logo_enabled');
+                    scrollToElement('upload_logo');
                     $('#checkout_logo_error').show('slow', 'linear');
                     return false;
                 }
