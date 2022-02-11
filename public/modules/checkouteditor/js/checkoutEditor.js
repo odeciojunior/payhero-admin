@@ -283,6 +283,7 @@ $(document).ready( function () {
         var done = function (url) {
             $("#logo_preview_mobile").attr("src", url);
             $("#logo_preview_desktop").attr("src", url);
+            $("#has_checkout_logo").val("true");
 
             $("#logo_preview_mobile").fadeIn('slow');
             $("#logo_preview_desktop").fadeIn('slow');
@@ -300,6 +301,8 @@ $(document).ready( function () {
                 reader.readAsDataURL(file);
             }
         }
+
+        
     });
 
     drEventLogo.on('dropify.errors', function(event, element){
@@ -310,6 +313,8 @@ $(document).ready( function () {
 
         $("#logo_preview_mobile").fadeOut('slow');
         $("#logo_preview_desktop").fadeOut('slow');
+
+        $("#has_checkout_logo").val("false");
     });
 
     var drEventBanner = $("#checkout_banner").dropify({
@@ -359,15 +364,15 @@ $(document).ready( function () {
     drEventBanner.on('dropify.errors', function(event, element){
         $("#preview_banner_img_mobile").attr("src", '');
         $("#preview_banner_img_desktop").attr("src", '');
+        $("#has_checkout_banner").val("false");
+
+        console.log(event);
 
         $("#preview_banner_img_mobile").fadeOut('slow');
         $("#preview_banner_img_desktop").fadeOut('slow');
     });
 
     $('.dropify-clear').hide();
-
-
-
 
     //  ----------------- Crop Modal ----------------------
 
@@ -442,6 +447,8 @@ $(document).ready( function () {
 
             $("#preview_banner_img_mobile").attr("src", src);
             $("#preview_banner_img_desktop").attr("src", src);
+
+            $("#has_checkout_banner").val("true");
 
             $("#preview_banner_img_mobile").fadeIn('slow');
             $("#preview_banner_img_desktop").fadeIn('slow');
