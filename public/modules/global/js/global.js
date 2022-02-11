@@ -209,7 +209,7 @@ function loadingOnScreen() {
 
 function loadingOnChart(target) {
     $(target).fadeIn().append(
-        `<div style="z-index: 5; border-radius: 16px;" class="sirius-loading">
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading">
             <img style="height: 125px; width: 125px;" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
@@ -218,7 +218,7 @@ function loadingOnChart(target) {
 
 function loadingOnAccountsHealth(target) {
     $(target).fadeIn().append(
-        `<div style="z-index: 100; border-radius: 16px;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center">
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center">
             <img style="height: 125px; width: 125px; top: auto;" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
