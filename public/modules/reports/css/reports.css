@@ -1181,3 +1181,54 @@ h4.number{
 @media only screen and (min-width: 1920px){
     .inner-state .header-resume strong { font-size: 18px; }
 }
+
+.footer-regions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.footer-regions section {
+    flex: 1;
+}
+.conversion-colors {
+    margin: 0;
+    padding: 0;
+    height: 94%;
+    display: flex;
+    flex-direction: column;
+}
+.conversion-colors li {
+    list-style: none;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    margin: 4px 0;
+    font-weight: bold;
+    font-size: 12px;
+}
+.conversion-colors .blue { color: #2E85EC; }
+.conversion-colors .purple { color: #665FE8; }
+.conversion-colors .pink { color: #F43F5E; }
+.conversion-colors .orange { color: #FF7900; }
+
+.regions-legend {
+    margin: 0;
+    padding: 0;
+}
+.regions-legend li {
+    list-style: none;
+    color: #636363;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.regions-legend li span {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    border-radius: 4px;
+    margin: 0 10px;
+}
+.regions-legend li.access span { background-color: #D5E7FB; }
+.regions-legend li.conversion span { background-color: #2E85EC; }

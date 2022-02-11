@@ -12,26 +12,26 @@ function barGraph() {
                 datasets: [
                     {
                         label: '',
-                        data: [60,42,48,35],
+                        data: [60,22,48,35],
                         color:'#636363',
                         backgroundColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(255, 205, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
+                            'rgba(46, 133, 236, 1)',
+                            'rgba(102, 95, 232, 1)',
+                            'rgba(244, 63, 94, 1)',
+                            'rgba(255, 121, 0, 1)',
                         ],
                         borderRadius: 4,
                         barThickness: 30,
                     }, 
                     {
                         label: '',
-                        data: [60,42,48,35],
+                        data: [100,42,58,45],
                         color:'#636363',
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(255, 205, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(46, 133, 236, .2)',
+                            'rgba(102, 95, 232, .2)',
+                            'rgba(244, 63, 94, .2)',
+                            'rgba(255, 121, 0, .2)',
                         ],
                         borderRadius: 4,
                         barThickness: 30,
@@ -41,21 +41,14 @@ function barGraph() {
             options: {
                 indexAxis: 'y',
                 plugins: {
-                    legend: {
-                        display: false
-                    },
-                    title: {
-                        display: false
-                    },
+                    legend: {display: false},
+                    title: {display: false},
                 },
                 
-                responsive: true,
+                responsive: false,
                 scales: {
                     x: {
-                        stacked: true,
-                        grid: {
-                            display: false
-                        }
+                        display: false,
                     },
                     y: {
                         stacked: true,
@@ -74,9 +67,9 @@ function barGraph() {
                                 family: 'Muli',
                                 size: 12,
                             },
-                            color: "#747474",
-                            callback: function(value){
-                                return value + '% '
+                            color: "#636363",
+                            callback: function(value, index){
+                                return this.getLabelForValue(value);
                             }
                         }
                     }

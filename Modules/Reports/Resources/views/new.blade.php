@@ -399,14 +399,22 @@
                                                         <h6 class="font-size-16 gray-700 grey"> Regiões </h6>
                                                         <!-- <h4 id='qtd-chargeback' class=" font-size-24 bold">0</h4> -->
                                                     </header>
-                                                    <footer class="container">
+                                                    <footer class="container footer-regions">
                                                         <section class="">
-                                                            <canvas id="regionsChart"></canvas>
+                                                            <canvas id="regionsChart" width="200" height="200"></canvas>
+                                                        </section>
+                                                        <section>
+                                                            <ul class="conversion-colors">
+                                                                <li class="blue">60%</li>
+                                                                <li class="purple">42%</li>
+                                                                <li class="pink">48%</li>
+                                                                <li class="orange">35%</li>
+                                                            </ul>
                                                         </section>
                                                         <section class="">
-                                                            <ul>
-                                                                <li>acessos</li>
-                                                                <li>conversões</li>
+                                                            <ul class="regions-legend">
+                                                                <li class="access"><span></span>Acessos</li>
+                                                                <li class="conversion"><span></span>Conversões</li>
                                                             </ul>
                                                         </section>
                                                     </footer>
