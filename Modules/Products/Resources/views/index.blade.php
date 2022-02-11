@@ -30,7 +30,7 @@
                             <label for="type-products">Tipo</label>
                             <select class="sirius-select" id='type-products'>
                                 <option value="0">Meus Produtos</option>
-                                <option value="1">Produtos Shopify</option>
+                                {{-- <option value="1">Produtos Shopify</option> --}}
                             </select>
                         </div>
                     </div>
@@ -42,10 +42,10 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div id="projects-list" class="mb-10 d-none">
-                            <label id="select-projects-label" for="select-projects">Projeto</label>
+                            {{-- <label id="select-projects-label" for="select-projects">Projeto</label>
                             <select id='select-projects' class="sirius-select" disabled>
                                 <option>Carregando...</option>
-                            </select>
+                            </select> --}}
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6 mt-auto">
@@ -141,7 +141,7 @@
 </div>
 
 @push('scripts')
-<script src="{{ asset('/modules/products/js/index.js?v='.uniqid()) }}"></script>
+<script src="{{ asset('/modules/products/js/index.js?v=' . versionsFile()) }}"></script>
 @endpush
 
 @endsection
