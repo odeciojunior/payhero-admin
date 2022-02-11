@@ -10,7 +10,6 @@ Route::group(
         Route::get('/projects/user-projects', 'ProjectsApiController@getProjects')
             ->middleware('permission:projects|apps');
 
-        //role:account_owner|admin|attendance|finantial
         Route::get('/projects', 'ProjectsApiController@index');
         Route::get('/projects/create', 'ProjectsApiController@create');
         Route::get('/projects/{id}', 'ProjectsApiController@show');
@@ -28,7 +27,7 @@ Route::group(
         Route::post('/projects/updateconfig', 'ProjectsApiController@updateConfig')
             ->middleware('permission:projects_manage');
 
-        Route::get('/projects/{id}/companie', 'ProjectsApiController@getCompanieByProject')
-            ->middleware('role:account_owner|admin');
-    }
+          Route::get('/projects/{id}/companie', 'ProjectsApiController@getCompanieByProject')
+               ->middleware('permission:projects_manage');
+     }
 );

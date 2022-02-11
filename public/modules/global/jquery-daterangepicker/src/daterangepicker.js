@@ -959,8 +959,8 @@
                     $(this).val(s);
                 }
             },
-            startDate: moment().subtract(30, "days"),
-            endDate: moment(),
+            startDate: false,
+            endDate: moment().endOf('day').toDate(),
             time: {
                 enabled: false
             },
