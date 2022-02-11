@@ -1093,8 +1093,7 @@
 
 
                                         <div class="menu-bar-mobile">
-
-                                            <div class="logo-mobile logo-preview-container">
+                                            <div class="logo-mobile-div logo-preview-container">
                                                 <img id="logo_preview_mobile" class="preview-logo mobile" />
                                             </div>
 

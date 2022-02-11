@@ -306,8 +306,6 @@ $(document).ready( function () {
     });
 
     drEventLogo.on('dropify.errors', function(event, element){
-        $("#checkout_logo").val(''); 
-
         $("#logo_preview_mobile").attr("src", '');
         $("#logo_preview_desktop").attr("src", '');
 

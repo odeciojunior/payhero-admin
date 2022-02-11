@@ -273,12 +273,12 @@ $(() => {
                 $("#checkout_editor #checkout_logo_enabled").prop("checked", true);
                 $("#checkout_editor #checkout_logo_enabled").prop("value", 1);
                 $("#checkout_editor .logo-content").show();
-                $("#checkout_editor .logo-mobile").show();
+                $("#checkout_editor .logo-preview-container").show();
             } else {
                 $("#checkout_editor #checkout_logo_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_logo_enabled").prop("value", 0);
                 $("#checkout_editor .logo-content").hide();
-                $("#checkout_editor .logo-mobile").hide();
+                $("#checkout_editor .logo-preview-container").hide();
             }
 
             if (checkout.checkout_logo) {
@@ -286,6 +286,11 @@ $(() => {
                 $("#logo_preview_mobile").attr("src", checkout.checkout_logo);
                 $("#logo_preview_desktop").attr("src", checkout.checkout_logo);
                 $("#has_checkout_logo").val("true");
+                $("#logo_preview_mobile").fadeIn('slow');
+                $("#logo_preview_desktop").fadeIn('slow');
+            }else{
+                $("#logo_preview_mobile").fadeOut('slow');
+                $("#logo_preview_desktop").fadeOut('slow');
             }
 
             if (checkout.checkout_banner) {
@@ -705,13 +710,22 @@ $(() => {
                 $(".shop-message-preview").slideUp("slow", "swing");
             }
 
-            $("#checkout_editor #post_purchase_message_title").val(
-                checkout.post_purchase_message_title ||
-                    "Obrigado por comprar conosco!"
-            );
+            
+            if(checkout.post_purchase_message_title){
+                $("#checkout_editor #post_purchase_message_title").val(checkout.post_purchase_message_title);
+                $(".shop-message-preview-title").empty();
+                $(".shop-message-preview-title").append(checkout.post_purchase_message_title);
+            }
 
-    
-            quillThanksPage.root.innerHTML = checkout.post_purchase_message_content;
+        
+
+            if(checkout.post_purchase_message_content){
+                quillThanksPage.root.innerHTML = checkout.post_purchase_message_content;
+                $(".shop-message-preview-content").empty();
+                $(".shop-message-preview-content").append(checkout.post_purchase_message_content);
+
+            }
+            
 
             if (checkout.whatsapp_enabled == 1) {
                 $("#checkout_editor #whatsapp_enabled").prop("checked", true);

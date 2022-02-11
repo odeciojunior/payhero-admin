@@ -186,7 +186,7 @@
     padding: 5px 20px;
 }
 
-.menu-bar-mobile .logo-mobile {
+.menu-bar-mobile .logo-mobile-div {
     display: flex;
     justify-content: center;
     align-items: center;
