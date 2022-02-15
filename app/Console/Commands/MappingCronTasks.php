@@ -94,6 +94,11 @@ class MappingCronTasks extends Command
                     if($hour==5){
                         Log::info(['time'=>$dateFormat,'total'=>$total,'commands'=>$commands]);
                     }
+
+
+                }
+                if($hour==18){
+                    Log::info(['time'=>$dateFormat,'total'=>$total,'commands'=>$commands]);
                 }
             }
 
@@ -175,6 +180,7 @@ class MappingCronTasks extends Command
 
         return $scheduledCommands;
     }
+
 
 
     public function mapManuallyCronTasks(){

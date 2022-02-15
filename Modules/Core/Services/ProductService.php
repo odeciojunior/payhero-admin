@@ -69,10 +69,9 @@ class ProductService
         ->with('productsPlanSales')
         ->with('productsPlans')
         ->where('user_id', auth()->user()->account_owner_id)
-        ->get()
-        ->sortByDesc(function($query) {
-            return $query->productsPlanSales->count();
-        })->take(16);
+        ->withCount('productsPlanSales')
+        ->take(16)
+        ->get();
     }
 
     public function getProductsFilter(int $projectId, string $product, bool $variants = false)

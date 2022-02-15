@@ -29,6 +29,7 @@ class ProcessGatewayPostbacksCommand extends Command
 
             $this->processPostBackGetnet();
             $this->processPostbackAsaas();
+            $this->processPostbackSafe2pay();
 
         } catch (Exception $e) {
             report($e);
@@ -73,6 +74,31 @@ class ProcessGatewayPostbacksCommand extends Command
                         ->get()->toArray();
 
             $url = getenv('CHECKOUT_URL') . '/api/postback/process/asaas';
+
+            foreach ($postbacks as $postback)
+            {
+                $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback['id'])]);
+            }
+
+        } catch (Exception $e) {
+            report($e);
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function processPostbackSafe2pay()
+    {
+        try {
+            $postbacks = GatewayPostback::select('id')
+                        ->where('processed_flag', false)
+                        ->where('gateway_id', 21)
+                        ->orderBy('id', 'asc')
+                        ->limit(100)
+                        ->get()->toArray();
+
+            $url = getenv('CHECKOUT_URL') . '/api/postback/process/safe2pay';
 
             foreach ($postbacks as $postback)
             {

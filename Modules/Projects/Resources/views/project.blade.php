@@ -3,9 +3,7 @@
 @push('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/scrollbar-plugin-master/jquery.mCustomScrollbar.css?v='. versionsFile()) }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.css?v='. uniqid()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=13') }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v='. versionsFile()) }}">
@@ -124,7 +122,7 @@
             <div>
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <div class="row ml-0">
-                        <ul id="slick-tabs" class="nav nav-tabs nav-tabs-line col-9 col-md-11" role="tablist">
+                        <ul class="nav nav-tabs nav-tabs-line col-9 col-md-11 vertical-scroll" role="tablist">
                             <li class="nav-item tab-domains" role="presentation">
                                 <span style="color: #2E85EC" id="first-category" class="category-tabs">PRINCIPAL</span>
                                 <a id="tab-domains" class="nav-link active" data-toggle="tab" href="#tab_domains"
@@ -399,14 +397,13 @@
     </div>
 
     @push('scripts')
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
         <script type="text/javascript" src="{{asset('modules/global/ckeditor5/ckeditor.js')}}"></script>
         <script type="text/javascript" src="{{asset('modules/global/ckeditor5/pt-br.js')}}"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/plans/js/loading.js?v='.versionsFile())}}"></script>
-        <script src="{{asset('modules/plans/js/plans.js?v='.versionsFile())}}"></script>
-        <script src="{{asset('modules/shipping/js/shipping.js?v='.versionsFile())}}"></script>
+        <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
+        <script src="{{asset('modules/shipping/js/shipping.js?v=0'.versionsFile())}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/orderbump/js/index.js?v='.versionsFile())}}"></script>
@@ -419,7 +416,7 @@
         <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>
         <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.versionsFile())}}"></script>
 
-        <script src="{{ asset('modules/global/adminremark/global/vendor/scrollbar-plugin-master/jquery.mousewheel.min.js') }}"></script>
-        <script src="{{ asset('modules/global/adminremark/global/vendor/scrollbar-plugin-master/jquery.mCustomScrollbar.js?v='.versionsFile()) }}"></script>
+        <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mousewheel.min.js') }}"></script>
+        <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.js?v='.uniqid()) }}"></script>
     @endpush
 @endsection

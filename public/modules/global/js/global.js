@@ -209,7 +209,7 @@ function loadingOnScreen() {
 
 function loadingOnChart(target) {
     $(target).fadeIn().append(
-        `<div style="z-index: 5; border-radius: 16px;" class="sirius-loading">
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading">
             <img style="height: 125px; width: 125px;" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
@@ -218,7 +218,7 @@ function loadingOnChart(target) {
 
 function loadingOnAccountsHealth(target) {
     $(target).fadeIn().append(
-        `<div style="z-index: 100; border-radius: 16px;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center">
+        `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center">
             <img style="height: 125px; width: 125px; top: auto;" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
@@ -921,8 +921,26 @@ $(document).ready(function () {
             $('.sirius-select-container .sirius-select-options').fadeOut();
         }
     });
-
     // END sirius select
+
+    // vertical scroll
+    $('.vertical-scroll').on({
+        'mousewheel wheel': function (e) {
+            e.preventDefault();
+            this.scrollLeft += e.originalEvent.deltaY;
+        },
+        'mousedown': function (e) {
+            $(this).addClass('scrolling').data('x', e.clientX).data('left', this.scrollLeft);
+        },
+        'mouseup mouseleave': function (e) {
+            $(this).removeClass('scrolling').data('x', 0).data('left', 0);
+        }
+    });
+    $(document).on('mousemove', '.vertical-scroll.scrolling', function (e) {
+        const dx = e.clientX - $(this).data('x');
+        this.scrollLeft = $(this).data('left') - dx;
+    });
+    // END vertical scroll
 })
 
 function verifyAccountFrozen() {
