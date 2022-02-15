@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Exception;
 use Carbon\Carbon;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PixCharge;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleLog;
@@ -29,7 +30,8 @@ class PixService
             $sales = Sale::where(
                 [
                     ['payment_method', '=', Sale::PIX_PAYMENT],
-                    ['status', '=', Sale::STATUS_PENDING]
+                    ['status', '=', Sale::STATUS_PENDING],
+                    ['gateway_id','=',Gateway::GERENCIANET_PRODUCTION_ID]
                 ]
             )
             ->whereHas(

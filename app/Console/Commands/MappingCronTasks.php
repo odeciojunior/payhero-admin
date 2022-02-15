@@ -84,7 +84,7 @@ class MappingCronTasks extends Command
                         break;
                     }
                 }
-                if($hour==5){
+                if($hour==18){
                     \Log::info(['time'=>$dateFormat,'total'=>$total,'commands'=>$commands]);
                 }
             }
@@ -163,126 +163,5 @@ class MappingCronTasks extends Command
     }
 
 
-    public function mapManuallyCronTasks(){
-        $tasks = $this->getManuallyCronTasks();
-        $total = 0;
-        $dateFormat = '00:00';
-        $commands = [];
-        for ($hour=0; $hour < 24; $hour++) { 
-            $total = 0;
-            $commands = [];
-            for ($min=0; $min < 60; $min++) { 
-                $total = 0;
-                $commands = [];
-                $dateFormat = str_pad($hour,2,'0',STR_PAD_LEFT).':'.str_pad($min,2,'0',STR_PAD_LEFT);
-                foreach($tasks as $task){
-                    switch($task['frequently']){
-                        case 'min':
-                            if($task['repeat']>=60){
-                                $inteiro = (int) $task['repeat']/60;                                
-                                if($hour % $inteiro == 0 && $min == (int) $inteiro - ($task['repeat']/60)){
-                                    $total++;
-                                    $commands[] = $task['command'];
-                                }
-                            }else{
-                                if($min % $task['repeat'] == 0){
-                                    $total++;
-                                    $commands[] = $task['command'];
-                                }
-                            }
-                        break;
-                        case 'day':
-                            if( $dateFormat == $task['time']){
-                                $total++;
-                                $commands[] = $task['command'];
-                            }
-                        break;
-                    }
-                }
-                if($total>10){
-                    \Log::info(['time'=>$dateFormat,'total'=>$total,'commands'=>$commands]);
-                }
-            }
-
-        }
-        
-    }
-
-    public function getManuallyCronTasks()
-    {
-        return [
-            ['command'=>'command:WoocommerceReorderSales','time'=>'03:45','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'user:benefits:update','time'=>'09:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:release-unblocked-balance','time'=>'02:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'tasks:check-completed-sales-tasks','time'=>'00:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'tasks:check-completed-sales-tasks','time'=>'06:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'tasks:check-completed-sales-tasks','time'=>'10:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'tasks:check-completed-sales-tasks','time'=>'14:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'tasks:check-completed-sales-tasks','time'=>'21:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'tasks:check-completed-sales-tasks','time'=>'22:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'change:boletopendingtocanceled','time'=>'06:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'check:gateway-tax-company-after-month','time'=>'06:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'verify:promotional-tax','time'=>'23:30','repeat'=>1,'frequently'=>'day'],            
-            ['command'=>'getnet:check-withdrawals-released','time'=>'09:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:check-withdrawals-released','time'=>'12:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:check-withdrawals-released','time'=>'16:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:check-withdrawals-released','time'=>'22:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:check-withdrawals-liquidated-cloudfox','time'=>'22:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'user:benefits:update','time'=>'22:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'verify:boletopaid','time'=>'10:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'asaas:transfers-chargebacks','time'=>'00:20','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'available-balance:update','time'=>'06:15','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'command:WoocommerceRetryFailedRequests','time'=>'04:15','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:check-refunded','time'=>'03:15','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'command:update-user-level','time'=>'11:15','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'verify:boleto2','time'=>'11:15','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'check:automatic-withdrawals','time'=>'03:10','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'withdrawals:release-get-faster','time'=>'00:00','repeat'=>30,'frequently'=>'min'],
-            ['command'=>'generate:notazzinvoicessalesapproved','time'=>'00:00','repeat'=>30,'frequently'=>'min'],
-            ['command'=>'verify:pendingnotazzinvoices','time'=>'00:00','repeat'=>30,'frequently'=>'min'],
-            ['command'=>'check:underattack','time'=>'00:00','repeat'=>30,'frequently'=>'min'],
-            ['command'=>'account-health:update','time'=>'09:00','repeat'=>1,'frequently'=>'day'],            
-            ['command'=>'account-health:update','time'=>'22:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'achievements:update','time'=>'09:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'achievements:update','time'=>'21:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'asaas:transfers-surplus-balance','time'=>'08:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'woocommerce:check-tracking-codes','time'=>'07:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:get-all-statement-chargebacks','time'=>'07:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'under-attack:update-card-declined','time'=>'05:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'command:validateLastDomains','time'=>'04:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'command:deleteTemporaryFiles','time'=>'04:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:update-confirm-date-debt-pending','time'=>'04:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'command:ShopifyReorderSales','time'=>'03:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:check-withdrawals-released-cloudfox','time'=>'22:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:check-withdrawals-liquidated','time'=>'10:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:check-withdrawals-liquidated','time'=>'13:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:check-withdrawals-liquidated','time'=>'17:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:check-withdrawals-liquidated','time'=>'21:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:check-withdrawals-liquidated','time'=>'22:30','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'account-health:user:update-average-response-time','time'=>'02:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:import-sale-contestations','time'=>'17:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'check:menv-tracking','time'=>'17:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'getnet:import-sale-contestations-txt-format','time'=>'16:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'asaas:anticipations-pending','time'=>'16:00','repeat'=>1,'frequently'=>'day'],            
-            ['command'=>'verify:trackingWithoutInfo','time'=>'15:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'update:currencyquotation','time'=>'14:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'verify:abandonedcarts2','time'=>'12:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'verify:boletoexpiring','time'=>'11:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'verify:boletowaitingpayment','time'=>'10:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'check:has-valid-tracking','time'=>'01:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'verify:inviteexpired','time'=>'01:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'whiteblacklist:verifyexpires','time'=>'00:00','repeat'=>1,'frequently'=>'day'],
-            ['command'=>'command:checkUpdateCompanyGetnet','time'=>'00:00','repeat'=>240,'frequently'=>'min'],
-            ['command'=>'command:UpdateListsFoxActiveCampaign','time'=>'00:00','repeat'=>720,'frequently'=>'min'],
-            ['command'=>'antifraud:backfill-asaas-chargebacks','time'=>'00:00','repeat'=>60,'frequently'=>'min'],
-            ['command'=>'redis:update-sale-tracking','time'=>'00:00','repeat'=>60,'frequently'=>'min'],
-            ['command'=>'verify:pendingdomains','time'=>'00:00','repeat'=>60,'frequently'=>'min'],
-            ['command'=>'updateTransactionsReleaseDate','time'=>'00:00','repeat'=>60,'frequently'=>'min'],
-            ['command'=>'gatewaypostbacks:process','time'=>'00:00','repeat'=>5,'repeat'=>1,'frequently'=>'min'],
-            ['command'=>'verify:abandonedcarts','time'=>'00:00','repeat'=>15,'repeat'=>1,'frequently'=>'min'],
-            ['command'=>'horizon:snapshot','time'=>'00:00','repeat'=>15,'repeat'=>1,'frequently'=>'min'],
-            ['command'=>'check:systems','time'=>'00:00','repeat'=>10,'repeat'=>1,'frequently'=>'min'],
-            ['command'=>'change:pix-to-canceled','time'=>'00:00','repeat'=>1,'frequently'=>'min']
-        ];
-    }
+    
 }
