@@ -895,7 +895,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card inner pad-bottom-0">
+                                        <div class="card inner pad-bottom-0 ">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Sistemas</strong>

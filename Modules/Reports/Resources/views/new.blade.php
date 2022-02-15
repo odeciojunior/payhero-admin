@@ -307,6 +307,75 @@
 													    <h6 class="font-size-16 gray-700 grey"> Produtos </h6>
 													    <h4 id='qtd-reembolso' class=" font-size-24 bold">0</h4>
                                                     </header>
+                                                    <footer>
+                                                        <ul class="list-products container">
+                                                            <li>
+                                                                <div class="box-list-products">
+                                                                    <figure>
+                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                    </figure>
+                                                                    <div class="bars blue" style="min-width: 102px"><span>51</span></div>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="box-list-products">
+                                                                    <figure>
+                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                    </figure>
+                                                                    <div class="bars purple" style="min-width: 80px"><span>40</span></div>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="box-list-products">
+                                                                    <figure>
+                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                    </figure>
+                                                                    <div class="bars pink" style="min-width: 65px"><span>32</span></div>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="box-list-products">
+                                                                    <figure>
+                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                    </figure>
+                                                                    <div class="bars orange" style="min-width: 42px"><span>21</span></div>
+                                                                </div>
+                                                            </li>
+
+                                                            <li>
+                                                                <div class="box-list-products">
+                                                                    <figure>
+                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                    </figure>
+                                                                    <div class="bars yellow" style="min-width: 106px"><span>19</span></div>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="box-list-products">
+                                                                    <figure>
+                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                    </figure>
+                                                                    <div class="bars light-blue" style="min-width: 20px"><span>4</span></div>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="box-list-products">
+                                                                    <figure>
+                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                    </figure>
+                                                                    <div class="bars light-green" style="min-width: 19px"><span>1</span></div>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="box-list-products">
+                                                                    <figure>
+                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                    </figure>
+                                                                    <div class="bars grey" style="min-width: 19px"><span>1</span></div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </footer>
 												</div>
 											</div>
 										</div>
@@ -401,7 +470,7 @@
                                                     </header>
                                                     <footer class="container footer-regions">
                                                         <section class="">
-                                                            <canvas id="regionsChart" width="200" height="200"></canvas>
+                                                            <canvas id="regionsChart" width="180" height="200"></canvas>
                                                         </section>
                                                         <section>
                                                             <ul class="conversion-colors">
@@ -443,9 +512,22 @@
 																<div class="col-12">
 																	<table class="table-vendas table table-striped "
 																		style="width:100%;margin: auto; margin-top:15px">
-																		<tbody id="origins-table">
+																		<!-- <tbody id="origins-table">
 																			{{-- js carrega... --}}
-																		</tbody>
+																		</tbody> -->
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <img src="{!! asset('modules/global/img/reports/img-nodata.png') !!}" alt="">
+                                                                                </td>
+                                                                                <td>
+                                                                                    <p class="no-data-origin">
+                                                                                        <strong>Nada por aqui...</strong>
+                                                                                        Não há dados suficientes para gerar este gráfico.
+                                                                                    </p>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
 																	</table>
 																</div>
 															</div>
