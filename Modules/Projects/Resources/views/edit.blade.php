@@ -315,6 +315,36 @@
         </div>
     </div>
 
+    <!-- CARD ERROR  -->
+    <div id="data-error" class="row">
+        <div class="container position-fixed pr-5 pr-sm-45" style="bottom: 0;">
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="row no-gutters bg-danger text-white py-15 error-card">
+
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="row no-gutters">
+                                <div class="col-md-12 pl-0">
+                                    <span class="pl-30 font-size-18"><strong>Ops!</strong> Seu arquivo é inválido.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="pr-25">
+                                <img src="{{ asset('/modules/global/img/projects/errorIcon.svg') }}" alt="icone success">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- CARD ALTERACEOS SALVAS COM SUCESSO -->
     <div id="saved-alterations" class="row">
         <div class="container position-fixed pr-5 pr-sm-45 z-index" style="bottom: 0;">
@@ -323,7 +353,7 @@
 
                 <div class="col-md-12">
 
-                    <div class="row no-gutters success-card text-white py-10">
+                    <div class="row no-gutters success-card text-white py-15">
 
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
@@ -334,7 +364,7 @@
                         </div>
 
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
-                            <div class="pt-15 pr-25">
+                            <div class="pr-25">
                                 <img src="{{ asset('/modules/global/img/projects/successIcon.svg') }}" alt="icone success">
                             </div>
                         </div>

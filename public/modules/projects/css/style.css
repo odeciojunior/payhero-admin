@@ -410,19 +410,33 @@
 
 
 /* /////////////// FOOTER CARD SALVE OR CANCEL */
+
+.z-index-0{
+    z-index: 0;
+}
+.z-index{
+    z-index: 6;
+}
+.z-index-error{
+    z-index: 7;
+}
+
+#confirm-changes{
+    display: none;
+}
 .final-card{
     height: 71px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
 }
-.z-index-0{
-    z-index: 0;
-}.z-index{
-    z-index: 9;
-}
 
-#confirm-changes{
+#data-error{
     display: none;
+}
+.error-card{
+    height: 71px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 #saved-alterations{

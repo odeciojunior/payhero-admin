@@ -221,6 +221,7 @@ $(() => {
         },
         imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'],
     };
+    
 
     // CARD 3 SE NAO ACHAR IMAGEM SETTA UMA PADRAO
     $("img").on("error", function () {
@@ -364,6 +365,7 @@ $(() => {
             });
 
             $(".dropify-clear, .o-bin-1").on("click", function(){
+                $(".dropify-errors-container > ul > li").remove();
                 localStorage.setItem("photo_remove", true)
                 $( "#confirm-changes" ).fadeIn( "slow" );
             });
@@ -388,6 +390,18 @@ $(() => {
         );
         preview.fadeIn();
     }
+
+    $("#project_photo").on("dropify.fileReady", function(){
+        $("#bt-update-project").prop("disabled", false);
+    })
+
+    $("#project_photo").on("dropify.errors", function(event, element) {
+        $("#confirm-changes").fadeOut(3000);
+        $("#bt-update-project").prop("disabled", true);
+
+        $("#data-error").fadeIn(2000).delay(2000).fadeOut(3000);
+        $("#confirm-changes").fadeIn(2000);
+    })
 
     // INPUT AFFILIATION
     $('#update-project .status-url-affiliates').on("click", function(){
@@ -451,12 +465,6 @@ $(() => {
 
         let getTextSaveChanges = $(".final-card span").html();
         
-        if($(".dropify-render > img").length <= 0 && $(".dropify-errors-container > ul > li").length >= 1 ){
-            alertCustom('error', 'Imagem invalida');
-            event.preventDefault();
-            return;
-        }
-
         $(".final-card span").html("Um momento... <strong>Estamos salvando suas alterações.</strong>");
 
         $("#options-buttons").children().hide();
