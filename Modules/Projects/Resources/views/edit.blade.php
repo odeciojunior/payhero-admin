@@ -289,19 +289,19 @@
 
                 <div class="col-md-12">
 
-                    <div class="row bg-primary no-gutters final-card py-15">
+                    <div class="row bg-primary no-gutters final-card padding-cards">
 
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
-                                    <span class="pl-25 font-size-18">Você tem alterações que <b>não estão salvas</b> </span>
+                                    <span class="padding-cards-l font-size-18">Você tem alterações que <b>não estão salvas</b> </span>
                                 </div>
                             </div>
                         </div>
 
                         <div id="options-buttons" class="buttons-container col-md-6 d-flex justify-content-end align-items-center">
                             <div class="row no-gutters">
-                                <div class="col-md-12 d-flex justify-content-end pr-0 pr-md-25">
+                                <div class="col-md-12 d-flex justify-content-end pr-0 padding-cards-r">
                                     <button type="button" id="cancel-edit" class="font-size-16 btn btn-primary border border-white mr-10 px-15 px-sm-40">Cancelar</button>
                                     <button type="submit" id="bt-update-project" class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alteração</button>
                                 </div>
@@ -323,18 +323,18 @@
 
                 <div class="col-md-12">
 
-                    <div class="row no-gutters bg-danger text-white py-15 error-card">
+                    <div class="row no-gutters bg-danger text-white padding-cards error-card">
 
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
-                                    <span class="pl-30 font-size-18"><strong>Ops!</strong> Seu arquivo é inválido.</span>
+                                    <span class="padding-cards-l font-size-18"><strong>Ops!</strong> Seu arquivo é inválido.</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
-                            <div class="pr-25">
+                            <div class="padding-cards-r">
                                 <img src="{{ asset('/modules/global/img/projects/errorIcon.svg') }}" alt="icone success">
                             </div>
                         </div>
@@ -353,18 +353,18 @@
 
                 <div class="col-md-12">
 
-                    <div class="row no-gutters success-card text-white py-15">
+                    <div class="row no-gutters success-card text-white padding-cards">
 
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
-                                    <span class="pl-30 font-size-18">Alterações salvas com sucesso!</span>
+                                    <span class="padding-cards-l font-size-18">Alterações salvas com sucesso!</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
-                            <div class="pr-25">
+                            <div class="padding-cards-r">
                                 <img src="{{ asset('/modules/global/img/projects/successIcon.svg') }}" alt="icone success">
                             </div>
                         </div>

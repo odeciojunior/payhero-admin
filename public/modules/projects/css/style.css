@@ -411,6 +411,17 @@
 
 
 /* /////////////// FOOTER CARD SALVE OR CANCEL */
+.padding-cards{
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+.padding-cards-l{
+    padding-left: 24px;
+}
+.padding-cards-r{
+    padding-right: 24px !important;
+}
+
 
 .z-index-0{
     z-index: 0;
