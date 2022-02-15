@@ -215,14 +215,14 @@ class CreateAccountSafe2Pay extends Command
 
             $gatewayCompanyCredentialProd->update([
                 'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED,
-                'gateway_subseller_id' => $result->response->ResponseDetail->Token,
-                'gateway_api_key' => $result->response->ResponseDetail->SecretKey
+                'gateway_subseller_id' => $result->gateway_subseller_id,
+                'gateway_api_key' => $result->gateway_api_key
             ]);
 
             $gatewayCompanyCredentialSend->update([
                 'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED,
-                'gateway_subseller_id' => $result->response->ResponseDetail->TokenSandbox,
-                'gateway_api_key' => $result->response->ResponseDetail->SecretKeySandbox
+                'gateway_subseller_id' => $result->gateway_subseller_id,
+                'gateway_api_key' => $result->gateway_api_key_sandbox
             ]);
 
             return [

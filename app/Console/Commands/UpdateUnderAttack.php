@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\UnderAttack;
+use Illuminate\Support\Facades\Log;
 
 class UpdateUnderAttack extends Command
 {
@@ -21,6 +22,9 @@ class UpdateUnderAttack extends Command
 
     public function handle()
     {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
             $start_date = Carbon::now()->endOfDay();
             $end_date = Carbon::now()->subDay(15)->startOfDay();
@@ -57,5 +61,8 @@ class UpdateUnderAttack extends Command
         } catch (Exception $e) {
             report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }
