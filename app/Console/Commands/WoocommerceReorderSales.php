@@ -2,16 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CommandMonitorTimeException;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleWoocommerceRequests;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
-use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Log;
 
 
 class WoocommerceReorderSales extends Command
@@ -38,18 +36,22 @@ class WoocommerceReorderSales extends Command
 
     public function handle()
     {
-        
-        $model = new SaleWoocommerceRequests();
-        $requests = $model->where('status', 0)->whereIn('method',['CreatePendingOrder', 'ProcessWooCommerceOrderCreate'])
-            ->whereRaw("DATEDIFF(CURDATE(),STR_TO_DATE(created_at, '%Y-%m-%d')) <= 10")->get();
 
-        $this->line('Total: ' . count($requests));
-        
-        foreach ($requests as $request) {
-            try {
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
+        try {
+
+            $model = new SaleWoocommerceRequests();
+            $requests = $model->where('status', 0)->whereIn('method',['CreatePendingOrder', 'ProcessWooCommerceOrderCreate'])
+                ->whereRaw("DATEDIFF(CURDATE(),STR_TO_DATE(created_at, '%Y-%m-%d')) <= 10")->get();
+
+            $this->line('Total: ' . count($requests));
+
+            foreach ($requests as $request) {
+                try {
                     $integration = WooCommerceIntegration::where('project_id', $request['project_id'])->first();
                     $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
-                    
+
                     $data = json_decode($request['send_data'], true);
 
                     $changeToPaidStatus = 0;
@@ -67,14 +69,14 @@ class WoocommerceReorderSales extends Command
                         $saleModel = Sale::where('id',$request['sale_id'])->first();
                         $saleModel->woocommerce_order = $order;
                         $saleModel->save();
-                        
+
                         $result = json_encode($result);
                         $service->updatePostRequest($request['id'], 1, $result, $order);
 
                         $this->line('success -> order generated: ' . $order);
 
                         if($changeToPaidStatus == 1){
-                            
+
                             $result = $service->approveBillet($order, $request['project_id'], $request['sale_id']);
 
                             if($result->status == 'processing')
@@ -83,11 +85,18 @@ class WoocommerceReorderSales extends Command
                         }
 
                     }
-            } catch (Exception $e) {
+                } catch (Exception $e) {
 
-                $this->line('erro -> ' . $e->getMessage());
-                
+                    $this->line('erro -> ' . $e->getMessage());
+
+                }
             }
+
+        } catch (Exception $e) {
+            report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

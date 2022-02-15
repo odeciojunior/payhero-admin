@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\AchievementService;
+use Illuminate\Support\Facades\Log;
 
 class UpdateUserAchievements extends Command
 {
@@ -39,19 +41,31 @@ class UpdateUserAchievements extends Command
      */
     public function handle()
     {
-        $achievementService = new AchievementService();
-        $now = now();
-        $users = User::with('achievements')
-            ->whereRaw('id = account_owner_id')
-            ->get();
 
-        foreach ($users as $user) {
-            $this->line($user->id . ' - ' . $user->name);
-            $achievementService->checkUserAchievements($user);
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
+        try {
+
+            $achievementService = new AchievementService();
+            $now = now();
+            $users = User::with('achievements')
+                ->whereRaw('id = account_owner_id')
+                ->get();
+
+            foreach ($users as $user) {
+                $this->line($user->id . ' - ' . $user->name);
+                $achievementService->checkUserAchievements($user);
+            }
+
+            $this->line($now);
+            $this->line(now());
+
+        } catch (Exception $e) {
+            report($e);
         }
 
-        $this->line($now);
-        $this->line(now());
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
         return 0;
     }
 }

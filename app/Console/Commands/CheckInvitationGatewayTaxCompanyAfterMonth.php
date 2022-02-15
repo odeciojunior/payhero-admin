@@ -2,12 +2,14 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\PromotionalTax;
 use Modules\Core\Services\CompanyService;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class checkInvitationGatewayTaxCompanyAfterMonth
@@ -46,27 +48,37 @@ class CheckInvitationGatewayTaxCompanyAfterMonth extends Command
      */
     public function handle()
     {
-        $invitesDiogo = Invitation::where(
-            [
-                ['invite', 177],
-                ['created_at', '>', '2021-04-14']
-            ]
-        )->get();
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-        foreach ($invitesDiogo as $invite) {
-            $create = Carbon::parse($invite->created_at)->addMonth();
+        try {
 
-            if(Carbon::now()->gt($create)) {
-                $company = Company::where([
-                    'user_id' => $invite->user_invited,
-                    'gateway_tax' => PromotionalTax::PROMOTIONAL_TAX
-                ])->first();
+            $invitesDiogo = Invitation::where(
+                [
+                    ['invite', 177],
+                    ['created_at', '>', '2021-04-14']
+                ]
+            )->get();
 
-                if (!empty($company)) {
-                    $company->update(['gateway_tax', (new CompanyService())->getTax($company->gateway_release_money_days)]);
+            foreach ($invitesDiogo as $invite) {
+                $create = Carbon::parse($invite->created_at)->addMonth();
+
+                if(Carbon::now()->gt($create)) {
+                    $company = Company::where([
+                                                  'user_id' => $invite->user_invited,
+                                                  'gateway_tax' => PromotionalTax::PROMOTIONAL_TAX
+                                              ])->first();
+
+                    if (!empty($company)) {
+                        $company->update(['gateway_tax', (new CompanyService())->getTax($company->gateway_release_money_days)]);
+                    }
                 }
             }
+
+        } catch (Exception $e) {
+            report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
         return 0;
     }

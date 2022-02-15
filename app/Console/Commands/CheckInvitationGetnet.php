@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Task;
@@ -24,7 +25,7 @@ class CheckInvitationGetnet extends Command
 
     protected $description = 'Command description';
     //sem detalhes compensar asaas
-    //com detalhes tornat disponivel
+    //com detalhes tornar disponivel
 
     public function __construct()
     {
@@ -32,11 +33,14 @@ class CheckInvitationGetnet extends Command
     }
 
     public  function  handle() {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
 
             $sales = Sale::
             with('transactions')
-            ->whereHas('transactions', function ($query) {
+                ->whereHas('transactions', function ($query) {
                     $query->where('type', Transaction::TYPE_PRODUCER);
                 })
                 ->where('id', 1472286);
@@ -118,9 +122,13 @@ class CheckInvitationGetnet extends Command
 
 
             //$this->captureInvitonErro();
+
         } catch (Exception $e) {
-            dd($e);
+            dump($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 
     public  function  captureInvitonErro() {

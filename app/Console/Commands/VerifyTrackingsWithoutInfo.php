@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\TrackingService;
+use Illuminate\Support\Facades\Log;
 
 class VerifyTrackingsWithoutInfo extends Command
 {
@@ -34,31 +36,43 @@ class VerifyTrackingsWithoutInfo extends Command
 
     public function handle()
     {
-        $trackingModel = new Tracking();
-        $trackingService = new TrackingService();
 
-        $query = $trackingModel->with('productPlanSale')
-            ->whereIn('system_status_enum', [
-                Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
-                Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
-            ])->whereDate('created_at', '>=', now()->subMonths(4));
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-        $total = $query->count();
-        $count = 0;
+        try {
 
-        $query->chunk(100, function ($trackings) use ($total, &$count, $trackingService) {
-            foreach ($trackings as $tracking) {
-                try {
-                    $count++;
-                    $this->line("T {$count} de {$total}: {$tracking->tracking_code}");
-                    $trackingCode = $tracking->tracking_code;
-                    $pps = $tracking->productPlanSale;
-                    $trackingService->createOrUpdateTracking($trackingCode, $pps->id);
-                } catch (\Exception $e) {
-                    $this->error($e->getMessage());
-                    continue;
+            $trackingModel = new Tracking();
+            $trackingService = new TrackingService();
+
+            $query = $trackingModel->with('productPlanSale')
+                ->whereIn('system_status_enum', [
+                    Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
+                    Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
+                ])->whereDate('created_at', '>=', now()->subMonths(4));
+
+            $total = $query->count();
+            $count = 0;
+
+            $query->chunk(100, function ($trackings) use ($total, &$count, $trackingService) {
+                foreach ($trackings as $tracking) {
+                    try {
+                        $count++;
+                        $this->line("T {$count} de {$total}: {$tracking->tracking_code}");
+                        $trackingCode = $tracking->tracking_code;
+                        $pps = $tracking->productPlanSale;
+                        $trackingService->createOrUpdateTracking($trackingCode, $pps->id);
+                    } catch (\Exception $e) {
+                        $this->error($e->getMessage());
+                        continue;
+                    }
                 }
-            }
-        });
+            });
+
+        } catch (Exception $e) {
+            report($e);
+        }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

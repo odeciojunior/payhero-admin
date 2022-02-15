@@ -2,12 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CommandMonitorTimeException;
+use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Services\SendgridService;
+use Illuminate\Support\Facades\Log;
 
 class ValidateLastDomains extends Command
 {
@@ -37,32 +38,44 @@ class ValidateLastDomains extends Command
 
     public function handle()
     {
-        $domainModel = new Domain();
-        $sendgridService = new SendgridService();
 
-        $domains = $domainModel->where('status', $domainModel->present()->getStatus('approved'))
-            ->where('created_at', '>', Carbon::today()->subDays(3))
-            ->get();
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-        $total = $domains->count();
-        $count = 1;
+        try {
 
-        foreach ($domains as $domain) {
+            $domainModel = new Domain();
+            $sendgridService = new SendgridService();
 
-            $this->line($count . ' de ' . $total . '. Validando o domínio: ' . $domain->name);
+            $domains = $domainModel->where('status', $domainModel->present()->getStatus('approved'))
+                ->where('created_at', '>', Carbon::today()->subDays(3))
+                ->get();
 
-            $responseValidateDomain = null;
-            $responseValidateLink = null;
+            $total = $domains->count();
+            $count = 1;
 
-            $linkBrandResponse = $sendgridService->getLinkBrand($domain->name);
-            $sendgridResponse = $sendgridService->getZone($domain->name);
+            foreach ($domains as $domain) {
 
-            if (!empty($linkBrandResponse) && !empty($sendgridResponse)) {
-                $sendgridService->validateDomain($sendgridResponse->id);
-                $sendgridService->validateBrandLink($linkBrandResponse->id);
+                $this->line($count . ' de ' . $total . '. Validando o domínio: ' . $domain->name);
+
+                $responseValidateDomain = null;
+                $responseValidateLink = null;
+
+                $linkBrandResponse = $sendgridService->getLinkBrand($domain->name);
+                $sendgridResponse = $sendgridService->getZone($domain->name);
+
+                if (!empty($linkBrandResponse) && !empty($sendgridResponse)) {
+                    $sendgridService->validateDomain($sendgridResponse->id);
+                    $sendgridService->validateBrandLink($linkBrandResponse->id);
+                }
+
+                $count++;
             }
 
-            $count++;
+        } catch (Exception $e) {
+            report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }
