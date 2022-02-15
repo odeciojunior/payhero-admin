@@ -178,6 +178,9 @@ class Kernel extends ConsoleKernel
         /** Antifraud backfill Asaas chargebacks */
         $schedule->command('antifraud:backfill-asaas-chargebacks')->hourly();
 
+        $schedule->command('safe2pay:manual-anticipation')->dailyAt('18:40');
+        
+
     }
 
 
