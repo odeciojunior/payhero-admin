@@ -42,7 +42,6 @@ class UpdateUserAccountHealth extends Command
         $accountHealthService = new AccountHealthService();
 
         foreach (User::whereRaw('id = account_owner_id')->get() as $user) {
-            $user->account_owner_id;
             $this->line($user->id . ' - ' . $user->account_owner_id . ' - ' . $user->name);
             if (!$accountHealthService->updateAccountScore($user)) {
                 $this->line('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
