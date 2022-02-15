@@ -437,7 +437,7 @@
     display: none;
 }
 .final-card{
-    height: 71px;
+    height: 85px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
 }
@@ -446,7 +446,7 @@
     display: none;
 }
 .error-card{
-    height: 71px;
+    height: 85px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
 }
@@ -455,7 +455,7 @@
     display: none;
 }
 .success-card{
-    height: 71px;
+    height: 85px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     background-color: #41DC8F;

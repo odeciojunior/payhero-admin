@@ -60,7 +60,7 @@
 
                 <div class='form-group col-lg-12'>
                     <label for='description' class="font-size-16">Descrição</label>
-                    <textarea style='height:100px;' name='description' type='text' class='input-pad font-size-16' id='description' placeholder='Fale um pouco sobre seu Projeto' required='' maxlength='100'></textarea>
+                    <textarea style='height:100px;' name='description' type='text' class='input-pad font-size-16' id='description' placeholder='Fale um pouco sobre seu Projeto' maxlength='100'></textarea>
                     <span id='description-error' class='text-danger'></span>
                     <p class="pt-25 mb-0 font-size-12">Recomendações: Imagem de 300x300px  |  Formatos: JPEG ou PNG</p>
                 </div>
