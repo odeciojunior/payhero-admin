@@ -65,7 +65,7 @@ $(() => {
     }
 
     // CARD 1 FOTO, NOME, CRIADO EM, DESCRICAO E RESUMO
-    const getImageProject = projectPhoto => projectPhoto ? dropifyOptions.defaultFile = projectPhoto : "/modules/global/img/projeto.svg";
+    const getImageProject = projectPhoto => projectPhoto ? dropifyOptions.defaultFile = projectPhoto : "/modules/global/img/produto.svg";
 
     function show() {
         $(".page").addClass("low-opacity");
