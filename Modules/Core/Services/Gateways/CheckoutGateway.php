@@ -216,7 +216,7 @@ class CheckoutGateway extends GatewayAbstract
             ],
             "safe2payAnticipation"=>[
                 "route" => "withdrawal/safe2pay/anticipation",
-                "method" => "PUT"
+                "method" => "GET"
             ]
             
         ];
