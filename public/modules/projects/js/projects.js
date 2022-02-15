@@ -122,7 +122,8 @@ $(() => {
 
     // CARD 2 CARREGA TELA DE EDITAR PROJETO
     function updateConfiguracoes() {
-        $("#update-project").addClass("low-opacity");
+        // $("#update-project").addClass("low-opacity");
+        loadOnAny('#tab_configuration_project .card');
 
         $.ajax({
             method: "GET",
@@ -134,7 +135,8 @@ $(() => {
 
             }, error: function (response) {
                 loadingOnScreenRemove();
-                $("#update-project").removeClass("low-opacity");
+                // $("#update-project").removeClass("low-opacity");
+                loadOnAny('#tab_configuration_project .card', true);
                 errorAjaxResponse(response);
 
             }, success: function (data) {
@@ -142,7 +144,8 @@ $(() => {
                 renderProjectConfig(data);
 
                 loadingOnScreenRemove();
-                $("#update-project").removeClass("low-opacity");
+                // $("#update-project").removeClass("low-opacity");
+                loadOnAny('#tab_configuration_project .card', true);
             }
         });
     }
