@@ -9,6 +9,7 @@ use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\Gateways\Safe2PayService;
 
 class UpdateAvailableBalance extends Command
 {
@@ -30,7 +31,8 @@ class UpdateAvailableBalance extends Command
         AsaasService::class,
         //CieloService::class,
         GetnetService::class,
-        GerencianetService::class
+        GerencianetService::class,
+        Safe2PayService::class
     ];
 
     /**
