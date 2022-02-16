@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\NotifyUserLevelEvent;
 use Modules\Core\Services\BenefitsService;
+use Illuminate\Support\Facades\Log;
 
 class UpdateUserLevel extends Command
 {
@@ -41,66 +43,77 @@ class UpdateUserLevel extends Command
      */
     public function handle()
     {
-        $transactionModel = new Transaction;
-        $transactionPresent = $transactionModel->present();
-        $transactions = $transactionModel->join('companies', 'companies.id', 'transactions.company_id')
-            ->whereIn('transactions.status_enum', [$transactionPresent->getStatusEnum('paid'), $transactionPresent->getStatusEnum('transfered')])
-            ->groupBy('companies.user_id')
-            ->selectRaw('companies.user_id, SUM(transactions.value) as value');
 
-        foreach ($transactions->cursor() as $transaction) {
-            if ($transaction->value > 10000000000) {
-                $level = 6;
-            } elseif ($transaction->value > 5000000000) {
-                $level = 5;
-            } elseif ($transaction->value > 1000000000) {
-                $level = 4;
-            } elseif ($transaction->value > 100000000) {
-                $level = 3;
-            } elseif ($transaction->value > 10000000) {
-                $level = 2;
-            } else {
-                $level = 1;
-            }
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-            $user = User::with('benefits')->find($transaction->user_id);
+        try {
 
-            if (!empty($user)) {
-                $this->line("Verficando o usuário: {$user->name} ({$user->id})...");
+            $transactionModel = new Transaction;
+            $transactionPresent = $transactionModel->present();
+            $transactions = $transactionModel->join('companies', 'companies.id', 'transactions.company_id')
+                ->whereIn('transactions.status_enum', [$transactionPresent->getStatusEnum('paid'), $transactionPresent->getStatusEnum('transfered')])
+                ->groupBy('companies.user_id')
+                ->selectRaw('companies.user_id, SUM(transactions.value) as value');
 
-                $previousLevel = $user->level;
+            foreach ($transactions->cursor() as $transaction) {
+                if ($transaction->value > 10000000000) {
+                    $level = 6;
+                } elseif ($transaction->value > 5000000000) {
+                    $level = 5;
+                } elseif ($transaction->value > 1000000000) {
+                    $level = 4;
+                } elseif ($transaction->value > 100000000) {
+                    $level = 3;
+                } elseif ($transaction->value > 10000000) {
+                    $level = 2;
+                } else {
+                    $level = 1;
+                }
 
-                $user->update([
-                    'total_commission_value' => $transaction->value,
-                    'level' => $level
-                ]);
+                $user = User::with('benefits')->find($transaction->user_id);
 
-                if ($previousLevel != $level) {
-                    $this->info("Nível {$previousLevel} -> {$level}");
-                    //TODO: remove after running the first time in production
-                    if ($previousLevel == 0) {
-                        $benefits = $user->benefits
-                            ->where('enabled', 0)
-                            ->where('level', '<=', $level);
-                    } else {
-                        $benefits = $user->benefits
-                            ->where('enabled', 0)
-                            ->where('level', $level);
-                    }
+                if (!empty($user)) {
+                    $this->line("Verficando o usuário: {$user->name} ({$user->id})...");
 
-                    foreach ($benefits as $benefit) {
-                        $benefit->enabled = 1;
-                        $benefit->save();
-                    }
+                    $previousLevel = $user->level;
 
-                    BenefitsService::updateUserBenefits($user);
+                    $user->update([
+                                      'total_commission_value' => $transaction->value,
+                                      'level' => $level
+                                  ]);
 
-                    if ($user->level > 1) {
-                        event(new NotifyUserLevelEvent(User::find($user->id), $user->level));
+                    if ($previousLevel != $level) {
+                        $this->info("Nível {$previousLevel} -> {$level}");
+                        //TODO: remove after running the first time in production
+                        if ($previousLevel == 0) {
+                            $benefits = $user->benefits
+                                ->where('enabled', 0)
+                                ->where('level', '<=', $level);
+                        } else {
+                            $benefits = $user->benefits
+                                ->where('enabled', 0)
+                                ->where('level', $level);
+                        }
+
+                        foreach ($benefits as $benefit) {
+                            $benefit->enabled = 1;
+                            $benefit->save();
+                        }
+
+                        BenefitsService::updateUserBenefits($user);
+
+                        if ($user->level > 1) {
+                            event(new NotifyUserLevelEvent(User::find($user->id), $user->level));
+                        }
                     }
                 }
             }
+
+        } catch (Exception $e) {
+            report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
         return 0;
     }

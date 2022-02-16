@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\ActiveCampaignService;
+use Illuminate\Support\Facades\Log;
 
 class UpdateListsFoxActiveCampaign extends Command
 {
@@ -30,6 +31,9 @@ class UpdateListsFoxActiveCampaign extends Command
 
     public function handle()
     {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
             // 2 - Usuários Ativos na plataforma
             $this->listActives(2);
@@ -54,6 +58,9 @@ class UpdateListsFoxActiveCampaign extends Command
         } catch (Exception $e) {
             report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 
     private function listUsers100k($listId)
@@ -174,10 +181,10 @@ class UpdateListsFoxActiveCampaign extends Command
         try {
             $users = User::select('id', 'name', 'email', 'cellphone', 'cellphone_verified', 'email_verified',
                 DB::raw('
-                    ((SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 4 ) / 
+                    ((SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 4 ) /
                     (SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 1 )) as tax_chergeback')
             )->havingRaw('
-                    ((SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 4 ) / 
+                    ((SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 4 ) /
                     (SELECT COUNT(*) FROM sales WHERE sales.owner_id = users.id AND status = 1 )) > 0.015')
                 ->get();
 
