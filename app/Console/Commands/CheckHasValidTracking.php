@@ -53,10 +53,8 @@ class CheckHasValidTracking extends Command
 
             $query->chunk(1000, function ($sales) {
                 foreach ($sales as $sale) {
-                    if ($sale->trackings_count == $sale->products_plans_sale_count) {
-                        $sale->has_valid_tracking = true;
-                        $sale->save();
-                    }
+                    $sale->has_valid_tracking = true;
+                    $sale->save();
                 }
             });
         } catch (Exception $e) {
