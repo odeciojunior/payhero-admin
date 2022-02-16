@@ -71,8 +71,12 @@ class PostBackWooCommerceController extends Controller
         $description = '';
         if (!empty($product['attributes'])) {
             foreach ($product['attributes'] as $attribute) {
-                if(!empty($attribute['options']))
-                    $description .= $attribute['options'] . ' ';
+
+                if(!empty($attribute['option'])){
+
+                    $description .= $attribute['option'] . ' ';
+
+                }
             }
         }
         //$request->_description = $description;
@@ -216,8 +220,8 @@ class PostBackWooCommerceController extends Controller
 
                     if(!empty($request['attributes'])){
                         foreach($request['attributes'] as $attribute){
-                            if(!empty($attribute['options']))
-                                $description .= $attribute['options'].' ';
+                            if(!empty($attribute['option']))
+                                $description .= $attribute['option'].' ';
                         }
                     }
                     $newValues['description'] = $description;

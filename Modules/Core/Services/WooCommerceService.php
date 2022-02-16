@@ -191,8 +191,8 @@ class WooCommerceService
         $description = '';
 
         foreach($variation->attributes as $attribute){
-            if(!empty($attribute->options))
-                $description .= $attribute->options.' ';
+            if(!empty($attribute->option))
+                $description .= $attribute->option.' ';
         }
 
 
