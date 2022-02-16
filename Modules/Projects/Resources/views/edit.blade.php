@@ -76,13 +76,13 @@
 
             <!-- ON/OFF COLLAPSE-->
             <div class='row no-gutters'>
-                <div class='col-md-12 d-flex pt-20 pl-30 pb-20'>
+                <div class='col-md-12 d-flex pt-20 pl-25 pb-20'>
 
                     <div class="col-md-6 p-0 d-flex align-items-center">
                         <div class="bg-afiliate-icon affiliation p-10 mr-15">
                             <img src="{{ asset('/modules/global/img/projects/afiliatesIcon.svg') }}" alt="icone afiliacao">
                         </div>
-                        <label for='boleto_redirect' class="font-size-24 m-0">Afiliações</label>
+                        <label for='boleto_redirect' class="font-size-24 m-0" style="color: #37474f;">Afiliações</label>
                     </div>
 
                     <div class="col-md-6 d-flex justify-content-end align-items-center">
@@ -262,7 +262,7 @@
     </div>
 
     <!-- DELETE PROJETO -->
-    <div class="row mt-60 mb-30">
+    <div class="row no-gutters mt-60 mb-60">
         <div class="col-md-12">
             <div class="row no-gutters">
                 <div class="d-flex delete-project">
@@ -294,7 +294,7 @@
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
-                                    <span class="padding-cards-l font-size-18">Você tem alterações que <b>não estão salvas</b> </span>
+                                    <span class="padding-cards-l font-size-16">Você tem alterações que <b>não estão salvas</b> </span>
                                 </div>
                             </div>
                         </div>
@@ -303,7 +303,7 @@
                             <div class="row no-gutters">
                                 <div class="col-md-12 d-flex justify-content-end pr-0 padding-cards-r">
                                     <button type="button" id="cancel-edit" class="font-size-16 btn btn-primary border border-white mr-10 px-15 px-sm-40">Cancelar</button>
-                                    <button type="submit" id="bt-update-project" class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alteração</button>
+                                    <button type="submit" id="bt-update-project" class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alterações</button>
                                 </div>
                             </div>
                             <div class="loader"></div>
@@ -328,7 +328,7 @@
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
-                                    <span class="padding-cards-l font-size-18"><strong>Ops!</strong> Seu arquivo é inválido.</span>
+                                    <span class="padding-cards-l font-size-16"><strong>Ops!</strong> Seu arquivo é inválido.</span>
                                 </div>
                             </div>
                         </div>
@@ -358,7 +358,7 @@
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
-                                    <span class="padding-cards-l font-size-18">Alterações salvas com sucesso!</span>
+                                    <span class="padding-cards-l font-size-16">Alterações salvas com sucesso!</span>
                                 </div>
                             </div>
                         </div>

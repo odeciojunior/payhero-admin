@@ -47,7 +47,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-8 d-flex flex-column justify-content-between pl-25 pr-25">
+                                <div class="col-md-8 d-flex flex-column justify-content-between pl-0 pr-25">
 
                                     <div alt="titulo" class="pt-10 pt-md-10 pt-lg-15 pt-xl-20 mr-15">
 
