@@ -47,7 +47,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-8 d-flex flex-column justify-content-between pl-25 pr-25">
+                                <div class="col-md-8 d-flex flex-column justify-content-between pl-0 pr-25">
 
                                     <div alt="titulo" class="pt-10 pt-md-10 pt-lg-15 pt-xl-20 mr-15">
 
@@ -459,7 +459,7 @@
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/plans/js/loading.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
-        <script src="{{asset('modules/shipping/js/shipping.js?v='.versionsFile())}}"></script>
+        <script src="{{asset('modules/shipping/js/shipping.js?v=0'.versionsFile())}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/orderbump/js/index.js?v='.versionsFile())}}"></script>

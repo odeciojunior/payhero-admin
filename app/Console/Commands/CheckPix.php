@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Exception;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\FoxUtils;
@@ -51,7 +52,7 @@ class CheckPix extends Command
                         ['payment_method', '=', Sale::PIX_PAYMENT],
                         ['status', '=', Sale::STATUS_CANCELED]
                     ]
-                )
+                )->where('gateway_id',Gateway::GERENCIANET_PRODUCTION_ID)
                 ->get();
 
             $total = count($sales);

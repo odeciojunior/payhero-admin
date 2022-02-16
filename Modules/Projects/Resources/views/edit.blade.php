@@ -53,14 +53,14 @@
 
                 <div class='form-group col-md-12'>
                     <label for='name' class="font-size-16">Nome do projeto</label>
-                    <input name='name' value="" type='text' class='input-pad font-size-16 name-project' id='name' placeholder='Nome do Projeto' maxlength='40' required />
+                    <input name='name' value="" type='text' class='input-pad font-size-16 name-project' id='name' placeholder='Nome do Projeto' maxlength='40' required/>
                     <span id='name-error' class='text-danger'></span>
                     <p class='info pt-5' style='font-size: 10px;'></p>
                 </div>
 
                 <div class='form-group col-lg-12'>
                     <label for='description' class="font-size-16">Descrição</label>
-                    <textarea style='height:100px;' name='description' type='text' class='input-pad font-size-16' id='description' placeholder='Fale um pouco sobre seu Projeto' required='' maxlength='100'></textarea>
+                    <textarea style='height:100px;' name='description' type='text' class='input-pad font-size-16' id='description' placeholder='Fale um pouco sobre seu Projeto' maxlength='100'></textarea>
                     <span id='description-error' class='text-danger'></span>
                     <p class="pt-25 mb-0 font-size-12">Recomendações: Imagem de 300x300px  |  Formatos: JPEG ou PNG</p>
                 </div>
@@ -76,13 +76,13 @@
 
             <!-- ON/OFF COLLAPSE-->
             <div class='row no-gutters'>
-                <div class='col-md-12 d-flex pt-20 pl-30 pb-20'>
+                <div class='col-md-12 d-flex pt-20 pl-25 pb-20'>
 
                     <div class="col-md-6 p-0 d-flex align-items-center">
                         <div class="bg-afiliate-icon affiliation p-10 mr-15">
                             <img src="{{ asset('/modules/global/img/projects/afiliatesIcon.svg') }}" alt="icone afiliacao">
                         </div>
-                        <label for='boleto_redirect' class="font-size-24 m-0">Afiliações</label>
+                        <label for='boleto_redirect' class="font-size-24 m-0" style="color: #37474f;">Afiliações</label>
                     </div>
 
                     <div class="col-md-6 d-flex justify-content-end align-items-center">
@@ -262,7 +262,7 @@
     </div>
 
     <!-- DELETE PROJETO -->
-    <div class="row mt-60 mb-30">
+    <div class="row no-gutters mt-60 mb-60">
         <div class="col-md-12">
             <div class="row no-gutters">
                 <div class="d-flex delete-project">
@@ -289,21 +289,21 @@
 
                 <div class="col-md-12">
 
-                    <div class="row bg-primary no-gutters final-card py-15">
+                    <div class="row bg-primary no-gutters final-card padding-cards">
 
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
-                                    <span class="pl-25 font-size-18">Você tem alterações que <b>não estão salvas</b> </span>
+                                    <span class="padding-cards-l font-size-16">Você tem alterações que <b>não estão salvas</b> </span>
                                 </div>
                             </div>
                         </div>
 
                         <div id="options-buttons" class="buttons-container col-md-6 d-flex justify-content-end align-items-center">
                             <div class="row no-gutters">
-                                <div class="col-md-12 d-flex justify-content-end pr-0 pr-md-25">
+                                <div class="col-md-12 d-flex justify-content-end pr-0 padding-cards-r">
                                     <button type="button" id="cancel-edit" class="font-size-16 btn btn-primary border border-white mr-10 px-15 px-sm-40">Cancelar</button>
-                                    <button type="submit" id="bt-update-project" class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alteração</button>
+                                    <button type="submit" id="bt-update-project" class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alterações</button>
                                 </div>
                             </div>
                             <div class="loader"></div>
@@ -315,6 +315,36 @@
         </div>
     </div>
 
+    <!-- CARD ERROR  -->
+    <div id="data-error" class="row">
+        <div class="container position-fixed pr-5 pr-sm-45" style="bottom: 0;">
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="row no-gutters bg-danger text-white padding-cards error-card">
+
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="row no-gutters">
+                                <div class="col-md-12 pl-0">
+                                    <span class="padding-cards-l font-size-16"><strong>Ops!</strong> Seu arquivo é inválido.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="padding-cards-r">
+                                <img src="{{ asset('/modules/global/img/projects/errorIcon.svg') }}" alt="icone success">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- CARD ALTERACEOS SALVAS COM SUCESSO -->
     <div id="saved-alterations" class="row">
         <div class="container position-fixed pr-5 pr-sm-45 z-index" style="bottom: 0;">
@@ -323,18 +353,18 @@
 
                 <div class="col-md-12">
 
-                    <div class="row no-gutters success-card text-white py-10">
+                    <div class="row no-gutters success-card text-white padding-cards">
 
                         <div class="col-md-6 d-flex align-items-center">
                             <div class="row no-gutters">
                                 <div class="col-md-12 pl-0">
-                                    <span class="pl-30 font-size-18">Alterações salvas com sucesso!</span>
+                                    <span class="padding-cards-l font-size-16">Alterações salvas com sucesso!</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
-                            <div class="pt-15 pr-25">
+                            <div class="padding-cards-r">
                                 <img src="{{ asset('/modules/global/img/projects/successIcon.svg') }}" alt="icone success">
                             </div>
                         </div>
