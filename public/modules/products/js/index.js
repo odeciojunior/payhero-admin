@@ -165,7 +165,7 @@ $(document).ready(function () {
                                 })
                             );
                         }
-                    });
+                    })
                 }
                 handleLocalStorage();
             },

@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Hashids\Hashids;
 use Illuminate\Console\Command;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Entities\ShopifyIntegration;
+use Illuminate\Support\Facades\Log;
 
 class RestartShopifyWebhooks extends Command
 {
@@ -40,6 +42,8 @@ class RestartShopifyWebhooks extends Command
      */
     public function handle()
     {
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         foreach(ShopifyIntegration::all() as $shopifyIntegration){
 
             try{
@@ -66,11 +70,13 @@ class RestartShopifyWebhooks extends Command
                 ]);
 
             }
-            catch(\Exception $e){
+            catch(Exception $e){
                 //
             }
 
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 
 }
