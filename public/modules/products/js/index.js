@@ -25,21 +25,28 @@ $(document).ready(function () {
         if(localStorage.getItem("filtersApplied")){
             let getProductValue = JSON.parse(localStorage.getItem("filtersApplied"));
             return getProductValue;
-
         }else{
             return 0;
         }
     }
 
+    function callback(dataLocalStorage){
+        $("#type-products").val(dataLocalStorage.getTypeProducts);
+        $("#select-projects-1").val(dataLocalStorage.getProject_1);
+        $("#select-projects-2").val(dataLocalStorage.getProject_2);
+        $("#name").val(dataLocalStorage.getName);
+        $("#btn-filtro").trigger("click");
+    }
+
     function handleLocalStorage() {
         if (localStorage.getItem('filtersApplied') != null) {
             let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApplied'));
-
-            $("#type-products").val(parseLocalStorage.getTypeProducts).trigger("change");
-
-            //$(".select-projects").val(parseLocalStorage.getProject);
-            $("#name").val(parseLocalStorage.getName);
-            $("#btn-filtro").trigger("click");
+            $("#type-products").val(parseLocalStorage.getTypeProducts);
+            $("#type-products").bind("change", function(e, callback){
+                callback(parseLocalStorage);
+                $(this).unbind( e );
+            });
+            $("#type-products").trigger("change",[callback]);
         }
     }
 
@@ -67,14 +74,11 @@ $(document).ready(function () {
                         $("#div-create").show();
                     }
 
-                    // ALIMENTA O SELECT DE TYPO
                     $.each(appsList,function (index, value) {
 
-                        // VERIFICA SE EXISTE PROJETO PRA AQUELE TYPO
                         let exist_shopify = 'n';
                         let exist_woocommerce = 'n';
 
-                        // LOOP NOS PROJETOS
                         $.each(response.data, function (index, value) {
                             if (value.shopify) {
                                 exist_shopify = 's';
@@ -84,7 +88,6 @@ $(document).ready(function () {
                             }
                         });
 
-                        // INCLUI SHOPIFY SE EXISTIR PROJETO SHOPIFY
                         if (index==1 && exist_shopify=='s'){
                             $("#type-products").append(
                                 $("<option>", {
@@ -94,7 +97,6 @@ $(document).ready(function () {
                             );
                         }
 
-                        // INCLUI WOOCOMMERCE SE EXISTIR PROJETO WOOCOMMERCE
                         if (index==2 && exist_woocommerce=='s'){
                             $("#type-products").append(
                                 $("<option>", {
@@ -172,7 +174,7 @@ $(document).ready(function () {
 
     function updateProducts(link = null) {
         pageCurrent = link
-        //RETORNA O FILTRO SE HOUVER, SE NAO RETORNA NULL
+
         let existFilters = () => {
             if(localStorage.getItem('filtersApplied') != null){
                 let getFilters = JSON.parse(localStorage.getItem('filtersApplied'))
@@ -182,7 +184,6 @@ $(document).ready(function () {
             };
         };
 
-        //GUARDA QUALQUER PAGINA DEPOIS DA 1
         if(link != null){
             let getPage = {
                 atualPage: pageCurrent
@@ -190,7 +191,6 @@ $(document).ready(function () {
             localStorage.setItem("page", JSON.stringify(getPage));
         }
 
-        //RESGATA PAGINA, SE HOUVER FILTRO SET PAGINA PARA NULL
         if(localStorage.getItem("page") != null){
             let parsePage = JSON.parse(localStorage.getItem("page"));
 
@@ -211,7 +211,19 @@ $(document).ready(function () {
 
         let type = existFilters() != null ? existFilters().getTypeProducts : $("#type-products").val();
         let name = existFilters() != null ? existFilters().getName : $("#name").val();
-        let project = existFilters() != null ? existFilters().getProject : $(".select-projects").val();
+        let project='';
+        if (existFilters() != null){
+            if( existFilters().getProject_1 != '' )
+                project = existFilters().getProject_1;
+            else if( existFilters().getProject_2 != '' )
+                project =  existFilters().getProject_2;
+        }
+        else{
+            if( $('#select-projects-1 option:selected').val() != '' )
+                project = $('#select-projects-1 option:selected').val();
+            else if( $('#select-projects-2 option:selected').val() != '' )
+                project =  $('#select-projects-2 option:selected').val();
+        }
 
         if (link == null) {
             link = "/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
@@ -379,25 +391,32 @@ $(document).ready(function () {
         }
     });
 
-    $("#type-products").on("change", function () {
-        $("#name").val('');
-        $("#select-projects-1, #select-projects-2").prepend("<option class='opcao-vazia'>");
-        $("#select-projects-1").val($("#select-projects-1 option:first").val());
-        $("#select-projects-2").val($("#select-projects-2 option:first").val());
-        const type = $(this).val();
-        $("#projects-list select").prop("disabled", true).addClass("disabled");
-        $("#projects-list, .box-projects").addClass("d-none");
-        if (type!=0) {
-            $("#projects-list #select-projects-"+type).prop("disabled", false).removeClass("disabled");
-            $("#projects-list #box-projects-"+type+" .opcao-vazia").remove();
-            $("#box-projects-"+type).removeClass('d-none');
-            $("#projects-list").removeClass('d-none');
+    $("#type-products").on("change",
+        function () {
+            $("#name").val('');
+            $("#select-projects-1, #select-projects-2").prepend("<option class='opcao-vazia'>");
+            $("#select-projects-1").val($("#select-projects-1 option:first").val());
+            $("#select-projects-2").val($("#select-projects-2 option:first").val());
+
+            $("#projects-list select").prop("disabled", true).addClass("disabled");
+            $("#projects-list, .box-projects").addClass("d-none");
+
+            const type = $(this).val();
+            if (type!=0) {
+                $("#projects-list #select-projects-"+type).prop("disabled", false).removeClass("disabled");
+                $("#projects-list #box-projects-"+type+" .opcao-vazia").remove();
+                $("#box-projects-"+type).removeClass('d-none');
+                $("#projects-list").removeClass('d-none');
+            }
         }
-    });
+    );
 
     $("#btn-filtro").on("click", function () {
-        if(storeTypeProduct().getTypeProducts != $("#type-products").val() || storeTypeProduct().getName != $('#name').val() || storeTypeProduct().getProject != $('.select-projects').val()){
-
+        if(storeTypeProduct().getTypeProducts != $('#type-products option:selected').val()
+         || storeTypeProduct().getName != $('#name').val()
+         || storeTypeProduct().getProject_1 != $('#select-projects-1 option:selected').val()
+         || storeTypeProduct().getProject_2 != $('#select-projects-2 option:selected').val()
+         ){
             if(localStorage.getItem("page") != null){
                 let getPageStored = JSON.parse(localStorage.getItem("page"));
                 getPageStored.atualPage = null;
@@ -405,10 +424,10 @@ $(document).ready(function () {
             }
         }
 
-        //GUARDA O NOVO FILTRO
         let filtersApplied = {
             getTypeProducts: $("#type-products option:selected").val(),
-            getProject: $(".select-projects option:selected").val(),
+            getProject_1: $('#select-projects-1 option:selected').val(),
+            getProject_2: $('#select-projects-2 option:selected').val(),
             getName: $("#name").val()
         };
         localStorage.setItem('filtersApplied', JSON.stringify(filtersApplied));
