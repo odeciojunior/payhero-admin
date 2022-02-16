@@ -393,17 +393,21 @@ $(() => {
         );
         preview.fadeIn();
     }
-
-    $("#project_photo").on("dropify.fileReady", function(){
-        $("#bt-update-project").prop("disabled", false);
-    })
-
-    $("#project_photo").on("dropify.errors", function(event, element) {
+    
+    function handleError(){
         $("#confirm-changes").fadeOut(3000);
         $("#bt-update-project").prop("disabled", true);
 
         $("#data-error").fadeIn(2000).delay(2000).fadeOut(3000);
         $("#confirm-changes").fadeIn(2000);
+    }
+
+    $("#project_photo").on("dropify.fileReady", function(){
+        $("#bt-update-project").prop("disabled", false);
+    })
+
+    $("#project_photo").on("dropify.errors", function() {
+        handleError()
     })
 
     // INPUT AFFILIATION
