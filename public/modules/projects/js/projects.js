@@ -436,6 +436,8 @@ $(() => {
         if($(this).val().length >= 3){
             $("#bt-update-project").prop("disabled", false);
             $(this).removeClass("error-alert")
+        }else{
+            $("#bt-update-project").prop("disabled", true);
         }
     })
 
@@ -488,13 +490,18 @@ $(() => {
     // SALVAR AS CONFIGURACOES DO PROJETO
     $("#update-project").on('submit', function (event) {
 
+        let getDefaultErrorMessage = $("#data-error span").html()
+
         if($("#update-project #name").val().length <= 2 ){
             $("#update-project #name").addClass("error-alert")
 
-            let getDefaultErrorMessage = $("#data-error span").html()
             let messageError = "<strong>Ops!</strong> Você precisa preencher os campos indicados."
-
             messageErrors(getDefaultErrorMessage, messageError)
+            return false;
+        }
+        
+        if(document.getElementById("project_photo").files.length === 0){
+            messageErrors(getDefaultErrorMessage);
             return false;
         }
 
