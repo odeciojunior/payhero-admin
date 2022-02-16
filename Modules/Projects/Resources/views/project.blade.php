@@ -403,7 +403,7 @@
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/plans/js/loading.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
-        <script src="{{asset('modules/shipping/js/shipping.js?v='.versionsFile())}}"></script>
+        <script src="{{asset('modules/shipping/js/shipping.js?v=0'.versionsFile())}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/orderbump/js/index.js?v='.versionsFile())}}"></script>

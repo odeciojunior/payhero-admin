@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Chargebacks\Imports\ContestationImport;
 use Modules\Core\Services\Email\Gmail\GmailService;
+use Illuminate\Support\Facades\Log;
 
 class CheckSaleConstestations extends Command
 {
@@ -19,6 +21,9 @@ class CheckSaleConstestations extends Command
 
     public function handle()
     {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         $date_after = $this->argument('date_after');
         $gmailService = new GmailService();
         try {
@@ -29,8 +34,11 @@ class CheckSaleConstestations extends Command
                 \Excel::import(new ContestationImport, $path);
             }
             $gmailService->clearFolder();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

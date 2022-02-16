@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Services\ShopifyService;
+use Illuminate\Support\Facades\Log;
 
 class ShopifyReorderSales extends Command
 {
@@ -34,34 +35,46 @@ class ShopifyReorderSales extends Command
 
     public function handle()
     {
-        //Dia anterior
-        $saleModel     = new Sale();
-        $salePresenter = $saleModel->present();
-        $date          = Carbon::now()->subDay()->toDateString();
-        $sales         = $saleModel->whereNull('shopify_order')
-                                   ->whereIn('status',
-                                             [
-                                                 $salePresenter->getStatus('approved'),
-                                                 $salePresenter->getStatus('pending'),
-                                             ])
-                                   ->whereDate('created_at', $date)
-                                   ->whereHas('project.shopifyIntegrations', function($query) {
-                                       $query->where('status', 2);
-                                   })
-                                   ->get();
 
-        foreach ($sales as $sale) {
-            try {
-                $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-                $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+        try {
 
-                $shopifyService->newOrder($sale);
+            //Dia anterior
+            $saleModel     = new Sale();
+            $salePresenter = $saleModel->present();
+            $date          = Carbon::now()->subDay()->toDateString();
+            $sales         = $saleModel->whereNull('shopify_order')
+                ->whereIn('status',
+                          [
+                              $salePresenter->getStatus('approved'),
+                              $salePresenter->getStatus('pending'),
+                          ])
+                ->whereDate('created_at', $date)
+                ->whereHas('project.shopifyIntegrations', function($query) {
+                    $query->where('status', 2);
+                })
+                ->get();
 
-                $this->line('sucesso');
-            } catch (Exception $e) {
-                $this->line('erro -> ' . $e->getMessage());
+            foreach ($sales as $sale) {
+                try {
+                    $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+
+                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                    $shopifyService->newOrder($sale);
+
+                    $this->line('sucesso');
+                } catch (Exception $e) {
+                    $this->line('erro -> ' . $e->getMessage());
+                }
             }
+
+        } catch (Exception $e) {
+            report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

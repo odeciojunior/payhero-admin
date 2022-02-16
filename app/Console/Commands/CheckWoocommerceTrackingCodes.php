@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Log;
 
 class CheckWoocommerceTrackingCodes extends Command
 {
@@ -41,25 +43,37 @@ class CheckWoocommerceTrackingCodes extends Command
      */
     public function handle()
     {
-        $sales = Sale::select('project_id')->whereNotNull('woocommerce_order')->where('has_valid_tracking', false)
-        ->where('status', Sale::STATUS_APPROVED)
-        ->groupBy('project_id')
-        ->get();
 
-        
-        foreach($sales as $sale) {
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-            $projectId = $sale->project_id;
+        try {
 
-            $doProducts = false;
-            $doTrackingCodes = true;
-            $doWebhooks = false;
-            $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
-            if(!empty($integration)) {
-                $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+            $sales = Sale::select('project_id')->whereNotNull('woocommerce_order')->where('has_valid_tracking', false)
+                ->where('status', Sale::STATUS_APPROVED)
+                ->groupBy('project_id')
+                ->get();
 
-                $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
+
+            foreach($sales as $sale) {
+
+                $projectId = $sale->project_id;
+
+                $doProducts = false;
+                $doTrackingCodes = true;
+                $doWebhooks = false;
+                $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
+                if(!empty($integration)) {
+                    $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+
+                    $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
+                }
             }
+
+        } catch (Exception $e) {
+            report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

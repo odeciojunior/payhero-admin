@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
+use Illuminate\Support\Facades\Log;
 
 class CheckHasValidTracking extends Command
 {
@@ -22,6 +23,8 @@ class CheckHasValidTracking extends Command
 
     public function handle()
     {
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
 
             $query = Sale::select('sales.id', 'sales.has_valid_tracking')
@@ -50,12 +53,16 @@ class CheckHasValidTracking extends Command
 
             $query->chunk(1000, function ($sales) {
                 foreach ($sales as $sale) {
-                    $sale->has_valid_tracking = true;
-                    $sale->save();
+                    if ($sale->trackings_count == $sale->products_plans_sale_count) {
+                        $sale->has_valid_tracking = true;
+                        $sale->save();
+                    }
                 }
             });
         } catch (Exception $e) {
             report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 }

@@ -45,7 +45,7 @@ $(document).ready(function () {
         atualizarFrete();
     });
 
-    $(document).on('change', '.shipping-type select', function () {
+    $(document).on('change', '.shipping-type', function () {
         // altera campo value dependendo do tipo do frete
         let selected = $(this).val();
         if (selected === 'static') {
