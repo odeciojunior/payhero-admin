@@ -394,28 +394,32 @@ $(() => {
         preview.fadeIn();
     }
     
-    function handleError(defaultMessage, menssageError = ""){
+    function messageErrors(defaultMessage, menssageError = ""){
         $("#confirm-changes").fadeOut(3000);
         $("#bt-update-project").prop("disabled", true);
 
         if(menssageError != ""){
             $("#data-error span").html(menssageError)
-        }
-        $("#data-error").fadeIn(2000).delay(2000).fadeOut(3000);
-        $("#confirm-changes").fadeIn(2000);
+            $("#data-error").fadeIn(1000).delay(2000).fadeOut(2000);
+            setTimeout(function() {
+                $("#data-error span").html(defaultMessage)
+            },5000)
         
-        $("#data-error span").html(defaultMessage)
-
+        }else{
+            $("#data-error span").html(defaultMessage)
+            $("#data-error").fadeIn(2000).delay(2000).fadeOut(2000);
+        }
+        $("#confirm-changes").fadeIn(2000);
     }
 
     $("#project_photo").on("dropify.errors", function() {
-        handleError()
+        let getDefaultErrorMessage = $("#data-error span").html()
+        messageErrors(getDefaultErrorMessage)
     })
     
     $("#project_photo").on("dropify.fileReady", function(){
         $("#bt-update-project").prop("disabled", false);
     })
-    
 
     // INPUT AFFILIATION
     $('#update-project .status-url-affiliates').on("click", function(){
@@ -427,6 +431,13 @@ $(() => {
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg");
         }
     });
+
+    $("#update-project #name").on("input", function(){
+        if($(this).val().length >= 3){
+            $("#bt-update-project").prop("disabled", false);
+            $(this).removeClass("error-alert")
+        }
+    })
 
     // CARD 4 BOTAO DE COPIAR LINK
     $("#copy-link-affiliation").on("click", function () {
@@ -477,11 +488,13 @@ $(() => {
     // SALVAR AS CONFIGURACOES DO PROJETO
     $("#update-project").on('submit', function (event) {
 
-        if($("#update-project #name").val() == ""){
+        if($("#update-project #name").val().length <= 2 ){
+            $("#update-project #name").addClass("error-alert")
+
             let getDefaultErrorMessage = $("#data-error span").html()
             let messageError = "<strong>Ops!</strong> Você precisa preencher os campos indicados."
 
-            handleError(getDefaultErrorMessage, messageError)
+            messageErrors(getDefaultErrorMessage, messageError)
             return false;
         }
 
@@ -574,6 +587,7 @@ $(() => {
             scrollTop: 410
         });
         localStorage.setItem("photo_remove", false);
+        $("#bt-update-project").prop("disabled", false);
     })
 
     show();
