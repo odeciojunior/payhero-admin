@@ -32,7 +32,7 @@ class UpdateAvailableBalance extends Command
         //CieloService::class,
         GetnetService::class,
         GerencianetService::class,
-        Safe2PayService::class
+        //Safe2PayService::class
     ];
 
     /**
@@ -72,5 +72,5 @@ class UpdateAvailableBalance extends Command
         Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
-
+    
 }
