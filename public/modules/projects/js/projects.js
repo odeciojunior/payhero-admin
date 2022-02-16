@@ -394,21 +394,28 @@ $(() => {
         preview.fadeIn();
     }
     
-    function handleError(){
+    function handleError(defaultMessage, menssageError = ""){
         $("#confirm-changes").fadeOut(3000);
         $("#bt-update-project").prop("disabled", true);
 
+        if(menssageError != ""){
+            $("#data-error span").html(menssageError)
+        }
         $("#data-error").fadeIn(2000).delay(2000).fadeOut(3000);
         $("#confirm-changes").fadeIn(2000);
-    }
+        
+        $("#data-error span").html(defaultMessage)
 
-    $("#project_photo").on("dropify.fileReady", function(){
-        $("#bt-update-project").prop("disabled", false);
-    })
+    }
 
     $("#project_photo").on("dropify.errors", function() {
         handleError()
     })
+    
+    $("#project_photo").on("dropify.fileReady", function(){
+        $("#bt-update-project").prop("disabled", false);
+    })
+    
 
     // INPUT AFFILIATION
     $('#update-project .status-url-affiliates').on("click", function(){
@@ -470,8 +477,15 @@ $(() => {
     // SALVAR AS CONFIGURACOES DO PROJETO
     $("#update-project").on('submit', function (event) {
 
+        if($("#update-project #name").val() == ""){
+            let getDefaultErrorMessage = $("#data-error span").html()
+            let messageError = "<strong>Ops!</strong> Você precisa preencher os campos indicados."
+
+            handleError(getDefaultErrorMessage, messageError)
+            return false;
+        }
+
         let getTextSaveChanges = $(".final-card span").html();
-        
         $(".final-card span").html("Um momento... <strong>Estamos salvando suas alterações.</strong>");
 
         $("#options-buttons").children().hide();
