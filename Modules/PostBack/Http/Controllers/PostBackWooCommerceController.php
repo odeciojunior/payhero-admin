@@ -71,8 +71,12 @@ class PostBackWooCommerceController extends Controller
         $description = '';
         if (!empty($product['attributes'])) {
             foreach ($product['attributes'] as $attribute) {
-                if(!empty($attribute['options']))
-                    $description .= $attribute['options'] . ' ';
+
+                if(!empty($attribute['option'])){
+
+                    $description .= $attribute['option'] . ' ';
+
+                }
             }
         }
         //$request->_description = $description;
@@ -216,8 +220,8 @@ class PostBackWooCommerceController extends Controller
 
                     if(!empty($request['attributes'])){
                         foreach($request['attributes'] as $attribute){
-                            if(!empty($attribute['options']))
-                                $description .= $attribute['options'].' ';
+                            if(!empty($attribute['option']))
+                                $description .= $attribute['option'].' ';
                         }
                     }
                     $newValues['description'] = $description;
@@ -313,6 +317,22 @@ class PostBackWooCommerceController extends Controller
                         if($meta['key'] == '_aftership_tracking_number'){
                             if(!empty($meta['value']))
                                 $request->correios_tracking_code = $meta['value'];
+                        }
+                    }
+                }
+
+                //check for _wc_shipment_tracking_items
+                if(empty($request->correios_tracking_code)){
+                    foreach ($request->meta_data as $meta) {
+                        if($meta['key'] == '_wc_shipment_tracking_items'){
+                            if(is_array($meta['value'])){
+                                foreach ($meta['value'] as $key => $value) {
+                                    if($key == 'tracking_number'){
+
+                                        $request->correios_tracking_code = $value;
+                                    }
+                                }
+                            }
                         }
                     }
                 }

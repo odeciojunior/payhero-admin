@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\WooCommerceIntegration;
@@ -9,6 +10,7 @@ use Modules\Core\Services\WooCommerceService;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Log;
 
 class UpdateWoocommercePaidPix extends Command
 {
@@ -43,26 +45,38 @@ class UpdateWoocommercePaidPix extends Command
      */
     public function handle()
     {
-        $sales = Sale::whereNotNull('woocommerce_order')->where('payment_method', Sale::PIX_PAYMENT)->where('status', Sale::STATUS_APPROVED)->get();
 
-        $output = new ConsoleOutput();
-        $progress = new ProgressBar($output, count($sales));
-        $progress->start();
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-        foreach($sales as $sale) {
-            $projectId = $sale->project_id;
+        try {
 
-            $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
-            if(!empty($integration)) {
-                $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+            $sales = Sale::whereNotNull('woocommerce_order')->where('payment_method', Sale::PIX_PAYMENT)->where('status', Sale::STATUS_APPROVED)->get();
 
-                $service->approvePix($sale->woocommerce_order);
+            $output = new ConsoleOutput();
+            $progress = new ProgressBar($output, count($sales));
+            $progress->start();
+
+            foreach($sales as $sale) {
+                $projectId = $sale->project_id;
+
+                $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
+                if(!empty($integration)) {
+                    $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
+
+                    $service->approvePix($sale->woocommerce_order);
+                }
+
+                $progress->advance();
             }
 
-            $progress->advance();
+            $progress->finish();
+            $output->writeln('');
+
+        } catch (Exception $e) {
+            report($e);
         }
 
-        $progress->finish();
-        $output->writeln('');
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

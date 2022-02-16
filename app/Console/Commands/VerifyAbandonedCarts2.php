@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CommandMonitorTimeException;
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Services\CartRecoveryService;
+use Illuminate\Support\Facades\Log;
 
 class VerifyAbandonedCarts2 extends Command
 {
@@ -27,10 +28,22 @@ class VerifyAbandonedCarts2 extends Command
     {
         parent::__construct();
     }
-    
+
     public function handle()
     {
-        $cartRecoveryService = new CartRecoveryService();
-        $cartRecoveryService->verifyAbandonedCarts2();
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
+        try {
+
+            $cartRecoveryService = new CartRecoveryService();
+            $cartRecoveryService->verifyAbandonedCarts2();
+
+        } catch (Exception $e) {
+            report($e);
+        }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

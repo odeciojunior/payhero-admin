@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +15,6 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Entities\SaleGatewayRequest;
 use Modules\Core\Entities\SaleLog;
-use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Services\Gateways\AsaasService;
@@ -22,6 +22,7 @@ use Modules\Core\Services\Gateways\CheckoutGateway;
 use Vinkla\Hashids\Facades\Hashids;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
+
 class AsaasRetroactiveChargebackPostback extends Command
 {
     /**
@@ -56,8 +57,17 @@ class AsaasRetroactiveChargebackPostback extends Command
      */
     public function handle()
     {
-        $this->verifyAsaasBalance();
-    } 
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
+        try {
+            $this->verifyAsaasBalance();
+        } catch (Exception $e) {
+            report($e);
+        }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
+    }
 
     public function verifyAsaasBalance(){
         $companies =  Company::whereHas('gatewayCompanyCredential',function($qr){
@@ -70,23 +80,23 @@ class AsaasRetroactiveChargebackPostback extends Command
         {
             $this->line('avaliando empresa '.$company->id);
             $gatewayService->setCompany($company);
-        
-            $filters = [            
+
+            $filters = [
                 'date_type'=> 'transfer_date',
                 'date_range'=> '01/01/2018 - '.$dtNow,
-                'reason'=>'', 
-                'transaction'=>'', 
-                'type'=>'', 
-                'value'=>'',         
+                'reason'=>'',
+                'transaction'=>'',
+                'type'=>'',
+                'value'=>'',
             ];
             $balance = ($gatewayService->getPeriodBalance($filters)??0)*100;
-           
+
             if($balance <> $company->asaas_balance){
-                \Log::info(
+                Log::info(
                     str_pad($company->id,5,' ',STR_PAD_RIGHT).
                     str_pad($company->fantasy_name,80,' ',STR_PAD_RIGHT).
                     str_pad($balance,10,' ',STR_PAD_RIGHT).
-                    str_pad($company->asaas_balance,10,' ',STR_PAD_RIGHT).                    
+                    str_pad($company->asaas_balance,10,' ',STR_PAD_RIGHT).
                     'Divergente'
                 );
                 $this->error('Divergencia na empresa '.$company->id);
@@ -94,18 +104,18 @@ class AsaasRetroactiveChargebackPostback extends Command
         }
 
 
-        
+
     }
-    
+
     public function createBlockSaleRetroactiveGetnet()
     {
         $sales =  Sale::where('gateway_id',Gateway::GETNET_PRODUCTION_ID)->where('status',Sale::STATUS_APPROVED)
         ->whereHas('contestations',function($qr){
             $qr->where('status',SaleContestation::STATUS_IN_PROGRESS);
-        })->doesntHave('blockReasonsSale')->get();      
-        
+        })->doesntHave('blockReasonsSale')->get();
+
         // dd(Transaction::where('type', Transaction::TYPE_PRODUCER)
-        // ->whereIn('sale_id', $sales)            
+        // ->whereIn('sale_id', $sales)
         // ->sum('value'));
 
         $output = new ConsoleOutput();
@@ -113,37 +123,37 @@ class AsaasRetroactiveChargebackPostback extends Command
         $progress->start();
 
         foreach($sales as $sale)
-        {    
+        {
             $progress->advance();
-              
-            \Log::info('bloqueando sale id '.$sale->id); 
+
+            Log::info('bloqueando sale id '.$sale->id);
 
             BlockReasonSale::create([
                 'sale_id'=>$sale->id,
                 'blocked_reason_id'=>BlockReason::IN_DISPUTE,
-                'status'=>BlockReasonSale::STATUS_BLOCKED,    
+                'status'=>BlockReasonSale::STATUS_BLOCKED,
                 'observation'=>'Em disputa'
             ]);
         }
 
        $progress->finish();
     }
-    
+
     public function revertSaleChargeback(){
         $sales = Sale::where('gateway_id',8)->where('status',Sale::STATUS_CHARGEBACK)->whereDate('updated_at',now())
-        ->doesnthave('contestations')->doesnthave('saleRefundHistory')->get();        
+        ->doesnthave('contestations')->doesnthave('saleRefundHistory')->get();
 
         $output = new ConsoleOutput();
         $progress = new ProgressBar($output, count($sales));
         $progress->start();
 
         foreach($sales as $sale)
-        {     
-            \Log::info('======= VENDA '.$sale->id.' ============'); 
+        {
+            Log::info('======= VENDA '.$sale->id.' ============');
             $refundTransactions = $sale->transactions;
             foreach ($refundTransactions as $refundTransaction) {
                 $company = $refundTransaction->company;
-                $transfers = Transfer::where('transaction_id',$refundTransaction->id)->whereDate('created_at',now())->get();                
+                $transfers = Transfer::where('transaction_id',$refundTransaction->id)->whereDate('created_at',now())->get();
                 $transfered = false;
                 foreach($transfers as $transfer){
                     $devolverSaldo =0;
@@ -152,24 +162,24 @@ class AsaasRetroactiveChargebackPostback extends Command
                     }else{
                         $devolverSaldo = $company->asaas_balance - $transfer->value;
                         $transfered = true;
-                    }                    
-                    \Log::info('Devolvendo '.$transfer->value.' empresa '.$company->id.' - '.$company->fantasy_name);
+                    }
+                    Log::info('Devolvendo '.$transfer->value.' empresa '.$company->id.' - '.$company->fantasy_name);
                     $company->update([
                         'asaas_balance' => $devolverSaldo
                     ]);
 
-                    \Log::info('Deletando transfer id '.$transfer->id);
+                    Log::info('Deletando transfer id '.$transfer->id);
                     $transfer->delete();
                 }
 
                 if($transfered && $refundTransaction->type==Transaction::TYPE_PRODUCER){
                     $refundTransaction->status = 'transfered';
                     $refundTransaction->status_enum = Transaction::STATUS_TRANSFERRED;
-                    \Log::info('alterando status transaction id '.$refundTransaction->id.' para transfered');
+                    Log::info('alterando status transaction id '.$refundTransaction->id.' para transfered');
                 }else{
                     $refundTransaction->status = 'paid';
                     $refundTransaction->status_enum = Transaction::STATUS_PAID;
-                    \Log::info('alterando status transaction id '.$refundTransaction->id.' para paid');
+                    Log::info('alterando status transaction id '.$refundTransaction->id.' para paid');
                 }
                 $refundTransaction->save();
             }
@@ -182,7 +192,7 @@ class AsaasRetroactiveChargebackPostback extends Command
             );
             SaleLog::where('sale_id',$sale->id)->whereDate('created_at',now())->orderBy('id','DESC')->first()->delete();
 
-            \Log::info('atualizando status venda '.$sale->id.' para approved');            
+            Log::info('atualizando status venda '.$sale->id.' para approved');
             $progress->advance();
         }
 
@@ -294,18 +304,18 @@ class AsaasRetroactiveChargebackPostback extends Command
     public function updateNsuContestation(){
         $contestations = SaleContestation::where('gateway_id',8)->where('status',SaleContestation::STATUS_IN_PROGRESS)
         ->whereNull('nsu')->get();
-       
+
         foreach($contestations as $contestation){
             if(!empty($contestation->sale_id)){
                 $request = DB::table('sale_gateway_requests')->select('id','gateway_result')
                 ->where('sale_id',$contestation->sale_id)->where('gateway_result','like','%CONFIRMED%CREDIT_CARD%')->orderBy('id','DESC')->first();
                 if(!empty($request)){
-                    $data = json_decode($request->gateway_result);  
+                    $data = json_decode($request->gateway_result);
                     if(!empty($data->installment) || !empty($data->invoiceNumber))
-                    {                        
+                    {
                         $contestation->nsu = $data->installment??$data->invoiceNumber;
                         $contestation->update();
-                        $this->line('Atualizando contestation '.$contestation->id);                        
+                        $this->line('Atualizando contestation '.$contestation->id);
                     }else{
                         $this->error('sale_request id: '.$request->id);
                     }
@@ -318,7 +328,7 @@ class AsaasRetroactiveChargebackPostback extends Command
         $postbacks = GatewayPostback::where('gateway_id',8)->whereHas('sale',function($qr){
             $qr->where('status',Sale::STATUS_APPROVED);
         })
-        ->where('data', 'like','%"event": "PAYMENT_REFUNDED"%')->where('processed_flag',1)->get();        
+        ->where('data', 'like','%"event": "PAYMENT_REFUNDED"%')->where('processed_flag',1)->get();
         $salesArray = [];
         foreach($postbacks as $postback){
             if(in_array($postback->sale_id,$salesArray)){
@@ -334,7 +344,7 @@ class AsaasRetroactiveChargebackPostback extends Command
     }
 
     public function reprocessGatewayPostback(){
-        $postbacks = GatewayPostback::where('gateway_id',8)->where('data', 'like','%PAYMENT_CHARGEBACK_REQUESTED%')->whereDate('created_at',now())->get();        
+        $postbacks = GatewayPostback::where('gateway_id',8)->where('data', 'like','%PAYMENT_CHARGEBACK_REQUESTED%')->whereDate('created_at',now())->get();
 
         $output = new ConsoleOutput();
         $progress = new ProgressBar($output, count($postbacks));
@@ -345,7 +355,7 @@ class AsaasRetroactiveChargebackPostback extends Command
             if(!in_array($postback->sale_id,$sales) && $postback->id <> 1247278){
                 $postback->processed_flag = false;
                 $this->line($postback->id);
-                $postback->update();        
+                $postback->update();
                 $sales[] = $postback->sale_id;
             }
             $progress->advance();
@@ -357,15 +367,15 @@ class AsaasRetroactiveChargebackPostback extends Command
     }
 
     public function createPostbackRetroactive(){
-        $gateway_postbacks = array(           
+        $gateway_postbacks = array(
             array(
                 "sale_id" => 1376233,
             ),
             array(
                 "sale_id" => 1379013,
-            )           
+            )
         );
-        
+
 
         $output = new ConsoleOutput();
         $progress = new ProgressBar($output, count($gateway_postbacks));
@@ -383,11 +393,11 @@ class AsaasRetroactiveChargebackPostback extends Command
 
         $progress->finish();
     }
-    
+
     public function createPostback($saleId,$status)
     {
         $saleGatewayRequest = SaleGatewayRequest::where('sale_id',$saleId)->where('send_data','like','%split%')->orderBy('id','desc')->first();
-        
+
         if(!empty($saleGatewayRequest)){
             $data = json_decode($saleGatewayRequest->gateway_result,true);
 
@@ -395,7 +405,7 @@ class AsaasRetroactiveChargebackPostback extends Command
 
                 $data['status'] = 'CHARGEBACK_REQUESTED';
                 $data = ['event'=>'PAYMENT_CHARGEBACK_REQUESTED','payment'=>$data];
-    
+
                 GatewayPostback::create([
                     'data' => json_encode($data),
                     'gateway_id' => $this->gatewayId,
@@ -405,7 +415,7 @@ class AsaasRetroactiveChargebackPostback extends Command
                     'created_at'=>'2021-12-20 14:49:57'
                 ]);
             }
-        }        
+        }
     }
 
     public function collectChargeback()
@@ -416,7 +426,7 @@ class AsaasRetroactiveChargebackPostback extends Command
         ->where('payment_method',Sale::CREDIT_CARD_PAYMENT)
         ->whereNotNull('gateway_transaction_id')
         ->where('id','>',1426315)
-        ->get(); 
+        ->get();
 
         $total = count($sales);
 
@@ -429,20 +439,20 @@ class AsaasRetroactiveChargebackPostback extends Command
             str_pad("payment Id.",25,' ',STR_PAD_RIGHT).
             str_pad("Status",25,' ',STR_PAD_RIGHT).
             "paymentDate"
-        ); 
+        );
         $checkoutService = new CheckoutGateway($this->gatewayId);
         foreach($sales as $sale)
         {
             $saleId = Hashids::encode($sale->id);
             $response = $checkoutService->getPaymentInfo($saleId);
-            
+
             if(!empty($response->status) && $response->status =='success' && str_contains($response->data->status,'CHARGEBACK')){
                 Log::info(
                     str_pad($sale->id,15,' ',STR_PAD_RIGHT).
                     str_pad($response->data->id,25,' ',STR_PAD_RIGHT).
                     str_pad($response->data->status,25,' ',STR_PAD_RIGHT).
                     $response->data->paymentDate
-                ); 
+                );
             }
             Log::info('SaleId: '.$sale->id);
             $progress->advance();

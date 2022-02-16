@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\BenefitsService;
+use Illuminate\Support\Facades\Log;
 
 class UserBenefitsUpdate extends Command
 {
@@ -39,19 +41,31 @@ class UserBenefitsUpdate extends Command
      */
     public function handle()
     {
-        $benefitsService = new BenefitsService();
-        $now = now();
-        $users = User::with('benefits')
-            ->whereRaw('id = account_owner_id')
-            ->get();
 
-        foreach ($users as $user) {
-            $this->line($user->id . ' - ' . $user->name);
-            $benefitsService->updateUserBenefits($user);
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
+        try {
+
+            $benefitsService = new BenefitsService();
+            $now = now();
+            $users = User::with('benefits')
+                ->whereRaw('id = account_owner_id')
+                ->get();
+
+            foreach ($users as $user) {
+                $this->line($user->id . ' - ' . $user->name);
+                $benefitsService->updateUserBenefits($user);
+            }
+
+            $this->line($now);
+            $this->line(now());
+
+        } catch (Exception $e) {
+            report($e);
         }
 
-        $this->line($now);
-        $this->line(now());
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
         return 0;
     }
 }

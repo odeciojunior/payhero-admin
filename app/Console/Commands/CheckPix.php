@@ -5,10 +5,10 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\CheckoutService;
-use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CheckPix extends Command
@@ -44,6 +44,8 @@ class CheckPix extends Command
      */
     public function handle()
     {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -88,9 +90,11 @@ class CheckPix extends Command
                 $bar->advance();
             }
             $bar->finish();
-            dd('Fim');
+
         } catch (Exception $e) {
             report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 }
