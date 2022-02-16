@@ -895,9 +895,11 @@ h4.number{
     margin-bottom: 0;
 }
 
-.inner.relative .title-graph {
-    position: absolute;
-}
+.inner.relative .title-graph { position: absolute; }
+
+.inner.relative .title-graph.no-withdrawals { position: relative; }
+
+.inner.relative .title-graph.no-withdrawals small { font-size: 14px; }
 
 #financesChart { margin-top: 28px; }
 
@@ -1318,3 +1320,60 @@ h4.number{
 .list-products .light-blue { background: #33C0FF; }
 .list-products .light-green { background: #64DF96; }
 .list-products .grey { background: #767676; }
+
+.footer-withdrawals {
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.data-withdrawals { 
+    width: 235px; 
+    text-align: center; 
+}
+
+.footer-withdrawals h6 {
+    color: #636363;
+    font-size: 18px;
+}
+.footer-withdrawals p {
+    color: #9A9A9A;
+    font-size: 14px;
+}
+
+@media only screen and (min-width: 1600px){
+    .footer-withdrawals { flex-direction: row; }
+    .data-withdrawals { text-align: left; }
+}
+
+.no-data {
+    align-items: center;
+    flex-direction: column;
+    height: 69vh;
+    justify-content: center;
+}
+.no-data h6 {
+    color: #636363;
+    font-size: 24px;
+    line-height: 30px;
+    text-align: center;
+}
+.no-data p {
+    color: #9A9A9A;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+    width: 400px;
+    margin: 0 auto;
+}
+.no-data .lk-dashboard {
+    height: 48px;
+    width: 184px;
+    margin: 30px auto;
+    display: block;
+    background: #2E85EC;
+    color: #FFF;
+    border-radius: 8px;
+    font-size: 16px;
+    line-height: 48px;
+    text-align: center;
+}

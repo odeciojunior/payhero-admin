@@ -96,7 +96,7 @@
 
             <section class="container box-reports" id="reports-content">
 				<div class="row">
-					<div class="col-12">
+					<div class="col-12"  style="display: none;">
 						<!-- /FINANCE -->	
 						<div class="row">
 							<header class="header-reports container">
@@ -551,6 +551,34 @@
 						</div>
 						<!-- /MARKETING -->
 					</div>
+                    <div class="col-12">
+                        <div class="d-flex no-data">
+                            <figure>
+                                <svg width="214" height="214" viewBox="0 0 214 214" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M107 214C166.094 214 214 166.094 214 107C214 47.9055 166.094 0 107 0C47.9055 0 0 47.9055 0 107C0 166.094 47.9055 214 107 214Z" fill="url(#paint0_linear_517_989)"/>
+                                <path d="M171.2 214H42.8V75.6135C48.852 75.6067 54.6541 73.1996 58.9334 68.9203C63.2128 64.6409 65.6199 58.8388 65.6267 52.7869H148.373C148.367 55.7848 148.955 58.7543 150.104 61.5235C151.253 64.2926 152.939 66.8065 155.066 68.9196C157.179 71.0469 159.693 72.7339 162.462 73.883C165.232 75.032 168.202 75.6202 171.2 75.6135V214Z" fill="white"/>
+                                <path d="M107 145.52C125.91 145.52 141.24 130.19 141.24 111.28C141.24 92.3698 125.91 77.04 107 77.04C88.0898 77.04 72.76 92.3698 72.76 111.28C72.76 130.19 88.0898 145.52 107 145.52Z" fill="#4285F4"/>
+                                <path d="M119.106 127.421L107 115.315L94.8943 127.421L90.8591 123.386L102.965 111.28L90.8591 99.1746L94.8943 95.1394L107 107.245L119.106 95.1394L123.141 99.1746L111.035 111.28L123.141 123.386L119.106 127.421Z" fill="white"/>
+                                <path d="M125.547 154.08H88.4535C86.0897 154.08 84.1735 155.996 84.1735 158.36C84.1735 160.724 86.0897 162.64 88.4535 162.64H125.547C127.911 162.64 129.827 160.724 129.827 158.36C129.827 155.996 127.911 154.08 125.547 154.08Z" fill="#DFEAFB"/>
+                                <path d="M138.387 171.2H75.6134C73.2496 171.2 71.3334 173.116 71.3334 175.48C71.3334 177.844 73.2496 179.76 75.6134 179.76H138.387C140.75 179.76 142.667 177.844 142.667 175.48C142.667 173.116 140.75 171.2 138.387 171.2Z" fill="#DFEAFB"/>
+                                <defs>
+                                <linearGradient id="paint0_linear_517_989" x1="107" y1="0" x2="107" y2="214" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#E3ECFA"/>
+                                <stop offset="1" stop-color="#DAE7FF"/>
+                                </linearGradient>
+                                </defs>
+                                </svg>
+                            </figure>
+
+                            <div>
+                                <h6>Ainda não tem nada pra mostrar aqui! :(</h6>
+                                <p>
+                                    Faça a sua primeira venda para começar a usar a sua central de relatórios.
+                                </p>
+                                <a href="/dashboard" class="lk-dashboard" title="Ir para Dashboard">Ir para Dashboard</a>
+                            </div>
+                        </div>
+                    </div>
 				</div>
             </section>
 
