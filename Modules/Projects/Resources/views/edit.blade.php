@@ -53,7 +53,7 @@
 
                 <div class='form-group col-md-12'>
                     <label for='name' class="font-size-16">Nome do projeto</label>
-                    <input name='name' value="" type='text' class='input-pad font-size-16 name-project' id='name' placeholder='Nome do Projeto' minlength='3' maxlength='40' />
+                    <input name='name' value="" type='text' class='input-pad font-size-16 name-project' id='name' placeholder='Nome do Projeto' maxlength='40' />
                     <span id='name-error' class='text-danger'></span>
                     <p class='info pt-5' style='font-size: 10px;'></p>
                 </div>

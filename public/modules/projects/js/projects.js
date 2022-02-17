@@ -397,7 +397,6 @@ $(() => {
     
     function messageErrors(defaultMessage, menssageError = ""){
         $("#confirm-changes").fadeOut(3000);
-        $("#bt-update-project").prop("disabled", true);
 
         if(menssageError != ""){
             $("#data-error span").html(menssageError)
@@ -412,27 +411,34 @@ $(() => {
         }
         $("#confirm-changes").fadeIn(2000);
     }
+    let imgReady
+    let getDefaultErrorMessage = $("#data-error span").html()
+    const projectNameInput = formUpdateProject.find("#name");
 
-    function validateForm(){
-        let getDefaultErrorMessage = $("#data-error span").html()
+    function validateForm(photoIsValid){
 
-        if(projectNameInput.val().length <= 2 ){
+        if(projectNameInput.val().length <= 2){
             projectNameInput.addClass("error-alert")
-
             let messageError = "<strong>Ops!</strong> Você precisa preencher os campos indicados."
             messageErrors(getDefaultErrorMessage, messageError)
+            return false;
+        }
+
+        if(photoIsValid === false){
+            messageErrors(getDefaultErrorMessage)
             return false;
         }
         return true;
     }
 
     $("#project_photo").on("dropify.errors", function() {
-        let getDefaultErrorMessage = $("#data-error span").html()
         messageErrors(getDefaultErrorMessage)
+        imgReady = false
     })
     
     $("#project_photo").on("dropify.fileReady", function(){
-        if(validateForm()){
+        imgReady = true
+        if(validateForm(imgReady)){
             $("#bt-update-project").prop("disabled", false);
         }
     })
@@ -447,19 +453,7 @@ $(() => {
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg");
         }
     });
-
-    const projectNameInput = formUpdateProject.find("#name");
-    projectNameInput.on("input", function(){
-        if($(this).val().length >= 3){
-            $("#bt-update-project").prop("disabled", false);
-            $(this).removeClass("error-alert")
-
-        }else{
-            $("#bt-update-project").prop("disabled", true);
-            $(this).addClass("error-alert")
-        }
-    })
-
+   
     // CARD 4 BOTAO DE COPIAR LINK
     $("#copy-link-affiliation").on("click", function () {
         var copyText = document.getElementById("url-affiliates");
@@ -508,7 +502,7 @@ $(() => {
 
     // SALVAR AS CONFIGURACOES DO PROJETO
     formUpdateProject.on('submit', function (event) {
-        if(!validateForm()){
+        if(!validateForm(imgReady)){
             return false;
         }
 
