@@ -36,7 +36,7 @@ class UserService
 
     public function haveAnyDocumentPending(): bool
     {
-        $user = auth()->user();
+        $user = User::find(auth()->user()->account_owner_id);
 
         return (
             $user->address_document_status == UserDocument::STATUS_APPROVED &&
