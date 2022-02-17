@@ -538,7 +538,7 @@ class WooCommerceService
                 foreach ($order->meta_data as $meta) {
                     if($meta->key == '_wc_shipment_tracking_items'){
                         if(is_array($meta->value)){
-                            foreach ($meta->value as $key => $value) {
+                            foreach ($meta->value[0] as $key => $value) {
                                 if($key == 'tracking_number'){
 
                                     $order->correios_tracking_code = $value;
