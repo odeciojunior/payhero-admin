@@ -5,12 +5,10 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\AsaasBackofficeRequest;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\Gateways\CheckoutGateway;
 
 class CreateAccountAsaas extends Command
@@ -52,17 +50,29 @@ class CreateAccountAsaas extends Command
      */
     public function handle()
     {
-        $companies = Company::whereDoesntHave('gatewayCompanyCredential', function($q) {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
+        try {
+
+            $companies = Company::whereDoesntHave('gatewayCompanyCredential', function($q) {
                 $q->where('gateway_id', $this->gatewayId);
             })
-            ->where('contract_document_status', Company::STATUS_APPROVED)
-            ->where('bank_document_status', Company::STATUS_APPROVED)
-            ->where('address_document_status', Company::STATUS_APPROVED)
-            ->get();
+                ->where('contract_document_status', Company::STATUS_APPROVED)
+                ->where('bank_document_status', Company::STATUS_APPROVED)
+                ->where('address_document_status', Company::STATUS_APPROVED)
+                ->get();
 
-        foreach ($companies as $company) {
-            $this->createAccount($company);
+            foreach ($companies as $company) {
+                $this->createAccount($company);
+            }
+
+        } catch (Exception $e) {
+            report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 
     public function createAccount(Company $company){
