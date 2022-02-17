@@ -42,6 +42,7 @@ $(() => {
     // PARCELAS
     let parcelas = '';
     let parcelasJuros = '';
+    const formUpdateProject = $("#update-project");
     $(".installment_amount").on('change', function () {
         parcelas = parseInt($(".installment_amount option:selected").val());
         parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
@@ -122,7 +123,7 @@ $(() => {
 
     // CARD 2 CARREGA TELA DE EDITAR PROJETO
     function updateConfiguracoes() {
-        // $("#update-project").addClass("low-opacity");
+
         loadOnAny('#tab_configuration_project .card');
 
         $.ajax({
@@ -135,8 +136,9 @@ $(() => {
 
             }, error: function (response) {
                 loadingOnScreenRemove();
-                // $("#update-project").removeClass("low-opacity");
+
                 loadOnAny('#tab_configuration_project .card', true);
+                $("#trash").removeClass("d-none")
                 errorAjaxResponse(response);
 
             }, success: function (data) {
@@ -144,8 +146,8 @@ $(() => {
                 renderProjectConfig(data);
 
                 loadingOnScreenRemove();
-                // $("#update-project").removeClass("low-opacity");
                 loadOnAny('#tab_configuration_project .card', true);
+                $("#trash").removeClass("d-none")
             }
         });
     }
@@ -201,7 +203,6 @@ $(() => {
     });
     // FIM COMPORTAMENTOS DA TELA
 
-
     // CARD 3 CONFIGURACAO DO PLUGIN DE ADD FOTO
     dropifyOptions = {
         messages: {
@@ -225,7 +226,6 @@ $(() => {
         imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'],
     };
     
-
     // CARD 3 SE NAO ACHAR IMAGEM SETTA UMA PADRAO
     $("img").on("error", function () {
         $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
@@ -251,7 +251,9 @@ $(() => {
         $(".h-200, .ql-container, .ql-snow").css("border-color", "#cccccc");
     });
 
-    $("#status-url-affiliates").on("click", function(){
+    const statusUrlAffiliatesEl =  formUpdateProject.find('#status-url-affiliates')
+
+    statusUrlAffiliatesEl.on("click", function(){
         if($(this).prop("checked") == true ){
             $("#affiliation-access").show();
         }else{
@@ -265,9 +267,9 @@ $(() => {
         let {project} = data;
 
         // AFILIACOES ON / OFF
-        let getStatusAffiliation = $("#status-url-affiliates").prop("checked");
+        let getStatusAffiliation = statusUrlAffiliatesEl.prop("checked");
         if (project.status_url_affiliates == 1 && getStatusAffiliation == false) {
-            $('#update-project .status-url-affiliates').trigger('click');
+            statusUrlAffiliatesEl.trigger('click');
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg").css("background-color", "#F2F8FF");
             $("#affiliation-access").show();
         }
@@ -277,7 +279,7 @@ $(() => {
             $("#affiliation-access").hide();
 
             if(project.status_url_affiliates == 0 && getStatusAffiliation == true){
-                $('#update-project .status-url-affiliates').trigger('click');
+                statusUrlAffiliatesEl.trigger('click');
 
             }
         }
@@ -293,18 +295,17 @@ $(() => {
 
 
         //NOME E DESCRICAO
-        $('#update-project #name').val(project.name);
-        $('#update-project #description').val(project.description);
+        formUpdateProject.find('#name').val(project.name);
+        formUpdateProject.find('#description').val(project.description);
 
         //URL PAGINA
-        $('#update-project #url-page').val(project.url_page ? project.url_page : 'https://');
+        formUpdateProject.find('#url-page').val(project.url_page ? project.url_page : 'https://');
 
 
         // DURACAO DE COOKIE
         if (project.cookie_duration == 0) {
             $('.sirius-select').prop("selectedIndex", 0).change();
             $(".sirius-select-text").text("Eterno");
-            // $('#update-project .cookie-duration').prop('selectedIndex', 0).change();
 
         } else if (project.cookie_duration == 7) {
             $('.sirius-select').prop("selectedIndex", 1).change();
@@ -341,11 +342,11 @@ $(() => {
                 }
             }
         });
-        $('#update-project #percentage-affiliates').val(project.percentage_affiliates);
+        formUpdateProject.find('#percentage-affiliates').val(project.percentage_affiliates);
 
 
         // TIPO DE COMISSAO
-        $('#update-project .commission-type-enum input').filter(`[value=${project.commission_type_enum}]`).prop("checked", true);
+        formUpdateProject.find('.commission-type-enum input').filter(`[value=${project.commission_type_enum}]`).prop("checked", true);
 
 
         // DELETA TEXTO E RESGATA O TEXTO SALVO
@@ -355,15 +356,15 @@ $(() => {
 
         // AFILIACAO AUTOMATICA
         if (project.automatic_affiliation == 1) {
-            $('#update-project .automatic-affiliation input').prop("checked", true);
+            formUpdateProject.find('.automatic-affiliation input').prop("checked", true);
         }
 
         // URL CONVIDE AFILIADOS
-        $('#update-project #url-affiliates').val(project.url_affiliates);
+        formUpdateProject.find('#url-affiliates').val(project.url_affiliates);
 
         // COMPORTAMENTO CARD SALVAR / CANCELAR
         if(!onChangeSet){
-            $("#update-project").on('input change', function() {
+            formUpdateProject.on('input change', function() {
                 $( "#confirm-changes" ).fadeIn( "slow" );
             });
 
@@ -412,18 +413,33 @@ $(() => {
         $("#confirm-changes").fadeIn(2000);
     }
 
+    function validateForm(){
+        let getDefaultErrorMessage = $("#data-error span").html()
+
+        if(projectNameInput.val().length <= 2 ){
+            projectNameInput.addClass("error-alert")
+
+            let messageError = "<strong>Ops!</strong> Você precisa preencher os campos indicados."
+            messageErrors(getDefaultErrorMessage, messageError)
+            return false;
+        }
+        return true;
+    }
+
     $("#project_photo").on("dropify.errors", function() {
         let getDefaultErrorMessage = $("#data-error span").html()
         messageErrors(getDefaultErrorMessage)
     })
     
     $("#project_photo").on("dropify.fileReady", function(){
-        $("#bt-update-project").prop("disabled", false);
+        if(validateForm()){
+            $("#bt-update-project").prop("disabled", false);
+        }
     })
 
     // INPUT AFFILIATION
-    $('#update-project .status-url-affiliates').on("click", function(){
-        let affiliationStatus = $("#status-url-affiliates").prop("checked")
+    statusUrlAffiliatesEl.on("click", function(){
+        let affiliationStatus = statusUrlAffiliatesEl.prop("checked")
         if(affiliationStatus == false){
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/affiliationDisable.svg");
 
@@ -432,12 +448,15 @@ $(() => {
         }
     });
 
-    $("#update-project #name").on("input", function(){
+    const projectNameInput = formUpdateProject.find("#name");
+    projectNameInput.on("input", function(){
         if($(this).val().length >= 3){
             $("#bt-update-project").prop("disabled", false);
             $(this).removeClass("error-alert")
+
         }else{
             $("#bt-update-project").prop("disabled", true);
+            $(this).addClass("error-alert")
         }
     })
 
@@ -488,20 +507,8 @@ $(() => {
     });
 
     // SALVAR AS CONFIGURACOES DO PROJETO
-    $("#update-project").on('submit', function (event) {
-
-        let getDefaultErrorMessage = $("#data-error span").html()
-
-        if($("#update-project #name").val().length <= 2 ){
-            $("#update-project #name").addClass("error-alert")
-
-            let messageError = "<strong>Ops!</strong> Você precisa preencher os campos indicados."
-            messageErrors(getDefaultErrorMessage, messageError)
-            return false;
-        }
-        
-        if(document.getElementById("project_photo").files.length === 0){
-            messageErrors(getDefaultErrorMessage);
+    formUpdateProject.on('submit', function (event) {
+        if(!validateForm()){
             return false;
         }
 
@@ -521,12 +528,12 @@ $(() => {
         let verify = verificaParcelas(parcelas, parcelasJuros);
 
         let statusUrlAffiliates = 0;
-        if ($('#status-url-affiliates').prop('checked')) {
+        if (statusUrlAffiliatesEl.prop('checked')) {
             statusUrlAffiliates = 1;
         }
 
         let automaticAffiliation = 0;
-        if($('#update-project .automatic-affiliation input').prop("checked")){
+        if(formUpdateProject.find('.automatic-affiliation input').prop("checked")){
             automaticAffiliation = 1;
         };
 

@@ -262,7 +262,7 @@
     </div>
 
     <!-- DELETE PROJETO -->
-    <div class="row no-gutters mt-60 mb-60">
+    <div id="trash" class="row no-gutters mt-60 mb-60 d-none">
         <div class="col-md-12">
             <div class="row no-gutters">
                 <div class="d-flex delete-project">

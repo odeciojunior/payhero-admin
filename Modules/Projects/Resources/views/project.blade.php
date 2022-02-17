@@ -70,38 +70,50 @@
                                     <!-- RODA PE -->
                                     <div class="row no-gutters">
                                         <!-- CHARGEBACK -->
-                                        <div class="col-md-4 d-flex align-items-center py-10 product-chargeback product-info-color">
-                                            <div class="pl-5 pl-lg-10">
-                                                <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/icon-arrowback.svg') }}">
+                                        <div class="col-md-4 align-items-center py-10 product-chargeback product-info-color">
 
+                                            <div class="d-flex justify-content-start padding-cards-l">
+                                                <div class="pl-5">
+                                                    <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/icon-arrowback.svg') }}">
+    
+                                                </div>
+    
+                                                <span class="s-data-project-values pl-5 pl-md-5 align-self-center" id="value-chargeback"></span>
                                             </div>
-
-                                            <span class="s-data-project-values pl-5 pl-md-5 align-self-center" id="value-chargeback"></span>
-                                            <div class="d-flex align-items-center pl-5 font-size-10">
+                                            
+                                            
+                                            <div class="d-flex align-items-start justify-content-start padding-cards-l font-size-12">
                                                 <small class="font-size-12">chargebacks</small>
                                             </div>
                                         </div>
 
                                         <!-- CHAMADOS ABERTOS -->
-                                        <div class="col-md-4 d-flex align-items-center py-10 rounded-0 product-info-color border-product-alert">
-                                            <div class="d-flex pl-5 pl-lg-10">
-                                                <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/icon-chat.svg') }}">
+                                        <div class="col-md-4 align-items-center py-10 rounded-0 product-info-color border-product-alert">
+
+                                            <div class="d-flex justify-content-start padding-cards-l">
+                                                <div class="d-flex pl-5">
+                                                    <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/icon-chat.svg') }}">
+                                                </div>
+
+                                                <span class="s-data-project-values pl-5 align-self-center" id="value-open-tickets"></span>
                                             </div>
 
-                                            <span class="s-data-project-values pl-5 align-self-center" id="value-open-tickets"></span>
-                                            <div class="d-flex align-items-center pl-5 font-size-10">
+                                            <div class="d-flex align-items-center justify-content-start padding-cards-l font-size-10">
                                                 <small class="font-size-12">chamados abertos</small>
                                             </div>
                                         </div>
 
                                         <!-- VENDAS S/ RASTREIO -->
-                                        <div class="col-md-4 d-flex align-items-center py-10 tracking-sell product-info-color border-product-alert">
-                                            <div class="d-flex pl-5 pl-lg-10">
-                                                <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/trackIcon.svg') }}">
+                                        <div class="col-md-4 align-items-center py-10 tracking-sell product-info-color border-product-alert">
+
+                                            <div class="d-flex justify-content-start padding-cards-l">
+                                                <div class="d-flex pl-5">
+                                                    <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/trackIcon.svg') }}">
+                                                </div>
+                                                <span class="s-data-project-values pl-5 align-self-center" id="value-without-tracking"></span>
                                             </div>
 
-                                            <span class="s-data-project-values pl-5 align-self-center" id="value-without-tracking"></span>
-                                            <div class="d-flex align-items-center pl-5 font-size-10">
+                                            <div class="d-flex align-items-center justify-content-start padding-cards-l font-size-10">
                                                 <small class="font-size-12">vendas sem rastreio</small>
                                             </div>
 
