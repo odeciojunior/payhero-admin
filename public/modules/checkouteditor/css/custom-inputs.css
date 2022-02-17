@@ -113,3 +113,10 @@
 .custom-bubble-check[type="checkbox"] + label:hover {
     opacity: 0.8;
 }
+
+/* ------------ Circle Radio -------------- */
+
+.bigger-radio[type="radio"] {
+    width: 20px;
+    height: 20px;
+}

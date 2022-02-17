@@ -1,138 +1,179 @@
 /* Dropify - Upload de Imagem */
 
 #upload_logo > .dropify-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 200px !important;
-  width: 200px !important;
-  border: 2px dashed #2E85EC;
-  border-radius: 8px;
-  font-weight: bold;
-  background-color: #F8FDFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 150px !important;
+    width: 150px !important;
+    border: 1px dashed #2e85ec;
+    border-radius: 8px;
+    font-weight: bold;
+    background-color: #f8fdff;
+}
+
+#upload_favicon > .dropify-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 40px !important;
+    width: 40px !important;
+    border: 1px dashed #2e85ec;
+    border-radius: 8px;
+    font-weight: bold;
+    background-color: #f8fdff;
+    padding: 2px;
+}
+#upload_favicon > input {
+    padding: 2px;
 }
 
 #upload-banner > .dropify-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 110px !important;
-  height: fit-content !important;
-  width: 100% !important;
-  border: 2px dashed #2E85EC;
-  border-radius: 8px;
-  font-weight: bold;
-  background-color: #F8FDFF;
-  object-fit: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 110px !important;
+    height: fit-content !important;
+    width: 100% !important;
+    border: 1px dashed #2e85ec;
+    border-radius: 8px;
+    font-weight: bold;
+    background-color: #f8fdff;
+    object-fit: cover;
 }
 
 #checkout_editor .dropify-wrapper .dropify-message {
-  transform: none;
-  top: auto;
+    transform: none;
+    top: auto;
 }
 
 #checkout_editor .dropify-errors-container ul {
-  padding-left: 0;
-  font-size: 10px;
-  color: red;
-  padding-top: 10px;
+    padding-left: 0;
+    font-size: 10px;
+    color: red;
+    padding-top: 10px;
 }
 
 #checkout_editor .dropify-errors-container li {
-  list-style-type: none;
-  line-height: 10px;
+    list-style-type: none;
+    line-height: 10px;
 }
 
 #checkout_editor .dropify-infos-message::before,
 #checkout_editor .dropify-filename span.dropify-filename-inner {
-  display: none;
+    display: none;
 }
 
 #checkout_editor .dropify-wrapper .dropify-message span.file-icon p {
-  color: #3B8CED;
+    color: #3b8ced;
 }
 
-#checkout_editor .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
-  white-space: normal;
+#checkout_editor
+    .dropify-wrapper
+    .dropify-preview
+    .dropify-infos
+    .dropify-infos-inner
+    p {
+    white-space: normal;
 }
 
 #checkout_editor .dropify-filename span.file-icon::before {
-  content: '\e800';
+    content: "\e800";
 }
 
 #checkout_editor .dropify-filename span.file-icon {
-  font-family: dropify;
-  display: inline;
-  font-size: 4em;
+    font-family: dropify;
+    display: inline;
+    font-size: 4em;
+}
+
+#checkout_editor #upload_favicon .dropify-filename span.file-icon {
+    font-family: dropify;
+    display: inline;
+    font-size: 10px;
 }
 
 #checkout_editor .dropify-wrapper .dropify-clear {
-color: #0D2C54;
-border: 2px solid #3B8CED;
+    color: #0d2c54;
+    border: 2px solid #3b8ced;
 }
 
 #checkout_editor .dropify-wrapper .dropify-preview .dropify-infos {
-  background: #F8FDFFE6;
+    background: #f8fdffe6;
 }
 
 #checkout_editor .dropify-wrapper:hover .dropify-preview .dropify-infos {
-opacity: .9;
+    opacity: 0.9;
 }
 
-#checkout_editor .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p {
-line-height: 14px;
-color: #3B8CED;
-text-align: center;
+#checkout_editor
+    .dropify-wrapper
+    .dropify-preview
+    .dropify-infos
+    .dropify-infos-inner
+    p {
+    line-height: 14px;
+    color: #3b8ced;
+    text-align: center;
 }
 
-#checkout_editor .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-infos-message {
-  margin-top: 0;
-  padding-top: 8px;
-
+#checkout_editor
+    .dropify-wrapper
+    .dropify-preview
+    .dropify-infos
+    .dropify-infos-inner
+    p.dropify-infos-message {
+    margin-top: 0;
+    padding-top: 5px;
 }
 
 #checkout_editor .dropify-wrapper .dropify-clear {
-  content: '';
-  color: #3B8CED;
-  border: 2px solid #3B8CED;
-  border-radius: 8px;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
+    content: "";
+    color: #3b8ced;
+    border: 2px solid #3b8ced;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
 }
 
 /* Upload Digital Product Input */
 
 #checkout_editor .input-file-trigger::before {
-  content: "\e800";
-  font-family: dropify;
-  font-size: 25px;
-  margin-right: 10px;
+    content: "\e800";
+    font-family: dropify;
+    font-size: 25px;
+    margin-right: 10px;
 }
 
 #checkout_editor #file_return,
 #checkout_editor .input-file-trigger {
-  font-size: 15px;
-  font-weight: bold;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 #checkout_editor .input-file-trigger {
-  color: #3B8CED;
-  cursor: pointer;
-  background-color: #F8FDFF;
-  border-radius: 16px;
-  display: inline-flex;
-  align-items: center;
+    color: #3b8ced;
+    cursor: pointer;
+    background-color: #f8fdff;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
 }
 
 #checkout_editor .input-file {
-  display: none;
+    display: none;
 }
 
 #checkout_editor .div-expiration-time > .input-group {
-  width: 150px;
+    width: 150px;
 }
 
 #checkout_editor .o-arrow-right-1:before {
-  transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+#upload_favicon .dropify-wrapper .dropify-message span.file-icon {
+    font-size: 25px;
+    color: #ccc;
 }
