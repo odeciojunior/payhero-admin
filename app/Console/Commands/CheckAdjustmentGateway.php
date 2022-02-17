@@ -56,8 +56,8 @@ class CheckAdjustmentGateway extends Command
                 ->whereHas('gatewayCompanyCredential')
                 //->onlyTrashed()
                 ->withTrashed()
-                ->where('id', '>=', 3190)
-                ->where('id', '<=', 3400)
+                ->where('id', '>=', 3768)
+                ->where('id', '<=', 3800)
             ;
 
             $total = $companies->count();
