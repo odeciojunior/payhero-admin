@@ -321,6 +321,23 @@ class PostBackWooCommerceController extends Controller
                     }
                 }
 
+                //check for _wc_shipment_tracking_items
+                if(empty($request->correios_tracking_code)){
+                    foreach ($request->meta_data as $meta) {
+                        if($meta['key'] == '_wc_shipment_tracking_items'){
+                            if(is_array($meta['value'])){
+                                foreach ($meta['value'][0] as $key => $value) {
+                                    
+                                    if($key == 'tracking_number'){
+
+                                        $request->correios_tracking_code = $value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 
 
                 if(!empty($request->correios_tracking_code)) {

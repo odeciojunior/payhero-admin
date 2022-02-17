@@ -534,7 +534,7 @@ $(() => {
                             `<tr>
                               <td>${checkpoint.created_at}</td>
                               <td>
-                                  <span class="badge badge-${statusEnum[checkpoint.tracking_status_enum]}">${checkpoint.tracking_status}</span>
+                                  <span class="text-secondary badge badge-${statusEnum[checkpoint.tracking_status_enum]}">${checkpoint.tracking_status}</span>
                               </td>
                               <td>${checkpoint.event}</td>
                           </tr>`
