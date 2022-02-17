@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
@@ -9,6 +10,7 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CheckoutGateway;
 use Symfony\Component\VarDumper\VarDumper;
+use Illuminate\Support\Facades\Log;
 
 class AsaasHelper extends Command
 {
@@ -19,35 +21,46 @@ class AsaasHelper extends Command
     private $api= null;
 
     public function __construct()
-    {             
-        parent::__construct();    
-        $this->api = new CheckoutGateway(FoxUtils::isProduction()? Gateway::ASAAS_PRODUCTION_ID:Gateway::ASAAS_SANDBOX_ID);        
+    {
+        parent::__construct();
+        $this->api = new CheckoutGateway(FoxUtils::isProduction()? Gateway::ASAAS_PRODUCTION_ID:Gateway::ASAAS_SANDBOX_ID);
     }
 
     public function handle()
     {
-        $this->listOptions();
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-        while(true){
-            $option = $this->ask("Digite uma opção");
-            $this->menu($option);
-        }        
+        try {
+
+            $this->listOptions();
+
+            while(true){
+                $option = $this->ask("Digite uma opção");
+                $this->menu($option);
+            }
+
+        } catch (Exception $e) {
+            report($e);
+        }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 
     public function listOptions(){
-        
+
         if(FoxUtils::isProduction()){
             $this->question('===== ASAAS (Production) =====');
         }else{
             $this->error('===== ASAAS (Sandbox) =====');
         }
-        $this->comment("[1] Listar opções");        
+        $this->comment("[1] Listar opções");
         $this->comment("[2] Company Transfers ");
         $this->comment("[3] Company Transfer");
         $this->comment("[4] Company Balance");
         $this->comment("[5] Cloudfox Balance");
         $this->comment("[6] Company Anticipation");
-        $this->comment("[7] Company Anticipations");   
+        $this->comment("[7] Company Anticipations");
         $this->comment('[8] Company Receivables Reserves');
         $this->comment('[9] Update Company Balance Extract');
         $this->comment("[0] Sair");
@@ -57,7 +70,7 @@ class AsaasHelper extends Command
     }
 
     public function menu($option){
-        
+
         switch($option){
             case 1:
                 $this->listOptions();
@@ -86,8 +99,8 @@ class AsaasHelper extends Command
             case 9:
                 $this->updateAsaasBalance();
             break;
-            case 0:  
-                $this->info('Bye!');              
+            case 0:
+                $this->info('Bye!');
                 exit;
             break;
             default:
@@ -98,14 +111,14 @@ class AsaasHelper extends Command
 
     public function getTransfers()
     {
-        $companyId = $this->anticipate('Informe CompanyId', ['2964', '3442']);  
+        $companyId = $this->anticipate('Informe CompanyId', ['2964', '3442']);
         VarDumper::dump($this->api->getTransfersAsaas($companyId)??[]);
     }
 
     public function getTransfer()
     {
         list($companyId,$transferId) = explode(',',$this->ask('Informe CompanyId,transferId'));
-        
+
         VarDumper::dump($this->api->getTransferAsaas($companyId,$transferId)??[]);
     }
 
@@ -120,26 +133,26 @@ class AsaasHelper extends Command
 
     public function getCompanyAntipation(){
         list($companyId,$anticipationId) = explode(',',$this->ask('Informe CompanyId,anticipationId'));
-        
+
         VarDumper::dump($this->api->getAnticipationAsaas($companyId,$anticipationId)??[]);
     }
 
     public function getCompanyAntipations(){
         $companyId = $this->anticipate('Informe CompanyId', ['2964', '3442']);
-        
+
         VarDumper::dump($this->api->getAnticipationsAsaas($companyId)??[]);
-    }   
+    }
 
     public function getReceivablesReserves(){
         $companyId = $this->anticipate('Informe CompanyId', ['2964', '3442']);
         $filters = [
             'startDate'=>'2021-11-01',
-            'finishDate'=>now(),            
+            'finishDate'=>now(),
         ];
         $response = $this->api->getReceivablesReserves($companyId,$filters);
-        
+
         VarDumper::dump($response->total);
-        
+
     }
 
     public function updateAsaasBalance(){
@@ -148,13 +161,13 @@ class AsaasHelper extends Command
         $gatewayService = new AsaasService();
         $gatewayService->setCompany($company);
 
-        $filters = [            
+        $filters = [
             'date_type'=> 'transfer_date',
             'date_range'=> '01/01/2018 - '.Date('d/m/Y')    ,
-            'reason'=>'', 
-            'transaction'=>'', 
-            'type'=>'', 
-            'value'=>'',         
+            'reason'=>'',
+            'transaction'=>'',
+            'type'=>'',
+            'value'=>'',
         ];
         $balance = $gatewayService->getPeriodBalance($filters)??0;
         VarDumper::dump(['fantasy_name'=>$company->fantasy_name,'real_balance'=>$balance*100,'asaas_balance'=>$company->asaas_balance]);
@@ -165,7 +178,7 @@ class AsaasHelper extends Command
                 'asaas_balance'=>$balance*100
             ]);
         }
-        
+
     }
 
 }

@@ -7,6 +7,7 @@ use Exception;
 use Predis\Client;
 use Illuminate\Console\Command;
 use Modules\Core\Services\SmsService;
+use Illuminate\Support\Facades\Log;
 
 class VerifyRedisStatus extends Command
 {
@@ -41,6 +42,9 @@ class VerifyRedisStatus extends Command
      */
     public function handle()
     {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try{
             $redisClient = new Client();
 
@@ -92,5 +96,8 @@ class VerifyRedisStatus extends Command
             }
 
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

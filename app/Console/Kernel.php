@@ -17,6 +17,8 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+
         setlocale(LC_ALL, 'pt_BR');
 
         $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
@@ -60,11 +62,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:release-unblocked-balance')->dailyAt('02:30');
 
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
-
-
-        /** sirius */
-        // snapshot for horizon metrics
-        $schedule->command('horizon:snapshot')->everyFifteenMinutes();
 
         // update pending domains automaticaly
         $schedule->command('verify:pendingdomains')->hourly();
@@ -180,6 +177,9 @@ class Kernel extends ConsoleKernel
 
         /** Antifraud backfill Asaas chargebacks */
         $schedule->command('antifraud:backfill-asaas-chargebacks')->hourly();
+
+        $schedule->command('safe2pay:manual-anticipation')->dailyAt('21:40');
+        
 
     }
 

@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Services\ShopifyService;
+use Illuminate\Support\Facades\Log;
 
 class ShopifyReorderSalesHourly extends Command
 {
@@ -37,38 +38,49 @@ class ShopifyReorderSalesHourly extends Command
      */
     public function handle()
     {
-        // 1:30 atrás até 0:30
-        $saleModel     = new Sale();
-        $salePresenter = $saleModel->present();
-        $sales         = $saleModel->whereNull('shopify_order')
-                                   ->whereIn('status',
-                                             [
-                                                 $salePresenter->getStatus('approved'),
-                                                 $salePresenter->getStatus('pending'),
-                                             ])
-                                   ->whereBetween('created_at',
-                                                  [
-                                                      Carbon::now()->subHour()->subMinutes(30)->toDateTimeString(),
-                                                      Carbon::now()->subMinutes(30)->toDateTimeString(),
-                                                  ])
-                                   ->whereHas('project.shopifyIntegrations', function($query) {
-                                       $query->where('status', 2);
-                                   })
-                                   ->get();
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
+        try {
+
+            // 1:30 atrás até 0:30
+            $saleModel     = new Sale();
+            $salePresenter = $saleModel->present();
+            $sales         = $saleModel->whereNull('shopify_order')
+                ->whereIn('status',
+                          [
+                              $salePresenter->getStatus('approved'),
+                              $salePresenter->getStatus('pending'),
+                          ])
+                ->whereBetween('created_at',
+                               [
+                                   Carbon::now()->subHour()->subMinutes(30)->toDateTimeString(),
+                                   Carbon::now()->subMinutes(30)->toDateTimeString(),
+                               ])
+                ->whereHas('project.shopifyIntegrations', function($query) {
+                    $query->where('status', 2);
+                })
+                ->get();
 
 
-        foreach ($sales as $sale) {
-            try {
-                $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
+            foreach ($sales as $sale) {
+                try {
+                    $shopifyIntegration = ShopifyIntegration::where('project_id', $sale->project_id)->first();
 
-                $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                    $shopifyService = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
-                $shopifyService->newOrder($sale);
+                    $shopifyService->newOrder($sale);
 
-                $this->line('sucesso');
-            } catch (Exception $e) {
-                $this->line('erro -> ' . $e->getMessage());
-            }
+                    $this->line('sucesso');
+                } catch (Exception $e) {
+                    $this->line('erro -> ' . $e->getMessage());
+                }
+            };
+
+        } catch (Exception $e) {
+            report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

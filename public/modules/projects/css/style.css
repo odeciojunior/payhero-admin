@@ -235,7 +235,7 @@
 }
 
 .s-data-project-values {
-    font: normal normal bold 13px Muli;
+    font: normal normal bold 16px Muli;
 }
 
 .nav-tabs .nav-link {
@@ -278,8 +278,9 @@
 
 /* /////////// CARD 1 PROJECT DETAILS /////////// */
 .card-img-edit{
-    width: 100%;
+    width: 93.8%;
     height: 300px;
+    object-fit: cover;
 }
 
 .product-chargeback{
@@ -410,31 +411,39 @@
 
 
 /* /////////////// FOOTER CARD SALVE OR CANCEL */
-.final-card{
-    height: 71px;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+.padding-cards{
+    padding-top: 16px;
+    padding-bottom: 16px;
 }
-.z-index-0{
-    z-index: 0;
-}.z-index{
-    z-index: 9;
+.padding-cards-l{
+    padding-left: 24px;
+}
+.padding-cards-r{
+    padding-right: 24px !important;
 }
 
+
+/* /////////////// FOOTER CARD SALVE OR CANCEL */
+.z-index-0{
+    z-index: 0;
+}
+.z-index{
+    z-index: 6;
+}
+.z-index-error{
+    z-index: 7;
+}
+
+
+/* /////////////// FOOTER CARD SAVE OR CANCEL */
 #confirm-changes{
     display: none;
 }
-
-#saved-alterations{
-    display: none;
-}
-.success-card{
-    height: 71px;
+.final-card{
+    height: 80px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
-    background-color: #41DC8F;
 }
-
 .loader {
     display: none;
     border: 5px solid #2e85ec;
@@ -447,6 +456,28 @@
     height: 38px;
     margin-left: 89%;
 }
+/* /////////////// FOOTER CARD ERRORS */
+#data-error{
+    display: none;
+}
+.error-card{
+    height: 80px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+
+/* /////////////// FOOTER CARD SALVE SUCCESS */
+#saved-alterations{
+    display: none;
+}
+.success-card{
+    height: 80px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    background-color: #41DC8F;
+}
 /* /////////////////////////// END FOOTER CARD */
+
 /* Page titles */
 .page-title > a, .page-title > a > span { color: #707070 }

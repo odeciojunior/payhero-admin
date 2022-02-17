@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Illuminate\Support\Facades\Log;
 
 class MonthlyResume extends Command
 {
@@ -39,66 +41,78 @@ class MonthlyResume extends Command
      */
     public function handle()
     {
-        $installmentsNumber = [1,2,3,4,5,6,7,8,9,10,11,12];
-        $createdInit = '2021-11-01';
-        $createdFinish = '2021-11-31';
 
-        $this->line('Início: ' . $createdInit . ' fim: ' . $createdFinish);
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-        foreach($installmentsNumber as $installmentsNumber) {
+        try {
 
-            $this->line('VENDAS PARCELADAS EM ' . $installmentsNumber . 'X');
+            $installmentsNumber = [1,2,3,4,5,6,7,8,9,10,11,12];
+            $createdInit = '2021-11-01';
+            $createdFinish = '2021-11-31';
 
-            $salescount = Sale::where('installments_amount', $installmentsNumber)
-                                ->where('status', Sale::STATUS_APPROVED)
-                                ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
-                                ->where('created_at', '>', $createdInit)
-                                ->where('created_at', '<', $createdFinish)
-                                ->count();
+            $this->line('Início: ' . $createdInit . ' fim: ' . $createdFinish);
 
-            $this->line('Quantidade de vendas: ' . $salescount);
+            foreach($installmentsNumber as $installmentsNumber) {
 
-            $value = Sale::where('installments_amount', $installmentsNumber)
-                                ->where('status', Sale::STATUS_APPROVED)
-                                ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
-                                ->where('created_at', '>', $createdInit)
-                                ->where('created_at', '<', $createdFinish)
-                                ->sum('total_paid_value');
+                $this->line('VENDAS PARCELADAS EM ' . $installmentsNumber . 'X');
 
-            $this->line('Valor total: R$ ' . foxutils()->formatMoney($value));
+                $salescount = Sale::where('installments_amount', $installmentsNumber)
+                    ->where('status', Sale::STATUS_APPROVED)
+                    ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
+                    ->where('created_at', '>', $createdInit)
+                    ->where('created_at', '<', $createdFinish)
+                    ->count();
 
-            $comission = Transaction::whereNull('company_id')
-                                    ->whereHas('sale', function($q) use($installmentsNumber, $createdInit, $createdFinish) {
-                                        $q->where('installments_amount', $installmentsNumber)
-                                                ->where('status', Sale::STATUS_APPROVED)
-                                                ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
-                                                ->where('created_at', '>', $createdInit)
-                                                ->where('created_at', '<', $createdFinish);
-                                    })->sum('value');
-            
-            $installmentsTaxValue = Sale::where('installments_amount', $installmentsNumber)
-                        ->where('status', Sale::STATUS_APPROVED)
-                        ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
-                        ->where('created_at', '>', $createdInit)
-                        ->where('created_at', '<', $createdFinish)
-                        ->sum('interest_total_value');
+                $this->line('Quantidade de vendas: ' . $salescount);
 
-            $this->line('Taxas de juros Cloudfox: R$ ' . foxutils()->formatMoney($installmentsTaxValue / 100));
-            
-            $this->line('Taxa base cobrada pela Cloudfox: R$ ' . foxutils()->formatMoney(($comission - $installmentsTaxValue) / 100));
+                $value = Sale::where('installments_amount', $installmentsNumber)
+                    ->where('status', Sale::STATUS_APPROVED)
+                    ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
+                    ->where('created_at', '>', $createdInit)
+                    ->where('created_at', '<', $createdFinish)
+                    ->sum('total_paid_value');
 
-            $this->line('Taxas totais cobradas pela Cloudfox: R$ ' . foxutils()->formatMoney($comission / 100));
+                $this->line('Valor total: R$ ' . foxutils()->formatMoney($value));
 
-            $gatewayTaxValue = Sale::where('installments_amount', $installmentsNumber)
-                        ->where('status', Sale::STATUS_APPROVED)
-                        ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
-                        ->where('created_at', '>', $createdInit)
-                        ->where('created_at', '<', $createdFinish)
-                        ->sum('gateway_tax_value');
+                $comission = Transaction::whereNull('company_id')
+                    ->whereHas('sale', function($q) use($installmentsNumber, $createdInit, $createdFinish) {
+                        $q->where('installments_amount', $installmentsNumber)
+                            ->where('status', Sale::STATUS_APPROVED)
+                            ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
+                            ->where('created_at', '>', $createdInit)
+                            ->where('created_at', '<', $createdFinish);
+                    })->sum('value');
 
-            $this->line('Taxas cobradas pela adquirente: R$ ' . foxutils()->formatMoney($gatewayTaxValue / 100));
+                $installmentsTaxValue = Sale::where('installments_amount', $installmentsNumber)
+                    ->where('status', Sale::STATUS_APPROVED)
+                    ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
+                    ->where('created_at', '>', $createdInit)
+                    ->where('created_at', '<', $createdFinish)
+                    ->sum('interest_total_value');
 
-            $this->line('Lucro: R$ ' . foxutils()->formatMoney(($comission - $gatewayTaxValue) / 100));
+                $this->line('Taxas de juros Cloudfox: R$ ' . foxutils()->formatMoney($installmentsTaxValue / 100));
+
+                $this->line('Taxa base cobrada pela Cloudfox: R$ ' . foxutils()->formatMoney(($comission - $installmentsTaxValue) / 100));
+
+                $this->line('Taxas totais cobradas pela Cloudfox: R$ ' . foxutils()->formatMoney($comission / 100));
+
+                $gatewayTaxValue = Sale::where('installments_amount', $installmentsNumber)
+                    ->where('status', Sale::STATUS_APPROVED)
+                    ->where('payment_method', Sale::CREDIT_CARD_PAYMENT)
+                    ->where('created_at', '>', $createdInit)
+                    ->where('created_at', '<', $createdFinish)
+                    ->sum('gateway_tax_value');
+
+                $this->line('Taxas cobradas pela adquirente: R$ ' . foxutils()->formatMoney($gatewayTaxValue / 100));
+
+                $this->line('Lucro: R$ ' . foxutils()->formatMoney(($comission - $gatewayTaxValue) / 100));
+            }
+
+        } catch (Exception $e) {
+            report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

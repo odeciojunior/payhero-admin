@@ -60,4 +60,9 @@ class ProcessShopifyPostbackJob implements ShouldQueue
             report($e);
         }
     }
+
+    public function tags()
+    {
+        return ['shopify:postback'];
+    }
 }
