@@ -9,6 +9,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Illuminate\Support\Facades\Log;
 
 class CreateEmptyCredential extends Command
 {
@@ -44,6 +45,9 @@ class CreateEmptyCredential extends Command
      */
     public function handle()
     {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
 
             $companies = Company::get();
@@ -97,6 +101,9 @@ class CreateEmptyCredential extends Command
         catch(Exception $e) {
             report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+        
     }
 
 
