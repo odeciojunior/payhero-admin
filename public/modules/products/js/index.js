@@ -30,23 +30,22 @@ $(document).ready(function () {
         }
     }
 
-    function callback(dataLocalStorage){
-        $("#type-products").val(dataLocalStorage.getTypeProducts);
-        $("#select-projects-1").val(dataLocalStorage.getProject_1);
-        $("#select-projects-2").val(dataLocalStorage.getProject_2);
-        $("#name").val(dataLocalStorage.getName);
-        $("#btn-filtro").trigger("click");
-    }
-
     function handleLocalStorage() {
         if (localStorage.getItem('filtersApplied') != null) {
             let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApplied'));
             $("#type-products").val(parseLocalStorage.getTypeProducts);
-            $("#type-products").bind("change", function(e, callback){
-                callback(parseLocalStorage);
-                $(this).unbind( e );
-            });
-            $("#type-products").trigger("change",[callback]);
+            $("#select-projects-1").val(parseLocalStorage.getProject_1);
+            $("#select-projects-2").val(parseLocalStorage.getProject_2);
+            $("#name").val(parseLocalStorage.getName);
+
+            $("#projects-list, .box-projects").addClass("d-none");
+            type=parseLocalStorage.getTypeProducts;
+            if (type!=0) {
+                $("#projects-list #select-projects-"+type).prop("disabled", false).removeClass("disabled");
+                $("#projects-list #box-projects-"+type+" .opcao-vazia").remove();
+                $("#box-projects-"+type).removeClass('d-none');
+                $("#projects-list").removeClass('d-none');
+            }
         }
     }
 
@@ -115,7 +114,6 @@ $(document).ready(function () {
                     $("#project-not-empty").hide();
                     $("#div-create").hide();
                 }
-
                 loadingOnScreenRemove();
             },
         });
@@ -138,18 +136,21 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if (response.data) {
+                    let has_shopify = false;
+                    let has_woocomm = false;
                     $("#projects-list").html("");
                     $.each(appsList,function (index, value) {
                         $("#projects-list").append(
                             '<div class="box-projects" id="box-projects-'+index+'">'+
                             '<label id="select-projects-label-'+index+'" for="select-projects-'+index+'">Projeto</label>'+
-                            '<select id="select-projects-'+index+'" class="sirius-select select-projects" disabled>'+
+                            '<select id="select-projects-'+index+'" class="sirius-selectzzz select-projects" disabled>'+
                             '<option value="" class="opcao-vazia"></option>'+
                             '</select>'+
                             '</div>');
                     });
                     $.each(response.data, function (index, value) {
                         if (value.shopify) {
+                            has_shopify = true;
                             $("#select-projects-1").append(
                                 $("<option>", {
                                     value: value.id,
@@ -158,6 +159,7 @@ $(document).ready(function () {
                             );
                         }
                         else if (value.woocommerce) {
+                            has_woocomm = true;
                             $("#select-projects-2").append(
                                 $("<option>", {
                                     value: value.id,
@@ -166,8 +168,14 @@ $(document).ready(function () {
                             );
                         }
                     })
+                    if (has_shopify) {
+                        $("#select-projects-1").addClass('has_shopify');
+                    }
+                    if (has_woocomm) {
+                        $("#select-projects-2").addClass('has_woocomm');
+                    }
+                    handleLocalStorage();
                 }
-                handleLocalStorage();
             },
         });
     }
@@ -177,7 +185,7 @@ $(document).ready(function () {
 
         let existFilters = () => {
             if(localStorage.getItem('filtersApplied') != null){
-                let getFilters = JSON.parse(localStorage.getItem('filtersApplied'))
+                let getFilters = JSON.parse(localStorage.getItem('filtersApplied'));
                 return getFilters;
             }else {
                 return null;
@@ -209,7 +217,13 @@ $(document).ready(function () {
         link = pageCurrent
         loadOnAny(".page-content");
 
-        let type = existFilters() != null ? existFilters().getTypeProducts : $("#type-products").val();
+        if(existFilters() != null) {
+            type = existFilters().getTypeProducts;
+        }
+        else{
+            type = $("#type-products").val();
+        }
+
         let name = existFilters() != null ? existFilters().getName : $("#name").val();
         let project='';
         if (existFilters() != null){
@@ -402,6 +416,9 @@ $(document).ready(function () {
             $("#projects-list, .box-projects").addClass("d-none");
 
             const type = $(this).val();
+            // const $selectProject1 = $('#select-projects-1');
+            // const $selectProject2 = $('#select-projects-2');
+            // if (type!=0 && $selectProject.hasClass('has_shopify')) {
             if (type!=0) {
                 $("#projects-list #select-projects-"+type).prop("disabled", false).removeClass("disabled");
                 $("#projects-list #box-projects-"+type+" .opcao-vazia").remove();
