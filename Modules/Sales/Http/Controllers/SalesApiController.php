@@ -1,7 +1,7 @@
 <?php
 
 namespace Modules\Sales\Http\Controllers;
-use PDF;
+
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -78,13 +78,11 @@ class SalesApiController extends Controller
                     $sale->owner_id,
                 ];
             }
+
             if (!in_array(auth()->user()->account_owner_id, $users)) {
                 return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
             }
-            // if(!auth()->user()->hasAnyPermission('sales_manage','finances_manage','trackings_manage','report_pending')){
-            //     return response()->json(['message' => 'Sem permissão para visualizar detalhes da venda'], 400);
-            // }
-            $sale->test='asdf';
+
             return new SalesResource($sale);
         } catch (Exception $e) {
             report($e);
@@ -194,8 +192,22 @@ class SalesApiController extends Controller
     {
         try {
             $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
+
+            if(!in_array($sale->gateway_id, [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID])) {
+                return response()->json(
+                    [
+                        'message' => 'Estorno de boleto habilitado somente no Vega'
+                    ],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
             $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
-            if (!(new CompanyBalanceService($producerCompany))->hasEnoughBalanceToRefund($sale)) {
+
+            $gatewayService = Gateway::getServiceById($sale->gateway_id);
+            $gatewayService->setCompany($producerCompany);
+
+            if (!$gatewayService->hasEnoughBalanceToRefund($sale)) {
                 return response()->json(
                     [
                         'message' => 'Saldo insuficiente para realizar o estorno'
@@ -203,7 +215,9 @@ class SalesApiController extends Controller
                     Response::HTTP_BAD_REQUEST
                 );
             }
+
             (new SaleService())->refundBillet($sale);
+
             return response()->json(
                 [
                     'message' => 'Boleto estornado com sucesso'
