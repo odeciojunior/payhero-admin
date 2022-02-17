@@ -126,9 +126,11 @@ $(document).ready( function () {
             if (checked) {
                 $("." + $(this).attr("data-target")).slideDown("slow", "swing");
                 $($(this).attr("data-preview")).slideDown("slow", "swing");
+                $($(this).attr("data-enable")).removeClass('low-opacity')
             } else {
                 $("." + $(this).attr("data-target")).slideUp("slow", "swing");
                 $($(this).attr("data-preview")).slideUp("slow", "swing");
+                $($(this).attr("data-enable")).addClass('low-opacity')
             }
         });
 
@@ -275,7 +277,7 @@ $(document).ready( function () {
             clearButton:
                 '<button type="button" class="dropify-clear o-bin-1"></button>',
         },
-        imgFileExtensions: ["png", "jpg", "jpeg", "svg"],
+        imgFileExtensions: ["png", "jpg", "jpeg"],
     });
 
     drEventLogo.on("dropify.fileReady", function (event, element) {
@@ -313,6 +315,29 @@ $(document).ready( function () {
         $("#logo_preview_desktop").fadeOut('slow');
 
         $("#has_checkout_logo").val("false");
+    });
+
+
+    var drEventFavicon = $("#checkout_favicon").dropify({
+        messages: {
+            default: "",
+            replace: "",
+        },
+        error: {
+            fileSize: "",
+            fileExtension: "",
+        },
+        tpl: {
+            message:
+                '<div class="dropify-message"><span class="file-icon" /></div>',
+        },
+        imgFileExtensions: ["png", "jpg", "jpeg", "ico"],
+    });
+
+    $('#upload_favicon .dropify-error').css('display', 'none');
+
+    drEventFavicon.on('dropify.errors', function(event, element){
+        $('#checkout_favicon_error').fadeIn('slow', 'linear');
     });
 
     var drEventBanner = $("#checkout_banner").dropify({
@@ -441,7 +466,7 @@ $(document).ready( function () {
     $("#button-crop").on("click", function () {
         if (cropper) {
             var canvas = cropper.getCroppedCanvas();
-            var src = canvas.toDataURL();
+            var src = canvas.toDataURL('image/png', 0.7);
 
             $("#preview_banner_img_mobile").attr("src", src);
             $("#preview_banner_img_desktop").attr("src", src);
@@ -451,28 +476,14 @@ $(document).ready( function () {
             $("#preview_banner_img_mobile").fadeIn('slow');
             $("#preview_banner_img_desktop").fadeIn('slow');
 
-            replacePreview("checkout_banner", src, "Image.jpg");
+            replacePreview("checkout_banner", src, "checkout_banner.jpg");
 
             cropper.getCroppedCanvas().toBlob((blob) => {
                 let dt = new DataTransfer();
-                let file = new File(
-                    [blob],
-                    "banner." + blob.type.split("/")[1]
-                );
+                let file = new File([blob], "banner." + blob.type.split("/")[1]);
                 dt.items.add(file);
                 document.querySelector("#checkout_banner").files = dt.files;
-
-                let reader = new FileReader();
-                reader.onload = function (e) {
-                    // $('.img-profile')
-                    //     .find('img')
-                    //     .attr('src', e.target.result)
-                    //     .data('src', e.target.result);
-                    // cropper.destroy();
-                    // $('#btn-crop-cancel, #btn-crop').hide();
-                };
-                reader.readAsDataURL(file);
-            });
+            },'image/jpeg', 0.8);
         }
 
         bs_modal.modal("hide");
@@ -507,9 +518,6 @@ $(document).ready( function () {
             $('#logo_preview_desktop_div').removeClass('has-banner');
         }
     });
-
-    $('[data-toggle="tooltip"]').tooltip()
-
     
     $('#installments_limit').on('change', function() {
         var installmentsLimit = parseInt($("#installments_limit option:selected").val());
@@ -546,10 +554,19 @@ $(document).ready( function () {
 
     $('#selector-tooltip').on({
         mouseenter: function () {
-            $('.tooltip-container').fadeIn();
+            $('#selector-tooltip-container').fadeIn();
         },
         mouseleave: function () {
-            $('.tooltip-container').fadeOut();
+            $('#selector-tooltip-container').fadeOut();
+        }
+    });
+
+    $('#favicon-tooltip').on({
+        mouseenter: function () {
+            $('#favicon-tooltip-container').fadeIn();
+        },
+        mouseleave: function () {
+            $('#favicon-tooltip-container').fadeOut();
         }
     });
 
@@ -581,9 +598,7 @@ $(document).ready( function () {
             $('#selectable-all-notification').removeClass('dash-check');
         }
     });
-    // ---------------- Functions Table - END ---------------------    
-
-
+    // ---------------- Functions Table - END ---------------------   
     
 });
 

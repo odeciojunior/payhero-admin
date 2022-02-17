@@ -38,7 +38,7 @@
 }
 
 .low-opacity {
-    opacity: 0.5;
+    opacity: 0.4;
     pointer-events: none;
 }
 
@@ -172,17 +172,6 @@
     display: inline-flex;
     flex-wrap: wrap;
     gap: 10px;
-}
-
-.instrunctios {
-    min-width: 180px;
-    align-self: flex-end;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 10px;
-    line-height: 15px;
-    white-space: pre-line;
-    color: #a8a8a8;
 }
 
 .banner-intructions {
@@ -836,20 +825,37 @@ textarea:focus {
 }
 
 .tooltip-content {
-    width: 230px;
-    height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 15px;
     background: #ffffff;
     border-radius: 4px;
     border: 1px solid #e1e1e1;
 }
 
+.favicon-tooltip-container .tooltip-content {
+    width: 230px;
+    height: 150px;
+}
+
+.selector-tooltip-container .tooltip-content {
+    width: 230px;
+    height: 130px;
+}
+
+
 .tooltip-content p {
     font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
+    font-weight: normal !important;
+    font-size: 13px;
     line-height: 13px;
     color: #939598;
+}
+
+.tooltip-content b {
+    font-weight: bold !important;
 }
 
 .tooltip-content .input-example {
@@ -926,6 +932,45 @@ textarea:focus {
     height: 15px;
 }
 
+.tab-example {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 200px;
+    height: 35px;
+    padding: 5px 10px;
+
+    background: #FFFFFF;
+    border: 0.6px solid #F0F0F0;
+    box-sizing: border-box;
+    border-radius: 8px 8px 0px 0px;
+}
+
+.tab-example .row-flex {
+    align-items: center;
+}
+
+.tab-example p {
+    margin: 0;
+}
+
+.sirius-icon {
+    width: 15px;
+    height: 15px;
+}
+
+.radio-row {
+    display:flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.radio-row label{
+    margin: 0px;
+}
+
 /* -------------------- Themes ------------------- */
 
 .theme-ready-content {
@@ -1000,6 +1045,74 @@ textarea:focus {
     background: #fff;
     border: 2px solid #2e85ec;
     border-radius: 10px;
+}
+
+
+.favicon-logo-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.logo-container,
+.favicon-container {
+    flex: 1;
+    min-height: 270px;
+}
+
+.logo-content,
+.favicon-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 190px;
+
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.7s;
+    -ms-transition: all 0.7s;
+    -o-transition: all 0.7s;
+    transition: all 0.7s;
+}
+
+.logo-container {
+    padding: 35px 25px 35px 0px;
+}
+
+#upload_favicon {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+#upload_favicon label {
+    margin: 0;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 12px;
+    color: #2E85EC;
+}
+
+.favicon-container {
+    padding: 35px 0px 35px 25px;
+}
+
+.favicon-logo-container .vertical-line {
+    border-left: 1px solid #e4eaec;
+}
+
+.instrunctios {
+    margin-top: 10px;
+    min-width: 180px;
+}
+
+.instrunctios p {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 15px;
+    white-space: pre-line;
+    color: #a8a8a8;
+    margin: 0px;
 }
 
 /* ------------------- Custom Color Picker --------------------- */

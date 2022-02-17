@@ -272,12 +272,12 @@ $(() => {
             if (checkout.checkout_logo_enabled == 1) {
                 $("#checkout_editor #checkout_logo_enabled").prop("checked", true);
                 $("#checkout_editor #checkout_logo_enabled").prop("value", 1);
-                $("#checkout_editor .logo-content").show();
+                $('.logo-content').removeClass('low-opacity')
                 $("#checkout_editor .logo-preview-container").show();
             } else {
                 $("#checkout_editor #checkout_logo_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_logo_enabled").prop("value", 0);
-                $("#checkout_editor .logo-content").hide();
+                $($(this).attr("data-enable")).addClass('low-opacity')
                 $("#checkout_editor .logo-preview-container").hide();
             }
 
