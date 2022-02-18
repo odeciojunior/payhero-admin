@@ -76,9 +76,11 @@ $(document).ready( function () {
 
         if (bannerType === "0") {
             $(".preview-banner").addClass("retangle-banner");
+            $(".logo-div.logo-menu-bar").addClass("retangle-banner");
             $(".preview-banner").removeClass("wide-banner");
         } else {
             $(".preview-banner").removeClass("retangle-banner");
+            $(".logo-div.logo-menu-bar").removeClass("retangle-banner");
             $(".preview-banner").addClass("wide-banner");
         }
     });
@@ -389,8 +391,6 @@ $(document).ready( function () {
         $("#preview_banner_img_desktop").attr("src", '');
         $("#has_checkout_banner").val("false");
 
-        console.log(event);
-
         $("#preview_banner_img_mobile").fadeOut('slow');
         $("#preview_banner_img_desktop").fadeOut('slow');
     });
@@ -406,7 +406,7 @@ $(document).ready( function () {
                 highlight: false,
                 movable: false,
                 viewMode: 3,
-                aspectRatio: 960/150,
+                aspectRatio:  1280/198,
                 zoom: function (e) {
                     var ratio = Math.round(e.ratio * 1000) / 10;
                     $dataZoom.text(ratio);
@@ -512,10 +512,14 @@ $(document).ready( function () {
     $('#checkout_banner_enabled').on('change', function(){
         if($(this).is(':checked')){
             $("#banner_type").fadeIn("slow", "swing");
-            $('#logo_preview_desktop_div').addClass('has-banner');
+            $('.logo-div').addClass('has-banner');
+            $('.menu-bar-mobile').hide('slow');
+            $('.purchase-menu-mobile').fadeIn('slow');
         }else{
             $("#banner_type").fadeOut("slow", "swing");
-            $('#logo_preview_desktop_div').removeClass('has-banner');
+            $('.logo-div').removeClass('has-banner');
+            $('.menu-bar-mobile').show('slow');
+            $('.purchase-menu-mobile').fadeOut('slow');
         }
     });
     

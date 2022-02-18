@@ -192,6 +192,7 @@
     font-weight: bold;
     font-size: 14px;
     color: #2e85ec;
+    margin-top: 10px;
 }
 
 .button-template {
@@ -849,7 +850,7 @@ textarea:focus {
 .tooltip-content p {
     font-style: normal;
     font-weight: normal !important;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 13px;
     color: #939598;
 }

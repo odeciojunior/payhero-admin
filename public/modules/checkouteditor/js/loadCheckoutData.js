@@ -306,22 +306,29 @@ $(() => {
                 $("#checkout_editor .banner-top-content").show();
                 $("#checkout_editor .preview-banner").show();
                 $("#checkout_editor #banner_type").show();
-                $('#logo_preview_desktop_div').addClass('has-banner');
+                $('.logo-div').addClass('has-banner');
+                $('.menu-bar-mobile').hide('slow');
+                $('.purchase-menu-mobile').fadeIn('slow');
             } else {
                 $("#checkout_editor #checkout_banner_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_banner_enabled").prop("value", 0);
                 $("#checkout_editor .banner-top-content").hide();
                 $("#checkout_editor .preview-banner").hide();
                 $("#checkout_editor #banner_type").hide();
+                $('.logo-div').removeClass('has-banner');
+                $('.menu-bar-mobile').show('slow');
+                $('.purchase-menu-mobile').fadeOut('slow');
             }
 
             if (checkout.checkout_banner_type === 1) {
                 $("#checkout_editor #banner_type_wide").prop("checked", true);
                 $(".preview-banner").removeClass("retangle-banner");
+                $(".logo-div.logo-menu-bar").removeClass("retangle-banner");
                 $(".preview-banner").addClass("wide-banner");
             } else {
                 $("#checkout_editor #banner_type_square").prop("checked", true);
                 $(".preview-banner").addClass("retangle-banner");
+                $(".logo-div.logo-menu-bar").addClass("retangle-banner");
                 $(".preview-banner").removeClass("wide-banner");
             }
 

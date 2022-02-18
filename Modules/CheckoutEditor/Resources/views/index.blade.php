@@ -12,7 +12,7 @@
 <!-- Page -->
 <div class="checkout-container" style="max-height: 3585px;  margin-bottom: 20px;">
 
-    <div class="card card-body">
+    <div class="card card-body" style="height: 122px;">
         <h1 class="checkout-title">
             Editor de Checkout
         </h1>
@@ -64,10 +64,8 @@
                                 </div>
 
                                 <div class="switch-holder mb-3">
-                                    <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="checkout_logo_enabled" name="checkout_logo_enabled"
-                                            data-enable=".logo-content" data-preview=".logo-preview-container"
-                                            class='check switch-checkout'>
+                                    <label class="switch" style='top:3px; margin-right: 0;'>
+                                        <input type="checkbox" id="checkout_logo_enabled" name="checkout_logo_enabled" data-enable=".logo-content" data-preview=".logo-preview-container" class='check switch-checkout'>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -108,8 +106,7 @@
                                             style="display: none">
                                             <div class="tooltip-content">
                                                 <p>
-                                                    Favicon é um arquivo identificado por navegadores como a logo ou
-                                                    ícone que acompanha o título da aba nos navegadores.
+                                                    Favicon é a imagem que acompanha o título da sua página na aba do navegador.
                                                 </p>
                                                 <div class="tab-example">
                                                     <div class="row-flex">
@@ -126,7 +123,7 @@
                                 </div>
 
                                 <div class="switch-holder mb-3">
-                                    <label class="switch" style='top:3px'>
+                                    <label class="switch" style='top:3px; margin-right: 0;'>
                                         <input type="checkbox" id="checkout_favicon_enabled" name="checkout_favicon_enabled" data-enable=".favicon-content" class='check switch-checkout'>
                                         <span class="slider round"></span>
                                     </label>
@@ -153,8 +150,7 @@
                                 </div>
 
                                 <div class="instrunctios">
-                                    <p>Recomendamos: 32x32px ou 56x56px
-                                        em formato .png</p>
+                                    <p>"Sua imagem deve ter 32x32px, nos formatos .png, .jpg ou ICO</p>
                                 </div>
                                 
                                 <div id="checkout_favicon_error" class="checkout-error" style="display: none">
@@ -404,20 +400,21 @@
 
 
 
-                            <div class="banner-intructions ">
+                            <div class="row-flex">
                                 <div class="instrunctios">
-                                    <b>Indicações</b>
+                                    <p><b>Indicações</b>
                                     Banner container: 960x210px
                                     Banner tela inteira: 1280x280px
+                                    <p>
                                 </div>
 
                                 <div class="instrunctios">
-                                    Resoluções menores não serão aceitos. <b>Formatos: JPEG e PNG.</b>
+                                    <p>Resoluções menores não serão aceitos. <b>Formatos: JPG, JPEG ou PNG.</b></p>
                                 </div>
 
                                 <div class="button-template">
                                     <button id="download_template_banner" class="line-button" type="button"
-                                        data-href="{{ asset('/modules/checkouteditor/files/test_download.xlsx') }}">
+                                        data-href="{{ asset('/modules/checkouteditor/files/Gabarito_EditorCheckout.zip') }}">
                                         <img class="icon-title download"
                                             src="{{ asset('/modules/checkouteditor/img/svg/download-icon.svg') }}">
                                         Baixar gabarito</button>
@@ -1270,7 +1267,7 @@
                                     </div>
                                 </div>
 
-                                <div id="logo_preview_desktop_div" class="logo-desktop-div desktop">
+                                <div id="logo_preview_desktop_div" class="logo-div logo-desktop-div desktop">
                                     <div class="logo-desktop logo-preview-container">
                                         <img id="logo_preview_desktop" class="preview-logo desktop" alt="Logo" />
                                     </div>
@@ -1332,23 +1329,31 @@
                                         <div class="header-colorbar mobile primary-color   countdown-preview"></div>
                                         <div class="header-colorbar mobile secondary-color textbar-preview"> </div>
 
-
-                                        <div class="menu-bar-mobile">
-                                            <div class="logo-mobile-div logo-preview-container">
-                                                <img id="logo_preview_mobile" class="preview-logo mobile" />
+                                        
+                                            <div class="menu-bar-mobile">
+                                                <div class="menu">
+                                                    <div class="menu-circle-mobile"></div>
+                                                    <img class="arrow-icon-mobile" src="{{ asset('/modules/checkouteditor/img/svg/menu-arrow.svg') }}">
+                                                </div>
                                             </div>
-
-                                            <div></div>
-
-                                            <div class="menu">
-                                                <div class="menu-circle-mobile"></div>
-                                                <img class="arrow-icon-mobile"
-                                                    src="{{ asset('/modules/checkouteditor/img/svg/menu-arrow.svg') }}">
-                                            </div>
-                                        </div>
+                                        
 
                                         <div class="preview-banner wide-banner mobile">
                                             <img id="preview_banner_img_mobile" class="preview-banner-img" />
+                                        </div>
+                                    </div>
+
+                                    <div class="logo-div logo-menu-bar has-banner" style="overflow-y:hidden">
+                                        <div>
+                                            <div class="logo-mobile-div logo-preview-container">
+                                                <img id="logo_preview_mobile" class="preview-logo mobile" />
+                                            </div>
+                                        </div>
+
+                                        <div class="purchase-menu-mobile">
+                                            <img class="arrow-icon-mobile" src="{{ asset('/modules/checkouteditor/img/svg/purchase-icon.svg') }}">
+                                            <div class="menu-circle-mobile"></div>
+                                            <img class="arrow-icon-mobile" src="{{ asset('/modules/checkouteditor/img/svg/menu-arrow.svg') }}">
                                         </div>
                                     </div>
 
