@@ -217,13 +217,7 @@ $(document).ready(function () {
         link = pageCurrent
         loadOnAny(".page-content");
 
-        if(existFilters() != null) {
-            type = existFilters().getTypeProducts;
-        }
-        else{
-            type = $("#type-products").val();
-        }
-
+        let type = existFilters() != null ? existFilters().getTypeProducts : $("#type-products").val();
         let name = existFilters() != null ? existFilters().getName : $("#name").val();
         let project='';
         if (existFilters() != null){
@@ -458,4 +452,11 @@ $(document).ready(function () {
 
     getProjects();
     getTypeProducts();
+
+    setTimeout(() => {
+        if (localStorage.getItem('filtersApplied') != null) {
+            let parseLocalStorage = JSON.parse(localStorage.getItem('filtersApplied'));
+            $("#type-products").val(parseLocalStorage.getTypeProducts);
+        }
+    }, 5000);
 });

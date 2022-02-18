@@ -70,7 +70,7 @@
                     </div>
                 </div>
 
-                <div class="form-buttons">
+                <div class="form-buttons" style="display: block; text-align: right">
                     <div>
                         <a class="btn btn-lg btn-excluir delete-product" data-toggle="modal" data-target="#modal-delete" href="#"><span class="o-bin-1 mr-2"></span>Excluir produto</a>
                     </div>
