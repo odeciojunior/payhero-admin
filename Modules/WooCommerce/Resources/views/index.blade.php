@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}"> --}}
-     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+    {{-- <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css?v='. versionsFile()) }}"> --}}
+     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v='. versionsFile()) }}">
      <style>
         .o-arrow-right-1 {
             font-size: 30px;
@@ -336,7 +336,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/woocommerce/js/index.js?v='. uniqid()) }}"></script>
+        <script src="{{ asset('modules/woocommerce/js/index.js?v='. versionsFile()) }}"></script>
     @endpush
 
 @endsection
