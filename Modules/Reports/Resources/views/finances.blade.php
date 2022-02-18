@@ -380,7 +380,7 @@
                                             <h5 class="grey font-size-16">
                                                 <strong>Pendente</strong>
                                             </h5>
-                                            <a href="#" class="box-link silver">
+                                            <a href="{{ route('reports.pending') }}" class="box-link silver">
                                                 <span>Acessar&nbsp&nbsp</span>
                                                 <i class="o-arrow-right-1 redirect"></i>
                                             </a>
@@ -404,7 +404,7 @@
                                             <h5 class="grey font-size-16">
                                                 <strong>Bloqueado</strong>
                                             </h5>
-                                            <a href="#" class="box-link silver">
+                                            <a href="{{ route('reports.blockedbalance') }}" class="box-link silver">
                                                 <span>Acessar&nbsp&nbsp</span>
                                                 <i class="o-arrow-right-1 redirect"></i>
                                             </a>

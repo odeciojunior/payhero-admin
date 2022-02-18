@@ -314,6 +314,7 @@ h4.number{
 .ico-finance { background: #fff url('/modules/global/img/reports/cash.png') no-repeat center; }
 .ico-sell { background: #fff url('/modules/global/img/reports/ico-sell.png') no-repeat center; }
 .ico-mkt { background: #fff url('/modules/global/img/reports/ico-mkt.png') no-repeat center; }
+.ico-pending { background: #fff url('/modules/global/img/reports/pending.png') no-repeat center; }
 
 .box-title img {
     width: 23px;
@@ -566,6 +567,7 @@ h4.number{
 /* REPORTS FINANCE */
 @media only screen and (min-width: 1220px) {
     .box-items-finance  { padding-right: 0; }
+    .pending.box-items-finance { padding-right: 1.0715rem; }
 }
 
 .box-items-finance .fianance-items  { 
@@ -581,6 +583,8 @@ h4.number{
     }
 }
 @media only screen and (min-width: 1220px) {
+    .pending.box-items-finance .fianance-items { max-width: 100%; }
+
     .box-items-finance .fianance-items {
         width: auto; 
         max-width: 25%;
@@ -600,7 +604,7 @@ h4.number{
 
 .finance-card .title { 
     display: block;
-    margin-bottom: 11px; 
+    margin-bottom: 16px; 
     color: #636363;
     font-size: 16px;
 }
@@ -638,6 +642,14 @@ h4.number{
     border-color: #F43F5E !important;
 }
 .finance-card.pink .number { color: #F54A68; }
+.finance-card.pink strong.number { 
+    color: #9E9E9E; 
+    font-weight: 400; 
+    font-size: 16px; 
+}
+.finance-card.pink strong.number span {
+    color: #F43F5E;
+}
 
 .finance-card.purple {
     background-color: #FCFCFF;
@@ -1376,4 +1388,50 @@ h4.number{
     font-size: 16px;
     line-height: 48px;
     text-align: center;
+}
+
+.top-system { padding: 0 0 30px 0; }
+
+.back {
+    color: #636363;
+    font-size: 18px;
+    line-height: 23px;
+}
+
+.title-system {
+    align-items: center;
+    font-size: 30px;
+}
+
+.box-projects { 
+    width: 293px; 
+    margin-left: auto; 
+}
+
+.table-vendas thead td { 
+    background-color: #FEFEFE !important; 
+    border-bottom: 1px solid #EDEDED !important;
+    color: #15034C !important;
+    font-size: 16px !important;
+}
+.table-vendas tbody td {
+    color: #5D5D5D !important;
+}
+
+.table-striped > tbody > tr:nth-child(2n+2) > td, .table-striped > tbody > tr:nth-child(2n+2) > th {
+    background-color: #FBFBFB !important;
+}
+
+.pagination .nav-btn.active {
+    background-color: #fff !important;
+    border: 1px solid #2E85EC !important;
+    color: #2E85EC !important;
+    font-weight: 700;
+}
+
+.pagination .nav-btn {
+    background-color: #fff !important;
+    color: #3D4456 !important;
+    border: 1px solid #EBEBEB !important;
+    font-weight: 400;
 }

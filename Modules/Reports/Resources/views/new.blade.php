@@ -96,7 +96,7 @@
 
             <section class="container box-reports" id="reports-content">
 				<div class="row">
-					<div class="col-12"  style="display: none;">
+					<div class="col-12">
 						<!-- /FINANCE -->	
 						<div class="row">
 							<header class="header-reports container">
@@ -551,7 +551,7 @@
 						</div>
 						<!-- /MARKETING -->
 					</div>
-                    <div class="col-12">
+                    <div class="col-12"  style="display: none;">
                         <div class="d-flex no-data">
                             <figure>
                                 <svg width="214" height="214" viewBox="0 0 214 214" fill="none" xmlns="http://www.w3.org/2000/svg">

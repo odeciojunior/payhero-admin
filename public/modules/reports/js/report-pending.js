@@ -154,6 +154,12 @@ $(document).ready(function () {
                             value: project.id,
                             text: project.name
                         }));
+                        $("#select_projects").append(
+                            $("<option>", {
+                                value: project.id,
+                                text: project.name,
+                            })
+                        );
                     });
 
                     atualizar();
