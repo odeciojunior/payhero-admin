@@ -28,7 +28,7 @@ class CreateAntifraudDeviceDataTable extends Migration
                 $table->string('browser')->nullable()->index();
                 $table->string('browser_version')->nullable()->index();
                 $table->string('user_agent')->nullable()->index();
-                $table->text('cookies')->nullable();
+                $table->json('cookies')->nullable();
                 $table->string('robot')->nullable()->index();
                 $table->string('incognito')->nullable()->index();
                 $table->string('proxy')->nullable()->index();
