@@ -315,6 +315,7 @@ h4.number{
 .ico-sell { background: #fff url('/modules/global/img/reports/ico-sell.png') no-repeat center; }
 .ico-mkt { background: #fff url('/modules/global/img/reports/ico-mkt.png') no-repeat center; }
 .ico-pending { background: #fff url('/modules/global/img/reports/pending.png') no-repeat center; }
+.ico-blocked { background: #fff url('/modules/global/img/reports/blokedbalance.png') no-repeat center; }
 
 .box-title img {
     width: 23px;

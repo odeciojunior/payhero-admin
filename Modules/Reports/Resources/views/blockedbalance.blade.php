@@ -76,7 +76,7 @@
             <div class="row align-items-center justify-content-between" style="min-height: 50px;">
                 <div class="col-8">
                     <h1 class="d-flex title-system">
-                        <span class="box-title ico-pending">Pendente</span>
+                        <span class="box-title ico-blocked">Bloqueado</span>
                         Saldo bloqueado
                     </h1>
                     <!-- <span type="hidden" class="error-data"></span> -->
