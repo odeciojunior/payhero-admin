@@ -29,7 +29,7 @@ $(document).ready(function () {
         let hasCompanyApproved = false;
         $("#select_companies").empty();
         $(companies).each(function (index, company) {
-            if (company.capture_transaction_enabled) {
+            if (companyIsApproved(company)) {
                 hasCompanyApproved = true;
                 $("#select_companies").append(
                     `<option value=${company.id}> ${company.name}</option>`

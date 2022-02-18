@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
@@ -18,7 +19,7 @@ class CreateAccountSafe2Pay extends Command
      *
      * @var string
      */
-    protected $signature = 'createAccountAsaas';
+    protected $signature = 'createAccountSafe2Pay';
 
     /**
      * The console command description.
@@ -54,12 +55,7 @@ class CreateAccountSafe2Pay extends Command
 
         try {
 
-            $companies = Company::
-            whereHas('gatewayCompanyCredential', function($q) {
-                $q->where('gateway_id', $this->gatewayId);
-                $q->where('gateway_status', '!=', GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED);
-            })
-                ->where('contract_document_status', Company::STATUS_APPROVED)
+            $companies = Company::where('contract_document_status', Company::STATUS_APPROVED)
                 ->where('bank_document_status', Company::STATUS_APPROVED)
                 ->where('address_document_status', Company::STATUS_APPROVED)
                 ->get();
@@ -92,7 +88,6 @@ class CreateAccountSafe2Pay extends Command
             $companyPhoneNumber = foxutils()->formatCellPhoneGetNet($company->user->cellphone ?? '5511988517040');
 
             $data = [
-                'company_id' => Hashids::encode($company->id),
                 "Name" => $company->fantasy_name,
                 "CommercialName" => $company->fantasy_name,
                 "Identity" => foxutils()->onlyNumbers($company->document),
@@ -181,7 +176,17 @@ class CreateAccountSafe2Pay extends Command
 //                ],
             ];
 
-            $result = $this->api->createAccount($data);
+            $data['variables']['company_id'] = Hashids::encode($company->id);
+
+            $createRowCredentialProd = $this->createRowCredential($company->id, Gateway::SAFE2PAY_PRODUCTION_ID);
+            $createRowCredentialSendbox = $this->createRowCredential($company->id, Gateway::SAFE2PAY_SANDBOX_ID);
+
+            if ($createRowCredentialProd || !$this->company->getGatewaySubsellerId($this->gatewayId)){
+                $result = $this->api->createAccount($data);
+            } else {
+                $data['variables']['gateway_subseller_id'] = Hashids::encode($this->company->getGatewaySubsellerId($this->gatewayId));
+                $result = $this->api->updateAccount($data);
+            }
 
             return $this->updateToReviewStatus($result,$company);
 
@@ -194,7 +199,7 @@ class CreateAccountSafe2Pay extends Command
 
     private function updateToReviewStatus($result,$company): array
     {
-        //Log::info(print_r($result));
+
         try {
 
             $gatewayCompanyCredentialProd = GatewaysCompaniesCredential::where('company_id', $company->id)->where('gateway_id', Gateway::SAFE2PAY_PRODUCTION_ID)->first();
@@ -239,4 +244,21 @@ class CreateAccountSafe2Pay extends Command
         }
     }
 
+    public function createRowCredential($companyId, $gatewayId)
+    {
+        $gatewaysCompaniesCredential = new GatewaysCompaniesCredential();
+
+        if(!($gatewaysCompaniesCredential::where('company_id', $companyId)
+            ->where('gateway_id', $gatewayId)
+            ->exists())
+        ) {
+            GatewaysCompaniesCredential::create([
+                'company_id'=>$companyId,
+                'gateway_id'=>$gatewayId,
+                'gateway_status' => GatewaysCompaniesCredential::GATEWAY_STATUS_PENDING,
+            ]);
+            return true;
+        }
+        return false;
+    }
 }

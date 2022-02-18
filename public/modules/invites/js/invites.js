@@ -95,7 +95,7 @@ $(document).ready(function () {
                         $.ajax({
                             method: "POST",
                             url: "/api/invitations/resendinvitation",
-                            data: {invitationId: invitationId},
+                            data: { invitationId: invitationId },
                             dataType: "json",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -125,7 +125,7 @@ $(document).ready(function () {
                         $.ajax({
                             method: "DELETE",
                             url: "/api/invitations/" + invitationId,
-                            data: {invitationId: invitationId},
+                            data: { invitationId: invitationId },
                             dataType: "json",
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -181,26 +181,26 @@ $(document).ready(function () {
                         selCompany = '<select id="select-company-list" class="sirius-select">';
 
                         disabledCompany = false;
-                        $.each(response.data, function (index, value) {
+                        $.each(response.data, function (index, company) {
                             contCompanies++;
-                            if (value.capture_transaction_enabled) {
-                                if (value.type_company === 'physical person') {
-                                    if (statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado' || value.bank_document_translate !== 'Aprovado') {
+                            if (companyIsApproved(company)) {
+                                if (company.type_company === 'physical person') {
+                                    if (statusDocumentUser[company.user_address_document_status] !== 'Aprovado' || statusDocumentUser[company.user_personal_document_status] !== 'Aprovado' || company.bank_document_translate !== 'Aprovado') {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
-                                        selCompany += `<option value=${value.id_code} disabled> ${value.fantasy_name}  </option>`;
+                                        selCompany += `<option value=${company.id_code} disabled> ${company.fantasy_name}  </option>`;
                                     } else {
-                                        selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
+                                        selCompany += `<option value=${company.id_code} >  ${company.fantasy_name}  </option>`;
 
                                     }
 
-                                } else if (value.type_company === 'juridical person') {
-                                    if (value.address_document_translate !== 'Aprovado' || value.bank_document_translate !== 'Aprovado' || value.contract_document_translate !== 'Aprovado' || statusDocumentUser[value.user_address_document_status] !== 'Aprovado' || statusDocumentUser[value.user_personal_document_status] !== 'Aprovado') {
+                                } else if (company.type_company === 'juridical person') {
+                                    if (company.address_document_translate !== 'Aprovado' || company.bank_document_translate !== 'Aprovado' || company.contract_document_translate !== 'Aprovado' || statusDocumentUser[company.user_address_document_status] !== 'Aprovado' || statusDocumentUser[company.user_personal_document_status] !== 'Aprovado') {
                                         disabledCompany = false;
                                         contCompaniesNotApproved++;
-                                        selCompany += `<option value=${value.id_code} disabled> ${value.fantasy_name}  </option>`;
+                                        selCompany += `<option value=${company.id_code} disabled> ${company.fantasy_name}  </option>`;
                                     } else {
-                                        selCompany += `<option value=${value.id_code} >  ${value.fantasy_name}  </option>`;
+                                        selCompany += `<option value=${company.id_code} >  ${company.fantasy_name}  </option>`;
                                     }
                                 }
                             } else {
@@ -309,12 +309,12 @@ $(document).ready(function () {
             success: (response) => {
                 $("#invitations_accepted").html('' + response.data.invitation_accepted_count + '');
                 $("#invitations_sent").html('' + response.data.invitation_sent_count + '');
-                var commission_paid=response.data.commission_paid.split(/\s/g);
-                $("#commission_paid").html(commission_paid[0]+' <strong class="font-size-30">'+commission_paid[1]+'</strong>');
-                var commission_pending=response.data.commission_pending.split(/\s/g);
-                $("#commission_pending").html(commission_pending[0]+' <strong class="font-size-30">'+commission_pending[1]+'</strong>');
+                var commission_paid = response.data.commission_paid.split(/\s/g);
+                $("#commission_paid").html(commission_paid[0] + ' <strong class="font-size-30">' + commission_paid[1] + '</strong>');
+                var commission_pending = response.data.commission_pending.split(/\s/g);
+                $("#commission_pending").html(commission_pending[0] + ' <strong class="font-size-30">' + commission_pending[1] + '</strong>');
                 $("#invitations_amount").html('' + response.data.invitations_available);
-                if(verifyAccountFrozen()) {
+                if (verifyAccountFrozen()) {
                     $('#store-invite').attr('disabled', true);
                 }
             }

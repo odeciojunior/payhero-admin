@@ -48,6 +48,18 @@ class CompanyResource extends JsonResource
         $currencyQuotationService = new CurrencyQuotationService();
         $lastUsdQuotation = $currencyQuotationService->getLastUsdQuotation();
 
+        $companyDocumentValidated = $companyService->isDocumentValidated($this->resource->id);
+
+        $companyDocumentStatus = ($companyDocumentValidated) ? 'approved' : 'pending';
+
+        $userAddressDocumentStatus = $presenter->getAddressDocumentStatus($user->address_document_status);
+        $userPersonalDocumentStatus = $presenter->getAddressDocumentStatus($user->personal_document_status);
+
+        $companyIsApproved = false;
+        if($companyDocumentStatus == "approved" && $userAddressDocumentStatus == "approved" && $userPersonalDocumentStatus == "approved" ) {
+            $companyIsApproved = true;
+        }
+
         return [
             'id_code' => Hashids::encode($this->resource->id),
             'user_code' => Hashids::encode($this->resource->user_id),
@@ -94,12 +106,12 @@ class CompanyResource extends JsonResource
             'extra_document' => $this->extra_document ?? '',
             'active_flag' => $this->active_flag,
             'has_project' => !empty($project),
-            'capture_transaction_enabled' => $this->gatewayCredential(Gateway::GETNET_PRODUCTION_ID)->capture_transaction_enabled ?? '',
             'transaction_rate' => $this->transaction_rate,
             'gateway_tax' => $this->gateway_tax,
             'installment_tax' => $this->installment_tax,
             'gateway_release_money_days' => $this->gateway_release_money_days,
-            'currency_quotation' => $lastUsdQuotation->value
+            'currency_quotation' => $lastUsdQuotation->value,
+            'company_is_approved' => $companyIsApproved
         ];
     }
 }

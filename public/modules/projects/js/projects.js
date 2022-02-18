@@ -22,7 +22,7 @@ $(() => {
         });
 
 
-    $('.percentage-affiliates').mask('###', {'translation': {0: {pattern: /[0-9*]/}}});
+    $('.percentage-affiliates').mask('###', { 'translation': { 0: { pattern: /[0-9*]/ } } });
 
     // COMPORTAMENTOS DA TELA
     $('#tab-info').click(() => {
@@ -30,8 +30,8 @@ $(() => {
     });
 
     $(".tab_configuration").click(function () {
-        $("#image-logo-email").imgAreaSelect({remove: true});
-        $("#previewimage").imgAreaSelect({remove: true});
+        $("#image-logo-email").imgAreaSelect({ remove: true });
+        $("#previewimage").imgAreaSelect({ remove: true });
         updateConfiguracoes();
         $(this).off();
     });
@@ -155,7 +155,7 @@ $(() => {
     $('#ratioImage').unbind('change');
     $("#ratioImage").on('change', function () {
         ratio = $('#ratioImage option:selected').val();
-        $("#image-logo-email").imgAreaSelect({remove: true});
+        $("#image-logo-email").imgAreaSelect({ remove: true });
         updateConfiguracoes();
         imgNatural(ratio);
     });
@@ -247,7 +247,7 @@ $(() => {
     });
 
     function renderProjectConfig(data) {
-        let {project, companies, userProject, shopifyIntegrations, projectUpsell} = data;
+        let { project, companies, userProject, shopifyIntegrations, projectUpsell } = data;
 
         $('#percentage-affiliates').mask('000', {
             reverse: true,
@@ -277,7 +277,7 @@ $(() => {
         let company_selected = null;
         for (let company of companies) {
             if (company.id == userProject.company_id) company_selected = company;
-            if (company.id == userProject.company_id || company.capture_transaction_enabled) {
+            if (company.id == userProject.company_id || companyIsApproved(company)) {
                 if (company.id === userProject.company_id) company_selected = company;
                 $('#update-project #companies').append(
                     `<option value="${company.id}"
@@ -457,7 +457,7 @@ $(() => {
         $('.color-options').find('[data-color="' + project.countdown_timer_color + '"]').addClass('active');
 
         $('.custom_message_box').hide('fast', 'linear');
-        if(project.custom_message_configs &&  project.custom_message_configs.active){
+        if (project.custom_message_configs && project.custom_message_configs.active) {
             $('[name=custom_message_switch]').prop('checked', project.custom_message_configs.active);
             $('[name=custom_message_title]').val(project.custom_message_configs.title);
             $('[name=custom_message_content]').val(project.custom_message_configs.message);
@@ -809,8 +809,8 @@ $(() => {
                         scrollTop: $('#bt-update-project').offset().top
                     }, 'slow');
 
-                    $("#image-logo-email").imgAreaSelect({remove: true});
-                    $("#previewimage").imgAreaSelect({remove: true});
+                    $("#image-logo-email").imgAreaSelect({ remove: true });
+                    $("#previewimage").imgAreaSelect({ remove: true });
                     show();
                     loadingOnScreenRemove();
 
@@ -1333,18 +1333,18 @@ $(() => {
         element.val(0);
     }
 
-    $('.nav-tabs-horizontal-custom').on('click', '.nav-link', function() {
-        $('.slick-slider').find('.nav-link').each(function() {
+    $('.nav-tabs-horizontal-custom').on('click', '.nav-link', function () {
+        $('.slick-slider').find('.nav-link').each(function () {
             if ($(this).hasClass('show')) {
                 $(this).addClass('active');
             }
         });
     });
 
-    $('.slick-slider').on('click', '.nav-link', function() {
+    $('.slick-slider').on('click', '.nav-link', function () {
         let tabId = $(this).attr('id');
 
-        $('.slick-slider').find('.nav-link').each(function() {
+        $('.slick-slider').find('.nav-link').each(function () {
             if ($(this).attr('id') != tabId) {
                 $(this).removeClass('show');
             }

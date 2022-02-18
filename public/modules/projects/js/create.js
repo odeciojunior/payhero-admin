@@ -22,7 +22,6 @@ $(document).ready(function () {
                 let countApproved = 0;
                 $.each(response, (key, company) => {
                     let dataSelect = '';
-                    if (company.capture_transaction_enabled) {
                         countApproved = countApproved + 1;
                         if (company.company_type == 'physical person') {
                             if (company.user_address_document_status != 'approved' || company.user_personal_document_status != 'approved') {
@@ -37,7 +36,6 @@ $(document).ready(function () {
                                 dataSelect = `<option value=${company.id} ${(company.active_flag == 0 ? 'disabled' : '')}>${company.name}</option>`;
                             }
                         }
-                    }
                     $('#company').append(dataSelect);
                 });
 

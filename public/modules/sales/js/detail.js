@@ -831,19 +831,18 @@ $(() => {
             $("#details-api").show();
         }
 
-//        if (
-//            sale.payment_method == 2 &&
-//            sale.status == 1 &&
-//            sale.userPermissionRefunded
-//        ) {
-//            $("#div_refund_billet").html(
-//                '<button class="btn btn-danger btn-sm btn_refund_billet" sale=' +
-//                    sale.id +
-//                    ">Estornar boleto</button>"
-//            );
-//        } else {
+       if (
+           sale.payment_method == 2 &&
+           sale.status == 1 &&
+           sale.userPermissionRefunded &&
+           (sale.gateway_id == 'BeYEwR3AdgdKykA' || sale.gateway_id == 'ODzj6aGnOgwlK9J') //vega
+       ) {
+           $("#div_refund_billet").html(
+               '<button class="btn btn-danger btn-sm btn_refund_billet" sale=' + sale.id + ">Estornar boleto</button>"
+           );
+       } else {
             $("#div_refund_billet").html("");
-//        }
+       }
         if (sale.refund_observation != null) {
             $(".div-refund-observation").show();
             $("#refund-observation")
