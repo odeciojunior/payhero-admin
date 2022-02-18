@@ -124,7 +124,7 @@ $(() => {
     // CARD 2 CARREGA TELA DE EDITAR PROJETO
     function updateConfiguracoes() {
 
-        loadOnAny('#tab_configuration_project .card');
+        loadOnAny('#update-project');
 
         $.ajax({
             method: "GET",
@@ -137,7 +137,7 @@ $(() => {
             }, error: function (response) {
                 loadingOnScreenRemove();
 
-                loadOnAny('#tab_configuration_project .card', true);
+                loadOnAny('#update-project', true);
                 $("#trash").removeClass("d-none")
                 errorAjaxResponse(response);
 
@@ -146,7 +146,7 @@ $(() => {
                 renderProjectConfig(data);
 
                 loadingOnScreenRemove();
-                loadOnAny('#tab_configuration_project .card', true);
+                loadOnAny('#update-project', true);
                 $("#trash").removeClass("d-none")
             }
         });
@@ -428,6 +428,7 @@ $(() => {
             messageErrors(getDefaultErrorMessage)
             return false;
         }
+        projectNameInput.removeClass("error-alert")
         return true;
     }
 
@@ -542,7 +543,7 @@ $(() => {
         if(localStorage.getItem("photo_remove") == "true"){
             formData.append("remove_project_photo", true)
         }
-
+        
         if (!verify) {
             $.ajax({
                 method: "POST",

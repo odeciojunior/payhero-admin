@@ -53,7 +53,7 @@
 
                 <div class='form-group col-md-12'>
                     <label for='name' class="font-size-16">Nome do projeto</label>
-                    <input name='name' value="" type='text' class='input-pad font-size-16 name-project' id='name' placeholder='Nome do Projeto' maxlength='40' />
+                    <input name='name' value="" type='text' class='input-pad font-size-16 name-project' id='name' placeholder='Nome do Projeto' maxlength='40'  style="outline: none;"/>
                     <span id='name-error' class='text-danger'></span>
                     <p class='info pt-5' style='font-size: 10px;'></p>
                 </div>
@@ -110,7 +110,7 @@
                                     <div class="col-md-12 px-10 pr-sm-0 form-group">
                                         <label for="url-affiliates" class="font-size-16">URL da página principal</label>
                                         <div class="input-group">
-                                            <input name="url_page" value="" type="text" class="input-pad" id="url-page" placeholder="URL da página" maxlength="60">
+                                            <input name="url_page" value="" type="text" class="input-pad" id="url-page" placeholder="URL da página" maxlength="60" style="outline: none;">
                                         </div>
                                     </div>
                                 </div>
@@ -145,7 +145,7 @@
                                             <div class="col-md-12">
                                                 <div class="input-group mb-3 test">
 
-                                                    <input id='percentage-affiliates' class="form-control select-pad" name='percentage_affiliates' value='' type='text' min="0" max="100" maxlength="3">
+                                                    <input id='percentage-affiliates' class="form-control select-pad" name='percentage_affiliates' value='' type='text' min="0" max="100" maxlength="3" style="outline: none;">
 
                                                     <div class="input-group-append">
                                                         <span class="input-group-text select-pad percent-border">%</span>
