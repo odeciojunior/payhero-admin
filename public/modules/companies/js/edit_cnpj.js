@@ -140,7 +140,7 @@ $(document).ready(function () {
                 $('#document_number').val(company.extra_document);
 
 
-                if (company.capture_transaction_enabled) {
+                if (companyIsApproved(company)) {
                     $("#tax-payment").val(company.gateway_tax + '%')
 
                     $(".select-gateway-tax").html('');
@@ -410,7 +410,7 @@ $(document).ready(function () {
                     'Authorization': $('meta[name="access-token"]').attr('content'),
                     'Accept': 'application/json',
                 },
-                data: {document_url: documentUrl},
+                data: { document_url: documentUrl },
                 error: function (response) {
                     loadingOnScreenRemove();
                     errorAjaxResponse(response);

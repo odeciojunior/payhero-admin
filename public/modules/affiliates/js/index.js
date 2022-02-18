@@ -24,8 +24,6 @@ $(document).ready(function () {
                 loadOnAny('.page-content', true);
                 $('.page-content').show();
 
-                console.log(response.data);
-
                 if (response.data.status_url_affiliates) {
                     $('.div-project').show();
                     $('.project-header').html(`Afiliação no projeto ${response.data.name}`);
@@ -103,8 +101,8 @@ $(document).ready(function () {
             success: (response) => {
                 countCompanies = response.data.length;
 
-                for (let company of response.data) {
-                    if (company.capture_transaction_enabled) {
+                $(response.data).each(function (index, company) {
+                    if (companyIsApproved(company)) {
                         countCompanyApproved++;
                         $('#companies').append(`
                             <option value='${company.id}'>
@@ -112,7 +110,7 @@ $(document).ready(function () {
                             </option>
                         `);
                     }
-                }
+                });
             }
         });
 

@@ -83,7 +83,7 @@ $(document).ready(function () {
                     if (companyType[value.type] === 'physical person') {
                         if (companyStatusTranslated[value.bank_document_status] == 'Recusado') {
                             dados += `<span class='badge ${companyStatus[value.bank_document_status]}'>${companyStatusTranslated[value.bank_document_status]}</span>`;
-                        } else if (companyStatusTranslated[value.bank_document_status] == 'Aprovado' && value.capture_transaction_enabled) {
+                        } else if (companyStatusTranslated[value.bank_document_status] == 'Aprovado') {
                             dados += `<span class='badge ${companyStatus[value.bank_document_status]}'>${companyStatusTranslated[value.bank_document_status]}</span>`;
                         } else {
                             dados += `<span class='badge ${companyStatus['analyzing']}'>${companyStatusTranslated['analyzing']}</span>`;
@@ -92,7 +92,7 @@ $(document).ready(function () {
                     } else {
                         if (companyStatusTranslated[statusCompanyJuridicalPerson(value)] == 'Recusado') {
                             dados += `<span class='badge ${companyStatus[statusCompanyJuridicalPerson(value)]}'>${companyStatusTranslated[statusCompanyJuridicalPerson(value)]}</span>`;
-                        } else if (companyStatusTranslated[statusCompanyJuridicalPerson(value)] == 'Aprovado' && value.capture_transaction_enabled) {
+                        } else if (companyStatusTranslated[statusCompanyJuridicalPerson(value)] == 'Aprovado') {
                             dados += `<span class='badge ${companyStatus[statusCompanyJuridicalPerson(value)]}'>${companyStatusTranslated[statusCompanyJuridicalPerson(value)]}</span>`;
                         } else {
                             dados += `<span class='badge ${companyStatus['analyzing']}'>${companyStatusTranslated['analyzing']}</span>`;
@@ -121,7 +121,7 @@ $(document).ready(function () {
                             method: "POST",
                             url: "/api/companies/updateorder",
                             dataType: "json",
-                            data: {order: orderCompanies},
+                            data: { order: orderCompanies },
                             headers: {
                                 'Authorization': $('meta[name="access-token"]').attr('content'),
                                 'Accept': 'application/json',

@@ -16,21 +16,33 @@ class CompaniesSelectResource extends JsonResource
         $companyService = new CompanyService();
         $companyDocumentValidated = $companyService->isDocumentValidated($this->id);
 
+        $companyDocumentStatus = ($companyDocumentValidated) ? 'approved' : 'pending';
+
+        $userAddressDocumentStatus = (new User())->present()->getAddressDocumentStatus(
+            $this->user->address_document_status
+        );
+        $userPersonalDocumentStatus = (new User())->present()->getAddressDocumentStatus(
+            $this->user->personal_document_status
+        );
+
+
+        $companyIsApproved = false;
+        if($companyDocumentStatus == "approved" && $userAddressDocumentStatus == "approved" && $userPersonalDocumentStatus == "approved" ) {
+            $companyIsApproved = true;
+        }
+
         return [
             'id' => Hashids::encode($this->id),
             'country' => $this->country,
             'name' => $this->company_type == 1 ? 'Pessoa física' : $this->fantasy_name,
-            'company_document_status' => ($companyDocumentValidated) ? 'approved' : 'pending',
+            'company_document_status' => $companyDocumentStatus,
             'company_has_sale_before_getnet' => auth()->user()->has_sale_before_getnet,
             'active_flag' => $this->active_flag,
             'has_pix_key' => $this->has_pix_key,
             'company_type' => $this->present()->getCompanyType($this->company_type),
-            'user_address_document_status' => (new User())->present()->getAddressDocumentStatus(
-                $this->user->address_document_status
-            ),
-            'user_personal_document_status' => (new User())->present()->getAddressDocumentStatus(
-                $this->user->personal_document_status
-            ),
+            'user_address_document_status' => $userAddressDocumentStatus,
+            'user_personal_document_status' => $userPersonalDocumentStatus,
+            'company_is_approved' => $companyIsApproved
         ];
     }
 }

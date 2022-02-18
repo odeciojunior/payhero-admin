@@ -301,7 +301,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/shopify/js/index.js?v='. uniqid()) }}"></script>
+        <script src="{{ asset('modules/shopify/js/index.js?v=' .  versionsFile()) }}"></script>
     @endpush
 
 @endsection
