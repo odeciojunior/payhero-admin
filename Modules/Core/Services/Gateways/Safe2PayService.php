@@ -259,10 +259,6 @@ class Safe2PayService implements Statement
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
                                         ->where('company_id', $this->company->id)
                                         ->orderBy('id', 'desc')->first();
-
-        if(empty($lastTransaction)) {
-            return [];
-        }
         
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
