@@ -28,11 +28,11 @@ class UpdateAvailableBalance extends Command
     protected $description = 'Command description';
 
     private $defaultGateways = [
-        AsaasService::class,
+        //AsaasService::class,
         //CieloService::class,
-        GetnetService::class,
-        GerencianetService::class,
-        //Safe2PayService::class
+        // GetnetService::class,
+        // GerencianetService::class,
+        Safe2PayService::class
     ];
 
     /**
@@ -52,8 +52,6 @@ class UpdateAvailableBalance extends Command
      */
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
 
             settings()->group('withdrawal_request')->set('withdrawal_request', false);
@@ -68,9 +66,6 @@ class UpdateAvailableBalance extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
-
     }
     
 }
