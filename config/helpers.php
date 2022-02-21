@@ -47,6 +47,6 @@ if (!function_exists('builder2sql')) {
 if (!function_exists('versionsFile')) {
     function versionsFile()
     {
-        return md5(27);
+        return md5(32);
     }
 }

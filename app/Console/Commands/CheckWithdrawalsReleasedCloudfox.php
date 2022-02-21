@@ -14,6 +14,7 @@ use Modules\Core\Services\CheckoutService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Log;
 
 class CheckWithdrawalsReleasedCloudfox extends Command
 {
@@ -48,6 +49,9 @@ class CheckWithdrawalsReleasedCloudfox extends Command
      */
     public function handle()
     {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
 
             $query = "select t.id as transaction_id, t.gateway_id, t.user_id, t.status, t.status_enum, s.id as sale_id, s.gateway_id,
@@ -167,8 +171,10 @@ class CheckWithdrawalsReleasedCloudfox extends Command
             $bar->finish();
         } catch ( Exception $e) {
             report($e);
-
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 
     private function tryFixGatewayOrderIdAndGatewayTransactionId(Sale $sale)

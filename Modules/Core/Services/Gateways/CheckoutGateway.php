@@ -145,6 +145,13 @@ class CheckoutGateway extends GatewayAbstract
         return json_decode($this->requestHttp($options));
     }
 
+    public function safe2payAnticipation(){
+        $options = new GatewayCurlOptions([
+            'endpoint'=>'safe2payAnticipation'            
+        ]);
+        return json_decode($this->requestHttp($options));
+    }
+
     public function setBaseUrl($newUrl){
         $this->baseUrl = $newUrl;
     }
@@ -206,6 +213,10 @@ class CheckoutGateway extends GatewayAbstract
             "getReceivablesReserves"=>[
                 "route" => "withdrawal/asaas/receivables-reserves/:companyId",
                 "method" => "POST"
+            ],
+            "safe2payAnticipation"=>[
+                "route" => "withdrawal/safe2pay/anticipation",
+                "method" => "GET"
             ]
             
         ];

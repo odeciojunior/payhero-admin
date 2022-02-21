@@ -100,9 +100,14 @@ class Safe2PayService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $availableBalance += $pendingBalance;
 
-        $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
+        if($sale->payment_method == Sale::BOLETO_PAYMENT) {
+            return $availableBalance >= (int) foxutils()->onlyNumbers($sale->total_paid_value);
+        }
+        else {
+            $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
+            return $availableBalance >= $transaction->value;
+        }
 
-        return $availableBalance >= $transaction->value;
     }
 
     public function getWithdrawals(): JsonResource
@@ -249,7 +254,6 @@ class Safe2PayService implements Statement
         return (new StatementService)->getPeriodBalance($this->company->id, $this->gatewayIds, $filters);
     }
 
-
     public function getResume()
     {
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
@@ -270,7 +274,7 @@ class Safe2PayService implements Statement
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
 
         return [
-            'name' => 'Safe2pay',
+            'name' => 'Vega',
             'available_balance' => foxutils()->formatMoney($availableBalance / 100),
             'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
             'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
@@ -281,12 +285,13 @@ class Safe2PayService implements Statement
         ];
     }
 
-    public function getGatewayAvailable(){
+    public function getGatewayAvailable()
+    {
         $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
                                         ->where('company_id', $this->company->id)
                                         ->orderBy('id', 'desc')->first();
 
-        return !empty($lastTransaction) ? ['Safe2pay']:[];
+        return !empty($lastTransaction) ? ['Vega']:[];
     }
 
     public function getCompanyApiKey(Sale $sale)

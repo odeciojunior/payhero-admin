@@ -87,31 +87,31 @@ $(document).ready(function () {
             dados = '';
             dados += '<tr>';
 
-                dados += '<td class="" style="vertical-align: middle;">';
-                    dados += '<p class="description mb-0 mr-1">' + value.description + '</p>';
-                    dados += '<small class="text-muted">Criada em ' + value.register_date + '</small>';
-                dados += '</td>';
+            dados += '<td class="" style="vertical-align: middle;">';
+            dados += '<p class="description mb-0 mr-1">' + value.description + '</p>';
+            dados += '<small class="text-muted">Criada em ' + value.register_date + '</small>';
+            dados += '</td>';
 
-                dados += '<td class="text-center">';
-                    dados += '<span class="badge badge-' + integrationTypeEnumBadge[value.integration_type] + ' text-center">' + integrationTypeEnum[value.integration_type] + '</span>';
-                dados += '</td>';
+            dados += '<td class="text-center">';
+            dados += '<span class="badge badge-' + integrationTypeEnumBadge[value.integration_type] + ' text-center">' + integrationTypeEnum[value.integration_type] + '</span>';
+            dados += '</td>';
 
-                dados += '<td style="vertical-align: middle;">';
-                    dados += '<div class="input-group input-group-lg">';
-                        dados += '<input type="text" class="form-control font-sm brr inptToken" id="inputToken-' + value.id_code + '" value="' + value.access_token + '" disabled="disabled" style="background: #F1F1F1;">';
-                        dados += '<div class="input-group-append">';
-                            dados += '<button class="btn btn-primary bg-white btnCopiarLink" data-code="' + value.id_code + '" type="button" data-placement="top" data-toggle="tooltip" title="Copiar token" style="width: 48px; height: 48px;">';
-                                dados += '<img src="/modules/global/img/icon-copy-b.svg">';
-                            dados += '</button>';
-                        dados += '</div>';
-                    dados += '</div>';
-                dados += '</td>';
+            dados += '<td style="vertical-align: middle;">';
+            dados += '<div class="input-group input-group-lg">';
+            dados += '<input type="text" class="form-control font-sm brr inptToken" id="inputToken-' + value.id_code + '" value="' + value.access_token + '" disabled="disabled" style="background: #F1F1F1;">';
+            dados += '<div class="input-group-append">';
+            dados += '<button class="btn btn-primary bg-white btnCopiarLink" data-code="' + value.id_code + '" type="button" data-placement="top" data-toggle="tooltip" title="Copiar token" style="width: 48px; height: 48px;">';
+            dados += '<img src="/modules/global/img/icon-copy-b.svg">';
+            dados += '</button>';
+            dados += '</div>';
+            dados += '</div>';
+            dados += '</td>';
 
-                dados += '<td class="text-center">';
-                    dados += '<button class="btn pointer edit-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Editar integração"><span class="o-edit-1"></span></button>';
-                    //dados += '<button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><span class="o-reload-1"></span></button>';
-                    dados += '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><span class="o-bin-1"></span></button>';
-                dados += '</td>';
+            dados += '<td class="text-center">';
+            dados += '<button class="btn pointer edit-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Editar integração"><span class="o-edit-1"></span></button>';
+            //dados += '<button class="btn pointer refresh-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Regerar token"><span class="o-reload-1"></span></button>';
+            dados += '<button class="btn pointer delete-integration" style="background-color:transparent;" integration="' + value.id_code + '"' + disabled + ' title="Deletar token"><span class="o-bin-1"></span></button>';
+            dados += '</td>';
 
             dados += '</tr>';
             $("#table-body-integrates").append(dados);
@@ -214,7 +214,7 @@ $(document).ready(function () {
                 $.ajax({
                     method: "POST",
                     url: url,
-                    data: {integrationId: integrationId},
+                    data: { integrationId: integrationId },
                     dataType: "json",
                     headers: {
                         'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -248,7 +248,7 @@ $(document).ready(function () {
                 $.ajax({
                     method: "DELETE",
                     url: url,
-                    data: {integrationId: integrationId},
+                    data: { integrationId: integrationId },
                     dataType: "json",
                     headers: {
                         'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -419,7 +419,7 @@ $(document).ready(function () {
         let type = e.target.value;
         let companiesContainer = $('.companies-container');
         let postbackContainer = $('.postback-container');
-        let descriptionInput =  $('#description');
+        let descriptionInput = $('#description');
 
         descriptionInput.val('')
 
@@ -430,7 +430,7 @@ $(document).ready(function () {
         } else {
             //type = 3 is Profitfy (External Integration)
             //if(type == 3) {
-                //descriptionInput.val('Profitfy');
+            //descriptionInput.val('Profitfy');
             //}
             companiesContainer.addClass('d-none').removeClass('d-flex');
             postbackContainer.addClass('d-none').removeClass('d-flex');
@@ -457,7 +457,7 @@ $(document).ready(function () {
             success: function success(response) {
                 if (!isEmpty(response.data)) {
                     $.each(response.data, function (i, company) {
-                        if (company.capture_transaction_enabled) {
+                        if (companyIsApproved(company)) {
                             $("#companies").append($('<option>', {
                                 value: company.id,
                                 text: company.name

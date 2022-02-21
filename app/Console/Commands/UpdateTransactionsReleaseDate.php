@@ -9,6 +9,7 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\GetnetBackOfficeService;
+use Illuminate\Support\Facades\Log;
 
 class UpdateTransactionsReleaseDate extends Command
 {
@@ -23,83 +24,53 @@ class UpdateTransactionsReleaseDate extends Command
 
     public function handle()
     {
-        $getnetService = new GetnetBackOfficeService();
 
-        $transactions = Transaction::with([
-            'company',
-            'user',
-            'sale' => function ($query) {
-                $query->withCount([
-                    'products as digital_products_count' => function ($query) {
-                        $query->where('products.type_enum', Product::TYPE_DIGITAL);
-                    }
-                ]);
-            }
-        ])->whereIn('gateway_id',
-            [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
-            ->where('status_enum', Transaction::STATUS_PAID)
-            ->whereNotNull('company_id')
-            ->whereNull('release_date');
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-        $total = $transactions->count();
+        try {
 
-        $bar = $this->output->createProgressBar($total);
-        $bar->start();
+            $getnetService = new GetnetBackOfficeService();
 
-        $transactions->chunk(1000, function ($transactions) use ($bar, $getnetService) {
-            foreach ($transactions as $transaction) {
-                try {
-                    $company = $transaction->company;
-                    $user = $transaction->user;
-                    $sale = $transaction->sale;
+            $transactions = Transaction::with([
+                                                  'company',
+                                                  'user',
+                                                  'sale' => function ($query) {
+                                                      $query->withCount([
+                                                                            'products as digital_products_count' => function ($query) {
+                                                                                $query->where('products.type_enum', Product::TYPE_DIGITAL);
+                                                                            }
+                                                                        ]);
+                                                  }
+                                              ])->whereIn('gateway_id',
+                                                          [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])
+                ->where('status_enum', Transaction::STATUS_PAID)
+                ->whereNotNull('company_id')
+                ->whereNull('release_date');
 
-                    $statement = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
-                        ->setStatementSubSellerId($company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID))
-                        ->getStatement($sale->gateway_order_id);
+            $total = $transactions->count();
 
-                    $getnetSale = json_decode($statement);
+            $bar = $this->output->createProgressBar($total);
+            $bar->start();
 
-                    $getnetTransaction = $getnetSale->list_transactions[0] ?? null;
-                    $details = $getnetTransaction ? $getnetTransaction->details[0] ?? null : null;
+            $transactions->chunk(1000, function ($transactions) use ($bar, $getnetService) {
+                foreach ($transactions as $transaction) {
+                    try {
+                        $company = $transaction->company;
+                        $user = $transaction->user;
+                        $sale = $transaction->sale;
 
-                    if (!empty($details)) {
-                        $releaseDate = Carbon::parse($details->payment_date);
-                        $releaseCount = $user->release_count + 1;
-                        //se for produto digital, o prazo mínimo é 7 dias
-                        if ($sale->digital_products_count) {
-                            $transactionDate = Carbon::parse($details->transaction_date);
-                            $transactionDate->setTimeFrom('00:00:00');
-                            $diffInDays = $releaseDate->diffInDays($transactionDate);
-                            if ($diffInDays < 7) {
-                                $releaseDate->addDays(7 - $diffInDays);
-                            }
-                        }
-                        //se tem o benefício receba mais rápido
-                        if ($user->get_faster) {
-                            $transaction->tracking_required = false;
-                        }
-                        if ($user->has_security_reserve && is_null($transaction->invitation_id)) {
-                            //reserva de segurança
-                            if ($releaseCount == 20) {
-                                $releaseDate = now()->addDays(90);
-                                $transaction->is_security_reserve = true;
-                                $releaseCount = 0;
-                            }
-                            $user->release_count = $releaseCount;
-                            $user->save();
-                        }
-                        $transaction->release_date = $releaseDate->toDateTimeString();
-                        $transaction->save();
-                    } else {
-                        $getnetSale = $getnetService
-                            ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                        $statement = $getnetService->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
                             ->setStatementSubSellerId($company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID))
                             ->getStatement($sale->gateway_order_id);
 
+                        $getnetSale = json_decode($statement);
+
                         $getnetTransaction = $getnetSale->list_transactions[0] ?? null;
                         $details = $getnetTransaction ? $getnetTransaction->details[0] ?? null : null;
+
                         if (!empty($details)) {
                             $releaseDate = Carbon::parse($details->payment_date);
+                            $releaseCount = $user->release_count + 1;
                             //se for produto digital, o prazo mínimo é 7 dias
                             if ($sale->digital_products_count) {
                                 $transactionDate = Carbon::parse($details->transaction_date);
@@ -109,18 +80,60 @@ class UpdateTransactionsReleaseDate extends Command
                                     $releaseDate->addDays(7 - $diffInDays);
                                 }
                             }
+                            //se tem o benefício receba mais rápido
+                            if ($user->get_faster) {
+                                $transaction->tracking_required = false;
+                            }
+                            if ($user->has_security_reserve && is_null($transaction->invitation_id)) {
+                                //reserva de segurança
+                                if ($releaseCount == 20) {
+                                    $releaseDate = now()->addDays(90);
+                                    $transaction->is_security_reserve = true;
+                                    $releaseCount = 0;
+                                }
+                                $user->release_count = $releaseCount;
+                                $user->save();
+                            }
                             $transaction->release_date = $releaseDate->toDateTimeString();
                             $transaction->save();
+                        } else {
+                            $getnetSale = $getnetService
+                                ->setStatementSaleHashId(hashids_encode($sale->id, 'sale_id'))
+                                ->setStatementSubSellerId($company->getGatewaySubsellerId(Gateway::GETNET_PRODUCTION_ID))
+                                ->getStatement($sale->gateway_order_id);
+
+                            $getnetTransaction = $getnetSale->list_transactions[0] ?? null;
+                            $details = $getnetTransaction ? $getnetTransaction->details[0] ?? null : null;
+                            if (!empty($details)) {
+                                $releaseDate = Carbon::parse($details->payment_date);
+                                //se for produto digital, o prazo mínimo é 7 dias
+                                if ($sale->digital_products_count) {
+                                    $transactionDate = Carbon::parse($details->transaction_date);
+                                    $transactionDate->setTimeFrom('00:00:00');
+                                    $diffInDays = $releaseDate->diffInDays($transactionDate);
+                                    if ($diffInDays < 7) {
+                                        $releaseDate->addDays(7 - $diffInDays);
+                                    }
+                                }
+                                $transaction->release_date = $releaseDate->toDateTimeString();
+                                $transaction->save();
+                            }
                         }
+
+                    } catch (Exception $e) {
+                        report($e);
                     }
-
-                } catch (Exception $e) {
-                    report($e);
+                    $bar->advance();
                 }
-                $bar->advance();
-            }
-        });
+            });
 
-        $bar->finish();
+            $bar->finish();
+
+        } catch (Exception $e) {
+            report($e);
+        }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

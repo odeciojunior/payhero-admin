@@ -6,9 +6,8 @@ use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
-use Modules\Core\Entities\GatewaysCompaniesCredential;
-use Modules\Core\Entities\User;
 use Modules\Core\Services\CompanyService;
+use Illuminate\Support\Facades\Log;
 
 class CreateCompanyGetnet extends Command
 {
@@ -38,6 +37,9 @@ class CreateCompanyGetnet extends Command
 
     public function handle()
     {
+
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         try {
             $companies = Company::whereDoesntHave('gatewayCompanyCredential', function($q){
                 $q->where('gateway_id',Gateway::GETNET_PRODUCTION_ID);
@@ -59,5 +61,8 @@ class CreateCompanyGetnet extends Command
         } catch (Exception $e) {
             report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

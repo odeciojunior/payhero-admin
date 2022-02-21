@@ -28,6 +28,20 @@ class CompanyCpfResource extends JsonResource
             ->where('company_id', $this->resource->id)
             ->first();
 
+        $user = $this->resource->user;
+        $companyService = new CompanyService();
+        $companyDocumentValidated = $companyService->isDocumentValidated($this->resource->id);
+
+        $companyDocumentStatus = ($companyDocumentValidated) ? 'approved' : 'pending';
+
+        $userAddressDocumentStatus = $presenter->getAddressDocumentStatus($user->address_document_status);
+        $userPersonalDocumentStatus = $presenter->getAddressDocumentStatus($user->personal_document_status);
+
+        $companyIsApproved = false;
+        if($companyDocumentStatus == "approved" && $userAddressDocumentStatus == "approved" && $userPersonalDocumentStatus == "approved" ) {
+            $companyIsApproved = true;
+        }
+
         return [
             'id_code' => Hashids::encode($this->resource->id),
             'user_code' => Hashids::encode($this->resource->user_id),
@@ -42,10 +56,10 @@ class CompanyCpfResource extends JsonResource
             'account_type' => $this->account_type ?? '',
             'active_flag' => $this->active_flag,
             'has_project' => !empty($project),
-            'capture_transaction_enabled' => $this->capture_transaction_enabled,
             'gateway_tax' => $this->gateway_tax,
             'installment_tax' => $this->installment_tax,
             'transaction_rate' => $this->transaction_rate,
+            'company_is_approved' => $companyIsApproved
         ];
     }
 }

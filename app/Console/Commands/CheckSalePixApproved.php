@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
+use Illuminate\Support\Facades\Log;
 
 class CheckSalePixApproved extends Command
 {
@@ -40,22 +42,26 @@ class CheckSalePixApproved extends Command
     public function handle()
     {
 
-        $sales = Sale::where(
-            [
-                ['payment_method', '=', Sale::PIX_PAYMENT],
-                ['status', '=', Sale::STATUS_CANCELED]
-            ]
-        )
-        ->whereHas(
-            'pixCharges',
-            function ($querySale) {
-                $querySale->where('status', 'RECEBIDO');
-            }
-        )->get();
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
-        $total = count($sales);
-        $bar = $this->output->createProgressBar($total);
-        $bar->start();
+        try {
+
+            $sales = Sale::where(
+                [
+                    ['payment_method', '=', Sale::PIX_PAYMENT],
+                    ['status', '=', Sale::STATUS_CANCELED]
+                ]
+            )
+                ->whereHas(
+                    'pixCharges',
+                    function ($querySale) {
+                        $querySale->where('status', 'RECEBIDO');
+                    }
+                )->get();
+
+            $total = count($sales);
+            $bar = $this->output->createProgressBar($total);
+            $bar->start();
 
             foreach ($sales as $sale) {
                 $this->line('  id: ' . $sale->id . '  ');
@@ -73,6 +79,13 @@ class CheckSalePixApproved extends Command
                 $bar->advance();
             }
 
-        $bar->finish();
+            $bar->finish();
+
+        } catch (Exception $e) {
+            report($e);
+        }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 }

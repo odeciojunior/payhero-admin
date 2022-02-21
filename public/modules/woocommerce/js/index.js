@@ -40,7 +40,7 @@ $(document).ready(function () {
         } else if (!allCompanyNotApproved) {
             if (woocommerceIntegrationNotFound) {
                 $("#no-integration-found").show();
-            }else{
+            } else {
                 $("#no-integration-found").hide();
 
             }
@@ -77,7 +77,7 @@ $(document).ready(function () {
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                             <div class="card shadow card-edit" project="${data.id}">
 
-                            
+
                             <svg style="position:absolute; top:8px; right:8px; cursor:pointer" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M30.5519 15.2167C30.5519 23.4694 23.8618 30.1596 15.6091 30.1596C7.35639 30.1596 0.66626 23.4694 0.66626 15.2167C0.66626 6.96405 7.35639 0.273926 15.6091 0.273926C23.8618 0.273926 30.5519 6.96405 30.5519 15.2167Z" fill="white"/>
                                 <g clip-path="url(#clip0_0_1)">
@@ -91,7 +91,7 @@ $(document).ready(function () {
                                 </defs>
                             </svg>
 
-                            
+
                                 <img class="card-img-top img-fluid w-full" src="${!data.project_photo ? '/modules/global/img/produto.png' : data.project_photo}"  alt="Photo Project"/>
                                 <div class="card-body">
                                     <div class='row'>
@@ -123,10 +123,10 @@ $(document).ready(function () {
         $('#integration-actions').show();
 
         $("#select_companies").empty();
-        $(data).each(function (index, data) {
-            if (data.capture_transaction_enabled) {
+        $(data).each(function (index, company) {
+            if (companyIsApproved(company)) {
                 companyApproved = companyApproved + 1;
-                $("#select_companies").append(`<option value=${data.id}> ${data.name}</option>`);
+                $("#select_companies").append(`<option value=${company.id}> ${company.name}</option>`);
             }
         });
 
