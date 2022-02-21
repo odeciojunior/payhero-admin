@@ -14,6 +14,7 @@ use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
+use Modules\Core\Services\Gateways\Safe2PayService;
 
 class CheckAutomaticWithdrawals extends Command
 {
@@ -35,6 +36,7 @@ class CheckAutomaticWithdrawals extends Command
         AsaasService::class,
         GetnetService::class,
         GerencianetService::class,
+        //Safe2PayService::class
         //CieloService::class,
     ];
 
