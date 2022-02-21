@@ -105,7 +105,10 @@
                                 <div class="finance-card border blue mb-10">
                                     <span class="title">N de transações</span>
                                     <div class="d-flex">
-                                        <strong class="number">74.860</strong>
+                                        <strong class="number">
+                                            <span>74.860</span>
+                                            
+                                        </strong>
                                     </div>
                                 </div>
                             </div>
@@ -135,7 +138,7 @@
                                     <span class="title">Total em Chargebacks</span>
                                     <div class="d-flex">
                                         <span class="detail">R$</span>
-                                        <strong class="number">24.120,50</strong>
+                                        <strong class="number"><span class="bold">24.120,50</span></strong>
                                     </div>
                                 </div>
                             </div>

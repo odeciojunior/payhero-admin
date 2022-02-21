@@ -316,6 +316,7 @@ h4.number{
 .ico-mkt { background: #fff url('/modules/global/img/reports/ico-mkt.png') no-repeat center; }
 .ico-pending { background: #fff url('/modules/global/img/reports/pending.png') no-repeat center; }
 .ico-blocked { background: #fff url('/modules/global/img/reports/blokedbalance.png') no-repeat center; }
+.ico-cupons { background: #fff url('/modules/global/img/reports/ico-cupons.png') no-repeat center; }
 
 .box-title img {
     width: 23px;
@@ -650,6 +651,7 @@ h4.number{
 }
 .finance-card.pink strong.number span {
     color: #F43F5E;
+    font-size: 24px !important;
 }
 
 .finance-card.purple {
@@ -1409,19 +1411,22 @@ h4.number{
     margin-left: auto; 
 }
 
-.table-vendas thead td { 
+.table-vendas thead td,
+.table-coupons thead td { 
     background-color: #FEFEFE !important; 
     border-bottom: 1px solid #EDEDED !important;
     color: #15034C !important;
     font-size: 16px !important;
 }
-.table-vendas tbody td {
+.table-vendas tbody td,
+.table-coupons tbody td {
     color: #5D5D5D !important;
 }
 
 .table-striped > tbody > tr:nth-child(2n+2) > td, .table-striped > tbody > tr:nth-child(2n+2) > th {
     background-color: #FBFBFB !important;
 }
+.table-coupons > tbody > tr:nth-child(2n+2) > td { border-radius: 0 !important; }
 
 .pagination .nav-btn.active {
     background-color: #fff !important;

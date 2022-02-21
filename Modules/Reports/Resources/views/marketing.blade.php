@@ -827,7 +827,7 @@
                                                 <h5 class="grey font-size-16">
                                                     <strong>Cupons</strong>
                                                 </h5>
-                                                <a href="#" class="box-link silver">
+                                                <a href="{{ route('reports.coupons') }}" class="box-link silver">
                                                     <span>Acessar&nbsp;&nbsp;</span>
                                                     <i class="o-arrow-right-1 redirect"></i>
                                                 </a>

@@ -4,7 +4,8 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
+        <link rel="stylesheet" href="{!! asset('modules/reports/css/v6/css/all.min.css') !!}">
+        <!-- <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}"> -->
         <link rel="stylesheet" href="{!! asset('modules/reports/css/coupons.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
@@ -12,14 +13,55 @@
 
         <div class="page">
             <div style="display: none" class="page-header container">
+                <header class="top-system">
+                    <a href="{!! route('reports.marketing') !!}" class="back">
+                        <i class="fa-solid fa-arrow-left-long"></i>
+                        Voltar para Marketing
+                    </a>
+                </header>
+
                 <div class="row align-items-center justify-content-between" style="min-height: 50px;">
                     <div class="col-8">
-                        <h1 class="page-title">Utilização de Cupons</h1>
-                        <span type="hidden" class="error-data"></span>
+                        <h1 class="d-flex title-system">
+                            <span class="box-title ico-cupons">Cupons</span>
+                            Cupons
+                        </h1>
+                        <!-- <h1 class="page-title">Cupons</h1>
+                        <span type="hidden" class="error-data"></span> -->
                     </div>
                 </div>
             </div>
             <div id="project-not-empty" style="display: none">
+                
+                <section class="container box-reports" id="reports-content">
+                    <div class="row">
+                        <div class="col-12 box-items-finance pending">
+                            <div class="row mb-20">
+                            @if(!auth()->user()->hasRole('attendance'))
+                                <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
+                                    <div class="finance-card border orange mb-10">
+                                        <span class="title">Total bloqueado</span>
+                                        <div class="d-flex">
+                                            <span class="detail">R$</span>
+                                            <strong class="number" id="">356.568,22</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
+                                    <div class="finance-card border blue mb-10">
+                                        <span class="title">Quantidade de vendas</span>
+                                        <div class="d-flex">
+                                            <strong class="number" id="total_sales">0</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <div id="reports-content" class="page-content container" style="padding-top: 0">
                     <div class="row justify-content-between">
                         <div class="col-lg-12">
@@ -90,13 +132,24 @@
                                     <table class="table-coupons table table-striped" style="width:100%;margin: auto;">
                                         <thead>
                                         <tr>
-                                            <td class="table-title">Código cupom</td>
+                                            <td class="table-title">Cupom</td>
                                             <td class="table-title">Projeto</td>
-                                            <td class="table-title">Quantidade utilizada</td>
+                                            <td class="table-title">Utilizados</td>
                                         </tr>
                                         </thead>
-                                        <tbody id="body-table-coupons"  img-empty="{!! asset('modules/global/img/geral-1.svg')!!}">
-                                        {{-- js carrega... --}}
+                                        <tbody>
+                                        <!-- <tbody id="body-table-coupons"  img-empty="{!! asset('modules/global/img/geral-1.svg')!!}"> -->
+                                            <!-- {{-- js carrega... --}} -->
+                                            <tr>
+                                                <td>aaa</td>
+                                                <td>aaaa</td>
+                                                <td>aaaa</td>
+                                            </tr>
+                                            <tr>
+                                            <td>aaaa</td>
+                                            <td>aaaa</td>
+                                            <td>aaaa</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
