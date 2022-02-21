@@ -10,11 +10,11 @@ $(document).ready(function () {
         2: "danger",
     };
 
-    $("#tab-affiliates").on("click", function () {
+    $("#btn-filter-affiliates").on("click", function () {
         getAffiliates();
     });
 
-    $("#tab-affiliates-request").on("click", function () {
+    $("#btn-filter-affiliates-request").on("click", function () {
         getAffiliatesRequest();
     });
 
@@ -206,16 +206,16 @@ $(document).ready(function () {
                                     function error() {
                                         return _error3.apply(this, arguments);
                                     }
-                    
+
                                     error.toString = function () {
                                         return _error3.toString();
                                     };
-                    
+
                                     return error;
                                 }(function (response) {
                                     loadingOnScreenRemove();
                                     errorAjaxResponse(response);
-                    
+
                                 }),
                                 success: function (data) {
                                     loadingOnScreenRemove();
