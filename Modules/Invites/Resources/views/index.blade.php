@@ -3,8 +3,8 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4546') }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
         <style>
             .badge {
                 color: white;
@@ -323,7 +323,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/invites/js/invites.js?v=08') }}"></script>
+        <script src="{{asset('modules/invites/js/invites.js?v=' . versionsFile()) }}"></script>
     @endpush
 
 @endsection

@@ -1210,6 +1210,9 @@ class SaleService
                         ->where('transactions.created_at', '>', '2021-09-20');
                     })
                     ->orWhere(function($qr2){
+                        $qr2->whereIn('transactions.gateway_id', $this->getGatewayIdsByFilter('Vega'));
+                    })
+                    ->orWhere(function($qr2){
                         $qr2->whereIn('transactions.gateway_id',$this->getGatewayIdsByFilter('Gerencianet'))
                             ->where('is_waiting_withdrawal', 0);
                     })
@@ -1454,6 +1457,12 @@ class SaleService
                 return [
                     Gateway::CIELO_PRODUCTION_ID,
                     Gateway::CIELO_SANDBOX_ID
+                ];
+            break;
+            case 'Vega':
+                return [
+                    Gateway::SAFE2PAY_PRODUCTION_ID,
+                    Gateway::SAFE2PAY_SANDBOX_ID
                 ];
             break;
         }

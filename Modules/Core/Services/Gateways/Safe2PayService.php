@@ -259,10 +259,6 @@ class Safe2PayService implements Statement
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
                                         ->where('company_id', $this->company->id)
                                         ->orderBy('id', 'desc')->first();
-
-        if(empty($lastTransaction)) {
-            return [];
-        }
         
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
@@ -274,7 +270,7 @@ class Safe2PayService implements Statement
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
 
         return [
-            'name' => 'Safe2pay',
+            'name' => 'Vega',
             'available_balance' => foxutils()->formatMoney($availableBalance / 100),
             'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
             'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
@@ -291,7 +287,7 @@ class Safe2PayService implements Statement
                                         ->where('company_id', $this->company->id)
                                         ->orderBy('id', 'desc')->first();
 
-        return !empty($lastTransaction) ? ['Safe2pay']:[];
+        return !empty($lastTransaction) ? ['Vega']:[];
     }
 
     public function getCompanyApiKey(Sale $sale)
