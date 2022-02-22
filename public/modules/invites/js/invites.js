@@ -323,6 +323,7 @@ $(document).ready(function () {
 
     function pagination(response, model) {
         if (response.meta.last_page == 1) {
+            $("#pagination-" + model).html("");
             $("#primeira_pagina_" + model).hide();
             $("#ultima_pagina_" + model).hide();
         } else {

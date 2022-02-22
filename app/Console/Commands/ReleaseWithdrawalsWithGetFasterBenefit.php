@@ -13,6 +13,14 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
     protected $signature = 'withdrawals:release-get-faster';
 
     protected $description = "Libera o saque dos usuário que possuem o benefício 'Receba + rápido' habilitado";
+    private $gatewayIds = [
+        [
+            Gateway::GETNET_PRODUCTION_ID,
+            Gateway::ASAAS_PRODUCTION_ID,
+            Gateway::GERENCIANET_PRODUCTION_ID,
+            Gateway::SAFE2PAY_PRODUCTION_ID
+        ]
+    ];
 
     public function __construct()
     {
@@ -32,7 +40,7 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
                 ->join('users as u', 'u.id', '=', 'c.user_id')
                 ->whereIn('withdrawals.status', [Withdrawal::STATUS_PENDING, Withdrawal::STATUS_IN_REVIEW])
                 ->where('u.get_faster', 1)
-                ->whereIn('withdrawals.gateway_id',[Gateway::GETNET_PRODUCTION_ID,Gateway::ASAAS_PRODUCTION_ID,Gateway::GERENCIANET_PRODUCTION_ID])
+                ->whereIn('withdrawals.gateway_id',$this->gatewayIds)
                 ->whereNull('c.deleted_at')
                 ->whereNull('u.deleted_at')
                 ->orderBy('withdrawals.id')
