@@ -122,7 +122,7 @@ class BankService
             ['code' => '213', 'name' => 'BANCO ARBI S.A.'],
 //            ['code' => '214', 'name' => 'Banco Dibens'],
 //            ['code' => '217', 'name' => 'Banco Joh Deere'],
-//            ['code' => '218', 'name' => 'BANCO BONSUCESSO/ BS2 S.A.'],
+            ['code' => '218', 'name' => 'BANCO BONSUCESSO/ BS2 S.A.'],
 //            ['code' => '222', 'name' => 'Banco Calyon Brasil'],
             ['code' => '224', 'name' => 'BANCO FIBRA S.A.'],
 //            ['code' => '225', 'name' => 'Banco Brascan'],
