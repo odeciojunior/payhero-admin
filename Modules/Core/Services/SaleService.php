@@ -393,7 +393,7 @@ class SaleService
         //valor do produtor
         $value = $userTransaction->value??0;
         $cashbackValue = $sale->cashback->value ?? 0;
-        $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
+        $comission = 'R$ ' . number_format($value/100, 2, ',', '.');
 
         //valor do afiliado
         $affiliateComission = '';
@@ -972,7 +972,7 @@ class SaleService
             ',',
             [
                 $transactionModel->present()->getStatusEnum('transfered'),
-                $transactionModel->present()->getStatusEnum('paid'),                
+                $transactionModel->present()->getStatusEnum('paid'),
             ]
         );
 
