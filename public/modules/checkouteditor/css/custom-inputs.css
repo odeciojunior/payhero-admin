@@ -88,7 +88,7 @@
     border-radius: 999px;
     margin-right: 5px;
     transition: 0.5s;
-    padding: 2px 15px;
+    padding: 2px 12px;
 }
 
 .custom-bubble-check[type="checkbox"]:checked + label {

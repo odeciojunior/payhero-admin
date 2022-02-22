@@ -451,13 +451,11 @@
     background-color: var(--primary-color);
 }
 
-.step-two {
+.step-two,
+.step-three {
     background-color: #313c52;
 }
 
-.step-three {
-    background-color: #dbdbdb;
-}
 
 .steps-circle {
     min-width: 50px;

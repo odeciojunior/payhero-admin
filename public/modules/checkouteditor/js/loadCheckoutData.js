@@ -119,10 +119,15 @@ $(() => {
                         formData.append( "topbar_content", '');
                     }else{
                         formData.append( "topbar_content", $("#topbar_content").children().html());
-                    }                   
+                    }             
                 
-                    formData.append("post_purchase_message_content", $("#post_purchase_message_content").children().html());
+                    
 
+                    if(quillThanksPage.getText().trim().length === 0){
+                        formData.append( "post_purchase_message_content", '');
+                    }else{
+                        formData.append("post_purchase_message_content", $("#post_purchase_message_content").children().html());
+                    } 
 
                     if(!formData.get('automatic_discount_credit_card')){
                         $('#automatic_discount_credit_card').val(0);
@@ -921,12 +926,22 @@ $(() => {
 
             if(form.get('checkout_logo_enabled') == "1"){
                 if($("#has_checkout_logo").val() == "true"){
-                    console.log('Valido')
                     validated = true;  
                 }else{
                     console.log('não válido')
                     scrollToElement('upload_logo');
                     $('#checkout_logo_error').show('slow', 'linear');
+                    return false;
+                }
+            }
+
+            if(form.get('checkout_banner_enabled') == "1"){
+                if($("#has_checkout_banner").val() == "true"){
+                    validated = true;  
+                }else{
+                    console.log('não válido')
+                    scrollToElement('banner_type');
+                    $('#checkout_banner_error').show('slow', 'linear');
                     return false;
                 }
             }

@@ -319,6 +319,11 @@ $(document).ready( function () {
         $("#has_checkout_logo").val("false");
     });
 
+    drEventLogo.on('dropify.afterClear', function(event, element){
+        $("#has_checkout_logo").val("false");
+    });
+
+
 
     var drEventFavicon = $("#checkout_favicon").dropify({
         messages: {
@@ -390,10 +395,15 @@ $(document).ready( function () {
         $("#preview_banner_img_mobile").attr("src", '');
         $("#preview_banner_img_desktop").attr("src", '');
         $("#has_checkout_banner").val("false");
-
         $("#preview_banner_img_mobile").fadeOut('slow');
         $("#preview_banner_img_desktop").fadeOut('slow');
     });
+
+    drEventBanner.on('dropify.afterClear', function(event, element){
+        $("#has_checkout_banner").val("false");
+    });
+
+    
 
     $('.dropify-clear').hide();
 
@@ -515,6 +525,7 @@ $(document).ready( function () {
             $('.logo-div').addClass('has-banner');
             $('.menu-bar-mobile').hide('slow');
             $('.purchase-menu-mobile').fadeIn('slow');
+            $("#checkout_banner").parent().find(".dropify-clear").trigger("click");
         }else{
             $("#banner_type").fadeOut("slow", "swing");
             $('.logo-div').removeClass('has-banner');

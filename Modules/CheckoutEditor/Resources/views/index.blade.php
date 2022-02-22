@@ -12,12 +12,28 @@
 <!-- Page -->
 <div class="checkout-container" style="max-height: 3585px;  margin-bottom: 20px;">
 
-    <div class="card card-body" style="height: 122px;">
+    <!-- <div class="card card-body" style="height: 122px;">
         <h1 class="checkout-title">
             Editor de Checkout
         </h1>
         <div class="checkout-subtitle">
             <span class="tag"><b>NOVO!</b></span> Adicione banner, temas pré-prontos ou personalize o seu próprio.
+        </div>
+
+    </div> -->
+
+    <div class='row card no-gutters p-30 rounded-top'>
+
+        <div class="col-12 font-size-24 pl-0 mb-10">
+        Editor de Checkout
+        </div>
+
+        <div class="col-md-12">
+            <div class="badge badge-primary font-size-14 mr-10">
+                NOVO
+            </div>
+
+            <span class="font-size-16">Adicione banner, temas pré-prontos ou personalize o seu próprio.</span>
         </div>
 
     </div>
@@ -34,13 +50,11 @@
                     </h1>
 
                     <div id="checkout_type" class="radio-group">
-                        <input class="custom-radio" id="checkout_type_steps" type="radio" name="checkout_type_enum"
-                            value="1" />
+                        <input class="custom-radio" id="checkout_type_steps" type="radio" name="checkout_type_enum" value="1" style="width: 150px"/>
                         <label for="checkout_type_steps">Checkout de 3 passos</label>
 
-                        <input class="custom-radio" id="checkout_type_unique" type="radio" name="checkout_type_enum"
-                            value="2" />
-                        <label for="checkout_type_unique">Checkout único</label>
+                        <input class="custom-radio" id="checkout_type_unique" type="radio" name="checkout_type_enum" value="2" style="width: 150px"/>
+                        <label for="checkout_type_unique">Checkout de 1 passo</label>
                     </div>
                 </div>
 
@@ -144,7 +158,7 @@
                                 </div>
 
                                 <div id='upload_favicon'>
-                                    <input type="file" id="checkout_favicon" name="checkout_favicon" data-errors-position="outside" data-show-errors="false" data-show-loader="false" data-max-file-size="10M" data-max-width="32" data-min-height="32" data-allowed-file-extensions="jpg jpeg png ico">
+                                    <input type="file" id="checkout_favicon" name="checkout_favicon" data-errors-position="outside" data-show-errors="false" data-show-loader="false" data-max-file-size="10M"  data-allowed-file-extensions="jpg jpeg png ico">
                                     <label for="checkout_favicon">Clique para fazer upload</label>
                                     <input type="hidden" id="has_checkout_favicon" value="false">
                                 </div>
@@ -393,9 +407,11 @@
 
                         <div class="banner-top-content">
                             <div id='upload-banner'>
-                                <input type="file" id="checkout_banner" name="checkout_banner" data-max-file-size="10M"
-                                    data-allowed-file-extensions="jpg jpeg png">
+                                <input type="file" id="checkout_banner" name="checkout_banner" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                                 <input type="hidden" id="has_checkout_banner" value="false">
+                                <div id="checkout_banner_error" class="checkout-error" style="display: none">
+                                    <p>Por favor,carregue uma imagem de formato válido (jpg, jpeg ou png).</p>
+                                </div>
                             </div>
 
 
@@ -1332,7 +1348,7 @@
                                         
                                             <div class="menu-bar-mobile">
                                                 <div class="menu">
-                                                    <div class="menu-circle-mobile"></div>
+                                                    <div class="menu-circle-mobile primary-color"></div>
                                                     <img class="arrow-icon-mobile" src="{{ asset('/modules/checkouteditor/img/svg/menu-arrow.svg') }}">
                                                 </div>
                                             </div>
@@ -1352,7 +1368,7 @@
 
                                         <div class="purchase-menu-mobile">
                                             <img class="arrow-icon-mobile" src="{{ asset('/modules/checkouteditor/img/svg/purchase-icon.svg') }}">
-                                            <div class="menu-circle-mobile"></div>
+                                            <div class="menu-circle-mobile primary-color"></div>
                                             <img class="arrow-icon-mobile" src="{{ asset('/modules/checkouteditor/img/svg/menu-arrow.svg') }}">
                                         </div>
                                     </div>
@@ -1675,7 +1691,7 @@
                                                     style="border-radius: 12px; height: 35px; width: 70px; background-color: #F5F5F5; margin: 0 20px 0 0;border-radius: 8px;">
                                                 </div>
 
-                                                <div
+                                                <div class="primary-color"
                                                     style="border-radius: 12px; height: 35px; width: 100px; background-color: #2E85EC; border-radius: 4px;">
                                                 </div>
                                             </div>
