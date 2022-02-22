@@ -3,8 +3,8 @@
 @push('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
-    <link rel="stylesheet" href="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.css?v='. uniqid()) }}">
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=13') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.css?v=' . versionsFile()) }}">
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v='. versionsFile()) }}">
     <style>
@@ -75,13 +75,13 @@
                                             <div class="d-flex justify-content-start padding-cards-l">
                                                 <div class="pl-5">
                                                     <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/icon-arrowback.svg') }}">
-    
+
                                                 </div>
-    
+
                                                 <span class="s-data-project-values pl-5 pl-md-5 align-self-center" id="value-chargeback"></span>
                                             </div>
-                                            
-                                            
+
+
                                             <div class="d-flex align-items-start justify-content-start padding-cards-l font-size-12">
                                                 <small class="font-size-12">chargebacks</small>
                                             </div>
@@ -470,8 +470,8 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
         <script src="{{asset('modules/domain/js/domainEdit.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/plans/js/loading.js?v='.versionsFile())}}"></script>
-        <script src="{{asset('modules/plans/js/plans.js?v='.uniqid())}}"></script>
-        <script src="{{asset('modules/shipping/js/shipping.js?v=0'.versionsFile())}}"></script>
+        <script src="{{asset('modules/plans/js/plans.js?v=' . versionsFile()) }}"></script>
+        <script src="{{asset('modules/shipping/js/shipping.js?v=' . versionsFile()) }}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/orderbump/js/index.js?v='.versionsFile())}}"></script>
@@ -486,7 +486,7 @@
         <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>
         <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.versionsFile())}}"></script>
 
-        <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mousewheel.min.js') }}"></script>
-        <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.js?v='.uniqid()) }}"></script>
+        <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mousewheel.min.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.js?v=' . versionsFile()) }}"></script>
     @endpush
 @endsection

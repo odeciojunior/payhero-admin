@@ -56,7 +56,7 @@ $(document).ready(function () {
 function stringToMoney(string, currency = 'BRL') {
     let value = parseInt(string, 10);
 
-    return value.toLocaleString('pt-br', {style: 'currency', currency: currency});
+    return value.toLocaleString('pt-br', { style: 'currency', currency: currency });
 }
 
 function scrollCustom(div, padding = false, type = '') {
@@ -285,7 +285,7 @@ function heightAnimate(element, height) {
     var autoHeight = element.css('height', 'auto').height(); // Get Auto Height
 
     element.height(curHeight); // Reset to Default Height
-    element.stop().animate({height: autoHeight}, time); // Animate to Auto Height
+    element.stop().animate({ height: autoHeight }, time); // Animate to Auto Height
 }
 
 function loadingOnScreenRemove() {
@@ -617,8 +617,12 @@ function isEmpty(obj) {
     return Object.keys(obj ? obj : {}).length === 0;
 }
 
+function companyIsApproved(company) {
+    return company.company_is_approved ? true : false;
+}
+
 function defaultSelectItemsFunction(item) {
-    return {value: item.id_code, text: item.name};
+    return { value: item.id_code, text: item.name };
 }
 
 function downloadFile(response, request) {
@@ -631,7 +635,7 @@ function downloadFile(response, request) {
     var a = document.createElement("a");
     a.style.display = "none";
     document.body.appendChild(a);
-    a.href = window.URL.createObjectURL(new Blob([response], {type: type}));
+    a.href = window.URL.createObjectURL(new Blob([response], { type: type }));
     a.setAttribute("download", fileName);
     a.click();
     window.URL.revokeObjectURL(a.href);
@@ -781,8 +785,8 @@ $.fn.shake = function () {
     let distance = 5;
     let speed = 50;
     let repeat = 3;
-    let animation1 = {left: "+=" + distance};
-    let animation2 = {left: "-=" + (distance * 2)};
+    let animation1 = { left: "+=" + distance };
+    let animation2 = { left: "-=" + (distance * 2) };
 
     for (let i = 0; i < repeat; i++) {
         $(this).animate(animation1, speed)

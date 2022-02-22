@@ -28,7 +28,7 @@
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
-    <script src="{{ asset('modules/global/js/global.js?v=01') }}"></script>
+    <script src="{{ asset('modules/global/js/global.js?v=' . versionsFile()) }}"></script>
     <script>
         Breakpoints();
     </script>

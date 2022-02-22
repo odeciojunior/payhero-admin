@@ -105,7 +105,8 @@ class SalesResource extends JsonResource
             'cashback_value' => $this->payment_method <> 4 ? (isset($this->cashback->value) ? FoxUtils::formatMoney($this->cashback->value / 100) : 0):0 ,
             'has_cashback' => $this->cashback->value ?? false,
             'api_flag' => $this->api_flag,
-            'has_withdrawal' => !empty($this->details->has_withdrawal),                  
+            'has_withdrawal' => !empty($this->details->has_withdrawal),
+            'gateway_id' => hashids_encode($this->gateway_id)
         ];
 
         $shopifyIntegrations = [];

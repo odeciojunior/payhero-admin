@@ -46,7 +46,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property int $contract_document_status
  * @property int $boleto_release_money
  * @property int $credit_card_release_money
- * @property int $capture_transaction_enabled
  * @property int $account_type
  * @property int $gateway_tax
  * @property int $gateway_release_money_days
@@ -153,7 +152,6 @@ class Company extends Model
         'pix_key_situation',
         'has_pix_key',
         'order_priority',
-        'capture_transaction_enabled',
         'account_type',
         'extra_document',
         'document_issue_date',

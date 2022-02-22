@@ -100,9 +100,14 @@ class Safe2PayService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $availableBalance += $pendingBalance;
 
-        $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
+        if($sale->payment_method == Sale::BOLETO_PAYMENT) {
+            return $availableBalance >= (int) foxutils()->onlyNumbers($sale->total_paid_value);
+        }
+        else {
+            $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
+            return $availableBalance >= $transaction->value;
+        }
 
-        return $availableBalance >= $transaction->value;
     }
 
     public function getWithdrawals(): JsonResource
@@ -249,16 +254,11 @@ class Safe2PayService implements Statement
         return (new StatementService)->getPeriodBalance($this->company->id, $this->gatewayIds, $filters);
     }
 
-
     public function getResume()
     {
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
                                         ->where('company_id', $this->company->id)
                                         ->orderBy('id', 'desc')->first();
-
-        if(empty($lastTransaction)) {
-            return [];
-        }
         
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
@@ -270,7 +270,7 @@ class Safe2PayService implements Statement
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
 
         return [
-            'name' => 'Safe2pay',
+            'name' => 'Vega',
             'available_balance' => foxutils()->formatMoney($availableBalance / 100),
             'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
             'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
@@ -281,12 +281,13 @@ class Safe2PayService implements Statement
         ];
     }
 
-    public function getGatewayAvailable(){
+    public function getGatewayAvailable()
+    {
         $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
                                         ->where('company_id', $this->company->id)
                                         ->orderBy('id', 'desc')->first();
 
-        return !empty($lastTransaction) ? ['Safe2pay']:[];
+        return !empty($lastTransaction) ? ['Vega']:[];
     }
 
     public function getCompanyApiKey(Sale $sale)
@@ -444,68 +445,7 @@ class Safe2PayService implements Statement
 
     public function refundReceipt($hashSaleId,$transaction)
     {
-        $credential = DB::table('gateways_companies_credentials')->select('gateway_api_key')
-        ->where('company_id',$transaction->company_id)->where('gateway_id',$transaction->gateway_id)->first();
-
-        if(!empty($credential)){
-            $this->apiKey = $credential->gateway_api_key;
-        }
-
-        $domainAsaas = 'https://www.asaas.com';
-        $url = $domainAsaas.'/api/v3/payments/'.$transaction->sale->gateway_transaction_id;
-
-        $curl = curl_init($url);
-
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            'Content-Type: multipart/form-data',
-            'access_token: ' . $this->apiKey,
-        ]);
-
-        $result = curl_exec($curl);
-        $httpStatus     = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $response = json_decode($result);
-
-        if (($httpStatus < 200 || $httpStatus > 299) && (!isset($response->errors))) {
-            //report(new Exception('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus));
-            report('Erro ao consultar o status do pagamento' . $url . ' - code:' . $httpStatus);
-        }
-
-        if(!empty($response) && !empty($response->status) && $response->status=='REFUNDED' && !empty($response->transactionReceiptUrl)){
-
-            $curl = curl_init($response->transactionReceiptUrl);
-
-            curl_setopt($curl, CURLOPT_ENCODING, '');
-            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-
-            $result = curl_exec($curl);
-
-            curl_close($curl);
-
-            $of = [
-                'href="/assets',
-                'src="/assets',
-                '</head>',
-                'Cobrança intermediada por ASAAS - gerar boletos nunca foi tão fácil.'
-            ];
-
-            $to = [
-                'href="' .$domainAsaas.'/assets',
-                'src="'. $domainAsaas.'/assets',
-                '<style>#loading-backdrop{display:none !important}</style>',
-                ''
-            ];
-
-            $view = str_replace($of,$to,$result);
-
-            return PDF::loadHtml($view);
-        }
-
+        
         return PDF::loadHtml('<h2>Não foi possivel gerar o comprovante de estorno!.</h2>');
     }
 }

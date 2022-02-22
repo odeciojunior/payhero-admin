@@ -225,7 +225,7 @@ $(() => {
         },
         imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'],
     };
-    
+
     // CARD 3 SE NAO ACHAR IMAGEM SETTA UMA PADRAO
     $("img").on("error", function () {
         $(this).attr("src", "https://cloudfox-files.s3.amazonaws.com/produto.svg");
@@ -394,7 +394,7 @@ $(() => {
         );
         preview.fadeIn();
     }
-    
+
     function messageErrors(defaultMessage, menssageError = ""){
         $("#confirm-changes").fadeOut(3000);
 
@@ -404,7 +404,7 @@ $(() => {
             setTimeout(function() {
                 $("#data-error span").html(defaultMessage)
             },5000)
-        
+
         }else{
             $("#data-error span").html(defaultMessage)
             $("#data-error").fadeIn(2000).delay(2000).fadeOut(2000);
@@ -436,7 +436,7 @@ $(() => {
         messageErrors(getDefaultErrorMessage)
         imgReady = false
     })
-    
+
     $("#project_photo").on("dropify.fileReady", function(){
         imgReady = true
         if(validateForm(imgReady)){
@@ -454,7 +454,7 @@ $(() => {
             $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg");
         }
     });
-   
+
     // CARD 4 BOTAO DE COPIAR LINK
     $("#copy-link-affiliation").on("click", function () {
         var copyText = document.getElementById("url-affiliates");
@@ -543,7 +543,7 @@ $(() => {
         if(localStorage.getItem("photo_remove") == "true"){
             formData.append("remove_project_photo", true)
         }
-        
+
         if (!verify) {
             $.ajax({
                 method: "POST",
