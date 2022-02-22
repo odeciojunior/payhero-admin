@@ -31,12 +31,12 @@ $(() => {
 
     $("#modal_verify_phone").on("hidden.bs.modal", function () {
         $('.code-input').val("");
+        $('#modal_verify_content').hide();
+        $('#modal_verified_content').hide();
     });
 
     $("#modal_verify_phone").on("shown.bs.modal", function () {
-
         $('#modal_verify_content').show('slow');
-        $('#modal_verified_content').hide('slow');
 
         $("#phone_modal").empty();
         $("#phone_modal").append($("#support_phone").val());

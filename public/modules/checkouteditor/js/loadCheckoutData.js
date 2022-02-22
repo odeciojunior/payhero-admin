@@ -119,9 +119,7 @@ $(() => {
                         formData.append( "topbar_content", '');
                     }else{
                         formData.append( "topbar_content", $("#topbar_content").children().html());
-                    }             
-                
-                    
+                    }                                 
 
                     if(quillThanksPage.getText().trim().length === 0){
                         formData.append( "post_purchase_message_content", '');

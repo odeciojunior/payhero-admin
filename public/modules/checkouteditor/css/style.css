@@ -1199,6 +1199,11 @@ input[type="color"]::-moz-color-swatch {
     height: 40px;
 }
 
+#modal_verify_phone .modal-content {
+    min-width: 600px;
+    min-height: 417px;
+}
+
 /* ----------- Animated Loader ------------- */
 
 .lds-ring {

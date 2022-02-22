@@ -396,8 +396,7 @@
                                 <div class="switch-holder mb-3">
                                     <label class="switch" style='top:3px'>
                                         <input type="checkbox" id="checkout_banner_enabled"
-                                            name="checkout_banner_enabled" data-target="banner-top-content"
-                                            data-preview=".preview-banner" class='check switch-checkout'>
+                                            name="checkout_banner_enabled" data-target="banner-top-content" data-preview=".preview-banner" class='check switch-checkout'>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -405,7 +404,7 @@
 
                         </div>
 
-                        <div class="banner-top-content">
+                        <div class="banner-top-content" style="display: none">
                             <div id='upload-banner'>
                                 <input type="file" id="checkout_banner" name="checkout_banner" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                                 <input type="hidden" id="has_checkout_banner" value="false">
@@ -459,7 +458,7 @@
                                 </div>
                             </div>
 
-                            <div class="countdown-content">
+                            <div class="countdown-content" style="display: none">
                                 <div class="input-container">
                                     <label for="countdown_time" class="checkout-label">Tempo</label>
                                     <div class="tagged-input-div">
@@ -527,7 +526,7 @@
                                 </div>
                             </div>
 
-                            <div class="textbar-content">
+                            <div class="textbar-content" style="display: none">
                                 <label for="topbar_content" class="checkout-label">Texto na barra</label>
                                 <div class="editor-container">
                                     <div id="topbar_content_toolbar_container" class="editor-toolbar-container">
@@ -572,20 +571,16 @@
                                     <label class="checkout-label">Intervalo entre notificações</label>
 
                                     <div class="radio-group">
-                                        <input class="custom-radio" id="notifications_interval_15" type="radio"
-                                            name="notifications_interval" value="15" />
+                                        <input class="custom-radio" id="notifications_interval_15" type="radio" name="notifications_interval" value="15" />
                                         <label for="notifications_interval_15">15 segundos</label>
 
-                                        <input class="custom-radio" id="notifications_interval_30" type="radio"
-                                            name="notifications_interval" value="30" />
+                                        <input class="custom-radio" id="notifications_interval_30" type="radio" name="notifications_interval" value="30" checked/>
                                         <label for="notifications_interval_30">30 segundos</label>
 
-                                        <input class="custom-radio" id="notifications_interval_45" type="radio"
-                                            name="notifications_interval" value="45" />
+                                        <input class="custom-radio" id="notifications_interval_45" type="radio" name="notifications_interval" value="45" />
                                         <label for="notifications_interval_45">45 segundos</label>
 
-                                        <input class="custom-radio" id="notifications_interval_60" type="radio"
-                                            name="notifications_interval" value="60" />
+                                        <input class="custom-radio" id="notifications_interval_60" type="radio" name="notifications_interval" value="60" />
                                         <label for="notifications_interval_60">1 minuto</label>
                                     </div>
                                 </div>
@@ -748,7 +743,7 @@
                                 </div>
                             </div>
 
-                            <div class="social-proof-content">
+                            <div class="social-proof-content" style="display: none">
                                 <div class="input-container">
                                     <label for="social_proof_message" class="checkout-label">Mensagem</label>
                                     <textarea class="checkout-textarea" id="social_proof_message"
@@ -1122,7 +1117,7 @@
                             </div>
                         </div>
 
-                        <div class="thanks-page-content">
+                        <div class="thanks-page-content" style="display: none">
                             <div style="margin-bottom: 15px;">
                                 <label for="post_purchase_message_content" class="checkout-label">Título da sua
                                     mensagem</label>
@@ -1180,7 +1175,7 @@
                             <p>Ao ativar, seu cliente poderá receber o boleto via WhatsApp.</p>
                         </div>
 
-                        <div class="whatsapp-content">
+                        <div class="whatsapp-content" style="display: none">
                             <label for="support_phone" class="checkout-label">Telefone do suporte <span
                                     class="observation-span">Opcional</span></label>
                             <div class="row-flex">
@@ -1278,13 +1273,13 @@
                                     <div class="header-colorbar desktop primary-color  countdown-preview"></div>
                                     <div class="header-colorbar desktop secondary-color textbar-preview"> </div>
 
-                                    <div class="preview-banner wide-banner desktop">
+                                    <div class="preview-banner wide-banner desktop" style="display: none">
                                         <img id="preview_banner_img_desktop" class="preview-banner-img" />
                                     </div>
                                 </div>
 
                                 <div id="logo_preview_desktop_div" class="logo-div logo-desktop-div desktop">
-                                    <div class="logo-desktop logo-preview-container">
+                                    <div class="logo-desktop logo-preview-container" style="display: none">
                                         <img id="logo_preview_desktop" class="preview-logo desktop" alt="Logo" />
                                     </div>
                                 </div>
@@ -1354,14 +1349,14 @@
                                             </div>
                                         
 
-                                        <div class="preview-banner wide-banner mobile">
+                                        <div class="preview-banner wide-banner mobile" style="display: none">
                                             <img id="preview_banner_img_mobile" class="preview-banner-img" />
                                         </div>
                                     </div>
 
                                     <div class="logo-div logo-menu-bar has-banner" style="overflow-y:hidden">
                                         <div>
-                                            <div class="logo-mobile-div logo-preview-container">
+                                            <div class="logo-mobile-div logo-preview-container" style="display: none">
                                                 <img id="logo_preview_mobile" class="preview-logo mobile" />
                                             </div>
                                         </div>
@@ -1746,7 +1741,7 @@
                         </div>
                     </div>
 
-                    <div class="save-changes " id="save_changes" style="">
+                    <div class="save-changes " id="save_changes" style="display: none">
 
                         <p>
                             Você tem alterações que <strong>não estão salvas</strong>
