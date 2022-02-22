@@ -152,13 +152,13 @@ class ProjectsApiController extends Controller
                 return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
-            $checkoutConfig = CheckoutConfig::firstOrCreate([
+            $checkoutConfig = CheckoutConfig::create([
                 'company_id' => $requestValidated['company'],
-            ], [
                 'project_id' => $project->id,
             ]);
 
             if (empty($checkoutConfig)) {
+                $project->delete();
                 return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
