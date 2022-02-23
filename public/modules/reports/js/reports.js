@@ -10,6 +10,37 @@ $(function () {
     newSellGraph();
     distributionGraphSeller();
 
+    $.ajax({
+        async: false,
+        method: "GET",
+        url: "/api/projects/jeApQgzQqRGEb76/companie",
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: function error(response) {
+            console.log('error ', response);
+        },
+        success: function success(response) {
+            $.ajax({
+                method: "GET",
+                url: "/api/reports/get-cashback?company=" + response.data.id_code + "&date_type=start_date&date_range=" + $('#date-filter').val(),
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
+                },
+                error: function error(response) {
+                    console.log('error ', response);
+                },
+                success: function success(response) {
+                    console.log('successs ', response);
+                }
+            });
+        }
+    });
+
     // show/hide modal de exportar relatórios
     $(".lk-export").on('click', function(e) {
         e.preventDefault();

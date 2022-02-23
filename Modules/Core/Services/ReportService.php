@@ -1208,13 +1208,12 @@ class ReportService
 
             //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-            $dateType = $filters["date_type"];
 
             $transactions
             ->whereHas(
                 'sale',
-                function ($querySale) use ($dateRange, $dateType) {
-                    $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                function ($querySale) use ($dateRange) {
+                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
             )
             ->selectRaw('transactions.*, sales.start_date')
@@ -1278,13 +1277,12 @@ class ReportService
 
             // Filtros - INICIO
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-            $dateType = $filters["date_type"];
 
             // Filtro de Data
             $transactions->whereHas(
                 'sale',
-                function ($querySale) use ($dateRange, $dateType) {
-                    $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                function ($querySale) use ($dateRange) {
+                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
             )
             ->selectRaw('transactions.*, sales.start_date')
@@ -1358,13 +1356,12 @@ class ReportService
 
             //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-            $dateType = $filters["date_type"];
 
             $cashbacks
             ->whereHas(
                 'sale',
-                function ($querySale) use ($dateRange, $dateType) {
-                    $querySale->whereBetween($dateType, ['2021-01-01 00:00:00', $dateRange[1] . ' 23:59:59']);
+                function ($querySale) use ($dateRange) {
+                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
             )
             ->selectRaw('cashbacks.*, sales.start_date')

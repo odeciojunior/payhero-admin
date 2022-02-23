@@ -808,8 +808,7 @@ class ReportsApiController extends Controller
     {
         $request->validate([
             'company' => 'required',
-            'date_range' => 'required',
-            'date_type' => 'required'
+            'date_range' => 'required'
         ]);
 
         $data = $request->all();
@@ -824,8 +823,7 @@ class ReportsApiController extends Controller
     {
         $request->validate([
             'company' => 'required',
-            'date_range' => 'required',
-            'date_type' => 'required'
+            'date_range' => 'required'
         ]);
 
         $data = $request->all();
@@ -840,8 +838,7 @@ class ReportsApiController extends Controller
     {
         $request->validate([
             'company' => 'required',
-            'date_range' => 'required',
-            'date_type' => 'required'
+            'date_range' => 'required'
         ]);
 
         $data = $request->all();
