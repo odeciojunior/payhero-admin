@@ -954,6 +954,7 @@ $(() => {
                         $('#support_phone').addClass('error-input');
                         $('#support_phone_error').show('slow', 'linear');
                         scrollToElement('support_phone');
+                        console.log('tefasutydfasytdf')
                         return false;
                     }
                 }

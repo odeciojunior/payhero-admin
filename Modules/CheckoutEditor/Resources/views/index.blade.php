@@ -157,7 +157,7 @@
                                     </div>
                                 </div>
 
-                                <div id='upload_favicon'>
+                                <div id='upload_favicon' class="low-opacity">
                                     <input type="file" id="checkout_favicon" name="checkout_favicon" data-errors-position="outside" data-show-errors="false" data-show-loader="false" data-max-file-size="10M"  data-allowed-file-extensions="jpg jpeg png ico">
                                     <label for="checkout_favicon">Clique para fazer upload</label>
                                     <input type="hidden" id="has_checkout_favicon" value="false">

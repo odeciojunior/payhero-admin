@@ -511,6 +511,14 @@ $(document).ready( function () {
         }
     });
 
+    $("input[name='favicon_type'").on("change", function(){
+        if($(this).val()=='1'){
+            $("#upload_favicon").addClass('low-opacity');
+        }else{
+            $("#upload_favicon").removeClass('low-opacity');
+        }
+    })
+
     $("#checkout_editor").on("input", function () {
         $("#save_changes").fadeIn("slow", "swing");
     });
