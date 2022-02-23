@@ -156,7 +156,7 @@ $(document).ready(function () {
                             '">' +
                             value.status_translated +
                             "</span></td>";
-                        data += "<td class='text-center'>";
+                        data += "<td class='text-center text-nowrap'>";
                         data +=
                             "<a title='Visualizar' class='mg-responsive pointer details-affiliate' affiliate='" +
                             value.id +
@@ -206,16 +206,16 @@ $(document).ready(function () {
                                     function error() {
                                         return _error3.apply(this, arguments);
                                     }
-                    
+
                                     error.toString = function () {
                                         return _error3.toString();
                                     };
-                    
+
                                     return error;
                                 }(function (response) {
                                     loadingOnScreenRemove();
                                     errorAjaxResponse(response);
-                    
+
                                 }),
                                 success: function (data) {
                                     loadingOnScreenRemove();
