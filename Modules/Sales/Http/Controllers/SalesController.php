@@ -50,7 +50,7 @@ class SalesController extends Controller
                 'sale',
                 'company'
             ])->where('sale_id', $id)
-                ->whereIn('gateway_id', [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID])
+                ->whereIn('gateway_id', [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID,Gateway::SAFE2PAY_PRODUCTION_ID])
                 ->where('type', (new Transaction())->present()->getType('producer'))
                 ->whereHas('sale', function ($query) {
                     $query->where('payment_method', 1);

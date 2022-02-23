@@ -18,9 +18,10 @@ class WithdrawalsResumeResource extends JsonResource
         if ($date->diffInDays() > Carbon::DAYS_PER_WEEK) {
             $dateWithdrawal = "Em {$this->created_at->format('d/m/Y')}";
         }
+        $bank = (new BankService())->getBankName($this->bank);
         return [
             'gateway_name' => $this->gateway->present()->getName(),
-            'bank_name' => (new BankService())->getBankName($this->bank),
+            'bank_name' => $bank??' - ',
             'date' => $dateWithdrawal,
             'value' => foxutils()->formatMoney($this->value / 100),
             'status' => $this->status,
