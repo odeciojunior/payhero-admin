@@ -106,7 +106,7 @@
 }
 
 .preview-banner.desktop {
-    height: 83px;
+    height: 90px;
     overflow: hidden;
 }
 
@@ -147,6 +147,25 @@
 
 .logo-div.logo-menu-bar.retangle-banner {
     padding: 0 30px;
+}
+
+.preview-body.visual.desktop {
+    width: 400px;
+    padding: 0 !important;
+}
+
+@media (max-width: 1600px){
+
+    .retangle-banner.desktop {
+        width: 230px;
+    }
+    .preview-banner.desktop {
+        height: 65px;
+    }
+
+    .preview-body.visual.desktop {
+        width: 230px;
+    }
 }
 
 /* ----------- Logo Desktop Preview ----------- */
@@ -818,12 +837,4 @@
     margin: 0 10px 0 0;
 }
 
-@media (max-width: 1600px){
 
-    .retangle-banner.desktop {
-        width: 230px;
-    }
-    .preview-banner.desktop {
-        height: 58px;
-    }
-}
