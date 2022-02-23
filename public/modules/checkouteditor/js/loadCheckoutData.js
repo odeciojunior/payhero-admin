@@ -275,14 +275,15 @@ $(() => {
             if (checkout.checkout_logo_enabled == 1) {
                 $("#checkout_editor #checkout_logo_enabled").prop("checked", true);
                 $("#checkout_editor #checkout_logo_enabled").prop("value", 1);
-                $('.logo-content').removeClass('low-opacity')
+                $('.favicon-content').removeClass('low-opacity')
                 $("#checkout_editor .logo-preview-container").show();
             } else {
                 $("#checkout_editor #checkout_logo_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_logo_enabled").prop("value", 0);
-                $($(this).attr("data-enable")).addClass('low-opacity')
+                $('.favicon-content').addClass('low-opacity')
                 $("#checkout_editor .logo-preview-container").hide();
             }
+            
 
             if (checkout.checkout_logo) {
                 replacePreview("checkout_logo", checkout.checkout_logo, "Image.jpg");
@@ -295,6 +296,31 @@ $(() => {
                 $("#logo_preview_mobile").fadeOut('slow');
                 $("#logo_preview_desktop").fadeOut('slow');
             }
+
+            if (checkout.checkout_favicon_enabled == 1) {
+                $("#checkout_editor #checkout_favicon_enabled").prop("checked", true);
+                $("#checkout_editor #checkout_favicon_enabled").prop("value", 1);
+                $('.favicon-content').removeClass('low-opacity')
+            } else {
+                $("#checkout_editor #checkout_favicon_enabled").prop("checked", false);
+                $("#checkout_editor #checkout_favicon_enabled").prop("value", 0);
+                $('.favicon-content').addClass('low-opacity')
+            }
+
+            if(checkout.checkout_favicon_type == '1') {
+                $('#favicon_logo').attr("checked", true);
+            }else {
+                $('#favicon_uploaded').attr("checked", true);
+            }
+
+            if (checkout.checkout_banner) {
+                replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
+                $("#preview_banner_img_desktop").attr("src", checkout.checkout_banner);
+                $("#preview_banner_img_mobile").attr("src", checkout.checkout_banner);
+                $("#has_checkout_banner").val("true");
+            }
+
+            
 
             if (checkout.checkout_banner) {
                 replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");

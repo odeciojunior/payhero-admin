@@ -106,7 +106,7 @@
 }
 
 .preview-banner.desktop {
-    height: 83px;
+    height: 84px;
     overflow: hidden;
 }
 
@@ -136,7 +136,7 @@
 }
 
 .retangle-banner.desktop {
-    width: 400px;
+    width: 75%;
 }
 
 .retangle-banner.mobile {
@@ -155,7 +155,7 @@
     display: flex;
     align-items: center;
     width: 100%;
-    /* height: 50px; */
+    height: 50px;
     padding: 10px 70px 0 80px;
     -webkit-transition: all 0.1s;
     -moz-transition: all 0.1s;
@@ -821,7 +821,7 @@
 @media (max-width: 1600px){
 
     .retangle-banner.desktop {
-        width: 230px;
+        width: 64%;
     }
     .preview-banner.desktop {
         height: 58px;
