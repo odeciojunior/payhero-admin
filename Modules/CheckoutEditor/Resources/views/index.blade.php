@@ -1285,7 +1285,7 @@
                                 </div>
 
 
-                                <div class="preview-body desktop visual">
+                                <div class="preview-body visual desktop">
                                     <div class="checkout-step-type">
                                         <div class="steps-lines">
                                             <div class="step-one primary-color"></div>

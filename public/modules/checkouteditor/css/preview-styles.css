@@ -106,7 +106,7 @@
 }
 
 .preview-banner.desktop {
-    height: 6.1em;
+    height: 90px;
     overflow: hidden;
 }
 
@@ -136,7 +136,7 @@
 }
 
 .retangle-banner.desktop {
-    width: 28em;
+    width: 400px;
 }
 
 .retangle-banner.mobile {
@@ -149,12 +149,22 @@
     padding: 0 30px;
 }
 
+.preview-body.visual.desktop {
+    width: 400px;
+    padding: 0 !important;
+}
+
 @media (max-width: 1600px){
+
     .retangle-banner.desktop {
-        width: 17em;
+        width: 230px;
     }
     .preview-banner.desktop {
-        height: 4.2em;
+        height: 65px;
+    }
+
+    .preview-body.visual.desktop {
+        width: 230px;
     }
 }
 
@@ -164,7 +174,7 @@
     display: flex;
     align-items: center;
     width: 100%;
-    height: 50px;
+    /* height: 50px; */
     padding: 10px 70px 0 80px;
     -webkit-transition: all 0.1s;
     -moz-transition: all 0.1s;
@@ -826,3 +836,5 @@
     height: 20px;
     margin: 0 10px 0 0;
 }
+
+
