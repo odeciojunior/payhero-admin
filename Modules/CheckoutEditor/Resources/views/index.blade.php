@@ -86,7 +86,7 @@
                             </div>
 
                             <div class="logo-content low-opacity">
-                            
+
                                 <div id='upload_logo'>
                                     <input type="file" id="checkout_logo" name="checkout_logo"
                                         data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
@@ -97,7 +97,7 @@
                                     <p><b>Recomendações:</b> Imagem de
                                         300x300px, <b>.jpeg</b> ou <b>.png</b></p>
                                 </div>
-                                
+
 
                                 <div id="checkout_logo_error" class="checkout-error" style="display: none">
                                     <p>Por favor,carregue uma imagem de formato válido (jpg, jpeg ou png).</p>
@@ -147,12 +147,12 @@
                             <div class="favicon-content low-opacity">
                                 <div>
                                     <div class="radio-row">
-                                        <input type="radio" id="favicon_logo" class="bigger-radio" name="favicon_type" value="1" checked>
+                                        <input type="radio" id="favicon_logo" class="bigger-radio" name="checkout_favicon_type" value="1" checked>
                                         <label for="favicon_logo">Utilizar a logo como favicon</label><br>
                                     </div>
 
                                     <div class="radio-row">
-                                        <input type="radio" id="favicon_uploaded" class="bigger-radio" name="favicon_type" value="2">
+                                        <input type="radio" id="favicon_uploaded" class="bigger-radio" name="checkout_favicon_type" value="2">
                                         <label for="favicon_uploaded">Subir um arquivo diferente</label><br>
                                     </div>
                                 </div>
@@ -166,7 +166,7 @@
                                 <div class="instrunctios">
                                     <p>"Sua imagem deve ter 32x32px, nos formatos .png, .jpg ou ICO</p>
                                 </div>
-                                
+
                                 <div id="checkout_favicon_error" class="checkout-error" style="display: none">
                                     <p>Por favor, carregue uma imagem de formato e tamanho válido.</p>
                                 </div>
@@ -1340,14 +1340,14 @@
                                         <div class="header-colorbar mobile primary-color   countdown-preview"></div>
                                         <div class="header-colorbar mobile secondary-color textbar-preview"> </div>
 
-                                        
+
                                             <div class="menu-bar-mobile">
                                                 <div class="menu">
                                                     <div class="menu-circle-mobile primary-color"></div>
                                                     <img class="arrow-icon-mobile" src="{{ asset('/modules/checkouteditor/img/svg/menu-arrow.svg') }}">
                                                 </div>
                                             </div>
-                                        
+
 
                                         <div class="preview-banner wide-banner mobile" style="display: none">
                                             <img id="preview_banner_img_mobile" class="preview-banner-img" />

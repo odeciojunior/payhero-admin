@@ -13,7 +13,6 @@ use Modules\CheckoutEditor\Transformers\CheckoutConfigResource;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\AmazonFileService;
-use Intervention\Image\Facades\Image;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
 use Spatie\Activitylog\Models\Activity;
@@ -52,21 +51,32 @@ class CheckoutEditorApiController extends Controller
             $userId = hashids_encode(auth()->user()->account_owner_id);
 
             $logo = $request->file('checkout_logo');
-            if (!empty($logo)) {
+            if (!empty($logo) && $data['checkout_logo_enabled']) {
                 $amazonFileService->deleteFile($config->checkout_logo);
                 $amazonPathLogo = $amazonFileService->uploadFile('uploads/user/' . $userId . '/public/projects/' . hashids_encode($id) . '/logo', $logo);
                 $data['checkout_logo'] = $amazonPathLogo;
-            } elseif(!$data['checkout_logo_enabled']) {
-                $data['checkout_logo'] = null;
+            }
+
+            if ($data['checkout_favicon_enabled']) {
+                if(intval($data['checkout_favicon_type']) === CheckoutConfig::CHECKOUT_FAVICON_TYPE_LOGO) {
+                    $data['checkout_favicon'] = !empty($data['checkout_logo']) ? $data['checkout_logo'] : $config->checkout_logo;
+                } else {
+                    $favicon = $request->file('checkout_favicon');
+                    if(!empty($favicon)) {
+                        if($config->checkout_favicon_type === CheckoutConfig::CHECKOUT_FAVICON_TYPE_FILE) {
+                            $amazonFileService->deleteFile($config->checkout_favicon);
+                        }
+                        $amazonPathFavicon = $amazonFileService->uploadFile('uploads/user/' . $userId . '/public/projects/' . hashids_encode($id) . '/favicon', $favicon);
+                        $data['checkout_favicon'] = $amazonPathFavicon;
+                    }
+                }
             }
 
             $banner = $request->file('checkout_banner');
-            if (!empty($banner)) {
+            if (!empty($banner) && $data['checkout_banner_enabled']) {
                 $amazonFileService->deleteFile($config->checkout_banner);
-                $amazonPathBanner = $amazonFileService->uploadFile('uploads/user/' . $userId . '/public/projects/' . hashids_encode($id) . '/logo', $banner);
+                $amazonPathBanner = $amazonFileService->uploadFile('uploads/user/' . $userId . '/public/projects/' . hashids_encode($id) . '/banner', $banner);
                 $data['checkout_banner'] = $amazonPathBanner;
-            } elseif(!$data['checkout_banner_enabled']) {
-                $data['checkout_banner'] = null;
             }
 
             if ($data['company_id'] !== $config->company_id) {

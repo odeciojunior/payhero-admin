@@ -14,6 +14,9 @@ use Spatie\Activitylog\Models\Activity;
  * @property integer $checkout_type_enum
  * @property boolean $checkout_logo_enabled
  * @property string $checkout_logo
+ * @property boolean $checkout_favicon_enabled
+ * @property integer $checkout_favicon_type
+ * @property string $checkout_favicon
  * @property boolean $checkout_banner_enabled
  * @property integer $checkout_banner_type
  * @property string $checkout_banner
@@ -79,6 +82,9 @@ class CheckoutConfig extends Model
     public const CHECKOUT_TYPE_THREE_STEPS = 1;
     public const CHECKOUT_TYPE_ONE_STEP = 2;
 
+    public const CHECKOUT_FAVICON_TYPE_LOGO = 1;
+    public const CHECKOUT_FAVICON_TYPE_FILE = 2;
+
     public const CHECKOUT_BANNER_TYPE_FULL = 1;
     public const CHECKOUT_BANNER_TYPE_CENTER= 2;
 
@@ -104,6 +110,9 @@ class CheckoutConfig extends Model
         'checkout_type_enum',
         'checkout_logo_enabled',
         'checkout_logo',
+        'checkout_favicon_enabled',
+        'checkout_favicon_type',
+        'checkout_favicon',
         'checkout_banner_enabled',
         'checkout_banner_type',
         'checkout_banner',
