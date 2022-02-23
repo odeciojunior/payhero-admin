@@ -42,7 +42,7 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div id="projects-list" class="mb-10 d-none">
-                            <label id="select-projects-label" for="select-projects">Projeto</label>
+                            <label id="select-projects-label" for="select-projects">Loja</label>
                             <select id='select-projects' class="sirius-select" disabled>
                                 <option>Carregando...</option>
                             </select>

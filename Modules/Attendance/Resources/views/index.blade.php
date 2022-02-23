@@ -24,7 +24,7 @@
                     <span>Uma nova central para você responder as solicitações de seus clientes.</span>
                 </div>
                 <select class="sirius-select" id="project-select">
-                    <option value="">Todos os projetos</option>
+                    <option value="">Todos as lojas</option>
                 </select>
             </div>
         </div>

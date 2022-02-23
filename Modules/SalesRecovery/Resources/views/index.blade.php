@@ -48,9 +48,9 @@
                         </div>
 
                         <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
-                            <label for="project">Projeto</label>
+                            <label for="project">Loja</label>
                             <select name='select_project' id="project" class="form-control select-pad applySelect2">
-                                <option value="all">Todos projetos</option>
+                                <option value="all">Todas Lojas</option>
                             </select>
                         </div>
 
@@ -122,7 +122,7 @@
                             <thead>
                                 <tr>
                                     <td class="table-title display-sm-none display-m-none display-lg-none">Data</td>
-                                    <td class="table-title">Projeto</td>
+                                    <td class="table-title">Loja</td>
                                     <td class="table-title display-sm-none display-m-none">Cliente</td>
                                     <td class="table-title">Email</td>
                                     <td class="table-title">Sms</td>
