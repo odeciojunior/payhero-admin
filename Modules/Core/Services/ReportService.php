@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Checkout;
 use Illuminate\Support\Facades\Auth;
+use Modules\Core\Entities\Cashback;
+use Modules\Core\Entities\Customer;
+use Modules\Core\Entities\DiscountCoupon;
+use Modules\Core\Entities\Gateway;
 use Modules\Reports\Transformers\SalesByOriginResource;
 use Modules\Core\Entities\Transaction;
 
@@ -1139,6 +1143,245 @@ class ReportService
                 [
                     'message' => 'Não foi possível verificar todos os valores totais de venda'
                 ];
+        }
+    }
+
+    public function getComission($filters)
+    {
+        try {
+            $transactionModel = new Transaction();
+            $companyModel = new Company();
+            $transactionModel = new Transaction();
+
+            if (empty($filters["company"])) {
+                $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)
+                ->get()
+                ->pluck('id')
+                ->toArray();
+
+            } else {
+                $userCompanies = [];
+                $companies = explode(',', $filters["company"]);
+
+                foreach($companies as $company){
+                    array_push($userCompanies, current(Hashids::decode($company)));
+                }
+
+            }
+
+            $relationsArray = [
+                'sale',
+                'sale.project',
+                'sale.customer',
+                'sale.plansSales',
+                'sale.shipping',
+                'sale.checkout',
+                'sale.delivery',
+                'sale.affiliate.user',
+                'sale.saleRefundHistory',
+                'sale.cashback'
+            ];
+
+            $transactions = $transactionModel
+            ->with($relationsArray)
+            ->whereIn('company_id', $userCompanies)
+            ->join('sales', 'sales.id', 'transactions.sale_id')
+            ->whereNull('invitation_id')
+            ->where('type', '<>', $transactionModel->present()->getType('cashback'));
+
+            if (!empty($filters["project"])) {
+                $projectIds =[];
+                $projects = explode(',', $filters["project"]);
+
+                foreach($projects as $project){
+                    array_push($projectIds, current(Hashids::decode($project)));
+                }
+
+                //$projectId = current(Hashids::decode($filters["project"]));
+                $transactions->whereHas(
+                    'sale',
+                    function ($querySale) use ($projectIds) {
+                        $querySale->whereIn('project_id', $projectIds);
+                    }
+                );
+            }
+
+            //tipo da data e periodo obrigatorio
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateType = $filters["date_type"];
+
+            $transactions
+            ->whereHas(
+                'sale',
+                function ($querySale) use ($dateRange, $dateType) {
+                    $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                }
+            )
+            ->selectRaw('transactions.*, sales.start_date')
+            ->orderByDesc('sales.start_date');
+
+            $transactionStatus = implode(
+                ',',
+                [
+                    $transactionModel->present()->getStatusEnum('paid'),
+                    $transactionModel->present()->getStatusEnum('transfered'),
+                ]
+            );
+
+            $statusDispute = (new Sale())->present()->getStatus('in_dispute');
+
+            $resume = $transactions->without(['sale'])
+            ->select(
+                DB::raw("count(sales.id) as total_sales, sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission")
+            )
+            ->first()
+            ->toArray();
+
+            $resume['commission'] = FoxUtils::formatMoney($resume['commission']);
+
+            return $resume['commission'];
+
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function getPendings($filters)
+    {
+        try {
+            $relationsArray = [
+                'sale',
+                'sale.project',
+                'sale.customer',
+            ];
+
+            $transactionModel = new Transaction();
+
+            $transactions = $transactionModel->with($relationsArray)
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->join('sales', 'sales.id', 'transactions.sale_id')
+            ->where(
+                'transactions.status_enum',
+                '=',
+                $transactionModel->present()->getStatusEnum('paid')
+            )
+            ->whereNull('invitation_id');
+
+            // Filtro Company
+            if (!empty($filters["company"])) {
+                $companyId = Hashids::decode($filters["company"]);
+                $transactions->where('company_id', $companyId);
+            }
+
+            $transactions->whereNull('withdrawal_id');
+
+            // Filtros - INICIO
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateType = $filters["date_type"];
+
+            // Filtro de Data
+            $transactions->whereHas(
+                'sale',
+                function ($querySale) use ($dateRange, $dateType) {
+                    $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                }
+            )
+            ->selectRaw('transactions.*, sales.start_date')
+            ->orderByDesc('sales.start_date');
+
+            // Projeto
+            if (!empty($filters["project"])) {
+                $projectId = Hashids::decode($filters["project"]);
+                $transactions->whereHas(
+                    'sale',
+                    function ($querySale) use ($projectId) {
+                        $querySale->where('sales.project_id', $projectId);
+                    }
+                );
+            }
+
+            $resume = $transactions->without(['sale'])
+            ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
+            ->first()
+            ->toArray();
+
+            $resume['total'] = FoxUtils::formatMoney($resume['total']);
+
+            return $resume['total'];
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function getCashbacks($filters)
+    {
+        try {
+            $cashbackModel = new Cashback();
+            $companyModel = new Company();
+
+            if (empty($filters["company"])) {
+                $userCompanies = $companyModel
+                ->where('user_id', auth()->user()->account_owner_id)
+                ->get()
+                ->pluck('id')
+                ->toArray();
+
+            } else {
+                $userCompanies = [];
+                $companies = explode(',', $filters["company"]);
+
+                foreach($companies as $company){
+                    array_push($userCompanies, current(Hashids::decode($company)));
+                }
+            }
+
+            $cashbacks = $cashbackModel
+            ->join('sales', 'sales.id', 'cashbacks.sale_id')
+            ->whereIn('company_id', [3469]);
+
+            if (!empty($filters["project"])) {
+                $projectIds =[];
+                $projects = explode(',', $filters["project"]);
+
+                foreach($projects as $project){
+                    array_push($projectIds, current(Hashids::decode($project)));
+                }
+
+                $cashbacks->whereHas(
+                    'sale',
+                    function ($querySale) use ($projectIds) {
+                        $querySale->whereIn('project_id', $projectIds);
+                    }
+                );
+            }
+
+            //tipo da data e periodo obrigatorio
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateType = $filters["date_type"];
+
+            $cashbacks
+            ->whereHas(
+                'sale',
+                function ($querySale) use ($dateRange, $dateType) {
+                    $querySale->whereBetween($dateType, ['2021-01-01 00:00:00', $dateRange[1] . ' 23:59:59']);
+                }
+            )
+            ->selectRaw('cashbacks.*, sales.start_date')
+            ->orderByDesc('sales.start_date');
+
+            $resume = $cashbacks
+            ->select(
+                DB::raw("sum(cashbacks.value) / 100 as cashback")
+            )
+            ->first()
+            ->toArray();
+
+            $resume['cashback'] = FoxUtils::formatMoney($resume['cashback']);
+
+            return $resume['cashback'];
+
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 }

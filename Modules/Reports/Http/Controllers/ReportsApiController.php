@@ -745,7 +745,7 @@ class ReportsApiController extends Controller
         }
     }
 
-    public function resumePendingBalance (Request $request)
+    public function resumePendingBalance(Request $request)
     {
         try {
             $saleService = new SaleService();
@@ -756,7 +756,7 @@ class ReportsApiController extends Controller
 
             return response()->json($resume);
         } catch (Exception $e) {
-            Log::warning('Erro ao exibir resumo dos saldos pendete ReportsApiController - resumePendingBalance');
+            Log::warning('Erro ao exibir resumo dos saldos pendentes ReportsApiController - resumePendingBalance');
             report($e);
 
             return response()->json(['error' => 'Erro ao exibir resumo das vendas'], 400);
@@ -803,157 +803,51 @@ class ReportsApiController extends Controller
         }
     }
 
-    // Reports Finances
-    public function getComissionBalanceFinances(Request $request)
+    function getComission(Request $request)
     {
-        try {
-            if (empty($request->input('company'))) {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
-            }
+        $request->validate([
+            'company' => 'required',
+            'date_range' => 'required',
+            'date_type' => 'required'
+        ]);
 
-            $company = Company::find(hashids_decode($request->input('company')));
-            $gateway = Gateway::find(hashids_decode($request->input('gateway_id')));
+        $data = $request->all();
 
-            if (empty($company) || empty($gateway)) {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
-            }
+        $saleService = new ReportService();
+        $comission = $saleService->getComission($data);
 
-            if (Gate::denies('edit', [$company])) {
-                return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
-            }
-
-            $companyService = new CompanyBalanceService($company, $gateway->getService());
-
-            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
-            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
-            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
-            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
-
-            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalanceTotal;
-            $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
-
-            return response()->json(
-                [
-                    'available_balance' => foxutils()->formatMoney($availableBalance / 100),
-                    'total_balance' => foxutils()->formatMoney($totalBalance / 100),
-                    'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
-                    'blocked_balance' => foxutils()->formatMoney($blockedBalanceTotal / 100),
-                    'pending_debt_balance' => foxutils()->formatMoney($pendingDebtBalance / 100)
-                ]
-            );
-        } catch (Exception $e) {
-            report($e);
-            return response()->json(['message' => 'Ocorreu algum erro, tente novamente!',], 400);
-        }
+        return response()->json(['data' => $comission]);
     }
 
-    public function getPendingBalanceFinances(Request $request)
+    function getPendings(Request $request)
     {
-        try {
-            if (empty($request->input('company'))) {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
-            }
+        $request->validate([
+            'company' => 'required',
+            'date_range' => 'required',
+            'date_type' => 'required'
+        ]);
 
-            $company = Company::find(hashids_decode($request->input('company')));
-            $gateway = Gateway::find(hashids_decode($request->input('gateway_id')));
+        $data = $request->all();
 
-            if (empty($company) || empty($gateway)) {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
-            }
+        $saleService = new ReportService();
+        $pendings = $saleService->getPendings($data);
 
-            if (Gate::denies('edit', [$company])) {
-                return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
-            }
-
-            $companyService = new CompanyBalanceService($company, $gateway->getService());
-
-            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
-
-            return response()->json(
-                [
-                    'response' => foxutils()->formatMoney($pendingBalance / 100)
-                ]
-            );
-        } catch (Exception $e) {
-            report($e);
-            return response()->json(['message' => 'Ocorreu algum erro, tente novamente!',], 400);
-        }
+        return response()->json(['data' => $pendings]);
     }
 
-    public function getCashbackBalanceFinances(Request $request)
+    function getCashbacks(Request $request)
     {
-        try {
-            if (empty($request->input('company'))) {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
-            }
+        $request->validate([
+            'company' => 'required',
+            'date_range' => 'required',
+            'date_type' => 'required'
+        ]);
 
-            $company = Company::find(hashids_decode($request->input('company')));
-            $gateway = Gateway::find(hashids_decode($request->input('gateway_id')));
+        $data = $request->all();
 
-            if (empty($company) || empty($gateway)) {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
-            }
+        $reportService = new ReportService();
+        $comission = $reportService->getCashbacks($data);
 
-            if (Gate::denies('edit', [$company])) {
-                return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
-            }
-
-            $companyService = new CompanyBalanceService($company, $gateway->getService());
-
-            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
-            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
-            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
-            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
-
-            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalanceTotal;
-            $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
-
-            return response()->json(
-                [
-                    'available_balance' => foxutils()->formatMoney($availableBalance / 100),
-                    'total_balance' => foxutils()->formatMoney($totalBalance / 100),
-                    'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
-                    'blocked_balance' => foxutils()->formatMoney($blockedBalanceTotal / 100),
-                    'pending_debt_balance' => foxutils()->formatMoney($pendingDebtBalance / 100)
-                ]
-            );
-        } catch (Exception $e) {
-            report($e);
-            return response()->json(['message' => 'Ocorreu algum erro, tente novamente!',], 400);
-        }
-    }
-
-    // Reports Sales
-    public function getTotalSales()
-    {
-        return 'total sales - sales';
-    }
-
-    public function getPaymentsTypeSales()
-    {
-        return 'payments type - sales';
-    }
-
-    public function getProductsTopsellingSales()
-    {
-        return 'products top selling - sales';
-    }
-
-    // Reports Marketing
-    public function getCouponsMarketing()
-    {
-        return 'coupons - marketing';
-    }
-
-    public function getRegionsMarketing()
-    {
-        return 'regions - marketing';
-    }
-
-    public function getOriginsMarketing()
-    {
-        return 'origins - marketing';
+        return $comission;
     }
 }

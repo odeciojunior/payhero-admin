@@ -85,10 +85,11 @@ class SaleService
                 $relationsArray[] = 'sale.productsPlansSale.product';
             }
 
-            $transactions = $transactionModel->with($relationsArray)
-                ->whereIn('company_id', $userCompanies)
-                ->join('sales', 'sales.id', 'transactions.sale_id')
-                ->whereNull('invitation_id');
+            $transactions = $transactionModel
+                            ->with($relationsArray)
+                            ->whereIn('company_id', $userCompanies)
+                            ->join('sales', 'sales.id', 'transactions.sale_id')
+                            ->whereNull('invitation_id');
 
             if (!$withCashback) {
                 $transactions->where('type', '<>', $transactionModel->present()->getType('cashback'));
@@ -296,7 +297,7 @@ class SaleService
                     $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
             )->selectRaw('transactions.*, sales.start_date')
-                ->orderByDesc('sales.start_date');
+            ->orderByDesc('sales.start_date');
 
             return $transactions;
         } catch (Exception $e) {
@@ -1067,7 +1068,7 @@ class SaleService
             ',',
             [
                 $transactionModel->present()->getStatusEnum('transfered'),
-                $transactionModel->present()->getStatusEnum('paid'),                
+                $transactionModel->present()->getStatusEnum('paid'),
             ]
         );
 

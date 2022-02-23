@@ -103,7 +103,7 @@ $(function () {
                 cardTotalPercentBoleto = parseFloat(response.totalPercentPaidBoleto).toFixed(1)
                 cardTotalPercentPix = parseFloat(response.totalPercentPaidPix).toFixed(1)
 
-                
+
                 console.log(response.totalPaidValueAproved);
                 if(response.totalPaidValueAproved='R$ 0,00' || response.totalPaidValueAproved ==false || !response.totalPaidValueAproved){
                     response.totalPaidValueAproved='R$ <span class="grey font-size-24 bold">0,00</span>'
@@ -111,7 +111,7 @@ $(function () {
                     let split=response.totalPaidValueAproved.split(/\s/g);
                     response.totalPaidValueAproved=split[0]+' <span class="font-size-30 bold">'+split[1]+'</span>';
                 }
-                
+
                 $("#revenue-generated").html(response.totalPaidValueAproved);
                 $("#qtd-aproved").html(response.contAproved);
                 $("#qtd-boletos").html(response.contBoleto);
@@ -575,7 +575,7 @@ $(function () {
             }
           });
     }
-    
+
     function newGraphCashback() {
         new Chartist.Line('.new-graph-cashback', {
             labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
@@ -616,7 +616,7 @@ $(function () {
             }
           });
     }
-    
+
 
     function newGraphPie() {
         new Chartist.Pie('.new-graph-pie', {
@@ -734,5 +734,5 @@ $(function () {
         });
     }
 
-        
+
 });
