@@ -27,17 +27,23 @@ Route::group(
 
         Route::get('/reports/blockedresume', 'ReportsApiController@resumeBlockedBalance')->middleware('permission:report_blockedbalance');
 
-        // Reports new
-        Route::get('/reports/get-commission', 'ReportsApiController@getCommission');
-        Route::get('/reports/get-pending', 'ReportsApiController@getPending');
-        Route::get('/reports/get-cashback', 'ReportsApiController@getCashback');
+        // Reports - resume
+        Route::get('/reports/resume/commissions', 'ReportsApiController@getResumeCommissions');
+        Route::get('/reports/resume/pendings', 'ReportsApiController@getResumePendings');
+        Route::get('/reports/resume/cashbacks', 'ReportsApiController@getResumeCashbacks');
 
-        Route::get('/reports/get-sales', 'ReportsApiController@getSales');
-        Route::get('/reports/get-type-payments', 'ReportsApiController@getTypePayments');
-        Route::get('/reports/get-products', 'ReportsApiController@getProducts');
+        Route::get('/reports/resume/sales', 'ReportsApiController@getResumeSales');
+        Route::get('/reports/resume/type-payments', 'ReportsApiController@getResumeTypePayments');
+        Route::get('/reports/resume/products', 'ReportsApiController@getResumeProducts');
 
-        Route::get('/reports/get-coupons', 'ReportsApiController@getCoupons');
-        Route::get('/reports/get-regions', 'ReportsApiController@getRegions');
-        Route::get('/reports/get-origins', 'ReportsApiController@getOrigins');
+        Route::get('/reports/resume/coupons', 'ReportsApiController@getResumeCoupons');
+        Route::get('/reports/resume/regions', 'ReportsApiController@getResumeRegions');
+        Route::get('/reports/resume/origins', 'ReportsApiController@getResumeOrigins');
+
+        // Reports - finances
+
+        // Reports - sales
+
+        // Reports - marketing
     }
 );

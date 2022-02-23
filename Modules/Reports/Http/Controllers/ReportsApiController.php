@@ -804,66 +804,64 @@ class ReportsApiController extends Controller
     }
 
     // FINANCES --------------------------------------------------------------------------
-    function getCommission(Request $request)
+    function getResumeCommissions(Request $request)
     {
         $request->validate([
-            'company' => 'required',
+            'company_id' => 'required',
             'date_range' => 'required'
         ]);
 
         $data = $request->all();
 
         $saleService = new ReportService();
-        $comission = $saleService->getCommission($data);
+        $comission = $saleService->getResumeCommissions($data);
 
         return response()->json(['data' => $comission]);
     }
 
-    function getPending(Request $request)
+    function getResumePendings(Request $request)
     {
         $request->validate([
-            'company' => 'required',
+            'company_id' => 'required',
             'date_range' => 'required'
         ]);
 
         $data = $request->all();
 
         $saleService = new ReportService();
-        $pending = $saleService->getPending($data);
+        $pending = $saleService->getResumePendings($data);
 
         return response()->json(['data' => $pending]);
     }
 
-    function getCashback(Request $request)
+    function getResumeCashbacks(Request $request)
     {
         $request->validate([
-            'company' => 'required',
+            'company_id' => 'required',
             'date_range' => 'required'
         ]);
 
         $data = $request->all();
 
         $reportService = new ReportService();
-        $comission = $reportService->getCashback($data);
+        $comission = $reportService->getResumeCashbacks($data);
 
         return response()->json(['data' => $comission]);
     }
 
     // SALES --------------------------------------------------------------------------
-    function getSales(Request $request)
+    function getResumeSales(Request $request)
     {
         $request->validate([
-            'company' => 'required',
-            'date_range' => 'required',
-            'date_type' => 'required'
+            'date_range' => 'required'
         ]);
 
         $data = $request->all();
 
         $saleService = new ReportService();
-        $comission = $saleService->getSales($data);
+        $sales = $saleService->getResumeSales($data);
 
-        return response()->json(['data' => $comission]);
+        return response()->json(['data' => $sales]);
     }
 
     // MARKETING --------------------------------------------------------------------------

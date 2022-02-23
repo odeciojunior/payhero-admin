@@ -1147,14 +1147,14 @@ class ReportService
     }
 
     // FINANCES --------------------------------------------------------------------------------------
-    public function getCommission($filters)
+    public function getResumeCommissions($filters)
     {
         try {
             $transactionModel = new Transaction();
             $companyModel = new Company();
             $transactionModel = new Transaction();
 
-            if (empty($filters["company"])) {
+            if (empty($filters["company_id"])) {
                 $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)
                 ->get()
                 ->pluck('id')
@@ -1162,12 +1162,11 @@ class ReportService
 
             } else {
                 $userCompanies = [];
-                $companies = explode(',', $filters["company"]);
+                $companies = explode(',', $filters["company_id"]);
 
-                foreach($companies as $company){
+                foreach($companies as $company) {
                     array_push($userCompanies, current(Hashids::decode($company)));
                 }
-
             }
 
             $relationsArray = [
@@ -1246,7 +1245,7 @@ class ReportService
         }
     }
 
-    public function getPending($filters)
+    public function getResumePendings($filters)
     {
         try {
             $relationsArray = [
@@ -1312,7 +1311,7 @@ class ReportService
         }
     }
 
-    public function getCashback($filters)
+    public function getResumeCashbacks($filters)
     {
         try {
             $cashbackModel = new Cashback();
@@ -1354,7 +1353,7 @@ class ReportService
                 );
             }
 
-            //tipo da data e periodo obrigatorio
+            // periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
             $cashbacks
@@ -1384,34 +1383,34 @@ class ReportService
     }
 
     // SALES --------------------------------------------------------------------------------------
-    public function getSales($filters)
+    public function getResumeSales($filters)
     {
-        $saleModel = new Sale();
-        $companyModel = new Company();
+       try {
+            $saleModel = new Sale();
 
-        // filter by company
-        if (empty($filters["company"])) {
-            $userCompanies = $companyModel
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->get()
-            ->pluck('id')
-            ->toArray();
+            $sales = $saleModel
+            ->where('owner_id', auth()->user()->account_owner_id)
+            ->where('status', $saleModel->present()->getStatus('paid'));
 
-        } else {
-            $userCompanies = [];
-            $companies = explode(',', $filters["company"]);
-
-            foreach($companies as $company){
-                array_push($userCompanies, current(Hashids::decode($company)));
+            // filter by project
+            if (!empty($filters["project"])) {
+                $projectId = Hashids::decode($filters["project"]);
+                $sales->where('project_id', $projectId);
             }
-        }
 
-        $sales = $saleModel->where('status', $saleModel->present()->getStatus('paid'));
+            // periodo obrigatorio
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-        // filter by project
-        if (!empty($filters["project"])) {
-            $projectId = Hashids::decode($filters["project"]);
-            $sales->where('project_id', $projectId);
+            $sales
+            ->where(function ($querySale) use ($dateRange) {
+                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                }
+            )
+            ->orderByDesc('start_date');
+
+            return $sales->get()->count();
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 
