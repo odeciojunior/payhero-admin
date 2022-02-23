@@ -803,7 +803,8 @@ class ReportsApiController extends Controller
         }
     }
 
-    function getComission(Request $request)
+    // FINANCES --------------------------------------------------------------------------
+    function getCommission(Request $request)
     {
         $request->validate([
             'company' => 'required',
@@ -814,7 +815,7 @@ class ReportsApiController extends Controller
         $data = $request->all();
 
         $saleService = new ReportService();
-        $comission = $saleService->getComission($data);
+        $comission = $saleService->getCommission($data);
 
         return response()->json(['data' => $comission]);
     }
@@ -850,4 +851,23 @@ class ReportsApiController extends Controller
 
         return $comission;
     }
+
+    // SALES --------------------------------------------------------------------------
+    function getSales(Request $request)
+    {
+        $request->validate([
+            'company' => 'required',
+            'date_range' => 'required',
+            'date_type' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $saleService = new ReportService();
+        $comission = $saleService->getSales($data);
+
+        return response()->json(['data' => $comission]);
+    }
+
+    // MARKETING --------------------------------------------------------------------------
 }

@@ -1146,7 +1146,7 @@ class ReportService
         }
     }
 
-    public function getComission($filters)
+    public function getCommission($filters)
     {
         try {
             $transactionModel = new Transaction();
@@ -1246,6 +1246,7 @@ class ReportService
         }
     }
 
+    // FINANCES
     public function getPendings($filters)
     {
         try {
@@ -1382,6 +1383,38 @@ class ReportService
 
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    // SALES
+    public function getSales($filters)
+    {
+        $saleModel = new Sale();
+        $companyModel = new Company();
+
+        // filter by company
+        if (empty($filters["company"])) {
+            $userCompanies = $companyModel
+            ->where('user_id', auth()->user()->account_owner_id)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+        } else {
+            $userCompanies = [];
+            $companies = explode(',', $filters["company"]);
+
+            foreach($companies as $company){
+                array_push($userCompanies, current(Hashids::decode($company)));
+            }
+        }
+
+        $sales = $saleModel->where('status', $saleModel->present()->getStatus('paid'));
+
+        // filter by project
+        if (!empty($filters["project"])) {
+            $projectId = Hashids::decode($filters["project"]);
+            $sales->where('project_id', $projectId);
         }
     }
 }

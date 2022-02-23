@@ -28,7 +28,7 @@ Route::group(
         Route::get('/reports/blockedresume', 'ReportsApiController@resumeBlockedBalance')->middleware('permission:report_blockedbalance');
 
         // Reports new
-        Route::get('/reports/get-comission', 'ReportsApiController@getComission');
+        Route::get('/reports/get-commission', 'ReportsApiController@getCommission');
         Route::get('/reports/get-pending', 'ReportsApiController@getPendings');
         Route::get('/reports/get-cashback', 'ReportsApiController@getCashbacks');
 
