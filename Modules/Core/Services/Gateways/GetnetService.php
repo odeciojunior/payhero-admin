@@ -81,6 +81,7 @@ class GetnetService implements Statement
         return Transaction::where('company_id', $this->company->id)
                             ->whereIn('gateway_id', $this->gatewayIds)
                             ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+                            ->where('type', '!=', Transaction::TYPE_INVITATION)
                             ->whereHas('blockReasonSale',function ($query) {
                                     $query->where('status', BlockReasonSale::STATUS_BLOCKED);
                             })
