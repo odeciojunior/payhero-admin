@@ -819,7 +819,7 @@ class ReportsApiController extends Controller
         return response()->json(['data' => $comission]);
     }
 
-    function getPendings(Request $request)
+    function getPending(Request $request)
     {
         $request->validate([
             'company' => 'required',
@@ -829,12 +829,12 @@ class ReportsApiController extends Controller
         $data = $request->all();
 
         $saleService = new ReportService();
-        $pendings = $saleService->getPendings($data);
+        $pendings = $saleService->getPending($data);
 
         return response()->json(['data' => $pendings]);
     }
 
-    function getCashbacks(Request $request)
+    function getCashback(Request $request)
     {
         $request->validate([
             'company' => 'required',
@@ -844,7 +844,7 @@ class ReportsApiController extends Controller
         $data = $request->all();
 
         $reportService = new ReportService();
-        $comission = $reportService->getCashbacks($data);
+        $comission = $reportService->getCashback($data);
 
         return $comission;
     }

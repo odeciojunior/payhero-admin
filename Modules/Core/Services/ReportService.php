@@ -1146,6 +1146,7 @@ class ReportService
         }
     }
 
+    // FINANCES --------------------------------------------------------------------------------------
     public function getCommission($filters)
     {
         try {
@@ -1245,8 +1246,7 @@ class ReportService
         }
     }
 
-    // FINANCES
-    public function getPendings($filters)
+    public function getPending($filters)
     {
         try {
             $relationsArray = [
@@ -1312,7 +1312,7 @@ class ReportService
         }
     }
 
-    public function getCashbacks($filters)
+    public function getCashback($filters)
     {
         try {
             $cashbackModel = new Cashback();
@@ -1383,7 +1383,7 @@ class ReportService
         }
     }
 
-    // SALES
+    // SALES --------------------------------------------------------------------------------------
     public function getSales($filters)
     {
         $saleModel = new Sale();
@@ -1414,4 +1414,6 @@ class ReportService
             $sales->where('project_id', $projectId);
         }
     }
+
+    // MARKETING --------------------------------------------------------------------------------------
 }
