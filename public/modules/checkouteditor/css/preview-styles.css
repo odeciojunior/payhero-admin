@@ -106,7 +106,7 @@
 }
 
 .preview-banner.desktop {
-    height: 84px;
+    height: 6.1em;
     overflow: hidden;
 }
 
@@ -136,7 +136,7 @@
 }
 
 .retangle-banner.desktop {
-    width: 75%;
+    width: 28em;
 }
 
 .retangle-banner.mobile {
@@ -147,6 +147,15 @@
 
 .logo-div.logo-menu-bar.retangle-banner {
     padding: 0 30px;
+}
+
+@media (max-width: 1600px){
+    .retangle-banner.desktop {
+        width: 17em;
+    }
+    .preview-banner.desktop {
+        height: 4.2em;
+    }
 }
 
 /* ----------- Logo Desktop Preview ----------- */
@@ -816,14 +825,4 @@
     width: 20px;
     height: 20px;
     margin: 0 10px 0 0;
-}
-
-@media (max-width: 1600px){
-
-    .retangle-banner.desktop {
-        width: 64%;
-    }
-    .preview-banner.desktop {
-        height: 58px;
-    }
 }
