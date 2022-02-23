@@ -120,7 +120,7 @@
                                                     <header class="container">
 													    <h6 class="font-size-16 gray-700 grey"> Comissão </h6>
                                                         <div class="d-flex value-price">
-													        <h4 id='revenue-generated' class="font-size-16 gray-1">0</h4>
+													        <h4 id='comission' class="font-size-24 bold grey"></h4>
                                                             <em class="pink">
                                                                 <i class="ms-Icon ms-Icon--SkypeArrow x-hidden-focus"></i>
                                                                 23%
@@ -135,7 +135,7 @@
                                                     <header class="container">
 													    <h6 class="font-size-16 gray-700 grey"> Pendentes </h6>
                                                         <div class="d-flex value-price">
-                                                            <h4 id='qtd-pending' class="font-size-24 bold">0</h4>
+                                                            <h4 id='pending' class="font-size-24 bold grey">0</h4>
                                                         </div>
                                                     </header>
                                                     <div class="new-graph-pending"></div>
@@ -146,7 +146,7 @@
                                                     <header class="container">
                                                         <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
                                                         <div class="d-flex value-price">
-                                                            <h4 id='qtd-aproved' class="font-size-24 bold">0</h4>
+                                                            <h4 id='cashback' class="font-size-24 bold grey">0</h4>
                                                         </div>
                                                     </header>
 													<div class="new-graph-cashback"></div>

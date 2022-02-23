@@ -386,7 +386,13 @@ h4.number{
     border-radius: 8px; 
 }
 
+#comission { height: 29px; }
 .cards-reports h6 {font-weight: 700;}
+
+.currency {
+    color: #9E9E9E;
+    font-size: 16px;
+}
 
 .value-price {
     justify-content: space-between;
