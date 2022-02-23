@@ -501,6 +501,7 @@ $(document).ready(function () {
                                 "success",
                                 "Solicitação de afiliação atualizada com sucesso"
                             );
+                            getAffiliates();
                             getAffiliatesRequest();
                         },
                     });
