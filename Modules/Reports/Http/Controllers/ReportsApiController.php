@@ -829,9 +829,9 @@ class ReportsApiController extends Controller
         $data = $request->all();
 
         $saleService = new ReportService();
-        $pendings = $saleService->getPending($data);
+        $pending = $saleService->getPending($data);
 
-        return response()->json(['data' => $pendings]);
+        return response()->json(['data' => $pending]);
     }
 
     function getCashback(Request $request)
@@ -846,7 +846,7 @@ class ReportsApiController extends Controller
         $reportService = new ReportService();
         $comission = $reportService->getCashback($data);
 
-        return $comission;
+        return response()->json(['data' => $comission]);
     }
 
     // SALES --------------------------------------------------------------------------

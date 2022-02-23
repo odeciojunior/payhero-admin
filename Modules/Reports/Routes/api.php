@@ -29,8 +29,8 @@ Route::group(
 
         // Reports new
         Route::get('/reports/get-commission', 'ReportsApiController@getCommission');
-        Route::get('/reports/get-pending', 'ReportsApiController@getPendings');
-        Route::get('/reports/get-cashback', 'ReportsApiController@getCashbacks');
+        Route::get('/reports/get-pending', 'ReportsApiController@getPending');
+        Route::get('/reports/get-cashback', 'ReportsApiController@getCashback');
 
         Route::get('/reports/get-sales', 'ReportsApiController@getSales');
         Route::get('/reports/get-type-payments', 'ReportsApiController@getTypePayments');
