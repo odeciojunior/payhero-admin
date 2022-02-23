@@ -138,18 +138,8 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <!-- <tbody id="body-table-coupons"  img-empty="{!! asset('modules/global/img/geral-1.svg')!!}"> -->
-                                            <!-- {{-- js carrega... --}} -->
-                                            <tr>
-                                                <td>aaa</td>
-                                                <td>aaaa</td>
-                                                <td>aaaa</td>
-                                            </tr>
-                                            <tr>
-                                            <td>aaaa</td>
-                                            <td>aaaa</td>
-                                            <td>aaaa</td>
-                                            </tr>
+                                        <tbody id="body-table-coupons"  img-empty="{!! asset('modules/global/img/geral-1.svg')!!}">
+                                            {{-- js carrega... --}}
                                         </tbody>
                                     </table>
                                 </div>
