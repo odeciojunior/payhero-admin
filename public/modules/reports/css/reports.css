@@ -451,6 +451,18 @@ h4.number{
     height: 176px;
     align-items: center;
 }
+.container-payment.visible { display: flex; }
+
+.no-payment { display: none;  }
+.no-payment.visible {
+    margin: 0 auto;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .container-payment.height-auto { height: auto; }
 
 .box-ico {
@@ -477,6 +489,7 @@ h4.number{
     font-size: 12px;
     flex: 1;
 }
+.col-payment.end { justify-content: flex-end; }
 
 .col-graph { flex: 2; }
 
@@ -492,11 +505,15 @@ h4.number{
     overflow: hidden;
     border-radius: 4px;
 }
-
 .bar.pink { background: #F43F5E; }
 .bar.purple { background: #665FE8; }
 .bar.blue { background: #002F66; }
 .bar.blue-2 { background: #0050AF; }
+
+.bar.visible { 
+    text-indent: 0; 
+    background: transparent !important;
+}
 
 /* graph */
 

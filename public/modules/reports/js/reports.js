@@ -12,36 +12,21 @@ $(function () {
 
     function getCashback() {
         $.ajax({
-            async: false,
             method: "GET",
-            url: "/api/projects/jeApQgzQqRGEb76/companie",
+            url: "/api/reports/resume/cashbacks?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
             },
             error: function error(response) {
-                console.log('error ', response);
+                errorAjaxResponse(response);
             },
             success: function success(response) {
-                $.ajax({
-                    method: "GET",
-                    url: "/api/reports/get-cashback?company=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
-                    dataType: "json",
-                    headers: {
-                        Authorization: $('meta[name="access-token"]').attr("content"),
-                        Accept: "application/json",
-                    },
-                    error: function error(response) {
-                        errorAjaxResponse(response);
-                    },
-                    success: function success(response) {
-                        if(response.data){
-                            let value = response.data.replace("R$", "");
-                            $("#cashback").html("<span class='currency'>R$</span>" + value);
-                        }
-                    }
-                });
+                if(response.data){
+                    let value = response.data.replace("R$", "");
+                    $("#cashback").html("<span class='currency'>R$</span>" + value);
+                }
             }
         });
     }
@@ -49,7 +34,7 @@ $(function () {
     function getPending() {
         $.ajax({
             method: "GET",
-            url: "/api/reports/get-pending?company=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: "/api/reports/resume/pendings?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -62,16 +47,17 @@ $(function () {
                 if(response.data){
                     let value = response.data.replace("R$", "");
                     $("#pending").html("<span class='currency'>R$</span>" + value);
+                } else {
+                    $('.new-graph-pending').hide();
                 }
             }
         });
     }
 
     function getCommission() {
-
         $.ajax({
             method: "GET",
-            url: "/api/reports/get-commission?company=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: "/api/reports/resume/commissions?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -84,6 +70,73 @@ $(function () {
                 if(response.data){
                     let value = response.data.replace("R$", "");
                     $("#comission").html("<span class='currency'>R$</span>" + value);
+                }
+            }
+        });
+    }
+
+    function getSales() {
+        $.ajax({
+            method: "GET",
+            url: "/api/reports/resume/sales?date_range=" + $("input[name='daterange']").val(),
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if(response){
+                    $("#sales").html(response.data);
+                } else {
+                    $("#sales").html('sem vendas');
+                    $('.new-graph-sell').hide();
+                }
+            }
+        });
+    }
+
+    function getTypePayments() {
+        $.ajax({
+            method: "GET",
+            url: "/api/reports/resume/type-payments?date_range=" + $("input[name='daterange']").val(),
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                
+                
+
+
+                if( response.data.total ) {
+                    //credit_card
+                    $("#credit-card-value").html(response.data.credit_card.value);
+                    $("#percent-credit-card").html(response.data.credit_card.percent);
+                    $("#percent-credit-card").next('.col-payment').find('.bar').css('width', response.data.credit_card.percent );
+
+                    // boleto
+                    $("#boleto-value").html(response.data.boleto.value);
+                    $("#percent-values-boleto").html(response.data.boleto.percent);
+                    $("#percent-values-boleto").next('.col-payment').find('.bar').css('width', response.data.boleto.percent );
+
+                    // pix
+                    $("#pix-value").html(response.data.pix.value);
+                    $("#percent-values-pix").html(response.data.pix.percent);
+                    $("#percent-values-pix").next('.col-payment').find('.bar').css('width', response.data.pix.percent );
+                    
+                    $('.bar').removeClass('visible');
+                   ;
+                } else {
+                    $('#percent-credit-card, #percent-values-boleto, #percent-values-pix ').html('0%');
+                    $('#credit-card-value, #boleto-value, #pix-value').html('R$ 0,00');
+                    $('.bar').html(' - ').addClass('visible');
                 }
             }
         });
@@ -156,7 +209,7 @@ $(function () {
     function updateReports() {
         var date_range = $("#date_range_requests").val();
 
-        $("#pending,#cashback,#comission, #revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#boleto-value, #percent-boleto-convert#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
+        $("#sales,#pending,#cashback,#comission, #revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#percent-values-pix,#pix-value, #boleto-value, #percent-boleto-convert,#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
         ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
         loadOnTable("#origins-table-itens", ".table-vendas-itens");
 
@@ -177,10 +230,7 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                current_currency = response.currency;
-                cardTotalPercentCartao = parseFloat(response.totalPercentCartao).toFixed(1);
-                cardTotalPercentBoleto = parseFloat(response.totalPercentPaidBoleto).toFixed(1)
-                cardTotalPercentPix = parseFloat(response.totalPercentPaidPix).toFixed(1)
+                current_currency = response.currency;                
 
                 if(response.totalPaidValueAproved='R$ 0,00' || response.totalPaidValueAproved ==false || !response.totalPaidValueAproved){
                     response.totalPaidValueAproved='R$ <span class="grey font-size-24 bold">0,00</span>'
@@ -199,23 +249,7 @@ $(function () {
                 $("#qtd-dispute").html(response.contInDispute);
                 $("#qtd-pending").html(response.contPending);
                 $("#qtd-canceled").html(response.contCanceled);
-                $("#percent-credit-card").html(`
-                    ${parseFloat(response.totalPercentCartao).toFixed(1)} %
-                `);
-                $("#percent-credit-card").next('.col-payment').find('.bar').css('width', cardTotalPercentCartao );
-                $("#percent-values-boleto").html(`
-                    ${parseFloat(response.totalPercentPaidBoleto).toFixed(1)} %
-                `);
-                $("#percent-values-boleto").next('.col-payment').find('.bar').css('width', cardTotalPercentBoleto );
-
-                $("#percent-values-pix").html(`
-                    ${parseFloat(response.totalPercentPaidPix).toFixed(1)} %
-                `);
-                $("#percent-values-pix").next('.col-payment').find('.bar').css('width', cardTotalPercentPix );
-
-                $("#credit-card-value").html(response.totalValueCreditCard);
-                $("#boleto-value").html(response.totalValueBoleto);
-                $("#pix-value").html(response.totalValuePix);
+                
                 $("#percent-boleto-convert").html(`
                     <span class="money-td"> ${parseFloat(response.convercaoBoleto).toFixed(1)} % </span>
                 `);
@@ -296,6 +330,8 @@ $(function () {
                 getCommission();
                 getCashback();
                 getPending();
+                getSales();
+                getTypePayments();
             },
         });
     }

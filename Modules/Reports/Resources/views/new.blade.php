@@ -182,7 +182,7 @@
                                                     <header class="container">
                                                         <h6 class="font-size-16 gray-700 grey"> Vendas realizadas </h6>
                                                         <div class="d-flex value-price">
-                                                            <h4 id='qtd-canceled' class=" font-size-24 bold">0</h4>
+                                                            <h4 id='sales' class=" font-size-24 bold">0</h4>
                                                         </div>
                                                     </header>
                                                     <div class="new-graph-sell"></div>
@@ -208,16 +208,9 @@
 																		</div>
 																		
 																		<div class="box-payment-option option">
-																			<div class="col-payment grey" id='percent-credit-card'>
-																				0
-																				
-																			</div>
-
-																			<div class="col-payment col-graph">
-																				<div class="bar">barrinha</div>
-																			</div>
-
-																			<div class="col-payment"><span class="money-td green bold grey" id='credit-card-value'></span></div>
+																			<div class="col-payment grey" id='percent-credit-card'>0</div>
+																			<div class="col-payment col-graph"><div class="bar">barrinha</div></div>
+																			<div class="col-payment end"><span class="money-td green bold grey" id='credit-card-value'></span></div>
 																		</div>
 																	</div>
 																</div>
@@ -254,7 +247,7 @@
 																			<div class="col-payment col-graph">
 																				<div class="bar purple">barrinha</div>
 																			</div>
-																			<div class="col-payment">
+																			<div class="col-payment end">
 																				<span class="money-td green grey bold" id='pix-value'></span>
 																			</div>
 																		</div>
@@ -289,7 +282,7 @@
 																			<div class="col-payment col-graph">
 																				<div class="bar pink">barrinha</div>
 																			</div>
-																			<div class="col-payment">
+																			<div class="col-payment end">
 																				<span class="money-td green bold grey" id='boleto-value'></span>
 																			</div>
 																		</div>
@@ -298,6 +291,9 @@
 															</div>
 															
 														</div>
+                                                        <div class="no-payment">
+                                                            Não há meios de pagamento
+                                                        </div>
                                                     </div>
 												</div>
 											</div>
