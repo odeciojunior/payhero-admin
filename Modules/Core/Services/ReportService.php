@@ -1408,7 +1408,71 @@ class ReportService
             )
             ->orderByDesc('start_date');
 
-            return $sales->get()->count();
+            return [
+                'sales' => $sales->get()->count()
+            ];
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function getResumeTypePayments($filters)
+    {
+        try {
+            $saleModel = new Sale();
+            $sales = $saleModel->where('owner_id', auth()->user()->account_owner_id)
+            ->where('status', $saleModel->present()->getStatus('paid'));
+
+            if (!empty($filters["project"])) {
+                $projectId = Hashids::decode($filters["project"]);
+                $sales->where('project_id', $projectId);
+            }
+
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+            $sales->where(function ($querySale) use ($dateRange) {
+                $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+            })
+            ->orderByDesc('start_date');
+
+            $salesTotal = $sales->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
+            ->first();
+            $total = $salesTotal->total + 50;
+
+            $salesCreditCard = $sales->where('payment_method', $saleModel->present()->getPaymentType('credit_card'))
+            ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
+            ->first();
+            $totalCreditCard = $salesCreditCard->total;
+            $percentageCreditCard = number_format(($totalCreditCard * 100) / $total, 2, '.', ',');
+
+            $salesBoleto = $sales->where('payment_method', $saleModel->present()->getPaymentType('boleto'))
+            ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
+            ->first();
+            $totalBoleto = $salesBoleto->total + 10;
+            $percentageBoleto = number_format(($totalBoleto * 100) / $total, 2, '.', ',');
+
+            $salesPix = $sales->where('payment_method', $saleModel->present()->getPaymentType('pix'))
+            ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
+            ->first();
+            $totalPix = $salesPix->total + 40;
+            $percentagePix = number_format(($totalPix * 100) / $total, 2, '.', ',');
+
+            return [
+                'total' => FoxUtils::formatMoney($total),
+                'credit_card' => [
+                    'value' => FoxUtils::formatMoney($totalCreditCard),
+                    'percent' => round($percentageCreditCard, 1, PHP_ROUND_HALF_DOWN).'%'
+                ],
+                'boleto' => [
+                    'value' => FoxUtils::formatMoney($totalBoleto),
+                    'percent' => round($percentageBoleto, 1, PHP_ROUND_HALF_DOWN).'%'
+                ],
+                'pix' => [
+                    'value' => FoxUtils::formatMoney($totalPix),
+                    'percent' => round($percentagePix, 1, PHP_ROUND_HALF_DOWN).'%'
+                ]
+            ];
+
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }

@@ -861,7 +861,23 @@ class ReportsApiController extends Controller
         $saleService = new ReportService();
         $sales = $saleService->getResumeSales($data);
 
-        return response()->json(['data' => $sales]);
+        return response()->json(['data' => $sales['sales']]);
+    }
+
+    function getResumeTypePayments(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $saleService = new ReportService();
+        $typePayments = $saleService->getResumeTypePayments($data);
+
+        return response()->json([
+            'data' => $typePayments
+        ]);
     }
 
     // MARKETING --------------------------------------------------------------------------

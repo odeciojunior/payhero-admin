@@ -26,8 +26,6 @@ class AuthenticationApiController extends Controller
     public function login(Request $request)
     {
         try {
-            dd($request);
-
             $request->validate([
                 'email' => 'required',
                 'password' => 'required'
