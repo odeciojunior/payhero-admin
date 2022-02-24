@@ -73,9 +73,9 @@
                         <div class="row">
 
                             <div class="col-sm-6 col-md-3">
-                                <label for="projeto">Projeto</label>
+                                <label for="projeto">Loja</label>
                                 <select name='select_project' id="projeto" class="sirius-select">
-                                    <option value="">Todos projetos</option>
+                                    <option value="">Todas Lojas</option>
                                 </select>
                             </div>
 
@@ -222,7 +222,7 @@
                                 <thead>
                                 <tr>
                                     <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                    <td class="table-title">Projeto</td>
+                                    <td class="table-title">Loja</td>
                                     <td class="table-title">Descrição</td>
                                     <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
                                     <td class="table-title">Forma</td>

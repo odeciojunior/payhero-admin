@@ -50,9 +50,9 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                        <label for="project">Projeto</label>
+                                        <label for="project">Loja</label>
                                         <select name='select_project' id="project" class="sirius-select">
-                                            <option value="0">Todas os projetos</option>
+                                            <option value="0">Todas lojas</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-8 col-md-6 col-xl-3">
@@ -180,7 +180,7 @@
                                     <thead>
                                     <tr>
                                         <td class="table-title">Transação</td>
-                                        <td class="table-title">Projeto</td>
+                                        <td class="table-title">Loja</td>
                                         <td class="table-title">Cliente</td>
                                         <td class="table-title display-sm-none display-m-none display-lg-none">Forma
                                         </td>
