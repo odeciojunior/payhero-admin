@@ -60,7 +60,7 @@
                 <div class="pt-10 pr-20 pl-20 modal_config_body">
 
                     <div class="switch-holder">
-                        <label for='deleted_project_filter' class='mb-10'>Apresentar projetos excluídos nos filtros:</label>
+                        <label for='deleted_project_filter' class='mb-10'>Apresentar lojas excluídos nos filtros:</label>
                         <br>
 
                         <label class="switch">

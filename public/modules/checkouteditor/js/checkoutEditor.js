@@ -49,6 +49,9 @@ $(document).ready( function () {
     });
 
     $(".accept-payment-method").on("change", function () {
+
+        $('.accepted-payment:first-child').css('border', '2px solid blue !important')
+
         const form = document.querySelector("#checkout_editor");
         const checkboxes = form.querySelectorAll(".accept-payment-method");
         const checkboxLength = checkboxes.length;
@@ -68,7 +71,7 @@ $(document).ready( function () {
                 $($(this).attr("data-preview")).hide("slow", "swing");
                 $("." + $(this).attr("data-target")).slideUp("slow", "swing");
             }
-        }
+        }   
     });
 
     $("input[name=checkout_banner_type]").on("click", function () {

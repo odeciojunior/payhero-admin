@@ -189,7 +189,7 @@
             <li class="site-menu-item has-sub">
                 <a href="/projects" id="projects-link">
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/projetos.svg') }}" alt="Projetos">
+                        <img src="{{ asset('modules/global/img/svg/vitrine.svg') }}" alt="Projetos">
                     </span>
                     <span class="site-menu-title">Lojas</span>
                 </a>

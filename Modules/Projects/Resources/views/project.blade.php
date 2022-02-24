@@ -87,22 +87,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- CHAMADOS ABERTOS -->
-                                        <div class="col-md-4 align-items-center py-10 rounded-0 product-info-color border-product-alert">
-
-                                            <div class="d-flex justify-content-start padding-cards-l">
-                                                <div class="d-flex pl-5">
-                                                    <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/icon-chat.svg') }}">
-                                                </div>
-
-                                                <span class="s-data-project-values pl-5 align-self-center" id="value-open-tickets"></span>
-                                            </div>
-
-                                            <div class="d-flex align-items-center justify-content-start padding-cards-l font-size-10">
-                                                <small class="font-size-12">chamados abertos</small>
-                                            </div>
-                                        </div>
-
                                         <!-- VENDAS S/ RASTREIO -->
                                         <div class="col-md-4 align-items-center py-10 tracking-sell product-info-color border-product-alert">
 
@@ -117,6 +101,22 @@
                                                 <small class="font-size-12">vendas sem rastreio</small>
                                             </div>
 
+                                        </div>
+
+                                        <!-- CHAMADOS ABERTOS -->
+                                        <div class="col-md-4 align-items-center py-10 rounded-0 product-info-color border-product-alert">
+
+                                            <div class="d-flex justify-content-start padding-cards-l">
+                                                <div class="d-flex pl-5">
+                                                    <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/icon-chat.svg') }}">
+                                                </div>
+
+                                                <span class="s-data-project-values pl-5 align-self-center" id="value-open-tickets"></span>
+                                            </div>
+
+                                            <div class="d-flex align-items-center justify-content-start padding-cards-l font-size-10">
+                                                <small class="font-size-12">chamados abertos</small>
+                                            </div>
                                         </div>
 
                                     </div>

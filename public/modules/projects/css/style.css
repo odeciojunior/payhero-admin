@@ -42,11 +42,12 @@
     font-weight: bold;
     border-top: none;
     border-right: none;
-    border-bottom: 2px solid #FAFAFA;
+    border-bottom: 3px solid #FAFAFA;
     border-left: none;
     background-color: #FAFAFA;
     padding: 15px;
     white-space: nowrap !important;
+    margin-bottom: -1px;
 
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
@@ -64,6 +65,7 @@
 
 .nav-tabs .nav-link:not(.active) {
     margin: 0 5px;
+    border-bottom: 3px solid #fff;
 }
 
 .nav-tabs .nav-link:hover {
@@ -87,7 +89,7 @@
     transition: all 0.3s;
 }
 .nav-tabs-line .nav-link.active, .nav-tabs-line .nav-link.active:focus {
-    border-bottom: 2px solid #2E85EC;
+    border-bottom: 3px solid #2E85EC;
 }
 
 #tab_configuration:hover > img, .nav-tabs .nav-link.active > img {
@@ -199,10 +201,6 @@
     transform: rotate(-90deg) !important;
 }
 
-.tab-content {
-    margin-top: -2px;
-}
-
 .nav-tabs .nav-link {
     padding: 16px 16px 14px 16px;
 }
@@ -239,7 +237,7 @@
 }
 
 .nav-tabs .nav-link {
-    margin: 3px 5px 0 !important;
+    margin: 3px 5px -1px !important;
 }
 
 .nav-tabs-horizontal li:first-child > a {
