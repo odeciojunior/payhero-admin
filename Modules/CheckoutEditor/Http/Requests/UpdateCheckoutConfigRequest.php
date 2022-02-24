@@ -11,7 +11,7 @@ class UpdateCheckoutConfigRequest extends FormRequest
         return [
             'checkout_type_enum' => 'required|integer',
             'checkout_logo_enabled' => 'required|boolean',
-            'checkout_logo' => 'file',
+            'checkout_logo' => 'required_if:checkout_logo_enabled,1file',
             'checkout_banner_enabled' => 'required|boolean',
             'checkout_banner_type' => 'required_if:checkout_banner_enabled,1|integer',
             'checkout_banner' => 'file',

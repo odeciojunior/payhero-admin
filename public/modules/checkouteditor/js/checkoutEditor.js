@@ -261,12 +261,6 @@ $(document).ready( function () {
         }
     });
 
-    // ------------------------------- Dropify 
-
-    $('#upload_favicon .dropify-error').css('display', 'none');
-
-    $('.dropify-clear').hide();
-    
 
     $("#checkout_editor input[type=checkbox]").on("change", function () {
         if ($(this).is(":checked")) {

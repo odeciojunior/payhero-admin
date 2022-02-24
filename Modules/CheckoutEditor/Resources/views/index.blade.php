@@ -747,9 +747,9 @@
                             <div class="social-proof-content" style="display: none">
                                 <div class="input-container">
                                     <label for="social_proof_message" class="checkout-label">Mensagem</label>
-                                    <textarea class="checkout-textarea" id="social_proof_message"
-                                        name="social_proof_message"
-                                        rows="1">Outros { num-visitantes } estão finalizando esta compra nesse momento.</textarea>
+                                    <textarea class="checkout-textarea" id="social_proof_message" name="social_proof_message" rows="1">
+                                        Outros { num-visitantes } estão finalizando esta compra nesse momento.
+                                    </textarea>
                                     <div id="social_proof_message_error" class="checkout-error" style="display: none;">
                                         <p>Preencha o campo de mensagem.</p>
                                     </div>

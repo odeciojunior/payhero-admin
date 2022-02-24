@@ -175,9 +175,9 @@ $(() => {
                     });
 
                     // Printar Form
-                    for (var form of formData.entries()) {
-                        console.log(form[0] + ": " + form[1]);
-                    }
+                    // for (var form of formData.entries()) {
+                    //     console.log(form[0] + ": " + form[1]);
+                    // }
 
                     if(validadeForm(formData)) {
                         $.ajax({
@@ -300,72 +300,73 @@ $(() => {
                 $("#has_checkout_logo").val("true");
                 $("#logo_preview_mobile").fadeIn('slow');
                 $("#logo_preview_desktop").fadeIn('slow');
-
-                var drEventLogo = $("#checkout_logo").dropify({
-                    messages: {
-                        default: "",
-                        replace: "",
-                        error: "",
-                    },
-                    error: {
-                        fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
-                        fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
-                    },
-                    tpl: {
-                        message:
-                            '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">Clique ou arraste e solte aqui</span></p></div>',
-                        clearButton:
-                            '<button type="button" class="dropify-clear o-bin-1"></button>',
-                    },
-                    imgFileExtensions: ["png", "jpg", "jpeg"],
-                    defaultFile: checkout.checkout_logo,
-                });
-            
-                drEventLogo.on("dropify.fileReady", function (event, element) {
-                    var files = event.target.files;
-                    var done = function (url) {
-                        $("#logo_preview_mobile").attr("src", url);
-                        $("#logo_preview_desktop").attr("src", url);
-                        $("#has_checkout_logo").val("true");
-            
-                        $("#logo_preview_mobile").fadeIn('slow');
-                        $("#logo_preview_desktop").fadeIn('slow');
-                    };
-                    if (files && files.length > 0) {
-                        file = files[0];
-            
-                        if (URL) {
-                            done(URL.createObjectURL(file));
-                        } else if (FileReader) {
-                            reader = new FileReader();
-                            reader.onload = function (e) {
-                                done(reader.result);
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    }
-            
-                    
-                });
-            
-                drEventLogo.on('dropify.errors', function(event, element){
-                    $("#logo_preview_mobile").attr("src", '');
-                    $("#logo_preview_desktop").attr("src", '');
-            
-                    $("#logo_preview_mobile").fadeOut('slow');
-                    $("#logo_preview_desktop").fadeOut('slow');
-            
-                    $("#has_checkout_logo").val("false");
-                });
-            
-                drEventLogo.on('dropify.afterClear', function(event, element){
-                    $("#has_checkout_logo").val("false");
-                });
             }else{
                 $("#logo_preview_mobile").fadeOut('slow');
                 $("#logo_preview_desktop").fadeOut('slow');
             }
 
+
+            var drEventLogo = $("#checkout_logo").dropify({
+                messages: {
+                    default: "",
+                    replace: "",
+                    error: "",
+                },
+                error: {
+                    fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
+                    fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                },
+                tpl: {
+                    message:
+                        '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">Clique ou arraste e solte aqui</span></p></div>',
+                    clearButton:
+                        '<button type="button" class="dropify-clear o-bin-1"></button>',
+                },
+                imgFileExtensions: ["png", "jpg", "jpeg"],
+                defaultFile: (checkout.checkout_logo ? checkout.checkout_logo : ''),
+            });
+        
+            drEventLogo.on("dropify.fileReady", function (event, element) {
+                var files = event.target.files;
+                var done = function (url) {
+                    $("#logo_preview_mobile").attr("src", url);
+                    $("#logo_preview_desktop").attr("src", url);
+                    $("#has_checkout_logo").val("true");
+        
+                    $("#logo_preview_mobile").fadeIn('slow');
+                    $("#logo_preview_desktop").fadeIn('slow');
+                };
+                if (files && files.length > 0) {
+                    file = files[0];
+        
+                    if (URL) {
+                        done(URL.createObjectURL(file));
+                    } else if (FileReader) {
+                        reader = new FileReader();
+                        reader.onload = function (e) {
+                            done(reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+        
+                
+            });
+        
+            drEventLogo.on('dropify.errors', function(event, element){
+                $("#logo_preview_mobile").attr("src", '');
+                $("#logo_preview_desktop").attr("src", '');
+        
+                $("#logo_preview_mobile").fadeOut('slow');
+                $("#logo_preview_desktop").fadeOut('slow');
+        
+                $("#has_checkout_logo").val("false");
+            });
+        
+            drEventLogo.on('dropify.afterClear', function(event, element){
+                $("#has_checkout_logo").val("false");
+                });
+            
             if (checkout.checkout_favicon_enabled == 1) {
                 $("#checkout_editor #checkout_favicon_enabled").prop("checked", true);
                 $("#checkout_editor #checkout_favicon_enabled").prop("value", 1);
@@ -384,32 +385,37 @@ $(() => {
             }
 
             
-            
             if (checkout.checkout_favicon) {
                 $("#has_checkout_favicon").val("true");
-                var drEventFavicon = $("#checkout_favicon").dropify({
-                    messages: {
-                        default: "",
-                        replace: "",
-                    },
-                    error: {
-                        fileSize: "",
-                        fileExtension: "",
-                    },
-                    tpl: {
-                        message:
-                            '<div class="dropify-message"><span class="file-icon" /></div>',
-                    },
-                    imgFileExtensions: ["png", "jpg", "jpeg", "ico"],
-                    defaultFile: checkout.checkout_favicon,
-                });
-            
-                drEventFavicon.on('dropify.errors', function(event, element){
-                    $('#checkout_favicon_error').fadeIn('slow', 'linear');
-                });
             }else {
                 $("#has_checkout_favicon").val("false");
             }
+            
+                
+            var drEventFavicon = $("#checkout_favicon").dropify({
+                messages: {
+                    default: "",
+                    replace: "",
+                },
+                error: {
+                    fileSize: "",
+                    fileExtension: "",
+                },
+                tpl: {
+                    message:
+                        '<div class="dropify-message"><span class="file-icon" /></div>',
+                },
+                imgFileExtensions: ["png", "jpg", "jpeg", "ico"],
+                defaultFile: (checkout.checkout_favicon ? checkout.checkout_favicon : ''),
+            });
+        
+            drEventFavicon.on('dropify.errors', function(event, element){
+                $('#checkout_favicon_error').fadeIn('slow', 'linear');
+            });
+
+            drEventFavicon.on('dropify.fileReady', function(event, element){
+                $('#checkout_favicon_error').hide();
+            });
 
            
 
@@ -418,7 +424,8 @@ $(() => {
                 $("#preview_banner_img_desktop").attr("src", checkout.checkout_banner);
                 $("#preview_banner_img_mobile").attr("src", checkout.checkout_banner);
                 $("#has_checkout_banner").val("true");
-
+            }
+                
 
                 var drEventBanner = $("#checkout_banner").dropify({
                     messages: {
@@ -436,7 +443,7 @@ $(() => {
                         clearButton: '<button type="button" class="dropify-clear o-bin-1"></button>',
                     },
                     imgFileExtensions: ["png", "jpg", "jpeg"],
-                    defaultFile: checkout.checkout_banner,
+                    defaultFile: (checkout.checkout_banner ? checkout.checkout_banner : ''),
                 });
             
                 var bs_modal = $("#modal_banner");
@@ -577,7 +584,7 @@ $(() => {
                 });
 
                 // replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
-            }
+            
 
             if (checkout.checkout_banner_enabled) {
                 $("#checkout_editor #checkout_banner_enabled").prop("checked", true);
@@ -1069,6 +1076,10 @@ $(() => {
 
             $('#checkout_editor_id').val(checkout.id)
 
+            $('#upload_favicon .dropify-error').css('display', 'none');
+
+            $('.dropify-clear').hide();
+
         }
 
         function validadeForm(form) {
@@ -1199,6 +1210,9 @@ $(() => {
                     return false;
                 }   
             }
+
+
+            console.log($('#checkout_logo').attr('data-default-file'));
 
             if(form.get('checkout_logo_enabled') == "1"){
                 if($("#has_checkout_logo").val() == "true"){
