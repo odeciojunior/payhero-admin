@@ -109,7 +109,7 @@
                                     <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="projeto">Lojas</label>
                                         <select name='select_project' id="projeto" class="form-control select-pad applySelect2">
-                                            <option value="">Todas as lojas</option>
+                                            <option value="">Todas lojas</option>
                                         </select>
                                     </div>
 
