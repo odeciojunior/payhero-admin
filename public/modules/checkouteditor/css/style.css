@@ -1083,6 +1083,12 @@ textarea:focus {
     flex-direction: row;
     gap: 10px;
     align-items: center;
+    
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.7s;
+    -ms-transition: all 0.7s;
+    -o-transition: all 0.7s;
+    transition: all 0.7s;
 }
 
 #upload_favicon label {

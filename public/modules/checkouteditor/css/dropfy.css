@@ -28,6 +28,10 @@
     padding: 2px;
 }
 
+#upload_favicon .dropify-wrapper .dropify-preview {
+    padding: 3px;
+}
+
 #upload-banner > .dropify-wrapper {
     display: flex;
     flex-direction: column;
@@ -45,6 +49,11 @@
 #checkout_editor .dropify-wrapper .dropify-message {
     transform: none;
     top: auto;
+}
+
+#checkout_editor  .dropify-wrapper .dropify-preview .dropify-render img {
+    border-radius: 8px;
+    width: 100%;
 }
 
 #checkout_editor .dropify-errors-container ul {

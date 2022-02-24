@@ -81,7 +81,7 @@ $(() => {
                 $('#post_purchase_message_content').addClass('focus-in');
             }
         });
-  
+
         $.ajax({
             method: "GET",
             url: "/api/checkouteditor/" + projectId,
@@ -94,7 +94,15 @@ $(() => {
                 checkout = response.data;
                 if(checkout) {
                     fillForm(checkout);
-                    $('#checkout_editor_id').val(checkout.id)
+
+                    $("#checkout_editor").on("input", function () {
+                        $("#save_changes").fadeIn("slow", "swing");
+                    });
+
+                    $('.sirius-select').on("change", function () {
+                        $("#save_changes").fadeIn("slow", "swing");
+                    });
+                    // $('#save_changes').hide();
                 }
 
                 $(document).on("submit", "#checkout_editor", function (e) {
@@ -275,23 +283,84 @@ $(() => {
             if (checkout.checkout_logo_enabled == 1) {
                 $("#checkout_editor #checkout_logo_enabled").prop("checked", true);
                 $("#checkout_editor #checkout_logo_enabled").prop("value", 1);
-                $('.favicon-content').removeClass('low-opacity')
+                $('.logo-content').removeClass('low-opacity')
                 $("#checkout_editor .logo-preview-container").show();
             } else {
                 $("#checkout_editor #checkout_logo_enabled").prop("checked", false);
                 $("#checkout_editor #checkout_logo_enabled").prop("value", 0);
-                $('.favicon-content').addClass('low-opacity')
+                $('.logo-content').addClass('low-opacity')
                 $("#checkout_editor .logo-preview-container").hide();
             }
             
 
             if (checkout.checkout_logo) {
-                replacePreview("checkout_logo", checkout.checkout_logo, "Image.jpg");
+                // replacePreview("checkout_logo", checkout.checkout_logo, "Image.jpg");
                 $("#logo_preview_mobile").attr("src", checkout.checkout_logo);
                 $("#logo_preview_desktop").attr("src", checkout.checkout_logo);
                 $("#has_checkout_logo").val("true");
                 $("#logo_preview_mobile").fadeIn('slow');
                 $("#logo_preview_desktop").fadeIn('slow');
+
+                var drEventLogo = $("#checkout_logo").dropify({
+                    messages: {
+                        default: "",
+                        replace: "",
+                        error: "",
+                    },
+                    error: {
+                        fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
+                        fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                    },
+                    tpl: {
+                        message:
+                            '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">Clique ou arraste e solte aqui</span></p></div>',
+                        clearButton:
+                            '<button type="button" class="dropify-clear o-bin-1"></button>',
+                    },
+                    imgFileExtensions: ["png", "jpg", "jpeg"],
+                    defaultFile: checkout.checkout_logo,
+                });
+            
+                drEventLogo.on("dropify.fileReady", function (event, element) {
+                    var files = event.target.files;
+                    var done = function (url) {
+                        $("#logo_preview_mobile").attr("src", url);
+                        $("#logo_preview_desktop").attr("src", url);
+                        $("#has_checkout_logo").val("true");
+            
+                        $("#logo_preview_mobile").fadeIn('slow');
+                        $("#logo_preview_desktop").fadeIn('slow');
+                    };
+                    if (files && files.length > 0) {
+                        file = files[0];
+            
+                        if (URL) {
+                            done(URL.createObjectURL(file));
+                        } else if (FileReader) {
+                            reader = new FileReader();
+                            reader.onload = function (e) {
+                                done(reader.result);
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    }
+            
+                    
+                });
+            
+                drEventLogo.on('dropify.errors', function(event, element){
+                    $("#logo_preview_mobile").attr("src", '');
+                    $("#logo_preview_desktop").attr("src", '');
+            
+                    $("#logo_preview_mobile").fadeOut('slow');
+                    $("#logo_preview_desktop").fadeOut('slow');
+            
+                    $("#has_checkout_logo").val("false");
+                });
+            
+                drEventLogo.on('dropify.afterClear', function(event, element){
+                    $("#has_checkout_logo").val("false");
+                });
             }else{
                 $("#logo_preview_mobile").fadeOut('slow');
                 $("#logo_preview_desktop").fadeOut('slow');
@@ -311,22 +380,203 @@ $(() => {
                 $('#favicon_logo').attr("checked", true);
             }else {
                 $('#favicon_uploaded').attr("checked", true);
-            }
-
-            if (checkout.checkout_banner) {
-                replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
-                $("#preview_banner_img_desktop").attr("src", checkout.checkout_banner);
-                $("#preview_banner_img_mobile").attr("src", checkout.checkout_banner);
-                $("#has_checkout_banner").val("true");
+                $('#upload_favicon').removeClass('low-opacity')
             }
 
             
+            
+            if (checkout.checkout_favicon) {
+                $("#has_checkout_favicon").val("true");
+                var drEventFavicon = $("#checkout_favicon").dropify({
+                    messages: {
+                        default: "",
+                        replace: "",
+                    },
+                    error: {
+                        fileSize: "",
+                        fileExtension: "",
+                    },
+                    tpl: {
+                        message:
+                            '<div class="dropify-message"><span class="file-icon" /></div>',
+                    },
+                    imgFileExtensions: ["png", "jpg", "jpeg", "ico"],
+                    defaultFile: checkout.checkout_favicon,
+                });
+            
+                drEventFavicon.on('dropify.errors', function(event, element){
+                    $('#checkout_favicon_error').fadeIn('slow', 'linear');
+                });
+            }else {
+                $("#has_checkout_favicon").val("false");
+            }
+
+           
 
             if (checkout.checkout_banner) {
-                replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
+                // $("#checkout_banner").attr('src', checkout.checkout_banner);
                 $("#preview_banner_img_desktop").attr("src", checkout.checkout_banner);
                 $("#preview_banner_img_mobile").attr("src", checkout.checkout_banner);
                 $("#has_checkout_banner").val("true");
+
+
+                var drEventBanner = $("#checkout_banner").dropify({
+                    messages: {
+                        default: "",
+                        replace: "",
+                        remove: "Remover",
+                        error: "",
+                    },
+                    error: {
+                        fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
+                        fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                    },
+                    tpl: {
+                        message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">Faça upload do seu banner</span></p></div>',
+                        clearButton: '<button type="button" class="dropify-clear o-bin-1"></button>',
+                    },
+                    imgFileExtensions: ["png", "jpg", "jpeg"],
+                    defaultFile: checkout.checkout_banner,
+                });
+            
+                var bs_modal = $("#modal_banner");
+                var image = document.getElementById("cropped_image");
+                var cropper, reader, file;
+            
+                drEventBanner.on("dropify.fileReady", function (event, element) {
+                    var files = event.target.files;
+                    var done = function (url) {
+                        image.src = url;
+                        bs_modal.modal("show");
+                    };
+            
+                    if (files && files.length > 0) {
+                        file = files[0];
+            
+                        if (URL) {
+                            done(URL.createObjectURL(file));
+                        } else if (FileReader) {
+                            reader = new FileReader();
+                            reader.onload = function (e) {
+                                done(reader.result);
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    }
+                });
+            
+                drEventBanner.on('dropify.errors', function(event, element){
+                    $("#preview_banner_img_mobile").attr("src", '');
+                    $("#preview_banner_img_desktop").attr("src", '');
+                    $("#has_checkout_banner").val("false");
+                    $("#preview_banner_img_mobile").fadeOut('slow');
+                    $("#preview_banner_img_desktop").fadeOut('slow');
+                });
+            
+                drEventBanner.on('dropify.afterClear', function(event, element){
+                    $("#has_checkout_banner").val("false");
+                });
+            
+                
+            
+                $('.dropify-clear').hide();
+            
+                //  ----------------- Crop Modal ----------------------
+            
+                var $dataZoom = $("#dataZoom");
+                bs_modal.on("shown.bs.modal", function () {
+                        cropper = new Cropper(image, {
+                            highlight: false,
+                            movable: false,
+                            viewMode: 3,
+                            aspectRatio:  1280/198,
+                            zoom: function (e) {
+                                var ratio = Math.round(e.ratio * 1000) / 10;
+                                $dataZoom.text(ratio);
+                            },
+                        });
+                    })
+                    .on("hidden.bs.modal", function () {
+                        cropper.destroy();
+                        cropper = null;
+                    });
+            
+                $("#zoom-in").on("click", () => {
+                    cropper.zoom(0.1);
+                });
+            
+                $("#zoom-out").on("click", () => {
+                    cropper.zoom(-0.1);
+                });
+            
+                var lastNum;
+                $("#zoom-slide").on("input change", () => {
+                    if (lastNum < $("#zoom-slide").val()) {
+                        cropper.zoom(0.1);
+                    } else {
+                        cropper.zoom(-0.1);
+                    }
+                    lastNum = $("#zoom-slide").val();
+                });
+            
+                $("#crop-reset").on("click", () => {
+                    cropper.reset();
+                    $("#zoom-slide").val(0);
+                });
+            
+                $(".img-profile input")
+                    .on("click", function (e) {
+                        e.stopPropagation();
+                    })
+                    .on("change", function () {
+                        let file = this.files[0];
+                        let reader = new FileReader();
+                        reader.onload = function (e) {
+                            let img = $(".img-profile")
+                                .addClass("cropping")
+                                .find("img")
+                                .attr("src", e.target.result);
+                            cropper = new Cropper(img[0], {
+                                aspectRatio: 1,
+                                minContainerWidth: 150,
+                                minContainerHeight: 150,
+                            });
+                            $("#btn-crop-cancel, #btn-crop").show();
+                        };
+                        reader.readAsDataURL(file);
+                    });
+            
+                $("#button-crop").on("click", function () {
+                    if (cropper) {
+                        var canvas = cropper.getCroppedCanvas();
+                        var src = canvas.toDataURL('image/png', 0.7);
+            
+                        $("#preview_banner_img_mobile").attr("src", src);
+                        $("#preview_banner_img_desktop").attr("src", src);
+            
+                        $("#has_checkout_banner").val("true");
+            
+                        $("#preview_banner_img_mobile").fadeIn('slow');
+                        $("#preview_banner_img_desktop").fadeIn('slow');
+            
+                        replacePreview("checkout_banner", src, "checkout_banner.jpg");
+            
+                        cropper.getCroppedCanvas().toBlob((blob) => {
+                            let dt = new DataTransfer();
+                            let file = new File([blob], "banner." + blob.type.split("/")[1]);
+                            dt.items.add(file);
+                            document.querySelector("#checkout_banner").files = dt.files;
+                        },'image/jpeg', 0.8);
+                    }
+            
+                    bs_modal.modal("hide");
+                });
+            
+                $("#button-cancel-crop").on("click", function () {
+                    $("#checkout_banner").parent().find(".dropify-clear").trigger("click");
+                });
+
+                // replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
             }
 
             if (checkout.checkout_banner_enabled) {
@@ -816,6 +1066,8 @@ $(() => {
                 $('.theme-ready-first-line').removeClass('low-opacity');
                 $(".theme-ready-second-line").show("slow", "swing");
             }
+
+            $('#checkout_editor_id').val(checkout.id)
 
         }
 
