@@ -175,9 +175,9 @@ $(() => {
                     });
 
                     // Printar Form
-                    // for (var form of formData.entries()) {
-                    //     console.log(form[0] + ": " + form[1]);
-                    // }
+                    for (var form of formData.entries()) {
+                        console.log(form[0] + ": " + form[1]);
+                    }
 
                     if(validadeForm(formData)) {
                         $.ajax({

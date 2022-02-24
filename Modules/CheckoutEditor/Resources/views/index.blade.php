@@ -813,11 +813,7 @@
                                 <label for="company_billing" class="checkout-label">Empresa responsável pelo
                                     faturamento</label>
                                 <div class='form-group'>
-                                    <select id='companies' name='company_id' class="sirius-select">
-                                        <div class="sirius-select-text" style="height: 43px;">
-                                            Empresas
-                                        </div>
-                                    </select>
+                                    <select id='companies' name='company_id' class="sirius-select"></select>
                                 </div>
                             </div>
                         </div>
