@@ -112,31 +112,27 @@ $(function () {
             },
             success: function success(response) {
                 
-                
-
-
                 if( response.data.total ) {
                     //credit_card
                     $("#credit-card-value").html(response.data.credit_card.value);
-                    $("#percent-credit-card").html(response.data.credit_card.percent);
-                    $("#percent-credit-card").next('.col-payment').find('.bar').css('width', response.data.credit_card.percent );
+                    $("#percent-credit-card").html(response.data.credit_card.percentage);
+                    $("#percent-credit-card").next('.col-payment').find('.bar').css('width', response.data.credit_card.percentage );
 
                     // boleto
                     $("#boleto-value").html(response.data.boleto.value);
-                    $("#percent-values-boleto").html(response.data.boleto.percent);
-                    $("#percent-values-boleto").next('.col-payment').find('.bar').css('width', response.data.boleto.percent );
+                    $("#percent-values-boleto").html(response.data.boleto.percentage);
+                    $("#percent-values-boleto").next('.col-payment').find('.bar').css('width', response.data.boleto.percentage );
 
                     // pix
                     $("#pix-value").html(response.data.pix.value);
-                    $("#percent-values-pix").html(response.data.pix.percent);
-                    $("#percent-values-pix").next('.col-payment').find('.bar').css('width', response.data.pix.percent );
+                    $("#percent-values-pix").html(response.data.pix.percentage);
+                    $("#percent-values-pix").next('.col-payment').find('.bar').css('width', response.data.pix.percentage );
                     
-                    $('.bar').removeClass('visible');
                    ;
                 } else {
                     $('#percent-credit-card, #percent-values-boleto, #percent-values-pix ').html('0%');
                     $('#credit-card-value, #boleto-value, #pix-value').html('R$ 0,00');
-                    $('.bar').html(' - ').addClass('visible');
+
                 }
             }
         });
@@ -230,7 +226,7 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                current_currency = response.currency;                
+                current_currency = response.currency;
 
                 if(response.totalPaidValueAproved='R$ 0,00' || response.totalPaidValueAproved ==false || !response.totalPaidValueAproved){
                     response.totalPaidValueAproved='R$ <span class="grey font-size-24 bold">0,00</span>'
@@ -332,6 +328,7 @@ $(function () {
                 getPending();
                 getSales();
                 getTypePayments();
+                
             },
         });
     }
