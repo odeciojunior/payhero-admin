@@ -1461,15 +1461,15 @@ class ReportService
                 'total' => FoxUtils::formatMoney($total),
                 'credit_card' => [
                     'value' => FoxUtils::formatMoney($totalCreditCard),
-                    'percent' => round($percentageCreditCard, 1, PHP_ROUND_HALF_DOWN).'%'
+                    'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_DOWN).'%'
                 ],
                 'boleto' => [
                     'value' => FoxUtils::formatMoney($totalBoleto),
-                    'percent' => round($percentageBoleto, 1, PHP_ROUND_HALF_DOWN).'%'
+                    'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_DOWN).'%'
                 ],
                 'pix' => [
                     'value' => FoxUtils::formatMoney($totalPix),
-                    'percent' => round($percentagePix, 1, PHP_ROUND_HALF_DOWN).'%'
+                    'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_DOWN).'%'
                 ]
             ];
 
