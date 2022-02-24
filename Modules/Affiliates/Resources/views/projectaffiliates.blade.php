@@ -42,9 +42,9 @@
                                     <div class="row mb-15">
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
-                                                <label for="type-products">Projeto</label>
+                                                <label for="type-products">Loja</label>
                                                 <select class="sirius-select" id="project-affiliate" data-name="projects">
-                                                    <option value="0">Todos projetos</option>
+                                                    <option value="0">Todas lojas</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -66,7 +66,7 @@
                                             <tr>
                                                 <td class="table-title">Nome</td>
                                                 {{-- <td class="table-title">Email</td> --}}
-                                                <td class="table-title">Projeto</td>
+                                                <td class="table-title">Loja</td>
                                                 <td class="table-title">Data afiliação</td>
                                                 <td class="text-center table-title">Porcentagem</td>
                                                 <td class="text-center table-title">Status</td>
@@ -95,9 +95,9 @@
                                     <div class="row mb-15">
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
-                                                <label for="type-products">Projeto</label>
+                                                <label for="type-products">Loja</label>
                                                 <select class="sirius-select" id="project-affiliate-request" data-name="projects">
-                                                    <option value="0">Todos projetos</option>
+                                                    <option value="0">Todas loja</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -118,7 +118,7 @@
                                             <tr>
                                                 <td class="table-title">Nome</td>
                                                 <td class="table-title">Email</td>
-                                                <td class="table-title">Projeto</td>
+                                                <td class="table-title">Loja</td>
                                                 <td class="table-title">Data</td>
                                                 {{-- <td class="table-title" class="text-center">Status</td> --}}
                                                 <td class="table-title" class="text-center">Opções</td>

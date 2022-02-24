@@ -52,15 +52,15 @@
             <div class="col-md-7 col-lg-8 col-xl-9 pl-10 pr-sm-50">
 
                 <div class='form-group col-md-12'>
-                    <label for='name' class="font-size-16">Nome do projeto</label>
-                    <input name='name' value="" type='text' class='input-pad font-size-16 name-project' id='name' placeholder='Nome do Projeto' maxlength='40'  style="outline: none;"/>
+                    <label for='name' class="font-size-16">Nome da loja</label>
+                    <input name='name' value="" type='text' class='input-pad font-size-16 name-project' id='name' placeholder='Nome da loja' maxlength='40'  style="outline: none;"/>
                     <span id='name-error' class='text-danger'></span>
                     <p class='info pt-5' style='font-size: 10px;'></p>
                 </div>
 
                 <div class='form-group col-lg-12'>
                     <label for='description' class="font-size-16">Descrição</label>
-                    <textarea style='height:100px;' name='description' type='text' class='input-pad font-size-16' id='description' placeholder='Fale um pouco sobre seu Projeto' maxlength='100'></textarea>
+                    <textarea style='height:100px;' name='description' type='text' class='input-pad font-size-16' id='description' placeholder='Fale um pouco sobre sua loja' maxlength='100'></textarea>
                     <span id='description-error' class='text-danger'></span>
                     <p class="pt-25 mb-0 font-size-12">Recomendações: Imagem de 300x300px  |  Formatos: JPEG ou PNG</p>
                 </div>
@@ -274,7 +274,7 @@
 
                     <a id="bt-delete-project" role="button" class="pointer align-items-center mt-3 ml-10" data-toggle="modal" data-target="#modal-delete-project" style="float: left;">
                         <span class="orion-icon-lixo"></span>
-                        <span class="font-size-16"><b>Excluir projeto</b></span>
+                        <span class="font-size-16"><b>Excluir loja</b></span>
                     </a>
                 </div>
             </div>

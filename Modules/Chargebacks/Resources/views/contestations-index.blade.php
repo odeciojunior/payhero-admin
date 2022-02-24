@@ -113,9 +113,9 @@
                         <div class="collapse" id="bt_collapse">
                             <div class="row">
                                 <div class="col-sm-12 col-md-3 mt-10">
-                                    <label for="project">Projeto</label><br>
+                                    <label for="project">Loja</label><br>
                                     <select name='project' id="project" class="sirius-select">
-                                        <option value="">Todos projetos</option>
+                                        <option value="">Todas Loja</option>
                                     </select>
                                 </div>
 
