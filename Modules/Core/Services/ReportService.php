@@ -1437,7 +1437,7 @@ class ReportService
 
             $salesTotal = $sales->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
             ->first();
-            $total = $salesTotal->total + 50;
+            $total = $salesTotal->total;
 
             $salesCreditCard = $sales->where('payment_method', $saleModel->present()->getPaymentType('credit_card'))
             ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
@@ -1448,13 +1448,13 @@ class ReportService
             $salesBoleto = $sales->where('payment_method', $saleModel->present()->getPaymentType('boleto'))
             ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
             ->first();
-            $totalBoleto = $salesBoleto->total + 10;
+            $totalBoleto = $salesBoleto->total;
             $percentageBoleto = number_format(($totalBoleto * 100) / $total, 2, '.', ',');
 
             $salesPix = $sales->where('payment_method', $saleModel->present()->getPaymentType('pix'))
             ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
             ->first();
-            $totalPix = $salesPix->total + 40;
+            $totalPix = $salesPix->total;
             $percentagePix = number_format(($totalPix * 100) / $total, 2, '.', ',');
 
             return [
