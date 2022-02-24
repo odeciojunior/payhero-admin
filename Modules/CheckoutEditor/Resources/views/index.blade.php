@@ -147,24 +147,25 @@
                             <div class="favicon-content low-opacity">
                                 <div>
                                     <div class="radio-row">
-                                        <input type="radio" id="favicon_logo" class="bigger-radio" name="checkout_favicon_type" value="1" checked>
+                                        <input type="radio" id="favicon_logo" class="bigger-radio" name="checkout_favicon_type" value="1" checked style="outline: none">
                                         <label for="favicon_logo">Utilizar a logo como favicon</label><br>
                                     </div>
 
                                     <div class="radio-row">
-                                        <input type="radio" id="favicon_uploaded" class="bigger-radio" name="checkout_favicon_type" value="2">
+                                        <input type="radio" id="favicon_uploaded" class="bigger-radio" name="checkout_favicon_type" value="2" style="outline: none">
                                         <label for="favicon_uploaded">Subir um arquivo diferente</label><br>
                                     </div>
                                 </div>
 
                                 <div id='upload_favicon' class="low-opacity">
-                                    <input type="file" id="checkout_favicon" name="checkout_favicon" data-errors-position="outside" data-show-errors="false" data-show-loader="false" data-max-file-size="10M"  data-allowed-file-extensions="jpg jpeg png ico">
+                                    <input type="file" id="checkout_favicon" name="checkout_favicon" data-errors-position="outside" data-show-errors="false" data-max-heigth="256" data-max-width="256" data-show-loader="false" data-max-file-size="10M"  data-allowed-file-extensions="jpg jpeg png ico">
                                     <label for="checkout_favicon">Clique para fazer upload</label>
                                     <input type="hidden" id="has_checkout_favicon" value="false">
                                 </div>
 
                                 <div class="instrunctios">
-                                    <p>"Sua imagem deve ter 32x32px, nos formatos .png, .jpg ou ICO</p>
+                                    <p>Sua imagem deve ter 32x32px, nos 
+                                       formatos .png, .jpg ou ICO</p>
                                 </div>
 
                                 <div id="checkout_favicon_error" class="checkout-error" style="display: none">
