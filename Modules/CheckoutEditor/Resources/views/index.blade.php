@@ -748,7 +748,7 @@
                                 <div class="input-container">
                                     <label for="social_proof_message" class="checkout-label">Mensagem</label>
                                     <textarea class="checkout-textarea" id="social_proof_message" name="social_proof_message" rows="1">
-                                        Outros { num-visitantes } estão finalizando esta compra nesse momento.
+                                        
                                     </textarea>
                                     <div id="social_proof_message_error" class="checkout-error" style="display: none;">
                                         <p>Preencha o campo de mensagem.</p>
@@ -760,8 +760,8 @@
                                     <div style="display: flex; margin-bottom: 10px;">
                                         <button id="" class='add-tag' data-input="#social_proof_message"
                                             data-tag="{ num-visitantes }">num-visitantes</button>
-                                        <button id="" class='add-tag' data-input="#social_proof_message"
-                                            data-tag="{ nome-produto }">nome-produto</button>
+                                        <!-- <button id="" class='add-tag' data-input="#social_proof_message"
+                                            data-tag="{ nome-produto }">nome-produto</button> -->
                                     </div>
                                 </div>
 

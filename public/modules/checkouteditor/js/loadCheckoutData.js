@@ -411,10 +411,12 @@ $(() => {
         
             drEventFavicon.on('dropify.errors', function(event, element){
                 $('#checkout_favicon_error').fadeIn('slow', 'linear');
+                $("#has_checkout_favicon").val("false");
             });
 
             drEventFavicon.on('dropify.fileReady', function(event, element){
                 $('#checkout_favicon_error').hide();
+                $("#has_checkout_favicon").val("true");
             });
 
            
@@ -1211,9 +1213,6 @@ $(() => {
                 }   
             }
 
-
-            console.log($('#checkout_logo').attr('data-default-file'));
-
             if(form.get('checkout_logo_enabled') == "1"){
                 if($("#has_checkout_logo").val() == "true"){
                     validated = true;  
@@ -1224,6 +1223,24 @@ $(() => {
                     return false;
                 }
             }
+
+            console.log(form.get('checkout_favicon_type'));
+
+            if(form.get('checkout_favicon_enabled') == "1"){
+                if(form.get('checkout_favicon_type') == "1"){
+                    validated = true;  
+                }else{
+                    if($("#has_checkout_favicon").val() == "true"){
+                        validated = true;  
+                    }else{
+                        console.log('não válido')
+                        scrollToElement('upload_logo');
+                        $('#checkout_favicon_error').fadeIn('slow', 'linear');
+                        return false;
+                    }
+                }
+            }
+
 
             if(form.get('checkout_banner_enabled') == "1"){
                 if($("#has_checkout_banner").val() == "true"){

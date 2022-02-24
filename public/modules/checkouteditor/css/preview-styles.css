@@ -461,8 +461,8 @@
 .step-one,
 .step-two,
 .step-three {
-    height: 2px;
-    min-width: 50px;
+    height: 3px;
+    /* min-width: 50px; */
     width: 100%;
     flex: 1;
 }
@@ -730,6 +730,10 @@
     font-weight: bold;
     color: black;
     height: 20px;
+}
+
+.accepted-payment:first-child {
+    border: 2px solid blue !important;
 }
 
 .input-form-placeholder {
