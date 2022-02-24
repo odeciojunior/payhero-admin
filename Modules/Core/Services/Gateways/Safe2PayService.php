@@ -365,7 +365,7 @@ class Safe2PayService implements Statement
                             'safe2pay_balance' => $company->safe2pay_balance -= $refundValue
                         ]);
 
-                    } elseif(!empty($sale->anticipation_status))
+                    } else
                     {
                         if ($refundTransaction->type <> Transaction::TYPE_PRODUCER) continue;
 
