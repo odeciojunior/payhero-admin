@@ -26,7 +26,7 @@ Route::get('/termos', function () {
 Route::group(
     [
     ],
-    function() {        
+    function() {
         // rotas autenticadas
         // rotas para autenticação e registro de novos usuarios
         Route::get('/login', '\App\Http\Controllers\Auth\LoginController@showLoginForm')->name('login');
@@ -85,6 +85,12 @@ Route::group(
         Route::get('/test-job-with-database', 'TesteController@testJobWithDatabase');
     }
 );
+
+// utilitário para QA
+// desabilitado em produção
+if (env('APP_ENV', 'production') !== 'production') {
+    Route::view('/qa-utils', 'utils.info');
+}
 
 Route::view('/carriers', 'carriers');
 
