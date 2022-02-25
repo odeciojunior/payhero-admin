@@ -97,7 +97,7 @@
                                             <div class="form-group">
                                                 <label for="type-products">Loja</label>
                                                 <select class="sirius-select" id="project-affiliate-request" data-name="projects">
-                                                    <option value="0">Todas loja</option>
+                                                    <option value="0">Todas lojas</option>
                                                 </select>
                                             </div>
                                         </div>
