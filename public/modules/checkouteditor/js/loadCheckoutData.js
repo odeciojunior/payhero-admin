@@ -1214,6 +1214,14 @@ $(() => {
                 }
             }
 
+
+            if(!form.get('company_id')){
+                $('#company_billing_error').show('slow', 'linear');
+                scrollToElement('company_id');
+                return false;
+            }
+                
+
             if(form.get('bank_slip_due_days') !=  '' && form.get('bank_slip_due_days') != null){
                 validated = true;
             }else{

@@ -805,7 +805,10 @@
                                     <select id='companies' name='company_id' class="sirius-select">
                                         <option value=''>Selecione</option>
                                     </select>
-                                    
+                                </div>
+                                <div id="company_billing_error" class="checkout-error"
+                                    style="display: none;">
+                                    <p>Por favor, você deve selecionar uma empresa.</p>
                                 </div>
                             </div>
                         </div>
@@ -1738,12 +1741,12 @@
                         </p>
 
                         <div class="save-changes-button-group">
-                            <button id="cancel_button" type="button"
-                                class="change-button cancel-changes-button">Cancelar</button>
-                            <button type="submit" form="checkout_editor"
-                                class="change-button save-changes-button">Salvar alterações</button>
+                            <button id="cancel_button" type="button" class="font-size-16 btn btn-primary border border-white mr-10 px-15 px-sm-40">Cancelar</button>
+                            <button type="submit" form="checkout_editor" class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alterações</button>
                         </div>
                     </div>
+
+                    class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40"
 
                     <div class="save-changes" id="save_load" style="display: none;">
                         <p>
