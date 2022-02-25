@@ -878,6 +878,7 @@ $(() => {
             $("#checkout_editor #invoice_description").val(checkout.invoice_description || "");
 
 
+            console.log(checkout.companies);
             for (let company of checkout.companies) {
                 if ( company.status != "pending") {
                     $("#checkout_editor #companies").append(
