@@ -75,7 +75,7 @@
                             <div class="col-sm-6 col-md-3">
                                 <label for="projeto">Loja</label>
                                 <select name='select_project' id="projeto" class="sirius-select">
-                                    <option value="">Todas Lojas</option>
+                                    <option value="">Todas lojas</option>
                                 </select>
                             </div>
 
@@ -247,9 +247,9 @@
                 </div>
             </div>
         </div>
-        {{-- Quando não tem projeto cadastrado  --}}
+        {{-- Quando não tem loja cadastrado  --}}
             @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
+        {{-- FIM loja nao existem lojas--}}
     </div>
 
 

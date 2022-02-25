@@ -39,9 +39,9 @@
                     <div id="" class="card shadow p-20">
                         <div class="row align-items-baseline">
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                <label for="projeto">Projeto</label>
+                                <label for="projeto">Loja</label>
                                 <select name='select_project' id="projeto" class="form-control select-pad">
-                                    <option value="">Todos projetos</option>
+                                    <option value="">Todas lojas</option>
                                 </select>
                             </div>
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -73,7 +73,7 @@
                             <thead>
                                 <tr class='text-center'>
                                     <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                    <td class="table-title">Projeto</td>
+                                    <td class="table-title">Loja</td>
                                     <td class="table-title">Descrição</td>
                                     <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
                                     {{--                                <td class="table-title blacklist" style='display:none'>Motivo</td>--}}
@@ -96,9 +96,9 @@
             </div>
         </div>
 
-        {{-- Quando não tem projeto cadastrado  --}}
+        {{-- Quando não tem loja cadastrado  --}}
             @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
+        {{-- FIM loja nao existem lojas--}}
     </div>
 
     @push('scripts')
