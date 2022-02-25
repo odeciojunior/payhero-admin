@@ -157,7 +157,7 @@
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0">
                         <label for="project-select">Loja</label>
                         <select name='project' id="project-select" class="form-control select-pad applySelect2">
-                            <option value="">Todas Loja</option>
+                            <option value="">Todas Lojas</option>
                         </select>
                     </div>
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0">
