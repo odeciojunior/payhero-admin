@@ -189,9 +189,9 @@
             <li class="site-menu-item has-sub">
                 <a href="/projects" id="projects-link">
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/vitrine.svg') }}" alt="Projetos">
+                        <img src="{{ asset('modules/global/img/svg/vitrine.svg') }}" alt="Lojas">
                     </span>
-                    <span class="site-menu-title">Lojas</span>
+                    <span class="site-menu-title">lojas</span>
                 </a>
             </li>
         @endcan

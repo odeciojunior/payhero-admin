@@ -140,7 +140,7 @@
                 </div>
             </div>
         </div>
-        {{-- FIM projeto nao existem projetos--}}
+        {{-- FIM loja nao existem lojas--}}
         {{-- MODAL --}}
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-affiliate" aria-hidden="true" role="dialog" tabindex="-1">
             <div class="modal-dialog  modal-dialog-centered  modal-simple">
@@ -218,9 +218,9 @@
         </div>
         {{-- END MODAL --}}
 
-        {{-- Quando não tem projeto cadastrado  --}}
+        {{-- Quando não tem loja cadastrado  --}}
             @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
+        {{-- FIM loja nao existem lojas--}}
     </div>
     @push('scripts')
         <script src="{{asset('modules/affiliates/js/projectaffiliates.js?v=' . random_int(100, 10000)) }}"></script>

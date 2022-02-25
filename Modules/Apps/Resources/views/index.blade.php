@@ -23,7 +23,7 @@
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/notazz.png') !!}" alt="" align="middle">
                             <div class="card-body">
                                 <h5 class="card-title">Notazz</h5>
-                                <p class="card-text sm">Integre seus projetos com a Notazz </p>
+                                <p class="card-text sm">Integre suas lojas com a Notazz </p>
                             </div>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/hotzapp.png') !!}" alt="">
                             <div class="card-body">
                                 <h5 class="card-title">Hotzapp</h5>
-                                <p class="card-text sm">Integre seus projetos com HotZapp </p>
+                                <p class="card-text sm">Integre suas lojas com HotZapp </p>
                             </div>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/shopify.png') !!}" alt="">
                             <div class="card-body">
                                 <h5 class="card-title">Shopify</h5>
-                                <p class="card-text sm">Integre seus projetos com Shopify </p>
+                                <p class="card-text sm">Integre suas lojas com Shopify </p>
                             </div>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/convertax.png') !!}" alt="" align="middle">
                             <div class="card-body">
                                 <h5 class="card-title">ConvertaX</h5>
-                                <p class="card-text sm">Integre seus projetos com ConvertaX </p>
+                                <p class="card-text sm">Integre suas lojas com ConvertaX </p>
                             </div>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/active_campaign.png') !!}" alt="" align="middle">
                             <div class="card-body">
                                 <h5 class="card-title">ActiveCampaign</h5>
-                                <p class="card-text sm">Integre seus projetos com ActiveCampaign </p>
+                                <p class="card-text sm">Integre suas lojas com ActiveCampaign </p>
                             </div>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/sak.png') !!}" alt="" align="middle">
                             <div class="card-body">
                                 <h5 class="card-title">SAK (Whatsapp 2.0)</h5>
-                                <p class="card-text sm">Integre seus projetos com Sak </p>
+                                <p class="card-text sm">Integre suas lojas com Sak </p>
                             </div>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/reportana.png') !!}" alt="" align="middle">
                             <div class="card-body">
                                 <h5 class="card-title">Reportana</h5>
-                                <p class="card-text sm">Integre seus projetos com Reportana </p>
+                                <p class="card-text sm">Integre suas lojas com Reportana </p>
                             </div>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/unicodrop.png') !!}" alt="" align="middle">
                             <div class="card-body">
                                 <h5 class="card-title">Unicodrop</h5>
-                                <p class="card-text sm">Integre seus projetos com Unicodrop </p>
+                                <p class="card-text sm">Integre suas lojas com Unicodrop </p>
                             </div>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/smartfunnel.png') !!}" alt="" align="middle">
                             <div class="card-body">
                                 <h5 class="card-title">Smart Funnel</h5>
-                                <p class="card-text sm">Integre seus projetos com Smart Funnel </p>
+                                <p class="card-text sm">Integre suas lojas com Smart Funnel </p>
                             </div>
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                             <img class="card-img-top card-img-controll mt-30" src="{!! asset('modules/global/img/woocom.jpg') !!}" alt="">
                             <div class="card-body">
                                 <h5 class="card-title">WooCommerce</h5>
-                                <p class="card-text sm">Integre seus projetos com WooCommerce </p>
+                                <p class="card-text sm">Integre suas lojas com WooCommerce </p>
                             </div>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/melhorenvio.png') !!}" alt="">
                             <div class="card-body">
                                 <h5 class="card-title">Melhor Envio</h5>
-                                <p class="card-text sm">Integre seus projetos com Melhor Envio </p>
+                                <p class="card-text sm">Integre suas lojas com Melhor Envio </p>
                             </div>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                             <img class="card-img-top card-img-controll  mt-100 mb-100" src="{!! asset('modules/global/img/hotbillet.png') !!}" alt="">
                             <div class="card-body">
                                 <h5 class="card-title">HotBillet</h5>
-                                <p class="card-text sm">Integre seus projetos com HotBillet </p>
+                                <p class="card-text sm">Integre suas lojas com HotBillet </p>
                             </div>
                         </div>
                     </div>
@@ -160,7 +160,7 @@
                             <img class="card-img-top card-img-controll  mt-100 " src="{!! asset('modules/global/img/astromembers.jpeg') !!}" alt="">
                             <div class="card-body">
                                 <h5 class="card-title">Astron Members</h5>
-                                <p class="card-text sm">Integre seus projetos com Astron Members </p>
+                                <p class="card-text sm">Integre suas lojas com Astron Members </p>
                             </div>
                         </div>
                     </div>
@@ -186,7 +186,7 @@
                             <img class="card-img-top card-img-controll" src="{!! asset('modules/global/img/digital_manager_guru.png') !!}" alt="" align="middle">
                             <div class="card-body">
                                 <h5 class="card-title">Digital Manager Guru</h5>
-                                <p class="card-text sm">Integre seus projetos com Digital Manager Guru</p>
+                                <p class="card-text sm">Integre suas lojas com Digital Manager Guru</p>
                             </div>
                         </div>
                     </div>
@@ -194,9 +194,9 @@
                 </div>
             </div>
         </div>
-        {{-- Quando não tem projeto cadastrado  --}}
+        {{-- Quando não tem loja cadastrado  --}}
             @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
+        {{-- FIM loja nao existem lojas--}}
     </div>
 
     @push('scripts')

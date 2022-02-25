@@ -383,8 +383,8 @@ $(document).ready(function () {
                     $("#modal-project-title").text("Oooppsssss!");
                     $("#modal_project_body").html(
                         '<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' +
-                            '<h3 align="center"><strong>Você não possui projetos para realizar integração</strong></h3>' +
-                            '<h5 align="center">Deseja criar seu primeiro projeto? <a class="red pointer" href="' +
+                            '<h3 align="center"><strong>Você não possui lojas para realizar integração</strong></h3>' +
+                            '<h5 align="center">Deseja criar sua primeira loja? <a class="red pointer" href="' +
                             route +
                             '">clique aqui</a></h5>'
                     );

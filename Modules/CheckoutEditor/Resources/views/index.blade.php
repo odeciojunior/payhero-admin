@@ -12,16 +12,6 @@
 <!-- Page -->
 <div class="checkout-container" style="max-height: 3585px;  margin-bottom: 20px;">
 
-    <!-- <div class="card card-body" style="height: 122px;">
-        <h1 class="checkout-title">
-            Editor de Checkout
-        </h1>
-        <div class="checkout-subtitle">
-            <span class="tag"><b>NOVO!</b></span> Adicione banner, temas pré-prontos ou personalize o seu próprio.
-        </div>
-
-    </div> -->
-
     <div class='row card no-gutters p-30 rounded-top'>
 
         <div class="col-12 font-size-24 pl-0 mb-10">
@@ -805,8 +795,7 @@
                             <div class="input-container" style="flex: 3; min-width: 200px;">
                                 <label for="invoice_description" class="checkout-label">Descrição na fatura <span
                                         class="observation-span">Opcional</span></label>
-                                <input type="text" class="checkout-input-text" id="invoice_description"
-                                    name="invoice_description" />
+                                <input type="text" class="checkout-input-text" id="invoice_description" name="invoice_description" style="width: 184px" />
                             </div>
 
                             <div class="input-container" style="flex: 4">
@@ -1082,7 +1071,7 @@
 
                 </div>
 
-                <div class="checkout-content post-purchase-pages" id="post_purchase" style="margin-bottom: 500px;">
+                <div class="checkout-content post-purchase-pages" id="post_purchase" style="margin-bottom: 350px;">
 
                     <span class="title-icon">
                         <img class="icon-title" src="{{ asset('/modules/checkouteditor/img/svg/paid-page.svg') }}">

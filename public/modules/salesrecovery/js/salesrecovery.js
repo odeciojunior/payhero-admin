@@ -110,7 +110,7 @@ $(document).ready(function () {
     );
 
     /**
-     * Busca os projetos para montar o select
+     * Busca os lojas para montar o select
      */
     function getProjects() {
         loadingOnScreen();

@@ -175,9 +175,9 @@ $(() => {
                     });
 
                     // Printar Form
-                    for (var form of formData.entries()) {
-                        console.log(form[0] + ": " + form[1]);
-                    }
+                    // for (var form of formData.entries()) {
+                    //     console.log(form[0] + ": " + form[1]);
+                    // }
 
                     if(validadeForm(formData)) {
                         $.ajax({
@@ -251,7 +251,63 @@ $(() => {
             },
             error: (response) => {
                 errorAjaxResponse(response);
+                $('#checkout_editor').addClass('low-opacity');
+
+                $("#checkout_logo").dropify({
+                    messages: {
+                        default: "",
+                        replace: "",
+                        error: "",
+                    },
+                    error: {
+                        fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
+                        fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                    },
+                    tpl: {
+                        message:
+                            '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">Clique ou arraste e solte aqui</span></p></div>',
+                        clearButton:
+                            '<button type="button" class="dropify-clear o-bin-1"></button>',
+                    },
+                    imgFileExtensions: ["png", "jpg", "jpeg"],
+                });
+
+                $("#checkout_favicon").dropify({
+                    messages: {
+                        default: "",
+                        replace: "",
+                    },
+                    error: {
+                        fileSize: "",
+                        fileExtension: "",
+                    },
+                    tpl: {
+                        message:
+                            '<div class="dropify-message"><span class="file-icon" /></div>',
+                    },
+                    imgFileExtensions: ["png", "jpg", "jpeg", "ico"],
+                });
+
+                $("#checkout_banner").dropify({
+                    messages: {
+                        default: "",
+                        replace: "",
+                        remove: "Remover",
+                        error: "",
+                    },
+                    error: {
+                        fileSize: "O tamanho máximo do arquivo deve ser {{ value }}.",
+                        fileExtension: "A imagem deve ser algum dos formatos permitidos. ({{ value }}).",
+                    },
+                    tpl: {
+                        message: '<div class="dropify-message"><span class="file-icon" /> <p>{{ default }}<span style="color: #2E85EC;">Faça upload do seu banner</span></p></div>',
+                        clearButton: '<button type="button" class="dropify-clear o-bin-1"></button>',
+                    },
+                    imgFileExtensions: ["png", "jpg", "jpeg"],
+                });
+                
                 loadOnAny(".checkout-container", true);
+            
             },
         });
 
@@ -636,13 +692,9 @@ $(() => {
                 checkout.countdown_time || 15
             );
 
-            if ( checkout.countdown_description != "" || !checkout.countdown_description) {
-                $("#checkout_editor #countdown_description").val( checkout.countdown_description );
-            }
+            $("#checkout_editor #countdown_description").val(checkout.countdown_description || "Aproveite o desconto extra ao comprar no Cartão ou pelo PIX! É por tempo limitado.");
 
-            if ( checkout.countdown_finish_message != "" || !checkout.countdown_finish_message ) {
-                $("#checkout_editor #countdown_finish_message").val( checkout.countdown_finish_message );
-            }
+            $("#checkout_editor #countdown_finish_message").val(checkout.countdown_finish_message || "Seu tempo acabou! Você precisa finalizar sua compra agora para ganhar o desconto extra.");
 
             if (checkout.topbar_enabled) {
                 $("#checkout_editor #topbar_enabled").prop("checked", true);
@@ -657,7 +709,7 @@ $(() => {
             }
 
 
-            quillTextbar.root.innerHTML = checkout.topbar_content;
+            quillTextbar.root.innerHTML = checkout.topbar_content || "<p>Aproveite o <b>desconto extra</b> ao comprar no <u>Cartão ou pelo PIX!</u> É por <b>tempo limitado</b>.</p>";
 
 
             if (checkout.notifications_enabled) {
@@ -821,15 +873,9 @@ $(() => {
                 $("#checkout_editor .social-proof-content").hide();
             }
 
-            $("#checkout_editor #social_proof_message").val(
-                checkout.social_proof_message || ""
-            );
-            $("#checkout_editor #social_proof_minimum").val(
-                checkout.social_proof_minimum || 0
-            );
-            $("#checkout_editor #invoice_description").val(
-                checkout.invoice_description || ""
-            );
+            $("#checkout_editor #social_proof_message").val(checkout.social_proof_message || "Outras { num-visitantes } pessoas estão finalizando a compra neste momento.");
+            $("#checkout_editor #social_proof_minimum").val(checkout.social_proof_minimum || 0);
+            $("#checkout_editor #invoice_description").val(checkout.invoice_description || "");
 
             for (let company of checkout.companies) {
                 if ( ( company.id == checkout.company_id || company.capture_transaction_enabled ) && company.status != "pending") {
@@ -977,15 +1023,15 @@ $(() => {
             ).change();
 
             $("#checkout_editor #automatic_discount_credit_card").val(
-                checkout.automatic_discount_credit_card || 1
+                checkout.automatic_discount_credit_card || 0
             );
 
             $("#checkout_editor #automatic_discount_bank_slip").val(
-                checkout.automatic_discount_bank_slip || 1
+                checkout.automatic_discount_bank_slip || 0
             );
 
             $("#checkout_editor #automatic_discount_pix").val(
-                checkout.automatic_discount_pix || 1
+                checkout.automatic_discount_pix || 0
             );
 
             if (checkout.post_purchase_message_enabled) {
@@ -1000,22 +1046,14 @@ $(() => {
                 $(".shop-message-preview").slideUp("slow", "swing");
             }
 
-            
-            if(checkout.post_purchase_message_title){
-                $("#checkout_editor #post_purchase_message_title").val(checkout.post_purchase_message_title);
-                $(".shop-message-preview-title").empty();
-                $(".shop-message-preview-title").append(checkout.post_purchase_message_title);
-            }
+            $("#checkout_editor #post_purchase_message_title").val(checkout.post_purchase_message_title || "Obrigado por comprar conosco!");
+            $(".shop-message-preview-title").empty();
+            $(".shop-message-preview-title").append(checkout.post_purchase_message_title || "Obrigado por comprar conosco!");
 
-        
+            quillThanksPage.root.innerHTML = checkout.topbar_content || "<p>Aproveite o <b>desconto extra</b> ao comprar no <u>Cartão ou pelo PIX!</u> É por <b>tempo limitado</b>.</p>";
 
-            if(checkout.post_purchase_message_content){
-                quillThanksPage.root.innerHTML = checkout.post_purchase_message_content;
-                $(".shop-message-preview-content").empty();
+            $(".shop-message-preview-content").empty();
                 $(".shop-message-preview-content").append(checkout.post_purchase_message_content);
-
-            }
-            
 
             if (checkout.whatsapp_enabled == 1) {
                 $("#checkout_editor #whatsapp_enabled").prop("checked", true);
