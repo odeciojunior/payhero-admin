@@ -803,7 +803,6 @@
                                     faturamento</label>
                                 <div class='form-group'>
                                     <select id='companies' name='company_id' class="sirius-select">
-                                        <option value=''>Selecione</option>
                                     </select>
                                 </div>
                                 <div id="company_billing_error" class="checkout-error"

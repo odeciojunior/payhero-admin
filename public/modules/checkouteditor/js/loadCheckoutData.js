@@ -1215,8 +1215,9 @@ $(() => {
                 }
             }
 
-
-            if(!form.get('company_id')){
+            if(form.get('company_id') !=  '' && form.get('company_id') != null){
+                validated = true;
+            }else{
                 $('#company_billing_error').show('slow', 'linear');
                 scrollToElement('company_id');
                 return false;
@@ -1262,8 +1263,6 @@ $(() => {
                     return false;
                 }
             }
-
-            console.log(form.get('checkout_favicon_type'));
 
             if(form.get('checkout_favicon_enabled') == "1"){
                 if(form.get('checkout_favicon_type') == "1"){
