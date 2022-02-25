@@ -733,8 +733,12 @@
 }
 
 .accepted-payment:first-child {
-    border: 2px solid #2e85ec !important;
-    color: #2e85ec;
+    border: 2px solid var(--primary-color) !important;
+    color: var(--primary-color);
+}
+
+#accepted_payment_card_creditcard  svg {
+    fill: var(--primary-color);
 }
 
 .input-form-placeholder {

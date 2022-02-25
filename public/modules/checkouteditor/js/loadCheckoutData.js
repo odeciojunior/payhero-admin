@@ -877,17 +877,14 @@ $(() => {
             $("#checkout_editor #social_proof_minimum").val(checkout.social_proof_minimum || 0);
             $("#checkout_editor #invoice_description").val(checkout.invoice_description || "");
 
+
             for (let company of checkout.companies) {
-                if ( ( company.id == checkout.company_id || company.capture_transaction_enabled ) && company.status != "pending") {
+                if ( company.status != "pending") {
                     $("#checkout_editor #companies").append(
                         `<option  class="sirius-select-option" value="${company.id}"
                         ${company.id === checkout.company_id ? "selected" : ""}
                     >
-                        ${
-                            company.status == "pending"
-                                ? company.name + " (documentos pendentes)"
-                                : company.name
-                        }
+                        ${company.name}
                     </option>
                   `
                     );
