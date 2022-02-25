@@ -43,14 +43,14 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('getnet:get-all-statement-chargebacks')->dailyAt('07:00');
 
-        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('10:00');
-        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('13:00');
-        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('17:00');
-        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('21:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('10:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('13:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('17:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('21:00');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('23:30');
 
-        $schedule->command('getnet:check-withdrawals-released')->dailyAt('09:00');
-        $schedule->command('getnet:check-withdrawals-released')->dailyAt('12:00');
+        // $schedule->command('getnet:check-withdrawals-released')->dailyAt('09:00');
+        // $schedule->command('getnet:check-withdrawals-released')->dailyAt('12:00');
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('16:00');
 
         $schedule->command('getnet:import-sale-contestations-txt-format')->dailyAt('16:00');
