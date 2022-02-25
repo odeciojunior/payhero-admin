@@ -832,15 +832,10 @@ $(() => {
             );
 
             for (let company of checkout.companies) {
-                if (
-                    company.id == checkout.company_id ||
-                    company.capture_transaction_enabled
-                ) {
+                if ( ( company.id == checkout.company_id || company.capture_transaction_enabled ) && company.status != "pending") {
                     $("#checkout_editor #companies").append(
                         `<option  class="sirius-select-option" value="${company.id}"
                         ${company.id === checkout.company_id ? "selected" : ""}
-                        ${company.status == "pending" ? "disabled" : ""}
-                        ${company.active_flag == 0 ? "disabled" : ""}
                     >
                         ${
                             company.status == "pending"

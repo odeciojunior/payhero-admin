@@ -682,7 +682,7 @@
     align-items: center;
     margin: 0 5px 20px 0;
     width: 60px;
-    border: 2px solid var(--primary-color);
+    border: 2px solid #e1e1e1;
     box-sizing: border-box;
     border-radius: 8px;
     padding-top: 3px;
@@ -733,7 +733,8 @@
 }
 
 .accepted-payment:first-child {
-    border: 2px solid blue !important;
+    border: 2px solid #2e85ec !important;
+    color: #2e85ec;
 }
 
 .input-form-placeholder {

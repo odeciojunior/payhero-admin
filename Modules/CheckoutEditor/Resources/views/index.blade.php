@@ -158,7 +158,7 @@
                                 </div>
 
                                 <div id='upload_favicon' class="low-opacity">
-                                    <input type="file" id="checkout_favicon" name="checkout_favicon" data-errors-position="outside" data-show-errors="false" data-max-heigth="256" data-max-width="256" data-show-loader="false" data-max-file-size="10M"  data-allowed-file-extensions="jpg jpeg png ico">
+                                    <input type="file" id="checkout_favicon" name="checkout_favicon" data-errors-position="outside" data-show-errors="false" data-max-heigth="32" data-max-width="32" data-show-loader="false" data-max-file-size="10M"  data-allowed-file-extensions="jpg jpeg png ico">
                                     <label for="checkout_favicon">Clique para fazer upload</label>
                                     <input type="hidden" id="has_checkout_favicon" value="false">
                                 </div>
@@ -1448,8 +1448,13 @@
 
                                                 <div class="accepted-payment accepted-payment-card-creditcard"
                                                     id="accepted_payment_card_creditcard">
-                                                    <img src="{{ asset('/modules/checkouteditor/img/svg/icon-card.svg') }}"
-                                                        style="width: 20px; filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(209deg) brightness(150%) contrast(102%);">
+                                                    
+                                                    <!-- <img src="{{ asset('/modules/checkouteditor/img/svg/icon-card.svg') }}" style="width: 20px; filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(209deg) brightness(150%) contrast(102%);"> -->
+
+                                                        <svg width="34" height="24" viewBox="0 0 34 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 20px;">
+                                                            <path d="M23.3744 16.0941C22.6703 16.0941 22.0994 16.663 22.0994 17.3647C22.0994 18.0664 22.6703 18.6353 23.3744 18.6353H27.6244C28.3286 18.6353 28.8994 18.0664 28.8994 17.3647C28.8994 16.663 28.3286 16.0941 27.6244 16.0941H23.3744ZM3.89583 0C1.74422 0 0 1.73819 0 3.88235V20.1176C0 22.2618 1.74422 24 3.89583 24H30.1042C32.2558 24 34 22.2618 34 20.1176V3.88235C34 1.73819 32.2558 0 30.1042 0H3.89583ZM2.125 20.1176V9.17647H31.875V20.1176C31.875 21.0923 31.0822 21.8824 30.1042 21.8824H3.89583C2.91783 21.8824 2.125 21.0923 2.125 20.1176ZM2.125 7.05882V3.88235C2.125 2.90773 2.91783 2.11765 3.89583 2.11765H30.1042C31.0822 2.11765 31.875 2.90773 31.875 3.88235V7.05882H2.125Z" fill="#2e85ec"/>
+                                                        </svg>
+                                                        
                                                     <span>Cartão</span>
                                                 </div>
 
@@ -1730,7 +1735,7 @@
 
                     <div class="save-changes" id="save_empty_fields" style="display: none;">
                         <p>
-                            <strong>Ops!</strong> Você precisa preencher os campos indícados.
+                            <strong>Ops!</strong> Verifique as mensagem em vermelho.
                         </p>
 
                         <div>
