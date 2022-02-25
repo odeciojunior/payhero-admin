@@ -500,15 +500,15 @@ h4.number{
 }
 
 .bar {
-    background: #2E85EC;
-    text-indent: -9000em;
     overflow: hidden;
     border-radius: 4px;
+    text-align: center;
 }
-.bar.pink { background: #F43F5E; }
-.bar.purple { background: #665FE8; }
-.bar.blue { background: #002F66; }
-.bar.blue-2 { background: #0050AF; }
+.bar.pink { background: #F43F5E; text-indent: -9000em; }
+.bar.purple { background: #665FE8; text-indent: -9000em;}
+.bar.blue { background: #2E85EC; text-indent: -9000em;}
+.bar.blue-1 { background: #002F66; text-indent: -9000em;}
+.bar.blue-2 { background: #0050AF; text-indent: -9000em;}
 
 .bar.visible { 
     text-indent: 0; 

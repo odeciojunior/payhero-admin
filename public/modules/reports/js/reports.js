@@ -111,28 +111,42 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                $('.bar').html('-').addClass('visible');
+                
                 
                 if( response.data.total ) {
                     //credit_card
                     $("#credit-card-value").html(response.data.credit_card.value);
                     $("#percent-credit-card").html(response.data.credit_card.percentage);
-                    $("#percent-credit-card").next('.col-payment').find('.bar').css('width', response.data.credit_card.percentage );
+
+                    if(response.data.credit_card.percentage){
+                        $("#percent-credit-card").next('.col-payment').find('.bar').css('width', response.data.credit_card.percentage );
+                        $("#percent-credit-card").next('.col-payment').find('.bar').addClass('blue');
+                    }
 
                     // boleto
                     $("#boleto-value").html(response.data.boleto.value);
                     $("#percent-values-boleto").html(response.data.boleto.percentage);
-                    $("#percent-values-boleto").next('.col-payment').find('.bar').css('width', response.data.boleto.percentage );
+
+                    if(response.data.boleto.percentage > 0){
+                        $("#percent-values-boleto").next('.col-payment').find('.bar').css('width', response.data.boleto.percentage );
+                        $("#percent-values-boleto").next('.col-payment').find('.bar').addClass('pink');
+                    }
 
                     // pix
                     $("#pix-value").html(response.data.pix.value);
                     $("#percent-values-pix").html(response.data.pix.percentage);
-                    $("#percent-values-pix").next('.col-payment').find('.bar').css('width', response.data.pix.percentage );
-                    
-                   ;
+
+                    if(response.data.pix.percentage > 0){
+                        $("#percent-values-pix").next('.col-payment').find('.bar').css('width', response.data.pix.percentage );
+                        $("#percent-values-pix").next('.col-payment').find('.bar').addClass('purple');
+                    }
+                    $('.bar').removeClass('visible');
+                   
                 } else {
                     $('#percent-credit-card, #percent-values-boleto, #percent-values-pix ').html('0%');
                     $('#credit-card-value, #boleto-value, #pix-value').html('R$ 0,00');
-
+                    $('.bar').html('-').css('width', '100%');
                 }
             }
         });
@@ -204,8 +218,13 @@ $(function () {
 
     function updateReports() {
         var date_range = $("#date_range_requests").val();
+        
+        $('.bar').css('width','100%');
+        $('.bar').removeClass('blue');
+        $('.bar').removeClass('pink');
+        $('.bar').removeClass('purple');
 
-        $("#sales,#pending,#cashback,#comission, #revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#percent-values-pix,#pix-value, #boleto-value, #percent-boleto-convert,#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
+        $(".bar,#sales,#pending,#cashback,#comission, #revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#percent-values-pix,#pix-value, #boleto-value, #percent-boleto-convert,#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
         ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
         loadOnTable("#origins-table-itens", ".table-vendas-itens");
 

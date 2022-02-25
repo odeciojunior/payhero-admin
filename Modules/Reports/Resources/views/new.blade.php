@@ -245,7 +245,7 @@
 																				0
 																			</div>
 																			<div class="col-payment col-graph">
-																				<div class="bar purple">barrinha</div>
+																				<div class="bar">barrinha</div>
 																			</div>
 																			<div class="col-payment end">
 																				<span class="money-td green grey bold" id='pix-value'></span>
@@ -280,7 +280,7 @@
 																				0
 																			</div>
 																			<div class="col-payment col-graph">
-																				<div class="bar pink">barrinha</div>
+																				<div class="bar">barrinha</div>
 																			</div>
 																			<div class="col-payment end">
 																				<span class="money-td green bold grey" id='boleto-value'></span>
