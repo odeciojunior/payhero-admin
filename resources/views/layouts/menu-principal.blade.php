@@ -191,7 +191,7 @@
                     <span class="bg-menu">
                         <img src="{{ asset('modules/global/img/svg/vitrine.svg') }}" alt="Lojas">
                     </span>
-                    <span class="site-menu-title">lojas</span>
+                    <span class="site-menu-title">Lojas</span>
                 </a>
             </li>
         @endcan

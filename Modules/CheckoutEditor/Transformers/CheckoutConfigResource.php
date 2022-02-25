@@ -13,6 +13,7 @@ class CheckoutConfigResource extends JsonResource
         $companies = Company::select([
             'id',
             'fantasy_name as name',
+            'company_type as type',
             'active_flag',
             'capture_transaction_enabled',
             'address_document_status',
@@ -28,7 +29,7 @@ class CheckoutConfigResource extends JsonResource
                     : 'pending';
                 return (object)[
                     'id' => hashids_encode($company->id),
-                    'name' => $company->name,
+                    'name' => $company->type == Company::PHYSICAL_PERSON ? 'Pessoa física' : $company->name,
                     'active_flag' => $company->active_flag,
                     'capture_transaction_enabled' => $company->capture_transaction_enabled,
                     'status' => $status
