@@ -323,107 +323,79 @@ class Safe2PayService implements Statement
                 ]
             );
 
-            $refundTransactions = $sale->transactions;
-
             $saleService = new SaleService();
             $saleTax = 0;
-            if(!empty($sale->anticipation_status)){
-                $cashbackValue = $sale->cashback()->first()->value??0;
-                $saleTax = $saleService->getSaleTaxRefund($sale,$cashbackValue);
-            }
+
+            $cashbackValue = $sale->cashback()->first()->value??0;
+            $saleTax = $saleService->getSaleTaxRefund($sale,$cashbackValue);
+
             $totalSale = $saleService->getSaleTotalValue($sale);
 
-            foreach ($refundTransactions as $refundTransaction) {
+            foreach ($sale->transactions as $refundTransaction) {
 
-                $company = $refundTransaction->company;
-                if (!empty($company)) {
-
-                    if ($refundTransaction->status_enum == Transaction::STATUS_TRANSFERRED) {
-
-                        $refundValue = $refundTransaction->value;
-                        if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
-                            $refundValue += $saleTax;
-                        }
-
-                        if($refundValue > $totalSale){
-                            $refundValue = $totalSale;
-                        }
-
-                        Transfer::create([
-                            'transaction_id' => $refundTransaction->id,
-                            'user_id' => $refundTransaction->user_id,
-                            'company_id' => $refundTransaction->company_id,
-                            'gateway_id' => $sale->gateway_id,
-                            'value' => $refundValue,
-                            'type' => 'out',
-                            'type_enum' => Transfer::TYPE_OUT,
-                            'reason' => 'refunded',
-                            'is_refunded_tax' => 0
-                        ]);
-
-                        $company->update([
-                            'safe2pay_balance' => $company->safe2pay_balance -= $refundValue
-                        ]);
-
-                    } else
-                    {
-                        if ($refundTransaction->type <> Transaction::TYPE_PRODUCER) continue;
-
-                        Transfer::create(
-                            [
-                                'transaction_id' => $refundTransaction->id,
-                                'user_id' => $company->user_id,
-                                'company_id' => $company->id,
-                                'type_enum' => Transfer::TYPE_IN,
-                                'value' => $refundTransaction->value,
-                                'type' => 'in',
-                                'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
-                            ]
-                        );
-
-                        $company->update([
-                            'safe2pay_balance' => $company->safe2pay_balance += $refundTransaction->value
-                        ]);
-
-                        $refundValue = $refundTransaction->value + $saleTax;
-
-                        if($refundValue > $totalSale){
-                            $refundValue = $totalSale;
-                        }
-
-                        Transfer::create([
-                            'transaction_id' => $refundTransaction->id,
-                            'user_id' => $refundTransaction->user_id,
-                            'company_id' => $refundTransaction->company_id,
-                            'gateway_id' => $sale->gateway_id,
-                            'value' => $refundValue,
-                            'type' => 'out',
-                            'type_enum' => Transfer::TYPE_OUT,
-                            'reason' => 'refunded',
-                            'is_refunded_tax' => 0
-                        ]);
-
-                        $company->update([
-                            'safe2pay_balance' => $company->safe2pay_balance -= $refundValue
-                        ]);
-                    }
-
+                if(empty($refundTransaction->company_id)) {
+                    $refundTransaction->update([
+                        'status_enum' => Transaction::STATUS_REFUNDED,
+                        'status' => 'refunded',
+                    ]);
+                    continue;
                 }
+
+                if($refundTransaction->status_enum == Transaction::STATUS_PAID) {
+
+                    Transfer::create(
+                        [
+                            'transaction_id' => $refundTransaction->id,
+                            'user_id' => $refundTransaction->company->user_id,
+                            'company_id' => $refundTransaction->company->id,
+                            'type_enum' => Transfer::TYPE_IN,
+                            'value' => $refundTransaction->value,
+                            'type' => 'in',
+                            'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
+                        ]
+                    );
+    
+                    $refundTransaction->company->update([
+                        'safe2pay_balance' => $refundTransaction->company->safe2pay_balance += $refundTransaction->value
+                    ]);
+                }
+
+                $refundValue = $refundTransaction->value;
+                if ($refundTransaction->type == Transaction::TYPE_PRODUCER) {
+                    $refundValue += $saleTax;
+                }
+
+                if($refundValue > $totalSale){
+                    $refundValue = $totalSale;
+                }
+
+                Transfer::create([
+                    'transaction_id' => $refundTransaction->id,
+                    'user_id' => $refundTransaction->user_id,
+                    'company_id' => $refundTransaction->company_id,
+                    'gateway_id' => $sale->gateway_id,
+                    'value' => $refundValue,
+                    'type' => 'out',
+                    'type_enum' => Transfer::TYPE_OUT,
+                    'reason' => 'refunded',
+                    'is_refunded_tax' => 0
+                ]);
+
+                $refundTransaction->company->update([
+                    'safe2pay_balance' => $refundTransaction->company->safe2pay_balance -= $refundValue
+                ]);
 
                 $refundTransaction->status = 'refunded';
                 $refundTransaction->status_enum = Transaction::STATUS_REFUNDED;
-                $refundTransaction->is_waiting_withdrawal = 0;
                 $refundTransaction->save();
             }
 
-            $sale->update(
-                [
-                    'status' => Sale::STATUS_REFUNDED,
-                    'gateway_status' => $statusGateway,
-                    'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
-                    'date_refunded' => Carbon::now(),
-                ]
-            );
+            $sale->update([
+                'status' => Sale::STATUS_REFUNDED,
+                'gateway_status' => $statusGateway,
+                'refund_value' => foxutils()->onlyNumbers($sale->total_paid_value),
+                'date_refunded' => Carbon::now(),
+            ]);
 
             SaleLog::create(
                 [
@@ -445,7 +417,6 @@ class Safe2PayService implements Statement
 
     public function refundReceipt($hashSaleId,$transaction)
     {
-        
         return PDF::loadHtml('<h2>Não foi possivel gerar o comprovante de estorno!.</h2>');
     }
 }
