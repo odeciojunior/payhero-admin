@@ -54,9 +54,9 @@ class CreateCheckoutConfigsTable extends Migration
             $table->integer('interest_free_installments')->default(1);
             $table->integer('preselected_installment')->default(12);
             $table->integer('bank_slip_due_days')->default(3);
-            $table->integer('automatic_discount_credit_card')->default(5);
-            $table->integer('automatic_discount_bank_slip')->default(5);
-            $table->integer('automatic_discount_pix')->default(5);
+            $table->integer('automatic_discount_credit_card')->default(0);
+            $table->integer('automatic_discount_bank_slip')->default(0);
+            $table->integer('automatic_discount_pix')->default(0);
             $table->boolean('post_purchase_message_enabled')->default(false);
             $table->string('post_purchase_message_title')->nullable();
             $table->text('post_purchase_message_content')->nullable();
