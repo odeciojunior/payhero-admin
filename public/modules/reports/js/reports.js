@@ -111,7 +111,7 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('.bar').html('-').addClass('visible');
+                $('#payment-type-items .bar').html('-').addClass('visible');
                 
                 
                 if( response.data.total ) {
@@ -146,7 +146,7 @@ $(function () {
                 } else {
                     $('#percent-credit-card, #percent-values-boleto, #percent-values-pix ').html('0%');
                     $('#credit-card-value, #boleto-value, #pix-value').html('R$ 0,00');
-                    $('.bar').html('-').css('width', '100%');
+                    $('#payment-type-items .bar').html('-').css('width', '100%');
                 }
             }
         });
@@ -219,10 +219,10 @@ $(function () {
     function updateReports() {
         var date_range = $("#date_range_requests").val();
         
-        $('.bar').css('width','100%');
-        $('.bar').removeClass('blue');
-        $('.bar').removeClass('pink');
-        $('.bar').removeClass('purple');
+        $('#payment-type-items .bar').css('width','100%');
+        $('#payment-type-items .bar').removeClass('blue');
+        $('#payment-type-items .bar').removeClass('pink');
+        $('#payment-type-items .bar').removeClass('purple');
 
         $(".bar,#sales,#pending,#cashback,#comission, #revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#percent-values-pix,#pix-value, #boleto-value, #percent-boleto-convert,#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
         ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");

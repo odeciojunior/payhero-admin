@@ -969,7 +969,7 @@
                                                                 </div>
                                                                 <div class="box-payment-option option">
                                                                     <div class="col-payment col-graph">
-                                                                        <div class="bar" style="width:43%">barrinha</div>
+                                                                        <div class="bar blue" style="width:43%">barrinha</div>
                                                                     </div>
                                                                     <div class="col-payment">
                                                                         <span class="money-td green bold grey font-size-14  value-percent">5%</span>
@@ -992,7 +992,7 @@
                                                                 </div>
                                                                 <div class="box-payment-option option">
                                                                     <div class="col-payment col-graph">
-                                                                        <div class="bar" style="width: 20%">barrinha</div>
+                                                                        <div class="bar blue" style="width: 20%">barrinha</div>
                                                                     </div>
                                                                     <div class="col-payment">
                                                                         <span class="money-td green bold grey font-size-14 value-percent">1%</span>
