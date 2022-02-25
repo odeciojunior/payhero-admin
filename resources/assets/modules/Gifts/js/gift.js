@@ -202,7 +202,7 @@ $(function () {
 
                 id_brinde = $(this).attr('brinde');
                 var name = $(this).closest("tr").find("td:first-child").text();
-                $('#modal_excluir_titulo').html('Remover do projeto o brinde ' + name + ' ?');
+                $('#modal_excluir_titulo').html('Remover da loja o brinde ' + name + ' ?');
 
                 $('#bt_excluir').unbind('click');
 

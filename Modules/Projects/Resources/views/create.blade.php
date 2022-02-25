@@ -65,7 +65,7 @@
         <div id="empty-companies-error" style="display:none;position: absolute; top: 25%;">
             <div class="text-center" style="display:flex;color: black;align-content: center;align-items: center;justify-content: center;flex-direction: column;text-align: center;padding: 20px;">
                 <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">
-                <p class="desc gray" style='font-size:20px;'>Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar
+                <p class="desc gray" style='font-size:20px;'>Para criar uma loja você precisa ter pelo menos uma empresa aprovada para transacionar
                     e todos os documentos da empresa e do seu perfil precisam estar aprovados! </p>
             </div>
         </div>

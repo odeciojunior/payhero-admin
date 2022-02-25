@@ -468,7 +468,7 @@ $(() => {
     $('#bt-delete-project').on('click', function (event) {
         event.preventDefault();
         let name = $("#name").val();
-        $("#modal_excluir_titulo").html("Remover projeto " + name + " ?");
+        $("#modal_excluir_titulo").html("Remover loja " + name + " ?");
 
         $("#modal-delete-project .btn-delete").on('click', function () {
             $("#modal-delete").modal('hide');
@@ -493,7 +493,7 @@ $(() => {
                     if (data == 'success') {
                         window.location = "/projects";
                     } else {
-                        alertCustom('error', "Erro ao deletar projeto");
+                        alertCustom('error', "Erro ao deletar loja");
                     }
                 }
             });

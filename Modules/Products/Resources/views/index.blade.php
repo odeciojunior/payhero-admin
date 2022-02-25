@@ -135,9 +135,9 @@
         </div>
     </div>
 
-    {{-- Quando não tem projeto cadastrado  --}}
+    {{-- Quando não tem loja cadastrado  --}}
     @include('projects::empty')
-    {{-- FIM projeto nao existem projetos--}}
+    {{-- FIM loja nao existem lojas--}}
 </div>
 
 @push('scripts')
