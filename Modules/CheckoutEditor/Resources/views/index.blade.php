@@ -1746,8 +1746,6 @@
                         </div>
                     </div>
 
-                    class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40"
-
                     <div class="save-changes" id="save_load" style="display: none;">
                         <p>
                             Um momento... <strong>Estamos salvando suas alterações.</strong>
