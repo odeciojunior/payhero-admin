@@ -50,8 +50,6 @@ $(document).ready( function () {
 
     $(".accept-payment-method").on("change", function () {
 
-        $('.accepted-payment:first-child').css('border', '2px solid blue !important')
-
         const form = document.querySelector("#checkout_editor");
         const checkboxes = form.querySelectorAll(".accept-payment-method");
         const checkboxLength = checkboxes.length;
@@ -287,7 +285,6 @@ $(document).ready( function () {
             $('.logo-div').addClass('has-banner');
             $('.menu-bar-mobile').hide('slow');
             $('.purchase-menu-mobile').fadeIn('slow');
-            $("#checkout_banner").parent().find(".dropify-clear").trigger("click");
         }else{
             $("#banner_type").fadeOut("slow", "swing");
             $('.logo-div').removeClass('has-banner');
