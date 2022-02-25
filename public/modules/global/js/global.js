@@ -894,7 +894,7 @@ $(document).ready(function () {
         $(this).siriusSelect();
     });
 
-    $(document).on('DOMSubtreeModified propertychange change', '.sirius-select', function () {
+    $(document).on('DOMSubtreeModified propertychange change', '.sirius-select-container select', function () {
         renderSiriusSelect(this);
     });
 
@@ -912,7 +912,7 @@ $(document).ready(function () {
     $(document).on('click', '.sirius-select-options div', function () {
         let $target = $(this);
         let $wrapper = $target.parents('.sirius-select-container');
-        $wrapper.find('.sirius-select')
+        $wrapper.find('select')
             .val($target.data('value'))
             .trigger('change');
         $wrapper.find('.sirius-select-text')
