@@ -1150,19 +1150,7 @@ class ReportService
     public function getResumeCommissions($filters)
     {
         try {
-            $transactions = $this->getSalesQueryBuilder($filters, false, null, true);
-
-            $statusDispute = Sale::STATUS_APPROVED;
-            $transactionStatus = implode(',', [
-                Transaction::STATUS_PAID,
-                Transaction::STATUS_TRANSFERRED,
-            ]);
-
-            $resume = $transactions->without(['sale'])
-            ->select(DB::raw("sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status = {$statusDispute}, transactions.value, 0)) / 100 as commission"))
-            ->first();
-
-            return number_format($resume->commission, 2, ',', '.');
+            return '';
 
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
@@ -1300,29 +1288,56 @@ class ReportService
     public function getResumeSales($filters)
     {
        try {
-            $saleModel = new Sale();
+            $userId = auth()->user()->account_owner_id;
+            $statusId = Sale::STATUS_APPROVED;
 
-            $sales = $saleModel
-            ->where('owner_id', auth()->user()->account_owner_id)
-            ->where('status', $saleModel->present()->getStatus('paid'));
-
-            // filter by project
+            $projectId = '';
             if (!empty($filters["project"])) {
-                $projectId = Hashids::decode($filters["project"]);
-                $sales->where('project_id', $projectId);
+                $projectId = 'AND project_id = ' . Hashids::decode($filters["project"]);
             }
 
-            // periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $sales
-            ->where(function ($querySale) use ($dateRange) {
-                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-                }
-            )
-            ->orderByDesc('start_date');
+            $query = 'SELECT COUNT(*) as sales FROM sales WHERE owner_id = '.$userId.' AND status = '.$statusId.' AND (start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")' .$projectId;
 
-            return $sales->get()->count();
+            $dbResults = DB::select($query);
+
+           return $dbResults[0]->sales;
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function getResumeTypePayments($filters)
+    {
+        try {
+            $total = $this->getResumeTypePaymentsSum($filters);
+
+            $totalCreditCard = $this->getResumeTypePaymentsSum($filters, Sale::CREDIT_CARD_PAYMENT);
+            $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCard * 100) / $total, 2, '.', ',') : 0;
+
+            $totalBoleto = $this->getResumeTypePaymentsSum($filters, Sale::BOLETO_PAYMENT);
+            $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoleto * 100) / $total, 2, '.', ',') : 0;
+
+            $totalPix = $this->getResumeTypePaymentsSum($filters, Sale::PIX_PAYMENT);
+            $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
+
+            return [
+                'total' => number_format($total, 2, ',', '.'),
+                'credit_card' => [
+                    'value' => number_format($totalCreditCard, 2, ',', '.'),
+                    'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
+                ],
+                'boleto' => [
+                    'value' => number_format($totalBoleto, 2, ',', '.'),
+                    'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
+                ],
+                'pix' => [
+                    'value' => number_format($totalPix, 2, ',', '.'),
+                    'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
+                ]
+            ];
+
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -1361,124 +1376,40 @@ class ReportService
         return $dbResults[0]->total;
     }
 
-    public function getResumeTypePayments($filters)
+    public function getResumeProducts()
     {
         try {
-            $total = $this->getResumeTypePaymentsSum($filters);
-
-            $totalCreditCard = $this->getResumeTypePaymentsSum($filters, Sale::CREDIT_CARD_PAYMENT);
-            $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCard * 100) / $total, 2, '.', ',') : 0;
-
-            $totalBoleto = $this->getResumeTypePaymentsSum($filters, Sale::BOLETO_PAYMENT);
-            $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoleto * 100) / $total, 2, '.', ',') : 0;
-
-            $totalPix = $this->getResumeTypePaymentsSum($filters, Sale::PIX_PAYMENT);
-            $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
-
-            return [
-                'total' => number_format($total, 2, ',', '.'),
-                'credit_card' => [
-                    'value' => number_format($totalCreditCard, 2, ',', '.'),
-                    'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
-                ],
-                'boleto' => [
-                    'value' => number_format($totalBoleto, 2, ',', '.'),
-                    'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
-                ],
-                'pix' => [
-                    'value' => number_format($totalPix, 2, ',', '.'),
-                    'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
-                ]
-            ];
 
         } catch(Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
-    }
 
-    public function getSalesQueryBuilder($filters, $userId = 0)
-    {
-        try {
-            $userCompanies = [];
-            if (empty($filters["company"])) {
-                $userCompanies = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
-            } else {
-                $userCompanies = [];
-
-                $companies = explode(',', $filters["company"]);
-                foreach($companies as $company) {
-                    array_push($userCompanies, current(Hashids::decode($company)));
-                }
-            }
-
-            $query = 'SELECT * FROM transactions WHERE company_id in ('.explode(',', $userCompanies).')';
-            dd($query);
-
-            $dbResults = DB::select($query);
-
-            $transactionModel = new Transaction();
-            $companyModel = new Company();
-
-
-            $relationsArray = [
-                'sale',
-                'sale.project',
-                'sale.customer',
-                'sale.plansSales',
-                'sale.shipping',
-                'sale.checkout',
-                'sale.delivery',
-                'sale.affiliate.user',
-                'sale.saleRefundHistory',
-                'sale.cashback'
-            ];
-
-            $transactions = $transactionModel
-            ->with($relationsArray)
-            ->whereIn('company_id', $userCompanies)
-            ->join('sales', 'sales.id', 'transactions.sale_id')
-            ->whereNull('invitation_id');
-
-            if (!empty($filters["project"])) {
-                $projectIds =[];
-                $projects = explode(',', $filters["project"]);
-
-                foreach($projects as $project){
-                    array_push($projectIds, current(Hashids::decode($project)));
-                }
-
-                //$projectId = current(Hashids::decode($filters["project"]));
-                $transactions->whereHas(
-                    'sale',
-                    function ($querySale) use ($projectIds) {
-                        $querySale->whereIn('project_id', $projectIds);
-                    }
-                );
-            }
-
-            $transactions->whereHas(
-                'sale',
-                function ($querySale) {
-                    $querySale->where('status', Sale::STATUS_APPROVED);
-                }
-            );
-
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-
-            $transactions->whereHas(
-                'sale',
-                function ($querySale) use ($dateRange) {
-                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-                }
-            )
-            ->selectRaw('transactions.*, sales.start_date')
-            ->orderByDesc('sales.start_date');
-
-            return $transactions;
-        } catch(Exception $e) {
-            return '';
         }
     }
 
     // MARKETING --------------------------------------------------------------------------------------
+    public function getResumeCoupons()
+    {
+        try {
+
+        } catch(Exception $e) {
+
+        }
+    }
+
+    public function getResumeRegions()
+    {
+        try {
+
+        } catch(Exception $e) {
+
+        }
+    }
+
+    public function getResumeOrigins()
+    {
+        try {
+
+        } catch(Exception $e) {
+
+        }
+    }
 }
