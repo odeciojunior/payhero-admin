@@ -369,6 +369,9 @@ h4.number{
     justify-content: space-between;
     flex-direction: column;
 }
+.data-content { opacity: 0; }
+.data-content.visible { opacity: 1; }
+
 @media (min-width: 1220px) {
     .cards-reports { flex-direction: row; }
 }
@@ -376,6 +379,7 @@ h4.number{
 .cards-reports .card-body { 
     padding: 0; 
     padding-top: 1.429rem;
+    position: relative;
 }
 .cards-reports .card-origin { padding: 1.429rem; }
 
@@ -403,9 +407,10 @@ h4.number{
     font-weight: 700;
     flex: 0.155;
     align-items: center;
-    display: flex;
+    display: none;
     justify-content: space-between;
 }
+.value-price em.visible { display: flex; }
 
 .value-price .green { color:#1BE4A8; }
 .value-price .green i { transform: rotate(134deg); }
@@ -516,7 +521,8 @@ h4.number{
 }
 
 /* graph */
-
+.new-graph { opacity: 0.1; }
+.new-graph.visible { opacity: 1; }
 .new-graph .ct-series-a .ct-line { stroke: #2e85ec; }
 .new-graph-pending .ct-series-a .ct-line { stroke: #FF7900; }
 .new-graph-cashback .ct-series-a .ct-line { stroke: #1BE4A8; }
@@ -526,6 +532,18 @@ h4.number{
 .new-graph-pending .ct-series-a .ct-area { fill: #FF7900; }
 .new-graph-cashback .ct-series-a .ct-area { fill: #1BE4A8; }
 .new-graph-sell .ct-series-a .ct-area { fill: #2e85ec; }
+
+.off {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #757575;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
 
 /* new graph pie */
 .box-donut { 

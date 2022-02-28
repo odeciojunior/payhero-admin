@@ -116,7 +116,7 @@
                                     <div class='container col-sm-12 mt-20 d-lg-block'>
 										<div class="row cards-reports">
 											<div class="card">
-												<div class="card-body">
+												<div class="card-body data-content">
                                                     <header class="container">
 													    <h6 class="font-size-16 gray-700 grey"> Comissão </h6>
                                                         <div class="d-flex value-price">
@@ -128,6 +128,7 @@
                                                         </div>
                                                     </header>
 													<div class="new-graph"></div>
+                                                    <p class="off">Não há dados suficientes</p>
 												</div>
 											</div>
 											<div class="card ">
@@ -518,8 +519,8 @@
                                                                                 </td>
                                                                                 <td>
                                                                                     <p class="no-data-origin">
-                                                                                        <strong>Nada por aqui...</strong>
-                                                                                        Não há dados suficientes para gerar este gráfico.
+                                                                                        <strong>Sem dados, por enquanto...</strong>
+                                                                                        Ainda faltam dados suficientes a comparação, continue rodando!
                                                                                     </p>
                                                                                 </td>
                                                                             </tr>

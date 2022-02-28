@@ -67,10 +67,18 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
+                if(!$('.loaderSpan').is('visible')) {
+                    $('.data-content').addClass('visible');
+                }
+
                 if(response.data){
                     let value = response.data.replace("R$", "");
                     $("#comission").html("<span class='currency'>R$</span>" + value);
-                }
+                    if(response.data !== 'R$ 0,00') {
+                        $('.value-price em').addClass('visible');
+                        $('.new-graph').addClass('visible')
+                    }
+                } 
             }
         });
     }
