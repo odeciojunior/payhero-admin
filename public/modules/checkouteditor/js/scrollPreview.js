@@ -5,7 +5,7 @@ $(() => {
                     var scrollWindow = $(this).scrollTop();
                     var topVisual = $("#checkout_type").position().top;
                     var topPayment = $("#payment_container").position().top - 200;
-                    var topPostPurchase = $("#post_purchase").position().top - 300;
+                    var topPostPurchase = $("#post_purchase").position().top - 350;
             
                     if (scrollWindow > topVisual) {
                         var marginTop = scrollWindow - topVisual;

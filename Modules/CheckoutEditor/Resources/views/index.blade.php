@@ -581,7 +581,7 @@
                                     <label for="notification-interval" class="checkout-label">Configure as
                                         notificações</label>
                                     <div class="notification-table-cointainer">
-                                        <table class="table table-hover selectable" id="notification-table"
+                                        <!-- <table class="table table-hover selectable" id="notification-table"
                                             data-plugin="selectable" data-row-selectable="true">
                                             <thead>
                                                 <tr>
@@ -638,12 +638,19 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                        </table>
+                                        </table> -->
 
                                         <table class="table table-hover notification-counts"
                                             id="notification-table-count" data-row-selectable="true">
                                             <thead>
-                                                <tr>
+                                                <tr style="width: 30px">
+                                                    <th class="th-notification">
+                                                        <span class="checkbox-custom checkbox-primary">
+                                                            <input id="selectable-all-notification" type="checkbox">
+                                                            <label></label>
+                                                        </span>
+                                                    </th>
+
                                                     <th class="th-notification">
                                                         Mensagem
                                                     </th>
@@ -654,9 +661,18 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
+                                                    <td style="width: 30px">
+                                                        <span class="checkbox-custom checkbox-primary">
+                                                            <input class="selectable-notification" type="checkbox"
+                                                                id="notification_buying_enabled"
+                                                                name="notification_buying_enabled">
+                                                            <label for="notification_buying_enabled"></label>
+                                                        </span>
+                                                    </td>
+
                                                     <td><b>XX</b> pessoas estão comprando <b>{produto}</b> nesse
                                                         momento.</td>
-                                                    <td>
+                                                    <td class="table-td-input">
                                                         <input class="table-number-input" type="number"
                                                             id="notification_buying_minimum"
                                                             name="notification_buying_minimum" value="1" min="1"
@@ -666,9 +682,18 @@
                                                 </tr>
 
                                                 <tr>
+                                                    <td style="width: 30px">
+                                                        <span class="checkbox-custom checkbox-primary">
+                                                            <input class="selectable-notification" type="checkbox"
+                                                                id="notification_bought_30_minutes_enabled"
+                                                                name="notification_bought_30_minutes_enabled">
+                                                            <label for="notification_bought_30_minutes_enabled"></label>
+                                                        </span>
+                                                    </td>
+
                                                     <td><b>XX</b> pessoas compraram <b>{produto}</b> nos últimos 30
                                                         minutos.</td>
-                                                    <td>
+                                                    <td class="table-td-input">
                                                         <input class="table-number-input" type="number"
                                                             id="notification_bought_30_minutes_minimum"
                                                             name="notification_bought_30_minutes_minimum" value="1"
@@ -678,9 +703,18 @@
                                                 </tr>
 
                                                 <tr>
+                                                    <td style="width: 30px">
+                                                        <span class="checkbox-custom checkbox-primary">
+                                                            <input class="selectable-notification" type="checkbox"
+                                                                id="notification_bought_last_hour_enabled"
+                                                                name="notification_bought_last_hour_enabled">
+                                                            <label for="notification_bought_last_hour_enabled"></label>
+                                                        </span>
+                                                    </td>
+
                                                     <td><b>XX</b> pessoas compraram <b>{produto}</b> na última hora.
                                                     </td>
-                                                    <td>
+                                                    <td class="table-td-input">
                                                         <input class="table-number-input" type="number"
                                                             id="notification_bought_last_hour_minimum"
                                                             name="notification_bought_last_hour_minimum" value="1"
@@ -690,9 +724,19 @@
                                                 </tr>
 
                                                 <tr>
+                                                    <td style="width: 30px">
+                                                        <span class="checkbox-custom checkbox-primary">
+                                                            <input class="selectable-notification" type="checkbox"
+                                                                id="notification_just_bought_enabled"
+                                                                name="notification_just_bought_enabled">
+                                                            <label for="notification_just_bought_enabled"></label>
+                                                        </span>
+                                                    </td>
+
+
                                                     <td><b>{nome}</b> de <b>{cidade}</b> acabou de comprar esse produto
                                                     </td>
-                                                    <td style="padding: 20px 20px 30px 10px;">
+                                                    <td class="table-td-input" style="padding: 20px 20px 30px 10px;">
                                                         <input class="table-number-input" type="number"
                                                             id="notification_just_bought_minimum"
                                                             name="notification_just_bought_minimum" value="1" min="1"
@@ -1499,24 +1543,24 @@
 
                                     <div class="preview-body mobile payment">
                                         <div class="preview-card">
-                                            <div class="accepted-payment-list">
-                                                <div class="accepted-payment accepted-payment-card-creditcard"
-                                                    id="accepted_payment_card_creditcard">
+                                            <div class="accepted-payment-list mobile">
+                                                <div class="accepted-payment accepted-payment-card-creditcard" id="accepted_payment_card_creditcard">
                                                     <svg width="34" height="24" viewBox="0 0 34 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px;">
                                                         <path d="M23.3744 16.0941C22.6703 16.0941 22.0994 16.663 22.0994 17.3647C22.0994 18.0664 22.6703 18.6353 23.3744 18.6353H27.6244C28.3286 18.6353 28.8994 18.0664 28.8994 17.3647C28.8994 16.663 28.3286 16.0941 27.6244 16.0941H23.3744ZM3.89583 0C1.74422 0 0 1.73819 0 3.88235V20.1176C0 22.2618 1.74422 24 3.89583 24H30.1042C32.2558 24 34 22.2618 34 20.1176V3.88235C34 1.73819 32.2558 0 30.1042 0H3.89583ZM2.125 20.1176V9.17647H31.875V20.1176C31.875 21.0923 31.0822 21.8824 30.1042 21.8824H3.89583C2.91783 21.8824 2.125 21.0923 2.125 20.1176ZM2.125 7.05882V3.88235C2.125 2.90773 2.91783 2.11765 3.89583 2.11765H30.1042C31.0822 2.11765 31.875 2.90773 31.875 3.88235V7.05882H2.125Z"/>
                                                     </svg>
+                                                    <span>Cartão</span>
                                                 </div>
 
                                                 <div class="accepted-payment accepted-payment-pix"
                                                     id="accepted_payment_pix">
-                                                    <img src="{{ asset('/modules/checkouteditor/img/svg/icon-pix.svg') }}"
-                                                        style="width: 35px;">
+                                                    <img src="{{ asset('/modules/checkouteditor/img/svg/icon-pix.svg') }}" style="width: 35px;">
+                                                        <span>Pix</span>
                                                 </div>
 
                                                 <div class="accepted-payment accepted-payment-bank-billet"
                                                     id="accepted_payment_bank_billet">
-                                                    <img src="{{ asset('/modules/checkouteditor/img/svg/icon-boleto.svg') }}"
-                                                        style="width: 20px; filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(209deg) brightness(150%) contrast(102%);">
+                                                    <img src="{{ asset('/modules/checkouteditor/img/svg/icon-boleto.svg') }}" style="width: 20px; filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(209deg) brightness(150%) contrast(102%);">
+                                                        <span>Boleto</span>
                                                 </div>
                                             </div>
 

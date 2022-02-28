@@ -19,7 +19,7 @@ $(document).ready( function () {
     $("#color_primary").on("input", function () {
         $(":root").css("--primary-color", $(this).val());
 
-        $('#accepted_payment_card_creditcard svg path').fill = $(this).val();
+        $('.accepted-payment-card-creditcard svg path').fill = $(this).val();
     });
 
     $("#color_secondary").on("input", function () {

@@ -536,6 +536,8 @@ input[type="number"] {
     color: #2e85ec;
 }
 
+
+
 #notification-table thead > tr > td:last-child,
 #notification-table thead > tr > th:last-child,
 #notification-table thead > tr > td:first-child,
@@ -548,21 +550,27 @@ input[type="number"] {
     padding: 20px 20px 30px 20px;
 }
 
+
 .table tbody tr:last-child td:last-child {
     border-radius: 0;
 }
 
 .th-notification {
     align-items: center;
-    height: 50px;
-    max-height: 50px;
     font-weight: bold !important;
-    padding: 10px 40px!important;
+    /* padding: 10px 40px!important; */
 }
 
-#notification-table tr {
-    height: 90px;
-    max-height: 90px;
+#notification-table tr, 
+#notification-table th,
+#notification-table td {
+    height: 95px !important;
+    max-height: 95px !important;
+    min-height: 95px !important;
+}
+
+#notification-table .table-td-input {
+    text-align: center;
 }
 
 #notification-table-count tr {
@@ -601,7 +609,7 @@ input[type="number"] {
 }
 
 .notification-table-cointainer table tr {
-    height: 70px;
+    height: 70px; 
 }
 
 a:focus,
