@@ -1150,95 +1150,19 @@ class ReportService
     public function getResumeCommissions($filters)
     {
         try {
-            $transactionModel = new Transaction();
-            $companyModel = new Company();
-            $transactionModel = new Transaction();
+            $transactions = $this->getSalesQueryBuilder($filters, false, null, true);
 
-            if (empty($filters["company_id"])) {
-                $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-
-            } else {
-                $userCompanies = [];
-                $companies = explode(',', $filters["company_id"]);
-
-                foreach($companies as $company) {
-                    array_push($userCompanies, current(Hashids::decode($company)));
-                }
-            }
-
-            $relationsArray = [
-                'sale',
-                'sale.project',
-                'sale.customer',
-                'sale.plansSales',
-                'sale.shipping',
-                'sale.checkout',
-                'sale.delivery',
-                'sale.affiliate.user',
-                'sale.saleRefundHistory',
-                'sale.cashback'
-            ];
-
-            $transactions = $transactionModel
-            ->with($relationsArray)
-            ->whereIn('company_id', $userCompanies)
-            ->join('sales', 'sales.id', 'transactions.sale_id')
-            ->whereNull('invitation_id')
-            ->where('type', '<>', $transactionModel->present()->getType('cashback'));
-
-            if (!empty($filters["project"])) {
-                $projectIds =[];
-                $projects = explode(',', $filters["project"]);
-
-                foreach($projects as $project){
-                    array_push($projectIds, current(Hashids::decode($project)));
-                }
-
-                //$projectId = current(Hashids::decode($filters["project"]));
-                $transactions->whereHas(
-                    'sale',
-                    function ($querySale) use ($projectIds) {
-                        $querySale->whereIn('project_id', $projectIds);
-                    }
-                );
-            }
-
-            //tipo da data e periodo obrigatorio
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-
-            $transactions
-            ->whereHas(
-                'sale',
-                function ($querySale) use ($dateRange) {
-                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-                }
-            )
-            ->selectRaw('transactions.*, sales.start_date')
-            ->orderByDesc('sales.start_date');
-
-            $transactionStatus = implode(
-                ',',
-                [
-                    $transactionModel->present()->getStatusEnum('paid'),
-                    $transactionModel->present()->getStatusEnum('transfered'),
-                ]
-            );
-
-            $statusDispute = (new Sale())->present()->getStatus('in_dispute');
+            $statusDispute = Sale::STATUS_APPROVED;
+            $transactionStatus = implode(',', [
+                Transaction::STATUS_PAID,
+                Transaction::STATUS_TRANSFERRED,
+            ]);
 
             $resume = $transactions->without(['sale'])
-            ->select(
-                DB::raw("count(sales.id) as total_sales, sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission")
-            )
-            ->first()
-            ->toArray();
+            ->select(DB::raw("sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status = {$statusDispute}, transactions.value, 0)) / 100 as commission"))
+            ->first();
 
-            $resume['commission'] = FoxUtils::formatMoney($resume['commission']);
-
-            return $resume['commission'];
+            return number_format($resume->commission, 2, ',', '.');
 
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
@@ -1300,12 +1224,9 @@ class ReportService
 
             $resume = $transactions->without(['sale'])
             ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
-            ->first()
-            ->toArray();
+            ->first();
 
-            $resume['total'] = FoxUtils::formatMoney($resume['total']);
-
-            return $resume['total'];
+            return number_format($resume->total, 2, ',', '.');
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -1366,16 +1287,9 @@ class ReportService
             ->selectRaw('cashbacks.*, sales.start_date')
             ->orderByDesc('sales.start_date');
 
-            $resume = $cashbacks
-            ->select(
-                DB::raw("sum(cashbacks.value) / 100 as cashback")
-            )
-            ->first()
-            ->toArray();
+            $resume = $cashbacks->select(DB::raw("sum(cashbacks.value) / 100 as cashback"))->first();
 
-            $resume['cashback'] = FoxUtils::formatMoney($resume['cashback']);
-
-            return $resume['cashback'];
+            return number_format($resume->cashback, 2, ',', '.');
 
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
@@ -1408,73 +1322,161 @@ class ReportService
             )
             ->orderByDesc('start_date');
 
-            return [
-                'sales' => $sales->get()->count()
-            ];
+            return $sales->get()->count();
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 
+    public function getResumeTypePaymentsSum($filters, $typePayment = null)
+    {
+        $userCompanies = [];
+        if (empty($filters["company"])) {
+            $userCompanies = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
+        } else {
+            $userCompanies = [];
+
+            $companies = explode(',', $filters["company"]);
+            foreach($companies as $company) {
+                array_push($userCompanies, current(Hashids::decode($company)));
+            }
+        }
+
+        $typePaymentWhere = '';
+        if (!empty($typePayment)) {
+            $typePaymentWhere = 'AND sales.payment_method = '.$typePayment;
+        } else {
+            $typePaymentWhere = '';
+        }
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $query = 'SELECT SUM((sales.sub_total + sales.shipment_value) - (IFNULL(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total
+        FROM transactions INNER JOIN sales ON sales.id = transactions.sale_id
+        WHERE transactions.company_id in ('.implode(',', $userCompanies).') AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
+        AND sales.status = 1 AND sales.deleted_at IS NULL AND transactions.deleted_at IS NULL AND transactions.type <> 8 '.$typePaymentWhere.' AND transactions.invitation_id IS NULL';
+
+        $dbResults = DB::select($query);
+
+        return $dbResults[0]->total;
+    }
+
     public function getResumeTypePayments($filters)
     {
         try {
-            $saleModel = new Sale();
-            $sales = $saleModel->where('owner_id', auth()->user()->account_owner_id)
-            ->where('status', $saleModel->present()->getStatus('paid'));
+            $total = $this->getResumeTypePaymentsSum($filters);
 
-            if (!empty($filters["project"])) {
-                $projectId = Hashids::decode($filters["project"]);
-                $sales->where('project_id', $projectId);
-            }
+            $totalCreditCard = $this->getResumeTypePaymentsSum($filters, Sale::CREDIT_CARD_PAYMENT);
+            $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCard * 100) / $total, 2, '.', ',') : 0;
 
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $totalBoleto = $this->getResumeTypePaymentsSum($filters, Sale::BOLETO_PAYMENT);
+            $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoleto * 100) / $total, 2, '.', ',') : 0;
 
-            $sales->where(function ($querySale) use ($dateRange) {
-                $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-            })
-            ->orderByDesc('start_date');
-
-            $salesTotal = $sales->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
-            ->first();
-            $total = $salesTotal->total;
-
-            $salesCreditCard = $sales->where('payment_method', $saleModel->present()->getPaymentType('credit_card'))
-            ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
-            ->first();
-            $totalCreditCard = $salesCreditCard->total;
-            $percentageCreditCard = number_format(($totalCreditCard * 100) / $total, 2, '.', ',');
-
-            $salesBoleto = $sales->where('payment_method', $saleModel->present()->getPaymentType('boleto'))
-            ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
-            ->first();
-            $totalBoleto = $salesBoleto->total;
-            $percentageBoleto = number_format(($totalBoleto * 100) / $total, 2, '.', ',');
-
-            $salesPix = $sales->where('payment_method', $saleModel->present()->getPaymentType('pix'))
-            ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
-            ->first();
-            $totalPix = $salesPix->total;
-            $percentagePix = number_format(($totalPix * 100) / $total, 2, '.', ',');
+            $totalPix = $this->getResumeTypePaymentsSum($filters, Sale::PIX_PAYMENT);
+            $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
 
             return [
-                'total' => FoxUtils::formatMoney($total),
+                'total' => number_format($total, 2, ',', '.'),
                 'credit_card' => [
-                    'value' => FoxUtils::formatMoney($totalCreditCard),
-                    'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_DOWN).'%'
+                    'value' => number_format($totalCreditCard, 2, ',', '.'),
+                    'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
                 ],
                 'boleto' => [
-                    'value' => FoxUtils::formatMoney($totalBoleto),
-                    'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_DOWN).'%'
+                    'value' => number_format($totalBoleto, 2, ',', '.'),
+                    'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
                 ],
                 'pix' => [
-                    'value' => FoxUtils::formatMoney($totalPix),
-                    'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_DOWN).'%'
+                    'value' => number_format($totalPix, 2, ',', '.'),
+                    'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
                 ]
             ];
 
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function getSalesQueryBuilder($filters, $userId = 0)
+    {
+        try {
+            $userCompanies = [];
+            if (empty($filters["company"])) {
+                $userCompanies = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
+            } else {
+                $userCompanies = [];
+
+                $companies = explode(',', $filters["company"]);
+                foreach($companies as $company) {
+                    array_push($userCompanies, current(Hashids::decode($company)));
+                }
+            }
+
+            $query = 'SELECT * FROM transactions WHERE company_id in ('.explode(',', $userCompanies).')';
+            dd($query);
+
+            $dbResults = DB::select($query);
+
+            $transactionModel = new Transaction();
+            $companyModel = new Company();
+
+
+            $relationsArray = [
+                'sale',
+                'sale.project',
+                'sale.customer',
+                'sale.plansSales',
+                'sale.shipping',
+                'sale.checkout',
+                'sale.delivery',
+                'sale.affiliate.user',
+                'sale.saleRefundHistory',
+                'sale.cashback'
+            ];
+
+            $transactions = $transactionModel
+            ->with($relationsArray)
+            ->whereIn('company_id', $userCompanies)
+            ->join('sales', 'sales.id', 'transactions.sale_id')
+            ->whereNull('invitation_id');
+
+            if (!empty($filters["project"])) {
+                $projectIds =[];
+                $projects = explode(',', $filters["project"]);
+
+                foreach($projects as $project){
+                    array_push($projectIds, current(Hashids::decode($project)));
+                }
+
+                //$projectId = current(Hashids::decode($filters["project"]));
+                $transactions->whereHas(
+                    'sale',
+                    function ($querySale) use ($projectIds) {
+                        $querySale->whereIn('project_id', $projectIds);
+                    }
+                );
+            }
+
+            $transactions->whereHas(
+                'sale',
+                function ($querySale) {
+                    $querySale->where('status', Sale::STATUS_APPROVED);
+                }
+            );
+
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+            $transactions->whereHas(
+                'sale',
+                function ($querySale) use ($dateRange) {
+                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                }
+            )
+            ->selectRaw('transactions.*, sales.start_date')
+            ->orderByDesc('sales.start_date');
+
+            return $transactions;
+        } catch(Exception $e) {
+            return '';
         }
     }
 
