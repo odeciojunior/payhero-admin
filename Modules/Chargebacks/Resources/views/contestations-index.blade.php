@@ -180,9 +180,9 @@
                 <div class="fixhalf"></div>
 
                 <div class="row justify-content-center mt-10">
-                    <div class="col-md-3">
+                    <div class="col-md-3 px-0">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body ">
+                            <div class="card-body p-15">
                                 <h5 class="font-size-16 text-muted">N° de contestações</h5>
                                 <h4 class="total-number">
                                     <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestation"></span>
@@ -192,10 +192,10 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-3 pr-0">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body">
-                                <h5 class="font-size-16 text-muted">Resultantes em chargeback</h5>
+                            <div class="card-body p-15">
+                                <h5 class="font-size-16 text-muted">Resultou em chargeback</h5>
                                 <h4 class="total-number">
                                     <span class="font-size-30 bold" style="color:#5A5A5A" id="total-chargeback-tax-val"></span>
                                     <span id="total-chargeback-tax" class="text-muted"></span>
@@ -206,7 +206,7 @@
 
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body">
+                            <div class="card-body p-15">
                                 <h5 class="font-size-16 text-muted">Total</h5>
                                 <h4 class="total-number">
                                     <span class="text-muted">R$ </span>
