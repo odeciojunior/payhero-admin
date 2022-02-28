@@ -14,7 +14,7 @@
             <h1 class="page-title" style="min-height: 28px">
                 <a class="gray" href="/projects" style="outline: none">
                     <span class="o-arrow-right-1 font-size-30 ml-2 gray" aria-hidden="true"></span>
-                    Minhas lojas
+                    Minhas Lojas
                 </a>
             </h1>
         </div>
