@@ -117,29 +117,58 @@
 										<div class="row cards-reports">
 											<div class="card">
 												<div class="card-body data-content">
-                                                    <header class="container">
-													    <h6 class="font-size-16 gray-700 grey"> Comissão </h6>
-                                                        <div class="d-flex value-price">
-													        <h4 id='comission' class="font-size-24 bold grey"></h4>
-                                                            <em class="pink">
-                                                                <i class="ms-Icon ms-Icon--SkypeArrow x-hidden-focus"></i>
-                                                                23%
-                                                            </em>
+                                                    <div class="ske-load">
+                                                        <div class="px-20 py-0">
+                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
                                                         </div>
-                                                    </header>
-													<div class="new-graph"></div>
-                                                    <p class="off">Não há dados suficientes</p>
+                                                        <div class="px-20 py-0">
+                                                            <div class="row align-items-center mx-0 py-10">
+                                                                <div class="skeleton skeleton-circle"></div>
+                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                            </div>
+                                                            <div class="skeleton skeleton-text"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="block">
+                                                        <header class="container">
+                                                            <h6 class="font-size-16 gray-700 grey"> Comissão </h6>
+                                                            <div class="d-flex value-price">
+                                                                <h4 id='comission' class="font-size-24 bold grey"></h4>
+                                                                <em class="pink">
+                                                                    <i class="ms-Icon ms-Icon--SkypeArrow x-hidden-focus"></i>
+                                                                    23%
+                                                                </em>
+                                                            </div>
+                                                        </header>
+                                                        <div class="new-graph"></div>
+                                                        
+                                                    </div>
 												</div>
+                                                
 											</div>
 											<div class="card ">
-												<div class="card-body">
-                                                    <header class="container">
-													    <h6 class="font-size-16 gray-700 grey"> Pendentes </h6>
-                                                        <div class="d-flex value-price">
-                                                            <h4 id='pending' class="font-size-24 bold grey">0</h4>
+												<div class="card-body data-content">
+                                                    <div class="ske-load">
+                                                        <div class="px-20 py-0">
+                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
                                                         </div>
-                                                    </header>
-                                                    <div class="new-graph-pending"></div>
+                                                        <div class="px-20 py-0">
+                                                            <div class="row align-items-center mx-0 py-10">
+                                                                <div class="skeleton skeleton-circle"></div>
+                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                            </div>
+                                                            <div class="skeleton skeleton-text"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="block">
+                                                        <header class="container">
+                                                            <h6 class="font-size-16 gray-700 grey"> Pendentes </h6>
+                                                            <div class="d-flex value-price">
+                                                                <h4 id='pending' class="font-size-24 bold grey">0</h4>
+                                                            </div>
+                                                        </header>
+                                                        <div class="new-graph-pending"></div>
+                                                    </div>
 												</div>
 											</div>
                                             <div class="card">
