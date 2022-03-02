@@ -180,13 +180,6 @@
                 window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
             </script>
         @endif
-
-    @endif
-
-    @if(!Modules\Core\Services\FoxUtils::isProduction())
-        <script>
-            console.log('{{Modules\Core\Services\FoxUtils::gitInfo()}}')
-        </script>
     @endif
 
 </body>
