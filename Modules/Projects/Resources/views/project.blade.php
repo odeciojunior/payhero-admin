@@ -88,7 +88,7 @@
                                         </div>
 
                                         <!-- VENDAS S/ RASTREIO -->
-                                        <div class="col-md-4 align-items-center py-10 tracking-sell product-info-color border-product-alert">
+                                        <div class="col-md-4 align-items-center py-10 product-info-color border-product-alert">
 
                                             <div class="d-flex justify-content-start padding-cards-l">
                                                 <div class="d-flex pl-5">
@@ -104,7 +104,7 @@
                                         </div>
 
                                         <!-- CHAMADOS ABERTOS -->
-                                        <div class="col-md-4 align-items-center py-10 rounded-0 product-info-color border-product-alert">
+                                        <div class="col-md-4 align-items-center py-10 open-calls product-info-color border-product-alert">
 
                                             <div class="d-flex justify-content-start padding-cards-l">
                                                 <div class="d-flex pl-5">
