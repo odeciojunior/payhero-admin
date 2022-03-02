@@ -263,9 +263,4 @@ class CompanyPresenter extends Presenter
         }
     }
 
-    public function formatCellPhoneBraspag($number)
-    {
-        $number = FoxUtils::onlyNumbers($number);
-        return substr($number, 2);
-    }
 }
