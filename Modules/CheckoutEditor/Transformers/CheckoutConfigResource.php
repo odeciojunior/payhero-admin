@@ -22,11 +22,15 @@ class CheckoutConfigResource extends JsonResource
         ])->where('user_id', auth()->user()->account_owner_id)
             ->get()
             ->map(function ($company) {
-                $status = ($company->bank_document_status === 3 &&
-                    $company->address_document_status === 3 &&
-                    $company->contract_document_status === 3)
-                    ? 'approved'
-                    : 'pending';
+                if($company->type === Company::PHYSICAL_PERSON) {
+                    $status = $company->bank_document_status === 3
+                        ? 'approved'
+                        : 'pending';
+                } else {
+                    $status = $company->bank_document_status === 3 && $company->address_document_status === 3 && $company->contract_document_status === 3
+                        ? 'approved'
+                        : 'pending';
+                }
                 return (object)[
                     'id' => hashids_encode($company->id),
                     'name' => $company->type == Company::PHYSICAL_PERSON ? 'Pessoa física' : $company->name,
