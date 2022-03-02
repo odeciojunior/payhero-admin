@@ -21,12 +21,10 @@ Route::group(
 
         Route::any('/getnet', 'PostBackGetnetController@postBackGetnet');
 
-        Route::any('/braspag', 'PostBackBraspagOfficeController@postBackBraspagOffice');
-
         Route::any('/woocommerce/{project_id}/tracking', 'PostBackWooCommerceController@postBackTracking');
 
         Route::any('/woocommerce/{project_id}/product/update', 'PostBackWooCommerceController@postBackProductUpdate');
-        
+
         Route::any('/woocommerce/{project_id}/product/create', 'PostBackWooCommerceController@postBackProductCreate');
 
     }
