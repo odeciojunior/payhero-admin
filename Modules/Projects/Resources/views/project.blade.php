@@ -47,7 +47,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-8 d-flex flex-column justify-content-between pl-5 pr-25">
+                                <div class="col-md-8 d-flex flex-column justify-content-between pl-10 pr-25">
 
                                     <div alt="titulo" class="pt-10 pt-md-10 pt-lg-15 pt-xl-20 mr-15">
 
@@ -88,7 +88,7 @@
                                         </div>
 
                                         <!-- VENDAS S/ RASTREIO -->
-                                        <div class="col-md-4 align-items-center py-10 tracking-sell product-info-color border-product-alert">
+                                        <div class="col-md-4 align-items-center py-10 product-info-color border-product-alert">
 
                                             <div class="d-flex justify-content-start padding-cards-l">
                                                 <div class="d-flex pl-5">
@@ -104,7 +104,7 @@
                                         </div>
 
                                         <!-- CHAMADOS ABERTOS -->
-                                        <div class="col-md-4 align-items-center py-10 rounded-0 product-info-color border-product-alert">
+                                        <div class="col-md-4 align-items-center py-10 open-calls product-info-color border-product-alert">
 
                                             <div class="d-flex justify-content-start padding-cards-l">
                                                 <div class="d-flex pl-5">

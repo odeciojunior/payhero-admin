@@ -1324,7 +1324,7 @@
                                     <div class="checkout-step-type">
                                         <div class="steps-lines">
                                             <div class="step-one primary-color"></div>
-                                            <div class="step-two secondary-color"></div>
+                                            <div class="step-two"></div>
                                             <div class="step-three"></div>
                                         </div>
 
