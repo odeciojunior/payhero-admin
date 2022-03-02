@@ -66,8 +66,8 @@ class CreateCheckoutConfigsTable extends Migration
             $table->string('support_email')->nullable();
             $table->boolean('support_email_verified')->default(false);
             $table->integer('theme_enum')->default(1);
-            $table->string('color_primary')->default('#5577a7');
-            $table->string('color_secondary')->default('#313c52');
+            $table->string('color_primary')->default('#4B8FEF');
+            $table->string('color_secondary')->default('#313C52');
             $table->string('color_buy_button')->default('#23d07d');
             $table->timestamps();
             $table->softDeletes();
