@@ -61,6 +61,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('getnet:release-unblocked-balance')->dailyAt('02:30');
 
+        $schedule->command('getnet:block-sale-for-contestation')->dailyAt('03:45');
+
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
         // update pending domains automaticaly
