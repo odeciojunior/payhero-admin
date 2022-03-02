@@ -26,7 +26,7 @@ $(document).ready(function () {
 
                 if (response.data.status_url_affiliates) {
                     $('.div-project').show();
-                    $('.project-header').html(`Afiliação no projeto ${response.data.name}`);
+                    $('.project-header').html(`Afiliação na loja ${response.data.name}`);
                     $('.project-image').prop('src', `${response.data.photo ? response.data.photo : '/modules/global/img/projeto.svg'}`);
                     $('#created_by').html(`Produtor: ${response.data.user_name}`);
                     $('.text-about-project').html(response.data.description);
@@ -74,7 +74,7 @@ $(document).ready(function () {
                     $('.release_days').html(`<strong>Dias para liberar dinheiro: <span class='green-gradient'>${response.data.billet_release_days}</span> dias</strong>`);
                 } else {
                     swal({
-                        title: 'Esse projeto não está disponível para afiliação',
+                        title: 'Essa loja não está disponível para afiliação',
                         type: 'warning',
                         confirmButtonColor: "#EC6421",
                         confirmButtonClass: "btn btn-warning",

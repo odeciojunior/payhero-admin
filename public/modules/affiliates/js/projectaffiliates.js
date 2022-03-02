@@ -64,13 +64,13 @@ $(document).ready(function () {
                     $("#project-affiliate").append(
                         $("<option>", {
                             value: 0,
-                            text: "Nenhum projeto encontrado",
+                            text: "Nenhuma loja encontrado",
                         })
                     );
                     $("#project-affiliate-request").append(
                         $("<option>", {
                             value: 0,
-                            text: "Nenhum projeto encontrado",
+                            text: "Nenhuma loja encontrado",
                         })
                     );
                 }

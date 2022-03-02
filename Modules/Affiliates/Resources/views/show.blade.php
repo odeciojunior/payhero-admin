@@ -11,7 +11,7 @@
             <td class='text-left affiliate-company'></td>
         </tr>
         <tr>
-            <td class="table-title">Projeto</td>
+            <td class="table-title">Loja</td>
             <td style='width: 20px'></td>
             <td class='text-left affiliate-project'></td>
         </tr>

@@ -2,6 +2,14 @@
   margin: 0;
   padding: 0; }
 
+*:focus {
+  -webkit-outline: 1px solid #2BB2FF;
+      -moz-outline: 1px solid #2BB2FF;
+      -ms-outline: 1px solid #2BB2FF;
+        -o-outline: 1px solid #2BB2FF;
+          outline: 1px solid #2BB2FF;
+  }
+
 .verde {
   color: #4cd964; }
 

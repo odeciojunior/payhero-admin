@@ -899,6 +899,9 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.sirius-select-text', function () {
+        $('.sirius-select-text').removeClass('active');
+        $('.sirius-select-options').fadeOut();
+
         let $target = $(this);
         $target.toggleClass('active');
         let $wrapper = $target.parent();
