@@ -166,6 +166,10 @@
     .preview-body.visual.desktop {
         width: 230px;
     }
+
+    .logo-desktop-div.desktop {
+        padding: 0px 110px !important;
+    }
 }
 
 /* ----------- Logo Desktop Preview ----------- */
