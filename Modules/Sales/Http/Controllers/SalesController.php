@@ -8,6 +8,7 @@ use Modules\Core\Entities\Gateway;
 use PDF;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
@@ -51,9 +52,9 @@ class SalesController extends Controller
                 'company'
             ])->where('sale_id', $id)
                 ->whereIn('gateway_id', [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID,Gateway::SAFE2PAY_PRODUCTION_ID])
-                ->where('type', (new Transaction())->present()->getType('producer'))
+                ->where('type', Transaction::TYPE_PRODUCER)
                 ->whereHas('sale', function ($query) {
-                    $query->where('payment_method', 1);
+                    $query->where('payment_method', Sale::CREDIT_CARD_PAYMENT);
                 })->first();
 
             if(empty($transaction) || empty($transaction->company)){

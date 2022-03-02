@@ -81,6 +81,8 @@ $(document).ready(function(){
                     $("#statement_company_select").append(data);
                 });
 
+                getSettings(response.data[0].id)
+
                 updateStatements();
                 updateWithdrawals();
             }
