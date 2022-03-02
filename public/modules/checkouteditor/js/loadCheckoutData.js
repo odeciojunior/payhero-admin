@@ -1213,7 +1213,7 @@ $(() => {
                 validated = true;
             }else{
                 $('#company_billing_error').show('slow', 'linear');
-                scrollToElement('company_id');
+                scrollToElement('companies');
                 return false;
             }
                 
