@@ -19,22 +19,16 @@ class InstallmentsService
      */
     public static function getInstallments(Project $project, $totalValue)
     {
+        $project->loadMissing('checkoutConfig.company');
+        $checkoutConfig = $project->checkoutConfig;
 
-        $userProjectModel = new UserProject();
-
-        $userModel = new User();
-
-        $userProject = $userProjectModel->with('company')->where('project_id', $project->id)->where('type_enum', $userProjectModel->present()->getTypeEnum('producer'))->first();
-
-        $user = $userModel->find($userProject->user_id);
-
-        $installmentValueTax = intval($totalValue / 100 * $userProject->company->installment_tax);
+        $installmentValueTax = intval($totalValue / 100 * $checkoutConfig->company->installment_tax);
 
         $totalValue = preg_replace("/[^0-9]/", "", $totalValue);
 
         $installmentsData = array();
 
-        for ($installmentAmount = 1; $installmentAmount <= $project->installments_amount; $installmentAmount++) {
+        for ($installmentAmount = 1; $installmentAmount <= $checkoutConfig->installments_limit; $installmentAmount++) {
 
             $installmentData = array();
 
@@ -43,7 +37,7 @@ class InstallmentsService
                 $installmentData['value'] = number_format(intval($totalValue) / 100, 2, ',', '.');
                 $installmentData['total_value'] = number_format(intval($totalValue) / 100, 2, ',', '.');
             } else {
-                if ($project->installments_interest_free >= $installmentAmount) {
+                if ($checkoutConfig->interest_free_installments >= $installmentAmount) {
                     $totalValueWithTax = $totalValue;
                 } else {
                     $totalValueWithTax = $totalValue + $installmentValueTax * ($installmentAmount - 1);
