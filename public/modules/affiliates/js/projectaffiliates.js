@@ -445,7 +445,7 @@ $(document).ready(function () {
                             value.date +
                             "</td>";
                         // data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
-                        data += "<td class='text-center'>";
+                        data += "<td class='text-center text-nowrap'>";
                         if (
                             value.status != 3 &&
                             verifyAccountFrozen() == false
