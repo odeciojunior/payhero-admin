@@ -209,6 +209,7 @@ class ProjectService
                         'affiliates',
                         'affiliates.affiliateLinks',
                         'upsellConfig',
+                        'checkoutConfig'
                     ]
                 )
                 ->where('id', $projectId)->first();
@@ -230,6 +231,10 @@ class ProjectService
                     foreach ($project->shippings as $shipping) {
                         $shipping->delete();
                     }
+                }
+
+                if (!empty($project->checkoutConfig)) {
+                    $project->checkoutConfig->delete();
                 }
 
                 foreach ($project->domains as $domain) {
@@ -273,7 +278,7 @@ class ProjectService
                 //remover integração do woocommerce
                 $wooCommerceIntegration = $this->getWooCommerceIntegration()
                                            ->where('project_id', $project->id)->first();
-                
+
                 if (!empty($wooCommerceIntegration)) {
                     $wooCommerceIntegration->delete();
                     $wooCommerceService = $this->getWooCommerceService(
@@ -281,9 +286,9 @@ class ProjectService
                         $wooCommerceIntegration->token_user,
                         $wooCommerceIntegration->token_pass,
                     );
-                    
+
                     $wooCommerceService->deleteHooks($project->id);
-                    
+
                 }
                 //end woo
 

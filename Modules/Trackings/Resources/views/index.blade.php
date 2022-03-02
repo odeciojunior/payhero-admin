@@ -155,9 +155,9 @@
             <div id="" class="card shadow p-20">
                 <div class="row mb-xl-3">
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0">
-                        <label for="project-select">Projeto</label>
+                        <label for="project-select">Loja</label>
                         <select name='project' id="project-select" class="form-control select-pad applySelect2">
-                            <option value="">Todos projetos</option>
+                            <option value="">Todas lojas</option>
                         </select>
                     </div>
                     <div class="col-sm-6 col-md-6 col-xl-3 col-12 mb-15 mb-sm-0">
@@ -481,9 +481,9 @@
             <!-- End Modal -->
         </div>
     </div>
-    {{-- Quando não tem projeto cadastrado  --}}
+    {{-- Quando não tem loja cadastrado  --}}
     @include('projects::empty')
-    {{-- FIM projeto nao existem projetos--}}
+    {{-- FIM loja nao existem lojas--}}
 </div>
 </div>
 

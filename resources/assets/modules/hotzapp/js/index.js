@@ -13,13 +13,13 @@ $(document).ready(function () {
                 alertCustom('error', 'Ocorreu algum erro');
             },
             success: function (response) {
-                if (response.message == 'Nenhum projeto encontrado') {
+                if (response.message == 'Nenhuma loja encontrado') {
                     let route = '/projects/create'
                     $('#modal-project').modal('show');
                     $('#modal-project-title').text("Oooppsssss!")
                     $('#modal_project_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' +
-                        '<h3 align="center"><strong>Você não possui projetos para realizar integração</strong></h3>' +
-                        '<h5 align="center">Deseja criar seu primeiro projeto? <a class="red pointer" href="' + route + '">clique aqui</a></h5>')
+                        '<h3 align="center"><strong>Você não possui lojas para realizar integração</strong></h3>' +
+                        '<h5 align="center">Deseja criar sua primeira loja? <a class="red pointer" href="' + route + '">clique aqui</a></h5>')
                     $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                 } else {
                     $(".modal-title").html('Adicionar nova Integração com HotZapp');

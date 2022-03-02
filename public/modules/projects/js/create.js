@@ -96,7 +96,7 @@ $(document).ready(function () {
                 },
                 success: (response) => {
                     loadingOnScreenRemove();
-                    alertCustom('success', 'Projeto salvo com sucesso!');
+                    alertCustom('success', 'Loja salvo com sucesso!');
                     window.location = "/projects"
                 }
             });

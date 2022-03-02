@@ -27,9 +27,9 @@
                                 <div id="" class="card shadow p-20">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                            <label for="projeto">Projeto</label>
+                                            <label for="projeto">Loja</label>
                                             <select name='select_project' id="projeto" class="sirius-select">
-                                                <option value="">Todos projetos</option>
+                                                <option value="">Todas lojas</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -91,7 +91,7 @@
                                         <thead>
                                         <tr>
                                             <td class="table-title">Código cupom</td>
-                                            <td class="table-title">Projeto</td>
+                                            <td class="table-title">Loja</td>
                                             <td class="table-title">Quantidade utilizada</td>
                                         </tr>
                                         </thead>
@@ -110,9 +110,9 @@
                     </div>
                 </div>
             </div>
-            {{-- Quando não tem projeto cadastrado  --}}
+            {{-- Quando não tem loja cadastrado  --}}
                 @include('projects::empty')
-            {{-- FIM projeto nao existem projetos--}}
+            {{-- FIM loja nao existem lojas--}}
         </div>
 
 

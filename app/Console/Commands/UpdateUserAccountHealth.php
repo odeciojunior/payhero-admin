@@ -4,9 +4,9 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\AccountHealthService;
-use Illuminate\Support\Facades\Log;
 
 class UpdateUserAccountHealth extends Command
 {
@@ -41,21 +41,20 @@ class UpdateUserAccountHealth extends Command
      */
     public function handle()
     {
-
         Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
-
             $accountHealthService = new AccountHealthService();
-
-            foreach (User::whereRaw('id = account_owner_id')->get() as $user) {
-                $user->account_owner_id;
+            $users = User::whereRaw('id = account_owner_id')->get();
+            foreach ($users as $user) {
                 $this->line($user->id . ' - ' . $user->account_owner_id . ' - ' . $user->name);
                 if (!$accountHealthService->updateAccountScore($user)) {
-                    $this->line('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
+                    $outputMessage = 'Não existem transações suficientes até a data de '
+                        . now()->format('d/m/Y')
+                        . ' para calcular o score do usuário ' . $user->name . '.';
+                    $this->line($outputMessage);
                 }
             }
-
         } catch (Exception $e) {
             report($e);
         }
