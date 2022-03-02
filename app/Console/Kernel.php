@@ -17,6 +17,26 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
+        /*
+            Syncing the schedule
+            php artisan schedule-monitor:sync
+
+            List the schedule
+            php artisan schedule-monitor:list
+
+            Naming tasks
+            ->monitorName('a-custom-name');
+
+            Setting a grace time
+            ->graceTimeInMinutes(10);
+
+            Ignoring scheduled tasks
+            ->doNotMonitor();
+
+            Storing output in the database
+            ->storeOutputInDb();
+        */
+
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
         setlocale(LC_ALL, 'pt_BR');

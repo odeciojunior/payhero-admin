@@ -130,8 +130,6 @@ class ProjectsApiController extends Controller
                 return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
-            $requestValidated['company'] = Hashids::decode($requestValidated['company'])[0];
-
             $project = $projectModel->create(
                 [
                     'name' => $requestValidated['name'],
@@ -152,9 +150,12 @@ class ProjectsApiController extends Controller
                 return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
+            $company = Company::find(hashids_decode($requestValidated['company']));
+
             $checkoutConfig = CheckoutConfig::create([
                 'company_id' => $requestValidated['company'],
                 'project_id' => $project->id,
+                'pix_enabled' => $company->has_pix_key
             ]);
 
             if (empty($checkoutConfig)) {
@@ -204,7 +205,7 @@ class ProjectsApiController extends Controller
                 [
                     'user_id' => auth()->user()->account_owner_id,
                     'project_id' => $project->id,
-                    'company_id' => $requestValidated['company'],
+                    'company_id' => $company->id,
                     'type' => 'producer',
                     'type_enum' => $userProjectModel->present()
                         ->getTypeEnum('producer'),
