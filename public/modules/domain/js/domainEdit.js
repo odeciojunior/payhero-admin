@@ -106,13 +106,14 @@ $(document).ready(function () {
      * @param domain
      */
     function deleteDomain(domain) {
+        $(".btn-delete-modal-domain").css('opacity',1);
         $("#modal-delete-domain-body, #title-delete-domain, #description-delete-domain, .btn-delete-modal-domain").show();
 
         $("#modal-delete-domain").modal("show");
 
         btnDeleteDomain.unbind('click');
         btnDeleteDomain.on('click', function () {
-            $(".btn-delete-modal-domain").hide();
+            $(".btn-delete-modal-domain").css('opacity',0);
 
             loadOnAny('#modal-delete-domain-body', false, {
                 styles: {
