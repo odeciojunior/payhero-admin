@@ -45,10 +45,29 @@ $(function () {
             },
             success: function success(response) {
                 if(response.data){
-                    let value = response.data.replace("R$", "");
-                    $("#pending").html("<span class='currency'>R$</span>" + value);
-                } else {
-                    $('.new-graph-pending').hide();
+                    let value = response.data.replace("R$", " ");
+                    $("#pending").html("<span class='currency'>R$ </span>" + value);
+                    $('.new-graph-pending').parent('.block').removeClass('visible');
+                    
+                    if(response.data !== '0,00') {
+                        $('.new-graph-pending').parent('.block').addClass('visible');
+                        $('.new-graph-pending').next('.off').remove();
+                        $('.new-graph-pending').addClass('visible')
+                        $('#pending').addClass('visible');
+                        $('.ske-load').hide();
+                        
+                    } else {
+                        $('.new-graph-pending').parent('.block').addClass('visible');
+                        $('#pending').removeClass('visible');
+                        $('.new-graph-pending').removeClass('visible');
+                        $('.new-graph-pending').after('<p class=off>Não há dados suficientes</p>');
+                        $('.ske-load').hide();
+                    }
+                }else {
+                    $('.new-graph-pending').next('.off').remove();
+                    $('.new-graph-pending').parent('.block').addClass('visible');
+                    $('.new-graph-pending').after('<p class=off>Não há dados suficientes</p>');
+                    $('.ske-load').hide();
                 }
             }
         });
@@ -67,18 +86,34 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                if(!$('.loaderSpan').is('visible')) {
-                    $('.data-content').addClass('visible');
-                }
-
                 if(response.data){
                     let value = response.data.replace("R$", "");
                     $("#comission").html("<span class='currency'>R$</span>" + value);
-                    if(response.data !== 'R$ 0,00') {
+                    $('.new-graph').parent('.block').removeClass('visible');
+                    
+                    if(response.data !== '0,00') {
+                        $('.new-graph').parent('.block').addClass('visible');
+                        $('.new-graph').next('.off').remove();
+                        $('.new-graph').addClass('visible');
+                        $('#comission').addClass('visible');
                         $('.value-price em').addClass('visible');
-                        $('.new-graph').addClass('visible')
+                        $('.new-graph').addClass('visible');
+                        $('.ske-load').hide();
+                        
+                    } else {
+                        $('.new-graph').parent('.block').addClass('visible');
+                        $('#comission').removeClass('visible');
+                        $('.new-graph').removeClass('visible');
+                        $('.new-graph').after('<p class=off>Não há dados suficientes</p>');
+                        $('.ske-load').hide();
                     }
-                } 
+                } else {
+                    $('.new-graph').next('.off').remove();
+                    $('.new-graph').parent('.block').addClass('visible');
+                    $('.new-graph').after('<p class=off>Não há dados suficientes</p>');
+                    $('.ske-load').hide();
+                }
+                
             }
         });
     }
@@ -119,8 +154,7 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('#payment-type-items .bar').html('-').addClass('visible');
-                
+                $('#payment-type-items .bar').addClass('visible');
                 
                 if( response.data.total ) {
                     //credit_card
@@ -136,7 +170,7 @@ $(function () {
                     $("#boleto-value").html(response.data.boleto.value);
                     $("#percent-values-boleto").html(response.data.boleto.percentage);
 
-                    if(response.data.boleto.percentage > 0){
+                    if(response.data.boleto.percentage > '0'){
                         $("#percent-values-boleto").next('.col-payment').find('.bar').css('width', response.data.boleto.percentage );
                         $("#percent-values-boleto").next('.col-payment').find('.bar').addClass('pink');
                     }
@@ -145,7 +179,7 @@ $(function () {
                     $("#pix-value").html(response.data.pix.value);
                     $("#percent-values-pix").html(response.data.pix.percentage);
 
-                    if(response.data.pix.percentage > 0){
+                    if(response.data.pix.percentage > '0'){
                         $("#percent-values-pix").next('.col-payment').find('.bar').css('width', response.data.pix.percentage );
                         $("#percent-values-pix").next('.col-payment').find('.bar').addClass('purple');
                     }
@@ -154,7 +188,7 @@ $(function () {
                 } else {
                     $('#percent-credit-card, #percent-values-boleto, #percent-values-pix ').html('0%');
                     $('#credit-card-value, #boleto-value, #pix-value').html('R$ 0,00');
-                    $('#payment-type-items .bar').html('-').css('width', '100%');
+                    $('#payment-type-items .bar').css('width', '100%');
                 }
             }
         });
@@ -232,9 +266,14 @@ $(function () {
         $('#payment-type-items .bar').removeClass('pink');
         $('#payment-type-items .bar').removeClass('purple');
 
-        $(".bar,#sales,#pending,#cashback,#comission, #revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#percent-values-pix,#pix-value, #boleto-value, #percent-boleto-convert,#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
+        $(".bar,#sales,#cashback,#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#percent-values-pix,#pix-value, #boleto-value, #percent-boleto-convert,#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
         ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
         loadOnTable("#origins-table-itens", ".table-vendas-itens");
+
+        if($('.ske-load').is(':hidden')) {
+            $('.ske-load').show();
+            $('.block').removeClass('visible');
+        }
 
         $.ajax({
             url: "/api/reports",
