@@ -581,65 +581,6 @@
                                     <label for="notification-interval" class="checkout-label">Configure as
                                         notificações</label>
                                     <div class="notification-table-cointainer">
-                                        <!-- <table class="table table-hover selectable" id="notification-table"
-                                            data-plugin="selectable" data-row-selectable="true">
-                                            <thead>
-                                                <tr>
-                                                    <th class="th-notification">
-                                                        <span class="checkbox-custom checkbox-primary">
-                                                            <input id="selectable-all-notification" type="checkbox">
-                                                            <label></label>
-                                                        </span>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr style="height: 90px; max-height: 90px">
-                                                    <td>
-                                                        <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-notification" type="checkbox"
-                                                                id="notification_buying_enabled"
-                                                                name="notification_buying_enabled">
-                                                            <label for="notification_buying_enabled"></label>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td>
-                                                        <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-notification" type="checkbox"
-                                                                id="notification_bought_30_minutes_enabled"
-                                                                name="notification_bought_30_minutes_enabled">
-                                                            <label for="notification_bought_30_minutes_enabled"></label>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td>
-                                                        <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-notification" type="checkbox"
-                                                                id="notification_bought_last_hour_enabled"
-                                                                name="notification_bought_last_hour_enabled">
-                                                            <label for="notification_bought_last_hour_enabled"></label>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td>
-                                                        <span class="checkbox-custom checkbox-primary">
-                                                            <input class="selectable-notification" type="checkbox"
-                                                                id="notification_just_bought_enabled"
-                                                                name="notification_just_bought_enabled">
-                                                            <label for="notification_just_bought_enabled"></label>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table> -->
-
                                         <table class="table table-hover notification-counts"
                                             id="notification-table-count" data-row-selectable="true">
                                             <thead>
