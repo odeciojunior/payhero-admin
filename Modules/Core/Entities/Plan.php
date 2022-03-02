@@ -64,12 +64,12 @@ class Plan extends Model
         'price',
         'status',
         'shopify_id',
-        'shopify_variant_id',        
+        'shopify_variant_id',
         'created_at',
         'updated_at',
         'deleted_at',
     ];
-    
+
     /**
      * @var bool
      */

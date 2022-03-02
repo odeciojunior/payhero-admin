@@ -410,7 +410,7 @@
     <script src="{{ asset('modules/global/js/daterangepicker.min.js?v=' . versionsFile()) }}"></script>
     <script src="{{ asset('modules/finances/js/jPages.min.js?v=' . versionsFile()) }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.js?v=' . versionsFile()) }}"></script>
-    <script src="{{ asset('modules/finances/js/multi-finances.js?v=' . versionsFile()) }}"></script>
+    <script src="{{ asset('modules/finances/js/multi-finances.js?v=0' . versionsFile()) }}"></script>
     <script src="{{ asset('modules/finances/js/multi-finances-withdrawals.js?v=' . versionsFile()) }}"></script>
-    <script src="{{ asset('modules/finances/js/settings.js?v=' . versionsFile()) }}"></script>
+    <script src="{{ asset('modules/finances/js/settings.js?v=0' . versionsFile()) }}"></script>
 @endpush
