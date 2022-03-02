@@ -12,7 +12,7 @@
                 <h1 class="page-title my-10" style="min-height: 28px">
                     <a href="/projects">
                         <span class="o-arrow-right-1 font-size-30 ml-2" aria-hidden="true"></span>
-                        Cadastrar novo projeto
+                        Cadastrar nova loja
                     </a>
                 </h1>
             </div>
@@ -23,7 +23,7 @@
                             <div class="form-group col-12 col-lg-5 col-xl-4">
                                 <div class="d-flex flex-column" id="div_img" style="position: relative">
                                     <div class="d-flex flex-column" id="div_digital_product_upload">
-                                        <label for="product_photo">Imagem do projeto</label>
+                                        <label for="product_photo">Imagem da loja</label>
                                         <input type="file" id="product_photo" name="photo" data-height="651" data-max-width="651" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                                         <small class="text-center text-muted mt-15">Sugerimos PNG ou JPG com 650px x 650px (1:1).</small>
                                     </div>
@@ -32,7 +32,7 @@
                             <div class="col-12 col-lg-7 col-xl-8">
                                 <div class="row">
                                     <div class="form-group col-12">
-                                        <label for="name">Nome do projeto</label>
+                                        <label for="name">Nome da Loja</label>
                                         <input name="name" type="text" class="input-pad" id="name" placeholder="Digite o nome">
                                     </div>
 
@@ -65,7 +65,7 @@
         <div id="empty-companies-error" style="display:none;position: absolute; top: 25%;">
             <div class="text-center" style="display:flex;color: black;align-content: center;align-items: center;justify-content: center;flex-direction: column;text-align: center;padding: 20px;">
                 <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">
-                <p class="desc gray" style='font-size:20px;'>Para criar um projeto você precisa ter pelo menos uma empresa aprovada para transacionar
+                <p class="desc gray" style='font-size:20px;'>Para criar uma loja você precisa ter pelo menos uma empresa aprovada para transacionar
                     e todos os documentos da empresa e do seu perfil precisam estar aprovados! </p>
             </div>
         </div>
