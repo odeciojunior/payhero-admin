@@ -42,10 +42,8 @@ $(() => {
 
         quillTextbar.on('selection-change', function(range, oldRange, source) {
             if (range === null && oldRange !== null) {
-                console.log('blur');
                 $('#topbar_content').removeClass('focus-in');
             } else if (range !== null && oldRange === null){
-                console.log('focus');
                 $('#topbar_content').addClass('focus-in');
             }
                 
@@ -74,10 +72,8 @@ $(() => {
 
         quillThanksPage.on('selection-change', function(range, oldRange, source) {
             if (range === null && oldRange !== null) {
-                console.log('blur');
                 $('#post_purchase_message_content').removeClass('focus-in');
             } else if (range !== null && oldRange === null) {
-                console.log('focus');
                 $('#post_purchase_message_content').addClass('focus-in');
             }
         });
@@ -877,8 +873,6 @@ $(() => {
             $("#checkout_editor #social_proof_minimum").val(checkout.social_proof_minimum || 0);
             $("#checkout_editor #invoice_description").val(checkout.invoice_description || "");
 
-
-            console.log(checkout.companies);
             for (let company of checkout.companies) {
                 if ( company.status != "pending") {
                     $("#checkout_editor #companies").append(
@@ -1257,7 +1251,6 @@ $(() => {
                 if($("#has_checkout_logo").val() == "true"){
                     validated = true;  
                 }else{
-                    console.log('não válido')
                     scrollToElement('upload_logo');
                     $('#checkout_logo_error').show('slow', 'linear');
                     return false;
@@ -1271,7 +1264,6 @@ $(() => {
                     if($("#has_checkout_favicon").val() == "true"){
                         validated = true;  
                     }else{
-                        console.log('não válido')
                         scrollToElement('upload_logo');
                         $('#checkout_favicon_error').fadeIn('slow', 'linear');
                         return false;
@@ -1284,7 +1276,6 @@ $(() => {
                 if($("#has_checkout_banner").val() == "true"){
                     validated = true;  
                 }else{
-                    console.log('não válido')
                     scrollToElement('banner_type');
                     $('#checkout_banner_error').show('slow', 'linear');
                     return false;
@@ -1301,7 +1292,6 @@ $(() => {
                         $('#support_phone').addClass('error-input');
                         $('#support_phone_error').show('slow', 'linear');
                         scrollToElement('support_phone');
-                        console.log('tefasutydfasytdf')
                         return false;
                     }
                 }
