@@ -12,13 +12,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $created_at
  * @property string $updated_at
  */
-class AsaasBackofficeRequest extends Model
+class GatewaysBackofficeRequests extends Model
 {
     protected $keyType = 'integer';
 
     protected $fillable = [
-        'sent_data',
         'company_id',
+        'gateway_id',
+        'sent_data',
         'response',
         'created_at',
         'updated_at'
@@ -30,5 +31,13 @@ class AsaasBackofficeRequest extends Model
     public function company()
     {
         return $this->belongsTo('Modules\Core\Entities\Company');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function gateway(): BelongsTo
+    {
+        return $this->belongsTo('Modules\Core\Entities\Gateway');
     }
 }
