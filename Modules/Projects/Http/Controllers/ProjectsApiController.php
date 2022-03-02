@@ -3,16 +3,15 @@
 namespace Modules\Projects\Http\Controllers;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Gate;
 use Intervention\Image\Facades\Image;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyResource;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\PixelConfig;
 use Modules\Core\Entities\Project;
@@ -25,15 +24,11 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\AmazonFileService;
-use Modules\Core\Services\CacheService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\ProjectNotificationService;
 use Modules\Core\Services\ProjectService;
-use Modules\Core\Services\SendgridService;
-use Modules\Core\Services\SmsService;
 use Modules\Core\Services\TaskService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
-use Modules\Projects\Http\Requests\ProjectUpdateRequest;
+use Modules\Projects\Http\Requests\ProjectsSettingsUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\UserProjectResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
@@ -135,19 +130,13 @@ class ProjectsApiController extends Controller
                 return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
-            $requestValidated['company'] = Hashids::decode($requestValidated['company'])[0];
-
             $project = $projectModel->create(
                 [
                     'name' => $requestValidated['name'],
                     'description' => $requestValidated['description'],
-                    'installments_amount' => 12,
-                    'installments_interest_free' => 1,
                     'visibility' => 'private',
                     'automatic_affiliation' => 0,
-                    'boleto' => 1,
                     'status' => $projectModel->present()->getStatus('active'),
-                    'checkout_type' => 2, // checkout de 1 passo
                     'notazz_configs' => json_encode(
                         [
                             'cost_currency_type' => 1,
@@ -158,6 +147,19 @@ class ProjectsApiController extends Controller
             );
 
             if (empty($project)) {
+                return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
+            }
+
+            $company = Company::find(hashids_decode($requestValidated['company']));
+
+            $checkoutConfig = CheckoutConfig::create([
+                'company_id' => $requestValidated['company'],
+                'project_id' => $project->id,
+                'pix_enabled' => $company->has_pix_key
+            ]);
+
+            if (empty($checkoutConfig)) {
+                $project->delete();
                 return response()->json(['message' => 'Erro ao tentar salvar projeto'], 400);
             }
 
@@ -203,7 +205,7 @@ class ProjectsApiController extends Controller
                 [
                     'user_id' => auth()->user()->account_owner_id,
                     'project_id' => $project->id,
-                    'company_id' => $requestValidated['company'],
+                    'company_id' => $company->id,
                     'type' => 'producer',
                     'type_enum' => $userProjectModel->present()
                         ->getTypeEnum('producer'),
@@ -331,12 +333,11 @@ class ProjectsApiController extends Controller
         }
     }
 
-    public function update(ProjectUpdateRequest $request, $id): JsonResponse
-    {
+    public function updateSettings(ProjectsSettingsUpdateRequest $request, $id){
+
         try {
             $requestValidated = $request->validated();
             $projectModel = new Project();
-            $userProjectModel = new UserProject();
             $amazonFileService = app(AmazonFileService::class);
 
             if (!$requestValidated) {
@@ -344,207 +345,54 @@ class ProjectsApiController extends Controller
             }
 
             $projectId = current(Hashids::decode($id));
-
-            CacheService::forget(CacheService::CHECKOUT_PROJECT, $projectId);
-            CacheService::forgetContainsUnique(CacheService::SHIPPING_RULES, $projectId);
-
             $project = $projectModel->find($projectId);
 
             if (!Gate::allows('update', [$project])) {
                 return response()->json(['message' => 'Sem permissão para atualizar o projeto'], 403);
             }
-
-            if ($requestValidated['installments_amount'] < $requestValidated['installments_interest_free']) {
-                $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
-            }
-
             $requestValidated['status'] = 1;
 
-            $requestValidated['invoice_description'] = FoxUtils::removeAccents(
-                $requestValidated['invoice_description']
-            );
 
-            // $requestValidated['cost_currency_type'] = $project->present()->getCurrencyCost($requestValidated['cost_currency_type']);
+            $projectPhoto = $request->file('project_photo');
+            $removeProjectPhoto = $request->get('remove_project_photo');
 
-            if (isset($requestValidated['finalizing_purchase_config_toogle']) && !empty($requestValidated['finalizing_purchase_config_toogle'])) {
-                $array = [
-                    'toogle' => $requestValidated['finalizing_purchase_config_toogle'],
-                    'text' => $requestValidated['finalizing_purchase_config_text'],
-                    'min_value' => $requestValidated['finalizing_purchase_config_min_value']
-                ];
+            if ($projectPhoto == null && $removeProjectPhoto == "true") {
+                try{
+                    $amazonFileService->deleteFile($project->photo);
+                    $project->update(['photo' => null]);
 
-                $requestValidated['finalizing_purchase_configs'] = json_encode($array);
-            } else {
-                $requestValidated['finalizing_purchase_configs'] = null;
-            }
-
-
-            if (isset($requestValidated['checkout_notification_config_toogle']) && !empty($requestValidated['checkout_notification_config_toogle'])) {
-                $messages = [];
-
-                if (isset($requestValidated['checkout_notification_config_messages']) && !empty($requestValidated['checkout_notification_config_messages'])) {
-                    foreach ($requestValidated['checkout_notification_config_messages'] as $config_message_key => $config_message_value) {
-                        $messages[$config_message_key] = config(
-                                'arrays.checkout_notification_config_messages'
-                            )[$config_message_key] . '//' . $requestValidated['checkout_notification_config_messages_min_value'][$config_message_key];
-                    }
+                }catch(Exception $error){
+                    report($error);
                 }
-
-                $array = [
-                    'toogle' => $requestValidated['checkout_notification_config_toogle'],
-                    'time' => $requestValidated['checkout_notification_config_time'],
-                    'mobile' => $requestValidated['checkout_notification_mobile'],
-                    'messages' => $messages,
-                ];
-
-                $requestValidated['checkout_notification_configs'] = json_encode($array);
-            } else {
-                $requestValidated['checkout_notification_configs'] = null;
             }
 
-            if (!empty($requestValidated['custom_message_switch'])) {
-                $requestValidated['custom_message_configs'] = [
-                    'active'=>true,
-                    'title'=>$requestValidated['custom_message_title'],
-                    'message'=>$requestValidated['custom_message_content']
-                ];
-            }else{
-                $requestValidated['custom_message_configs'] = [
-                    'active'=>false
-                ];
+            if($projectPhoto != null && !$removeProjectPhoto){
+                try{
+                    $amazonFileService->deleteFile($project->photo);
+                    $img = Image::make($projectPhoto->getPathname());
+                    $img->save($projectPhoto->getPathname());
+
+                    $amazonPath = $amazonFileService->uploadFile('uploads/user/' . Hashids::encode(
+                        auth()->user()->account_owner_id).'/public/project/'.Hashids::encode($project->id).'/main',$projectPhoto
+                    );
+
+                    $project->update(['photo' => $amazonPath]);
+
+                }catch(Exception $error) {
+                    report($error);
+                    return response()->json(['message' =>'Ocorreu um erro, tente novamente mais tarde'], 400);
+                }
             }
 
-            $projectUpdate = $project->fill($requestValidated)->save();
-            $projectChanges = $project->getChanges();
-            if (isset($projectChanges["support_phone"])) {
-                $project->fill(["support_phone_verified" => false])->save();
-            }
-            if (isset($projectChanges["contact"])) {
-                $project->fill(["contact_verified" => false])->save();
-            }
+            $projectUpdate = $project->update($requestValidated);
             if (!$projectUpdate) {
                 return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
             }
 
-            try {
-                $projectPhoto = $request->file('photo');
-                if ($projectPhoto != null) {
-                    $amazonFileService->deleteFile($project->photo);
-                    $img = Image::make($projectPhoto->getPathname());
-                    if (
-                        !empty($requestValidated['photo_w']) && !empty($requestValidated['photo_h'])
-                        && !empty($requestValidated['photo_x1']) && !empty($requestValidated['photo_y1'])
-                    ) {
-                        $img->crop(
-                            $requestValidated['photo_w'],
-                            $requestValidated['photo_h'],
-                            $requestValidated['photo_x1'],
-                            $requestValidated['photo_y1']
-                        );
-                    }
-                    $img->resize(300, 300);
-                    $img->save($projectPhoto->getPathname());
-
-                    $amazonPath = $amazonFileService
-                        ->uploadFile(
-                            'uploads/user/' . Hashids::encode(
-                                auth()->user()->account_owner_id
-                            ) . '/public/projects/' . Hashids::encode($project->id) . '/main',
-                            $projectPhoto
-                        );
-                    $project->update(
-                        [
-                            'photo' => $amazonPath,
-                        ]
-                    );
-                }
-
-                $projectLogo = $request->file('logo');
-                if ($projectLogo != null) {
-                    $amazonFileService->deleteFile($project->logo);
-                    $img = Image::make($projectLogo->getPathname());
-
-                    $img->resize(
-                        null,
-                        300,
-                        function ($constraint) {
-                            $constraint->aspectRatio();
-                        }
-                    );
-
-                    $img->save($projectLogo->getPathname());
-
-                    $amazonPathLogo = $amazonFileService
-                        ->uploadFile(
-                            'uploads/user/' . Hashids::encode(
-                                auth()->user()->account_owner_id
-                            ) . '/public/projects/' . Hashids::encode($project->id) . '/logo',
-                            $projectLogo
-                        );
-
-                    $project->update(
-                        [
-                            'logo' => $amazonPathLogo,
-                        ]
-                    );
-                }
-            } catch (Exception $e) {
-                report($e);
-
-                return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
-            }
-
-            $userProject = $userProjectModel->where(
-                [
-                    ['user_id', auth()->user()->account_owner_id],
-                    ['project_id', $project->id],
-                ]
-            )->first();
-            if (!empty($requestValidated['company_id'])) {
-                $requestValidated['company_id'] = current(Hashids::decode($requestValidated['company_id']));
-
-                if ($userProject->company_id != $requestValidated['company_id']) {
-                    $old_company = $userProject->company;
-                    $userProject->update(['company_id' => $requestValidated['company_id']]);
-                    $new_company = Company::find($requestValidated['company_id']);
-
-                    if ($old_company->has_pix_key != $new_company->has_pix_key) {
-                        $boo_pix = $new_company->has_pix_key;
-                        foreach ($new_company->usersProjects as $userProject) {
-                            $project = $userProject->project;
-                            $project->pix = $boo_pix;
-                            $project->save();
-                        }
-                    }
-                }
-            }
-
-            if (!empty($requestValidated['pix']) && $userProject->project->pix != $requestValidated['pix']) {
-                $project = $userProject->project;
-                $project->pix = $requestValidated['pix'];
-                $project->save();
-            }
-
-            //ATUALIZA STATUS E VALOR DA RECOBRANÇA POR FALTA DE SALDO
-            if (isset($projectChanges["discount_recovery_status"])) {
-                $project->update(
-                    [
-                        'discount_recovery_status' => $requestValidated['discount_recovery_status'],
-                        'discount_recovery_value' => $requestValidated['discount_recovery_value'],
-                    ]
-                );
-            } else {
-                $project->update(
-                    [
-                        'discount_recovery_status' => 0,
-                    ]
-                );
-            }
-
             return response()->json(['message' => 'Projeto atualizado!'], 200);
+
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Erro ao atualizar projeto'], 400);
         }
     }
@@ -673,238 +521,6 @@ class ProjectsApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Ocorreu um erro ao buscar dados das empresas'], 400);
-        }
-    }
-
-    public function verifySupportphone($projectId, Request $request): JsonResponse
-    {
-        try {
-            $projectModel = new Project();
-
-            $data = $request->all();
-            $supportPhone = $data["support_phone"] ?? null;
-            if (FoxUtils::isEmpty($supportPhone)) {
-                return response()->json(
-                    [
-                        'message' => 'Telefone não pode ser vazio!',
-                    ],
-                    400
-                );
-            }
-            $project = $projectModel->find(Hashids::decode($projectId))->first();
-
-            activity()->on($projectModel)->tap(
-                function (Activity $activity) use ($projectId) {
-                    $activity->log_name = 'visualization';
-                    $activity->subject_id = current(Hashids::decode($projectId));
-                }
-            )
-                ->log(
-                    'Visualizou tela envio de código para verificação de telefone contato do projeto ' . $project->name
-                );
-
-            if ($supportPhone != $project->support_phone) {
-                $project->support_phone = $supportPhone;
-                $project->save();
-            }
-
-            $verifyCode = random_int(100000, 999999);
-
-            $message = "Código de verificação CloudFox - " . $verifyCode;
-            $smsService = new SmsService();
-            $smsService->sendSms($supportPhone, $message, '', 'aws-sns');
-
-            return response()->json(
-                [
-                    "message" => "Mensagem enviada com sucesso!",
-
-                ],
-                200
-            )
-                ->withCookie("supportphoneverifycode_" . Hashids::encode(auth()->id()) . $projectId, $verifyCode, 15);
-        } catch (Exception $ex) {
-            report($ex);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro ao enviar sms para o telefone informado!',
-                ],
-                400
-            );
-        }
-    }
-
-    public function matchSupportphoneVerifyCode($projectId, Request $request): JsonResponse
-    {
-        try {
-            $projectModel = new Project();
-            $project = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
-
-            activity()->on($projectModel)->tap(
-                function (Activity $activity) use ($projectId) {
-                    $activity->log_name = 'updated';
-                    $activity->subject_id = current(Hashids::decode($projectId));
-                }
-            )->log('Validação código telefone de contato do projeto ' . $project->name);
-
-            $data = $request->all();
-            $verifyCode = $data["verifyCode"] ?? null;
-            if (empty($verifyCode)) {
-                return response()->json(
-                    [
-                        'message' => 'Código de verificação não pode ser vazio!',
-                    ],
-                    400
-                );
-            }
-            $cookie = Cookie::get("supportphoneverifycode_" . Hashids::encode(auth()->id()) . $projectId);
-            if ($verifyCode != $cookie) {
-                return response()->json(
-                    [
-                        'message' => 'Código de verificação inválido!',
-                    ],
-                    400
-                );
-            }
-
-            $project->update(["support_phone_verified" => true]);
-
-            return response()->json(
-                [
-                    "message" => "Telefone verificado com sucesso!",
-                ],
-                200
-            )
-                ->withCookie(Cookie::forget("supportphoneverifycode_" . Hashids::encode(auth()->id())) . $projectId);
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro ao verificar código!',
-                ],
-                400
-            );
-        }
-    }
-
-    public function verifyContact($projectId, Request $request): JsonResponse
-    {
-        try {
-            $projectModel = new Project();
-            $project = $projectModel->find(Hashids::decode($projectId))->first();
-
-            activity()->on($projectModel)->tap(
-                function (Activity $activity) use ($projectId) {
-                    $activity->log_name = 'visualization';
-                    $activity->subject_id = current(Hashids::decode($projectId));
-                }
-            )->log('Visualizou tela envio de codigo para verificação email contato do projeto: ' . $project->name);
-
-            $data = $request->all();
-            $contact = $data["contact"] ?? null;
-            if (FoxUtils::isEmpty($contact)) {
-                return response()->json(
-                    [
-                        'message' => 'Email não pode ser vazio!',
-                    ],
-                    400
-                );
-            }
-
-            if ($contact != $project->contact) {
-                $project->contact = $contact;
-                $project->save();
-            }
-
-            $verifyCode = random_int(100000, 999999);
-
-            $data = [
-                "verify_code" => $verifyCode,
-            ];
-
-            /** @var SendgridService $sendgridService */
-            $sendgridService = app(SendgridService::class);
-            $sendgridService->sendEmail(
-                'help@cloudfox.net',
-                'cloudfox',
-                $contact,
-                auth()->user()->name,
-                "d-5f8d7ae156a2438ca4e8e5adbeb4c5ac",
-                $data
-            );
-
-            return response()->json(
-                [
-                    "message" => "Email enviado com sucesso!",
-
-                ],
-                200
-            )
-                ->withCookie("contactverifycode_" . Hashids::encode(auth()->id()) . $projectId, $verifyCode, 15);
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, ao enviar o email com o código!',
-                ],
-                400
-            );
-        }
-    }
-
-    public function matchContactVerifyCode($projectId, Request $request): JsonResponse
-    {
-        try {
-            $projectModel = new Project();
-            $project = $projectModel->where("id", current(Hashids::decode($projectId)))->first();
-
-            activity()->on($projectModel)->tap(
-                function (Activity $activity) use ($projectId) {
-                    $activity->log_name = 'updated';
-                    $activity->subject_id = current(Hashids::decode($projectId));
-                }
-            )->log('Validação código email de contato do projeto: ' . $project->name);
-
-            $data = $request->all();
-            $verifyCode = $data["verifyCode"] ?? null;
-            if (empty($verifyCode)) {
-                return response()->json(
-                    [
-                        'message' => 'Código de verificação não pode ser vazio!',
-                    ],
-                    400
-                );
-            }
-            $cookie = Cookie::get("contactverifycode_" . Hashids::encode(auth()->id()) . $projectId);
-            if ($verifyCode != $cookie) {
-                return response()->json(
-                    [
-                        'message' => 'Código de verificação inválido!',
-                    ],
-                    400
-                );
-            }
-
-            $project->update(["contact_verified" => true]);
-
-            return response()->json(
-                [
-                    "message" => "Email verificado com sucesso!",
-                ],
-                200
-            )
-                ->withCookie(Cookie::forget("contactverifycode_" . Hashids::encode(auth()->id())) . $projectId);
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro ao verificar código!',
-                ],
-                400
-            );
         }
     }
 

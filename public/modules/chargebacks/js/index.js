@@ -13,11 +13,11 @@ $(document).ready(function () {
 
     //Search project
     $('#project').select2({
-        placeholder: 'Nome do projeto',
+        placeholder: 'Nome da loja',
         allowClear: true,
         language: {
             noResults: function () {
-                return 'Nenhum projeto encontrado';
+                return 'Nenhuma loja encontrado';
             },
             searching: function () {
                 return 'Procurando...';

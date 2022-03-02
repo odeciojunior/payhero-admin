@@ -65,7 +65,7 @@
             <li id="section-3">
                 <h4>Cadastrando o frete</h4>
                 <div>
-                    Acesse: <span class="breadcrumb">Projetos > Seu Projeto</span>. Em seguida clique na aba <span
+                    Acesse: <span class="breadcrumb">Loja > Sua Loja </span>. Em seguida clique na aba <span
                         class="breadcrumb">Frete</span> e depois no botão <b>Adicionar Frete</b>. Preencha os dados e
                     clique em <span class="btn green">Salvar</span>.
                     <div class="img-container">
