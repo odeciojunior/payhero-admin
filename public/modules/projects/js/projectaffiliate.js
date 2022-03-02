@@ -26,7 +26,7 @@ $(() => {
 
     show();
 
-    //carrega detalhes do projeto
+    //carrega detalhes do loja
     function show() {
 
         loadOnAny('#tab_info_geral .card', false, {
@@ -109,7 +109,7 @@ $(() => {
 
     });
 
-    //carrega a tela de edicao do projeto
+    //carrega a tela de edicao do loja
     function updateConfiguracoes() {
         loadOnAny('#tab_setiings_affiliate .card');
         $.ajax({
@@ -133,7 +133,7 @@ $(() => {
         });
     }
 
-    //atualiza as configuracoes do projeto
+    //atualiza as configuracoes do loja
     $("#bt-update-project").on('click', function (event) {
         event.preventDefault();
         loadingOnScreen();
