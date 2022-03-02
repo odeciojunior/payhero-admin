@@ -113,9 +113,9 @@
                         <div class="collapse" id="bt_collapse">
                             <div class="row">
                                 <div class="col-sm-12 col-md-3 mt-10">
-                                    <label for="project">Projeto</label><br>
+                                    <label for="project">Loja</label><br>
                                     <select name='project' id="project" class="sirius-select">
-                                        <option value="">Todos projetos</option>
+                                        <option value="">Todas lojas</option>
                                     </select>
                                 </div>
 
@@ -264,9 +264,9 @@
                 @include('sales::details')
 
             </div>
-            {{-- Quando não tem projeto cadastrado  --}}
+            {{-- Quando não tem loja cadastrado  --}}
             @include('projects::empty')
-            {{-- FIM projeto nao existem projetos--}}
+            {{-- FIM loja nao existem lojas--}}
         </div>
         @push('scripts')
             <script src="{{ asset('/modules/chargebacks/js/contestations-index.js?v='. random_int(100, 10000)) }}"></script>

@@ -27,7 +27,7 @@
                 <div class="col-sm-8 col-12">
                     <h1 class="page-title">
                         <a href='/apps/notazz' class='o-arrow-right-1'></a>
-                        Notas fiscais do projeto <span id="title_integration"></span>
+                        Notas fiscais da loja <span id="title_integration"></span>
                     </h1>
                 </div>
                 <div class="col-sm-4 col-12 text-right">

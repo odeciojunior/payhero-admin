@@ -10,7 +10,7 @@ $(() => {
 
     show();
 
-    //carrega detalhes do projeto
+    //carrega detalhes da loja
     function show() {
         loadOnAny('#tab_configuration .card', false,{
             styles: {

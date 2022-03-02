@@ -59,7 +59,8 @@ class SaleRefundedSendEmailListener implements ShouldQueue
             }
 
             $saleCode = Hashids::connection('sale_id')->encode($sale->id);
-            $project = $projectModel->find($sale->project_id);
+            $project = $projectModel->with('checkoutConfig')->find($sale->project_id);
+            $checkoutConfig = $project->checkoutConfig;
             $products = $saleService->getEmailProducts($sale->id);
 
             $sale->total_paid_value = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
@@ -86,8 +87,7 @@ class SaleRefundedSendEmailListener implements ShouldQueue
 
             $data = [
                 'first_name' => $customer->present()->getFirstName(),
-                "store_logo" => $project->logo,
-                "project_contact" => $project->contact,
+                "store_logo" => $checkoutConfig->checkout_logo,
                 'sale_code' => $saleCode,
                 "products" => $products,
                 "total_paid_value" => $sale->total_paid_value,
