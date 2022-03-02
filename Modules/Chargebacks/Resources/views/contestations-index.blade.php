@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=123') }}">
         <link rel="stylesheet" href="{{ asset('modules/chargebacks/css/contestations-index.css?v='. versionsFile()) }}">
+        <link rel="stylesheet" href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css?v='. versionsFile()) }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
             .select2-selection--single {
@@ -104,9 +105,8 @@
                             <div class="col-sm-12 col-md-3 mt-10">
                                 <div class="form-group form-icons">
                                     <label for="date_type">&nbsp;</label>
-                                    <i style="right: 24px;top: 35px;"
-                                       class="form-control-icon form-control-icon-right o-agenda-1 mt-15 font-size-20"></i>
-                                    <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly style="">
+                                    <input name='date_range' id="date_range" class="input-pad pr-30" readonly>
+                                    <i style="right: 24px;top: 31px;"class="filter-badge daterange"></i>
                                 </div>
                             </div>
                         </div>
@@ -271,6 +271,7 @@
         @push('scripts')
             <script src="{{ asset('/modules/chargebacks/js/contestations-index.js?v='. random_int(100, 10000)) }}"></script>
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
+            {{-- <script src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js?v=' . versionsFile()) }}"></script> --}}
             <script src="{{ asset('modules/global/js/daterangepicker.min.js') }}"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush

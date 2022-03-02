@@ -231,6 +231,18 @@ $(document).ready(function () {
             }
         );
     }
+    // function datePicker() {
+    //     $('#date_range').dateRangePicker({
+    //         setValue: function (s) {
+    //             if (s) {
+    //                 let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+    //                 $(this).html(s).data('value', normalize);
+    //             } else {
+    //                 $(this).html('Selecionar').data('value', '');
+    //             }
+    //         }
+    //     })
+    // }
 
     function getFilters(urlParams = true) {
         let current_url = window.location.href;
