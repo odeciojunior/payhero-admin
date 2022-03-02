@@ -807,7 +807,6 @@ class ReportsApiController extends Controller
     function getResumeCommissions(Request $request)
     {
         $request->validate([
-            'company_id' => 'required',
             'date_range' => 'required'
         ]);
 
@@ -822,7 +821,6 @@ class ReportsApiController extends Controller
     function getResumePendings(Request $request)
     {
         $request->validate([
-            'company_id' => 'required',
             'date_range' => 'required'
         ]);
 
@@ -837,7 +835,6 @@ class ReportsApiController extends Controller
     function getResumeCashbacks(Request $request)
     {
         $request->validate([
-            'company_id' => 'required',
             'date_range' => 'required'
         ]);
 
@@ -877,6 +874,22 @@ class ReportsApiController extends Controller
 
         return response()->json([
             'data' => $typePayments
+        ]);
+    }
+
+    function getResumeProducts(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $saleService = new ReportService();
+        $products = $saleService->getResumeProducts($data);
+
+        return response()->json([
+            'data' => $products
         ]);
     }
 

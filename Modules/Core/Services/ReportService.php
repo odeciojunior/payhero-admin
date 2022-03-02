@@ -1150,8 +1150,63 @@ class ReportService
     public function getResumeCommissions($filters)
     {
         try {
-            return '';
+            $status = [
+                Sale::STATUS_APPROVED,
+                Sale::STATUS_PENDING,
+                Sale::STATUS_CHARGEBACK,
+                Sale::STATUS_REFUNDED,
+                Sale::STATUS_PARTIAL_REFUNDED,
+                Sale::STATUS_IN_REVIEW,
+                Sale::STATUS_CANCELED_ANTIFRAUD,
+                Sale::STATUS_BILLET_REFUNDED,
+                Sale::STATUS_IN_DISPUTE
+            ];
+            $status = implode(',', $status);
 
+            $transactionStatus = implode(',', [
+                Transaction::STATUS_TRANSFERRED,
+                Transaction::STATUS_PAID
+            ]);
+
+            $statusDispute = Sale::STATUS_IN_DISPUTE;
+
+            $companieIds = [];
+            if (empty($filters["company"])) {
+                $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
+            } else {
+                $companieIds = [];
+
+                $companies = explode(',', $filters["company"]);
+                foreach($companies as $company) {
+                    array_push($companieIds, current(Hashids::decode($company)));
+                }
+            }
+            $companieIds = implode(',', $companieIds);
+
+            $filterProjects = '';
+            $projectIds = [];
+            if (!empty($filters["project"])) {
+                $projectIds = [];
+
+                $projects = explode(',', $filters["project"]);
+
+                foreach($projects as $project){
+                    array_push($projectIds, current(Hashids::decode($project)));
+                }
+
+                $filterProjects = 'sales.project_id IN ('.implode($projectIds).') AND';
+            }
+
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+            $query = 'SELECT SUM(if(transactions.status_enum in ('.$transactionStatus.') && sales.status <> '.$statusDispute.', transactions.value, 0)) / 100 as commission
+            FROM transactions INNER JOIN sales ON sales.id = transactions.sale_id
+            WHERE '.$filterProjects.' transactions.company_id IN ('.$companieIds.') AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
+            AND sales.status IN('.$status.') AND sales.deleted_at IS NULL AND transactions.deleted_at IS NULL AND transactions.type <> 8 AND transactions.invitation_id IS NULL';
+
+            $dbResults = DB::select($query);
+
+            return number_format($dbResults[0]->commission, 2, ',', '.');
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -1160,61 +1215,44 @@ class ReportService
     public function getResumePendings($filters)
     {
         try {
-            $relationsArray = [
-                'sale',
-                'sale.project',
-                'sale.customer',
-            ];
+            $status = Transaction::STATUS_PAID;
 
-            $transactionModel = new Transaction();
-
-            $transactions = $transactionModel->with($relationsArray)
-            ->where('user_id', auth()->user()->account_owner_id)
-            ->join('sales', 'sales.id', 'transactions.sale_id')
-            ->where(
-                'transactions.status_enum',
-                '=',
-                $transactionModel->present()->getStatusEnum('paid')
-            )
-            ->whereNull('invitation_id');
-
-            // Filtro Company
+            $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
             if (!empty($filters["company"])) {
-                $companyId = Hashids::decode($filters["company"]);
-                $transactions->where('company_id', $companyId);
+                $companieIds = [];
+
+                $companies = explode(',', $filters["company"]);
+                foreach($companies as $company) {
+                    array_push($companieIds, current(Hashids::decode($company)));
+                }
             }
 
-            $transactions->whereNull('withdrawal_id');
+            $filterProjects = '';
+            $projectIds = [];
+            if (!empty($filters["project"])) {
+                $projectIds = [];
 
-            // Filtros - INICIO
+                $projects = explode(',', $filters["project"]);
+
+                foreach($projects as $project){
+                    array_push($projectIds, current(Hashids::decode($project)));
+                }
+
+                $filterProjects = 'sales.project_id IN ('.implode($projectIds).') AND';
+            }
+
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            // Filtro de Data
-            $transactions->whereHas(
-                'sale',
-                function ($querySale) use ($dateRange) {
-                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-                }
-            )
-            ->selectRaw('transactions.*, sales.start_date')
-            ->orderByDesc('sales.start_date');
+            $query = 'SELECT SUM((sales.sub_total + sales.shipment_value) - (IFNULL(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as pending
+            FROM transactions
+            INNER JOIN sales ON sales.id = transactions.sale_id
+            WHERE transactions.status_enum = '.$status.' '.$filterProjects.'
+            AND transactions.company_id in ('.implode($companieIds).')
+            AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")';
 
-            // Projeto
-            if (!empty($filters["project"])) {
-                $projectId = Hashids::decode($filters["project"]);
-                $transactions->whereHas(
-                    'sale',
-                    function ($querySale) use ($projectId) {
-                        $querySale->where('sales.project_id', $projectId);
-                    }
-                );
-            }
+            $dbResults = DB::select($query);
 
-            $resume = $transactions->without(['sale'])
-            ->select(DB::raw("sum((sales.sub_total + sales.shipment_value) - (ifnull(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total"))
-            ->first();
-
-            return number_format($resume->total, 2, ',', '.');
+            return number_format($dbResults[0]->pending, 2, ',', '.');
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -1223,62 +1261,42 @@ class ReportService
     public function getResumeCashbacks($filters)
     {
         try {
-            $cashbackModel = new Cashback();
-            $companyModel = new Company();
-
-            if (empty($filters["company"])) {
-                $userCompanies = $companyModel
-                ->where('user_id', auth()->user()->account_owner_id)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-
-            } else {
-                $userCompanies = [];
-                $companies = explode(',', $filters["company"]);
-
-                foreach($companies as $company){
-                    array_push($userCompanies, current(Hashids::decode($company)));
-                }
-            }
-
-            $cashbacks = $cashbackModel
-            ->join('sales', 'sales.id', 'cashbacks.sale_id')
-            ->whereIn('company_id', [3469]);
-
+            $filterProjects = '';
+            $projectIds = [];
             if (!empty($filters["project"])) {
-                $projectIds =[];
+                $projectIds = [];
+
                 $projects = explode(',', $filters["project"]);
 
                 foreach($projects as $project){
                     array_push($projectIds, current(Hashids::decode($project)));
                 }
 
-                $cashbacks->whereHas(
-                    'sale',
-                    function ($querySale) use ($projectIds) {
-                        $querySale->whereIn('project_id', $projectIds);
-                    }
-                );
+                $filterProjects = 'sales.project_id IN ('.implode($projectIds).') AND';
             }
 
-            // periodo obrigatorio
+            $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
+            if (!empty($filters["company"])) {
+                $companieIds = [];
+
+                $companies = explode(',', $filters["company"]);
+                foreach($companies as $company) {
+                    array_push($companieIds, current(Hashids::decode($company)));
+                }
+            }
+
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $cashbacks
-            ->whereHas(
-                'sale',
-                function ($querySale) use ($dateRange) {
-                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-                }
-            )
-            ->selectRaw('cashbacks.*, sales.start_date')
-            ->orderByDesc('sales.start_date');
+            $query = 'SELECT SUM(cashbacks.value) / 100 as cashback
+            FROM cashbacks
+            INNER JOIN sales ON sales.id = cashbacks.sale_id
+            WHERE '.$filterProjects.'
+            cashbacks.company_id in ('.implode($companieIds).')
+            AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")';
 
-            $resume = $cashbacks->select(DB::raw("sum(cashbacks.value) / 100 as cashback"))->first();
+            $dbResults = DB::select($query);
 
-            return number_format($resume->cashback, 2, ',', '.');
-
+            return number_format($dbResults[0]->cashback, 2, ',', '.');
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -1298,7 +1316,10 @@ class ReportService
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $query = 'SELECT COUNT(*) as sales FROM sales WHERE owner_id = '.$userId.' AND status = '.$statusId.' AND (start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")' .$projectId;
+            $query = 'SELECT COUNT(*) as sales
+            FROM sales
+            WHERE owner_id = '.$userId.' AND status = '.$statusId.'
+            AND (start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")' .$projectId;
 
             $dbResults = DB::select($query);
 
@@ -1345,15 +1366,15 @@ class ReportService
 
     public function getResumeTypePaymentsSum($filters, $typePayment = null)
     {
-        $userCompanies = [];
+        $companieIds = [];
         if (empty($filters["company"])) {
-            $userCompanies = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
+            $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
         } else {
-            $userCompanies = [];
+            $companieIds = [];
 
             $companies = explode(',', $filters["company"]);
             foreach($companies as $company) {
-                array_push($userCompanies, current(Hashids::decode($company)));
+                array_push($companieIds, current(Hashids::decode($company)));
             }
         }
 
@@ -1368,7 +1389,7 @@ class ReportService
 
         $query = 'SELECT SUM((sales.sub_total + sales.shipment_value) - (IFNULL(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total
         FROM transactions INNER JOIN sales ON sales.id = transactions.sale_id
-        WHERE transactions.company_id in ('.implode(',', $userCompanies).') AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
+        WHERE transactions.company_id IN ('.implode(',', $companieIds).') AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
         AND sales.status = 1 AND sales.deleted_at IS NULL AND transactions.deleted_at IS NULL AND transactions.type <> 8 '.$typePaymentWhere.' AND transactions.invitation_id IS NULL';
 
         $dbResults = DB::select($query);
@@ -1376,10 +1397,30 @@ class ReportService
         return $dbResults[0]->total;
     }
 
-    public function getResumeProducts()
+    public function getResumeProducts($filters)
     {
         try {
+            $userId = auth()->user()->account_owner_id;
+            $statusId = Sale::STATUS_APPROVED;
 
+            $projectId = '';
+            if (!empty($filters["project"])) {
+                $projectId = 'AND project_id = ' . Hashids::decode($filters["project"]);
+            }
+
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+            $query = 'SELECT products.* FROM sales
+            INNER JOIN plans_sales ON sales.id = plans_sales.sale_id
+            INNER JOIN plans ON plans_sales.plan_id = plans.id
+            INNER JOIN products_plans_sales ON plans.id = products_plans_sales.plan_id
+            INNER JOIN products ON products.id = products_plans_sales.product_id
+            WHERE owner_id = '.$userId.' AND sales.status = '.$statusId.'
+            AND (start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")' .$projectId;
+            dd($query);
+            $dbResults = DB::select($query);
+
+           return $dbResults[0]->sales;
         } catch(Exception $e) {
 
         }
