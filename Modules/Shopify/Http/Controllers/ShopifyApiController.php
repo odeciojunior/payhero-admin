@@ -542,7 +542,7 @@ class ShopifyApiController extends Controller
 
             return response()->json(
                 [
-                    'message' => 'Os códigos de rastreio sendo importados...',
+                    'message' => 'Os códigos de rastreio estão sendo importados...',
                 ],
                 Response::HTTP_OK
             );

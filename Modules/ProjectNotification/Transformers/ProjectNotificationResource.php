@@ -51,7 +51,6 @@ class ProjectNotificationResource extends JsonResource
             'type'   	        => $arrayType[$this->type_enum],
             'event' 	        => $arrayEvent[$this->event_enum],
             'project_name'      => $this->project_name ?? '',
-            'project_contact'   => $this->project_contact ?? '',
             'project_image'     => $this->project_image ?? '',
         ];
     }

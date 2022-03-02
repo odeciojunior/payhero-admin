@@ -911,21 +911,16 @@ class SaleService
 
         $newTotalValueWithoutInterest = $newTotalvalue;
 
-        $userProject = UserProject::with('company')->where(
-            [
-                ['type_enum', (new UserProject())->present()->getTypeEnum('producer')],
-                ['project_id', $sale->project->id],
-            ]
-        )->first();
-
-        $user = $userProject->user;
-        $company = $userProject->company;
+        $project = $sale->project;
+        $project->loadMissing('checkoutConfig');
+        $checkoutConfig = $project->checkoutConfig;
+        $company = $checkoutConfig->company;
 
         $installmentFreeTaxValue = 0;
         $interestValue = 0;
 
         $installmentSelected = $sale->installments_amount;
-        $freeInstallments = $sale->project->installments_interest_free;
+        $freeInstallments = $checkoutConfig->interest_free_installments;
         $installmentValueTax = intval(($newTotalvalue / 100) * $company->installment_tax);
 
         if ($installmentSelected == 1) {
@@ -940,7 +935,7 @@ class SaleService
             }
         }
 
-        if ($sale->project->installments_interest_free > 1 && $sale->installments_amount <= $sale->project->installments_interest_free) {
+        if ($checkoutConfig->interest_free_installments > 1 && $sale->installments_amount <= $checkoutConfig->interest_free_installments) {
             $installmentFreeTaxValue = $totalValueWithTax - $newTotalvalue;
         } else {
             $interestValue = $totalValueWithTax - $newTotalvalue;
