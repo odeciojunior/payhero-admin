@@ -2,13 +2,14 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/shopify/css/index.css?v=' .  versionsFile()) }}">
-    <style>
-        .gray:hover {
-            color: #a1a1a1 !important;
-        }
-
-    </style>
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=' . versionsFile()) }}">
 @endpush
+<style>
+    .gray:hover {
+        color: #a1a1a1 !important;
+    }
+
+</style>
 
 @section('content')
 
