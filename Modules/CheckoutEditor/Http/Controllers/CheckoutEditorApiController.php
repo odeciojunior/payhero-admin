@@ -13,6 +13,7 @@ use Modules\CheckoutEditor\Transformers\CheckoutConfigResource;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
 use Modules\Core\Services\AmazonFileService;
+use Modules\Core\Services\CacheService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\SmsService;
 use Spatie\Activitylog\Models\Activity;
@@ -89,6 +90,8 @@ class CheckoutEditorApiController extends Controller
             }
 
             $config->update($data);
+
+            CacheService::forget(CacheService::CHECKOUT_PROJECT, $config->project_id);
 
             return new CheckoutConfigResource($config);
         } catch (\Exception $e) {
