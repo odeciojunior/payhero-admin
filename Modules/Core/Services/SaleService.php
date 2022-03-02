@@ -314,8 +314,7 @@ class SaleService
             ',',
             [
                 $transactionModel->present()->getStatusEnum('paid'),
-                $transactionModel->present()
-                    ->getStatusEnum('transfered'),
+                $transactionModel->present()->getStatusEnum('transfered'),
             ]
         );
         $statusDispute = (new Sale())->present()->getStatus('in_dispute');
@@ -332,7 +331,7 @@ class SaleService
             ->toArray();
 
         $resume['commission'] = number_format($resume['commission'], 2, ',', '.');
-        $resume['total'] = number_format($resume['total'], 2, ',', '.');
+        $resume['total'] = $resume['total'];
 
         return $resume;
     }
