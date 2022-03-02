@@ -285,11 +285,13 @@ $(document).ready( function () {
         if($(this).is(':checked')){
             $("#banner_type").fadeIn("slow", "swing");
             $('.logo-div').addClass('has-banner');
+            $('.logo-preview-container').addClass('has-banner');
             $('.menu-bar-mobile').hide('slow');
             $('.purchase-menu-mobile').fadeIn('slow');
         }else{
             $("#banner_type").fadeOut("slow", "swing");
             $('.logo-div').removeClass('has-banner');
+            $('.logo-preview-container').removeClass('has-banner');
             $('.menu-bar-mobile').show('slow');
             $('.purchase-menu-mobile').fadeOut('slow');
         }

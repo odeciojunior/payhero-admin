@@ -197,12 +197,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 99px;
+    width: 41px;
+    height: 41px;
     overflow: hidden;
+}
+
+.logo-preview-container.has-banner {
+    border-radius: 99px;
     background-color: #fff;
 }
+
 
 .preview-logo.desktop {
     max-width: 41px;
