@@ -260,7 +260,7 @@ $(function () {
 
                     if (response.data[0].document_status == 'approved') {
                         if (response.data[0].status_affiliate == 2) {
-                            $("#data-table-link").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Sua afiliação ao projeto foi desativada</td></tr>");
+                            $("#data-table-link").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Sua afiliação a loja foi desativada</td></tr>");
                             $('#table-links').addClass('table-striped');
                         } else {
                             $.each(response.data, function (index, value) {

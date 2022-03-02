@@ -408,7 +408,7 @@ $(function () {
 
                 id_layout = $(this).attr('layout');
 
-                $('#modal_excluir_titulo').html('Remover layout do projeto ?');
+                $('#modal_excluir_titulo').html('Remover layout da loja ?');
 
                 $('#bt_excluir').unbind('click');
 

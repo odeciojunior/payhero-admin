@@ -83,6 +83,5 @@
     <br>
     <div class="mt-2 text-center" style="color: #757575; font-size: 10px;">
          Esse é um e-mail automático, por favor não responda. Para entrar em contato com o suporte <a href="">clique aqui</a>
-         {{-- <strong style="color: black;" class="p_project_contact"> contao@projeto.com </strong> --}}
     </div>
 </div>

@@ -4,7 +4,7 @@
         <div class="row mt-20">
             <div class="col-12">
                 <div class='form-group'>
-                    <label for="company">Selecione seu projeto</label>
+                    <label for="company">Selecione sua loja</label>
                     <select class="sirius-select" id="select_projects" name="project_id">
                     </select>
                 </div>

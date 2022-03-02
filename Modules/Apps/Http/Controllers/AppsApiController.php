@@ -5,6 +5,7 @@ namespace Modules\Apps\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\ActivecampaignIntegration;
+use Modules\Core\Entities\AstronMembersIntegration;
 use Modules\Core\Entities\ConvertaxIntegration;
 use Modules\Core\Entities\DigitalmanagerIntegration;
 use Modules\Core\Entities\HotzappIntegration;
@@ -35,6 +36,7 @@ class AppsApiController extends Controller
             'unicodropIntegrations' => UnicodropIntegration::where('user_id', $accountOwnerId)->count(),
             'smartfunnelIntegrations' => SmartfunnelIntegration::where('user_id', $accountOwnerId)->count(),
             'woocommerceIntegrations' => WooCommerceIntegration::where('user_id', $accountOwnerId)->count(),
+            'astronmembersIntegrations' => AstronMembersIntegration::where('user_id', $accountOwnerId)->count(),
             'hotbilletIntegrations' => HotbilletIntegration::where('user_id', $accountOwnerId)->count(),
             'melhorenvioIntegrations' => MelhorenvioIntegration::where('user_id', $accountOwnerId)->count(),
         ]);

@@ -245,7 +245,7 @@ $(document).ready(function () {
         setTimeout(registerComplete, 10000);
     });
 
-    ///  radio button escolhe tipo de projeto
+    ///  radio button escolhe tipo de loja
     $("#btnBrasil").click(function () {
         $("#eua-form").hide();
         $("#brasil-form").show();

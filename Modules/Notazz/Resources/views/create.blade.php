@@ -5,13 +5,13 @@
         <div class="row mt-20">
             <div class="col-12">
                 <div class='form-group'>
-                    <label for="select_projects_create">Selecione seu projeto</label>
+                    <label for="select_projects_create">Selecione sua loja</label>
                     <select class="sirius-select" id="select_projects_create" name="select_projects_create"> </select>
                 </div>
             </div>
             <div class="col-12">
                 <div class='form-group'>
-                    <label for="select_invoice_type_create">Tipo de nota fiscal emitida para o projeto</label>
+                    <label for="select_invoice_type_create">Tipo de nota fiscal emitida para a loja</label>
                     <select class="sirius-select" id="select_invoice_type_create" name="select_invoice_type_create">
                         <option value='1'>Nota de Serviço (nfse)</option>
                         {{--                        <option value='2'>Nota de Produto (nfe)</option>--}}

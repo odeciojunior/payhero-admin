@@ -56,5 +56,6 @@
     "Melhorenvio": true,
     "HotBillet": true,
     "AstronMembers": true,
-    "CheckoutApiPostback": true
+    "CheckoutApiPostback": true,
+    "CheckoutEditor": true
 }

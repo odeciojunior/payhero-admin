@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
-                            São <strong>6 níveis</strong> que sobem de acordo com o faturamento total de seus projetos.
+                            São <strong>6 níveis</strong> que sobem de acordo com o faturamento total de suas lojas.
                         </span>
                 </div>
 

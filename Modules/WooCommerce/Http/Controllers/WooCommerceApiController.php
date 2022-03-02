@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
@@ -136,7 +137,6 @@ class WooCommerceApiController extends Controller
 
             $woocommerceName = $urlStore;
             $company = Company::find(current(Hashids::decode($dataRequest['company'])));
-            $has_pix_key = ($company && $company->has_pix_key == true) ? 1 : 0;
 
             try {
                 $projectCreated = $projectModel->create(
@@ -144,17 +144,11 @@ class WooCommerceApiController extends Controller
                         'name' => $woocommerceName,
                         'status' => $projectModel->present()->getStatus('active'),
                         'visibility' => 'private',
-                        'pix' => $has_pix_key,
                         'percentage_affiliates' => '0',
                         'description' => $woocommerceName,
-                        'invoice_description' => $woocommerceName,
                         'url_page' => $urlStore,
                         'automatic_affiliation' => false,
                         'woocommerce_id' => '1',
-                        'boleto' => '1',
-                        'installments_amount' => '12',
-                        'installments_interest_free' => '1',
-                        'checkout_type' => 2, // checkout de 1 passo
                         'notazz_configs' => json_encode(
                             [
                                 'cost_currency_type' => 1,
@@ -172,6 +166,17 @@ class WooCommerceApiController extends Controller
                     ['message' => 'Problema ao criar integração, tente novamente mais tarde!'],
                     400
                 );
+            }
+
+            $checkoutConfig = CheckoutConfig::create([
+                'company_id' => $company->id,
+                'project_id' => $projectCreated->id,
+                'pix' => $company->has_pix_key,
+            ]);
+
+            if (empty($checkoutConfig)) {
+                $projectCreated->delete();
+                return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
             }
 
             $projectNotificationService->createProjectNotificationDefault($projectCreated->id);
@@ -251,9 +256,9 @@ class WooCommerceApiController extends Controller
             }
 
             try {
-                
+
                 $woocommerceService->fetchProducts($woocommerceIntegrationCreated->project_id, $woocommerceIntegrationCreated->user_id);
-                
+
                 $woocommerceIntegrationCreated->update(
                     [
                         'status' => 2,
@@ -298,32 +303,32 @@ class WooCommerceApiController extends Controller
         $doWebhooks = $request->opt_webhooks;
 
         $projectId = current(Hashids::decode($request->projectId));
-        
+
         $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
 
         $service = new WooCommerceService($integration->url_store, $integration->token_user, $integration->token_pass);
-        
+
         return $service->syncProducts($projectId, $integration, $doProducts, $doTrackingCodes, $doWebhooks);
-        
+
     }
 
     public function keysUpdate(Request $request)
     {
         try{
             $projectId = current(Hashids::decode($request->projectId));
-            
+
             $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
-    
+
             $integration->token_user = $request->consumer_key;
             $integration->token_pass = $request->consumer_secret;
             $integration->save();
-            
+
             return '{"status":true}';
 
         }catch(Exception $e){
-            
+
             report($e);
-            
+
             return '{"status":false}';
         }
 
@@ -334,17 +339,17 @@ class WooCommerceApiController extends Controller
     {
         try{
             $projectId = current(Hashids::decode($request->projectId));
-            
+
             $integration = WooCommerceIntegration::where('project_id', $projectId)->first();
-    
+
             $consumer_k = substr($integration->token_user, 0, 10);
             $consumer_s = substr($integration->token_pass, 0, 10);
-            
-            
+
+
             return '{"status":"true", "consumer_s":"'.$consumer_s.'", "consumer_k":"'.$consumer_k.'"}';
 
         }catch(Exception $e){
-            
+
             return '{"status":"false"}';
         }
     }

@@ -88,8 +88,7 @@ class BilletRefundedSendEmailListener implements ShouldQueue
 
             $data = [
                 'first_name' => $customer->present()->getFirstName(),
-                "store_logo" => $project->logo,
-                "project_contact" => $project->contact,
+                "store_logo" => $project->checkoutConfig->checkout_logo,
                 "project_name" => $project->name,
                 'sale_code' => $saleCode,
                 "products" => $products,

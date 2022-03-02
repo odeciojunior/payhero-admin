@@ -238,7 +238,7 @@ class AffiliatesApiController extends Controller
             $userId           = auth()->user()->account_owner_id;
             $userProjects     = $userProjectModel->where('user_id', $userId)->pluck('project_id');
 
-            $affiliates = $affiliateModel->with('user', 'company', 'project');
+            $affiliates = $affiliateModel->with('user', 'company', 'project.checkoutConfig');
 
             if ($request->input('project') != "null" && $request->input('project') != "0") {
                 $affiliates->where('project_id', Hashids::decode($request->input('project')));
@@ -250,7 +250,7 @@ class AffiliatesApiController extends Controller
                     return $q->where('name', 'like', '%'.$name.'%');
                 });
             }
-            
+
             if ($request->input('project') == "null" || $request->input('project') == "0") {
                 $affiliates->whereIn('project_id', $userProjects);
             }
@@ -281,7 +281,7 @@ class AffiliatesApiController extends Controller
                     return $q->where('name', 'like', '%'.$name.'%');
                 });
             }
-            
+
             if ($request->input('project') == "null" || $request->input('project') == "0") {
                 $affiliatesRequest->whereIn('project_id', $userProjects);
             }
