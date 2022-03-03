@@ -647,6 +647,7 @@ $(() => {
                 $("#checkout_editor .preview-banner").show();
                 $("#checkout_editor #banner_type").show();
                 $('.logo-div').addClass('has-banner');
+                $('.logo-preview-container').addClass('has-banner');
                 $('.menu-bar-mobile').hide('slow');
                 $('.purchase-menu-mobile').fadeIn('slow');
             } else {
@@ -656,6 +657,7 @@ $(() => {
                 $("#checkout_editor .preview-banner").hide();
                 $("#checkout_editor #banner_type").hide();
                 $('.logo-div').removeClass('has-banner');
+                $('.logo-preview-container').removeClass('has-banner');
                 $('.menu-bar-mobile').show('slow');
                 $('.purchase-menu-mobile').fadeOut('slow');
             }

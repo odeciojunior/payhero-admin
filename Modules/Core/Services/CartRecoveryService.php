@@ -123,7 +123,7 @@ class CartRecoveryService
                                                       'templateId'  => 'd-92937608e68b47b79dbd2641fd20fd0d',
                                                       'bodyEmail'   => $bodyEmail,
                                                       'checkout'    => $abandonedCart,
-
+                                                      'sac_link'    => "https://sac." . $domain->name,
                                                   ];
 
                                                   event(new SendEmailEvent($dataEmail));
@@ -248,6 +248,7 @@ class CartRecoveryService
                                                   'templateId'  => 'd-613da0ac5d7e478ba436e4d51e2ee42c',
                                                   'bodyEmail'   => $bodyEmail,
                                                   'checkout'    => $abandonedCart,
+                                                  'sac_link'    => "https://sac." . $domain->name,
                                               ];
 
                                               event(new SendEmailEvent($dataEmail));

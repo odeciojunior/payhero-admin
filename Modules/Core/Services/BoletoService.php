@@ -639,31 +639,42 @@ class BoletoService
 
     public function changeBoletoPendingToCanceled()
     {
-        try {
-            $saleModel = new Sale();
-            $transactionModel = new Transaction();
+        $compensationDays = 2;
+        $compensationDate = Carbon::now()->subDay($compensationDays)->toDateString();
 
-            $boletos = $saleModel->with(['customer'])
-                ->where(
+        try {
+            $boletos = Sale::with(['customer'])
+            ->where(
+                [
+                    ['payment_method', '=', '2'],
+                    ['status', '=', '5'],                    
+                    ['gateway_id','=',21],
                     [
-                        ['payment_method', '=', '2'],
-                        ['status', '=', '2'],
-                        [
-                            DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"),
-                            '<=',
-                            Carbon::now()
-                                ->subDay('2')
-                                ->toDateString(),
-                        ],
-                    ]
-                );
-            foreach ($boletos->cursor() as $boleto) {
+                        DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"),
+                        '<',
+                        $compensationDate,
+                    ],
+                ]
+            );
+
+            foreach ($boletos->cursor() as $boleto){
+
+                //verificando se prazo de compensação foi final de semana
+                $bankSlipCompensationDate = Carbon::parse($boleto->boleto_due_date)->addDay($compensationDays);                    
+                if ($bankSlipCompensationDate->isWeekend()){
+                    $bankSlipCompensationDate = $bankSlipCompensationDate->nextWeekday();
+                }
+                $dueDate = $bankSlipCompensationDate->toDateString();
+                
+                if($dueDate >= $compensationDate) continue;
+                
                 $boleto->update(
                     [
                         'status' => 5,
                         'gateway_status' => 'canceled',
                     ]
                 );
+
                 SaleLog::create(
                     [
                         'status' => 'canceled',
@@ -676,7 +687,7 @@ class BoletoService
                     $transaction->update(
                         [
                             'status' => 'canceled',
-                            'status_enum' => $transactionModel->present()->getStatusEnum('canceled'),
+                            'status_enum' => Transaction::STATUS_CANCELED,
                         ]
                     );
                 }
@@ -685,6 +696,7 @@ class BoletoService
                     event(new BilletExpiredEvent($boleto));
                 }
             }
+            
         } catch (Exception $e) {
             report($e);
         }

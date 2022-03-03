@@ -174,7 +174,10 @@ class TrackingService
             $trackingCode = strtoupper($trackingCode);
 
             $productPlanSale = ProductPlanSale::select([
-                DB::raw('products_plans_sales.*'),
+                'products_plans_sales.id',
+                'products_plans_sales.sale_id',
+                'products_plans_sales.product_id',
+                'products_plans_sales.amount',
                 's.delivery_id',
                 's.customer_id',
                 's.upsell_id',
@@ -192,7 +195,7 @@ class TrackingService
                 'product_id' => $productPlanSale->product_id,
                 'product_plan_sale_id' => $productPlanSale->id,
                 'amount' => $productPlanSale->amount,
-                'delivery_id' => $productPlanSale->sale->delivery->id,
+                'delivery_id' => $productPlanSale->delivery_id,
             ];
 
             $newAttributes = [
@@ -379,11 +382,11 @@ class TrackingService
         }
 
         $productPlanSales->where(function($q) {
-            
+
             $q->whereHas('product', function ($query) {
                 $query->where('type_enum', Product::TYPE_PHYSICAL);
             })->orWhereNull('products_plans_sales.product_id');
-        
+
         });
 
         return $productPlanSales;

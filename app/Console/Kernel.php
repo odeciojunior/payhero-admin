@@ -81,6 +81,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('getnet:release-unblocked-balance')->dailyAt('02:30');
 
+        $schedule->command('getnet:block-sale-for-contestation')->dailyAt('03:45');
+
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
         // update pending domains automaticaly
@@ -141,7 +143,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('available-balance:update')->dailyAt('06:15');
 
-        $schedule->command('redis:update-sale-tracking')->hourly();
+        // $schedule->command('redis:update-sale-tracking')->hourly();
 
         $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
 
