@@ -17,6 +17,26 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
+        /*
+            Syncing the schedule
+            php artisan schedule-monitor:sync
+
+            List the schedule
+            php artisan schedule-monitor:list
+
+            Naming tasks
+            ->monitorName('a-custom-name');
+
+            Setting a grace time
+            ->graceTimeInMinutes(10);
+
+            Ignoring scheduled tasks
+            ->doNotMonitor();
+
+            Storing output in the database
+            ->storeOutputInDb();
+        */
+
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
         setlocale(LC_ALL, 'pt_BR');
@@ -60,6 +80,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
 
         $schedule->command('getnet:release-unblocked-balance')->dailyAt('02:30');
+
+        $schedule->command('getnet:block-sale-for-contestation')->dailyAt('03:45');
 
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
