@@ -39,7 +39,7 @@
                     <div id="" class="card shadow p-20">
                         <div class="row align-items-baseline">
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                <label for="projeto">Loja</label>
+                                <label for="projeto">Lojas</label>
                                 <select name='select_project' id="projeto" class="form-control select-pad">
                                     <option value="">Todas lojas</option>
                                 </select>

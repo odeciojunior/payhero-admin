@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="col-sm-6 col-md-3 col-xl-3 col-12 mb-15 mb-sm-0">
-                            <label for="project">Loja</label>
+                            <label for="project">Lojas</label>
                             <select name='select_project' id="project" class="form-control select-pad applySelect2">
                                 <option value="all">Todas lojas</option>
                             </select>

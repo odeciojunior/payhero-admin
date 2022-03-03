@@ -73,7 +73,7 @@
                         <div class="row">
 
                             <div class="col-sm-6 col-md-3">
-                                <label for="projeto">Loja</label>
+                                <label for="projeto">Lojas</label>
                                 <select name='select_project' id="projeto" class="sirius-select">
                                     <option value="">Todas lojas</option>
                                 </select>
