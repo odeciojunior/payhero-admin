@@ -34,7 +34,7 @@ class CheckAutomaticWithdrawals extends Command
 
     private $defaultGateways = [
         AsaasService::class,
-        GetnetService::class,
+        //GetnetService::class,
         GerencianetService::class,
         //Safe2PayService::class
         //CieloService::class,
