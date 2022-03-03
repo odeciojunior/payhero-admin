@@ -445,18 +445,18 @@ $(document).ready(function () {
                             value.date +
                             "</td>";
                         // data += '<td class="text-center" ><span class="badge badge-' + badgeAffiliateRequest[value.status] + '">' + value.status_translated + '</span></td>';
-                        data += "<td class='text-center'>";
+                        data += "<td class='text-center text-nowrap'>";
                         if (
                             value.status != 3 &&
                             verifyAccountFrozen() == false
                         ) {
                             data +=
-                                "<a title='Aprovar' class='text-white ml-2 badge badge-success pointer evaluate-affiliate' affiliate='" +
+                                "<a title='Aprovar' class='text-white ml-2 mb-1 mt-1 badge badge-success pointer evaluate-affiliate' affiliate='" +
                                 value.id +
                                 "' status='3'>Aprovar</a>";
                             if (value.status != 4) {
                                 data +=
-                                    "<a title='Recusar' class='text-white ml-2 badge badge-danger pointer evaluate-affiliate' affiliate='" +
+                                    "<a title='Recusar' class='text-white ml-2 mb-1 mt-1 badge badge-danger pointer evaluate-affiliate' affiliate='" +
                                     value.id +
                                     "' status='4'>Recusar</a>";
                             }
