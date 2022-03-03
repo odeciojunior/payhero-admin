@@ -153,7 +153,7 @@ class ProjectsApiController extends Controller
             $company = Company::find(hashids_decode($requestValidated['company']));
 
             $checkoutConfig = CheckoutConfig::create([
-                'company_id' => $requestValidated['company'],
+                'company_id' => $company->id,
                 'project_id' => $project->id,
                 'pix_enabled' => $company->has_pix_key
             ]);

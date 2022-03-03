@@ -21,7 +21,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property boolean $status
  * @property string $name
  * @property string $description
- * @property string $invoice_description
  * @property string $percentage_affiliates
  * @property string $terms_affiliates
  * @property string $status_url_affiliates
@@ -81,7 +80,6 @@ class Project extends Model
     public const STATUS_ACTIVE = 1;
     public const STATUS_DESABLE = 2;
 
-
     protected static $logFillable = true;
 
     protected static $logUnguarded = true;
@@ -103,7 +101,6 @@ class Project extends Model
         'status',
         'name',
         'description',
-        'invoice_description',
         'percentage_affiliates',
         'terms_affiliates',
         'status_url_affiliates',
