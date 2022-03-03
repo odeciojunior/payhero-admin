@@ -25,18 +25,18 @@ class ContestationService
     public function getTotalValueContestations($filters)
     {
         $qrConstestations = $this->getQuery($filters);
-        $total = $qrConstestations->sum('sales.sub_total');//transactions.value -- sales.sub_total
+        $total = $qrConstestations->sum('transactions.value')/100;// sales.sub_total
         $shipmentValue = $qrConstestations->sum('sales.shipment_value');
         $shopifyDiscount = $qrConstestations->sum('sales.shopify_discount');
         $automaticDiscount = $qrConstestations->sum('sales.automatic_discount');
 
-        $total += $shipmentValue;
+        // $total += $shipmentValue;
 
-        if ($shopifyDiscount > 0) {
-            $total -= $shopifyDiscount;
-        }
+        // if ($shopifyDiscount > 0) {
+        //     $total -= $shopifyDiscount;
+        // }
 
-        $total -= $automaticDiscount/100;
+        // $total -= $automaticDiscount/100;
 
         return trim(str_replace("R$", "", FoxUtils::formatMoney($total)));// transactions.value/100
     }

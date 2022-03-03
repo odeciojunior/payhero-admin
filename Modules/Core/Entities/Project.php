@@ -21,7 +21,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property boolean $status
  * @property string $name
  * @property string $description
- * @property string $invoice_description
  * @property string $percentage_affiliates
  * @property string $terms_affiliates
  * @property string $status_url_affiliates
@@ -32,7 +31,6 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $woocommerce_id
  * @property string $cookie_duration
  * @property boolean $url_cookies_checkout
- * @property string $boleto_due_days
  * @property string $boleto_redirect
  * @property string $card_redirect
  * @property string $pix_redirect
@@ -81,7 +79,6 @@ class Project extends Model
     public const STATUS_ACTIVE = 1;
     public const STATUS_DESABLE = 2;
 
-
     protected static $logFillable = true;
 
     protected static $logUnguarded = true;
@@ -103,7 +100,6 @@ class Project extends Model
         'status',
         'name',
         'description',
-        'invoice_description',
         'percentage_affiliates',
         'terms_affiliates',
         'status_url_affiliates',
@@ -114,7 +110,6 @@ class Project extends Model
         'woocommerce_id',
         'cookie_duration',
         'url_cookies_checkout',
-        'boleto_due_days',
         'boleto_redirect',
         'card_redirect',
         'pix_redirect',
