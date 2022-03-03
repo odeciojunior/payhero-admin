@@ -129,7 +129,7 @@
                                                             <div class="skeleton skeleton-text"></div>
                                                         </div>
                                                     </div>
-                                                    <div class="block">
+                                                    <div class="content-info">
                                                         <header class="container">
                                                             <h6 class="font-size-16 gray-700 grey"> Comissão </h6>
                                                             <div class="d-flex value-price">
@@ -140,7 +140,7 @@
                                                                 </em>
                                                             </div>
                                                         </header>
-                                                        <div class="new-graph"></div>
+                                                        <div class="new-graph graph"></div>
                                                         
                                                     </div>
 												</div>
@@ -160,26 +160,38 @@
                                                             <div class="skeleton skeleton-text"></div>
                                                         </div>
                                                     </div>
-                                                    <div class="block">
+                                                    <div class="content-info">
                                                         <header class="container">
                                                             <h6 class="font-size-16 gray-700 grey"> Pendentes </h6>
                                                             <div class="d-flex value-price">
                                                                 <h4 id='pending' class="font-size-24 bold grey">0</h4>
                                                             </div>
                                                         </header>
-                                                        <div class="new-graph-pending"></div>
+                                                        <div class="new-graph-pending graph"></div>
                                                     </div>
 												</div>
 											</div>
                                             <div class="card">
-												<div class="card-body">
+												<div class="card-body data-content">
+                                                    <div class="ske-load">
+                                                        <div class="px-20 py-0">
+                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                                        </div>
+                                                        <div class="px-20 py-0">
+                                                            <div class="row align-items-center mx-0 py-10">
+                                                                <div class="skeleton skeleton-circle"></div>
+                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                            </div>
+                                                            <div class="skeleton skeleton-text"></div>
+                                                        </div>
+                                                    </div>
                                                     <header class="container">
                                                         <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
                                                         <div class="d-flex value-price">
                                                             <h4 id='cashback' class="font-size-24 bold grey">0</h4>
                                                         </div>
                                                     </header>
-													<div class="new-graph-cashback"></div>
+													<div class="new-graph-cashback graph"></div>
 												</div>
 											</div>
 										</div>
@@ -208,23 +220,47 @@
                                     <div class='container col-sm-12 mt-20 d-lg-block'>
 										<div class="row cards-reports">
 											<div class="card">
-												<div class="card-body">
+												<div class="card-body data-content">
+                                                    <div class="ske-load">
+                                                        <div class="px-20 py-0">
+                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                                        </div>
+                                                        <div class="px-20 py-0">
+                                                            <div class="row align-items-center mx-0 py-10">
+                                                                <div class="skeleton skeleton-circle"></div>
+                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                            </div>
+                                                            <div class="skeleton skeleton-text"></div>
+                                                        </div>
+                                                    </div>
                                                     <header class="container">
                                                         <h6 class="font-size-16 gray-700 grey"> Vendas realizadas </h6>
                                                         <div class="d-flex value-price">
                                                             <h4 id='sales' class=" font-size-24 bold">0</h4>
                                                         </div>
                                                     </header>
-                                                    <div class="new-graph-sell"></div>
+                                                    <div class="new-graph-sell graph"></div>
 												</div>
 											</div>
 											<div class="card ">
-												<div class="card-body">
+												<div class="card-body data-content">
+                                                    <div class="ske-load">
+                                                        <div class="px-20 py-0">
+                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                                        </div>
+                                                        <div class="px-20 py-0">
+                                                            <div class="row align-items-center mx-0 py-10">
+                                                                <div class="skeleton skeleton-circle"></div>
+                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                            </div>
+                                                            <div class="skeleton skeleton-text"></div>
+                                                        </div>
+                                                    </div>
                                                     <header class="container">
 													    <h6 class="font-size-16 gray-700 grey"> Meios de pagamento </h6>
                                                     </header>
                                                     <div id="payment-type-items" class="custom-table scrollbar pb-0 pt-0">
-                                                        <div class="row container-payment">
+                                                        <div class="row container-payment" id="type-payment">
 															<div class="container">
 																<div class="data-holder b-bottom">
 																	<div class="box-payment-option">

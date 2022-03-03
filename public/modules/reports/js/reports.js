@@ -1,9 +1,5 @@
 $(function () {
     loadingOnScreen();
-    newGraph();
-    newGraphPending();
-    newGraphCashback();
-    newGraphSell();
     newGraphPie();
     newFinanceGraph();
     distributionGraph();
@@ -25,7 +21,18 @@ $(function () {
             success: function success(response) {
                 if(response.data){
                     let value = response.data.replace("R$", "");
-                    $("#cashback").html("<span class='currency'>R$</span>" + value);
+                    $("#cashback").html("<span class='currency'>R$ </span>" + value).addClass('visible');
+
+                    if(response.data !== '0,00') {
+                        $('.new-graph-cashback').html('<div class=graph-cashback></div>');
+                        newGraphCashback();
+                        
+                    } else {
+                        $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
+                    }                    
+                } else {
+                    $('.new-graph-cashback').next('.no-graph').remove();
+                    $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
                 }
             }
         });
@@ -46,28 +53,17 @@ $(function () {
             success: function success(response) {
                 if(response.data){
                     let value = response.data.replace("R$", " ");
-                    $("#pending").html("<span class='currency'>R$ </span>" + value);
-                    $('.new-graph-pending').parent('.block').removeClass('visible');
+                    $("#pending").html("<span class='currency'>R$ </span>" + value).addClass('visible');
                     
                     if(response.data !== '0,00') {
-                        $('.new-graph-pending').parent('.block').addClass('visible');
-                        $('.new-graph-pending').next('.off').remove();
-                        $('.new-graph-pending').addClass('visible')
-                        $('#pending').addClass('visible');
-                        $('.ske-load').hide();
-                        
+                        $('.new-graph-pending').html('<div class=graph-pending></div>');
+                        newGraphPending();
                     } else {
-                        $('.new-graph-pending').parent('.block').addClass('visible');
-                        $('#pending').removeClass('visible');
-                        $('.new-graph-pending').removeClass('visible');
-                        $('.new-graph-pending').after('<p class=off>Não há dados suficientes</p>');
-                        $('.ske-load').hide();
+                        $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
                     }
-                }else {
-                    $('.new-graph-pending').next('.off').remove();
-                    $('.new-graph-pending').parent('.block').addClass('visible');
-                    $('.new-graph-pending').after('<p class=off>Não há dados suficientes</p>');
-                    $('.ske-load').hide();
+                } else {
+                    $('.new-graph-pending').next('.no-graph').remove();
+                    $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
                 }
             }
         });
@@ -88,30 +84,18 @@ $(function () {
             success: function success(response) {
                 if(response.data){
                     let value = response.data.replace("R$", "");
-                    $("#comission").html("<span class='currency'>R$</span>" + value);
-                    $('.new-graph').parent('.block').removeClass('visible');
+                    //$("#com").addClass('visible');
+                    $("#comission").html("<span class='currency'>R$ </span>" + value).addClass('visible');
                     
                     if(response.data !== '0,00') {
-                        $('.new-graph').parent('.block').addClass('visible');
-                        $('.new-graph').next('.off').remove();
-                        $('.new-graph').addClass('visible');
-                        $('#comission').addClass('visible');
-                        $('.value-price em').addClass('visible');
-                        $('.new-graph').addClass('visible');
-                        $('.ske-load').hide();
-                        
+                        $('.new-graph').html('<div class=graph-comission></div>');
+                        newGraph();
                     } else {
-                        $('.new-graph').parent('.block').addClass('visible');
-                        $('#comission').removeClass('visible');
-                        $('.new-graph').removeClass('visible');
-                        $('.new-graph').after('<p class=off>Não há dados suficientes</p>');
-                        $('.ske-load').hide();
+                        $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
                     }
                 } else {
-                    $('.new-graph').next('.off').remove();
-                    $('.new-graph').parent('.block').addClass('visible');
-                    $('.new-graph').after('<p class=off>Não há dados suficientes</p>');
-                    $('.ske-load').hide();
+                    $('.new-graph').next('.no-graph').remove();
+                    $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
                 }
                 
             }
@@ -131,11 +115,16 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                if(response){
+                $("#sales").addClass('visible');
+                if(response.data != '0'){
                     $("#sales").html(response.data);
+                    $('.new-graph-sell').html('<div class=graph-sell></div>');
+                    newGraphSell();
+                    
                 } else {
-                    $("#sales").html('sem vendas');
-                    $('.new-graph-sell').hide();
+                    $("#sales").html('0');
+                    $(".new-graph-sell").next('.no-graph').remove();
+                    $('.new-graph-sell').after('<div class=no-graph>Não há dados suficientes</div>');
                 }
             }
         });
@@ -190,6 +179,7 @@ $(function () {
                     $('#credit-card-value, #boleto-value, #pix-value').html('R$ 0,00');
                     $('#payment-type-items .bar').css('width', '100%');
                 }
+                $('#type-payment').addClass('visible');
             }
         });
     }
@@ -256,6 +246,21 @@ $(function () {
         updateSalesByOrigin();
     });
 
+    function resume() {
+        const promises = [
+            getCommission(),
+            getCashback(),
+            getPending(),
+            getSales(),
+            getTypePayments()
+        ];
+
+        Promise.all(promises).then(resp => {
+            console.log(resp);
+            $('.ske-load').hide();
+        }).catch(error => console.log(error));
+    }
+
     var current_currency = "";
 
     function updateReports() {
@@ -266,13 +271,16 @@ $(function () {
         $('#payment-type-items .bar').removeClass('pink');
         $('#payment-type-items .bar').removeClass('purple');
 
-        $(".bar,#sales,#cashback,#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-credit-card, #percent-values-boleto,#credit-card-value,#percent-values-pix,#pix-value, #boleto-value, #percent-boleto-convert,#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
+        $("#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-boleto-convert,#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
         ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
         loadOnTable("#origins-table-itens", ".table-vendas-itens");
 
         if($('.ske-load').is(':hidden')) {
             $('.ske-load').show();
-            $('.block').removeClass('visible');
+            $('.no-graph').remove();
+            $('.graph *').remove();
+            $('.value-price *').removeClass('visible');
+            $("#type-payment").removeClass('visible');
         }
 
         $.ajax({
@@ -389,11 +397,7 @@ $(function () {
                 }
                 updateSalesByOrigin();
 
-                getCommission();
-                getCashback();
-                getPending();
-                getSales();
-                getTypePayments();
+                resume();
                 
             },
         });
@@ -712,7 +716,7 @@ $(function () {
 
     // new graphs
     function newGraph() {
-        new Chartist.Line('.new-graph', {
+        new Chartist.Line('.graph-comission', {
             labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
             series: [
               [12, 9, 7, 8, 5],
@@ -734,7 +738,7 @@ $(function () {
           });
     }
     function newGraphSell() {
-        new Chartist.Line('.new-graph-sell', {
+        new Chartist.Line('.graph-sell', {
             labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
             series: [
               [12, 9, 7, 8, 5],
@@ -757,7 +761,7 @@ $(function () {
     }
 
     function newGraphCashback() {
-        new Chartist.Line('.new-graph-cashback', {
+        new Chartist.Line('.graph-cashback', {
             labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
             series: [[12, 9, 7, 8, 5],]
           }, {
@@ -777,7 +781,7 @@ $(function () {
           });
     }
     function newGraphPending() {
-        new Chartist.Line('.new-graph-pending', {
+        new Chartist.Line('.graph-pending', {
             labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
             series: [[12, 9, 7, 8, 5],]
           }, {
