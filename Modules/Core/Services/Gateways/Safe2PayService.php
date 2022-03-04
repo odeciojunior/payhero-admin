@@ -72,9 +72,8 @@ class Safe2PayService implements Statement
         return Transaction::where('company_id', $this->company->id)
                             ->whereIn('gateway_id', $this->gatewayIds)
                             ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-                            ->whereHas('blockReasonSale',function ($query) {
-                                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
+                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
                             ->sum('value');
     }
 
@@ -83,9 +82,8 @@ class Safe2PayService implements Statement
         return Transaction::where('company_id', $this->company->id)
                             ->whereIn('gateway_id', $this->gatewayIds)
                             ->where('status_enum', Transaction::STATUS_PAID)
-                            ->whereHas('blockReasonSale',function ($query) {
-                                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
+                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
                             ->sum('value');
     }
 
@@ -259,12 +257,12 @@ class Safe2PayService implements Statement
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
                                         ->where('company_id', $this->company->id)
                                         ->orderBy('id', 'desc')->first();
-        
+
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
         $availableBalance = $this->getAvailableBalanceWithoutBlocking() - $blockedBalance;
         $blockedBalancePending = $this->getBlockedBalancePending();
-        
+
         $totalBlockedBalance = $blockedBalance + $blockedBalancePending;
         $totalBalance = $availableBalance + $pendingBalance + $totalBlockedBalance;
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
@@ -354,7 +352,7 @@ class Safe2PayService implements Statement
                             'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
                         ]
                     );
-    
+
                     $refundTransaction->company->update([
                         'safe2pay_balance' => $refundTransaction->company->safe2pay_balance += $refundTransaction->value
                     ]);

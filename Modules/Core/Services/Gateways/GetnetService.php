@@ -82,9 +82,8 @@ class GetnetService implements Statement
                             ->whereIn('gateway_id', $this->gatewayIds)
                             ->where('status_enum', Transaction::STATUS_TRANSFERRED)
                             //->where('type', '!=', Transaction::TYPE_INVITATION)
-                            ->whereHas('blockReasonSale',function ($query) {
-                                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
+                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
                             ->sum('value');
     }
 
@@ -94,9 +93,8 @@ class GetnetService implements Statement
                             ->whereNull('invitation_id')
                             ->whereIn('gateway_id', $this->gatewayIds)
                             ->where('status_enum', Transaction::STATUS_PAID)
-                            ->whereHas('blockReasonSale',function ($query) {
-                                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
+                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
                             ->sum('value');
     }
 
