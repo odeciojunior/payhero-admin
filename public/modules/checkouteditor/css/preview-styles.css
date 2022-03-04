@@ -855,7 +855,7 @@
     }
 
     .logo-desktop-div.desktop {
-        padding: 0px 0 0 125px !important;
+        padding: 0px 0 0 110px !important;
     }
 
     .logo-desktop-div .logo-desktop {
@@ -872,3 +872,13 @@
         height: 230px;
     }
 }
+
+@media (max-width: 1300px) {
+    .logo-desktop-div.desktop {
+        padding: 0px 0 0 72px !important;
+    }
+    .preview-banner.desktop {
+        height: 57px;
+    }
+}
+
