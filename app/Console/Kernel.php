@@ -37,172 +37,170 @@ class Kernel extends ConsoleKernel
             ->storeOutputInDb();
         */
 
-        $schedule->command('generic')->everyMinute()->storeOutputInDb();
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
-        // $schedule->command('horizon:snapshot')->everyFiveMinutes();
+        setlocale(LC_ALL, 'pt_BR');
 
-        // setlocale(LC_ALL, 'pt_BR');
+        $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
 
-        // $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
+        $schedule->command('check:systems')->everyTenMinutes();
 
-        // $schedule->command('check:systems')->everyTenMinutes();
+        $schedule->command('check:underattack')->everyThirtyMinutes();
 
-        // $schedule->command('check:underattack')->everyThirtyMinutes();
+        $schedule->command('withdrawals:release-get-faster')->withoutOverlapping()->everyThirtyMinutes();
 
-        // $schedule->command('withdrawals:release-get-faster')->withoutOverlapping()->everyThirtyMinutes();
+        $schedule->command('updateTransactionsReleaseDate')->hourly();
 
-        // $schedule->command('updateTransactionsReleaseDate')->hourly();
+        $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
 
-        // $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
+        $schedule->command('check:has-valid-tracking')->weekly()->thursdays()->at('01:00');
 
-        // $schedule->command('check:has-valid-tracking')->weekly()->thursdays()->at('01:00');
+        $schedule->command('getnet:check-refunded')->dailyAt('03:15');
 
-        // $schedule->command('getnet:check-refunded')->dailyAt('03:15');
+        $schedule->command('getnet:update-confirm-date-debt-pending')->dailyAt('04:00');
 
-        // $schedule->command('getnet:update-confirm-date-debt-pending')->dailyAt('04:00');
+        $schedule->command('under-attack:update-card-declined')->dailyAt('05:00');
 
-        // $schedule->command('under-attack:update-card-declined')->dailyAt('05:00');
+        $schedule->command('getnet:get-all-statement-chargebacks')->dailyAt('07:00');
 
-        // $schedule->command('getnet:get-all-statement-chargebacks')->dailyAt('07:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('10:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('13:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('17:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('21:00');
+        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('23:30');
 
-        // // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('10:00');
-        // // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('13:00');
-        // // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('17:00');
-        // // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('21:00');
-        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('23:30');
+        // $schedule->command('getnet:check-withdrawals-released')->dailyAt('09:00');
+        // $schedule->command('getnet:check-withdrawals-released')->dailyAt('12:00');
+        $schedule->command('getnet:check-withdrawals-released')->dailyAt('16:00');
 
-        // // $schedule->command('getnet:check-withdrawals-released')->dailyAt('09:00');
-        // // $schedule->command('getnet:check-withdrawals-released')->dailyAt('12:00');
-        // $schedule->command('getnet:check-withdrawals-released')->dailyAt('16:00');
+        $schedule->command('getnet:import-sale-contestations-txt-format')->dailyAt('16:00');
 
-        // $schedule->command('getnet:import-sale-contestations-txt-format')->dailyAt('16:00');
+        $schedule->command('getnet:import-sale-contestations')->dailyAt('17:00');
 
-        // $schedule->command('getnet:import-sale-contestations')->dailyAt('17:00');
+        $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
 
-        // $schedule->command('getnet:check-withdrawals-released')->dailyAt('22:30');
+        $schedule->command('getnet:release-unblocked-balance')->dailyAt('02:30');
 
-        // $schedule->command('getnet:release-unblocked-balance')->dailyAt('02:30');
+        $schedule->command('getnet:block-sale-for-contestation')->dailyAt('03:45');
 
-        // $schedule->command('getnet:block-sale-for-contestation')->dailyAt('03:45');
+        $schedule->command('verify:promotional-tax')->dailyAt('23:30');
 
-        // $schedule->command('verify:promotional-tax')->dailyAt('23:30');
+        // update pending domains automaticaly
+        $schedule->command('verify:pendingdomains')->hourly();
 
-        // // update pending domains automaticaly
-        // $schedule->command('verify:pendingdomains')->hourly();
+        // generate all sale approved invoices
+        $schedule->command('generate:notazzinvoicessalesapproved')->everyThirtyMinutes();
 
-        // // generate all sale approved invoices
-        // $schedule->command('generate:notazzinvoicessalesapproved')->everyThirtyMinutes();
+        // verify pending notazz invoices
+        $schedule->command('verify:pendingnotazzinvoices')->everyThirtyMinutes()->withoutOverlapping();
 
-        // // verify pending notazz invoices
-        // $schedule->command('verify:pendingnotazzinvoices')->everyThirtyMinutes()->withoutOverlapping();
+        // pega as ultimas quotacoes das moedas
+        $schedule->command('update:currencyquotation')->dailyAt('14:00');
 
-        // // pega as ultimas quotacoes das moedas
-        // $schedule->command('update:currencyquotation')->dailyAt('14:00');
+        // notify user to paid boletos
+        $schedule->command('verify:boletopaid')->dailyAt('10:30');
 
-        // // notify user to paid boletos
-        // $schedule->command('verify:boletopaid')->dailyAt('10:30');
+        // boletos
+        $schedule->command('verify:boletowaitingpayment')->dailyAt('10:00');
+        $schedule->command('verify:boleto2')->dailyAt('11:15');
+        $schedule->command('verify:boletoexpiring')->dailyAt('11:00');
 
-        // // boletos
-        // $schedule->command('verify:boletowaitingpayment')->dailyAt('10:00');
-        // $schedule->command('verify:boleto2')->dailyAt('11:15');
-        // $schedule->command('verify:boletoexpiring')->dailyAt('11:00');
+        // abandoned carts
+        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes()->withoutOverlapping();
 
-        // // abandoned carts
-        // $schedule->command('verify:abandonedcarts')->everyFifteenMinutes()->withoutOverlapping();
+        $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');
 
-        // $schedule->command('verify:abandonedcarts2')->dailyAt('12:00');
+        // Alterar status do boletos de pendente para cancelado
+        $schedule->command('change:boletopendingtocanceled')->dailyAt('06:30');
 
-        // // Alterar status do boletos de pendente para cancelado
-        // $schedule->command('change:boletopendingtocanceled')->dailyAt('06:30');
+        $schedule->command('command:UpdateListsFoxActiveCampaign')->cron('0 */12 * * *');
 
-        // $schedule->command('command:UpdateListsFoxActiveCampaign')->cron('0 */12 * * *');
+        //verify last domains on sendgrid
+        $schedule->command('command:validateLastDomains')->dailyAt('04:00');
 
-        // //verify last domains on sendgrid
-        // $schedule->command('command:validateLastDomains')->dailyAt('04:00');
+        //Reorder shopify
+        $schedule->command('command:ShopifyReorderSales')->dailyAt('03:00');
 
-        // //Reorder shopify
-        // $schedule->command('command:ShopifyReorderSales')->dailyAt('03:00');
+        //Reorder woocommerce
+        $schedule->command('command:WoocommerceReorderSales')->dailyAt('03:45');
 
-        // //Reorder woocommerce
-        // $schedule->command('command:WoocommerceReorderSales')->dailyAt('03:45');
+        //Retry woocommerce requests
+        $schedule->command('command:WoocommerceRetryFailedRequests')->dailyAt('04:15');
 
-        // //Retry woocommerce requests
-        // $schedule->command('command:WoocommerceRetryFailedRequests')->dailyAt('04:15');
+        //checks the trackings that have been recognized by the carrier but has no movement yet
+        $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');
 
-        // //checks the trackings that have been recognized by the carrier but has no movement yet
-        // $schedule->command('verify:trackingWithoutInfo')->dailyAt('15:00');
+        //checks companies update on getnet
+        $schedule->command('command:checkUpdateCompanyGetnet')->everyFourHours();
 
-        // //checks companies update on getnet
-        // $schedule->command('command:checkUpdateCompanyGetnet')->everyFourHours();
+        //check invites expired
+        $schedule->command('verify:inviteexpired')->dailyAt('01:00');
 
-        // //check invites expired
-        // $schedule->command('verify:inviteexpired')->dailyAt('01:00');
+        $schedule->command('check:menv-tracking')->dailyAt('17:00');
 
-        // $schedule->command('check:menv-tracking')->dailyAt('17:00');
+        //Remove temporary files in regiter
+        $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
 
-        // //Remove temporary files in regiter
-        // $schedule->command('command:deleteTemporaryFiles')->dailyAt('04:00');
+        $schedule->command('available-balance:update')->dailyAt('06:15');
 
-        // $schedule->command('available-balance:update')->dailyAt('06:15');
+        // $schedule->command('redis:update-sale-tracking')->hourly();
 
-        // // $schedule->command('redis:update-sale-tracking')->hourly();
+        $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
 
-        // $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
+        /** Account health */
+        $schedule->command('account-health:user:update-average-response-time')->dailyAt('02:00');
+        $schedule->command('command:update-user-level')->dailyAt('11:15');
+        $schedule->command('account-health:update')->dailyAt('09:00');
+        $schedule->command('account-health:update')->dailyAt('22:00');
 
-        // /** Account health */
-        // $schedule->command('account-health:user:update-average-response-time')->dailyAt('02:00');
-        // $schedule->command('command:update-user-level')->dailyAt('11:15');
-        // $schedule->command('account-health:update')->dailyAt('09:00');
-        // $schedule->command('account-health:update')->dailyAt('22:00');
+        /** Benefits: needs to be run after account-health:updates  */
+        $schedule->command('user:benefits:update')->dailyAt('09:30');
+        $schedule->command('user:benefits:update')->dailyAt('22:30');
 
-        // /** Benefits: needs to be run after account-health:updates  */
-        // $schedule->command('user:benefits:update')->dailyAt('09:30');
-        // $schedule->command('user:benefits:update')->dailyAt('22:30');
+        /** Tasks */
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('00:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('06:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('10:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('14:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('18:30');
+        $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('22:30');
 
-        // /** Tasks */
-        // $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('00:30');
-        // $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('06:30');
-        // $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('10:30');
-        // $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('14:30');
-        // $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('18:30');
-        // $schedule->command('tasks:check-completed-sales-tasks')->dailyAt('22:30');
+        /** Achievements */
+        $schedule->command('achievements:update')->dailyAt('09:00');
+        $schedule->command('achievements:update')->dailyAt('21:00');
 
-        // /** Achievements */
-        // $schedule->command('achievements:update')->dailyAt('09:00');
-        // $schedule->command('achievements:update')->dailyAt('21:00');
+        /** Pix Canceled */
+        $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
 
-        // /** Pix Canceled */
-        // $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
+        /** Check GatewayTax invitations Diogo */
+        $schedule->command('check:gateway-tax-company-after-month')->dailyAt('06:30');
 
-        // /** Check GatewayTax invitations Diogo */
-        // $schedule->command('check:gateway-tax-company-after-month')->dailyAt('06:30');
+        //Henrique: Remove, not working on getnet
+        //$schedule->command('check:sales-refunded')->weeklyOn(1, '23:00');
 
-        // //Henrique: Remove, not working on getnet
-        // //$schedule->command('check:sales-refunded')->weeklyOn(1, '23:00');
+        /** Libera o dinheiro da azx */
+        $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00')->withoutOverlapping();;
+        /** Confirma a transferencia do dinheiro da azx */
+        $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30')->withoutOverlapping();;
 
-        // /** Libera o dinheiro da azx */
-        // $schedule->command('getnet:check-withdrawals-released-cloudfox')->dailyAt('22:00')->withoutOverlapping();;
-        // /** Confirma a transferencia do dinheiro da azx */
-        // $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->dailyAt('22:30')->withoutOverlapping();;
+        /** Antecipações Asaas descontinuado temporariamente*/
+        //$schedule->command('asaas:anticipations')->dailyAt('4:00');
+        //$schedule->command('asaas:anticipations-pending')->dailyAt('14:00');
+        //$schedule->command('asaas:anticipations-pending')->dailyAt('16:00');
 
-        // /** Antecipações Asaas descontinuado temporariamente*/
-        // //$schedule->command('asaas:anticipations')->dailyAt('4:00');
-        // //$schedule->command('asaas:anticipations-pending')->dailyAt('14:00');
-        // //$schedule->command('asaas:anticipations-pending')->dailyAt('16:00');
+        /** Sincronizar códigos de rastreio com WooCommerce */
+        $schedule->command('woocommerce:check-tracking-codes')->sundays()->at('07:00');
 
-        // /** Sincronizar códigos de rastreio com WooCommerce */
-        // $schedule->command('woocommerce:check-tracking-codes')->sundays()->at('07:00');
+        /** Transferir grana dos vendedores no asaas para conta Cloudfox */
+        $schedule->command('asaas:transfers-chargebacks')->dailyAt('00:20');
 
-        // /** Transferir grana dos vendedores no asaas para conta Cloudfox */
-        // $schedule->command('asaas:transfers-chargebacks')->dailyAt('00:20');
+        /** transfere saldo excedente no asaas*/
+        $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('08:00');
 
-        // /** transfere saldo excedente no asaas*/
-        // $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('08:00');
+        /** Antifraud backfill Asaas chargebacks */
+        $schedule->command('antifraud:backfill-asaas-chargebacks')->hourly();
 
-        // /** Antifraud backfill Asaas chargebacks */
-        // $schedule->command('antifraud:backfill-asaas-chargebacks')->hourly();
-
-        // $schedule->command('safe2pay:manual-anticipation')->dailyAt('15:40');
+        $schedule->command('safe2pay:manual-anticipation')->dailyAt('15:40');
 
     }
 
