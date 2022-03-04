@@ -264,10 +264,11 @@ $(document).ready(function () {
 
     }
 
-    $("#projeto").on('change', function () {
+    $("#project").on('change', function () {
         let value = $(this).val();
         $("#plan").val(null).trigger('change');
     });
+    
     //Search plan
     $('#plan').select2({
         placeholder: 'Nome do plano',
@@ -286,7 +287,7 @@ $(document).ready(function () {
                 return {
                     list: 'plan',
                     search: params.term,
-                    project_id: $("#projeto").val(),
+                    project_id: $("#project").val(),
                 };
             },
             method: "GET",
@@ -306,6 +307,7 @@ $(document).ready(function () {
             },
         }
     });
+
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
             atualizar();
