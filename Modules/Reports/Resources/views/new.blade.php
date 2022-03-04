@@ -115,7 +115,7 @@
                                 <div id="reports-content" class="">
                                     <div class='container col-sm-12 mt-20 d-lg-block'>
 										<div class="row cards-reports">
-											<div class="card">
+											<div class="card" id="card-comission">
 												<div class="card-body data-content">
                                                     <div class="ske-load">
                                                         <div class="px-20 py-0">
@@ -146,7 +146,7 @@
 												</div>
                                                 
 											</div>
-											<div class="card ">
+											<div class="card" id="card-pending">
 												<div class="card-body data-content">
                                                     <div class="ske-load">
                                                         <div class="px-20 py-0">
@@ -171,7 +171,7 @@
                                                     </div>
 												</div>
 											</div>
-                                            <div class="card">
+                                            <div class="card" id="card-cashback">
 												<div class="card-body data-content">
                                                     <div class="ske-load">
                                                         <div class="px-20 py-0">
@@ -219,7 +219,7 @@
                                 <div id="reports-content" class="">
                                     <div class='container col-sm-12 mt-20 d-lg-block'>
 										<div class="row cards-reports">
-											<div class="card">
+											<div class="card" id="card-sales">
 												<div class="card-body data-content">
                                                     <div class="ske-load">
                                                         <div class="px-20 py-0">
@@ -242,7 +242,7 @@
                                                     <div class="new-graph-sell graph"></div>
 												</div>
 											</div>
-											<div class="card ">
+											<div class="card" id="card-typepayments">
 												<div class="card-body data-content">
                                                     <div class="ske-load">
                                                         <div class="px-20 py-0">
