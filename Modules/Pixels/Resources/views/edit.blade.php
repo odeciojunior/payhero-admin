@@ -160,11 +160,21 @@
 
                                     {{-- INPUT CODE PIXEL --}}
                                     <div class="form-group col-6">
-                                        <label for="code-pixel" class="font-text">Código</label>
+                                        <label id="code-pixel-label" for="code-pixel" class="font-text">Código</label>
                                         <div class="input-group">
-                                        <span class='input-group-text' id='text-type-code-edit' style='background:#f3f3f3;display:none'>
-                                        </span>
+                                            <span class='input-group-text' id='text-type-code-edit' style='background:#f3f3f3;display:none'>
+                                            </span>
                                             <input type="text" class="form-control code-edit" name="code" placeholder="52342343245553" maxlength="255">
+                                        </div>
+                                    </div>
+
+                                    {{-- INPUT CONVERSIONAL LABEL --}}
+                                    <div id="conversional-pixel-edit" class="form-group col-6" style="display: none">
+                                        <label id="" for="conversional-pixel-code" class="font-text">Rótulo de conversão</label>
+                                        <div class="input-group">
+                                            <span class='input-group-text' id='text-type-conversional-edit' style='background:#f3f3f3;'>/
+                                            </span>
+                                            <input type="text" class="form-control conversional-edit" name="conversional" id="conversional-pixel-code" placeholder="AN7162ASNSG" maxlength="255">
                                         </div>
                                     </div>
 

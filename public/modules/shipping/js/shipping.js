@@ -29,7 +29,7 @@ $(document).ready(function () {
                 for (let integration of resp.data) {
                     options += `<option class="menv${integration.id}" value="melhorenvio-${integration.id}">${integration.name} (integração com a API do Melhor Envio)</option>`;
                 }
-                $('.shipping-type').each(function () {
+                $('#shipping-type').each(function () {
                     $(this).children('select').append(options);
                 });
             },
@@ -45,7 +45,7 @@ $(document).ready(function () {
         atualizarFrete();
     });
 
-    $(document).on('change', '.shipping-type select', function () {
+    $(document).on('change', '#shipping-type', function () {
         // altera campo value dependendo do tipo do frete
         let selected = $(this).val();
         if (selected === 'static') {
@@ -162,16 +162,16 @@ $(document).ready(function () {
             }, success: function success(response) {
                 switch (response.type) {
                     case 'static':
-                        $('#modal-detail-shipping .shipping-type').html('Estático');
+                        $('#modal-detail-shipping #shipping-type').html('Estático');
                         break;
                     case 'pac':
-                        $('#modal-detail-shipping .shipping-type').html('PAC - Caculado automaticamente');
+                        $('#modal-detail-shipping #shipping-type').html('PAC - Caculado automaticamente');
                         break;
                     case 'sedex':
-                        $('#modal-detail-shipping .shipping-type').html('SEDEX - Caculado automaticamente');
+                        $('#modal-detail-shipping #shipping-type').html('SEDEX - Caculado automaticamente');
                         break;
                     case 'melhorenvio':
-                        $('#modal-detail-shipping .shipping-type').html('MelhorEnvio - Caculado automaticamente');
+                        $('#modal-detail-shipping #shipping-type').html('MelhorEnvio - Caculado automaticamente');
                         break;
                 }
                 $('#modal-detail-shipping .shipping-description').html(response.name);
@@ -203,21 +203,21 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             }, success: function success(response) {
 
-                $('#modal-edit-shipping .shipping-id').val(response.id_code);
+                $('#modal-edit-shipping .shipping-id').val(response.id_code).change();
 
                 switch (response.type) {
                     case 'static':
-                        $('#modal-edit-shipping .shipping-type select').prop("selectedIndex", 0).change();
+                        $('#modal-edit-shipping #shipping-type').prop("selectedIndex", 0).change();
                         break;
                     case 'pac':
-                        $('#modal-edit-shipping .shipping-type select').prop("selectedIndex", 1).change();
+                        $('#modal-edit-shipping #shipping-type').prop("selectedIndex", 1).change();
                         break;
                     case 'sedex':
-                        $('#modal-edit-shipping .shipping-type select').prop("selectedIndex", 2).change();
+                        $('#modal-edit-shipping #shipping-type').prop("selectedIndex", 2).change();
                         break;
                     case 'melhorenvio':
                         $('#modal-edit-shipping .menv'+response.melhorenvio_integration_id).prop('selected', true);
-                        $('#modal-edit-shipping .shipping-type select').change();
+                        $('#modal-edit-shipping #shipping-type').change();
                         break;
                 }
                 $('#modal-edit-shipping .shipping-description').val(response.name);
@@ -488,6 +488,10 @@ $(document).ready(function () {
                 },
             }
         });
+
+        $(document).on('show.bs.modal', '#modal-create-shipping', () => {
+            $('#modal-create-shipping #shipping-type').val('static').change();
+        })
 
         el.on('select2:select', function () {
             let selectPlan = $(this);

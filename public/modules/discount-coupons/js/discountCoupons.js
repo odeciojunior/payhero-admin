@@ -10,7 +10,8 @@ $(function () {
     //comportamento da tela
     var cuponType = 0;
     $('.coupon-value').mask('00%', {reverse: true});
-    $(document).on('change', '.coupon-type', function () {
+
+    $(document).on('change', '#edit-coupon-type', function (event) {
         if ($(this).val() == 1) {
             cuponType = 1;
             $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
@@ -19,6 +20,16 @@ $(function () {
             $('.coupon-value').mask('00%', {reverse: true});
         }
     });
+    $(document).on('change', '#create-coupon-type', function (event) {
+        if ($(this).val() == 1) {
+            cuponType = 1;
+            $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
+        } else {
+            cuponType = 0;
+            $('.coupon-value').mask('00%', {reverse: true});
+        }
+    });
+
     $(".rule-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
 
     $('.rule-value').on('blur', function () {
@@ -95,17 +106,17 @@ $(function () {
                 $('#modal-edit-coupon .rule-value').val(response.rule_value);
                 $('#modal-edit-coupon .rule-value').trigger('input');
                 if (response.type == 1) {
-                    $('#modal-edit-coupon .coupon-type').prop("selectedIndex", 1).change();
+                    $('#edit-coupon-type').prop("selectedIndex", 1).change();
                 } else {
-                    $('#modal-edit-coupon .coupon-type').prop("selectedIndex", 0).change();
+                    $('#edit-coupon-type').prop("selectedIndex", 0).change();
                 }
 
                 $('#modal-edit-coupon .coupon-code').val(response.code);
 
                 if (response.status == 1) {
-                    $('#modal-edit-coupon .coupon-status').prop("selectedIndex", 0).change();
+                    $('#edit-coupon-status').prop("selectedIndex", 0).change();
                 } else {
-                    $('#modal-edit-coupon .coupon-status').prop("selectedIndex", 1).change();
+                    $('#edit-coupon-status').prop("selectedIndex", 1).change();
                 }
                 $('#modal-edit-coupon').modal('show');
             }

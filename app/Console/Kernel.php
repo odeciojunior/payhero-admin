@@ -17,6 +17,28 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
+        /*
+            Syncing the schedule
+            php artisan schedule-monitor:sync
+
+            List the schedule
+            php artisan schedule-monitor:list
+
+            Naming tasks
+            ->monitorName('a-custom-name');
+
+            Setting a grace time
+            ->graceTimeInMinutes(10);
+
+            Ignoring scheduled tasks
+            ->doNotMonitor();
+
+            Storing output in the database
+            ->storeOutputInDb();
+        */
+
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+
         setlocale(LC_ALL, 'pt_BR');
 
         $schedule->command('gatewaypostbacks:process')->withoutOverlapping()->everyFiveMinutes();
@@ -41,14 +63,14 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('getnet:get-all-statement-chargebacks')->dailyAt('07:00');
 
-        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('10:00');
-        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('13:00');
-        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('17:00');
-        $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('21:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('10:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('13:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('17:00');
+        // $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('21:00');
         $schedule->command('getnet:check-withdrawals-liquidated')->dailyAt('23:30');
 
-        $schedule->command('getnet:check-withdrawals-released')->dailyAt('09:00');
-        $schedule->command('getnet:check-withdrawals-released')->dailyAt('12:00');
+        // $schedule->command('getnet:check-withdrawals-released')->dailyAt('09:00');
+        // $schedule->command('getnet:check-withdrawals-released')->dailyAt('12:00');
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('16:00');
 
         $schedule->command('getnet:import-sale-contestations-txt-format')->dailyAt('16:00');
@@ -59,12 +81,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('getnet:release-unblocked-balance')->dailyAt('02:30');
 
+        $schedule->command('getnet:block-sale-for-contestation')->dailyAt('03:45');
+
         $schedule->command('verify:promotional-tax')->dailyAt('23:30');
-
-
-        /** sirius */
-        // snapshot for horizon metrics
-        $schedule->command('horizon:snapshot')->everyFifteenMinutes();
 
         // update pending domains automaticaly
         $schedule->command('verify:pendingdomains')->hourly();
@@ -124,7 +143,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('available-balance:update')->dailyAt('06:15');
 
-        $schedule->command('redis:update-sale-tracking')->hourly();
+        // $schedule->command('redis:update-sale-tracking')->hourly();
 
         $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
 
@@ -180,6 +199,8 @@ class Kernel extends ConsoleKernel
 
         /** Antifraud backfill Asaas chargebacks */
         $schedule->command('antifraud:backfill-asaas-chargebacks')->hourly();
+
+        $schedule->command('safe2pay:manual-anticipation')->dailyAt('15:40');
 
     }
 

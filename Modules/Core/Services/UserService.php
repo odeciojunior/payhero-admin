@@ -36,7 +36,7 @@ class UserService
 
     public function haveAnyDocumentPending(): bool
     {
-        $user = auth()->user();
+        $user = User::find(auth()->user()->account_owner_id);
 
         return (
             $user->address_document_status == UserDocument::STATUS_APPROVED &&
@@ -107,33 +107,6 @@ class UserService
         }
 
         return false;
-    }
-
-    public function verifyFieldsEmptyBraspag(User $user)
-    {
-        if (empty($user->email)) {
-            return true;
-        } elseif (empty($user->cellphone)) {
-            return true;
-        } elseif (empty($user->document)) {
-            return true;
-        } elseif (empty($user->zip_code)) {
-            return true;
-        } elseif (empty($user->country)) {
-            return true;
-        } elseif (empty($user->state)) {
-            return true;
-        } elseif (empty($user->city)) {
-            return true;
-        } elseif (empty($user->neighborhood)) {
-            return true;
-        } elseif (empty($user->street)) {
-            return true;
-        } elseif (empty($user->number)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public function verifyFieldsEmpty(User $user): bool

@@ -29,22 +29,12 @@ class AccountApprovedService
 
         if ($user->address_document_status == UserDocument::STATUS_APPROVED &&
             $user->personal_document_status == UserDocument::STATUS_APPROVED) {
-            $hasCompanyPfApproved = Company::whereHas('gatewayCompanyCredential', function($q) {
-                    $q->where('gateway_id', Gateway::GETNET_PRODUCTION_ID);
-                    $q->where('gateway_status', GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED);
-                    $q->where('capture_transaction_enabled', 1);
-                })
-                ->where('user_id', $user->id)
+            $hasCompanyPfApproved = Company::where('user_id', $user->id)
                 ->where('company_type', Company::PHYSICAL_PERSON)
                 ->where('bank_document_status', Company::STATUS_APPROVED)
                 ->exists();
 
-            $hasCompanyPjApproved = Company::whereHas('gatewayCompanyCredential', function($q) {
-                    $q->where('gateway_id', Gateway::GETNET_PRODUCTION_ID);
-                    $q->where('gateway_status', GatewaysCompaniesCredential::GATEWAY_STATUS_APPROVED);
-                    $q->where('capture_transaction_enabled', 1);
-                })
-                ->where('user_id', $user->id)
+            $hasCompanyPjApproved = Company::where('user_id', $user->id)
                 ->where('company_type', Company::JURIDICAL_PERSON)
                 ->where('address_document_status', CompanyDocument::STATUS_APPROVED)
                 ->where('contract_document_status', CompanyDocument::STATUS_APPROVED)

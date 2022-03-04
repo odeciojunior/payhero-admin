@@ -2,9 +2,9 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4546') }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=03') }}">
-        <link rel="stylesheet" href="{{ asset('modules/integrations/css/edit-integrations.css?v=001') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ asset('modules/integrations/css/edit-integrations.css?v=' . versionsFile()) }}">
     @endpush
     <div class="page new-layout">
         <div style="display: none" class="page-header container pb-0">
@@ -227,7 +227,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('modules/integrations/js/index.js?v='.uniqid()) }}"></script>
+        <script src="{{ asset('modules/integrations/js/index.js?v=' . versionsFile()) }}"></script>
     @endpush
 
 @endsection

@@ -5,15 +5,13 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Gateway;
-use Modules\Core\Entities\PixTransfer;
-use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Log;
 
 class UpdateGetnetGatewayTransferredAt extends Command
 {
@@ -47,18 +45,30 @@ class UpdateGetnetGatewayTransferredAt extends Command
      * @return void     */
     public function handle()
     {
-        $withdrawals = Withdrawal::with('transactions')->whereHas('transactions', function ($q){
-            $q->whereNull('gateway_transferred_at')
-              ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]);
-        })
-        ->groupBy('withdrawals.id')
-        ->orderBy('withdrawals.id', 'desc');
 
-        foreach ( $withdrawals->cursor() as $withdrawal) {
-            $this->info('Começando withdrawal id: ' . $withdrawal->id);
-            $this->updateTransaction($withdrawal);
-            $this->info('Fim withdrawal id: ' . $withdrawal->id);
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
+        try {
+
+            $withdrawals = Withdrawal::with('transactions')->whereHas('transactions', function ($q){
+                $q->whereNull('gateway_transferred_at')
+                    ->whereIn('gateway_id', [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID, Gateway::GERENCIANET_PRODUCTION_ID]);
+            })
+                ->groupBy('withdrawals.id')
+                ->orderBy('withdrawals.id', 'desc');
+
+            foreach ( $withdrawals->cursor() as $withdrawal) {
+                $this->info('Começando withdrawal id: ' . $withdrawal->id);
+                $this->updateTransaction($withdrawal);
+                $this->info('Fim withdrawal id: ' . $withdrawal->id);
+            }
+
+        } catch (Exception $e) {
+            report($e);
         }
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
+
     }
 
     private function  updateTransaction($withdrawal) {

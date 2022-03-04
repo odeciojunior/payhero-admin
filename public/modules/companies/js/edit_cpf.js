@@ -58,7 +58,7 @@ $(document).ready(function () {
                 }
                 userIdCode = response.company.user_code;
                 let company = response.company;
-                if (response.company.capture_transaction_enabled) {
+                if (companyIsApproved(company)) {
                     companyIdCode = company.id_code;
 
                     $("#tax-payment").val(company.gateway_tax + '%')

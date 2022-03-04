@@ -17,8 +17,6 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/companies/consultcnpj', 'CompaniesApiController@consultCnpj');
 
-    Route::get('/companies/checkbraspagcompany', 'CompaniesApiController@checkBraspagCompany');
-
     Route::get('/companies/check-statement-available', 'CompaniesApiController@checkStatementAvailable');
 
     Route::post('/companies/{companiId}/getdocuments', 'CompaniesApiController@getDocuments');

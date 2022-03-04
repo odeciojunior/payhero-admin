@@ -86,7 +86,7 @@
             <div class="content-error text-center">
                 <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                <p class="desc gray">Integre seus projetos com Unicodrop de forma totalmente automatizada!</p>
+                <p class="desc gray">Integre suas loja com Unicodrop de forma totalmente automatizada!</p>
             </div>
         </div>
     </div>

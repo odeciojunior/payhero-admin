@@ -35,5 +35,3 @@ class CreateAsaasAnticipationRequestsTable extends Migration
         Schema::dropIfExists('asaas_anticipations_requests');
     }
 }
- // php artisan krlove:generate:model AsaasAnticipationRequests --output-path= Modules/Core/Entities/ --namespace=Modules\\Core\\Entities --table-name=asaas_anticipation_requests
-//  php artisan krlove:generate:model AsaasAnticipationRequests -output-path=/full/path/to/output/directory --table-name=asaas_anticipation_requests

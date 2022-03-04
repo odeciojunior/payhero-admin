@@ -2,11 +2,14 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
 use Modules\Core\Services\Gateways\GetnetService;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\Gateways\Safe2PayService;
 
 class UpdateAvailableBalance extends Command
 {
@@ -28,7 +31,8 @@ class UpdateAvailableBalance extends Command
         AsaasService::class,
         //CieloService::class,
         GetnetService::class,
-        GerencianetService::class
+        GerencianetService::class,
+        Safe2PayService::class
     ];
 
     /**
@@ -48,14 +52,20 @@ class UpdateAvailableBalance extends Command
      */
     public function handle()
     {
-        settings()->group('withdrawal_request')->set('withdrawal_request', false);
+        try {
 
-        foreach($this->defaultGateways as $gatewayClass) {
-            $gatewayService = app()->make($gatewayClass);
-            $gatewayService->updateAvailableBalance();
+            settings()->group('withdrawal_request')->set('withdrawal_request', false);
+
+            foreach($this->defaultGateways as $gatewayClass) {
+                $gatewayService = app()->make($gatewayClass);
+                $gatewayService->updateAvailableBalance();
+            }
+
+            settings()->group('withdrawal_request')->set('withdrawal_request', true);
+
+        } catch (Exception $e) {
+            report($e);
         }
-
-        settings()->group('withdrawal_request')->set('withdrawal_request', true);
     }
-
+    
 }

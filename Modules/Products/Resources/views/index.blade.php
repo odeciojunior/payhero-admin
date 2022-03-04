@@ -42,7 +42,7 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div id="projects-list" class="mb-10 d-none">
-                            <label id="select-projects-label" for="select-projects">Projeto</label>
+                            <label id="select-projects-label" for="select-projects">Lojas</label>
                             <select id='select-projects' class="sirius-select" disabled>
                                 <option>Carregando...</option>
                             </select>
@@ -135,13 +135,13 @@
         </div>
     </div>
 
-    {{-- Quando não tem projeto cadastrado  --}}
+    {{-- Quando não tem loja cadastrado  --}}
     @include('projects::empty')
-    {{-- FIM projeto nao existem projetos--}}
+    {{-- FIM loja nao existem lojas--}}
 </div>
 
 @push('scripts')
-<script src="{{ asset('/modules/products/js/index.js?v='.uniqid()) }}"></script>
+    <script src="{{ asset('/modules/products/js/index.js?v='.versionsFile()) }}"></script>
 @endpush
 
 @endsection

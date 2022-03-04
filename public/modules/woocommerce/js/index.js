@@ -75,10 +75,15 @@ $(document).ready(function () {
                 $(data).each(function (index, data) {
                     $('#content').append(`
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                            <div class="card shadow card-edit" project="${data.id}">
+                            <div class="card shadow card-edit" project="${data.id}" >
 
                             
-                            <svg style="position:absolute; top:8px; right:8px; cursor:pointer" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg  
+                            class="open-cfg" app="${data.id}" 
+                            data-img="${!data.project_photo ? '/modules/global/img/produto.png' : data.project_photo}"
+                            data-name="${data.project_name}" 
+                            style="position:absolute; top:8px; right:8px; cursor:pointer" 
+                            width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M30.5519 15.2167C30.5519 23.4694 23.8618 30.1596 15.6091 30.1596C7.35639 30.1596 0.66626 23.4694 0.66626 15.2167C0.66626 6.96405 7.35639 0.273926 15.6091 0.273926C23.8618 0.273926 30.5519 6.96405 30.5519 15.2167Z" fill="white"/>
                                 <g clip-path="url(#clip0_0_1)">
                                 <path d="M15.609 18.7327C17.5508 18.7327 19.1249 17.1586 19.1249 15.2168C19.1249 13.275 17.5508 11.7008 15.609 11.7008C13.6672 11.7008 12.093 13.275 12.093 15.2168C12.093 17.1586 13.6672 18.7327 15.609 18.7327Z" stroke="#70707E" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -89,6 +94,7 @@ $(document).ready(function () {
                                 <rect width="19.3378" height="19.3378" fill="white" transform="translate(5.94019 5.54785)"/>
                                 </clipPath>
                                 </defs>
+                                <title>Configurações da Integração</title>
                             </svg>
 
                             
@@ -105,6 +111,9 @@ $(document).ready(function () {
                         </div>
                     `);
                 });
+            
+                $('.open-cfg').on('click', openCfg)
+
 
 
             }
@@ -123,10 +132,10 @@ $(document).ready(function () {
         $('#integration-actions').show();
 
         $("#select_companies").empty();
-        $(data).each(function (index, data) {
-            if (data.capture_transaction_enabled) {
+        $(data).each(function (index, company) {
+            if (companyIsApproved(company)) {
                 companyApproved = companyApproved + 1;
-                $("#select_companies").append(`<option value=${data.id}> ${data.name}</option>`);
+                $("#select_companies").append(`<option value=${company.id}> ${company.name}</option>`);
             }
         });
 
@@ -193,4 +202,247 @@ $(document).ready(function () {
             }
         });
     }
+
+    let projectId
+    function openCfg() {
+        projectId = $(this).attr('app')
+        var img = $(this).attr('data-img')
+        var name = $(this).attr('data-name')
+        
+        $("#modal_edit").modal('show');
+        
+        function imageFound() {
+
+        }
+        
+        function imageNotFound() {
+
+            img = '/modules/global/img/produto.png';
+            $("#project-img").attr("src", img);
+
+        }
+
+        var tester=new Image();
+        tester.onload=imageFound;
+        tester.onerror=imageNotFound;
+        tester.src=img;
+        
+        $("#project-img").attr("src", img);
+        img = null
+        
+        $('#project-name').html(name)
+
+        
+        $.ajax({
+            method: "POST",
+            data:{projectId:projectId},
+            url: "/api/apps/woocommerce/keys/get",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                $("#modal-content").hide();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                
+                if(response.status){
+                    $('#consumer-k').attr('placeholder', response.consumer_k+'...')
+                    $('#consumer-s').attr('placeholder', response.consumer_s+'...')
+                }
+            }
+        })
+    }
+
+
+    $('#bt-update-keys').on('click', function () {
+        
+
+        var consumer_key = $('#consumer-k').val()
+        var consumer_secret = $('#consumer-s').val()
+
+        if(!consumer_key || !consumer_secret){
+            alertCustom('error', 'Informe os novos valores das chaves de acesso!');
+            return false;
+        }
+
+        $.ajax({
+            method: "POST",
+            data: {"consumer_key":consumer_key, "consumer_secret":consumer_secret},
+            url: "/api/apps/woocommerce/keys/update?projectId="+projectId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                $("#modal-content").hide();
+                errorAjaxResponse(response);
+            },
+            success: function success(r) {
+
+
+                $('#close-modal').click()
+
+
+                if(r.status == true){
+                    alertCustom('success', 'Chaves de acesso atualizadas com sucesso!');
+
+                    
+
+                }else{
+                    alertCustom('error', 'Erro ao atualizar as chaves!');
+
+                }
+
+            }
+        });
+
+        $('#keys-content').slideUp()
+        $('#arrow-up').hide()
+        $('#arrow-down').show()
+
+        $('#bt-update-keys').hide()
+        $('#bt-close').show()
+        
+        $('#bt-close').trigger('click')
+    })
+    
+    $('#open-keys').on('click', function () {
+        if($('#keys-content').is(':visible')){
+
+            $('#keys-content').slideUp()
+            $('#arrow-up').hide()
+            $('#arrow-down').show()
+
+            $('#bt-update-keys').hide()
+            $('#bt-close').show()
+        }else{
+
+            $('#keys-content').slideDown()
+            $('#arrow-down').hide()
+            $('#arrow-up').show()
+
+            $('#bt-close').hide()
+            $('#bt-update-keys').show()
+        }
+    })
+
+    var prod = false
+    var track = false
+    var webhook = false
+
+    $('.sync-products').click(function () {
+
+        prod = true
+        track = false
+        webhook = false
+
+        toggle_confirm('Produtos', 'A sincronização pode demorar algumas horas.')
+        
+
+    })
+
+    $('.sync-tracking').click(function () {
+
+        prod = false
+        track = true
+        webhook = false
+
+        toggle_confirm('Rastreios', 'A sincronização pode demorar algumas horas.')
+        
+
+    })
+    
+    $('#bt-confirm').on('click', function () {
+        sync_data(prod, track, webhook)
+        $('#bt-cancel').trigger('click')
+        $('#bt-close').trigger('click')
+        $("#modal-confirm").modal('hide');
+
+    })
+
+    $('#bt-cancel').on('click', function () {
+        $("#bts-confirm").slideUp()
+    })
+
+    $('.sync-webhooks').click(function () {
+
+        prod = false
+        track = false
+        webhook = true
+        
+        toggle_confirm('Webhooks', 'A sincronização pode demorar algumas horas.')
+    })
+
+    function toggle_confirm(name, desc) {
+
+        $("#modal_edit").modal('hide');
+        $("#modal-confirm").modal('show');
+
+        function fill() {
+            
+            $("#sync-name").html(name);
+            if (desc) {
+                $("#sync-desc").html(
+                    '<div style="padding:2px 0">' + desc + "</div>"
+                );
+            } else {
+                $("#sync-desc").html("");
+            }
+        }
+        if ($("#bts-confirm").is(":visible")) {
+            // $("#bts-confirm").fadeOut('fast',null, function () {
+            //     fill()
+            //     $("#bts-confirm").slideDown();
+            // });
+            fill()
+            
+        } else {
+            fill()
+            //$("#bts-confirm").show()
+            //$("#bts-confirm").slideDown();
+        }
+    }
+
+    function sync_data(prod, track, webhook) {
+        var data = {"opt_prod":prod, "opt_track":track, "opt_webhooks":webhook}
+
+        $.ajax({
+            method: "POST",
+            data: data,
+            url: "/api/apps/woocommerce/synchronize/products?projectId="+projectId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                
+                errorAjaxResponse(response);
+            },
+            success: function success(r) {
+
+
+                
+
+                if(r.status == true){
+                    alertCustom('success', 'Sincronização de dados foi iniciada!');
+
+                }else{
+                    alertCustom('error', 'Já existe uma sincronização de dados em andamento!');
+
+                }
+
+            }
+        });
+    }
+
+
+    $('#bt-close-confirm').on('click', function () {
+        $("#modal_edit").modal('show');
+
+    })
 });

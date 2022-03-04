@@ -3,7 +3,7 @@
     <div class='row'>
         <div class='form-group col-12'>
             <label for='type'>Tipo</label>
-            <select name='type' class='form-control type select-pad shipping-type'>
+            <select name='type' id="shipping-type" class='sirius-select type'>
                 <option value='static' selected>Frete fixo (você define um valor fixo para o frete)</option>
                 <option value='pac'>PAC (Calculado automaticamente pela API)</option>
                 <option value='sedex'>SEDEX (Calculado automaticamente pela API)</option>

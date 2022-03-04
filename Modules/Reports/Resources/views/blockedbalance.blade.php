@@ -131,9 +131,9 @@
                         <div class="row">
 
                             <div class="col-sm-6 col-md-3">
-                                <label for="projeto">Projeto</label>
+                                <label for="projeto">Lojas</label>
                                 <select name='select_project' id="projeto" class="sirius-select">
-                                    <option value="">Todos projetos</option>
+                                    <option value="">Todas lojas</option>
                                 </select>
                             </div>
 
@@ -280,7 +280,7 @@
                                 <thead>
                                 <tr>
                                     <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                    <td class="table-title">Projeto</td>
+                                    <td class="table-title">Loja</td>
                                     <td class="table-title">Descrição</td>
                                     <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
                                     <td class="table-title">Forma</td>
@@ -307,9 +307,9 @@
                
             </div>
         </div>
-        {{-- Quando não tem projeto cadastrado  --}}
+        {{-- Quando não tem loja cadastrado  --}}
             @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
+        {{-- FIM loja nao existem lojas--}}
     </div>
 
 

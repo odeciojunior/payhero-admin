@@ -191,7 +191,8 @@ class WooCommerceService
         $description = '';
 
         foreach($variation->attributes as $attribute){
-            $description .= $attribute->option.' ';
+            if(!empty($attribute->option))
+                $description .= $attribute->option.' ';
         }
 
 
@@ -531,6 +532,24 @@ class WooCommerceService
                     }
                 }
             }
+
+            //check for _wc_shipment_tracking_items
+            if(empty($order->correios_tracking_code)){
+                foreach ($order->meta_data as $meta) {
+                    if($meta->key == '_wc_shipment_tracking_items'){
+                        if(is_array($meta->value)){
+                            foreach ($meta->value[0] as $key => $value) {
+                                if($key == 'tracking_number'){
+
+                                    $order->correios_tracking_code = $value;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
 
             if(!empty($order->correios_tracking_code)){
 

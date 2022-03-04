@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\TrackingService;
+use Illuminate\Support\Facades\Log;
 
 class VerifyTrackingsWithoutInfo extends Command
 {
@@ -34,31 +35,34 @@ class VerifyTrackingsWithoutInfo extends Command
 
     public function handle()
     {
-        $trackingModel = new Tracking();
+        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
+
         $trackingService = new TrackingService();
 
-        $query = $trackingModel->with('productPlanSale')
+        $query = Tracking::select('product_plan_sale_id', 'tracking_code')
             ->whereIn('system_status_enum', [
                 Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
                 Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
             ])->whereDate('created_at', '>=', now()->subMonths(4));
 
-        $total = $query->count();
-        $count = 0;
+        $bar = $this->getOutput()->createProgressBar($query->count());
+        $bar->start();
 
-        $query->chunk(100, function ($trackings) use ($total, &$count, $trackingService) {
-            foreach ($trackings as $tracking) {
+        $query->chunk(100, function ($trackings) use ($bar, $trackingService) {
+            foreach ($trackings as $t) {
                 try {
-                    $count++;
-                    $this->line("T {$count} de {$total}: {$tracking->tracking_code}");
-                    $trackingCode = $tracking->tracking_code;
-                    $pps = $tracking->productPlanSale;
-                    $trackingService->createOrUpdateTracking($trackingCode, $pps->id);
+                    $trackingService->createOrUpdateTracking($t->tracking_code, $t->product_plan_sale_id);
                 } catch (\Exception $e) {
                     $this->error($e->getMessage());
                     continue;
+                } finally {
+                    $bar->advance();
                 }
             }
         });
+
+        $bar->finish();
+
+        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 }

@@ -17,7 +17,7 @@ $(document).ready(function () {
         3: "Recusado",
     };
 
-    //VERIFICA SE HA FILTRO E PEGA O TIPO 
+    //VERIFICA SE HA FILTRO E PEGA O TIPO
     let storeTypeProduct = () => {
         if(localStorage.getItem("filtersApplied")){
             let getProductValue = JSON.parse(localStorage.getItem("filtersApplied"));
@@ -77,7 +77,7 @@ $(document).ready(function () {
             },
         });
     }
-    
+
     function getTypeProducts() {
         $.ajax({
             method: "GET",
@@ -95,9 +95,11 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if (response.data) {
+                    let has_shopify = false;
                     $("#select-projects").html("");
                     $.each(response.data, function (index, value) {
                         if (value.shopify) {
+                            has_shopify = true
                             $("#select-projects").append(
                                 $("<option>", {
                                     value: value.id,
@@ -105,7 +107,11 @@ $(document).ready(function () {
                                 })
                             );
                         }
-                    });
+                    })
+
+                    if (has_shopify) {
+                        $("#select-projects").addClass('has_shopify')
+                    }
                 }
                 handleLocalStorage();
             },
@@ -132,7 +138,7 @@ $(document).ready(function () {
             };
             localStorage.setItem("page", JSON.stringify(getPage));
         }
-        
+
         //RESGATA PAGINA, SE HOUVER FILTRO SET PAGINA PARA NULL
         if(localStorage.getItem("page") != null){
             let parsePage = JSON.parse(localStorage.getItem("page"));
@@ -158,7 +164,7 @@ $(document).ready(function () {
 
         if (link == null) {
             link = "/api/products?shopify=" + type + "&project=" + project + "&name=" + name;
-            
+
         } else {
             link = "/api/products" + link + "&shopify=" + type + "&project=" + project + "&name=" + name;
         }
@@ -327,12 +333,14 @@ $(document).ready(function () {
     //EXIBI OU ESCONDE O CAMPO PROJETO
     $("#type-products").on("change", function () {
         const type = $(this).val();
-        if (type === "1") {
+        const $selectProject = $('#select-projects');
+        console.log($selectProject.hasClass('has_shopify'))
+        if (type === "1" && $selectProject.hasClass('has_shopify')) {
             $('#projects-list').removeClass('d-none');
             $("#projects-list select").prop("disabled", false).removeClass("disabled");
             $("#opcao-vazia").remove();
-
         } else {
+            console.log('entrei')
             $("#projects-list select").prop("disabled", true).addClass("disabled");
             $("#projects-list").addClass("d-none");
         }

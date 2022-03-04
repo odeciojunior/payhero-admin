@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\BoletoService;
 
 class ChangeBoletoPendingToCanceled extends Command
@@ -34,7 +36,14 @@ class ChangeBoletoPendingToCanceled extends Command
 
     public function handle()
     {
-        $boletoService = new BoletoService();
-        $boletoService->changeBoletoPendingToCanceled();
+        try {
+
+            $boletoService = new BoletoService();
+            $boletoService->changeBoletoPendingToCanceled();
+
+        } catch (Exception $e) {
+            report($e);
+        }
+
     }
 }
