@@ -106,7 +106,7 @@
 }
 
 .preview-banner.desktop {
-    height: 90px;
+    height: 84px;
     overflow: hidden;
 }
 
@@ -151,25 +151,8 @@
 
 .preview-body.visual.desktop {
     width: 400px;
+    margin-top: 5px;
     padding: 0 !important;
-}
-
-@media (max-width: 1600px){
-
-    .retangle-banner.desktop {
-        width: 230px;
-    }
-    .preview-banner.desktop {
-        height: 65px;
-    }
-
-    .preview-body.visual.desktop {
-        width: 230px;
-    }
-
-    .logo-desktop-div.desktop {
-        padding: 0px 110px !important;
-    }
 }
 
 /* ----------- Logo Desktop Preview ----------- */
@@ -178,6 +161,7 @@
     display: flex;
     align-items: center;
     width: 100%;
+    margin-top: 5px;
     /* height: 50px; */
     padding: 10px 70px 0 80px;
     -webkit-transition: all 0.1s;
@@ -858,4 +842,33 @@
     margin: 0 10px 0 0;
 }
 
+@media (max-width: 1600px){
+    .retangle-banner.desktop {
+        width: 230px;
+    }
+    .preview-banner.desktop {
+        height: 72px;
+    }
 
+    .preview-body.visual.desktop {
+        width: 230px;
+    }
+
+    .logo-desktop-div.desktop {
+        padding: 0px 0 0 125px !important;
+    }
+
+    .logo-desktop-div .logo-desktop {
+        width: 30px;
+        height: 30px;
+    }
+
+    .preview-logo.desktop {
+        max-width: 30px;
+        max-height: 30px;
+    }
+
+    #preview-desktop-visual {
+        height: 230px;
+    }
+}
