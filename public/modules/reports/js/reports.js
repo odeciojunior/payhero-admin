@@ -18,21 +18,24 @@ $(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
-                if(response.data){
-                    let value = response.data.replace("R$", "");
-                    $("#cashback").html("<span class='currency'>R$ </span>" + value).addClass('visible');
-
-                    if(response.data !== '0,00') {
-                        $('.new-graph-cashback').html('<div class=graph-cashback></div>');
-                        newGraphCashback();
-                        
+            success: function success(response, status) {
+                if(status !== ''){
+                    if(response.data){
+                        let value = response.data.replace("R$", "");
+                        $("#cashback").html("<span class='currency'>R$ </span>" + value).addClass('visible');
+    
+                        if(response.data !== '0,00') {
+                            $('.new-graph-cashback').html('<div class=graph-cashback></div>');
+                            newGraphCashback();
+                            
+                        } else {
+                            $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
+                        }                    
                     } else {
+                        $('.new-graph-cashback').next('.no-graph').remove();
                         $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
-                    }                    
-                } else {
-                    $('.new-graph-cashback').next('.no-graph').remove();
-                    $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
+                    }
+                    $('#card-cashback .ske-load').hide();
                 }
             }
         });
@@ -50,20 +53,23 @@ $(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
-                if(response.data){
-                    let value = response.data.replace("R$", " ");
-                    $("#pending").html("<span class='currency'>R$ </span>" + value).addClass('visible');
-                    
-                    if(response.data !== '0,00') {
-                        $('.new-graph-pending').html('<div class=graph-pending></div>');
-                        newGraphPending();
+            success: function success(response, status) {
+                if(status !== '') {
+                    if(response.data){
+                        let value = response.data.replace("R$", " ");
+                        $("#pending").html("<span class='currency'>R$ </span>" + value).addClass('visible');
+                        
+                        if(response.data !== '0,00') {
+                            $('.new-graph-pending').html('<div class=graph-pending></div>');
+                            newGraphPending();
+                        } else {
+                            $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
+                        }
                     } else {
+                        $('.new-graph-pending').next('.no-graph').remove();
                         $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
                     }
-                } else {
-                    $('.new-graph-pending').next('.no-graph').remove();
-                    $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
+                    $('#card-pending .ske-load').hide();
                 }
             }
         });
@@ -81,23 +87,25 @@ $(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
-                if(response.data){
-                    let value = response.data.replace("R$", "");
-                    //$("#com").addClass('visible');
-                    $("#comission").html("<span class='currency'>R$ </span>" + value).addClass('visible');
-                    
-                    if(response.data !== '0,00') {
-                        $('.new-graph').html('<div class=graph-comission></div>');
-                        newGraph();
+            success: function success(response, status) {
+                if(status !== '') {
+                    if(response.data){
+                        let value = response.data.replace("R$", "");
+                        //$("#com").addClass('visible');
+                        $("#comission").html("<span class='currency'>R$ </span>" + value).addClass('visible');
+                        
+                        if(response.data !== '0,00') {
+                            $('.new-graph').html('<div class=graph-comission></div>');
+                            newGraph();
+                        } else {
+                            $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
+                        }
                     } else {
+                        $('.new-graph').next('.no-graph').remove();
                         $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
                     }
-                } else {
-                    $('.new-graph').next('.no-graph').remove();
-                    $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
+                    $('#card-comission .ske-load').hide();
                 }
-                
             }
         });
     }
@@ -114,17 +122,20 @@ $(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
-                $("#sales").addClass('visible');
-                if(response.data != '0'){
-                    $("#sales").html(response.data);
-                    $('.new-graph-sell').html('<div class=graph-sell></div>');
-                    newGraphSell();
-                    
-                } else {
-                    $("#sales").html('0');
-                    $(".new-graph-sell").next('.no-graph').remove();
-                    $('.new-graph-sell').after('<div class=no-graph>Não há dados suficientes</div>');
+            success: function success(response, status) {
+                if(status !== ''){
+                    $("#sales").addClass('visible');
+                    if(response.data != '0'){
+                        $("#sales").html(response.data);
+                        $('.new-graph-sell').html('<div class=graph-sell></div>');
+                        newGraphSell();
+                        
+                    } else {
+                        $("#sales").html('0');
+                        $(".new-graph-sell").next('.no-graph').remove();
+                        $('.new-graph-sell').after('<div class=no-graph>Não há dados suficientes</div>');
+                    }
+                    $('#card-sales .ske-load').hide();
                 }
             }
         });
@@ -142,44 +153,47 @@ $(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
+            success: function success(response, status) {
                 $('#payment-type-items .bar').addClass('visible');
                 
-                if( response.data.total ) {
-                    //credit_card
-                    $("#credit-card-value").html(response.data.credit_card.value);
-                    $("#percent-credit-card").html(response.data.credit_card.percentage);
-
-                    if(response.data.credit_card.percentage){
-                        $("#percent-credit-card").next('.col-payment').find('.bar').css('width', response.data.credit_card.percentage );
-                        $("#percent-credit-card").next('.col-payment').find('.bar').addClass('blue');
+                if(status !== '') {
+                    if( response.data.total ) {
+                        //credit_card
+                        $("#credit-card-value").html(response.data.credit_card.value);
+                        $("#percent-credit-card").html(response.data.credit_card.percentage);
+    
+                        if(response.data.credit_card.percentage){
+                            $("#percent-credit-card").next('.col-payment').find('.bar').css('width', response.data.credit_card.percentage );
+                            $("#percent-credit-card").next('.col-payment').find('.bar').addClass('blue');
+                        }
+    
+                        // boleto
+                        $("#boleto-value").html(response.data.boleto.value);
+                        $("#percent-values-boleto").html(response.data.boleto.percentage);
+    
+                        if(response.data.boleto.percentage > '0'){
+                            $("#percent-values-boleto").next('.col-payment').find('.bar').css('width', response.data.boleto.percentage );
+                            $("#percent-values-boleto").next('.col-payment').find('.bar').addClass('pink');
+                        }
+    
+                        // pix
+                        $("#pix-value").html(response.data.pix.value);
+                        $("#percent-values-pix").html(response.data.pix.percentage);
+    
+                        if(response.data.pix.percentage > '0'){
+                            $("#percent-values-pix").next('.col-payment').find('.bar').css('width', response.data.pix.percentage );
+                            $("#percent-values-pix").next('.col-payment').find('.bar').addClass('purple');
+                        }
+                        $('.bar').removeClass('visible');
+                       
+                    } else {
+                        $('#percent-credit-card, #percent-values-boleto, #percent-values-pix ').html('0%');
+                        $('#credit-card-value, #boleto-value, #pix-value').html('R$ 0,00');
+                        $('#payment-type-items .bar').css('width', '100%');
                     }
-
-                    // boleto
-                    $("#boleto-value").html(response.data.boleto.value);
-                    $("#percent-values-boleto").html(response.data.boleto.percentage);
-
-                    if(response.data.boleto.percentage > '0'){
-                        $("#percent-values-boleto").next('.col-payment').find('.bar').css('width', response.data.boleto.percentage );
-                        $("#percent-values-boleto").next('.col-payment').find('.bar').addClass('pink');
-                    }
-
-                    // pix
-                    $("#pix-value").html(response.data.pix.value);
-                    $("#percent-values-pix").html(response.data.pix.percentage);
-
-                    if(response.data.pix.percentage > '0'){
-                        $("#percent-values-pix").next('.col-payment').find('.bar').css('width', response.data.pix.percentage );
-                        $("#percent-values-pix").next('.col-payment').find('.bar').addClass('purple');
-                    }
-                    $('.bar').removeClass('visible');
-                   
-                } else {
-                    $('#percent-credit-card, #percent-values-boleto, #percent-values-pix ').html('0%');
-                    $('#credit-card-value, #boleto-value, #pix-value').html('R$ 0,00');
-                    $('#payment-type-items .bar').css('width', '100%');
+                    $('#type-payment').addClass('visible');
+                    $('#card-typepayments .ske-load').hide();
                 }
-                $('#type-payment').addClass('visible');
             }
         });
     }
@@ -255,10 +269,7 @@ $(function () {
             getTypePayments()
         ];
 
-        Promise.all(promises).then(resp => {
-            console.log(resp);
-            $('.ske-load').hide();
-        }).catch(error => console.log(error));
+        $.when(promises).done(function(data, status, jqXHR) {});
     }
 
     var current_currency = "";
