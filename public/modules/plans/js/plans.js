@@ -612,10 +612,13 @@ $(function () {
         $(modal).find('.nav-tabs-horizontal').css('display', 'block');
         $(modal).find('#tab-general-data_panel').removeClass('show active');
 
-        $(modal).find('.modal-body').mCustomScrollbar('destroy');
-        $(modal).find('.modal-body').mCustomScrollbar('update');
-        $(modal).find('#stage1').find('.box-products').mCustomScrollbar('destroy');
-        $(modal).find('#stage1').find('.box-products').mCustomScrollbar('update');
+        if (!flag) {
+            $(modal).find('.modal-body').mCustomScrollbar('destroy');
+            $(modal).find('.modal-body').mCustomScrollbar('update');
+
+            $(modal).find('#stage1').find('.box-products').mCustomScrollbar('destroy');
+            $(modal).find('#stage1').find('.box-products').mCustomScrollbar('update');
+        }
 
         $(modal).find('.products-data').css('height', '148px');
 
@@ -773,7 +776,7 @@ $(function () {
                         });
 
                         if (flag == true) {
-                            getCustom(modal);
+                            getCustom(modal, false);
                         } else {
                             $(modal).find('.ph-item').fadeOut(100, function() { this.remove(); }).promise().done(function() {
                                 $('[data-toggle="tooltip"]').tooltip({
@@ -800,14 +803,16 @@ $(function () {
     function getCustom(modal, showLoading = true) {
         $(modal).find('.product-photo').unbind('load');
 
-        $(modal).find('.modal-body').mCustomScrollbar('destroy');
-        $(modal).find('.modal-body').mCustomScrollbar('update');
+        if (showLoading) {
+            $(modal).find('#modal_add_body').mCustomScrollbar('destroy');
+            $(modal).find('#modal_add_body').mCustomScrollbar('update');
 
-        $(modal).find('#stage1-customization').find('.body-products').mCustomScrollbar('destroy');
-        $(modal).find('#stage1-customization').find('.body-products').mCustomScrollbar('update');
+            $(modal).find('#stage1-customization').find('.body-products').mCustomScrollbar('destroy');
+            $(modal).find('#stage1-customization').find('.body-products').mCustomScrollbar('update');
 
-        $(modal).find('.modal-body').css('height', 'auto').attr('style', 'padding-bottom: 0px !important').attr('style', 'padding-top: 0 !important');
-        $(modal).find('#stage1-customization').find('.box-products').css({'height': 'auto'});
+            $(modal).find('.modal-body').css('height', 'auto').attr('style', 'padding-bottom: 0px !important').attr('style', 'padding-top: 0 !important');
+            $(modal).find('#stage1-customization').find('.box-products').css({'height': 'auto'});
+        }
 
         $(modal).find('.modal-footer').html(
             '<button plan="' + plan_id + '" id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">' +
@@ -935,6 +940,8 @@ $(function () {
     }
 
     function getProductCustom(modal, product_ID) {
+        $(modal).find('#stage2-customization').find('.active_custom').prop('checked', true).val(true).trigger('change');
+
         $(modal).find('.modal-body').css('height', 'auto');
 
         $(modal).find('#product_id').val(product_ID);
@@ -968,7 +975,7 @@ $(function () {
             $(modal).find('#stage2-customization').find('.name-product').html(products_plan[index_product_custom].product_name_short);
             $(modal).find('#stage2-customization').find('.qtd-product').html('Qtd: ' + products_plan[index_product_custom].amount);
             $(modal).find('#stage2-customization').find('.active_custom').attr('name', 'is_custom[' + product_ID + ']');
-            $(modal).find('#stage2-customization').find('.active_custom').prop('checked', products_plan[index_product_custom].is_custom ? true : false).val(products_plan[index_product_custom].is_custom).change();
+            //$(modal).find('#stage2-customization').find('.active_custom').prop('checked', products_plan[index_product_custom].is_custom ? true : false).val(products_plan[index_product_custom].is_custom).change();
             $(modal).find('#add-list-custom-product').attr('product', product_ID);
 
             if (products_plan[index_product_custom].shopify_id > 0) {
