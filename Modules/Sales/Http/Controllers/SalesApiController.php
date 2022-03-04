@@ -402,12 +402,16 @@ class SalesApiController extends Controller
             $data = $request->all();
             $planModel = new Plan();
             $userProjectModel = new UserProject();
+            
+            $projectIds = [current(Hashids::decode($data['project_id']))];
 
-            $projectIds = [];
-            foreach($data['project_id'] as $project){
-                array_push($projectIds, current(Hashids::decode($project)));
-            };
-
+            if(is_array($data['project_id'])){
+                $projectIds = [];
+                foreach($data['project_id'] as $project){
+                    array_push($projectIds, current(Hashids::decode($project)));
+                };
+            }
+                        
             if (current($projectIds)) {
 
                 $plans = null;
