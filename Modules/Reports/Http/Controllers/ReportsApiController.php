@@ -894,4 +894,19 @@ class ReportsApiController extends Controller
     }
 
     // MARKETING --------------------------------------------------------------------------
+    function getResumeCoupons(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $saleService = new ReportService();
+        $coupons = $saleService->getResumeCoupons($data);
+
+        return response()->json([
+            'data' => $coupons
+        ]);
+    }
 }

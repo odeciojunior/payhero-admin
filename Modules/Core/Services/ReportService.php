@@ -1444,12 +1444,54 @@ class ReportService
     }
 
     // MARKETING --------------------------------------------------------------------------------------
-    public function getResumeCoupons()
+    public function getResumeCoupons($filters)
     {
         try {
+            $userId = auth()->user()->account_owner_id;
+            $statusId = Sale::STATUS_APPROVED;
 
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+            $saleModel = new Sale();
+            $sales = $saleModel->where('owner_id', $userId)
+            ->where('status', $statusId)
+            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
+
+            $projectId = '';
+            if (!empty($filters["project"])) {
+                $projectId = 'AND project_id = ' . Hashids::decode($filters["project"]);
+
+                $sales->where('project_id', Hashids::decode($filters["project"]));
+            }
+
+            if ($sales->get()->count() == 0) {
+                return [];
+            }
+
+            $query = 'SELECT sales.cupom_code as coupon, COUNT(*) as amount FROM sales
+            WHERE sales.owner_id = '.$userId.' AND sales.status = '.$statusId.'
+            AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
+            GROUP BY sales.id ORDER BY amount DESC LIMIT 4' .$projectId;
+            $dbResults = DB::select($query);
+
+            $total = 0;
+            foreach($dbResults as $result)
+            {
+                $total += $result->amount;
+            }
+
+            foreach($dbResults as $result)
+            {
+                $result->percentage = round(number_format(($result->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
+            }
+
+            array_push($dbResults, (object) [
+                'total' => $total
+            ]);
+
+            return $dbResults;
         } catch(Exception $e) {
-
+            return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 
