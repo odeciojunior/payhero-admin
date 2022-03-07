@@ -128,6 +128,7 @@ $(function () {
                     if(response.data != '0'){
                         $("#sales").html(response.data);
                         $('.new-graph-sell').html('<div class=graph-sell></div>');
+                        $(".new-graph-sell").next('.no-graph').remove();
                         newGraphSell();
                         
                     } else {
@@ -136,6 +137,52 @@ $(function () {
                         $('.new-graph-sell').after('<div class=no-graph>Não há dados suficientes</div>');
                     }
                     $('#card-sales .ske-load').hide();
+                }
+            }
+        });
+    }
+
+    function getProducts() {
+        $.ajax({
+            method: "GET",
+            url: "/api/reports/resume/products?date_range=" + $("input[name='daterange']").val(),
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response, status) {
+                if(status !== ''){
+                    $("#qtd").addClass('visible');
+                    if(response.data){
+                        $.each(response.data, function (i, product) {
+                            if(product.total != 0) {
+                                $("#qtd").html(product.total);
+                                if(product.amount) {
+                                    $(".list-products").append(
+                                        $("<li class='" + ( (i > 3 && i < 8) ? 'line': '' ) + "'>"+
+                                            "<div class='box-list-products'>"+
+                                            "<figure><img src='"+ product.image +"' width='24px' height='24px' /></figure>"+
+                                            "<div class='bars blue' style='width:"+ (product.percentage) +"'>"+
+                                            "<span>" + product.amount + "</span></div></div></li>"
+                                        )
+                                    );
+                                    $(".list-products").addClass('visible');
+                                }
+                            } else {
+                                $("#qtd").html('0');
+                            }
+                        });
+                        
+                    } else {
+                        $("#qtd").html('0');
+                        // $(".new-graph-sell").next('.no-graph').remove();
+                        // $('.new-graph-sell').after('<div class=no-graph>Não há dados suficientes</div>');
+                    }
+                    $('#card-products .ske-load').hide();
                 }
             }
         });
@@ -266,7 +313,8 @@ $(function () {
             getCashback(),
             getPending(),
             getSales(),
-            getTypePayments()
+            getTypePayments(),
+            getProducts()
         ];
 
         $.when(promises).done(function(data, status, jqXHR) {});
@@ -282,7 +330,7 @@ $(function () {
         $('#payment-type-items .bar').removeClass('pink');
         $('#payment-type-items .bar').removeClass('purple');
 
-        $("#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-reembolso, #qtd-pending, #qtd-canceled, #percent-boleto-convert,#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
+        $("#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-chargeback, #qtd-pending, #qtd-canceled, #percent-boleto-convert,#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio"
         ).html("<span>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
         loadOnTable("#origins-table-itens", ".table-vendas-itens");
 
@@ -292,6 +340,7 @@ $(function () {
             $('.graph *').remove();
             $('.value-price *').removeClass('visible');
             $("#type-payment").removeClass('visible');
+            $('.list-products li').remove();
         }
 
         $.ajax({
@@ -325,7 +374,7 @@ $(function () {
                 $("#qtd-boletos").html(response.contBoleto);
                 $("#qtd-pix").html(response.contPix);
                 $("#qtd-recusadas").html(response.contRecused);
-                $("#qtd-reembolso").html(response.contRefunded);
+                // $("#qtd-reembolso").html(response.contRefunded);
                 $("#qtd-chargeback").html(response.contChargeBack);
                 $("#qtd-dispute").html(response.contInDispute);
                 $("#qtd-pending").html(response.contPending);
@@ -461,11 +510,10 @@ $(function () {
             success: function success(response) {
                 if (response.data.length == 0) {
                     $("#origins-table").html(
-                        "<td colspan='3' class='text-center'><img style='height:90px' src='" +
-                            $("#origins-table-itens").attr("img-empty") +
-                            "'><br> Nenhuma venda encontrada</div>"
+                        "<td><img src='" + $("#origins-table-itens").attr("img-empty") + "'></td><td> <p class='no-data-origin'><strong>Sem dados, por enquanto...</strong>Ainda faltam dados suficientes a comparação, continue rodando!</p></td>"
                     );
                     $("#pagination").html("");
+                    $("#pagination-origins").hide();
                 } else {
                     var table_data = "";
 
