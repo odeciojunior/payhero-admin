@@ -65,6 +65,7 @@
     "nunomaduro/collision": "^5.0",
     "phpunit/phpunit": "^9.0",
     "shuchkin/simplexlsx": "^0.8.13",
+    "supliu/laravel-query-monitor": "^1.0",
     "symfony/thanks": "^1.0"
   },
   "autoload": {
