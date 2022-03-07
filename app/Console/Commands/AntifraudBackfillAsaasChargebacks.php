@@ -9,7 +9,6 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Services\Antifraud\CloudfoxAntifraudService;
-use Illuminate\Support\Facades\Log;
 
 class AntifraudBackfillAsaasChargebacks extends Command
 {
@@ -44,7 +43,6 @@ class AntifraudBackfillAsaasChargebacks extends Command
      */
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
             $salesQuery = Sale::query()
@@ -74,6 +72,5 @@ class AntifraudBackfillAsaasChargebacks extends Command
             report($e);
         }
 
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 }

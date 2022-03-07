@@ -11,7 +11,6 @@ use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Log;
 
 class UpdateGetnetGatewayTransferredAt extends Command
 {
@@ -46,8 +45,6 @@ class UpdateGetnetGatewayTransferredAt extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
 
             $withdrawals = Withdrawal::with('transactions')->whereHas('transactions', function ($q){
@@ -66,8 +63,6 @@ class UpdateGetnetGatewayTransferredAt extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 
