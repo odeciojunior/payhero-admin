@@ -1414,22 +1414,27 @@ class ReportService
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $query = 'SELECT products.name, products.photo as image, COUNT(*) as quantidade FROM products
+            $query = 'SELECT products.name, products.photo as image, COUNT(*) as amount FROM products
             INNER JOIN products_plans_sales ON products.id = products_plans_sales.product_id
             INNER JOIN sales ON products_plans_sales.sale_id = sales.id
             WHERE sales.owner_id = '.$userId.' AND sales.status = '.$statusId.'
             AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
-            GROUP BY products.id ORDER BY quantidade DESC LIMIT 10' .$projectId;
+            GROUP BY products.id ORDER BY amount DESC LIMIT 10' .$projectId;
             $dbResults = DB::select($query);
 
-            $sumTotal = 0;
+            $total = 0;
             foreach($dbResults as $r)
             {
-                $sumTotal += $r->quantidade;
+                $total += $r->amount;
+            }
+
+            foreach($dbResults as $r)
+            {
+                $r->percentage = round(number_format(($r->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
             }
 
             array_push($dbResults, (object) [
-                'total' => $sumTotal
+                'total' => $total
             ]);
 
             return $dbResults;
