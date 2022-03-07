@@ -1,11 +1,400 @@
 let statusCupons = {
     1: "success",
-    0: "danger",
+    0: "secondary",
 };
+var edit_rules = []
+var cancel_edit_rules = []
+// var items_selected = []
+
+
+let projectId = $(window.location.pathname.split('/')).get(-1);
+
+
+function count_plans_coupons() { //thumbnails
+    
+    
+
+    $('#c-show_plans').html('')
+    
+    $.ajax({
+        data: {
+                total: 1,
+                list: 'plan',
+                search: '',
+                project_id: projectId,
+                //page: params.page || 1
+            }
+        ,
+
+        method: "GET",
+        url: "/api/plans/user-plans",
+        
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+            
+        }, success: function success(response) {
+            
+            
+            
+            
+
+            var html_show_plans = ''
+            for(i in response.thumbnails){
+
+                // background: url('https://cloudfox-files.s3.amazonaws.com/produto.svg');
+
+                var img = response.thumbnails[i].products[0].photo?response.thumbnails[i].products[0].photo:'https://cloudfox-files.s3.amazonaws.com/produto.svg'
+                
+                html_show_plans += `
+                
+
+                    <span class="plan_thumbnail" style="width:43px; height:43px;
+                    background-repeat: no-repeat; background-position: center center; 
+                    background-size: cover !important;  background-image: url('`+img+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');  "></span>
+                
+                `
+            }
+
+            $('#c-show_plans').html(html_show_plans)
+
+            if(response.total > 8){
+                var rest = response.total - 8
+                $('#c-show_plans').append('<div class="plans_rest">+'+rest+'</div>')
+
+            }
+
+
+            
+        }
+    });
+    
+}
+
+function plans_count2() {
+    if(items_selected.length > 0){
+        
+        var plans_count = items_selected.length + ' plano'+(items_selected.length>1?'s':'')
+        $('#planos-count2, #planos-count-edit2').html(plans_count);
+
+        $('#c-show_plans').css('margin-top','10px')
+        
+        $('#c-show_plans').css('height','88px')
+        // $('#c-show_plans').addClass('mostrar_mais_detalhes')
+        
+        
+        if($('#mostrar_mais_label2').html()=='Mostrar menos'){
+            
+            $('#mostrar_mais2').trigger('click')
+        }
+
+    }else{
+        
+
+        $('#c-show_plans').removeClass('mostrar_mais_detalhes')
+
+        $('#c-show_plans').css('height','48px')
+        
+        //c-show_plans
+        $('#c-show_plans').css('margin-top','20px')
+
+        $('#planos-count2, #planos-count-edit2').html('Todos os planos');
+
+        count_plans_coupons()
+    }
+
+    if(items_selected.length>2 && items_selected.length<11){
+        $('#mostrar_mais2').show();
+        
+    }else{
+        $('#mostrar_mais2').hide();
+
+    }
+}
+
+
+function coupon_rules(data) {
+    
+    var html = 'Desconto em '
+    var value = ''
+    if(data.type == 0){
+        html += '<strong>porcentagem</strong>'
+        value = data.value+'%'
+    }else{
+        html += '<strong>dinheiro</strong>'
+        value = 'R$'+data.value
+    }
+    var expires = data.expires?data.expires:'Não vence';
+    if(data.expires_days < 0){
+        expires = '<span style="color:">Vencido</span>'
+    }
+    if(data.expires_days > 0){
+        expires = '<span style="color:">Vence em '+data.expires_days+' dias</span>'
+    }
+    if(data.expires_days == 0){
+        expires = '<span style="color:">Vence hoje</span>'
+    }
+    html += '<br><small>'+expires+'</small><br>'
+    html += '<strong>'+value+' de desconto</strong> em compras <strong>de R$'+data.rule_value+' ou mais</strong> com o cupom <strong>'+data.code+'</strong>'
+    
+    $('#c-rules').html(html)
+}
+
+function show_plans(){
+    if(items_selected.length > 10){
+        var html_show_plans = ''
+        for(i in items_selected){
+            
+            if(i>7) break;
+
+            html_show_plans += `<span class="plan_thumbnail" style="width:43px; height:43px;
+            background-repeat: no-repeat; background-position: center center; 
+            background-size: cover !important; background: url('`+items_selected[i].image+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`
+        }
+
+        $('#show_plans, #c-show_plans').removeClass('mostrar_mais_detalhes')
+        $('#show_plans, #c-show_plans').css('margin-top',20);
+
+        $('#show_plans, #c-show_plans').html(html_show_plans)
+        var rest = items_selected.length - 8
+        $('#show_plans, #c-show_plans').append('<div class="plans_rest">+'+rest+'</div>')
+
+        return false
+    }
+
+
+    var show_plans = ''
+    for(i in items_selected){
+        
+        
+        show_plans += `<div class="item_raw" >
+    
+            <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
+                <span style="background-image: url(`+(items_selected[i].image?items_selected[i].image:'https://cloudfox-files.s3.amazonaws.com/produto.svg')+`)" class="image2"></span>
+            </span>
+
+            <span class="title text-overflow-title">`+items_selected[i].name+`</span>
+            <span class="description text-overflow-description">`+items_selected[i].description+`</span>
+        </div>`
+    }
+    if(show_plans)
+        $('#show_plans, #c-show_plans').html(show_plans)
+}
+
+function atualizarCoupon() {
+
+    var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+    if (link == null) {
+        link = '/api/project/' + projectId + '/couponsdiscounts';
+    } else {
+        link = '/api/project/' + projectId + '/couponsdiscounts' + link;
+    }
+
+    loadOnTable('#data-table-coupon', '#tabela-coupom');
+    $.ajax({
+        method: "GET",
+        data:{name:$('#search-name').val()},
+        url: link,
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            $("#data-table-coupon").html('');
+            
+            if (response.data == '') {
+                $("#data-table-coupon").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
+            } else {
+                $('#count-coupons').html(response.meta.total)
+                $.each(response.data, function (index, value) {
+                    let data = `<tr>
+                        <td class=""><strong>${value.discount}</strong></td>
+                        <td class="">${value.name}<br><span class="small-text">${value.plans}</span></td>
+                        <td class="">${value.value}</td>
+                        <td class="">${value.code}</td>
+                        <td class="" style="vertical-align: middle; text-align:center">
+                            <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
+                        </td>
+
+
+
+                        <td class="mg-responsive text-right" style="line-height: 1;">
+                            <div class="d-flex justify-content-end align-items-right" style="margin-right:-10px">
+                                <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" discount="${value.discount}" coupon="${value.id}"><span class="o-eye-1"></span> </a>
+                                <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}"><span class='o-bin-1'></span></a>
+                            </div>
+                        </td>
+
+                        
+                    </tr>`;
+
+                    $("#data-table-coupon").append(data);
+                });
+                pagination(response, 'coupons', atualizarCoupon);
+            }
+        }
+    });
+}
+
+var items_placeholder = `<div id="items_loading"> 
+    <div class="item_placeholder"></div>
+    <div class="item_placeholder"></div>
+    <div class="item_placeholder"></div>
+    <div class="item_placeholder"></div>
+    <div class="item_placeholder"></div>
+    <div class="item_placeholder"></div>
+    <div class="item_placeholder"></div>
+    <div class="item_placeholder"></div> </div>`
+
+function run_search(search, now){
+    
+    search_holder = search
+    var search2 = $('#search_input_description_value').val()
+    
+
+    var items_saved = mount_selected_items()    
+
+    var loading = $('.item_placeholder').is(':visible')
+
+    if(loading && !now) return
+
+    if(search.length > 0 || now){
+
+        $('#search_result, #search_result2').html(items_placeholder);
+        //animateItemsPlaceholder()
+
+        $.ajax({
+            data: {
+                    most_sales: 1,
+                    list: 'plan',
+                    search: search,
+                    search2: search2,
+                    project_id: projectId,
+                    limit:30
+                    //page: params.page || 1
+                }
+            ,
+
+            method: "GET",
+            url: "/api/plans/user-plans",
+            
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+                
+            }, success: function success(response) {
+                
+                if(search_holder != search){
+                    run_search(search_holder, 1)
+                    return
+                }
+
+                var data = response.data
+                var items = ''
+                for(plan in data){
+
+                    var skip = false
+                    for(i in items_selected){
+                        if(items_selected[i].id == data[plan].id)
+                            skip = true;
+                    }
+                    if(skip) continue;
+                    
+                    var toolTip
+                    if(data[plan].name.length > 18){
+
+                        toolTip = 'aria-describedby="tt'+data[plan].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+data[plan].name+'"'
+                    }else{
+                        toolTip = ''
+                    }
+
+                    var item = `<div ${toolTip} class="item" data-id="`+data[plan].id+`" data-image="`+data[plan].photo+`" data-name="`+data[plan].name+`" data-description="`+data[plan].description+`" >
+                                    
+                                    <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
+                                    
+                                        <span style="background-image: url(`+(data[plan].photo?data[plan].photo:'https://cloudfox-files.s3.amazonaws.com/produto.svg')+`)" class="image2"></span>
+                                    </span>
+
+                                    <span class="title text-overflow-title">`+data[plan].name+`</span>
+                                    <span class="description text-overflow-description">`+data[plan].description+`</span>
+                                    <svg class="selected_check " style="display: none" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9.5" fill="#2E85EC"/>                            <path d="M13.5574 6.75215C13.7772 6.99573 13.7772 7.39066 13.5574 7.63424L8.49072 13.2479C8.27087 13.4915 7.91442 13.4915 7.69457 13.2479L5.44272 10.7529C5.22287 10.5093 5.22287 10.1144 5.44272 9.87083C5.66257 9.62725 6.01902 9.62725 6.23887 9.87083L8.09265 11.9247L12.7612 6.75215C12.9811 6.50856 13.3375 6.50856 13.5574 6.75215Z" fill="white"/>                            </svg>    
+                                    <svg class="empty_check " width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9" stroke="#9B9B9B"/>                            </svg>
+                                </div>`;
+                    items += item;
+                }
+
+                if(items.length > 0){
+
+                    $('#search_result, #search_result2').html(items_saved + items);
+                    
+                    $('#search_result, #search_result2').mCustomScrollbar('destroy')
+
+                    $('#search_result, #search_result2').mCustomScrollbar()
+                    
+                    set_item_click()
+                }else{
+                    $('#search_result, #search_result2').mCustomScrollbar('destroy')
+
+                    $('#search_result, #search_result2').html(`
+                    <div class="not-found">
+                        <img src="/modules/discount-coupons/images/not-found.svg" >
+                        <div class="title">
+                        Nenhum resultado encontrado.</div>
+                        <div class="description">
+                        Por aqui, nenhum produto com esse nome.
+                        </div>
+                    </div>`);
+
+                }
+                
+            }
+        });
+    }else{
+        
+        run_search('',1)
+
+    }
+}
 
 $(function () {
+    function show_rules(rules){
+        var rules_html = '<ol>'
+        for(i in rules){
+            rules_html += `<li>
+                            Na compra 
+                            <strong>`+ (rules[i].buy=='above_of'?'acima de ':'de ') +
+                            rules[i].qtde +` itens</strong>,
+                            aplicar desconto de <strong>
+                            `+ (rules[i].type=='percent'?rules[i].value+'%':'R$' + rules[i].value) +`
+                            </strong>
+                        </li>`;
+        }
+        rules_html += '</ol>'
+        
+        if(rules_html.indexOf('%') > 0)
+            $('.rules-label').html('Por Valor em Porcentagem')
+        
+        if(rules_html.indexOf('R$') > 0)
+            $('.rules-label').html('Por Valor em R$')
+        
+        if(rules_html.indexOf('%')  > 0 && rules_html.indexOf('R$')  > 0)
+            $('.rules-label').html('Por Valor em R$ e Porcentagem')
 
-    let projectId = $(window.location.pathname.split('/')).get(-1);
+        $('.rules').html(rules_html)
+    }
 
     //comportamento da tela
     var cuponType = 0;
@@ -22,15 +411,15 @@ $(function () {
     });
     $(document).on('change', '#create-coupon-type', function (event) {
         if ($(this).val() == 1) {
-            cuponType = 1;
-            $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
+            cuponType = 1;            
+            $(".coupon-value").mask('#.##0,00', {reverse: true});          
+              
         } else {
             cuponType = 0;
             $('.coupon-value').mask('00%', {reverse: true});
         }
     });
-
-    $(".rule-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
+    $(".rule-value").mask('#.##0,00', {reverse: true});
 
     $('.rule-value').on('blur', function () {
         applyMaskManually(this);
@@ -79,16 +468,490 @@ $(function () {
                 $('#modal-detail-coupon .rule-value').html('R$ ' + response.data.rule_value);
                 $('#modal-detail-coupon .coupon-status').html(response.data.status == '1'
                     ? '<span class="badge badge-success text-left">Ativo</span>'
-                    : '<span class="badge badge-danger">Desativado</span>');
+                    : '<span class="badge badge-secondary">Inativo</span>');
                 $('#modal-detail-coupon').modal('show');
 
             }
         });
     });
+    // Edit discount
+    function edit_name(){
+        $('#edit-name').hide()
+        $('#edit-plans').hide()
+        $('#edit-rules').hide()
 
+
+        $('#display_name').hide()
+        $('#display_name_edit').show()
+        $('#name-edit').focus()
+        $('#name-edit').val($('#d-name').html());
+        
+
+        $('#cancel_name_edit').click(function(){
+            $('#edit-plans').show()
+            $('#edit-rules').show()
+
+            $('#display_name_edit').hide()
+            $('#display_name').show()
+            $('#edit-name').show()
+
+        })   
+    }
+    
+    function reset_edit_buttons() {
+        $('#edit-name').show()
+        $('#edit-plans').show()
+        $('#edit-rules').show()
+    }
+
+    function edit_plans(){
+        
+        if($('#mostrar_mais_label').html() == 'Mostrar menos'){
+
+            $('#mostrar_mais').trigger('click');
+        }
+
+        $('#edit_step0').hide();
+        $('#edit_step2').hide();
+        $('#edit_step1').show();
+        $('#search_input2').focus();
+
+        $('#edit-finish-btn').hide()
+        $('#plans-actions').show()
+
+        
+        if(items_selected.length>0){
+            var items_thumbs = ''
+            for(i in items_selected){
+                
+                if(i>7) break;
+                
+                items_thumbs +=  `
+                <span class="plan_thumbnail" style="width:56px; height:56px;
+                background-repeat: no-repeat; background-position: center center; 
+                background-size: cover !important; background: url('`+items_selected[i].image+`'), url('modules/global/img/produto.png')"></span>`
+                
+            }
+            
+            $('.edit-plans-thumbs').html(items_thumbs)
+
+        }else{
+            count_plans2()
+        }
+
+        //mount_selected_items()
+        //set_item_click()
+        //$('#search_input2').keyup();
+        $('#search_input_description_value').val('')
+        run_search('', 1)
+
+        
+    }
+
+
+    $('.cancel-btn').click(function(){
+        $('#edit_step1').hide();
+        $('#edit_step2').hide();
+        $('#edit_step0').show();
+    })
+
+    $('.btn-edit-plans-save').click(function(){
+        
+        
+        $('#show_plans').html('');
+
+
+        $('#plans_value').val( JSON.stringify(items_selected));
+        $('#save_name_edit').click()
+        $('.cancel-btn').click()
+
+        $('#edit-finish-btn').show()
+        $('#plans-actions').hide()
+
+        plans_count()
+    })
+    
+    
+    $('.btn-save-edit-rules').click(function(){
+
+        if(!toggleDiscountRulesAlert(edit_rules.length)){
+            return false
+        }
+
+        $('#rules_edited').val( JSON.stringify(edit_rules));
+        $('#save_name_edit').click()
+        $('#edit-rules-back').click()
+    })
+
+    $("#type_percent-edit").on('click', function () {
+        
+        $("#percent-edit").show()
+        $("#value-edit").hide()
+    })
+    $("#type_value-edit").on('click', function () {
+        
+        $("#value-edit").show()
+        $("#percent-edit").hide()
+    })
+
+    $('#value-edit').mask('#.##0,00', {reverse: true});
+
+
+    //var rules = edit_rules
+    
+    $("#add_rule-edit").on('click', function () {
+        
+        var rule_id = edit_rules.length+1;
+        for(i in edit_rules){
+            edit_rules[i].id = ++i
+        }
+        
+
+        if(!$('#qtde-edit').val() || $('#qtde-edit').val() == 0){
+            $('#qtde-edit').focus()
+            return false
+        }
+        
+        if($("#type_percent-edit").prop('checked') && (!$('#percent-edit').val() || $('#percent-edit').val() == 0 )){
+            $('#percent-edit').focus()
+            return false
+        }
+
+        if($("#type_value-edit").prop('checked') && (!$('#value-edit').val() || $('#value-edit').val().replace(',','').replace('.','') == 0 )){
+            $('#value-edit').focus()
+            return false
+        }
+
+        
+
+        edit_rules.push({
+            id:rule_id,
+            buy:$('#buy-edit').val(),
+            type:$("#type_percent-edit").prop('checked')?'percent':'value',
+            qtde:$('#qtde-edit').val(),
+            value:$("#type_percent-edit").prop('checked')?$('#percent-edit').val():$('#value-edit').val()
+        })
+        
+        toggleDiscountRulesAlert(1)
+        mount_rules(edit_rules);
+        return false;
+    })
+
+    function mount_rules(rules, edit){
+        let rules_html = ''
+        console.log(rules);
+        for(i in rules){
+            rules_html += `<div class="rule_holder">
+                                <div class="rule_box">
+                                    Na compra
+                                    <strong>`+ (rules[i].buy=='above_of'?'acima de ':'de ') +
+                                    rules[i].qtde +` itens</strong>,
+                                    aplicar desconto de <strong>
+                                    `+ (rules[i].type=='percent'?rules[i].value+'%':'R$' + rules[i].value) +`
+                                    </strong>
+
+                                    <svg data-id="`+rules[i].id+`"  style="float:right; margin:4px 4px 0 18px" class="pointer delete2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15 1L1 15M1 1L15 15L1 1Z" stroke="#5E6576" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+
+                                    <svg data-id="`+rules[i].id+`" style="float:right;" class="pointer edit2" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.8397 5.7993L19.8987 3.74294L17.2652 1.10974L15.2065 3.1661" stroke="#3D4456" stroke-width="1.4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3.19598 15.163L5.82952 17.7962M5.82952 17.7962L17.8395 5.79928L15.2063 3.16608L3.19598 15.163L1.10156 19.8903L5.82952 17.7962V17.7962Z" stroke="#3D4456" stroke-width="1.4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+
+                                </div>
+
+                                <div class="rule_box_edit" style="display:none">
+
+                                    Na compra
+                                    <select id="buy" class="buy  w-auto d-inline-block adjust-select">
+                                        <option `+ (rules[i].buy=='above_of'?'selected':'') +` value="above_of">acima de</option>
+                                        <option `+ (rules[i].buy=='of'?'selected':'') +` value="of">de</option>
+                                    </select>
+                                    
+                                    <input value="`+ rules[i].qtde +`" class="qtde input-pad" type="text" style="width: 60px; height: 49px;
+                                    margin-top: 2px;" maxlength="2" data-mask="0#" />
+                                    itens, aplicar desconto de
+                                    <input maxlength="9" value="`+ (rules[i].type=='value'?rules[i].value:'') +`" class="input-pad value value_edit" type="text" style="`+ (rules[i].type=='percent'?'display: none;':'') +` width: 86px; height:46px" />
+                                    <input value="`+ (rules[i].type=='percent'?rules[i].value:'') +`" type="text" style="width: 86px; `+ (rules[i].type=='value'?'display: none;':'') +` height:46px" class="input-pad percent" maxlength="2"
+                                        data-mask="0#" autocomplete="off">
+
+                                    <svg  class="pointer float-right save-edit-rule2" style="" width="19" height="16" viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18.629 0.8994C19.1237 1.43193 19.1237 2.29534 18.629 2.82787L7.229 15.1006C6.73434 15.6331 5.93233 15.6331 5.43766 15.1006L0.370998 9.64605C-0.123666 9.11352 -0.123666 8.25011 0.370998 7.71758C0.865662 7.18505 1.66767 7.18505 2.16234 7.71758L6.33333 12.2079L16.8377 0.8994C17.3323 0.366867 18.1343 0.366867 18.629 0.8994Z" fill="#5E6576"/>
+                                    </svg>
+                                        
+
+                                    
+
+                                </div>
+                            </div>`;
+        }
+        $('#rules-edit').html(rules_html)
+
+        $('#rules-edit').mCustomScrollbar('destroy')
+        $('#rules-edit').mCustomScrollbar()
+
+        $('.rule_box_edit select.buy').each(function () {
+          
+            $(this).siriusSelect()
+        })
+        
+        $('.value').mask('#.###,#0', {reverse: true});
+
+        $('.value_edit').on('change', function () {
+            if($(this).val().length<3){
+                $(this).val($(this).val().padStart(2, '0'))
+                $(this).val(','+$(this).val())
+                $(this).val($(this).val().padStart(4, '0'))
+            }
+        })
+
+        set_rules_events()
+        if(!edit){
+
+            $('#percent-edit').val('')
+            $('#value-edit').val('')
+            $('#qtde-edit').val('')
+        }
+
+        if(edit_rules.length > 0){
+            $('#empty-rules2').hide()
+        }else{
+            $('#empty-rules2').show()
+        }
+    }
+
+    function toggleDiscountRulesAlert(rules)
+    {
+        if(rules==0){
+
+            $('.inputs-warning2').addClass('warning')
+            $('.warning-text2').fadeIn()
+            
+            return false
+            
+        }else{
+            $('.inputs-warning2').removeClass('warning')
+            $('.warning-text2').fadeOut()
+        }
+        return true
+    }
+
+    function set_rules_events(){
+
+        $(".delete2").on('click', function () {
+            var id = $(this).attr('data-id')
+            
+            for(i in edit_rules){
+                if(edit_rules[i].id == id){
+                    edit_rules.splice(i,1)
+                }
+            }
+            mount_rules(edit_rules);
+        })
+        
+        $(".edit2").on('click', function () {
+            var id = $(this).attr('data-id')
+            
+            $(this).parents('.rule_holder').find('.rule_box').hide()
+            $(this).parents('.rule_holder').find('.rule_box_edit').show()
+            
+            for(i in edit_rules){
+                if(edit_rules[i].id == id){
+                    editingRule = i
+                }
+            }
+            
+
+            
+            // $('.btn-save-edit-rules').prop('disabled', true);
+
+
+        })
+
+        $('.save-edit-rule2').click(function(){
+            
+            var that = this;
+                function go(obj) {
+                    return $(that).parents('.rule_holder').find(obj)
+                }
+                
+                if(!go('.qtde').val() || go('.qtde').val()==0){
+                    go('.qtde').focus()
+                    return false;
+                }
+                if(edit_rules[editingRule].type=='percent'){
+                    if(!go('.percent').val() || go('.percent').val()==0){
+                        go('.percent').focus()
+                        return false;
+                    }
+                }else{
+                    if(!go('.value').val() || go('.value').val().replace(',','').replace('.','')==0){
+                        go('.value').focus()
+                        return false;
+                    }
+                }
+                
+                
+                edit_rules[editingRule].buy = go('#buy').val(),
+                edit_rules[editingRule].qtde = go('.qtde').val(),
+                edit_rules[editingRule].value = edit_rules[editingRule].type=='percent'?go('.percent').val():go('.value').val()
+                mount_rules(edit_rules, 1);
+        
+                
+                
+                
+                // $('.btn-save-edit-rules').prop('disabled', false);
+        
+                $(this).parents('.rule_holder').find('.rule_box_edit').hide()
+                $(this).parents('.rule_holder').find('.rule_box').show()
+    
+            
+        })
+    }
+    var editingRule = 0
+    
+
+
+
+    $('#edit-rules').click(function(){
+        
+
+        $('#edit_step0').hide();
+        $('#edit_step1').hide();
+        $('#edit_step2').show();
+        
+        mount_rules(edit_rules)
+    })
+
+    $('#edit-rules-back').click(function(){
+        $('#edit_step0').show();
+        $('#edit_step1').hide();
+        $('#edit_step2').hide();
+        // edit_rules = Object.assign(edit_rules, cancel_edit_rules)
+    })
+
+    $('#edit_status').click(function(){
+        if($(this).is(':checked')){
+            // $('#edit_status_label').css('color', '#41DC8F');
+            $('#edit_status_label').html('Desconto ativo');
+            
+        }else{
+            // $('#edit_status_label').css('color', '#9B9B9B');
+            $('#edit_status_label').html('Desativado');
+            
+            
+        }
+        $('#set_status').val(1)
+
+        $('#save_name_edit').click()
+    })
+
+    $('.edit-finish-btn').click(function(){
+        $('#modal-button-close-2').click()
+    })
+
+    $('#form-update-discount').submit(function(){
+        return false;
+    })
+
+    $("#save_name_edit").on('click', function () {
+        let formData = new FormData(document.getElementById('form-update-discount'));
+        let id = $('#discount-id').val();
+
+        $.ajax({
+            method: "POST",
+            url: "/api/project/" + projectId + "/discounts/" + id,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (response) {
+                if (response.status === 400) {
+                    //atualizarCoupon();
+                }
+
+                errorAjaxResponse(response);
+            },
+            success: function success(data) {
+
+                alertCustom("success", data.message);
+                atualizarCoupon();
+                
+                $('#display_name_edit').hide()
+                $('#display_name').show()
+                
+                if($('#name-edit').val())
+                    $('#d-name').html($('#name-edit').val())
+                
+
+                show_plans()
+                show_rules(edit_rules)
+
+
+                $('#edit-plans').show()
+                $('#edit-rules').show()
+                $('#edit-name').show()
+
+
+            }
+        });
+        return false
+    });
+    // End edit discount
+    
+    
+
+    
+    $('#nao_vence').on('click', function(){
+        if($(this).prop('checked')){
+            $('#date_range').prop('disabled', true)
+        }else{
+            $('#date_range').prop('disabled', false)
+            $('#date_range').focus()
+
+        }
+    })
+
+    $('#nao_vence2').on('click', function(){
+        if($(this).prop('checked')){
+            $('#date_range2').prop('disabled', true)
+        }else{
+            $('#date_range2').prop('disabled', false)
+            $('#date_range2').focus()
+        }
+    })
+
+    
+
+    $('#date_range2').val('DD/MM/YYYY')
+        .dateRangePicker({
+            format: 'DD/MM/YYYY',
+            singleDate: true,
+            showShortcuts: false,
+            startDate: false,
+	        endDate: false,
+            container: '#modal-edit-coupon',
+        }).bind('datepicker-opened',function()
+        {
+            $('.modal-open .modal').animate({scrollTop: $(document).height() + $(window).height()});
+            
+        });
+
+    $('#edit-name').on('click', edit_name);
+    $('#edit-plans').on('click',edit_plans);
     // carregar modal de edicao
     $(document).on('click', '.edit-coupon', function () {
         let coupon = $(this).attr('coupon');
+        var discount = $(this).attr('discount');
+        
+        
+
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon + "/edit",
@@ -100,56 +963,301 @@ $(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
             }, success: function success(response) {
-                $('#modal-edit-coupon .coupon-id').val(coupon);
-                $('#modal-edit-coupon .coupon-name').val(response.name);
-                $('#modal-edit-coupon .coupon-value').val(response.value);
-                $('#modal-edit-coupon .rule-value').val(response.rule_value);
-                $('#modal-edit-coupon .rule-value').trigger('input');
-                if (response.type == 1) {
-                    $('#edit-coupon-type').prop("selectedIndex", 1).change();
-                } else {
-                    $('#edit-coupon-type').prop("selectedIndex", 0).change();
+                
+                if(response.status==1){
+                    // $('#edit_status_label').css('color', '#41DC8F');
+                    $('#edit_status_label').html('Desconto ativo');
+                    $('#edit_status').prop('checked', true);
+                    
+                }else{
+                    // $('#edit_status_label').css('color', '#9B9B9B');
+                    $('#edit_status_label').html('Desativado');
+                    $('#edit_status').prop('checked', false);
                 }
+                
+                
+                    
+                
+                if(discount=='Progressivo'){
+                    $('.cancel-btn').trigger('click')
+                    $('#cancel_name_edit').trigger('click')
+                    $('#edit_step0').show()
+                    $('#edit_step1').hide()
+                    $('#edit_step2').hide()
+                    // console.log(response);
+                    $('#edit-discount').show();
+                    $('#edit-coupon').hide();
 
-                $('#modal-edit-coupon .coupon-code').val(response.code);
 
-                if (response.status == 1) {
-                    $('#edit-coupon-status').prop("selectedIndex", 0).change();
-                } else {
-                    $('#edit-coupon-status').prop("selectedIndex", 1).change();
+                    $('#set_status').val(0);
+                    // $('#edit_status').val('');
+                    
+
+                    $('#discount-id').val(coupon);
+
+                    $('#modal-edit-coupon').modal('show');
+                    
+                    $('#d-name').html(response.name);
+                    $('#name-edit').val(response.name);
+                    
+                    
+
+                    
+                    if(response.plans != null){
+                        items_selected = JSON.parse(response.plans)
+                        
+                        plans_count()
+
+                        $('#plans_value').val(response.plans);
+                    }else{
+                        items_selected = []
+                        $('#plans_value').val('');
+                    }
+                        
+                    
+                    
+                    
+
+                    show_plans()
+                    
+                    //rules
+                    $('#rules_edited').val(response.progressive_rules);
+                    var rules = JSON.parse(response.progressive_rules)
+                    edit_rules = rules
+                    
+                    show_rules(rules)
+                    
+
+                }else{
+                    if(response.plans != null){
+                        items_selected = JSON.parse(response.plans)
+                        plans_count2()
+                    }else{
+                        items_selected = []
+                    }
+                    // mount_selected_items()
+                    // set_item_click()
+                    show_plans()
+                    coupon_rules(response)
+
+                    $('#c-cancel_name_edit').trigger('click')
+                    $('#c-set_status').val(0);
+                    // $('#c-edit_status').val('');
+
+                    $('#edit-discount').hide();
+                    $('#edit-coupon').show();
+                    
+                    $('#coupon-id2').val(coupon);
+                    
+                    $('#d-code, #d-code2').html(response.code);
+                    $('#c-d-name, #c-d-name2').html(response.name);
+                    $('#c-code-edit').val(response.code);
+                    $('#c-name-edit').val(response.name);
+                    
+                    $('#c-edit_step1').hide()
+                    $('#c-edit_step2').hide()
+                    $('#c-edit_step0').show()
+                    
+                    
+                    
+                    response.rule_value = response.rule_value.replace(',','.')
+                    response.value = response.value.replace(',','.')
+                    $('#2minimum_value').val(response.rule_value);
+
+                    if (response.type == 1) {
+                        $('#2c_type_value').prop('checked',true).click();
+                    } else {
+                        $('#2c_type_percent').prop('checked',true).click();
+                    }
+                    if($('#2c_type_value').prop('checked')){
+                        $('#2discount_value').val(response.value)
+                        
+                    }
+                    if($('#2c_type_percent').prop('checked')){
+                        $('#2percent_value').val(response.value)
+                        
+                    }
+                    $('#2c_value').val(response.value)
+                    
+                    $('#date_range2').val(response.expires_date);
+                    if(!response.expires_date ){
+                        $('#nao_vence2').prop('checked', true);
+                    }else{
+                        $('#nao_vence2').prop('checked', false);
+                        
+                    }
+                    
+                    if(response.status==1){
+                        // $('#c-edit_status_label').css('color', '#41DC8F');
+                        $('#c-edit_status_label').html('Desconto ativo');
+                        $('#c-edit_status').prop('checked', true);
+                        
+                    }else{
+                        // $('#c-edit_status_label').css('color', '#9B9B9B');
+                        $('#c-edit_status_label').html('Desativado');
+                        $('#c-edit_status').prop('checked', false);
+                        
+                        
+                    }
+
+                    $('#modal-edit-coupon').modal('show');
                 }
-                $('#modal-edit-coupon').modal('show');
             }
         });
     });
 
-    // load delete modal
+    // carregar modal delecao
     $(document).on('click', '.delete-coupon', function (event) {
-        event.preventDefault();
-
         let coupon = $(this).attr('coupon');
-
-        $('#btn-delete-coupon').unbind('click');
-        $('#btn-delete-coupon').on('click', function () {
-            $.ajax({
-                method: "DELETE",
-                url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
-                dataType: "json",
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                error: function (response) {
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                    atualizarCoupon();
-
-                    alertCustom("success", "Cupom Removido com sucesso");
-                }
-            });
-        });
+        $('#modal-delete-coupon .btn-delete1').attr('coupon', coupon);
+        $("#modal-delete-coupon").modal('show');
     });
+
+    
+
+    function count_plans() { //thumbnails
+        
+        $('#show_plans').html('')
+
+        $.ajax({
+            data: {
+                    total: 1,
+                    list: 'plan',
+                    search: '',
+                    project_id: projectId,
+                    //page: params.page || 1
+                }
+            ,
+
+            method: "GET",
+            url: "/api/plans/user-plans",
+            
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+                
+            }, success: function success(response) {
+                
+                
+                
+                // console.log(response);
+                var html_show_plans = ''
+                for(i in response.thumbnails){
+                    html_show_plans += `<span class="plan_thumbnail" style="width:43px; height:43px;
+                    background-repeat: no-repeat; background-position: center center; 
+                    background-size: cover !important; background: url('`+response.thumbnails[i].products[0].photo+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`
+                }
+
+                $('#show_plans').removeClass('mostrar_mais_detalhes')
+
+                $('#show_plans').html(html_show_plans)
+
+                if(response.total > 8){
+                    var rest = response.total - 8
+                    $('#show_plans').append('<div class="plans_rest">+'+rest+'</div>')
+
+                }
+
+
+                
+            }
+        });
+        
+    }
+
+    function count_plans2() { //thumbnails on editing
+        
+        $('.edit-plans-thumbs').html('')
+
+
+        $.ajax({
+            data: {
+                    total: 1,
+                    list: 'plan',
+                    search: '',
+                    project_id: projectId,
+                    //page: params.page || 1
+                }
+            ,
+
+            method: "GET",
+            url: "/api/plans/user-plans",
+            
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+                
+            }, success: function success(response) {
+                
+                
+                
+                // console.log(response);
+                var html_show_plans = ''
+                for(i in response.thumbnails){
+                    html_show_plans += `<span class="plan_thumbnail" style="width:56px; height:56px;
+                    background-repeat: no-repeat; background-position: center center; 
+                    background-size: cover !important; background: url('`+response.thumbnails[i].products[0].photo+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');)"></span>`
+                }
+
+                $('.edit-plans-thumbs').html(html_show_plans)
+
+                if(response.total > 8){
+                    var rest = response.total - 8
+                    $('.edit-plans-thumbs').append('<div style="margin-top:14px" class="plans_rest">+'+rest+'</div>')
+
+                }
+
+
+                
+            }
+        });
+        
+    }
+
+    function plans_count() {
+        if(items_selected.length > 0){
+            
+            var plans_count = items_selected.length + ' plano'+(items_selected.length>1?'s':'')
+            $('#planos-count, #planos-count-edit').html(plans_count);
+
+            $('#plans_holder').css('height','auto')
+            $('#show_plans').css('margin-top','10px')
+
+    
+            //$('#show_plans').addClass('mostrar_mais_detalhes')
+
+        }else{
+            $('#plans_holder').css('height','174px')
+            $('#show_plans').css('margin-top','20px')
+            
+            $('#planos-count, #planos-count-edit').html('Todos os planos');
+
+            count_plans()
+        }
+
+        if(items_selected.length>2 && items_selected.length<11){
+            $('#mostrar_mais').show();
+            
+        }else{
+            $('#mostrar_mais').hide();
+            $('#show_plans').removeClass('mostrar_mais_detalhes')
+            $('#show_plans').css({
+                height: "88px"
+            });
+
+        }
+    }
+
+
+    
 
     //cria novo cupom
     $('#modal-create-coupon .btn-save').on('click', function () {
@@ -174,7 +1282,7 @@ $(function () {
             success: function success() {
 
                 $(".loading").css("visibility", "hidden");
-                alertCustom("success", "Cupom Adicionado!");
+                alertCustom("success", "Desconto adicionado!");
                 atualizarCoupon();
                 clearFields();
             }
@@ -213,83 +1321,31 @@ $(function () {
         });
     });
 
-
-
-    function atualizarCoupon() {
-
-        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-        if (link == null) {
-            link = '/api/project/' + projectId + '/couponsdiscounts';
-        } else {
-            link = '/api/project/' + projectId + '/couponsdiscounts' + link;
-        }
-
-        loadOnTable('#data-table-coupon', '#tabela-coupom');
-
-        $('#tab_coupons-panel').find('.no-gutters').css('display', 'none');
-        $('#tabela-coupon').find('thead').css('display', 'none');
-
+    //deletar cupom
+    $('#modal-delete-coupon .btn-delete1').on('click', function () {
+        let coupon = $(this).attr('coupon');
+        
         $.ajax({
-            method: "GET",
-            url: link,
+            method: "DELETE",
+            url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: function error(response) {
+            error: function (response) {
                 errorAjaxResponse(response);
             },
-            success: function success(response) {
-                $("#data-table-coupon").html('');
+            success: function success(data) {
 
-                if (response.data == '') {
-                    $("#data-table-coupon").html(`
-                        <tr class='text-center'>
-                            <td colspan='8' style='height: 70px; vertical-align: middle;'>
-                                <div class='d-flex justify-content-center align-items-center'>
-                                    <img src='/modules/global/img/empty-state-table.svg' style='margin-right: 60px;'>
-                                    <div class='text-left'>
-                                        <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum cupom configurado</h1>
-                                        <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro cupom para poder
-                                        <br>gerenciá-los nesse painel.</p>
-                                        <button type='button' style='width: auto; height: auto; padding: .429rem 1rem !important;' class='btn btn-primary add-order-bump' data-toggle="modal" data-target="#modal-create-coupon">Adicionar cupom</button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    `);
-                } else {
-                    $('#tab_coupons-panel').find('.no-gutters').css('display', 'flex');
-                    $('#tabela-coupon').find('thead').css('display', 'contents');
-
-                    $('#count-coupons').html(response.meta.total)
-                    $.each(response.data, function (index, value) {
-                        let data = `<tr>
-                            <td class="shipping-id">${value.name}</td>
-                            <td class="shipping-type">${value.type}</td>
-                            <td class="shipping-value">${value.value}</td>
-                            <td class="shipping-zip-code-origin">${value.code}</td>
-                            <td class="shipping-status text-center" style="vertical-align: middle">
-                                <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
-                            </td>
-                            <td style="text-align:center">
-                                <div class='d-flex justify-content-end align-items-center'>
-                                    <a role="button" title='Visualizar' class="mg-responsive details-coupon pointer" coupon="${value.id}"><span class="o-eye-1"></span></a>
-                                    <a role="button" title='Editar' class="mg-responsive edit-coupon pointer" coupon="${value.id}"><span class="o-edit-1"></span> </a>
-                                    <a role="button" title='Excluir' class="mg-responsive delete-coupon pointer" coupon="${value.id}" data-toggle="modal" data-target="#modal-delete-coupon"><span class='o-bin-1'></span></a>
-                                </div>
-                            </td>
-                        </tr>`;
-
-                        $("#data-table-coupon").append(data);
-                    });
-                    pagination(response, 'coupons', atualizarCoupon);
-                }
+                alertCustom("success", "Registro removido com sucesso");
+                atualizarCoupon();
             }
+
         });
-    }
+    });
+
+    
 
     //Limpa campos
     function clearFields() {
@@ -297,6 +1353,18 @@ $(function () {
         $('.coupon-value').val('');
         $('.coupon-code').val('');
         $('.rule-value').val('');
-
     }
+
+
+    
+    //
+    $('#edit_step0').mCustomScrollbar()
+    $('#coupon_edit_step0').mCustomScrollbar()
+
 });
+
+var timer_desc
+function set_description_value(obj, obj2){
+    $('#search_input_description_value').val($(obj).val())
+    $(obj2).trigger('keyup')
+}

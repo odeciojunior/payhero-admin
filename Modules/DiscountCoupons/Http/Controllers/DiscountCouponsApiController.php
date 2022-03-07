@@ -16,6 +16,8 @@ use Modules\DiscountCoupons\Http\Requests\DiscountCouponsUpdateRequest;
 use Modules\DiscountCoupons\Transformers\DiscountCouponsResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Http\Request;
+
 
 /**
  * Class DiscountCouponsApiController
@@ -27,9 +29,10 @@ class DiscountCouponsApiController extends Controller
      * @param $projectId
      * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index($projectId)
+    public function index(Request $request, $projectId)
     {
         try {
+            
             $discountCouponsModel = new DiscountCoupon();
             $projectModel         = new Project();
 
@@ -45,6 +48,11 @@ class DiscountCouponsApiController extends Controller
                     $coupons   = $discountCouponsModel->whereHas('project', function ($query) use ($projectId) {
                         $query->where('project_id', $projectId);
                     });
+                    if(!empty($request['name'])){
+                        
+                        $coupons = $coupons->where('name', 'like', '%'.$request['name'].'%')
+                        ->whereOr('code', 'like', '%'.$request['name'].'%');
+                    }
 
                     return DiscountCouponsResource::collection($coupons->orderBy('id', 'DESC')->paginate(5));
                 } else {
@@ -74,6 +82,7 @@ class DiscountCouponsApiController extends Controller
      */
     public function store(DiscountCouponsStoreRequest $request, $projectId)
     {
+        
         try {
             if (isset($projectId)) {
                 $requestData               = $request->validated();
@@ -82,7 +91,7 @@ class DiscountCouponsApiController extends Controller
                 $requestData['rule_value'] = preg_replace("/[^0-9]/", "", $requestData['rule_value']);
 
                 if (empty($requestData['rule_value'])) {
-                    $requestData['rule_value'] = 0;
+                    $requestData['rule_value'] = 0;                    
                 }
 
                 if($requestData['value']==0){
@@ -93,7 +102,7 @@ class DiscountCouponsApiController extends Controller
                         \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
                     );
                 }
-
+                
                 $project = Project::find($requestData["project_id"]);
 
                 if (!Gate::allows('edit', [$project])) {
@@ -105,18 +114,39 @@ class DiscountCouponsApiController extends Controller
                     );
                 }
 
-                $couponExists = DiscountCoupon::where(
-                    [
-                        'project_id' => $requestData["project_id"],
-                        'code' => $requestData["code"],
-                        'status' => 1
-                    ]
-                )->exists();
-
-                if ($couponExists) {
+                if(empty($requestData["code"])){
+                    $requestData["code"] = '';
+                }else{
+                    //Check if coupon exists
+                    $result = DiscountCoupon::where('project_id', $requestData["project_id"])
+                                                ->where('code', $requestData["code"])->first();
+                    if(!empty($result)){
+                        return response()->json(
+                            [
+                                'message' => 'Já existe um cupom de código "'.$requestData["code"].'"!',
+                            ],
+                            \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+                        );
+                    }
+                }
+                
+                if(empty($requestData["status"])){
                     $requestData["status"] = 0;
                 }
 
+                if($request['expires']){
+                    $date_array = explode('/', $requestData['expires']);
+                    $date = date('Y-m-d H:i:s', strtotime($date_array[2].'-'.$date_array[1].'-'.$date_array[0]));
+                    
+                    $requestData['expires'] = $date;
+                }
+                if($request['nao_vence']){
+                    $requestData['expires'] = null;
+                }
+                
+                
+                
+                
                 DiscountCoupon::create($requestData);
 
                 return response()->json(
@@ -208,45 +238,71 @@ class DiscountCouponsApiController extends Controller
                 if (Gate::allows('edit', [$project])) {
                     if ($coupon) {
                         $coupon->makeHidden(['id', 'project_id']);
+                        
+                        $coupon->rule_value = number_format($coupon->rule_value / 100, 2, ',', '.');
                         if($coupon->type==1){
+
                             $coupon->value = number_format($coupon->value / 100, 2, ',', '.');
                         }
-                        $coupon->rule_value = number_format($coupon->rule_value / 100, 2, ',', '.');
 
+                        $expires = '';
+                        if(!empty($coupon->expires)){
+                            $coupon->expires_date = date('d/m/Y',strtotime($coupon->expires));
+                            $now = strtotime(date('Y-m-d'));
+                            $_date = strtotime($coupon->expires);
+                            
+                            $datediff = $_date - $now;
+                            $expires = round($datediff / (60 * 60 * 24));
+                            $coupon->expires_days = $expires;
+                            if($expires>=0){
+                                $coupon->expires = 'Vence em '.$expires.' dia'.($expires>1?'s':'');
+                            }else{
+                                $coupon->expires = '';
+                                $coupon->status = 0;
+
+                            }
+                        }
                         return response()->json($coupon, 200);
                     } else {
-                        return response()->json(['message' => 'Erro ao atualizar Cupom'], 400);
+                        return response()->json(['message' => 'Erro ao atualizar registro'], 400);
                     }
                 } else {
                     return response()->json([
-                                                'message' => 'Sem permissão para editar este cupom',
+                                                'message' => 'Sem permissão para editar este registro',
                                             ], 400);
                 }
             }
 
             return response()->json(['message' => 'Erro ao buscar Cupom'], 400);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar buscar dados para atualizar cupom (DescountCouponsController - edit)');
+            Log::warning('Erro ao tentar buscar dados para atualizar  (DescountCouponsController - edit)');
             report($e);
 
-            return response()->json(['message' => 'Erro ao atualizar Cupom'], 400);
+            return response()->json(['message' => 'Erro ao atualizar registro'], 400);
         }
     }
 
-    /**
-     * @param DiscountCouponsUpdateRequest $request
-     * @param $projectId
-     * @param $id
-     * @return JsonResponse
-     */
+   
     public function update(DiscountCouponsUpdateRequest $request, $projectId, $id)
     {
         try {
+            
             if (isset($projectId) && isset($id)) {
                 $requestValidated = $request->validated();
 
                 $coupon  = DiscountCoupon::find(current(Hashids::decode($id)));
                 $project = Project::find(current(Hashids::decode($projectId)));
+
+                if(!empty($requestValidated['value'])){
+
+                    $requestValidated['value']      = preg_replace("/[^0-9]/", "", $requestValidated['value']);
+                }
+                if(!empty($requestValidated['rule_value'])){
+
+                    $requestValidated['rule_value'] = preg_replace("/[^0-9]/", "", $requestValidated['rule_value']);
+                }
+
+                
 
                 if (!Gate::allows('edit', [$project])) {
                     return response()->json(
@@ -257,50 +313,50 @@ class DiscountCouponsApiController extends Controller
                     );
                 }
 
-                $requestValidated['value']      = preg_replace("/[^0-9]/", "", $requestValidated['value']);
-                $requestValidated['rule_value'] = preg_replace("/[^0-9]/", "", $requestValidated['rule_value']);
-
-                if (empty($requestValidated['rule_value'])) {
-                    $requestValidated['rule_value'] = 0;
-                }
-
-                if($requestValidated['value']==0){
-                    return response()->json(
+                
+                if(!empty($request['code'])){
+                    $result = DiscountCoupon::where('project_id', current(Hashids::decode($projectId)))
+                        ->where('id', '!=', $coupon->id)
+                        ->where('code', $request["code"])->first();
+                    if(!empty($result)){
+                        return response()->json(
                         [
-                            'message' => 'O valor do cupom deve ser maior do que zero.',
+                            'message' => 'Já existe um cupom de código "'.$request["code"].'"!',
                         ],
                         \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-                    );
+                        );
+                    }
                 }
-
-                $couponExists = DiscountCoupon::where(
-                    [
-                        'project_id' => Hashids::decode($projectId),
-                        'code' => $requestValidated["code"],
-                        'status' => 1
-                    ]
-                )
-                    ->where('id', '!=', $coupon->id)
-                    ->exists();
-
-                if ($couponExists && $requestValidated['status'] == 1) {
-                    $requestValidated['status'] = 0;
-
-                    $coupon->update($requestValidated);
-
-                    return response()->json(
-                        [
-                            'message' => 'Não é possível ter mais de 1 cupom ativo com o mesmo código'
-                        ],
-                        \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-                    );
+                
+                if($request['set_status']==1){
+                    if($request['status']==1){
+                        $requestValidated['status']=1;
+                    }else{
+                        $requestValidated['status']=0;
+                    }
+                }else{
+                    unset($requestValidated['status']);
                 }
+                
+                if($request['expires']){
+                    $date_array = explode('/', $requestValidated['expires']);
+                    $date = date('Y-m-d H:i:s', strtotime($date_array[2].'-'.$date_array[1].'-'.$date_array[0]));
 
+                    $requestValidated['expires'] = $date;
+                }
+                if($request['nao_vence']){
+                    $requestValidated['expires'] = null;
+                }
+                if(empty($requestValidated['plans'])) unset($requestValidated['plans']);
+                if(empty($requestValidated['progressive_rules'])) unset($requestValidated['progressive_rules']);
+                if(empty($requestValidated['name'])) unset($requestValidated['name']);
+
+                //Log::debug($requestValidated);
                 $coupon->update($requestValidated);
 
                 return response()->json(
                     [
-                        'message' => 'Cupom atualizado com sucesso'
+                        'message' => 'Registro atualizado com sucesso'
                     ],
                     \Symfony\Component\HttpFoundation\Response::HTTP_OK
                 );
@@ -308,15 +364,15 @@ class DiscountCouponsApiController extends Controller
 
             return response()->json(
                 [
-                    'message' => 'Erro ao atualizar Cupom'
+                    'message' => 'Erro ao atualizar registro'
                 ],
                 \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
             );
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar atualizar cupom de desconto  (DescountCouponController - update)');
+            Log::warning('Erro ao tentar atualizar desconto  (DescountCouponController - update)');
             report($e);
 
-            return response()->json(['message' => 'Erro ao atualizar Cupom'], 400);
+            return response()->json(['message' => 'Erro ao atualizar registro'], 400);
         }
     }
 
@@ -344,8 +400,9 @@ class DiscountCouponsApiController extends Controller
                     }
                 } else {
                     return response()->json([
-                        'message' => 'Sem permissão para remover este cupom',
-                    ], 400);
+                                                'message' => 'Sem permissão para remover este cupom',
+
+                                            ], 400);
                 }
             }
 

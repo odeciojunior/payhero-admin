@@ -476,6 +476,7 @@
         <script src="{{asset('modules/projectupsell/js/index.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/orderbump/js/index.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=0'.versionsFile())}}"></script>
+        <script src="{{asset('modules/discount-coupons/js/discountCouponsSteps.js?v=' . versionsFile())}}"></script>
         <script src="{{asset('modules/projectreviews/js/index.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/projects/js/projects.js?v='.versionsFile())}}"></script>
