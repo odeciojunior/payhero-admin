@@ -449,11 +449,11 @@
 
                             <div style="padding-top: 28px;">
 
-                                <div id="" style="font-weight: bold; s">
+                                <div id="" style="font-weight: bold;">
 
                                     Token da integração
 
-                                    <span class="float-right pointer" style="
+                                    <span id="bt-shopify-verify-permissions" class="float-right pointer" style="
                                     font-style: normal;
                                     font-weight: bold;
                                     font-size: 14px;
