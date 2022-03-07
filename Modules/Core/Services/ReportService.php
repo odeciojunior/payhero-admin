@@ -1366,35 +1366,39 @@ class ReportService
 
     public function getResumeTypePaymentsSum($filters, $typePayment = null)
     {
-        $companieIds = [];
-        if (empty($filters["company"])) {
-            $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
-        } else {
+        try {
             $companieIds = [];
+            if (empty($filters["company"])) {
+                $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
+            } else {
+                $companieIds = [];
 
-            $companies = explode(',', $filters["company"]);
-            foreach($companies as $company) {
-                array_push($companieIds, current(Hashids::decode($company)));
+                $companies = explode(',', $filters["company"]);
+                foreach($companies as $company) {
+                    array_push($companieIds, current(Hashids::decode($company)));
+                }
             }
-        }
 
-        $typePaymentWhere = '';
-        if (!empty($typePayment)) {
-            $typePaymentWhere = 'AND sales.payment_method = '.$typePayment;
-        } else {
             $typePaymentWhere = '';
+            if (!empty($typePayment)) {
+                $typePaymentWhere = 'AND sales.payment_method = '.$typePayment;
+            } else {
+                $typePaymentWhere = '';
+            }
+
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+            $query = 'SELECT SUM((sales.sub_total + sales.shipment_value) - (IFNULL(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total
+            FROM transactions INNER JOIN sales ON sales.id = transactions.sale_id
+            WHERE transactions.company_id IN ('.implode(',', $companieIds).') AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
+            AND sales.status = 1 AND sales.deleted_at IS NULL AND transactions.deleted_at IS NULL AND transactions.type <> 8 '.$typePaymentWhere.' AND transactions.invitation_id IS NULL';
+
+            $dbResults = DB::select($query);
+
+            return $dbResults[0]->total;
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
         }
-
-        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-
-        $query = 'SELECT SUM((sales.sub_total + sales.shipment_value) - (IFNULL(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total
-        FROM transactions INNER JOIN sales ON sales.id = transactions.sale_id
-        WHERE transactions.company_id IN ('.implode(',', $companieIds).') AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
-        AND sales.status = 1 AND sales.deleted_at IS NULL AND transactions.deleted_at IS NULL AND transactions.type <> 8 '.$typePaymentWhere.' AND transactions.invitation_id IS NULL';
-
-        $dbResults = DB::select($query);
-
-        return $dbResults[0]->total;
     }
 
     public function getResumeProducts($filters)
@@ -1410,19 +1414,27 @@ class ReportService
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $query = 'SELECT products.* FROM sales
-            INNER JOIN plans_sales ON sales.id = plans_sales.sale_id
-            INNER JOIN plans ON plans_sales.plan_id = plans.id
-            INNER JOIN products_plans_sales ON plans.id = products_plans_sales.plan_id
-            INNER JOIN products ON products.id = products_plans_sales.product_id
-            WHERE owner_id = '.$userId.' AND sales.status = '.$statusId.'
-            AND (start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")' .$projectId;
-            dd($query);
+            $query = 'SELECT products.name, COUNT(*) as total FROM products
+            INNER JOIN products_plans_sales ON products.id = products_plans_sales.product_id
+            INNER JOIN sales ON products_plans_sales.sale_id = sales.id
+            WHERE sales.owner_id = '.$userId.' AND sales.status = '.$statusId.'
+            AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
+            GROUP BY products.id ORDER BY total DESC LIMIT 10' .$projectId;
             $dbResults = DB::select($query);
 
-           return $dbResults[0]->sales;
-        } catch(Exception $e) {
+            $sumTotal = 0;
+            foreach($dbResults as $r)
+            {
+                $sumTotal += $r->total;
+            }
 
+            array_push($dbResults, (object) [
+                'total' => $sumTotal
+            ]);
+
+            return $dbResults;
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 
