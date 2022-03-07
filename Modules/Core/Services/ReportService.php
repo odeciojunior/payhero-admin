@@ -1414,7 +1414,7 @@ class ReportService
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $query = 'SELECT products.name, COUNT(*) as quantidade FROM products
+            $query = 'SELECT products.name, products.photo as image, COUNT(*) as quantidade FROM products
             INNER JOIN products_plans_sales ON products.id = products_plans_sales.product_id
             INNER JOIN sales ON products_plans_sales.sale_id = sales.id
             WHERE sales.owner_id = '.$userId.' AND sales.status = '.$statusId.'
