@@ -1341,15 +1341,27 @@ h4.number{
 .list-products {
     margin: 0;
     list-style: none;
-    display: flex;
+    display: none;
     flex-direction: column;
     flex-wrap: wrap;
     height: 150px;
 }
+.list-products.visible { display: flex; }
 
-.list-products li:nth-child(n+5) { 
-    border-left: 1px solid #F4F4F4; 
-    padding-left: 20px;
+.list-products li {
+    margin: 0 20px 0 0;
+    border-right: 1px solid #F4F4F4; 
+}
+.list-products li:nth-child(n+8) { 
+    border: 0;
+    margin: 0 0 0 20px;
+}
+
+.list-products li.line { 
+    border: 0; 
+    margin: 0;
+    border-right: 1px solid #F4F4F4; 
+    /* padding-left: 20px; */
 }
 
 .box-list-products {
@@ -1363,6 +1375,7 @@ h4.number{
 .list-products .bars {
     border-radius: 4px;
     height: 25px;
+    /* min-width: 28%; */
 }
 .list-products span {
     color: #fff;
