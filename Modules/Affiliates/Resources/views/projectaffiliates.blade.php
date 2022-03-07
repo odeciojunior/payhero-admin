@@ -42,7 +42,7 @@
                                     <div class="row mb-15">
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
-                                                <label for="type-products">Loja</label>
+                                                <label for="type-products">Lojas</label>
                                                 <select class="sirius-select" id="project-affiliate" data-name="projects">
                                                     <option value="0">Todas lojas</option>
                                                 </select>
@@ -95,7 +95,7 @@
                                     <div class="row mb-15">
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
-                                                <label for="type-products">Loja</label>
+                                                <label for="type-products">Lojas</label>
                                                 <select class="sirius-select" id="project-affiliate-request" data-name="projects">
                                                     <option value="0">Todas lojas</option>
                                                 </select>

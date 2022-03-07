@@ -50,7 +50,7 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                        <label for="project">Loja</label>
+                                        <label for="project">Lojas</label>
                                         <select name='select_project' id="project" class="sirius-select">
                                             <option value="0">Todas lojas</option>
                                         </select>
