@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @push('css')
 
-    <link rel="stylesheet" href="{{ asset('modules/convertax/css/index.css?v=' .  versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('modules/convertax/css/index.min.css') }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
      <style>
         .o-arrow-right-1 {
@@ -120,6 +120,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/astronmembers/js/index.js?v=s0')}}"></script>
+        <script src="{{ mix('modules/astronmembers/js/index.min.js') }}"></script>
     @endpush
 @endsection

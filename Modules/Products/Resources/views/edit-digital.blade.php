@@ -4,7 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/global/adminremark/global/vendor/dropify/dropify.min.css?v=' . versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/products/css/edit.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('modules/products/css/edit.min.css') }}">
     @endpush
 
     <!-- Page -->
@@ -129,7 +129,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/products.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ mix('modules/products/js/products.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js?v=' . versionsFile()) }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js?v=' . versionsFile()) }}"></script>
     @endpush

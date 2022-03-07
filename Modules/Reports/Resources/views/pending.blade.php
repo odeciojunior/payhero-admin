@@ -4,7 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
+        <link rel="stylesheet" href="{!! mix('modules/reports/css/reports.min.css') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=123') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
@@ -218,8 +218,8 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('modules/reports/js/detail.js?v=' . uniqid()) }}"></script>
-    <script src='{{ asset('modules/reports/js/report-pending.js?v=' . random_int(100, 10000)) }}'></script>
+    <script src="{{ mix('modules/reports/js/detail.min.js') }}"></script>
+    <script src='{{ mix('modules/reports/js/report-pending.min.js') }}'></script>
     <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
 @endpush

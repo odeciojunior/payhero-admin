@@ -59,7 +59,7 @@
                     </div>
                 </div>
 
-                <div class="align-self-end mr-auto mb-5" id="btn_exports">                    
+                <div class="align-self-end mr-auto mb-5" id="btn_exports">
                     @can('finances_manage')
                         <div class="col-12 text-right">
                             <div class="justify-content-end align-items-center">
@@ -127,5 +127,5 @@
 
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/finances/js/detail.js?v=' . uniqid()) }}"></script>
+    <script src="{{ mix('modules/finances/js/detail.min.js') }}"></script>
 @endpush

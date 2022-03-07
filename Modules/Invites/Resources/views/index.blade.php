@@ -323,7 +323,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/invites/js/invites.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ mix('modules/invites/js/invites.min.js') }}"></script>
     @endpush
 
 @endsection

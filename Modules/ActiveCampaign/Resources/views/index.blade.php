@@ -105,6 +105,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/activecampaign/js/index.js?v=s0"></script>
+        <script src="{{ mix('modules/activecampaign/js/index.min.js') }}"></script>
     @endpush
 @endsection

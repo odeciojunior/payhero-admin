@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v='. versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('modules/projects/css/edit.min.css') }}">
 @endpush
 
 <div class='row card no-gutters p-30 rounded-top'>
@@ -231,7 +231,7 @@
                             <!-- CONVITE AFILIADOS -->
                             <div class="col-12 col-md-6 col-lg-7 col-xl-8 py-10 pl-0 pr-0 align-items-center border-top border-right">
                                 <div class="row no-gutters mt-3 d-flex justify-content-sm-start pl-0 pl-md-0 pl-lg-0">
-                                    
+
                                     <div class="col-sm-12 col-lg-3 col-xl-5 font-weight-bold pr-0 pl-5 d-flex justify-content-lg-end align-items-center">Convide afiliados:</div>
 
                                     <div class="col-md-12 col-lg-9 col-xl-7">
@@ -249,7 +249,7 @@
                                         <path d="M1.5028 2.62704L1.5 4.75V15.2542C1.5 17.0491 2.95507 18.5042 4.75 18.5042L13.3663 18.5045C13.0573 19.3782 12.224 20.0042 11.2444 20.0042H4.75C2.12665 20.0042 0 17.8776 0 15.2542V4.75C0 3.76929 0.627445 2.93512 1.5028 2.62704ZM13.75 0C14.9926 0 16 1.00736 16 2.25V15.25C16 16.4926 14.9926 17.5 13.75 17.5H4.75C3.50736 17.5 2.5 16.4926 2.5 15.25V2.25C2.5 1.00736 3.50736 0 4.75 0H13.75ZM13.75 1.5H4.75C4.33579 1.5 4 1.83579 4 2.25V15.25C4 15.6642 4.33579 16 4.75 16H13.75C14.1642 16 14.5 15.6642 14.5 15.25V2.25C14.5 1.83579 14.1642 1.5 13.75 1.5Z" fill="#37474F"/>
                                     </svg>
                                     <b>Copiar</b>
-                                    
+
                                 </button>
                             </div>
 

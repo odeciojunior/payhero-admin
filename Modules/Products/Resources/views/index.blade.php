@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-<link rel="stylesheet" href="{{ asset('/modules/products/css/products.css?v=123') }}">
+<link rel="stylesheet" href="{{ mix('modules/products/css/products.min.css') }}">
 @endpush
 
 @section('content')
@@ -141,7 +141,7 @@
 </div>
 
 @push('scripts')
-    <script src="{{ asset('/modules/products/js/index.js?v='.versionsFile()) }}"></script>
+    <script src="{{ mix('modules/products/js/index.min.js') }}"></script>
 @endpush
 
 @endsection

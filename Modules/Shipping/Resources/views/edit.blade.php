@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/shipping/css/shipping-edit.css?v=001') }}">
+    <link rel="stylesheet" href="{{ mix('modules/shipping/css/shipping-edit.min.css') }}">
 @endpush
 
 <form id='form-update-shipping' enctype="multipart/form-data">

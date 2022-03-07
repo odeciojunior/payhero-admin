@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=101') }}">
+    <link rel="stylesheet" href="{{ mix('modules/sales/css/index.min.css') }}">
 @endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-simple modal-sidebar modal-lg">
@@ -453,5 +453,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=' . uniqid()) }}"></script>
+    <script src="{{ mix('modules/sales/js/detail.min.js') }}"></script>
 @endpush

@@ -155,6 +155,6 @@
         <!-- End Modal -->
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/index.js?v=' .  versionsFile()) }}"></script>
+        <script src="{{ mix('modules/affiliates/js/index.min.js') }}"></script>
     @endpush
 @endsection

@@ -17,7 +17,7 @@
 
         /* Page titles */
         .page-title > a, .page-title > a > span { color: #707070 }
-        
+
     </style>
 @endpush
 @section('content')
@@ -224,12 +224,12 @@
                                                 border-radius: 4px; padding: 16px; color:#2E85EC">
 
                                             <div style="font-weight: bold;
-                                                
+
                                                 line-height: 18px;
                                                 color: #2E85EC;">A sincronização pode demorar algumas horas.</div>
 
-                                            
-                                            
+
+
 
                                         </div>
                                     </div>
@@ -343,21 +343,21 @@
 
                         <div style="padding: 25px 25px 15px 25px; border-top: 1px solid #F4F4F4" class=""
                             id="">
-                            
+
                             <div class="text-center">
                                 <svg width="93" height="93" viewBox="0 0 93 93" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="46.5" cy="46.5" r="46.5" fill="#F2F8FF"/>
                                     <path d="M57.6587 28.6022C56.9697 29.4907 57.1435 30.7603 58.0469 31.4379C62.952 35.1171 65.8857 40.8175 65.8857 47C65.8857 57.0785 58.1348 65.3764 48.1759 66.4424L50.0311 64.6167C50.8345 63.8266 50.8345 62.5455 50.0311 61.7554C49.3008 61.0371 48.1579 60.9718 47.3526 61.5595L47.1219 61.7554L41.6361 67.1507C40.9058 67.869 40.8394 68.9931 41.437 69.7851L41.6361 70.0121L47.1219 75.4074C47.9252 76.1975 49.2277 76.1975 50.0311 75.4074C50.7614 74.6891 50.8278 73.5651 50.2303 72.773L50.0311 72.5461L47.9733 70.526C60.3051 69.539 70 59.383 70 47C70 39.5416 66.4568 32.657 60.5419 28.2203C59.6385 27.5427 58.3476 27.7136 57.6587 28.6022ZM41.9689 18.5926C41.1655 19.3827 41.1655 20.6638 41.9689 21.4539L44.024 23.4742C31.6935 24.4625 22 34.6179 22 47C22 54.1339 25.24 60.7512 30.7245 65.2069C31.6004 65.9185 32.8971 65.797 33.6206 64.9355C34.3442 64.074 34.2207 62.7987 33.3447 62.0871C28.7966 58.3921 26.1143 52.9138 26.1143 47C26.1143 36.9225 33.8637 28.6251 43.8213 27.5579L41.9689 29.3833C41.1655 30.1734 41.1655 31.4545 41.9689 32.2446C42.7723 33.0347 44.0748 33.0347 44.8781 32.2446L50.3639 26.8493C51.1672 26.0591 51.1672 24.7781 50.3639 23.9879L44.8781 18.5926C44.0748 17.8025 42.7723 17.8025 41.9689 18.5926Z" fill="#2E85EC"/>
                                     </svg>
-                                    
+
 
                             </div>
 
-                            
+
                             <div class="text-center p-20" style=" margin-bottom: 16px; font-weight: bold;
                             font-size: 18px;
                             line-height: 150%; ">
-                                
+
                                 Você tem certeza que quer sincronizar <span style="font-weight: bold"
                                 id="sync-name"></span>?
 
@@ -398,7 +398,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/woocommerce/js/index.js?v=' . uniqid()) }}"></script>
+        <script src="{{ mix('modules/woocommerce/js/index.min.js') }}"></script>
     @endpush
 
 @endsection

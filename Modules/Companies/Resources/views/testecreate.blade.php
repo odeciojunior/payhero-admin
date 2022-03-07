@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.scss')}}">
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ mix('modules/profile/css/basic.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ mix('modules/profile/css/dropzone.min.css') }}">
 @endpush
 @section('content')
     <!-- Page -->
@@ -202,6 +202,6 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/companies/js/edit.js?v=s0')}}"></script>
+        <script src="{{ mix('modules/companies/js/edit.min.js') }}"></script>
     @endpush
 @endsection

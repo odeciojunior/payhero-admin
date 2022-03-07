@@ -4,7 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('/modules/products/css/create.css?v=123') }}">
+        <link rel="stylesheet" href="{{ mix('modules/products/css/create.min.css') }}">
     @endpush
 
     <!-- Page -->
@@ -37,9 +37,9 @@
                                 <div class="form-group col-12">
                                     <label for="description">Descrição</label>
                                     <textarea style="height: 140px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
-                                </div>                            
+                                </div>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                     <hr class="my-20">
                     <h4 class="px-40"> 2. Logística </h4>
@@ -98,7 +98,7 @@
                                     Informações utilizadas para calcular o valor do frete PAC e SEDEX, se não utilizar esses fretes ignore essas informações
                                 </small>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                 </div>
 
@@ -111,7 +111,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create-physical.js?v='.uniqid()) }}"></script>
+        <script src="{{ mix('modules/products/js/create-physical.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

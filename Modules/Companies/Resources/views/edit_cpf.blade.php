@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css?v=' . versionsFile()) }}">
+    <link rel="stylesheet" type="text/css" href="{{ mix('modules/profile/css/basic.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ mix('modules/profile/css/dropzone.min.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=' . versionsFile()) }}">
 @endpush
@@ -335,7 +335,7 @@
 
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js?v=' . versionsFile()) }}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cpf.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ mix('modules/companies/js/edit_cpf.min.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     @endpush
 @endsection

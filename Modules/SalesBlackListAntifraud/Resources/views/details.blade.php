@@ -1,5 +1,5 @@
 @push('css')
-    <link rel='stylesheet' href='{{asset('/modules/sales/css/index.css?v=' . uniqid())}}'>
+    <link rel='stylesheet' href='{{ mix('modules/sales/css/index.min.css') }}'>
 @endpush
 
 <div class='modal fade example-modal-lg' id='modal-detalhes-black-antifraud' aria-hidden='true' aria-labelledby='exampleModalTitle' role='dialog' tabindex='-1'>

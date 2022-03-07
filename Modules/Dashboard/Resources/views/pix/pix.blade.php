@@ -1,8 +1,7 @@
 @push('css')
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-
-    <link rel="stylesheet" href="{{ asset('modules/dashboard/css/pix.css?v=01') }}">
+    <link rel="stylesheet" href="{{ mix('modules/dashboard/css/pix.min.css') }}">
 @endpush
 
 <div id="modal-pix-onboarding" class="modal fade modal-fade-in-scale-up show">

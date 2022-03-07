@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v='. versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('modules/projects/css/style.min.css') }}">
     <style>
         @font-face {
             font-family: raty;
@@ -468,23 +468,23 @@
         <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
-        <script src="{{asset('modules/domain/js/domainEdit.js?v='.versionsFile())}}"></script>
-        <script src="{{asset('modules/plans/js/loading.js?v='.versionsFile())}}"></script>
-        <script src="{{asset('modules/plans/js/plans.js?v=' . versionsFile()) }}"></script>
-        <script src="{{asset('modules/shipping/js/shipping.js?v=' . versionsFile()) }}"></script>
-        <script src="{{asset('modules/pixels/js/pixels.js?v='.versionsFile())}}"></script>
+        <script src="{{ mix('modules/domains/js/domainEdit.min.js') }}"></script>
+        <script src="{{ mix('modules/plans/js/loading.min.js') }}"></script>
+        <script src="{{ mix('modules/plans/js/plans.min.js') }}"></script>
+        <script src="{{ mix('modules/shipping/js/shipping.min.js') }}"></script>
+        <script src="{{ mix('modules/pixels/js/pixels.min.js') }}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.versionsFile())}}"></script>
-        <script src="{{asset('modules/orderbump/js/index.js?v='.versionsFile())}}"></script>
-        <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v='.versionsFile())}}"></script>
-        <script src="{{asset('modules/projectreviews/js/index.js?v='.versionsFile())}}"></script>
-        <script src="{{asset('modules/project-notification/js/projectNotification.js?v='.versionsFile())}}"></script>
-        <script src="{{asset('modules/projects/js/projects.js?v='.versionsFile())}}"></script>
+        <script src="{{ mix('modules/orderbump/js/index.min.js') }}"></script>
+        <script src="{{ mix('modules/discountcoupons/js/discountCoupons.min.js') }}"></script>
+        <script src="{{ mix('modules/projectreviews/js/index.min.js') }}"></script>
+        <script src="{{ mix('modules/projectNotification/js/projectNotification.min.js') }}"></script>
+        <script src="{{ mix('modules/projects/js/projects.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
         <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
         <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
         <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>
-        <script src="{{asset('modules/woocommerce/js/syncproducts.js?v='.versionsFile())}}"></script>
+        <script src="{{ mix('modules/woocommerce/js/syncproducts.min.js') }}"></script>
 
         <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mousewheel.min.js?v=' . versionsFile()) }}"></script>
         <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.js?v=' . versionsFile()) }}"></script>

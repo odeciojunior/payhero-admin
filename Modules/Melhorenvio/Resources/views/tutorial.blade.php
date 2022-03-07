@@ -8,7 +8,7 @@
     <title>Manual de Integração com Melhor Envio</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('modules/melhorenvio/css/tutorial.css?v='.uniqid()) }}">
+    <link rel="stylesheet" href="{{ mix('modules/melhorenvio/css/tutorial.min.css') }}">
 </head>
 
 <body>

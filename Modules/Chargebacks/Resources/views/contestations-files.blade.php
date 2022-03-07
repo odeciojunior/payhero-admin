@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href='{{asset('/modules/sales/css/index.css?v=' . uniqid())}}'>
+    <link rel="stylesheet" href='{{ mix('modules/sales/css/index.min.css') }}'>
 
     <style>
         input[type="file"] {
@@ -100,7 +100,7 @@
 
                             <div class="form-group">
                                 <label for="type">Escolha uma categoria</label>
-                                <div id="type-select"></div>                               
+                                <div id="type-select"></div>
                             </div>
                             <div class="form-group">
 
@@ -170,5 +170,5 @@
 </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/chargebacks/js/contestations-detail.js?v=' . random_int(100, 10000)) }}"></script>
+    <script src="{{ mix('modules/chargebacks/js/contestations-detail.min.js') }}"></script>
 @endpush

@@ -134,6 +134,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="/modules/whatsapp2/js/index.js?v=s1"></script>
+        <script src="{{ mix('modules/whatsapp2/js/index.min.js') }}"></script>
     @endpush
 @endsection

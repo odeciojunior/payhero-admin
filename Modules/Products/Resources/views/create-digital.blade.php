@@ -4,7 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('/modules/products/css/create.css?v=123') }}">
+        <link rel="stylesheet" href="{{ mix('modules/products/css/create.min.css') }}">
     @endpush
 
     <!-- Page -->
@@ -37,7 +37,7 @@
                                     <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
                                 </div>
 
-                                <div class="form-group col-12 col-md-7 input-file-container">  
+                                <div class="form-group col-12 col-md-7 input-file-container">
                                     <label>Arquivo do produto</label>
                                     <input class="input-file" name="digital_product_url" id="digital_product_url" type="file">
                                     <div class="form-group d-flex pt-10">
@@ -59,7 +59,7 @@
 
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -72,7 +72,8 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create-digital.js?v='.uniqid()) }}"></script>
+        <script src="{{ mix('modules/products/js/create-digital.min.js') }}"></script>
+
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

@@ -4,7 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=' . random_int(100, 10000)) }}">
+        <link rel="stylesheet" href="{{ mix('modules/sales/css/index.min.css') }}">
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=101') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
     @endpush
@@ -329,7 +329,7 @@
     <!-- End Modal -->
     @push('scripts')
 
-        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js?v=' . uniqid()) }}"></script>
+        <script src="{{ mix('modules/salesrecovery/js/salesrecovery.min.js') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src="{{asset('modules/global/js/daterangepicker.min.js')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>

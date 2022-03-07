@@ -2,7 +2,7 @@
 @section('content')
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=124') }}">
-        <link rel="stylesheet" href="{{ asset('/modules/projects/css/index.css') }}">
+        <link rel="stylesheet" href="{{ mix('modules/projects/css/index.min.css') }}">
         <style>
             .card{
                 min-height:403px;
@@ -82,7 +82,7 @@
     </div>
     <!-- End Modal -->
     @push('scripts')
-        <script src="{{asset('modules/projects/js/index.js?v='.versionsFile())}}"></script>
+        <script src="{{ mix('modules/projects/js/index.min.js') }}"></script>
     @endpush
 @endsection
 

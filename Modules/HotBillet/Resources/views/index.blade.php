@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @push('css')
 
-    <link rel="stylesheet" href="{{ asset('modules/convertax/css/index.css?v=' .  versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('modules/convertax/css/index.min.css') }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
     <style>
         .gray:hover{
@@ -127,6 +127,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/hotbillet/js/index.js?v=s0')}}"></script>
+        <script src="{{ mix('modules/hotbillet/js/index.min.js') }}"></script>
     @endpush
 @endsection

@@ -92,7 +92,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('/modules/companies/js/index.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ mix('modules/companies/js/index.min.js') }}"></script>
     @endpush
 
 @endsection

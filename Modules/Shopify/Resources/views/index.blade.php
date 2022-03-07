@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/shopify/css/index.css?v=' .  versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('modules/shopify/css/index.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=' . versionsFile()) }}">
 @endpush
 <style>
@@ -617,7 +617,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/shopify/js/index.js?v=' . uniqid()) }}"></script>
+        <script src="{{ mix('modules/shopify/js/index.min.js') }}"></script>
     @endpush
 
 @endsection

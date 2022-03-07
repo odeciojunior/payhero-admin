@@ -4,7 +4,7 @@
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=' . versionsFile()) }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('modules/integrations/css/edit-integrations.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('modules/integrations/css/edit-integrations.min.css') }}">
     @endpush
     <div class="page new-layout">
         <div style="display: none" class="page-header container pb-0">
@@ -227,7 +227,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('modules/integrations/js/index.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ mix('modules/integrations/js/index.min.js') }}"></script>
     @endpush
 
 @endsection

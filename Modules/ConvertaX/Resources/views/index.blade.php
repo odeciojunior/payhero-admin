@@ -2,7 +2,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css?v=' .  versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('modules/convertax/css/index.min.css') }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
     <style>
         .gray:hover{
@@ -95,6 +95,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/convertax/js/index.js?v='.uniqid() )}}"></script>
+        <script src="{{ mix('modules/convertax/js/index.min.js' )}}"></script>
     @endpush
 @endsection

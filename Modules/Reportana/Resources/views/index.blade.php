@@ -100,6 +100,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/reportana/js/index.js?v=s0"></script>
+        <script src="{{ mix('modules/reportana/js/index.min.js') }}"></script>
     @endpush
 @endsection

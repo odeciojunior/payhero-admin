@@ -4,8 +4,8 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href='{{asset('/modules/sales/css/index.css?v=' . uniqid())}}'>
-        <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css?v=10') }}">
+        <link rel="stylesheet" href='{{ mix('modules/sales/css/index.min.css') }}'>
+        <link rel="stylesheet" href="{{ mix('modules/notazz/css/index.min.css') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
@@ -192,7 +192,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/notazz/js/show.js?v=s2') }}"></script>
+        <script src="{{ mix('modules/notazz/js/show.min.js') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
         <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush

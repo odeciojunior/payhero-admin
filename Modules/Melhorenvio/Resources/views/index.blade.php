@@ -1,7 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/melhorenvio/css/index.css?v=' .  versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('modules/melhorenvio/css/index.min.css') }}">
 @endpush
 
 @section('content')
@@ -105,7 +105,7 @@
     <!-- End modal -->
 
     @push('scripts')
-        <script src="{{ asset('modules/melhorenvio/js/index.js?v='. uniqid()) }}"></script>
+        <script src="{{ mix('modules/melhorenvio/js/index.min.js') }}"></script>
     @endpush
 
 @endsection

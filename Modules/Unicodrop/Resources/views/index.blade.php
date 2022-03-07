@@ -92,6 +92,6 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/unicodrop/js/index.js?v='.uniqid()) }}"></script>
+        <script src="{{ mix('modules/unicodrop/js/index.min.js') }}"></script>
     @endpush
 @endsection

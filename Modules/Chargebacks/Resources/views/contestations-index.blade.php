@@ -4,11 +4,11 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=123') }}">
+        <link rel="stylesheet" href="{{ mix('modules/sales/css/index.min.css') }}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
         <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=123') }}">
-        <link rel="stylesheet" href="{{ asset('modules/chargebacks/css/contestations-index.css?v='. versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('modules/chargebacks/css/contestations-index.min.css') }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
         <style>
             .select2-selection--single {
@@ -269,7 +269,7 @@
             {{-- FIM loja nao existem lojas--}}
         </div>
         @push('scripts')
-            <script src="{{ asset('/modules/chargebacks/js/contestations-index.js?v='. random_int(100, 10000)) }}"></script>
+            <script src="{{ mix('modules/chargebacks/js/contestations-index.min.js') }}"></script>
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
             <script src="{{ asset('modules/global/js/daterangepicker.min.js') }}"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>

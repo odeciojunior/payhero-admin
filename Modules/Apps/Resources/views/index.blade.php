@@ -2,7 +2,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/apps/css/index.css') }}">
+        <link rel="stylesheet" href="{{ mix('modules/apps/css/index.min.css') }}">
     @endpush
 
     <div class="page">
@@ -200,7 +200,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/apps/js/index.js?v='.uniqid()) }}"></script>
+        <script src="{{ mix('modules/apps/js/index.min.js') }}"></script>
         <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     @endpush
 @endsection

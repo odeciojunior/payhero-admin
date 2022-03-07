@@ -1,11 +1,11 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{asset('modules/finances/css/jPages.css?v=' . versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('modules/finances/css/jPages.min.css?') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css?v=' . versionsFile()) }}">
     <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=' . versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('modules/finances/css/new-finances.min.css') }}">
 @endpush
 
 @section('content')
@@ -69,14 +69,14 @@
         @push('scripts')
             <script src="{{ asset('modules/global/js-extra/moment.min.js?v=' . versionsFile()) }}"></script>
             <script src="{{ asset('modules/global/js/daterangepicker.min.js?v=' . versionsFile()) }}"></script>
-            <script src="{{ asset('modules/finances/js/jPages.min.js?v=' . versionsFile()) }}"></script>
-            <script src="{{ asset('modules/finances/js/statement-index.js?v=' . versionsFile()) }}"></script>
-            <script src="{{ asset('modules/finances/js/balances.js?v=1' . versionsFile()) }}"></script>
-            <script src="{{ asset('modules/finances/js/withdrawals-table.js?v=' . versionsFile()) }}"></script>
+            <script src="{{ mix('modules/finances/js/jPages.min.js') }}"></script>
+            <script src="{{ mix('modules/finances/js/statement-index.min.js') }}"></script>
+            <script src="{{ mix('modules/finances/js/balances.min.js') }}"></script>
+            <script src="{{ mix('modules/finances/js/withdrawals-table.min.js') }}"></script>
             {{-- <script src="{{ asset('modules/finances/js/withdrawal-custom.js?v=' . versionsFile()) }}"></script> --}}
             {{-- <script src="{{ asset('modules/finances/js/withdrawal-default.js?v=' . versionsFile()) }}"></script> --}}
-            <script src="{{ asset('modules/finances/js/withdrawal-handler.js?v=' . versionsFile()) }}"></script>
-            <script src="{{ asset('modules/finances/js/statement.js?v=3' . versionsFile()) }}"></script>
+            <script src="{{ mix('modules/finances/js/withdrawal-handler.min.js') }}"></script>
+            <script src="{{ mix('modules/finances/js/statement.min.js') }}"></script>
         @endpush
     </div>
 

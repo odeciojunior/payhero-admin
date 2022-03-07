@@ -223,6 +223,6 @@
         {{-- FIM loja nao existem lojas--}}
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/projectaffiliates.js?v=' . random_int(100, 10000)) }}"></script>
+        <script src="{{ mix('modules/affiliates/js/projectaffiliates.min.js') }}"></script>
     @endpush
 @endsection

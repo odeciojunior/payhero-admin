@@ -100,6 +100,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/smartfunnel/js/index.js?v=s0"></script>
+        <script src="{{ mix('modules/smartfunnel/js/index.min.js') }}"></script>
     @endpush
 @endsection

@@ -1,12 +1,12 @@
 @push('css')
 <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
 <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/quill.snow.css?v=' . uniqid()) }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/dropfy.css?v=' . uniqid()) }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/custom-inputs.css?v='.uniqid()) }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/cropper.css?v='.uniqid()) }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/style.css?v='.uniqid()) }}">
-<link rel="stylesheet" href="{{ asset('/modules/checkouteditor/css/preview-styles.css?v='.uniqid()) }}">
+<link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/quill.snow.min.css') }}">
+<link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/dropfy.min.css') }}">
+<link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/custom-inputs.min.css') }}">
+<link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/cropper.min.css') }}">
+<link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/style.min.css') }}">
+<link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/preview-styles.min.css') }}">
 @endpush
 
 <!-- Page -->
@@ -154,7 +154,7 @@
                                 </div>
 
                                 <div class="instrunctios">
-                                    <p>Sua imagem deve ter 32x32px, nos 
+                                    <p>Sua imagem deve ter 32x32px, nos
                                        formatos .png, .jpg ou ICO</p>
                                 </div>
 
@@ -723,7 +723,7 @@
                                 <div class="input-container">
                                     <label for="social_proof_message" class="checkout-label">Mensagem</label>
                                     <textarea class="checkout-textarea" id="social_proof_message" name="social_proof_message" rows="1">
-                                        
+
                                     </textarea>
                                     <div id="social_proof_message_error" class="checkout-error" style="display: none;">
                                         <p>Preencha o campo de mensagem.</p>
@@ -1842,11 +1842,11 @@
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin/cropper.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
-<script src="{{asset('modules/checkouteditor/js/quill.min.js?v=' . uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/cropper.min.js?v=' . uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/verifyPhone.js?v=' . uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/checkoutEditor.js?v=' . uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/loadCheckoutData.js?v=' . uniqid())}}"></script>
-<script src="{{asset('modules/checkouteditor/js/scrollPreview.js?v=' . uniqid())}}"></script>
+<script src="{{ mix('modules/checkouteditor/js/quill.min.js') }}"></script>
+<script src="{{ mix('modules/checkouteditor/js/cropper.min.js') }}"></script>
+<script src="{{ mix('modules/checkouteditor/js/verifyPhone.min.js') }}"></script>
+<script src="{{ mix('modules/checkouteditor/js/checkoutEditor.min.js') }}"></script>
+<script src="{{ mix('modules/checkouteditor/js/loadCheckoutData.min.js') }}"></script>
+<script src="{{ mix('modules/checkouteditor/js/scrollPreview.min.js') }}"></script>
 
 @endpush

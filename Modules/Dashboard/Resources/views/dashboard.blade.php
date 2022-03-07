@@ -5,11 +5,11 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=12') }}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=12') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=12') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=12') }}">
+        <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist.min.css') !!}">
+        <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
+        <link rel="stylesheet" href="{{ mix('modules/dashboard/css/index.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('modules/dashboard/css/dashboard-performance.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('modules/dashboard/css/dashboard-account-health.min.css') }}">
     @endpush
 
     <div class="page dashboard">
@@ -234,15 +234,15 @@
     </div>
 
     @push('scripts')
-        <script src='{{ asset('modules/dashboard/js/gauge.js?v=231') }}'></script>
-        <script src='{{ asset('modules/reports/js/chartist.min.js') }}'></script>
-        <script src='{{ asset('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
-        <script src='{{ asset('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
+        <script src='{{ mix('modules/dashboard/js/gauge.min.js') }}'></script>
+        <script src='{{ mix('modules/reports/js/chartist.min.js') }}'></script>
+        <script src='{{ mix('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
+        <script src='{{ mix('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
         <script src='{{ asset('modules/global/js/confetti.browser.min.js') }}'></script>
 {{--        <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>--}}
-        <script src="{{ asset('modules/dashboard/js/dashboard-performance.js?v=' . versionsFile()) }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=' . versionsFile()) }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard-account-health.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ mix('modules/dashboard/js/dashboard-performance.min.js') }}"></script>
+        <script src="{{ mix('modules/dashboard/js/dashboard.min.js') }}"></script>
+        <script src="{{ mix('modules/dashboard/js/dashboard-account-health.min.js') }}"></script>
     @endpush
 
 @endsection
