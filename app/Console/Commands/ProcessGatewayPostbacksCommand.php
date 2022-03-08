@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\GatewayPostback;
-use Illuminate\Support\Facades\Log;
 
 class ProcessGatewayPostbacksCommand extends Command
 {
@@ -23,7 +22,6 @@ class ProcessGatewayPostbacksCommand extends Command
      */
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -34,8 +32,6 @@ class ProcessGatewayPostbacksCommand extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 

@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
 
-        $schedule->command('check:has-valid-tracking')->weekly()->thursdays()->at('01:00');
+        $schedule->command('check:has-valid-tracking')->dailyAt('01:00');
 
         $schedule->command('getnet:check-refunded')->dailyAt('03:15');
 

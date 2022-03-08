@@ -5,12 +5,10 @@ namespace App\Console\Commands;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\CompanyAdjustments;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
-use Modules\Core\Entities\User;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 
@@ -48,7 +46,6 @@ class CheckAdjustmentGateway extends Command
      */
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -92,7 +89,6 @@ class CheckAdjustmentGateway extends Command
             report($e);
         }
 
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 
     public function checkGetnet(Company $company) {
