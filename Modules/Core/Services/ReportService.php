@@ -1146,10 +1146,25 @@ class ReportService
         }
     }
 
+    public function getColors($index = null)
+    {
+        $colors = [ 'blue', 'purple', 'pink', 'orange', 'yellow', 'light-blue', 'light-green', 'grey' ];
+
+        if (!empty($index) || $index >= 0) {
+            return $colors[$index];
+        }
+
+        return $colors;
+    }
+
     // FINANCES --------------------------------------------------------------------------------------
     public function getResumeCommissions($filters)
     {
         try {
+            if ($this->getResumeSales($filters) == 0) {
+                return [];
+            }
+
             $status = [
                 Sale::STATUS_APPROVED,
                 Sale::STATUS_PENDING,
@@ -1215,6 +1230,10 @@ class ReportService
     public function getResumePendings($filters)
     {
         try {
+            if ($this->getResumeSales($filters) == 0) {
+                return [];
+            }
+
             $status = Transaction::STATUS_PAID;
 
             $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
@@ -1261,6 +1280,10 @@ class ReportService
     public function getResumeCashbacks($filters)
     {
         try {
+            if ($this->getResumeSales($filters) == 0) {
+                return [];
+            }
+
             $filterProjects = '';
             $projectIds = [];
             if (!empty($filters["project"])) {
@@ -1332,6 +1355,10 @@ class ReportService
     public function getResumeTypePayments($filters)
     {
         try {
+            if ($this->getResumeSales($filters) == 0) {
+                return [];
+            }
+
             $total = $this->getResumeTypePaymentsSum($filters);
 
             $totalCreditCard = $this->getResumeTypePaymentsSum($filters, Sale::CREDIT_CARD_PAYMENT);
@@ -1367,6 +1394,10 @@ class ReportService
     public function getResumeTypePaymentsSum($filters, $typePayment = null)
     {
         try {
+            if ($this->getResumeSales($filters) == 0) {
+                return [];
+            }
+
             $companieIds = [];
             if (empty($filters["company"])) {
                 $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
@@ -1404,6 +1435,10 @@ class ReportService
     public function getResumeProducts($filters)
     {
         try {
+            if ($this->getResumeSales($filters) == 0) {
+                return [];
+            }
+
             $userId = auth()->user()->account_owner_id;
             $statusId = Sale::STATUS_APPROVED;
 
@@ -1419,7 +1454,7 @@ class ReportService
             INNER JOIN sales ON products_plans_sales.sale_id = sales.id
             WHERE sales.owner_id = '.$userId.' AND sales.status = '.$statusId.'
             AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
-            GROUP BY products.id ORDER BY amount DESC LIMIT 10' .$projectId;
+            GROUP BY products.id ORDER BY amount DESC LIMIT 8' .$projectId;
             $dbResults = DB::select($query);
 
             $total = 0;
@@ -1428,9 +1463,16 @@ class ReportService
                 $total += $r->amount;
             }
 
-            foreach($dbResults as $r)
+            $index = 0;
+            foreach($dbResults as $result)
             {
-                $r->percentage = round(number_format(($r->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
+                $percentage = round(number_format(($result->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
+
+                $result->image = empty($result->image) ? 'https://cloudfox-files.s3.amazonaws.com/produto.svg' : $result->image;
+                $result->percentage = $percentage < 28 ? '28%' : $percentage.'%';
+                $result->color = $this->getColors($index);
+
+                $index++;
             }
 
             array_push($dbResults, (object) [
@@ -1447,25 +1489,18 @@ class ReportService
     public function getResumeCoupons($filters)
     {
         try {
+            if ($this->getResumeSales($filters) == 0) {
+                return [];
+            }
+
             $userId = auth()->user()->account_owner_id;
             $statusId = Sale::STATUS_APPROVED;
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $saleModel = new Sale();
-            $sales = $saleModel->where('owner_id', $userId)
-            ->where('status', $statusId)
-            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
-
             $projectId = '';
             if (!empty($filters["project"])) {
                 $projectId = 'AND project_id = ' . Hashids::decode($filters["project"]);
-
-                $sales->where('project_id', Hashids::decode($filters["project"]));
-            }
-
-            if ($sales->get()->count() == 0) {
-                return [];
             }
 
             $query = 'SELECT sales.cupom_code as coupon, COUNT(*) as amount FROM sales
@@ -1480,9 +1515,17 @@ class ReportService
                 $total += $result->amount;
             }
 
+            $index = 0;
             foreach($dbResults as $result)
             {
                 $result->percentage = round(number_format(($result->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
+                if ($index < 8) {
+                    $result->color = $this->getColors($index);
+                } else {
+                    $result->color = 'grey';
+                }
+
+                $index++;
             }
 
             array_push($dbResults, (object) [
