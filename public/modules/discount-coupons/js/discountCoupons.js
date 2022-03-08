@@ -46,14 +46,16 @@ function count_plans_coupons() { //thumbnails
             var html_show_plans = ''
             for(i in response.thumbnails){
 
-                // background: url('https://cloudfox-files.s3.amazonaws.com/produto.svg');
+                
+                var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
+
 
                 var img = response.thumbnails[i].products[0].photo?response.thumbnails[i].products[0].photo:'https://cloudfox-files.s3.amazonaws.com/produto.svg'
                 
                 html_show_plans += `
                 
 
-                    <span class="plan_thumbnail" style="width:43px; height:43px;
+                    <span ${toolTip} class="plan_thumbnail" style="width:43px; height:43px;
                     background-repeat: no-repeat; background-position: center center; 
                     background-size: cover !important;  background-image: url('`+img+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');  "></span>
                 
@@ -62,12 +64,18 @@ function count_plans_coupons() { //thumbnails
 
             $('#c-show_plans').html(html_show_plans)
 
+            $('[data-toggle="tooltip"]').tooltip('dispose')
+    
+            $('[data-toggle="tooltip"]').tooltip({
+                container: '.page'
+            });
+
             if(response.total > 8){
                 var rest = response.total - 8
                 $('#c-show_plans').append('<div class="plans_rest">+'+rest+'</div>')
 
             }
-
+            
 
             
         }
@@ -150,8 +158,9 @@ function show_plans(){
         for(i in items_selected){
             
             if(i>7) break;
+            var toolTip = 'aria-describedby="tt'+items_selected[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+items_selected[i].name+'"'
 
-            html_show_plans += `<span class="plan_thumbnail" style="width:43px; height:43px;
+            html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:43px; height:43px;
             background-repeat: no-repeat; background-position: center center; 
             background-size: cover !important; background: url('`+items_selected[i].image+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`
         }
@@ -160,10 +169,21 @@ function show_plans(){
         $('#show_plans, #c-show_plans').css('margin-top',20);
 
         $('#show_plans, #c-show_plans').html(html_show_plans)
+
+        $('[data-toggle="tooltip"]').tooltip('dispose')
+    
+        $('[data-toggle="tooltip"]').tooltip({
+            container: '.page'
+        });
+
         var rest = items_selected.length - 8
         $('#show_plans, #c-show_plans').append('<div class="plans_rest">+'+rest+'</div>')
-
+        
+        $('#c-show_plans, #show_plans').css('height', 48)
         return false
+    }else{
+        $('#c-show_plans, #show_plans').css('height', 88)
+
     }
 
 
@@ -278,6 +298,7 @@ function run_search(search, now){
                     list: 'plan',
                     search: search,
                     search2: search2,
+                    items_saved: items_selected,
                     project_id: projectId,
                     limit:30
                     //page: params.page || 1
@@ -337,8 +358,8 @@ function run_search(search, now){
                 }
 
                 if(items.length > 0){
-
-                    $('#search_result, #search_result2').html(items_saved + items);
+                    
+                    $('#search_result, #search_result2').html(items + items_saved);
                     
                     $('#search_result, #search_result2').mCustomScrollbar('destroy')
 
@@ -526,14 +547,23 @@ $(function () {
                 
                 if(i>7) break;
                 
+                var toolTip = 'aria-describedby="tt'+items_selected[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+items_selected[i].name+'"'
+                
+
                 items_thumbs +=  `
-                <span class="plan_thumbnail" style="width:56px; height:56px;
+                <span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
                 background-repeat: no-repeat; background-position: center center; 
                 background-size: cover !important; background: url('`+items_selected[i].image+`'), url('modules/global/img/produto.png')"></span>`
                 
             }
             
             $('.edit-plans-thumbs').html(items_thumbs)
+
+            $('[data-toggle="tooltip"]').tooltip('dispose')
+    
+            $('[data-toggle="tooltip"]').tooltip({
+                container: '.page'
+            });
 
         }else{
             count_plans2()
@@ -639,7 +669,7 @@ $(function () {
 
     function mount_rules(rules, edit){
         let rules_html = ''
-        console.log(rules);
+        
         for(i in rules){
             rules_html += `<div class="rule_holder">
                                 <div class="rule_box">
@@ -801,7 +831,6 @@ $(function () {
                 
                 
                 
-                // $('.btn-save-edit-rules').prop('disabled', false);
         
                 $(this).parents('.rule_holder').find('.rule_box_edit').hide()
                 $(this).parents('.rule_holder').find('.rule_box').show()
@@ -1143,11 +1172,12 @@ $(function () {
             }, success: function success(response) {
                 
                 
+                var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
+
                 
-                // console.log(response);
                 var html_show_plans = ''
                 for(i in response.thumbnails){
-                    html_show_plans += `<span class="plan_thumbnail" style="width:43px; height:43px;
+                    html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:43px; height:43px;
                     background-repeat: no-repeat; background-position: center center; 
                     background-size: cover !important; background: url('`+response.thumbnails[i].products[0].photo+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`
                 }
@@ -1155,6 +1185,12 @@ $(function () {
                 $('#show_plans').removeClass('mostrar_mais_detalhes')
 
                 $('#show_plans').html(html_show_plans)
+
+                $('[data-toggle="tooltip"]').tooltip('dispose')
+    
+                $('[data-toggle="tooltip"]').tooltip({
+                    container: '.page'
+                });
 
                 if(response.total > 8){
                     var rest = response.total - 8
@@ -1199,15 +1235,24 @@ $(function () {
                 
                 
                 
-                // console.log(response);
+                var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
+
+
+
                 var html_show_plans = ''
                 for(i in response.thumbnails){
-                    html_show_plans += `<span class="plan_thumbnail" style="width:56px; height:56px;
+                    html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
                     background-repeat: no-repeat; background-position: center center; 
                     background-size: cover !important; background: url('`+response.thumbnails[i].products[0].photo+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');)"></span>`
                 }
 
                 $('.edit-plans-thumbs').html(html_show_plans)
+
+                $('[data-toggle="tooltip"]').tooltip('dispose')
+    
+                $('[data-toggle="tooltip"]').tooltip({
+                    container: '.page'
+                });
 
                 if(response.total > 8){
                     var rest = response.total - 8

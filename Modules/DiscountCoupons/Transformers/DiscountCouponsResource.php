@@ -18,12 +18,15 @@ class DiscountCouponsResource extends JsonResource
                 $plans_description = 'em todos os planos';
 
             }
+        }else{
+            $plans_description = 'em todos os planos';
+
         };
         
         $prog_rules = json_decode($this->progressive_rules, true);
         if(gettype($prog_rules)=='array'){
             if(count($prog_rules)==1){
-
+                if(empty($prog_rules[0]['buy'])) $prog_rules[0]['buy'] = 'above_of';
                 $rule = $prog_rules[0]['buy']=='above_of'?'apartir de ':'na compra de ';
                 $value = $prog_rules[0]['type'] == 'percent' ? $prog_rules[0]['value'].'%' : 'R$'.str_replace('.',',', $prog_rules[0]['value']);
                 $rules_description = $value.'<br><span class="small-text">'.$rule.$prog_rules[0]['qtde'].' ite'.($prog_rules[0]['qtde']==1?'m':'ns').'</span>';

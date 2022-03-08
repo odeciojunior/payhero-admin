@@ -162,7 +162,7 @@ $(function () {
                             <div class="rule_box_edit" style="display:none">
 
                                 Na compra
-                                <select class="buy w-auto d-inline-block adjust-select" style="width: 124px; height: 44px;">
+                                <select id="buy1" class="buy w-auto d-inline-block adjust-select" style="width: 124px; height: 44px;">
                                     <option `+ (rules[i].buy=='above_of'?'selected':'') +` value="above_of">acima de</option>
                                     <option `+ (rules[i].buy=='of'?'selected':'') +` value="of">de</option>
                                 </select>
@@ -329,11 +329,12 @@ $(function () {
                 }
             }
 
-            rules[editingRule1].buy = go('#buy').val(),
+            rules[editingRule1].buy = go('#buy1').val(),
             rules[editingRule1].qtde = go('.qtde').val(),
             rules[editingRule1].value = rules[editingRule1].type=='percent'?go('.percent').val():go('.value').val()
             mount_rules(rules, 1);
 
+            console.log(rules);
 
 
 
@@ -574,6 +575,7 @@ $(function () {
                         list: 'plan',
                         search: search,
                         search2: search2,
+                        items_saved: items_selected,
                         project_id: projectId,
                         limit:30
                         //page: params.page || 1
@@ -634,7 +636,7 @@ $(function () {
 
                     if(items.length > 0){
 
-                        $('#search_result, #search_result2').html(items_saved + items);
+                        $('#search_result, #search_result2').html(items + items_saved);
                         //$('#search_result, #search_result2').css('overflow-y', 'scroll')
     
                         $('#search_result, #search_result2').mCustomScrollbar('destroy')

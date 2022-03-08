@@ -610,3 +610,7 @@ input::placeholder {
 #edit_step0 .mCSB_inside > .mCSB_container {
     margin-right: 0 !important;
 }
+
+#rules .mCSB_container, #rules-edit .mCSB_container {
+    padding-bottom: 108px;
+}

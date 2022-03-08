@@ -577,13 +577,19 @@ class PlansApiController extends Controller
             if (!empty($data['search2'])) {
                 $plans->where('description', 'like', '%' . $data['search2'] . '%');
             }
-
+            $itemsNotIn = [];
+            if(!empty($data['items_saved']) && is_array($data['items_saved'])){
+                foreach($data['items_saved'] as $items){
+                    $itemsNotIn[] = current(Hashids::decode($items['id']));
+                }
+            }
             if(!empty($data['most_sales'])){
                 
                 $plans->select('id', 'name', 'description',
                                 DB::raw("id as i"),
-                                DB::raw("(select count(plan_id) from plans_sales where plan_id = i) as sales"));
-                $plans = $plans->orderBy('sales', 'desc')->paginate(30);
+                                DB::raw("(select count(plan_id) from plans_sales where plan_id = i) as sales"))
+                                ->whereNotIn('id', $itemsNotIn);
+                $plans = $plans->orderBy('sales', 'desc')->paginate(16);
                 
                 return PlansSelectResource::collection($plans);
 

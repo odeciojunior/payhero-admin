@@ -262,6 +262,9 @@ class DiscountCouponsApiController extends Controller
 
                             }
                         }
+
+                        if(empty($coupon->plans)) $coupon->plans = '[]';
+                        
                         return response()->json($coupon, 200);
                     } else {
                         return response()->json(['message' => 'Erro ao atualizar registro'], 400);

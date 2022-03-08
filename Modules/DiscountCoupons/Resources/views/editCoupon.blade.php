@@ -150,7 +150,7 @@
     
     
                         </div>
-                        <div style="padding-top: 10px">
+                        <div style="padding-top: 10px; width: 160px">
                             <span style="color:#2E85EC; font-size: 14px; font-weight: 400; " id="mostrar_mais2"
                                 class="pointer">
                                 <span id="mostrar_mais_label2">
@@ -255,7 +255,8 @@
                         </svg>
 
 
-                        <span class="sub-title"> Selecione os planos que terão cupom </span>
+                        {{-- <span class="sub-title"> Selecione os planos que terão cupom </span> --}}
+                        <span class="sub-title"> Planos no desconto <span style="color:#969696; font-size: 14px; font-weight: normal"> • <span id="planos-count-edit">x planos</span></span>  </span>
 
 
 
@@ -276,7 +277,11 @@
                         </div>
                     </div>
 
-                    <div style="position: relative">
+                    <div class="edit-plans-thumbs" style="height: 76px">
+                        
+                    </div>
+
+                    {{-- <div style="position: relative">
 
                         <input class="input-pad" style="height: 48px; padding-right: 38px" id="search_input2"
                             autocomplete="off" autofocus placeholder="Pesquiser plano por nome" type="text">
@@ -288,10 +293,22 @@
                                 d="M10.9633 12.0239C9.80854 12.9477 8.34378 13.5001 6.75 13.5001C3.02208 13.5001 0 10.478 0 6.75003C0 3.02209 3.02208 0 6.75 0C10.4779 0 13.5 3.02209 13.5 6.75003C13.5 8.34377 12.9477 9.80852 12.024 10.9633L17.7803 16.7197C18.0732 17.0126 18.0732 17.4874 17.7803 17.7803C17.4874 18.0732 17.0126 18.0732 16.7197 17.7803L10.9633 12.0239ZM12 6.75003C12 3.85052 9.6495 1.50001 6.75 1.50001C3.85051 1.50001 1.5 3.85052 1.5 6.75003C1.5 9.64953 3.85051 12 6.75 12C9.6495 12 12 9.64953 12 6.75003Z"
                                 fill="#636363" />
                         </svg>
+                    </div> --}}
+
+                    <div class="d-flex modal-new-layout box-description">
+                        <input class="form-control form-control-lg search_input_create_coupon search_coupon" type="text" id="search_input2" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
+                        <div class="input-group input-group-lg" style="width: 650px;">
+                            <input onkeyup="set_description_value(this, $('.search_input_create_coupon'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <img src="/modules/global/img/icon-search.svg" alt="Icon Search">
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
                     <div id="search_result2" class="mt-20  "
-                        style=" height: 368px">
+                        style=" height: 298px">
 
                         {{-- <div class="item item_selected" >
                                 <span style="background-image: url(http://dev.woo.com/wp-content/uploads/2021/07/sunglasses-2.jpg)" class="image"></span>
