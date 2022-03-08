@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
@@ -41,7 +40,6 @@ class AsaasChargeback extends Command
 
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -120,7 +118,6 @@ class AsaasChargeback extends Command
             report($e);
         }
 
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 
 }

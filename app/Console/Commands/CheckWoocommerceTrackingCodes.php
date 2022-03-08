@@ -7,8 +7,6 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Log;
 
 class CheckWoocommerceTrackingCodes extends Command
 {
@@ -44,8 +42,6 @@ class CheckWoocommerceTrackingCodes extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
 
             $sales = Sale::select('project_id')->whereNotNull('woocommerce_order')->where('has_valid_tracking', false)
@@ -72,8 +68,6 @@ class CheckWoocommerceTrackingCodes extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }

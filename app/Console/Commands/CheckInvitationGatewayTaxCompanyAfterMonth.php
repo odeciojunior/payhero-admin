@@ -9,7 +9,6 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\PromotionalTax;
 use Modules\Core\Services\CompanyService;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class checkInvitationGatewayTaxCompanyAfterMonth
@@ -48,7 +47,6 @@ class CheckInvitationGatewayTaxCompanyAfterMonth extends Command
      */
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -77,8 +75,6 @@ class CheckInvitationGatewayTaxCompanyAfterMonth extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
         return 0;
     }

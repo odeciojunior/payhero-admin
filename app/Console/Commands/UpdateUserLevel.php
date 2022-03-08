@@ -8,8 +8,6 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\NotifyUserLevelEvent;
 use Modules\Core\Services\BenefitsService;
-use Illuminate\Support\Facades\Log;
-
 class UpdateUserLevel extends Command
 {
     /**
@@ -43,8 +41,6 @@ class UpdateUserLevel extends Command
      */
     public function handle()
     {
-
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -112,8 +108,6 @@ class UpdateUserLevel extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
         return 0;
     }

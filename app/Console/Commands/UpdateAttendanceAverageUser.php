@@ -7,7 +7,6 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\TicketMessage;
 use Modules\Core\Entities\User;
-use Illuminate\Support\Facades\Log;
 
 class UpdateAttendanceAverageUser extends Command
 {
@@ -43,8 +42,6 @@ class UpdateAttendanceAverageUser extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
 
             $tickets = Ticket::join('sales', 'sales.id', 'tickets.sale_id')
@@ -68,7 +65,6 @@ class UpdateAttendanceAverageUser extends Command
             report($e);
         }
 
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
         return 0;
     }
 }

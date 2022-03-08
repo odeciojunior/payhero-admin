@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Services\AttendanceService;
 
@@ -42,8 +41,6 @@ class UpdateAttendanceAverageTicket extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
             $attendanceService = new AttendanceService();
             Ticket::with('messages')
@@ -58,7 +55,6 @@ class UpdateAttendanceAverageTicket extends Command
             report($e);
         }
 
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
         return 0;
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\BlockReason;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Gateway;
@@ -47,18 +46,18 @@ class BlockSaleForContestationGetnet extends Command
     {
         $sales =  Sale::select('sales.id')
         ->join('sale_contestations as c','sales.id','=','c.sale_id')
-        ->leftJoin('block_reason_sales as b','sales.id','=','b.sale_id')        
+        ->leftJoin('block_reason_sales as b','sales.id','=','b.sale_id')
         ->where('sales.gateway_id',Gateway::GETNET_PRODUCTION_ID)
         ->where('sales.status',Sale::STATUS_APPROVED)
         ->where('c.status',SaleContestation::STATUS_IN_PROGRESS)
         ->whereNull('b.sale_id')->get();
-        
+
         $output = new ConsoleOutput();
         $progress = new ProgressBar($output, count($sales));
         $progress->start();
 
         foreach($sales as $sale)
-        {            
+        {
             BlockReasonSale::create([
                 'sale_id'=>$sale->id,
                 'blocked_reason_id'=>BlockReason::IN_DISPUTE,

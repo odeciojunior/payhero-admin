@@ -8,7 +8,6 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Log;
 
 class CheckSalesRefunded extends Command
 {
@@ -43,7 +42,6 @@ class CheckSalesRefunded extends Command
      */
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -74,8 +72,6 @@ class CheckSalesRefunded extends Command
             report($e);
         }
 
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
-        
     }
 
     public function checkIfExistsRefundedSummary($listTransactions, $sale) {
