@@ -583,6 +583,9 @@ class PlansApiController extends Controller
                     $itemsNotIn[] = current(Hashids::decode($items['id']));
                 }
             }
+            
+            //if(empty($data['search']) && empty($data['search2'])) $itemsNotIn = [];
+
             if(!empty($data['most_sales'])){
                 
                 $plans->select('id', 'name', 'description',

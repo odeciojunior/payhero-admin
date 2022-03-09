@@ -85,7 +85,7 @@ function count_plans_coupons() { //thumbnails
 }
 
 function plans_count2() {
-    if(items_selected.length > 0){
+    if(items_selected.length > 0 && items_selected.length < 11){
         
         var plans_count = items_selected.length + ' plano'+(items_selected.length>1?'s':'')
         $('#planos-count2, #planos-count-edit2').html(plans_count);
@@ -111,7 +111,13 @@ function plans_count2() {
         //c-show_plans
         $('#c-show_plans').css('margin-top','20px')
 
-        $('#planos-count2, #planos-count-edit2').html('Todos os planos');
+        if(items_selected.length > 10){
+            var plans_count = items_selected.length + ' plano'+(items_selected.length>1?'s':'')
+            $('#planos-count2, #planos-count-edit2').html(plans_count);
+        }else{
+
+            $('#planos-count2, #planos-count-edit2').html('Todos os planos');
+        }
 
         count_plans_coupons()
     }
@@ -358,7 +364,7 @@ function run_search(search, now){
                     items += item;
                 }
 
-                if(items.length > 0){
+                if(items.length > 0 || (!search & !search2)){
                     
                     $('#search_result, #search_result2').html(items + items_saved);
                     
@@ -546,7 +552,7 @@ $(function () {
             var items_thumbs = ''
             for(i in items_selected){
                 
-                if(i>7) break;
+                // if(i>7) break;
                 
                 var toolTip = 'aria-describedby="tt'+items_selected[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+items_selected[i].name+'"'
                 
@@ -559,6 +565,22 @@ $(function () {
             }
             
             $('.edit-plans-thumbs').html(items_thumbs)
+
+            if(items_selected.length > 9){
+
+                $('.edit-disc-plans-thumbs-scroll').css('margin-bottom', 16)
+                $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar('destroy')
+                $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar({
+                    axis: 'x',
+                    advanced: {
+                      autoExpandHorizontalScroll: true
+                    }
+                  })
+            }else{
+                $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar('destroy')
+                $('.edit-disc-plans-thumbs-scroll').css('margin-bottom', 0)
+
+            }
 
             $('[data-toggle="tooltip"]').tooltip('dispose')
     

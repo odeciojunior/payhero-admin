@@ -276,8 +276,8 @@
                             </span>
                         </div>
                     </div>
-
-                    <div class="edit-plans-thumbs" style="height: 76px">
+                    
+                    <div class="edit-plans-thumbs edit-plans-thumbs-scroll" style="height: 76px; ">
                         
                     </div>
 

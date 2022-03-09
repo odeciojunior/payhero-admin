@@ -634,7 +634,7 @@ $(function () {
                         items += item;
                     }
 
-                    if(items.length > 0){
+                    if(items.length > 0 || (!search & !search2)){
 
                         $('#search_result, #search_result2').html(items + items_saved);
                         //$('#search_result, #search_result2').css('overflow-y', 'scroll')
@@ -983,7 +983,7 @@ $(function () {
             var items_thumbs = ''
             for(i in items_selected){
                 
-                if(i>7) break;
+                // if(i>7) break;
                 
                 var toolTip = 'aria-describedby="tt'+items_selected[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+items_selected[i].name+'"'
                 
@@ -996,6 +996,22 @@ $(function () {
             }
             
             $('.edit-plans-thumbs').html(items_thumbs)
+
+            if(items_selected.length > 9){
+
+                $('.edit-plans-thumbs-scroll').css('margin-bottom', 16)
+                $('.edit-plans-thumbs-scroll').mCustomScrollbar('destroy')
+                $('.edit-plans-thumbs-scroll').mCustomScrollbar({
+                    axis: 'x',
+                    advanced: {
+                      autoExpandHorizontalScroll: true
+                    }
+                  })
+            }else{
+                $('.edit-plans-thumbs-scroll').mCustomScrollbar('destroy')
+                $('.edit-plans-thumbs-scroll').css('margin-bottom', 0)
+
+            }
 
             $('[data-toggle="tooltip"]').tooltip('dispose')
     

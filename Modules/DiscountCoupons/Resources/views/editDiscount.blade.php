@@ -212,7 +212,7 @@
                         </div>
                     </p>
 
-                    <div class="edit-plans-thumbs" style="height: 76px">
+                    <div class="edit-plans-thumbs edit-disc-plans-thumbs-scroll" style="height: 76px">
                         
                     </div>
 
