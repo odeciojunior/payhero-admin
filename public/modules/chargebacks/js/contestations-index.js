@@ -44,6 +44,7 @@ $(document).ready(function () {
         atualizar();
         getTotalValues();
     });
+    
     // Obtem o os campos dos filtros
     function getProjects() {
         loadingOnScreen();
@@ -151,7 +152,6 @@ $(document).ready(function () {
             text.text("Filtros avançados").fadeIn();
         }
     });
-
 
     function getFilters(urlParams = true) {
         let current_url = window.location.href;
