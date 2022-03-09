@@ -2,7 +2,7 @@
     <div id="select-type-body" class="modal-content s-border-radius" style="height: 271px;  width: 474px">
         <div class="modal-header simple-border-bottom ">
             <h4 class="col-12 modal-title text-center" id="modal-title"
-                style="color:#787878; font: normal normal bold 22px Muli;">
+                style="color:#636363; font: normal normal bold 22px Muli;">
                 Novo desconto
             </h4>
             <a id="modal-button-close-1" class="pointer close" role="button" data-dismiss="modal"
@@ -13,8 +13,8 @@
                 
             </a>
         </div>
-        <div style=''>
-            <div class="d-flex justify-content-center text-center pt-20">
+        <div style='color:#636363'>
+            <div class="d-flex justify-content-center text-center pt-20" >
                 
                 
                     
@@ -68,7 +68,7 @@
                 
             </div>
 
-            <div id="create_name" style="display: none">
+            <div id="create_name" style="display: none; color: #636363">
                 <div id="create_name" class="d-flex justify-content-center  pt-30" >
                     <div style="width:259px" class="text-left">
                         

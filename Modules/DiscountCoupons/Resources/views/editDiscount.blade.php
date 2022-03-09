@@ -8,7 +8,7 @@
             
             <div class="mdtpad simple-border-bottom ">
                 <span class="  " id="modal-title"
-                    style="color:#787878; font: normal normal bold 22px Muli; ">
+                    style="color:#636363; font: normal normal bold 22px Muli; ">
                     Detalhes de desconto progressivo
                 </span>
                 <a id="modal-button-close-2" class=" modal-button-close-2 pointer close" role="button" data-dismiss="modal"
@@ -56,7 +56,7 @@
 
                     <input name="id" type="hidden" id="discount-id" />
 
-                    <div class="row" id="display_name">
+                    <div class="row" id="display_name" style="color:#636363">
                         <div class="col-6">
                             <span class="small-text"> Nome</span> <br>
                             <span id="d-name"></span>
@@ -69,7 +69,7 @@
                         </div>
                     </div>
                     
-                    <div class="" id="display_name_edit" style="display: none">
+                    <div class="" id="display_name_edit" style="display: none; color: #636363">
                         <div style="margin-bottom: 4px">Nome</div>
                         <input class="input-pad" id="name-edit" name="name" maxlength="20" type="text" style="margin-bottom: 24px; height:48px" /> <br>
                         <div class="d-flex flex-row-reverse">
@@ -80,7 +80,7 @@
                     </div>
                 </div>
 
-                <div id="plans_holder" style='min-height: 100px; position: relative' class="p-30 simple-border-bottom scroller">
+                <div id="plans_holder" style='min-height: 100px; position: relative; padding: 30px 30px 0' class="simple-border-bottom scroller">
 
                     
                     <div class="modal-disc">
@@ -126,7 +126,7 @@
                         
                     </div>
 
-                    <div style="padding-top: 10px; width: 160px">
+                    <div style="padding-bottom: 18px; width: 160px">
                         <span style="color:#2E85EC; font-size: 14px; font-weight: 400; " id="mostrar_mais" class="pointer">
                         <span id="mostrar_mais_label">
                             
@@ -464,25 +464,28 @@
 
             <div class="modal-footer footer-padding" style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; position: absolute; bottom:0px; width:646px; border-top: 1px solid #EBEBEB; background-color: #fff">
                 <div class="d-flex mt-10" style="width: 610px">
-                    <div style="width: 206px" class="mr-auto  switch-holder d-flex align-items-center">
-                        <label class="switch">
-                            <input id="edit_status" type="checkbox" value="1" name="status" class="check status" checked="">
-                            <span class="slider round"></span>
-                        </label>
-                        <label id="edit_status_label" for="edit_status" class="pointer" style="font: normal normal bold 16px Muli;color: #8B8B8B;margin-bottom: 0;">Desconto ativo</label>
-                        <input type="hidden" name="set_status" id="set_status">
-                    </div>
+                    
 
                     
 
-                    <div id="edit-finish-btn">
-
+                    <div id="edit-finish-btn" style="width:100%; justify-content: space-between" >
+                        <div style="width: 206px; float: left;
+                        margin-top: 12px;">
+                            <div style="width: 206px" class="mr-auto  switch-holder d-flex align-items-center">
+                                <label class="switch">
+                                    <input id="edit_status" type="checkbox" value="1" name="status" class="check status" checked="">
+                                    <span class="slider round"></span>
+                                </label>
+                                <label id="edit_status_label" for="edit_status" class="pointer" style="font: normal normal bold 16px Muli;color: #8B8B8B;margin-bottom: 0;">Desconto ativo</label>
+                                <input type="hidden" name="set_status" id="set_status">
+                            </div>
+                        </div>
                         <button class="p-2 btn btn-primary edit-finish-btn btn2 float-right "  type="button">Fechar</button>
                     </div>
 
 
                     
-                    <div id="plans-actions" style="display: none; " class="justify-center text-center ">
+                    <div id="plans-actions" style="display: none;  width:100%" class="justify-center text-center ">
                         <button class="btn cancel-btn" type="button">Voltar</button>
                         <button class="btn btn-primary next-btn btn-edit-plans-save" disabled type="button">Atualizar</button>
                         <input type="hidden" name="plans" id="plans_value">

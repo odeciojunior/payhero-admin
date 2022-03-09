@@ -4,7 +4,7 @@
         <div class="modal-content  s-border-radius" style="width:646px; height:706px">
             <div class="mdtpad simple-border-bottom ">
                 <span class="  " id="modal-title"
-                    style="color:#787878; font: normal normal bold 22px Muli;">
+                    style="color:#636363; font: normal normal bold 22px Muli;">
                     Novo desconto progressivo
             </span>
                 <a id="modal-button-close-1" class="pointer close" role="button" data-dismiss="modal"
@@ -127,7 +127,7 @@
 
                 </div>
 
-                <div style='min-height: 100px' class="inputs-warning pl-30 pr-25 simple-border-bottom">
+                <div style='min-height: 100px; color:#636363' class="inputs-warning pl-30 pr-25 simple-border-bottom">
 
                     <div class="mt-20 mb-20">
 

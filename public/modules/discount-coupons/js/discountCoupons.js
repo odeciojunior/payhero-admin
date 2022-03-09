@@ -1305,7 +1305,7 @@ $(function () {
             //$('#show_plans').addClass('mostrar_mais_detalhes')
 
         }else{
-            $('#plans_holder').css('height','174px')
+            $('#plans_holder').css('height','158px')
             $('#show_plans').css('margin-top','20px')
             
             $('#planos-count, #planos-count-edit').html('Todos os planos');

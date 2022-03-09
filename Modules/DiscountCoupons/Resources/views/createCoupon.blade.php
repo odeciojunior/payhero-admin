@@ -4,7 +4,7 @@
             <div class="modal-content s-border-radius" style="width:646px; height:706px">
                 <div class="mdtpad simple-border-bottom">
                     <span class=" " id="modal-title"
-                        style="color:#787878; font: normal normal bold 22px Muli;">
+                        style="color:#636363; font: normal normal bold 22px Muli;">
                         Novo cupom de desconto
                 </span>
 
@@ -27,7 +27,7 @@
                                 </svg>
 
                                 
-                            <span class="sub-title"> Selecione os planos que terão cupom </span>
+                            <span class="sub-title" style="color: #636363"> Selecione os planos que terão cupom </span>
 
                             
 

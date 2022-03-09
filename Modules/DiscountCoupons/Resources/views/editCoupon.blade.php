@@ -9,7 +9,7 @@
 
             <div class="mdtpad simple-border-bottom">
                 <span class="" id="modal-title"
-                    style="color:#787878; font: normal normal bold 22px Muli;">
+                    style="color:#636363; font: normal normal bold 22px Muli;">
                     Detalhes de cupom de desconto
             </span>
                 <a id="modal-button-close-3" class="modal-button-close-2 pointer close" role="button"
@@ -61,7 +61,7 @@
                         <input name="id" type="hidden" id="coupon-id2" />
                         <input name="plans" type="hidden" id="edited-plans" />
     
-                        <div class="row mt-20" id="c-display_name">
+                        <div class="row mt-20" id="c-display_name" style="color: #636363">
                             <div class="col-6">
                                 <span class="small-text"> Nome</span> <br>
                                 <span style="font-size: 16px" id="c-d-name"></span>
@@ -74,7 +74,7 @@
                             </div>
                         </div>
     
-                        <div class="row mt-20" id="c-display_name_edit" style="display: none">
+                        <div class="row mt-20" id="c-display_name_edit" style="display: none; color:#636363">
                             <div class="col-6">
     
                                 Nome <br>
@@ -100,7 +100,7 @@
                     </div>
     
     
-                    <div style='min-height: 100px; position: relative; padding: 20px 30px 30px'
+                    <div style='min-height: 100px; position: relative; padding: 20px 30px 0px'
                         class=" simple-border-bottom">
     
                         <div class="modal-disc">
@@ -150,7 +150,7 @@
     
     
                         </div>
-                        <div style="padding-top: 10px; width: 160px">
+                        <div style="padding-top: 10px; width: 160px; padding-bottom:18px">
                             <span style="color:#2E85EC; font-size: 14px; font-weight: 400; " id="mostrar_mais2"
                                 class="pointer">
                                 <span id="mostrar_mais_label2">
@@ -256,7 +256,7 @@
 
 
                         {{-- <span class="sub-title"> Selecione os planos que terão cupom </span> --}}
-                        <span class="sub-title"> Planos no desconto <span style="color:#969696; font-size: 14px; font-weight: normal"> • <span id="planos-count-edit">x planos</span></span>  </span>
+                        <span class="sub-title"> Planos no cupom <span style="color:#969696; font-size: 14px; font-weight: normal"> • <span id="planos-count-edit">x planos</span></span>  </span>
 
 
 

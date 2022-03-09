@@ -387,7 +387,8 @@ $(function () {
     $('.next-btn').on('click', function () {
         $('#step1').hide();
         $('#step2').show();
-
+        $('.finish-btn').prop('disabled',false)
+        
 
     })
 
@@ -1055,7 +1056,7 @@ $(function () {
             //$('#show_plans').addClass('mostrar_mais_detalhes')
 
         }else{
-            $('#plans_holder').css('height','174px')
+            $('#plans_holder').css('height','158px')
             $('#show_plans').css('margin-top','20px')
             
             $('#planos-count, #planos-count-edit').html('Todos os planos');
