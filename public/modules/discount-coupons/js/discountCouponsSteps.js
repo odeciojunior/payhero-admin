@@ -898,6 +898,70 @@ $(function () {
         return false
     });
 
+
+    function count_plans2() { //thumbnails on editing
+        
+        $('.edit-plans-thumbs').html('')
+
+
+        $.ajax({
+            data: {
+                    total: 1,
+                    list: 'plan',
+                    search: '',
+                    project_id: projectId,
+                    //page: params.page || 1
+                }
+            ,
+
+            method: "GET",
+            url: "/api/plans/user-plans",
+            
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+                
+            }, success: function success(response) {
+                
+                
+                
+                var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
+
+
+
+                var html_show_plans = ''
+                for(i in response.thumbnails){
+                    html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
+                    background-repeat: no-repeat; background-position: center center; 
+                    background-size: cover !important; background: url('`+response.thumbnails[i].products[0].photo+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');)"></span>`
+                }
+
+                $('.edit-plans-thumbs').html(html_show_plans)
+
+                $('[data-toggle="tooltip"]').tooltip('dispose')
+    
+                $('[data-toggle="tooltip"]').tooltip({
+                    container: '.page'
+                });
+
+                if(response.total > 8){
+                    var rest = response.total - 8
+                    $('.edit-plans-thumbs').append('<div style="margin-top:14px" class="plans_rest">+'+rest+'</div>')
+
+                }
+
+
+                
+            }
+        });
+        
+    }
+
+
     $('#c-edit-plans').click(function () {
 
         // console.log('oi');
@@ -915,6 +979,34 @@ $(function () {
 
         //$('#search_input2').keyup()
 
+        if(items_selected.length>0){
+            var items_thumbs = ''
+            for(i in items_selected){
+                
+                if(i>7) break;
+                
+                var toolTip = 'aria-describedby="tt'+items_selected[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+items_selected[i].name+'"'
+                
+
+                items_thumbs +=  `
+                <span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
+                background-repeat: no-repeat; background-position: center center; 
+                background-size: cover !important; background: url('`+items_selected[i].image+`'), url('modules/global/img/produto.png')"></span>`
+                
+            }
+            
+            $('.edit-plans-thumbs').html(items_thumbs)
+
+            $('[data-toggle="tooltip"]').tooltip('dispose')
+    
+            $('[data-toggle="tooltip"]').tooltip({
+                container: '.page'
+            });
+
+        }else{
+            count_plans2()
+        }
+
         $('#search_input_description_value').val('')
         run_search('',1);
 
@@ -931,7 +1023,42 @@ $(function () {
         // console.log(items_selected);
         $('#edited-plans').val(JSON.stringify(items_selected))
         $('#c-save_name_edit').click()
+        plans_count()
     });
+
+    function plans_count() {
+        if(items_selected.length > 0){
+            
+            var plans_count = items_selected.length + ' plano'+(items_selected.length>1?'s':'')
+            $('#planos-count, #planos-count-edit').html(plans_count);
+
+            $('#plans_holder').css('height','auto')
+            $('#show_plans').css('margin-top','10px')
+
+    
+            //$('#show_plans').addClass('mostrar_mais_detalhes')
+
+        }else{
+            $('#plans_holder').css('height','174px')
+            $('#show_plans').css('margin-top','20px')
+            
+            $('#planos-count, #planos-count-edit').html('Todos os planos');
+
+            count_plans()
+        }
+
+        if(items_selected.length>2 && items_selected.length<11){
+            $('#mostrar_mais').show();
+            
+        }else{
+            $('#mostrar_mais').hide();
+            $('#show_plans').removeClass('mostrar_mais_detalhes')
+            $('#show_plans').css({
+                height: "88px"
+            });
+
+        }
+    }
 
     $('#c-edit-rules').click(function () {
         $('#c-edit_step0').hide()

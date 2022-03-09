@@ -63,6 +63,7 @@ function count_plans_coupons() { //thumbnails
             }
 
             $('#c-show_plans').html(html_show_plans)
+            $('#c-show_plans').css('height','48px')
 
             $('[data-toggle="tooltip"]').tooltip('dispose')
     
@@ -1061,6 +1062,8 @@ $(function () {
                     if(response.plans != null){
                         items_selected = JSON.parse(response.plans)
                         plans_count2()
+                        plans_count()
+
                     }else{
                         items_selected = []
                     }
