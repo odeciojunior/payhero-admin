@@ -16,7 +16,7 @@
                 </a>
             </div>
             <div id="step1">
-                <div style='min-height: 100px; position: relative; padding: 27px 24px 24px 29px'
+                <div style='min-height: 100px; position: relative; padding: 27px 24px 0px 29px'
                     class=" simple-border-bottom">
 
                     <div style="margin-bottom: 21px">
@@ -73,7 +73,7 @@
                     </div>
 
                     <div id="search_result" class="mt-20 "
-                        style=" height: 362px; width: 596px">
+                        style=" height: 386px; width: 596px">
 
                         {{-- <div class="item item_selected" >
                             <span style="background-image: url(http://dev.woo.com/wp-content/uploads/2021/07/sunglasses-2.jpg)" class="image"></span>

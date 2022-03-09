@@ -190,7 +190,7 @@
             
             
             <div id="edit_step1" style="display: none">
-                <div style='min-height: 100px; position: relative;' class="pt-20 pb-30 pr-30 pl-20 ">
+                <div style='min-height: 100px; position: relative;' class="pt-20 pr-30 pl-20 ">
                 
                     <p>
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -238,7 +238,7 @@
                         </div>
                     </div>
                         
-                    <div id="search_result2" class="mt-30  " style="height: 298px;  overflow: hidden">
+                    <div id="search_result2" class="mt-30  " style="height: 328px;  overflow: hidden">
 
                         {{-- <div class="item item_selected" >
                             <span style="background-image: url(http://dev.woo.com/wp-content/uploads/2021/07/sunglasses-2.jpg)" class="image"></span>

@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="step1">
-                    <div style='min-height: 100px; position: relative;' class="p-25 simple-border-bottom">
+                    <div style='min-height: 100px; position: relative;' class="pt-25 pl-25 pr-25 simple-border-bottom">
                     
                         <div class="mb-25">
                             <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -71,7 +71,7 @@
                             </div>
                         </div>
                             
-                        <div id="search_result" class="mt-20 " style=" height: 368px">
+                        <div id="search_result" class="mt-20 " style=" height: 393px">
                             
                             
 
