@@ -3,9 +3,9 @@
 @push('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
-    <link rel="stylesheet" href="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
     <link rel="stylesheet" href="{{ mix('modules/projects/css/style.min.css') }}">
     <style>
         @font-face {
@@ -74,7 +74,7 @@
 
                                             <div class="d-flex justify-content-start padding-cards-l">
                                                 <div class="pl-5">
-                                                    <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/icon-arrowback.svg') }}">
+                                                    <img class="img-default mr-3 mr-lg-10" src="{{ mix('modules/global/img/projects/icon-arrowback.svg') }}">
 
                                                 </div>
 
@@ -92,7 +92,7 @@
 
                                             <div class="d-flex justify-content-start padding-cards-l">
                                                 <div class="d-flex pl-5">
-                                                    <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/trackIcon.svg') }}">
+                                                    <img class="img-default mr-3 mr-lg-10" src="{{ mix('modules/global/img/projects/trackIcon.svg') }}">
                                                 </div>
                                                 <span class="s-data-project-values pl-5 align-self-center" id="value-without-tracking"></span>
                                             </div>
@@ -108,7 +108,7 @@
 
                                             <div class="d-flex justify-content-start padding-cards-l">
                                                 <div class="d-flex pl-5">
-                                                    <img class="img-default mr-3 mr-lg-10" src="{{ asset('/modules/global/img/projects/icon-chat.svg') }}">
+                                                    <img class="img-default mr-3 mr-lg-10" src="{{ mix('modules/global/img/projects/icon-chat.svg') }}">
                                                 </div>
 
                                                 <span class="s-data-project-values pl-5 align-self-center" id="value-open-tickets"></span>
@@ -133,7 +133,7 @@
                                 <div class="pl-20 pl-md-30 pt-15 pt-lg-40 pt-md-20 pl-lg-20 pl-xl-30 pt-xl-45 pb-xl-25">
                                     <div class="d-flex">
                                         <div class="p-5 resume-sales mr-10">
-                                            <img class="control-img mr-5" src="{{ asset('/modules/global/img/projects/groceryCart.svg') }}">
+                                            <img class="control-img mr-5" src="{{ mix('modules/global/img/projects/groceryCart.svg') }}">
                                         </div>
                                         <span class="d-flex align-items-center font-size-14"> Vendas aprovadas </span>
                                     </div>
@@ -147,7 +147,7 @@
                                 <div class="pl-20 pl-md-30 pb-15 pl-lg-20 pl-xl-30 pb-lg-40 pb-xl-50">
                                     <div class="d-flex pt-10">
                                         <div class="p-5 resume-sales mr-10">
-                                            <img class="mr-5" src="{{ asset('/modules/global/img/projects/arrowBalance.svg') }}">
+                                            <img class="mr-5" src="{{ mix('modules/global/img/projects/arrowBalance.svg') }}">
                                         </div>
                                         <span class="d-flex align-items-center font-size-14">Total em receita</span>
                                     </div>
@@ -473,7 +473,7 @@
         <script src="{{ mix('modules/plans/js/plans.min.js') }}"></script>
         <script src="{{ mix('modules/shipping/js/shipping.min.js') }}"></script>
         <script src="{{ mix('modules/pixels/js/pixels.min.js') }}"></script>
-        <script src="{{asset('modules/projectupsell/js/index.js?v='.versionsFile())}}"></script>
+        <script src="{{ mix('modules/projectupsell/js/index.min.js') }}"></script>
         <script src="{{ mix('modules/orderbump/js/index.min.js') }}"></script>
         <script src="{{ mix('modules/discountcoupons/js/discountCoupons.min.js') }}"></script>
         <script src="{{ mix('modules/projectreviews/js/index.min.js') }}"></script>
@@ -481,12 +481,12 @@
         <script src="{{ mix('modules/projects/js/projects.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
-        <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
-        <script src="{{asset('modules/global/js/jquery.raty.min.js')}}"></script>
-        <script src="{{asset('modules/global/js-extra/jquery-loading.min.js')}}"></script>
+        <script src="{{ mix('modules/global/js/select2.min.js') }}"></script>
+        <script src="{{ mix('modules/global/js/jquery.raty.min.js') }}"></script>
+        <script src="{{ mix('modules/global/js-extra/jquery-loading.min.js') }}"></script>
         <script src="{{ mix('modules/woocommerce/js/syncproducts.min.js') }}"></script>
 
-        <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mousewheel.min.js?v=' . versionsFile()) }}"></script>
-        <script src="{{ asset('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ mix('modules/global/scrollbar-plugin/jquery.mousewheel.min.js') }}"></script>
+        <script src="{{ mix('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.min.js') }}"></script>
     @endpush
 @endsection

@@ -1,8 +1,8 @@
 @push('css')
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+    <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
 @endpush
 <div class="content-error text-center" id="empty-companies-error" style="display:none">
-    <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">
+    <img src="{!! mix('modules/global/img/empty.svg') !!}" width="250px">
     <h1 class="big gray">Você ainda não tem nenhuma empresa!</h1>
     <p class="desc gray">Vamos cadastrar a primeira empresa? </p>
     <a href="" class="btn btn-primary redirect-to-accounts" data-url-value="/companies">Cadastrar empresa</a>

@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
         <link rel="stylesheet" href="{!! mix('modules/reports/css/reports.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
+        <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
     @endpush
 
     <div class="page">

@@ -10,7 +10,7 @@
 {{--                    <label for='photo'>Imagem capa do projeto</label>--}}
 {{--                    <div style="width:100%" class="text-center">--}}
 {{--                        <img id='previewimage' alt='Selecione a foto do projeto'--}}
-{{--                             src="{{asset('modules/global/img/projeto.svg')}}"--}}
+{{--                             src="{{mix('modules/global/img/projeto.svg')}}"--}}
 {{--                             style="min-width: 250px; max-width: 250px;margin: auto">--}}
 {{--                    </div>--}}
 {{--                </div>--}}
@@ -57,7 +57,7 @@
 {{--                <div class='row'>--}}
 {{--                    <div class="col-12">--}}
 {{--                        <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>--}}
-{{--                            <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{asset('modules/global/img/projeto.svg')}}' style='max-height:250px;max-width:250px;margin:auto'>--}}
+{{--                            <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{mix('modules/global/img/projeto.svg')}}' style='max-height:250px;max-width:250px;margin:auto'>--}}
 {{--                        </div>--}}
 {{--                    </div>--}}
 {{--                </div>--}}

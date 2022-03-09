@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/global/adminremark/global/vendor/dropify/dropify.min.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css?v=' . versionsFile()) }}">
         <link rel="stylesheet" href="{{ mix('modules/products/css/edit.min.css') }}">
     @endpush
 
@@ -77,7 +77,7 @@
 
                     <div>
                         <a class="btn btn-lg btn-cancelar" href="/products">Cancelar</a>
-                        <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
+                        <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="{{ mix('modules/global/img/svg/check-all.svg') }}">Salvar</button>
                     </div>
                 </div>
             </form>

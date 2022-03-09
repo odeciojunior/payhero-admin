@@ -2,9 +2,9 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ mix('modules/finances/css/jPages.min.css?') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('modules/global/css/empty.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
     <link rel="stylesheet" href="{{ mix('modules/finances/css/new-finances.min.css') }}">
 @endpush
 
@@ -67,8 +67,8 @@
 
 
         @push('scripts')
-            <script src="{{ asset('modules/global/js-extra/moment.min.js?v=' . versionsFile()) }}"></script>
-            <script src="{{ asset('modules/global/js/daterangepicker.min.js?v=' . versionsFile()) }}"></script>
+            <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
+            <script src="{{ mix('modules/global/js/daterangepicker.min.js') }}"></script>
             <script src="{{ mix('modules/finances/js/jPages.min.js') }}"></script>
             <script src="{{ mix('modules/finances/js/statement-index.min.js') }}"></script>
             <script src="{{ mix('modules/finances/js/balances.min.js') }}"></script>

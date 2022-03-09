@@ -1,6 +1,6 @@
 <div class="modal-header flex-wrap">
     <div id="title-news-onboarding">
-        <img src="{{asset('/modules/global/img/logos/2021/svg/icon-sirius.svg')}}" width="40"
+        <img src="{{ mix('modules/global/img/logos/2021/svg/icon-sirius.svg') }}" width="40"
              alt="Image"> <span>Novidades</span>
     </div>
     <div class="pages">
@@ -27,7 +27,7 @@
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
                                 <img class="img-fluid" alt="Image"
-                                     src="{{asset('modules/global/img/pix/pix-landing.svg')}}">
+                                     src="{{ mix('modules/global/img/pix/pix-landing.svg') }}">
                             </div>
                         </div>
                         <span class="col-12 col-lg-8 text-center text-lg-left pl-lg-2">
@@ -39,7 +39,7 @@
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
                                 <img class="img-fluid" alt="Image"
-                                     src="{{asset('modules/global/img/pix/pix-qr-code.svg')}}">
+                                     src="{{ mix('modules/global/img/pix/pix-qr-code.svg') }}">
                             </div>
                         </div>
                         <span class="col-12 col-lg-8 text-center text-lg-left pl-lg-2">
@@ -51,7 +51,7 @@
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
                                 <img class="img-fluid" alt="Image"
-                                     src="{{asset('modules/global/img/pix/pix-info.svg')}}">
+                                     src="{{ mix('modules/global/img/pix/pix-info.svg') }}">
                             </div>
                         </div>
                         <span class="col-12 col-lg-8 text-center text-lg-left pl-lg-2">
@@ -69,7 +69,7 @@
 
         <div class="col-12 col-lg-5 order-lg-0 d-flex justify-content-center mt-lg-5 mt-0">
             <img class="img-fluid" alt="Image" id="img-onboarding"
-                 src="{{asset('modules/global/img/pix/pix-environment.png')}}">
+                 src="{{ mix('modules/global/img/pix/pix-environment.png') }}">
         </div>
     </div>
 </div>

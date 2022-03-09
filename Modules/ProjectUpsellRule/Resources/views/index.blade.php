@@ -8,7 +8,7 @@
                             <div id="config-upsell" class="btn-holder d-flex align-items-center pointer">
                                 <span class="link-button-dependent">Configurações </span>
                                 <a class="rounded-add pointer" style="background: none;">
-                                    <img src="{{ asset('modules/global/img/svg/settings.svg') }}" height="22">
+                                    <img src="{{ mix('modules/global/img/svg/settings.svg') }}" height="22">
                                 </a>
                             </div>
                         </div>

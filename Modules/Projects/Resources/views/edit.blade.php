@@ -30,7 +30,7 @@
             <div class="col-md p-0">
                 <div class="row no-gutters d-flex d-flex align-items-center pt-30 pb-20 pl-30">
                     <div class="bg-afiliate-icon mr-15">
-                        <img src="{{asset('/modules/global/img/projects/imgIcon.svg')}}" class="p-10">
+                        <img src="{{ mix('modules/global/img/projects/imgIcon.svg') }}" class="p-10">
                     </div>
                     <h3 class="mb-0">Identificação</h3>
                 </div>
@@ -80,7 +80,7 @@
 
                     <div class="col-md-6 p-0 d-flex align-items-center">
                         <div class="bg-afiliate-icon affiliation p-10 mr-15">
-                            <img src="{{ asset('/modules/global/img/projects/afiliatesIcon.svg') }}" alt="icone afiliacao">
+                            <img src="{{ mix('modules/global/img/projects/afiliatesIcon.svg') }}" alt="icone afiliacao">
                         </div>
                         <label for='boleto_redirect' class="font-size-24 m-0" style="color: #37474f;">Afiliações</label>
                     </div>
@@ -335,7 +335,7 @@
 
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
                             <div class="padding-cards-r">
-                                <img src="{{ asset('/modules/global/img/projects/errorIcon.svg') }}" alt="icone success">
+                                <img src="{{ mix('modules/global/img/projects/errorIcon.svg') }}" alt="icone success">
                             </div>
                         </div>
 
@@ -365,7 +365,7 @@
 
                         <div class="col-md-6 d-flex justify-content-end align-items-center">
                             <div class="padding-cards-r">
-                                <img src="{{ asset('/modules/global/img/projects/successIcon.svg') }}" alt="icone success">
+                                <img src="{{ mix('modules/global/img/projects/successIcon.svg') }}" alt="icone success">
                             </div>
                         </div>
 

@@ -47,7 +47,7 @@
                     <div class="px-40 row justify-content-between">
                         <div class="col-12 col-md-4 col-lg-2 col-xl-4 text-center">
                             <img id="caixinha-img"
-                                 src="{{ asset('modules/global/img/svg/caixinha.svg') }}"
+                                 src="{{ mix('modules/global/img/svg/caixinha.svg') }}"
                                  class="img-fluid"
                                  alt="novo produto fisico">
                         </div>
@@ -104,7 +104,7 @@
 
                 <div class="row pr-15 form-buttons">
                     <a type="button" class="btn btn-cancelar" href="/products">Cancelar</a>
-                    <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
+                    <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="{{ mix('modules/global/img/svg/check-all.svg') }}">Salvar</button>
                 </div>
             </form>
         </div>

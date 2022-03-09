@@ -23,7 +23,7 @@ class TrackingShowResource extends JsonResource
             $product = (object) [
                 'name' => $productSaleApi->name,
                 'description' => '',
-                'photo' => asset('/modules/global/img/produto.svg')
+                'photo' => mix('modules/global/img/produto.svg')
             ];
             $linkBase = 'cloudfox.net';
         }

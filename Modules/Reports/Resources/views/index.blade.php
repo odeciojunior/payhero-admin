@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
         <link rel="stylesheet" href="{!! mix('modules/reports/css/reports.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=' . uniqid()) !!}">
+        <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
     @endpush
 
     <div class="page mb-0">
@@ -169,7 +169,7 @@
                             </div>
                             <div class="widget-content tab-content bg-white p-20">
                                 <div id="empty-graph" class="row justify-content-center align-items-center d-flex" style="vertical-align: middle">
-                                    <img src="{!! asset('modules/global/img/sem-dados.svg') !!}" alt="">
+                                    <img src="{!! mix('modules/global/img/sem-dados.svg') !!}" alt="">
                                     <p style="font-size: 23px" class="gray">Nenhuma venda encontrada</p>
                                 </div>
                                 <div class="ct-chart tab-pane active" id="scoreLineToDay"></div>
@@ -362,7 +362,7 @@
                                 <div style="padding: 0 20px;" class=" card-body data-holder">
                                     <table class="table-vendas-itens table table-striped"
                                            style="width:100%;margin: auto; margin-top:15px">
-                                        <tbody id="origins-table-itens" img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
+                                        <tbody id="origins-table-itens" img-empty="{!! mix('modules/global/img/vendas.svg')!!}">
                                             {{-- js carrega... --}}
                                         </tbody>
                                     </table>
@@ -445,7 +445,7 @@
 @push('scripts')
     <!--script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script-->
     <script type='text/javascript' src='{{ mix('modules/reports/js/moment.min.js') }}'></script>
-    <script type='text/javascript' src='{{asset('modules/global/js/daterangepicker.min.js') }}'></script>
+    <script type='text/javascript' src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script>
     <script type='text/javascript' src='{{ mix('modules/reports/js/chartist.min.js') }}'></script>
     <script type='text/javascript' src='{{ mix('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
     <script type='text/javascript' src='{{ mix('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>

@@ -60,7 +60,7 @@ $(document).ready(function () {
                 $("#div-available-money").on("click", function () {
                     $(".withdrawal-value").val(response.available_balance);
                 });
-                $.getScript('modules/withdrawals/js/index.js')
+                $.getScript('modules/withdrawals/js/index.min.js')
                 $("#table-withdrawals-body").html('');
 
             }

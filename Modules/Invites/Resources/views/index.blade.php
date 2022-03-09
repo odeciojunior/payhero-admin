@@ -2,9 +2,9 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=' . versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('modules/global/css/empty.min.css') }}">
         <style>
             .badge {
                 color: white;

@@ -12,7 +12,7 @@ $(document).ready(function () {
             },
             error: (response) => {
                 if (response.responseJSON.data === 'invalido') {
-                    $('head').append('<link rel="stylesheet" href="/modules/global/css/page-error.css" type="text/css" />');
+                    $('head').append('<link rel="stylesheet" href="/modules/global/css/page-error.min.css" type="text/css" />');
                     $("#register-body").html('').append(createHtmlLinkInvalid());
 
                 } else {

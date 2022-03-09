@@ -3,10 +3,10 @@
 @section('content')
 
 @push('css')
-<link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=101') !!}">
-<link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-<link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v='.uniqid()) }}">
-<link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
+<link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
+<link rel="stylesheet" href="{!! mix('modules/global/css/switch.min.css') !!}">
+<link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
+<link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
 <link rel="stylesheet" href="{{ mix('modules/trackings/css/index.min.css') }}">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
 
@@ -210,13 +210,13 @@
                 <div class="row mb-10 mb-sm-0" style="height: 30px">
                     <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
                         <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center" data-toggle="collapse" data-target="#bt_collapse" aria-expanded="false" aria-controls="bt_collapse">
-                            <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} " />
+                            <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('modules/global/img/svg/filter-2-line.svg') }} " />
                             <div id="text-filtro" style="white-space: normal">Filtros avançados</div>
                         </div>
                     </div>
                     <div class="col-6 col-xl-3 mt-20">
                         <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
-                            <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} " />
+                            <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('modules/global/img/svg/check-all.svg') }} " />
                             Aplicar <br class="d-flex d-sm-none"> filtros
                         </div>
                     </div>
@@ -225,7 +225,7 @@
             <div class="fixhalf"></div>
             <!-- Aviso Problemas com os Códigos -->
             <div id="alert-tracking-issues" class="d-flex alert alert-light alert-dismissible fade show text-primary border border-primary alert-tracking" role="alert" style="border-radius: 12px">
-                <img src="{{ asset('modules/trackings/svg/info-tracking.svg') }}">
+                <img src="{{ mix('modules/trackings/svg/info-tracking.svg') }}">
                 <span class="alert-text ml-2">
                     <span class="bold">Problemas com os códigos?</span>
                     Caso você tenha algum código de rastreio com divergência de status, entre em contato com o nosso suporte.
@@ -401,7 +401,7 @@
                                 <td class="table-title">Código de Rastreio</td>
                             </tr>
                         </thead>
-                        <tbody id="dados_tabela" img-empty="{!! asset('modules/global/img/rastreio.svg')!!}">
+                        <tbody id="dados_tabela" img-empty="{!! mix('modules/global/img/rastreio.svg')!!}">
                             {{-- js carrega... --}}
                         </tbody>
                     </table>
@@ -488,8 +488,8 @@
 </div>
 
 @push('scripts')
-<script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-<script src="{{ asset('modules/global/js/daterangepicker.min.js') }}"></script>
+<script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
+<script src="{{ mix('modules/global/js/daterangepicker.min.js') }}"></script>
 <script src="{{ mix('modules/trackings/js/index.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>

@@ -3,7 +3,7 @@
 @push('css')
     <link rel="stylesheet" type="text/css" href="{{ mix('modules/profile/css/basic.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ mix('modules/profile/css/dropzone.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
+    <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
 
 @endpush
@@ -565,7 +565,7 @@
         }
     </style>
     @push('scripts')
-        <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
+        <script src="{{ mix('modules/global/js/dropzone.min.js') }}"></script>
         <script src="{{ mix('modules/profile/js/profile.min.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 

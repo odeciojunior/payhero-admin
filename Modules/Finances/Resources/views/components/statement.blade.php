@@ -8,7 +8,7 @@
                 <td class='col-auto headCenter table-title'>Valor</td>
             </tr>
         </thead>
-        <tbody id="table-transfers-body" class="custom-t-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}"></tbody>
+        <tbody id="table-transfers-body" class="custom-t-body" img-empty="{!! mix('modules/global/img/geral-1.svg')!!}"></tbody>
     </table>
     <table id="statementTable" class="table table-condensed unify table-striped" style="display: none">
         <thead>
@@ -24,7 +24,7 @@
                 <td class="col-auto headCenter table-title">Valor</td>
             </tr>
         </thead>
-        <tbody id="table-statement-body" img-empty="{!! asset('modules/global/img/geral-1.svg')!!}"
+        <tbody id="table-statement-body" img-empty="{!! mix('modules/global/img/geral-1.svg')!!}"
                class="custom-t-body table-statement-body-class"></tbody>
     </table>
 </div>

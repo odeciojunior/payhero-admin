@@ -3,12 +3,12 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
         <link rel="stylesheet" href='{{ mix('modules/sales/css/index.min.css') }}'>
         <link rel="stylesheet" href="{{ mix('modules/notazz/css/index.min.css') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
+        <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
+        <link rel="stylesheet" href="{!! mix('modules/global/css/switch.min.css') !!}">
+        <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
         <style>
             .fas {
                 color: #9c47fc;
@@ -79,7 +79,7 @@
                     <div class="row mt-15">
                         <div class="offset-sm-6 col-sm-6 offset-md-6 col-md-6 offset-xl-9 col-xl-3 col-12">
                             <button id="bt_filtro" class="btn btn-primary col-sm-12">
-                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
+                                <img style="height: 12px; margin-right: 4px" src=" {{ mix('modules/global/img/svg/check-all.svg') }} ">Aplicar
                             </button>
                         </div>
                         <div class="col-2">
@@ -193,8 +193,8 @@
 
     @push('scripts')
         <script src="{{ mix('modules/notazz/js/show.min.js') }}"></script>
-        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
+        <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
+        <script src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script>
     @endpush
 
 @endsection

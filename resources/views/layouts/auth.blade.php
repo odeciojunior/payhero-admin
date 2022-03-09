@@ -12,23 +12,23 @@
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/img/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/favicon-16x16.png') }}">
-    <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('modules/global/img/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('modules/global/img/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('modules/global/img/favicon-16x16.png') }}">
+    <link rel="mask-icon" href="{{ mix('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#603cba">
     <meta name="theme-color" content="#ffffff">
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/new-login.css') }}">
-    <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css') }}">
+    <link rel='stylesheet' href="{{ mix('modules/global/css/sweetalert2.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/global/css/loading.min.css') }}">
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
-    <script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
-    <script src="{{ asset('modules/global/js/global.js?v=' . versionsFile()) }}"></script>
+    <script src="{{ mix('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ mix('modules/global/js/global.min.js') }}"></script>
     <script>
         Breakpoints();
     </script>

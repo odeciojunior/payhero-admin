@@ -1,7 +1,6 @@
 <div class="modal-header flex-wrap">
     <div id="title-news-onboarding">
-        <img src="{{asset('/modules/global/img/logos/2021/svg/icon-sirius.svg')}}" width="40"
-             alt="Image"> <span>Novidades</span>
+        <img src="{{ mix('modules/global/img/logos/2021/svg/icon-sirius.svg') }}" width="40" alt="Image"> <span>Novidades</span>
     </div>
     <div class="pages">
         <span id="page-gamification"></span>
@@ -27,7 +26,7 @@
                     <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
-                                <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/statistic.svg?v=02')}}">
+                                <img class="img-fluid" alt="Image" src="{{ mix('modules/global/img/onboarding/statistic.svg') }}">
                             </div>
                         </div>
                         <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
@@ -38,7 +37,7 @@
                     <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
-                                <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/pay.svg?v=02')}}">
+                                <img class="img-fluid" alt="Image" src="{{ mix('modules/global/img/onboarding/pay.svg') }}">
                             </div>
                         </div>
                         <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
@@ -49,7 +48,7 @@
                     <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                         <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                             <div class="icon-onboarding-2">
-                                <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/arrow-right-down.svg?v=02')}}">
+                                <img class="img-fluid" alt="Image" src="{{ mix('modules/global/img/onboarding/arrow-right-down.svg') }}">
                             </div>
                         </div>
                         <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
@@ -62,7 +61,7 @@
 
         <div class="col-12 col-lg-5 order-lg-0 d-flex justify-content-center mt-lg-5 mt-0">
             <img class="img-fluid" alt="Image" id="img-onboarding"
-                 src="{{asset('modules/global/img/onboarding/account-health@2x.png')}}">
+                 src="{{ mix('modules/global/img/onboarding/account-health@2x.png') }}">
         </div>
     </div>
 </div>

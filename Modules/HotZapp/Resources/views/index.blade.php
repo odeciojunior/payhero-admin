@@ -1,7 +1,7 @@
 @extends("layouts.master")
 @push('css')
     <link rel="stylesheet" href="{{ mix('modules/convertax/css/index.min.css') }}">
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+    <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
     <style>
         .gray:hover{
             color:#a1a1a1 !important;
@@ -77,7 +77,7 @@
 
         <div id="no-integration-found" class='row justify-content-center' style="display:none">
             <div class="content-error text-center">
-                <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
+                <img src="{!! mix('modules/global/img/aplicativos.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
                 <p class="desc gray">Integre sua loja com HotZapp de forma totalmente automatizada!</p>
             </div>

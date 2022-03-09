@@ -12,7 +12,7 @@
                     <div id="modal-presentation">
                         <div id="header-onboarding-1" class="modal-header flex-wrap">
                             <div class="w-p100 d-flex justify-content-center">
-                                <img id="icon" src="{{ asset('modules/global/img/onboarding-presentation.png') }}" alt="Image">
+                                <img id="icon" src="{{ mix('modules/global/img/onboarding-presentation.png') }}" alt="Image">
                             </div>
                         </div>
                         <div class="modal-body text-center">

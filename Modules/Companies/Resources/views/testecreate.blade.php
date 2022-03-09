@@ -201,7 +201,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
+        <script src="{{ mix('modules/global/js/dropzone.min.js')}}"></script>
         <script src="{{ mix('modules/companies/js/edit.min.js') }}"></script>
     @endpush
 @endsection

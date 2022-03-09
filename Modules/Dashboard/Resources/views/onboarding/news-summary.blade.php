@@ -1,6 +1,6 @@
 <div class="modal-header flex-wrap">
     <div id="title-news-onboarding">
-        <img id="icon" src="{{ asset('/modules/global/img/logos/2021/svg/icon-sirius.svg') }}" width="40"
+        <img id="icon" src="{{ mix('modules/global/img/logos/2021/svg/icon-sirius.svg') }}" width="40"
              alt="Image"> <span>Novidades</span>
     </div>
     <div class="pages">

@@ -7,7 +7,7 @@
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
-            
+
             <div id="modal-details-body" class="modal-body" style='min-height: 100px'>
                 <div class='container-fluid'>
                     <table class='table table-bordered table-striped table-hover' style='overflow-x: auto !important;'>
@@ -48,7 +48,7 @@
                     @if(!foxutils()->isProduction())
                         <form id="form-cart-shopify" method="post" action="{{env("CHECKOUT_URL", "https://checkout.cloudfox.net")}}" target="_blank">
                             <button class="btn btn-success float-right d-flex py-1 px-2" type="submit">
-                                <img class="w-20 mr-2" src="{{asset('modules/global/img/svg/shopify.svg')}}" alt="Shopify Logo">
+                                <img class="w-20 mr-2" src="{{ mix('modules/global/img/svg/shopify.svg')}}" alt="Shopify Logo">
                                 <b>Abrir Carrinho</b>
                             </button>
                         </form>

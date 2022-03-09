@@ -2,8 +2,8 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=' . versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('modules/global/css/empty.min.css') }}">
         <link rel="stylesheet" href="{{ mix('modules/integrations/css/edit-integrations.min.css') }}">
     @endpush
     <div class="page new-layout">
@@ -11,7 +11,7 @@
             <div class="d-flex justify-content-between align-items-center mb-45">
                 <div>
                     <h1 class="page-title my-10" style="min-height: 28px">
-                        <img src="{{ asset('modules/global/img/svg/api-sirius.png') }}" style="height: 40px; width: auto;" alt="API Sirius">
+                        <img src="{{ mix('modules/global/img/svg/api-sirius.png') }}" style="height: 40px; width: auto;" alt="API Sirius">
                         <span style="line-height: 40px;">API Sirius</span>
                     </h1>
                     <p id='text-info' style="margin-bottom: 0;">Use nosso checkout API ou faça integrações externas.</p>

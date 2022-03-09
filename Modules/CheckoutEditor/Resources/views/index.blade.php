@@ -1,5 +1,5 @@
 @push('css')
-<link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+<link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
 <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
 <link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/quill.snow.min.css') }}">
 <link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/dropfy.min.css') }}">
@@ -50,7 +50,7 @@
 
                 <div class="checkout-content visual">
                     <span class="title-icon">
-                        <img class="icon-title" src="{{ asset('/modules/checkouteditor/img/svg/visual.svg') }}">
+                        <img class="icon-title" src="{{ mix('modules/checkouteditor/img/svg/visual.svg') }}">
                         <h1 class="checkout-title">
                             Visual
                         </h1>
@@ -105,7 +105,7 @@
                                     </h1>
                                     <div class="quantity-selector-tooltip">
                                         <img id="favicon-tooltip" data-target="favicon-tooltip-container"
-                                            src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}">
+                                            src="{{ mix('modules/checkouteditor/img/svg/info-icon.svg') }}">
                                         <div id="favicon-tooltip-container" class="tooltip-container"
                                             style="display: none">
                                             <div class="tooltip-content">
@@ -115,7 +115,7 @@
                                                 <div class="tab-example">
                                                     <div class="row-flex">
                                                         <img class="sirius-icon"
-                                                            src="{{ asset('/modules/checkouteditor/img/svg/icon-sirius.svg') }}">
+                                                            src="{{ mix('modules/checkouteditor/img/svg/icon-sirius.svg') }}">
                                                         <p>Sirius</p>
                                                     </div>
                                                     <p>x</p>
@@ -374,12 +374,12 @@
                                         <input class="custom-icon-radio" id="banner_type_square" type="radio"
                                             name="checkout_banner_type" value="0" />
                                         <label for="banner_type_square"><img
-                                                src="{{ asset('/modules/checkouteditor/img/svg/banner-square.svg') }}"></label>
+                                                src="{{ mix('modules/checkouteditor/img/svg/banner-square.svg') }}"></label>
 
                                         <input class="custom-icon-radio" id="banner_type_wide" type="radio"
                                             name="checkout_banner_type" value="1" />
                                         <label for="banner_type_wide"><img
-                                                src="{{ asset('/modules/checkouteditor/img/svg/banner-wide.svg') }}"></label>
+                                                src="{{ mix('modules/checkouteditor/img/svg/banner-wide.svg') }}"></label>
                                     </div>
                                 </div>
 
@@ -420,9 +420,9 @@
 
                                 <div class="button-template">
                                     <button id="download_template_banner" class="line-button" type="button"
-                                        data-href="{{ asset('/modules/checkouteditor/files/Gabarito_EditorCheckout.zip') }}">
+                                        data-href="{{ mix('modules/checkouteditor/files/Gabarito_EditorCheckout.zip') }}">
                                         <img class="icon-title download"
-                                            src="{{ asset('/modules/checkouteditor/img/svg/download-icon.svg') }}">
+                                            src="{{ mix('modules/checkouteditor/img/svg/download-icon.svg') }}">
                                         Baixar gabarito</button>
                                 </div>
 
@@ -476,7 +476,7 @@
 
                                     <div class="textarea-observation">
                                         <img class="dot"
-                                            src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}"><span
+                                            src="{{ mix('modules/checkouteditor/img/svg/info-icon.svg') }}"><span
                                             class="observation-span">Visível somente em desktop.</span>
                                     </div>
                                 </div>
@@ -767,7 +767,7 @@
                 <div class="checkout-content payment" id="payment_container">
                     <div class="title-buttons-group">
                         <span class="title-icon">
-                            <img class="icon-title" src="{{ asset('/modules/checkouteditor/img/svg/payments.svg') }}">
+                            <img class="icon-title" src="{{ mix('modules/checkouteditor/img/svg/payments.svg') }}">
                             <h1 class="checkout-title">
                                 Pagamentos
                             </h1>
@@ -839,7 +839,7 @@
                                 <label class="quantity-selector-label">Seletor de quantidade
                                     <div class="quantity-selector-tooltip">
                                         <img id="selector-tooltip"
-                                            src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}">
+                                            src="{{ mix('modules/checkouteditor/img/svg/info-icon.svg') }}">
                                         <div id="selector-tooltip-container" class="tooltip-container"
                                             style="display: none">
                                             <div class="tooltip-content">
@@ -851,10 +851,10 @@
                                                     <p>Nome do produto</p>
                                                     <div class="counter-example">
                                                         <img
-                                                            src="{{ asset('/modules/checkouteditor/img/svg/red-minus.svg') }}">
+                                                            src="{{ mix('modules/checkouteditor/img/svg/red-minus.svg') }}">
                                                         <p>1</p>
                                                         <img
-                                                            src="{{ asset('/modules/checkouteditor/img/svg/green-plus.svg') }}">
+                                                            src="{{ mix('modules/checkouteditor/img/svg/green-plus.svg') }}">
                                                     </div>
 
                                                 </div>
@@ -1064,7 +1064,7 @@
                 <div class="checkout-content post-purchase-pages" id="post_purchase" style="margin-bottom: 350px;">
 
                     <span class="title-icon">
-                        <img class="icon-title" src="{{ asset('/modules/checkouteditor/img/svg/paid-page.svg') }}">
+                        <img class="icon-title" src="{{ mix('modules/checkouteditor/img/svg/paid-page.svg') }}">
                         <h1 class="checkout-title">
                             Página pós-compra
                         </h1>
@@ -1170,7 +1170,7 @@
 
                             <div class="textarea-observation">
                                 <img class="dot"
-                                    src="{{ asset('/modules/checkouteditor/img/svg/info-icon.svg') }}"></span><span
+                                    src="{{ mix('modules/checkouteditor/img/svg/info-icon.svg') }}"></span><span
                                     class="observation-span">Caso preenchido, esse número apareçerá para o cliente no
                                     envio da mensagem de WhatsApp.</span>
                             </div>
@@ -1232,13 +1232,13 @@
                                     type="radio" name="preview-visual-type" data-target="preview-desktop-visual"
                                     data-toggle="preview-mobile-visual" checked />
                                 <label for="preview_visual_computer"><img
-                                        src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
+                                        src="{{ mix('modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
 
                                 <input class="custom-icon-radio mobile preview-type" id="preview_visual_mobile"
                                     type="radio" name="preview-visual-type" data-target="preview-mobile-visual"
                                     data-toggle="preview-desktop-visual" />
                                 <label for="preview_visual_mobile"><img
-                                        src="{{ asset('/modules/checkouteditor/img/svg/mobile-icon.svg') }}"></label>
+                                        src="{{ mix('modules/checkouteditor/img/svg/mobile-icon.svg') }}"></label>
                             </div>
                         </div>
 
@@ -1320,7 +1320,7 @@
                                             <div class="menu-bar-mobile">
                                                 <div class="menu">
                                                     <div class="menu-circle-mobile primary-color"></div>
-                                                    <img class="arrow-icon-mobile" src="{{ asset('/modules/checkouteditor/img/svg/menu-arrow.svg') }}">
+                                                    <img class="arrow-icon-mobile" src="{{ mix('modules/checkouteditor/img/svg/menu-arrow.svg') }}">
                                                 </div>
                                             </div>
 
@@ -1338,9 +1338,9 @@
                                         </div>
 
                                         <div class="purchase-menu-mobile">
-                                            <img class="arrow-icon-mobile" src="{{ asset('/modules/checkouteditor/img/svg/purchase-icon.svg') }}">
+                                            <img class="arrow-icon-mobile" src="{{ mix('modules/checkouteditor/img/svg/purchase-icon.svg') }}">
                                             <div class="menu-circle-mobile primary-color"></div>
-                                            <img class="arrow-icon-mobile" src="{{ asset('/modules/checkouteditor/img/svg/menu-arrow.svg') }}">
+                                            <img class="arrow-icon-mobile" src="{{ mix('modules/checkouteditor/img/svg/menu-arrow.svg') }}">
                                         </div>
                                     </div>
 
@@ -1390,13 +1390,13 @@
                                     type="radio" name="preview-payment-type" data-target="preview-desktop-payment"
                                     data-toggle="preview-mobile-payment" checked readonly />
                                 <label for="preview_payment_desktop"><img
-                                        src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
+                                        src="{{ mix('modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
 
                                 <input class="custom-icon-radio mobile preview-type" id="preview_payment_mobile"
                                     type="radio" name="preview-payment-type" data-target="preview-mobile-payment"
                                     data-toggle="preview-desktop-payment" />
                                 <label for="preview_payment_mobile"><img
-                                        src="{{ asset('/modules/checkouteditor/img/svg/mobile-icon.svg') }}"></label>
+                                        src="{{ mix('modules/checkouteditor/img/svg/mobile-icon.svg') }}"></label>
                             </div>
                         </div>
 
@@ -1434,14 +1434,14 @@
 
                                                 <div class="accepted-payment accepted-payment-pix"
                                                     id="accepted_payment_pix">
-                                                    <img src="{{ asset('/modules/checkouteditor/img/svg/icon-pix.svg') }}"
+                                                    <img src="{{ mix('modules/checkouteditor/img/svg/icon-pix.svg') }}"
                                                         style="width: 35px;">
                                                     <span>Pix</span>
                                                 </div>
 
                                                 <div class="accepted-payment accepted-payment-bank-billet"
                                                     id="accepted_payment_bank_billet">
-                                                    <img src="{{ asset('/modules/checkouteditor/img/svg/icon-boleto.svg') }}"
+                                                    <img src="{{ mix('modules/checkouteditor/img/svg/icon-boleto.svg') }}"
                                                         style="width: 20px; filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(209deg) brightness(150%) contrast(102%);">
                                                     <span>Boleto</span>
                                                 </div>
@@ -1494,13 +1494,13 @@
 
                                                 <div class="accepted-payment accepted-payment-pix"
                                                     id="accepted_payment_pix">
-                                                    <img src="{{ asset('/modules/checkouteditor/img/svg/icon-pix.svg') }}" style="width: 35px;">
+                                                    <img src="{{ mix('modules/checkouteditor/img/svg/icon-pix.svg') }}" style="width: 35px;">
                                                         <span>Pix</span>
                                                 </div>
 
                                                 <div class="accepted-payment accepted-payment-bank-billet"
                                                     id="accepted_payment_bank_billet">
-                                                    <img src="{{ asset('/modules/checkouteditor/img/svg/icon-boleto.svg') }}" style="width: 20px; filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(209deg) brightness(150%) contrast(102%);">
+                                                    <img src="{{ mix('modules/checkouteditor/img/svg/icon-boleto.svg') }}" style="width: 20px; filter: invert(100%) sepia(96%) saturate(15%) hue-rotate(209deg) brightness(150%) contrast(102%);">
                                                         <span>Boleto</span>
                                                 </div>
                                             </div>
@@ -1543,14 +1543,14 @@
                                     data-target="preview-desktop-post-purchase"
                                     data-toggle="preview-mobile-post-purchase" checked />
                                 <label for="preview_postpurchase_desktop"><img
-                                        src="{{ asset('/modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
+                                        src="{{ mix('modules/checkouteditor/img/svg/computer-icon.svg') }}"></label>
 
                                 <input class="custom-icon-radio mobile preview-type" id="preview_postpurchase_mobile"
                                     type="radio" name="preview-post-purchase-type"
                                     data-target="preview-mobile-post-purchase"
                                     data-toggle="preview-desktop-post-purchase" />
                                 <label for="preview_postpurchase_mobile"><img
-                                        src="{{ asset('/modules/checkouteditor/img/svg/mobile-icon.svg') }}"></label>
+                                        src="{{ mix('modules/checkouteditor/img/svg/mobile-icon.svg') }}"></label>
                             </div>
                         </div>
 
@@ -1558,7 +1558,7 @@
                             <div id="preview-desktop-post-purchase" class="preview-content desktop">
 
                                 <div class="preview-body desktop post-purchase">
-                                    <img src="{{ asset('/modules/checkouteditor/img/svg/barcode-icon.svg') }}"
+                                    <img src="{{ mix('modules/checkouteditor/img/svg/barcode-icon.svg') }}"
                                         style="margin: 10px 0">
 
                                     <div class="input-form-placeholder" style="margin: 10px 0"></div>
@@ -1586,7 +1586,7 @@
                                             <div class="whatsapp-preview"
                                                 style="display: flex; padding: 6px; border-radius: 12px; height: 25px; width: 120px; background-color: #36DB8C; border-radius: 4px;">
                                                 <img
-                                                    src="{{ asset('/modules/checkouteditor/img/svg/whatsapp-icon.svg') }}">
+                                                    src="{{ mix('modules/checkouteditor/img/svg/whatsapp-icon.svg') }}">
                                             </div>
                                         </div>
 
@@ -1643,7 +1643,7 @@
                             <div id="preview-mobile-post-purchase" class="preview-content mobile" style="display: none">
                                 <div class="preview-mobile-collapse">
                                     <div class="preview-body mobile post-purchase">
-                                        <img src="{{ asset('/modules/checkouteditor/img/svg/barcode-icon.svg') }}"
+                                        <img src="{{ mix('modules/checkouteditor/img/svg/barcode-icon.svg') }}"
                                             style="height: 70px; margin: 5px 0">
 
                                         <div class="input-form-placeholder" style="margin: 10px 0"></div>
@@ -1671,7 +1671,7 @@
                                             <div class="whatsapp-preview"
                                                 style="display: flex; padding: 6px; border-radius: 8px; height: 35px; width: 100%; background-color: #36DB8C; border-radius: 4px;">
                                                 <img
-                                                    src="{{ asset('/modules/checkouteditor/img/svg/whatsapp-icon.svg') }}">
+                                                    src="{{ mix('modules/checkouteditor/img/svg/whatsapp-icon.svg') }}">
                                             </div>
 
 
@@ -1694,7 +1694,7 @@
                         </p>
 
                         <div>
-                            <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-check.svg') }}">
+                            <img class="save-icon" src="{{ mix('modules/checkouteditor/img/svg/save-check.svg') }}">
                         </div>
                     </div>
 
@@ -1704,7 +1704,7 @@
                         </p>
 
                         <div>
-                            <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-error.svg') }}">
+                            <img class="save-icon" src="{{ mix('modules/checkouteditor/img/svg/save-error.svg') }}">
                         </div>
                     </div>
 
@@ -1714,7 +1714,7 @@
                         </p>
 
                         <div>
-                            <img class="save-icon" src="{{ asset('/modules/checkouteditor/img/svg/save-error.svg') }}">
+                            <img class="save-icon" src="{{ mix('modules/checkouteditor/img/svg/save-error.svg') }}">
                         </div>
                     </div>
 
@@ -1822,7 +1822,7 @@
 
                 <div id="modal_verified_content" class="modal-body centered" style="display: none">
                     <img class="icon-verified-modal"
-                        src="{{ asset('/modules/checkouteditor/img/svg/verified-icon.svg') }}">
+                        src="{{ mix('modules/checkouteditor/img/svg/verified-icon.svg') }}">
 
                     <div>
                         <h2> Seu telefone foi validado com sucesso! </h2>

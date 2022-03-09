@@ -4,7 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
+        <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
         <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist.min.css') !!}">
         <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
         <link rel="stylesheet" href="{{ mix('modules/dashboard/css/index.min.css') }}">
@@ -291,7 +291,7 @@
                                         <b class="card-desc">Bem-vindo(a) ao Sirius!</b>
                                     </div>
                                     <img class="img-fluid"
-                                         src="{{ asset('modules/global/img/svg/sirius-stars-b.png') }}"
+                                         src="{{ mix('modules/global/img/svg/sirius-stars-b.png') }}"
                                          height="60px" width="60px">
                                 </div>
                                 <div class="card-body d-flex flex-column justify-content-between">
@@ -321,7 +321,7 @@
         <script src='{{ mix('modules/reports/js/chartist.min.js') }}'></script>
         <script src='{{ mix('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
         <script src='{{ mix('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
-        <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
+        <script src="{{ mix('modules/global/js/circle-progress.min.js') }}"></script>
         <script src="{{ mix('modules/dashboard/js/dashboard.min.js') }}"></script>
     @endpush
 
