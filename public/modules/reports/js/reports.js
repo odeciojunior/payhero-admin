@@ -1,6 +1,7 @@
 $(function () {
+    
+    
     loadingOnScreen();
-    newGraphPie();
     newFinanceGraph();
     distributionGraph();
     newSellGraph();
@@ -20,15 +21,17 @@ $(function () {
             },
             success: function success(response, status) {
                 if(status !== ''){
-                    if(response.data){
+                    if(response.data != ''){
                         let value = response.data.replace("R$", "");
                         $("#cashback").html("<span class='currency'>R$ </span>" + value).addClass('visible');
     
                         if(response.data !== '0,00') {
                             $('.new-graph-cashback').html('<div class=graph-cashback></div>');
+                            $(".new-graph-cashback").next('.no-graph').remove();
                             newGraphCashback();
                             
                         } else {
+                            $(".new-graph-cashback").next('.no-graph').remove();
                             $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
                         }                    
                     } else {
@@ -55,12 +58,13 @@ $(function () {
             },
             success: function success(response, status) {
                 if(status !== '') {
-                    if(response.data){
+                    if(response.data != ''){
                         let value = response.data.replace("R$", " ");
                         $("#pending").html("<span class='currency'>R$ </span>" + value).addClass('visible');
                         
                         if(response.data !== '0,00') {
                             $('.new-graph-pending').html('<div class=graph-pending></div>');
+                            $(".new-graph-pending").next('.no-graph').remove();
                             newGraphPending();
                         } else {
                             $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
@@ -89,13 +93,14 @@ $(function () {
             },
             success: function success(response, status) {
                 if(status !== '') {
-                    if(response.data){
+                    if(response.data != ''){
                         let value = response.data.replace("R$", "");
                         //$("#com").addClass('visible');
                         $("#comission").html("<span class='currency'>R$ </span>" + value).addClass('visible');
                         
                         if(response.data !== '0,00') {
                             $('.new-graph').html('<div class=graph-comission></div>');
+                            $(".new-graph").next('.no-graph').remove();
                             newGraph();
                         } else {
                             $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
@@ -156,33 +161,65 @@ $(function () {
             },
             success: function success(response, status) {
                 if(status !== ''){
+                    $('#card-products .ske-load').show();
                     $("#qtd").addClass('visible');
-                    if(response.data){
+                    if(response.data != ''){
                         $.each(response.data, function (i, product) {
                             if(product.total != 0) {
-                                $("#qtd").html(product.total);
                                 if(product.amount) {
                                     $(".list-products").append(
                                         $("<li class='" + ( (i > 3 && i < 8) ? 'line': '' ) + "'>"+
                                             "<div class='box-list-products'>"+
-                                            "<figure><img src='"+ product.image +"' width='24px' height='24px' /></figure>"+
-                                            "<div class='bars blue' style='width:"+ (product.percentage) +"'>"+
+                                            "<figure data-container='body' data-viewport='.container' data-placement='top' data-toggle='tooltip' title='" + product.name +"'><img src='"+ product.image +"' width='24px' height='24px' /></figure>"+
+                                            "<div class='bars " +product.color+ "' style='width:"+ product.percentage +"'>"+
                                             "<span>" + product.amount + "</span></div></div></li>"
                                         )
                                     );
-                                    $(".list-products").addClass('visible');
+                                    $(".list-products, .footer-products").addClass('visible');
+                                    $('#card-products .value-price').addClass('invisible');
+                                    $('[data-toggle="tooltip"]').tooltip();
                                 }
                             } else {
-                                $("#qtd").html('0');
+                                $('#card-products .value-price').removeClass('invisible');
+                                $("#qtd").html(0);
+                                $(".footer-products").removeClass('visible');
                             }
                         });
-                        
                     } else {
                         $("#qtd").html('0');
-                        // $(".new-graph-sell").next('.no-graph').remove();
-                        // $('.new-graph-sell').after('<div class=no-graph>Não há dados suficientes</div>');
                     }
                     $('#card-products .ske-load').hide();
+                }
+            }
+        });
+    }
+
+    function getCoupons() {
+        $.ajax({
+            method: "GET",
+            url: "/api/reports/resume/coupons?date_range=" + $("input[name='daterange']").val(),
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response, status) {
+                if(status !== ''){
+                    // $("#qtd").addClass('visible');
+                    if(response.data != ''){
+                        console.log(response.data);
+                        $('.new-graph-pie').html('<div class=graph-pie></div>');
+                        $(".new-graph-pie").next('.no-graph').remove();
+                        newGraphPie();
+                        // $('#card-coupons .value-price').remove();
+                    } else {
+                        console.log('vazio');
+                        $("#qtd-dispute").html('0');
+                    }
+                    $('#card-coupons .ske-load').hide();
                 }
             }
         });
@@ -300,6 +337,7 @@ $(function () {
 
     $("#select_projects").on("change", function () {
         updateReports();
+        console.log('oi');
     });
 
     $("#origin").on("change", function () {
@@ -310,14 +348,17 @@ $(function () {
     function resume() {
         const promises = [
             getCommission(),
-            getCashback(),
-            getPending(),
-            getSales(),
             getTypePayments(),
-            getProducts()
+            getProducts(),
+            getPending(),
+            getCashback(),
+            getSales(),
+            getCoupons()
         ];
 
-        $.when(promises).done(function(data, status, jqXHR) {});
+        Promise.all([promises]).then((values) => {
+            console.log(values);
+        });        
     }
 
     var current_currency = "";
@@ -376,7 +417,7 @@ $(function () {
                 $("#qtd-recusadas").html(response.contRecused);
                 // $("#qtd-reembolso").html(response.contRefunded);
                 $("#qtd-chargeback").html(response.contChargeBack);
-                $("#qtd-dispute").html(response.contInDispute);
+                // $("#qtd-dispute").html(response.contInDispute);
                 $("#qtd-pending").html(response.contPending);
                 $("#qtd-canceled").html(response.contCanceled);
                 
@@ -778,7 +819,7 @@ $(function () {
         new Chartist.Line('.graph-comission', {
             labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
             series: [
-              [12, 9, 7, 8, 5],
+              [120, 90, 480, 370, 65, 60, 550, 55, 5],
             ]
           }, {
             fullWidth: true,
@@ -858,11 +899,12 @@ $(function () {
               offset: 0
             }
           });
+          
     }
 
 
     function newGraphPie() {
-        new Chartist.Pie('.new-graph-pie', {
+        new Chartist.Pie('.graph-pie', {
             series: [18, 16, 12, 6]
           }, {
             donut: true,

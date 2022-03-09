@@ -381,76 +381,10 @@
 													    <h6 class="font-size-16 gray-700 grey"> Produtos </h6>
                                                         <div class="d-flex value-price">
                                                             <h4 id='qtd' class=" font-size-24 bold">0</h4>
-                                                        </div>  
+                                                        </div>
                                                     </header>
-                                                    <footer>
-                                                        <ul class="list-products container">
-                                                            <!-- <li>
-                                                                <div class="box-list-products">
-                                                                    <figure>
-                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
-                                                                    </figure>
-                                                                    <div class="bars blue" style="min-width: 102px"><span>51</span></div>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="box-list-products">
-                                                                    <figure>
-                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
-                                                                    </figure>
-                                                                    <div class="bars purple" style="min-width: 80px"><span>40</span></div>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="box-list-products">
-                                                                    <figure>
-                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
-                                                                    </figure>
-                                                                    <div class="bars pink" style="min-width: 65px"><span>32</span></div>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="box-list-products">
-                                                                    <figure>
-                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
-                                                                    </figure>
-                                                                    <div class="bars orange" style="min-width: 42px"><span>21</span></div>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="box-list-products">
-                                                                    <figure>
-                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
-                                                                    </figure>
-                                                                    <div class="bars yellow" style="min-width: 106px"><span>19</span></div>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="box-list-products">
-                                                                    <figure>
-                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
-                                                                    </figure>
-                                                                    <div class="bars light-blue" style="min-width: 20px"><span>4</span></div>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="box-list-products">
-                                                                    <figure>
-                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
-                                                                    </figure>
-                                                                    <div class="bars light-green" style="min-width: 19px"><span>1</span></div>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="box-list-products">
-                                                                    <figure>
-                                                                        <img width="24px" height="24px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
-                                                                    </figure>
-                                                                    <div class="bars grey" style="min-width: 19px"><span>1</span></div>
-                                                                </div>
-                                                            </li> -->
-                                                        </ul>
+                                                    <footer class="footer-products">
+                                                        <ul class="list-products container"></ul>
                                                     </footer>
 												</div>
 											</div>
@@ -479,15 +413,29 @@
                                 <div id="reports-content" class="">
                                     <div class='container col-sm-12 mt-20 d-lg-block'>
 										<div class="row cards-reports">
-											<div class="card">
-												<div class="card-body">
+											<div class="card" id="card-coupons">
+												<div class="card-body data-content">
+                                                    <div class="ske-load">
+                                                        <div class="px-20 py-0">
+                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                                        </div>
+                                                        <div class="px-20 py-0">
+                                                            <div class="row align-items-center mx-0 py-10">
+                                                                <div class="skeleton skeleton-circle"></div>
+                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                            </div>
+                                                            <div class="skeleton skeleton-text"></div>
+                                                        </div>
+                                                    </div>
                                                     <header class="container">
 													    <h6 class="font-size-16 gray-700 grey"> Cupons </h6>
-													    <h4 id='qtd-dispute' class=" font-size-24 bold">0</h4>
+                                                        <div class="d-flex value-price">
+                                                            <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
+                                                        </div>
                                                     </header>
                                                     <div class="container d-flex justify-content-between box-donut">
-														<div class="new-graph-pie"></div>
-														<div class="data-pie">
+														<div class="new-graph-pie graph"></div>
+														<div class="data-pie" style="display: none;">
 															<ul>
 																<li>
 																	<div class="donut-pie blue">
