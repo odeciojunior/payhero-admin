@@ -1526,7 +1526,8 @@ class ReportService
             {
                 $result->percentage = round(number_format(($result->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
                 if ($index < 8) {
-                    $result->color = $this->getColors($index, true);
+                    $result->color = $this->getColors($index);
+                    $result->hexadecimal = $this->getColors($index, true);
                 } else {
                     $result->color = 'grey';
                 }
