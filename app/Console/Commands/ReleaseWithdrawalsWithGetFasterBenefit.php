@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Withdrawal;
-use Illuminate\Support\Facades\Log;
 
 class ReleaseWithdrawalsWithGetFasterBenefit extends Command
 {
@@ -14,12 +13,12 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
 
     protected $description = "Libera o saque dos usuário que possuem o benefício 'Receba + rápido' habilitado";
     private $gatewayIds = [
-        
+
         Gateway::GETNET_PRODUCTION_ID,
         Gateway::ASAAS_PRODUCTION_ID,
         Gateway::GERENCIANET_PRODUCTION_ID,
         Gateway::SAFE2PAY_PRODUCTION_ID
-        
+
     ];
 
     public function __construct()
@@ -29,8 +28,6 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
 
     public function handle()
     {
-
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -49,7 +46,7 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
 
             foreach ($withdrawals as $withdrawal) {
                 try {
-                    $this->runCurl($managerUrl, 'POST', ['withdrawal_id' => hashids_encode($withdrawal['id'])]);                    
+                    $this->runCurl($managerUrl, 'POST', ['withdrawal_id' => hashids_encode($withdrawal['id'])]);
                 } catch (Exception $e) {
                     report($e);
                 }
@@ -58,8 +55,6 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 

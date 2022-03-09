@@ -6,7 +6,7 @@
         <div class="row mt-20">
             <div class="col-12">
                 <div class='form-group'>
-                    <label for="company">Loja</label>
+                    <label for="company">Lojas</label>
                     <select class="select-pad" id="select_projects_edit" name="project_id" disabled>
                     </select>
                 </div>

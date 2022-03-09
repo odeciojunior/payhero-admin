@@ -9,7 +9,6 @@ use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
-use Illuminate\Support\Facades\Log;
 
 class ReleaseUnblockedBalanceGetnet extends Command
 {
@@ -45,8 +44,6 @@ class ReleaseUnblockedBalanceGetnet extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
 
             $dataSixMonthAgo = Carbon::create(date('Y-m-d'))->subMonths(6)->format('Y-m-d');
@@ -74,8 +71,6 @@ class ReleaseUnblockedBalanceGetnet extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }

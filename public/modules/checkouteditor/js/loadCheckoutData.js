@@ -1044,7 +1044,7 @@ $(() => {
             $(".shop-message-preview-title").empty();
             $(".shop-message-preview-title").append(checkout.post_purchase_message_title || "Obrigado por comprar conosco!");
 
-            quillThanksPage.root.innerHTML = checkout.topbar_content || "<p>Aproveite o <b>desconto extra</b> ao comprar no <u>Cartão ou pelo PIX!</u> É por <b>tempo limitado</b>.</p>";
+            quillThanksPage.root.innerHTML = checkout.post_purchase_message_content || "<p>Aproveite o <b>desconto extra</b> ao comprar no <u>Cartão ou pelo PIX!</u> É por <b>tempo limitado</b>.</p>";
 
             $(".shop-message-preview-content").empty();
                 $(".shop-message-preview-content").append(checkout.post_purchase_message_content);

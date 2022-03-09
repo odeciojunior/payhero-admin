@@ -35,7 +35,7 @@ $(document).ready(function () {
         null: "badge-primary",
     };
 
-    datePicker();
+    $('#date_range').val(moment().subtract(29, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY')).dateRangePicker();
     atualizar();
     getTotalValues();
     getProjects();
@@ -152,101 +152,23 @@ $(document).ready(function () {
         }
     });
 
-    function datePicker() {
-        //DatePicker
-        let startDate = moment("2018-01-01 00:00:00");
-        let endDate = moment().add(29, "days").format("YYYY-MM-DD");
-        $("#date_range").daterangepicker(
-            {
-                startDate: moment("2018-01-01 00:00:00"),
-                endDate: moment().add(29, "days"),
-                opens: "center",
-                maxDate: moment().add(3, "month"),
-                alwaysShowCalendar: true,
-                showCustomRangeLabel: "Customizado",
-                autoUpdateInput: true,
-                locale: {
-                    locale: "pt-br",
-                    format: "DD/MM/YYYY",
-                    applyLabel: "Aplicar",
-                    cancelLabel: "Limpar",
-                    fromLabel: "De",
-                    toLabel: "Até",
-                    customRangeLabel: "Customizado",
-                    weekLabel: "W",
-                    daysOfWeek: [
-                        "Dom",
-                        "Seg",
-                        "Ter",
-                        "Qua",
-                        "Qui",
-                        "Sex",
-                        "Sab",
-                    ],
-                    monthNames: [
-                        "Janeiro",
-                        "Fevereiro",
-                        "Março",
-                        "Abril",
-                        "Maio",
-                        "Junho",
-                        "Julho",
-                        "Agosto",
-                        "Setembro",
-                        "Outubro",
-                        "Novembro",
-                        "Dezembro",
-                    ],
-                    firstDay: 0,
-                },
-                ranges: {
-                    Hoje: [moment(), moment()],
-                    Ontem: [
-                        moment().subtract(1, "days"),
-                        moment().subtract(1, "days"),
-                    ],
-                    "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
-                    "Últimos 30 dias": [
-                        moment().subtract(29, "days"),
-                        moment(),
-                    ],
-                    "Próximos 30 dias": [moment(), moment().add(29, "days")],
-                    "Este mês": [
-                        moment().startOf("month"),
-                        moment().endOf("month"),
-                    ],
-                    "Mês passado": [
-                        moment().subtract(1, "month").startOf("month"),
-                        moment().subtract(1, "month").endOf("month"),
-                    ],
-                    Vitalício: [
-                        moment("2018-01-01 00:00:00"),
-                        moment().add(29, "days"),
-                    ],
-                },
-            },
-            function (start, end) {
-                startDate = start.format("YYYY-MM-DD");
-                endDate = end.format("YYYY-MM-DD");
-            }
-        );
-    }
 
     function getFilters(urlParams = true) {
         let current_url = window.location.href;
         let vazio = current_url.includes("vazio") ? "true" : "";
+        let date_range = $("#date_range").val();
+        if (transaction.length > 0){
+            date_range = moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY")
+        }
 
         let data = {
             transaction: $("#transaction").val().split("#").join(""),
-            // fantasy_name: $("#fantasy_name").val(),
             project: $("#project").val() ?? "",
             customer: $("#customer").val() ?? "",
             customer_document: $("#customer_document").val() ?? "",
-            date_range: $("#date_range").val() ?? "",
+            date_range: $("#date_range").val(),
             date_type: $("#date_type").val() ?? "",
-            order_by_expiration_date: $("#expiration_date").is(":checked")
-                ? 1
-                : 0,
+            order_by_expiration_date: $("#expiration_date").is(":checked") ? 1 : 0,
             contestation_situation: $("#contestation_situation").val() ?? "",
             is_contested: $("#is_contested").val() ?? "",
             is_expired: $("#is_expired").val() ?? "",
@@ -270,11 +192,7 @@ $(document).ready(function () {
         if (link == null) {
             link = "/api/contestations/getcontestations?" + getFilters();
         } else {
-            link =
-                "/api/contestations/getcontestations" +
-                link +
-                "&" +
-                getFilters();
+            link = "/api/contestations/getcontestations" + link + "&" + getFilters();
         }
         $.ajax({
             method: "GET",

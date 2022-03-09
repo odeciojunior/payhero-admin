@@ -27,8 +27,6 @@ class GetAllStatementChargebacks extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
             $getnetBackOfficeService = new GetnetBackOfficeService();
             $latest_chargeback = GetnetChargeback::orderByDesc('id')->first();
@@ -111,8 +109,6 @@ class GetAllStatementChargebacks extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }

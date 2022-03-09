@@ -9,7 +9,6 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\GetnetBackOfficeService;
-use Illuminate\Support\Facades\Log;
 
 class UpdateTransactionsReleaseDate extends Command
 {
@@ -24,8 +23,6 @@ class UpdateTransactionsReleaseDate extends Command
 
     public function handle()
     {
-
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -132,8 +129,6 @@ class UpdateTransactionsReleaseDate extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }

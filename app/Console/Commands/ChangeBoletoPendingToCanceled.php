@@ -3,9 +3,7 @@
 namespace App\Console\Commands;
 
 use Exception;
-use App\Exceptions\CommandMonitorTimeException;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\BoletoService;
 
 class ChangeBoletoPendingToCanceled extends Command
