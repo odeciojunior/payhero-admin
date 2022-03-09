@@ -1146,9 +1146,13 @@ class ReportService
         }
     }
 
-    public function getColors($index = null)
+    public function getColors($index = null, $hex = false)
     {
         $colors = [ 'blue', 'purple', 'pink', 'orange', 'yellow', 'light-blue', 'light-green', 'grey' ];
+
+        if ($hex == true) {
+            $colors = [ '#2E85EC', '#F43F5E', '#665FE8', '#FF7900' ];
+        }
 
         if (!empty($index) || $index >= 0) {
             return $colors[$index];
@@ -1505,7 +1509,7 @@ class ReportService
             }
 
             $query = 'SELECT sales.cupom_code as coupon, COUNT(*) as amount FROM sales
-            WHERE sales.cupom_code <> "" AND sales.owner_id = '.$userId.' AND sales.status = '.$statusId.'
+            WHERE sales.cupom_code <> "" AND sales.owner_id = '.$userId.'
             AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
             '.$projectId.'
             GROUP BY sales.id ORDER BY amount DESC LIMIT 4';
@@ -1522,7 +1526,7 @@ class ReportService
             {
                 $result->percentage = round(number_format(($result->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
                 if ($index < 8) {
-                    $result->color = $this->getColors($index);
+                    $result->color = $this->getColors($index, true);
                 } else {
                     $result->color = 'grey';
                 }
