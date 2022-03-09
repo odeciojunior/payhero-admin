@@ -435,54 +435,7 @@
                                                     </header>
                                                     <div class="container d-flex justify-content-between box-donut">
 														<div class="new-graph-pie graph"></div>
-														<div class="data-pie" style="display: none;">
-															<ul>
-																<li>
-																	<div class="donut-pie blue">
-																		<figure>
-                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#2E85EC" stroke-width="3"/>
-                                                                            </svg>
-																		</figure>
-																		<div>Mariana</div>
-																	</div>
-																	<div class="grey bold">18</div>
-																</li>
-																<li>
-																	<div class="donut-pie pink">
-                                                                        <figure>
-                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#F43F5E" stroke-width="3"/>
-                                                                            </svg>
-                                                                        </figure>
-																		<div>Cassio</div>
-																	</div>
-																	<div class="grey bold">16</div>
-																</li>
-																<li>
-																	<div class="donut-pie purple">
-                                                                        <figure>
-                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#665FE8" stroke-width="3"/>
-                                                                            </svg>																			
-																		</figure>
-																		<div>Agosto</div>
-																	</div>
-																	<div class="grey bold">12</div>
-																</li>
-																<li>
-																	<div class="donut-pie orange">
-                                                                        <figure>
-                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#FF7900" stroke-width="3"/>
-                                                                            </svg>																			
-																		</figure>
-																		<div>meuaniversario</div>
-																	</div>
-																	<div class="grey bold">06</div>
-																</li>
-															</ul>
-														</div>
+														<div class="data-pie"><ul></ul></div>
                                                     </div>
 												</div>
 											</div>
