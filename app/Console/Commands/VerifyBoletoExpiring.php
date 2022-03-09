@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Services\BoletoService;
-use Illuminate\Support\Facades\Log;
 
 class VerifyBoletoExpiring extends Command
 {
@@ -32,8 +31,6 @@ class VerifyBoletoExpiring extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
 
             $boletoService = new BoletoService();
@@ -42,8 +39,6 @@ class VerifyBoletoExpiring extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }

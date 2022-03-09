@@ -9,7 +9,6 @@ use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\BlockReason;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class UpdateBlockedBalance extends Command
 {
@@ -46,8 +45,6 @@ class UpdateBlockedBalance extends Command
      */
     public function handle()
     {
-
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -109,8 +106,6 @@ class UpdateBlockedBalance extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 

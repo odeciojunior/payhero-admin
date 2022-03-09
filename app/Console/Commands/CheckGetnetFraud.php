@@ -42,7 +42,6 @@ class CheckGetnetFraud extends Command
      */
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -86,8 +85,6 @@ class CheckGetnetFraud extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
     public function getchargeback()

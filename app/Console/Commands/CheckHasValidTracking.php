@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
-use Illuminate\Support\Facades\Log;
 
 class CheckHasValidTracking extends Command
 {
@@ -23,7 +22,6 @@ class CheckHasValidTracking extends Command
 
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -61,6 +59,5 @@ class CheckHasValidTracking extends Command
             report($e);
         }
 
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 }
