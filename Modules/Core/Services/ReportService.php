@@ -1151,7 +1151,7 @@ class ReportService
         $colors = [ 'blue', 'purple', 'pink', 'orange', 'yellow', 'light-blue', 'light-green', 'grey' ];
 
         if ($hex == true) {
-            $colors = [ '#2E85EC', '#F43F5E', '#665FE8', '#FF7900' ];
+            $colors = [ '#2E85EC', '#FF7900', '#665FE8', '#F43F5E' ];
         }
 
         if (!empty($index) || $index >= 0) {
