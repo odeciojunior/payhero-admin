@@ -1454,7 +1454,8 @@ class ReportService
             INNER JOIN sales ON products_plans_sales.sale_id = sales.id
             WHERE sales.owner_id = '.$userId.' AND sales.status = '.$statusId.'
             AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
-            GROUP BY products.id ORDER BY amount DESC LIMIT 8' .$projectId;
+            '.$projectId.'
+            GROUP BY products.id ORDER BY amount DESC LIMIT 8';
             $dbResults = DB::select($query);
 
             $total = 0;
@@ -1504,9 +1505,10 @@ class ReportService
             }
 
             $query = 'SELECT sales.cupom_code as coupon, COUNT(*) as amount FROM sales
-            WHERE sales.owner_id = '.$userId.' AND sales.status = '.$statusId.'
+            WHERE sales.cupom_code <> "" AND sales.owner_id = '.$userId.' AND sales.status = '.$statusId.'
             AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
-            GROUP BY sales.id ORDER BY amount DESC LIMIT 4' .$projectId;
+            '.$projectId.'
+            GROUP BY sales.id ORDER BY amount DESC LIMIT 4';
             $dbResults = DB::select($query);
 
             $total = 0;
@@ -1541,6 +1543,17 @@ class ReportService
     public function getResumeRegions()
     {
         try {
+            $saleModel = new Sale();
+            // ->select(\DB::raw('count(*) as count, HOUR(sales.start_date) as hour, SUM(transaction.value) as value, sales.payment_method'))
+            // ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
+            //     $join->on('transaction.sale_id', '=', 'sales.id');
+            //     $join->whereIn('transaction.company_id', $userCompanies);
+            // })
+            // ->where('sales.owner_id', auth()->user()->account_owner_id)
+            // ->where('sales.project_id', $projectId)
+            // ->whereDate('sales.start_date', $data['startDate'])
+            // ->groupBy('hour', 'sales.payment_method')
+            // ->get()->toArray();
 
         } catch(Exception $e) {
 
