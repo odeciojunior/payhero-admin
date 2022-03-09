@@ -41,7 +41,7 @@ $(document).ready(function () {
                         <tr class='text-center'>
                             <td colspan='4' style='height: 70px; vertical-align: middle;'>
                                 <div class='d-flex justify-content-center align-items-center'>
-                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <img src='/modules/global/img/empty-state-table.svg' style='margin-right: 60px;'>
                                     <div class='text-left'>
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum domínio configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro domínio para poder
@@ -106,13 +106,14 @@ $(document).ready(function () {
      * @param domain
      */
     function deleteDomain(domain) {
+        $(".btn-delete-modal-domain").css('opacity',1);
         $("#modal-delete-domain-body, #title-delete-domain, #description-delete-domain, .btn-delete-modal-domain").show();
 
         $("#modal-delete-domain").modal("show");
 
         btnDeleteDomain.unbind('click');
         btnDeleteDomain.on('click', function () {
-            $(".btn-delete-modal-domain").hide();
+            $(".btn-delete-modal-domain").css('opacity',0);
 
             loadOnAny('#modal-delete-domain-body', false, {
                 styles: {

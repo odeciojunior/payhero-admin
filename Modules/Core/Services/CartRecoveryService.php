@@ -40,7 +40,7 @@ class CartRecoveryService
                                       ['status_enum', '=', $checkoutModel->present()->getStatusEnum('abandoned cart'),
                                       ], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd],
                                   ])
-                          ->with('project', 'project.users', 'checkoutPlans.plan.productsPlans.product')
+                          ->with('project.checkoutConfig', 'project.users', 'checkoutPlans.plan.productsPlans.product')
                           ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               try {
                                   foreach ($abandonedCarts as $abandonedCart) {
@@ -107,9 +107,8 @@ class CartRecoveryService
                                               if (!empty($domain)) {
                                                   $bodyEmail = [
                                                       'name'            => $clientNameExploded[0],
-                                                      'project_logo'    => $project['logo'],
+                                                      'project_logo'    => $project->checkoutConfig->checkout_logo,
                                                       'checkout_link'   => $linkCheckout,
-                                                      "project_contact" => $project['contact'],
                                                       "subject"         => $subjectMessage,
                                                       "title"           => $titleMessage,
                                                       "content"         => $contentMessage,
@@ -124,7 +123,7 @@ class CartRecoveryService
                                                       'templateId'  => 'd-92937608e68b47b79dbd2641fd20fd0d',
                                                       'bodyEmail'   => $bodyEmail,
                                                       'checkout'    => $abandonedCart,
-
+                                                      'sac_link'    => "https://sac." . $domain->name,
                                                   ];
 
                                                   event(new SendEmailEvent($dataEmail));
@@ -161,7 +160,7 @@ class CartRecoveryService
                                                                             ->getStatusEnum('abandoned cart'),
                                       ], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date],
                                   ])
-                          ->with('project', 'project.users', 'checkoutPlans.plan.productsPlans.product')
+                          ->with('project.checkoutConfig', 'project.users', 'checkoutPlans.plan.productsPlans.product')
                           ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               foreach ($abandonedCarts as $abandonedCart) {
                                   try {
@@ -233,9 +232,8 @@ class CartRecoveryService
                                           if (!empty($domain)) {
                                               $bodyEmail = [
                                                   'name'            => $clientNameExploded[0],
-                                                  'project_logo'    => $project['logo'],
+                                                  'project_logo'    => $project->checkoutConfig->checkout_logo,
                                                   'checkout_link'   => $linkCheckout,
-                                                  "project_contact" => $project['contact'],
                                                   "subject"         => $subjectMessage,
                                                   "title"           => $titleMessage,
                                                   "content"         => $contentMessage,
@@ -250,6 +248,7 @@ class CartRecoveryService
                                                   'templateId'  => 'd-613da0ac5d7e478ba436e4d51e2ee42c',
                                                   'bodyEmail'   => $bodyEmail,
                                                   'checkout'    => $abandonedCart,
+                                                  'sac_link'    => "https://sac." . $domain->name,
                                               ];
 
                                               event(new SendEmailEvent($dataEmail));

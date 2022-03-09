@@ -708,9 +708,16 @@ $(document).ready(function () {
                     $("#commission").html(
                         `<span style="color:#959595">R$</span> <span class="font-size-30 bold"> ${response.commission} </span>`
                     );
-                    $("#total").html(
-                        `<span style="color:#959595">R$</span> <span class="font-size-30 bold"> ${response.total} </span>`
-                    );
+                    if (`${response.total}`.length >= 13 ){
+                        $("#total").html(
+                            `<span style="color:#959595">R$</span><span class="font-size-30 bold">&nbsp;</span><span style="font-size:27px !important" class="bold">${response.total}</span>`
+                        );
+                    }
+                    else{
+                        $("#total").html(
+                            `<span style="color:#959595">R$</span> <span class="font-size-30 bold"> ${response.total} </span>`
+                        );
+                    }
                 }
             },
         });
@@ -774,7 +781,7 @@ $(document).ready(function () {
     $(document).on('focusin', '.select2-selection__rendered', function () {
         $('.select2-selection.select2-selection--multiple').scrollTop(0);
     });
-    
+
     // FIM DO COMPORTAMENTO DO FILTRO
 
 

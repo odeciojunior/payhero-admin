@@ -82,7 +82,7 @@ $(function () {
                         <tr class="text-center">
                             <td colspan="8" style="height: 70px; vertical-align: middle;">
                                 <div class='d-flex justify-content-center align-items-center'>
-                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <img src='/modules/global/img/empty-state-table.svg' style='margin-right: 60px;'>
                                     <div class='text-left'>
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum pixel configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro pixel para poder
@@ -187,16 +187,27 @@ $(function () {
 
         const imgPlatform = $(".img-edit-selected");
         const codeEditInput = $(".code-edit");
+        const conversionalEditInput = $(".conversional-edit");
+
+        let code =  inputCodeByPlatform(pixel.platform, pixel.code, '', true)
 
         if (newPlatform == null) {
             newPlatform = pixel.platform;
         }
+
         $(".platform-edit").val(newPlatform);
 
         imgPlatform.attr('src', srcPlatforms[newPlatform]);
 
         $(".description-edit").val(pixel.name);
-        codeEditInput.val(pixel.code);
+
+        if (Array.isArray(code)) {
+            codeEditInput.val(code[0]);
+            conversionalEditInput.val(code[1]);
+        } else {
+            codeEditInput.val(code);
+            conversionalEditInput.val('');
+        }
         $('.percentage-boleto-value-edit').val(pixel.value_percentage_purchase_boleto);
 
         // plans
@@ -222,7 +233,7 @@ $(function () {
         isChecked($(".purchase-pix-edit"), pixel.purchase_pix);
 
         // Manipulation Modal pixel
-        changePlaceholderInput(newPlatform, codeEditInput, $("#text-type-code-edit"));
+        changePlaceholderInput(newPlatform, codeEditInput, $("#text-type-code-edit"),  $('#conversional-pixel-edit'));
 
         switch (newPlatform) {
             case 'facebook':
@@ -296,12 +307,30 @@ $(function () {
     });
 
 
+    function inputCodeByPlatform(platform, code, conversional = '', explode = false) {
+
+        switch (platform) {
+            case "google_adwords":
+                return explode ? code.split('/') : `${code}/${conversional}`
+            case "facebook":
+            case "google_analytics":
+            case "google_analytics_four":
+            case "taboola":
+            case "outbrain":
+            case 'uol_ads':
+            case 'tiktok':
+            default:
+                return code;
+        }
+    }
+
     //Update Pixel
     $("#btn-update-pixel").on('click', function () {
         const inputDescriptionEdit = $("#modal-edit-pixel .description-edit").val();
         const inputPlatformEdit = $("#modal-edit-pixel .platform-edit").val();
         const isApi = $("#modal-edit-pixel input[type=radio]:checked").val();
         const inputCodeEdit = $("#modal-edit-pixel .code-edit").val();
+        const inputConversionalEdit = $("#modal-edit-pixel .conversional-edit").val();
         const valuePercentagePurchaseBoleto = $("#modal-edit-pixel .percentage-boleto-value-edit").val();
         const facebookTokenApi = $("#modal-edit-pixel #facebook-token-api-edit").val();
         const inputPurchaseEventName = $("#modal-edit-pixel .input-purchase-event-name-edit").val();
@@ -312,6 +341,7 @@ $(function () {
             'platform': inputPlatformEdit,
             'is_api': isApi,
             'code': inputCodeEdit,
+            'conversional': inputConversionalEdit,
             'value_percentage_purchase_boleto': valuePercentagePurchaseBoleto,
             'facebook_token_api': facebookTokenApi,
             'purchase_event_name': inputPurchaseEventName,
@@ -320,6 +350,8 @@ $(function () {
             return false;
         }
 
+        let codeEdit = inputCodeByPlatform(inputPlatformEdit, inputCodeEdit, inputConversionalEdit)
+        console.log(codeEdit)
         $.ajax({
             method: "PUT",
             url: `/api/project/${projectId}/pixels/${pixelEdit.id_code}`,
@@ -330,7 +362,7 @@ $(function () {
             },
             data: {
                 name: inputDescriptionEdit,
-                code: inputCodeEdit,
+                code: codeEdit,
                 platform: inputPlatformEdit,
                 status: $("#modal-edit-pixel .status-edit").is(':checked'),
                 checkout: $("#modal-edit-pixel .checkout-edit").is(':checked'),
@@ -418,8 +450,9 @@ $(function () {
         $("#select-platform-pixel").show();
     }
 
-    function changePlaceholderInput(value, inputPlatform, inputAW) {
+    function changePlaceholderInput(value, inputPlatform, inputAW, inputConversional) {
         inputAW.html('').hide();
+        inputConversional.hide();
 
         switch (value) {
             case "facebook":
@@ -428,8 +461,9 @@ $(function () {
                 break;
             case "google_adwords":
                 inputAW.html('AW-').show();
-                inputPlatform.attr("placeholder", '8981445741-4/AN7162ASNSG');
-                inputPlatform.parent().parent().find('label').html('Código');
+                inputConversional.show();
+                inputPlatform.attr("placeholder", '8981445741-4');
+                inputPlatform.parent().parent().find('label').html('Código de conversão');
                 break;
             case "google_analytics":
                 inputPlatform.attr("placeholder", 'UA-8984567741-3');
@@ -470,7 +504,7 @@ $(function () {
 
         $("#select-facebook-integration, #div-facebook-token-api, .purchase-event-name-div, .url_facebook_api_div").hide();
 
-        changePlaceholderInput(platform, $("#code-pixel"), $("#input-code-pixel"));
+        changePlaceholderInput(platform, $("#code-pixel"), $("#input-code-pixel"), $('#conversional-pixel'));
 
         if (platform === 'facebook') {
             $("#select-facebook-integration, #div-facebook-token-api").show();
@@ -523,6 +557,13 @@ $(function () {
             return false;
         }
 
+        if (formData.platform == 'google_adwords') {
+            if ( formData.conversional.length < 1) {
+                alertCustom('error', 'O campo de Rótulo de conversão é obrigatório')
+                return false;
+            }
+        }
+
         if (formData.value_percentage_purchase_boleto.length > 3) {
             alertCustom('error', 'O valore do campo % Valor Boleto está incorreto!')
             return false;
@@ -566,6 +607,7 @@ $(function () {
             'platform': formData.get('platform'),
             'is_api': formData.get('api-facebook'),
             'code': formData.get('code'),
+            'conversional': formData.get('conversional'),
             'value_percentage_purchase_boleto': formData.get('value_percentage_purchase_boleto'),
             'facebook_token_api': formData.get('facebook-token-api'),
             'purchase_event_name': formData.get('purchase-event-name'),
@@ -574,6 +616,8 @@ $(function () {
             return false;
         }
 
+        let codeSave =  inputCodeByPlatform(formData.get('platform'), formData.get('code'), formData.get('conversional'))
+        formData.set('code', codeSave)
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/pixels",

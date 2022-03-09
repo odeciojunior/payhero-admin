@@ -52,15 +52,6 @@ return [
             'permission' => 0664,
         ],
 
-        'slack' => [
-            'driver' => 'slack',
-            'url' => env('SLACK_WEBHOOK'),
-            'username' => 'Laravel-Admin',
-            'emoji' => ':scream:',
-            'level' => 'critical',
-            'channel' => env('SLACK_CHANNEL', "#laravel-admin"),
-        ],
-
         'stderr' => [
             'driver' => 'monolog',
             'handler' => StreamHandler::class,

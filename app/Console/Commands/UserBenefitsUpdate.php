@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\BenefitsService;
-use Illuminate\Support\Facades\Log;
 
 class UserBenefitsUpdate extends Command
 {
@@ -42,8 +41,6 @@ class UserBenefitsUpdate extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
 
             $benefitsService = new BenefitsService();
@@ -63,8 +60,6 @@ class UserBenefitsUpdate extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
         return 0;
     }

@@ -47,7 +47,6 @@ class AsaasAnticipations extends Command
      */
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -144,7 +143,7 @@ class AsaasAnticipations extends Command
                                              ' -- TransactionId ' . $transaction->id . ' -- ' . json_encode($response)));
 
                         if($this->simulate) {
-                            \Log::info(
+                            Log::info(
                                 new Exception(
                                     "UserId:  " . $sale->owner_id . " SaleId:  " . $sale->id .
                                     ' -- TransactionId ' . $transaction->id . ' -- ' . print_r($response, true)
@@ -171,6 +170,5 @@ class AsaasAnticipations extends Command
             report($e);
         }
 
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 }

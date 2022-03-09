@@ -107,9 +107,9 @@
                                     </div>
 
                                     <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
-                                        <label for="projeto">Projeto</label>
+                                        <label for="projeto">Lojas</label>
                                         <select name='select_project' id="projeto" class="form-control select-pad applySelect2">
-                                            <option value="">Todos projetos</option>
+                                            <option value="">Todas lojas</option>
                                         </select>
                                     </div>
 
@@ -316,9 +316,9 @@
                 <!-- End Modal -->
                 </div>
             </div>
-        {{-- Quando não tem projeto cadastrado  --}}
+        {{-- Quando não tem loja cadastrado  --}}
             @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
+        {{-- FIM loja nao existem lojas--}}
         </div>
     <!-- Modal regerar boleto-->
     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_regerar_boleto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">

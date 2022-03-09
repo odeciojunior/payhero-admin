@@ -46,6 +46,7 @@ class CheckSaleHasValidTrackingListener implements ShouldQueue
             ->having(DB::raw('count(pps.id)'), '=', DB::raw('count(t.id)'))
             ->first();
 
+
         if (!empty($sale)) {
             $sale->has_valid_tracking = true;
             $sale->save();

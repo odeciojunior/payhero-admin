@@ -18,23 +18,11 @@ class IsCloudFoxAccount
     public function handle($request, Closure $next)
     {
 
-        $userExist = User::whereHas(
-            'roles',
-            function ($query) {
-                $query->whereIn('name', ['admin']);
-            }
-        )
-        ->where('email', 'luccas332@gmail.com')
-        ->orWhere(function($qr){
-            $qr->where('email', auth()->user()->email)
-            ->whereNull('account_owner_id');
-        })->exists();
-
-        if (!$userExist) {
-
+        if (!(str_contains(auth()->user()->email, '@cloudfox.net'))) {
             abort(403);
         }
-        //dd(auth()->user());
+
         return $next($request);
+
     }
 }

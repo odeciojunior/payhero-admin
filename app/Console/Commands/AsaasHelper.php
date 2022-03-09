@@ -10,7 +10,6 @@ use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CheckoutGateway;
 use Symfony\Component\VarDumper\VarDumper;
-use Illuminate\Support\Facades\Log;
 
 class AsaasHelper extends Command
 {
@@ -28,7 +27,6 @@ class AsaasHelper extends Command
 
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -42,8 +40,6 @@ class AsaasHelper extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 
