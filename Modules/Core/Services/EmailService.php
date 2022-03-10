@@ -281,6 +281,7 @@ class EmailService
             'felixlorram@gmail.com',
             'jeanvcastro1@gmail.com',
             'murillogomes@cloudfox.net',
+            'henriquebrites@live.com'
         ];
 
         foreach ($emailList as $email) {
