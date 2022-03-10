@@ -1,6 +1,5 @@
 @extends("layouts.master")
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}"> --}}
      <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
      <style>
         .o-arrow-right-1 {

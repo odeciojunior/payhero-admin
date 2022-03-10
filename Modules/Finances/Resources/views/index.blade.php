@@ -73,8 +73,6 @@
             <script src="{{ mix('modules/finances/js/statement-index.min.js') }}"></script>
             <script src="{{ mix('modules/finances/js/balances.min.js') }}"></script>
             <script src="{{ mix('modules/finances/js/withdrawals-table.min.js') }}"></script>
-            {{-- <script src="{{ asset('modules/finances/js/withdrawal-custom.js?v=' . versionsFile()) }}"></script> --}}
-            {{-- <script src="{{ asset('modules/finances/js/withdrawal-default.js?v=' . versionsFile()) }}"></script> --}}
             <script src="{{ mix('modules/finances/js/withdrawal-handler.min.js') }}"></script>
             <script src="{{ mix('modules/finances/js/statement.min.js') }}"></script>
         @endpush
