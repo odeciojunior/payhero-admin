@@ -29,8 +29,8 @@ $(document).ready(function () {
                 for (let integration of resp.data) {
                     options += `<option class="menv${integration.id}" value="melhorenvio-${integration.id}">${integration.name} (integração com a API do Melhor Envio)</option>`;
                 }
-                $('#shipping-type').each(function () {
-                    $(this).children('select').append(options);
+                $('.shipping-type select').each(function () {
+                    $(this).append(options);
                 });
             },
             error: resp => {
