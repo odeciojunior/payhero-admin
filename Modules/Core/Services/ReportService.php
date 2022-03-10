@@ -1499,47 +1499,53 @@ class ReportService
             }
 
             $userId = auth()->user()->account_owner_id;
-            $statusId = Sale::STATUS_APPROVED;
-
+            $status = [1, 2, 4, 6, 7, 8, 12, 20, 22];
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $projectId = '';
+            $query = Sale::select(DB::raw('sales.cupom_code as coupon, COUNT(*) as amount'))
+            ->where('sales.owner_id', $userId)
+            ->whereIn('status', $status)
+            ->where('sales.cupom_code', '<>', '')
+            ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
+
             if (!empty($filters["project"])) {
-                $projectId = 'AND project_id = ' . Hashids::decode($filters["project"]);
+                $query->where('project_id', Hashids::decode($filters["project"]));
             }
 
-            $query = 'SELECT sales.cupom_code as coupon, COUNT(*) as amount FROM sales
-            WHERE sales.cupom_code <> "" AND sales.owner_id = '.$userId.'
-            AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
-            '.$projectId.'
-            GROUP BY sales.id ORDER BY amount DESC LIMIT 4';
-            $dbResults = DB::select($query);
+            $coupons = $query
+            ->groupBy('sales.cupom_code')
+            ->orderByDesc('amount')
+            ->limit(4)
+            ->get();
 
             $total = 0;
-            foreach($dbResults as $result)
+            foreach($coupons as $coupon)
             {
-                $total += $result->amount;
+                $total += $coupon->amount;
             }
 
             $index = 0;
-            foreach($dbResults as $result)
+            foreach($coupons as $coupon)
             {
-                $result->percentage = round(number_format(($result->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
-                if ($index < 8) {
-                    $result->color = $this->getColors($index);
-                    $result->hexadecimal = $this->getColors($index, true);
-                } else {
-                    $result->color = 'grey';
-                }
+                $coupon->percentage = round(number_format(($coupon->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
+                $coupon->color = $this->getColors($index);
+                $coupon->hexadecimal = $this->getColors($index, true);
 
                 $index++;
             }
 
-            array_push($dbResults, (object) [
+            $couponsArray = $coupons->toArray();
+
+            foreach($couponsArray as $key => $coupon)
+            {
+                unset($couponsArray[$key]['id_code']);
+            }
+
+            array_push($couponsArray, [
                 'total' => $total
             ]);
 
-            return $dbResults;
+            return $couponsArray;
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -1561,16 +1567,51 @@ class ReportService
             // ->get()->toArray();
 
         } catch(Exception $e) {
-
+            return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 
-    public function getResumeOrigins()
+    public function getResumeOrigins($filters)
     {
         try {
+            $userId = auth()->user()->account_owner_id;
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
+            $query = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
+            ->leftJoin('transactions as transaction', function ($join) use ($userId) {
+                $join->on('transaction.sale_id', '=', 'sales.id');
+                $join->where('transaction.user_id', $userId);
+            })
+            ->leftJoin('checkouts as checkout', function ($join) {
+                $join->on('checkout.id', '=', 'sales.checkout_id');
+            })
+            ->where('sales.status', Sale::STATUS_APPROVED)
+            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+            ->whereNotIn('checkout.'.$filters['origin'], ['', 'null'])
+            ->whereNotNull('checkout.'.$filters['origin'])
+            ->groupBy('checkout.'.$filters['origin'])
+            ->orderBy('sales_amount', 'DESC');
+
+            if (!empty($filters['project_id'])) {
+                $affiliate = Affiliate::where([
+                    ['user_id', $userId],
+                    ['project_id', $filters['project_id']],
+                ])->first();
+
+                $query->where('sales.project_id', current(Hashids::decode($filters['project_id'])));
+
+                if (!empty($affiliate)) {
+                    $query->where('sales.affiliate_id', $affiliate->id);
+                }
+            }
+
+            dd($query->toSql());
+
+            $orders = $query->get();
+
+            return $orders;
         } catch(Exception $e) {
-
+            return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 }

@@ -909,4 +909,37 @@ class ReportsApiController extends Controller
             'data' => $coupons
         ]);
     }
+
+    function getResumeRegions(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $saleService = new ReportService();
+        $regions = $saleService->getResumeCoupons($data);
+
+        return response()->json([
+            'data' => $regions
+        ]);
+    }
+
+    function getResumeOrigins(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'origin' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $saleService = new ReportService();
+        $orders = $saleService->getResumeOrigins($data);
+
+        return response()->json([
+            'data' => $orders
+        ]);
+    }
 }
