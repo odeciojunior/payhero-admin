@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=' . uniqid()) !!}">
     @endpush
 
+    
     <div class="page mb-0">
         <div style="display: none" class="page-header container">
             <div class="row">
@@ -140,7 +141,9 @@
                                                                 </em>
                                                             </div>
                                                         </header>
-                                                        <div class="new-graph graph"></div>
+                                                        <div style="height: 159px;">
+                                                            <canvas id="comission-graph" class="new-graph graph"></canvas>
+                                                        </div>
                                                         
                                                     </div>
 												</div>
