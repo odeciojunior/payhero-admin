@@ -55,7 +55,7 @@ class BoletoService
             )
                 ->with('customer', 'plansSales.plan.products')
                 ->chunk(
-                    100,
+                    500,
                     function ($boletoDueToday) use (
                         $projectModel,
                         $domainModel,
@@ -254,7 +254,7 @@ class BoletoService
                     ]
                 )
                 ->chunk(
-                    100,
+                    500,
                     function ($boletos) use (
                         $checkoutModel,
                         $saleService,
@@ -430,7 +430,7 @@ class BoletoService
                     ]
                 )
                 ->chunk(
-                    100,
+                    500,
                     function ($boletos) use (
                         $checkoutModel,
                         $saleService,

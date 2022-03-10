@@ -161,7 +161,7 @@ class CartRecoveryService
                                       ], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date],
                                   ])
                           ->with('project.checkoutConfig', 'project.users', 'checkoutPlans.plan.productsPlans.product')
-                          ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
+                          ->chunk(500, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               foreach ($abandonedCarts as $abandonedCart) {
                                   try {
 
