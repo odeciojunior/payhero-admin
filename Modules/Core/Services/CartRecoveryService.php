@@ -41,7 +41,7 @@ class CartRecoveryService
                                       ], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd],
                                   ])
                           ->with('project.checkoutConfig', 'project.users', 'checkoutPlans.plan.productsPlans.product')
-                          ->chunk(100, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
+                          ->chunk(400, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
                               try {
                                   foreach ($abandonedCarts as $abandonedCart) {
                                       $products = [];
