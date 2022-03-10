@@ -1,6 +1,8 @@
 $(function () {
     
     
+
+
     loadingOnScreen();
     newFinanceGraph();
     distributionGraph();
@@ -46,6 +48,7 @@ $(function () {
                             $("#cashback").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
                         }                    
                     } else {
+                        $('.graph-cashback').remove();
                         $("#cashback").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
                         $('.new-graph-cashback').next('.no-graph').remove();
                         $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
@@ -93,6 +96,7 @@ $(function () {
                             $("#pending").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
                         }
                     } else {
+                        $('.graph-pending').remove();
                         $("#pending").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
                         $('.new-graph-pending').next('.no-graph').remove();
                         $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
@@ -136,15 +140,23 @@ $(function () {
                         if(response.data !== '0,00') {
                             $('.new-graph').html('<div class=graph-comission></div>');
                             $(".new-graph").next('.no-graph').remove();
-                            newGraph();
+                            let series = [120, 90, 17, 998, 5];                            
+                            
+                            graphComission(series);
+                            $('#graph-comission').removeClass('invisible');
+                            $('#graph-comission').addClass('visible');
+                            
                         } else {
-                            $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
+                            $('#graph-comission').addClass('invisible');
+                            $('#graph-comission').after('<div class=no-graph>Não há dados suficientes</div>');
                             $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
+                            
                         }
                     } else {
+                        $('#graph-comission').remove();
                         $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
-                        $('.new-graph').next('.no-graph').remove();
                         $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
+                        
                     }
                     $('#card-comission .ske-load').hide();
                 }
@@ -184,6 +196,7 @@ $(function () {
                         newGraphSell();
                         
                     } else {
+                        $('.graph-sell').remove();
                         $("#sales").html('0');
                         $(".new-graph-sell").next('.no-graph').remove();
                         $('.new-graph-sell').after('<div class=no-graph>Não há dados suficientes</div>');
@@ -975,13 +988,14 @@ $(function () {
     );
 
     // new graphs
-    function newGraph() {
+    function newGraph(series) {
         new Chartist.Line('.graph-comission', {
             labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
             series: [
-              [120, 90, 480, 370, 65, 60, 550, 55, 5],
+              series
             ]
-          }, {
+          },
+          {
             fullWidth: true,
             showArea: true,
             chartPadding: 0,
@@ -994,9 +1008,15 @@ $(function () {
               showLabel: false,
               offset: 0,
               showGrid: false
-            }
-          });
+            },
+        plugins: [
+            Chartist.plugins.tooltip()
+        ]
+          }
+        );      
+        
     }
+    
     function newGraphSell() {
         new Chartist.Line('.graph-sell', {
             labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
@@ -1164,5 +1184,69 @@ $(function () {
         });
     }
 
+
+    function graphComission(series) {
+       const titleTooltip = (tooltipItems) => {
+            return '';
+        }   
+    
+        const legendMargin = {
+            id: 'legendMargin',
+            beforeInit(chart, legend, options) {
+                const fitValue = chart.legend.fit;
+                chart.legend.fit = function () {  
+                    fitValue.bind(chart.legend)();
+                    return this.height += 20;
+                }
+            }
+        };
+    
+        const ctx = document.getElementById('comission-graph').getContext('2d');
+        var gradient = ctx.createLinearGradient(0, 0, 0, 450);
+        gradient.addColorStop(0, 'rgba(76, 152,242, 0.23)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+            const myChart = new Chart(ctx, {
+                plugins: [legendMargin],
+                type: 'line',
+                data: {
+                    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                    datasets: [
+                        {
+                            label: 'Legenda',
+                            data: series,
+                            color:'#636363',
+                            backgroundColor: gradient,
+                            borderColor: "#2E85EC",
+                            borderWidth: 4,
+                            fill: true,
+                            borderRadius: 4,
+                            barThickness: 30,
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {display: false},
+                        title: {display: false},
+                    },
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: false,
+                        },
+                        y: {
+                            display: false,
+                        },
+                    },
+                    pointBackgroundColor:"#2E85EC",
+                    radius: 3,
+                    interaction: {
+                      intersect: false,
+                    }
+                  },
+            });
+    }
 
 });
