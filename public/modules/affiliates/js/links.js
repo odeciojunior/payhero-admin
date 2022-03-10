@@ -239,7 +239,7 @@ $(function () {
                             <tr class='text-center'>
                                 <td colspan='11' style='height: 70px; vertical-align: middle;'>
                                     <div class='d-flex justify-content-center align-items-center'>
-                                        <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                        <img src='/modules/global/img/empty-state-table.svg' style='margin-right: 60px;'>
                                         <div class='text-left'>
                                             <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum link configurado</h1>
                                             <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro link para poder<br>gerenciá-los nesse painel.</p>
@@ -260,7 +260,7 @@ $(function () {
 
                     if (response.data[0].document_status == 'approved') {
                         if (response.data[0].status_affiliate == 2) {
-                            $("#data-table-link").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Sua afiliação ao projeto foi desativada</td></tr>");
+                            $("#data-table-link").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Sua afiliação a loja foi desativada</td></tr>");
                             $('#table-links').addClass('table-striped');
                         } else {
                             $.each(response.data, function (index, value) {

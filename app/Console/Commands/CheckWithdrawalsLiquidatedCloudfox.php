@@ -8,7 +8,6 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\TransactionCloudfox;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 
@@ -25,8 +24,6 @@ class CheckWithdrawalsLiquidatedCloudfox extends Command
 
     public function handle()
     {
-
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
             $transactionsCloudfox = TransactionCloudfox::with('sale', 'company')
@@ -80,8 +77,6 @@ class CheckWithdrawalsLiquidatedCloudfox extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }

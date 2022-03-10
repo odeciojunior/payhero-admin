@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\CommandMonitorTimeException;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
@@ -10,7 +9,6 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
-use Illuminate\Support\Facades\Log;
 
 class CheckUpdateCompanyGetnet extends Command
 {
@@ -40,8 +38,6 @@ class CheckUpdateCompanyGetnet extends Command
 
     public function handle()
     {
-
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
             $companiesCredencial = GatewaysCompaniesCredential::where('gateway_id',Gateway::GETNET_PRODUCTION_ID)->where('gateway_status', GatewaysCompaniesCredential::GATEWAY_STATUS_REVIEW)->get();
@@ -93,8 +89,6 @@ class CheckUpdateCompanyGetnet extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }

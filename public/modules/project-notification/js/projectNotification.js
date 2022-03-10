@@ -167,7 +167,6 @@ $(function () {
 
                     $('#modal-detail-project-notification .p_text_message').html(response.data.message_html);
                     $('#modal-detail-project-notification .p_project_name').html(response.data.project_name);
-                    $('#modal-detail-project-notification .p_project_contact').html(response.data.project_contact);
                     $('#modal-detail-project-notification .p_text_notification').html(response.data.title);
                     if (response.data.project_image != '') {
                         $('#modal-detail-project-notification .p_image_project').attr('src', response.data.project_image);
@@ -271,7 +270,7 @@ $(function () {
                         <tr class='text-center'>
                             <td colspan='8' style='height: 70px; vertical-align: middle;'>
                                 <div class='d-flex justify-content-center align-items-center'>
-                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <img src='/modules/global/img/empty-state-table.svg' style='margin-right: 60px;'>
                                     <div class='text-left'>
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhuma notificação configurada</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre a sua primeiro notificação para poder

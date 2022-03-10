@@ -179,16 +179,31 @@
                                     </div>
                                     {{-- INPUT CODE PIXEL --}}
                                     <div class="form-group col-6">
-                                        <label for="code-pixel" class="font-text">Código</label>
+                                        <label id="" for="code-pixel" class="font-text">Código</label>
                                         <div class="input-group">
-                                        <span class='input-group-text' id='input-code-pixel'
-                                              style='background:#f3f3f3;display:none'>
-                                        </span>
+                                            <span class='input-group-text' id='input-code-pixel'
+                                                  style='background:#f3f3f3;display:none'>
+                                            </span>
                                             <input type="text"
                                                    class="form-control pixel-code"
                                                    name="code"
                                                    id="code-pixel"
                                                    placeholder="52342343245553"
+                                                   maxlength="255">
+                                        </div>
+                                    </div>
+                                    {{-- INPUT CONVERSIONAL LABEL --}}
+                                    <div id="conversional-pixel" class="form-group col-6" style="display: none">
+                                        <label id="" for="conversional-pixel-code" class="font-text">Rótulo de conversão</label>
+                                        <div class="input-group">
+                                            <span class='input-group-text' id='input-conversional-pixel'
+                                                  style='background:#f3f3f3;'>/
+                                            </span>
+                                            <input type="text"
+                                                   class="form-control conversional-code"
+                                                   name="conversional"
+                                                   id="conversional-pixel-code"
+                                                   placeholder="AN7162ASNSG"
                                                    maxlength="255">
                                         </div>
                                     </div>
@@ -272,16 +287,10 @@
             </div>
         </div>
 
-        <div class="modal-footer">
-            <div class="row">
-                <div class="col-4"></div>
-                <div class="col-4 text-center">
-                    <button type="button" class="btn btn-success" id="btn-store-pixel"
-                            style="padding: 15px 50px;">Confirmar
-                    </button>
-                </div>
-                <div class="col-4"></div>
-            </div>
+        <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-success" id="btn-store-pixel"
+                    style="padding: 15px 50px;">Confirmar
+            </button>
         </div>
     </div>
 </div>

@@ -9,7 +9,6 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\ActiveCampaignService;
-use Illuminate\Support\Facades\Log;
 
 class UpdateListsFoxActiveCampaign extends Command
 {
@@ -31,8 +30,6 @@ class UpdateListsFoxActiveCampaign extends Command
 
     public function handle()
     {
-
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
             // 2 - Usuários Ativos na plataforma
@@ -58,8 +55,6 @@ class UpdateListsFoxActiveCampaign extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 

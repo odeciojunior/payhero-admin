@@ -42,9 +42,9 @@
                                     <div class="row mb-15">
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
-                                                <label for="type-products">Projeto</label>
+                                                <label for="type-products">Lojas</label>
                                                 <select class="sirius-select" id="project-affiliate" data-name="projects">
-                                                    <option value="0">Todos projetos</option>
+                                                    <option value="0">Todas lojas</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -66,7 +66,7 @@
                                             <tr>
                                                 <td class="table-title">Nome</td>
                                                 {{-- <td class="table-title">Email</td> --}}
-                                                <td class="table-title">Projeto</td>
+                                                <td class="table-title">Loja</td>
                                                 <td class="table-title">Data afiliação</td>
                                                 <td class="text-center table-title">Porcentagem</td>
                                                 <td class="text-center table-title">Status</td>
@@ -95,9 +95,9 @@
                                     <div class="row mb-15">
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
-                                                <label for="type-products">Projeto</label>
+                                                <label for="type-products">Lojas</label>
                                                 <select class="sirius-select" id="project-affiliate-request" data-name="projects">
-                                                    <option value="0">Todos projetos</option>
+                                                    <option value="0">Todas lojas</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -118,7 +118,7 @@
                                             <tr>
                                                 <td class="table-title">Nome</td>
                                                 <td class="table-title">Email</td>
-                                                <td class="table-title">Projeto</td>
+                                                <td class="table-title">Loja</td>
                                                 <td class="table-title">Data</td>
                                                 {{-- <td class="table-title" class="text-center">Status</td> --}}
                                                 <td class="table-title" class="text-center">Opções</td>
@@ -140,7 +140,7 @@
                 </div>
             </div>
         </div>
-        {{-- FIM projeto nao existem projetos--}}
+        {{-- FIM loja nao existem lojas--}}
         {{-- MODAL --}}
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-affiliate" aria-hidden="true" role="dialog" tabindex="-1">
             <div class="modal-dialog  modal-dialog-centered  modal-simple">
@@ -218,9 +218,9 @@
         </div>
         {{-- END MODAL --}}
 
-        {{-- Quando não tem projeto cadastrado  --}}
+        {{-- Quando não tem loja cadastrado  --}}
             @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
+        {{-- FIM loja nao existem lojas--}}
     </div>
     @push('scripts')
         <script src="{{asset('modules/affiliates/js/projectaffiliates.js?v=' . random_int(100, 10000)) }}"></script>

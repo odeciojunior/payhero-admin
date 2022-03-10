@@ -4,7 +4,6 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Affiliate;
@@ -23,7 +22,6 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Transfers\Services\GetNetStatementService;
@@ -393,7 +391,7 @@ class SaleService
         //valor do produtor
         $value = $userTransaction->value??0;
         $cashbackValue = $sale->cashback->value ?? 0;
-        $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
+        $comission = 'R$ ' . number_format($value/100, 2, ',', '.');
 
         //valor do afiliado
         $affiliateComission = '';
@@ -913,21 +911,16 @@ class SaleService
 
         $newTotalValueWithoutInterest = $newTotalvalue;
 
-        $userProject = UserProject::with('company')->where(
-            [
-                ['type_enum', (new UserProject())->present()->getTypeEnum('producer')],
-                ['project_id', $sale->project->id],
-            ]
-        )->first();
-
-        $user = $userProject->user;
-        $company = $userProject->company;
+        $project = $sale->project;
+        $project->loadMissing('checkoutConfig');
+        $checkoutConfig = $project->checkoutConfig;
+        $company = $checkoutConfig->company;
 
         $installmentFreeTaxValue = 0;
         $interestValue = 0;
 
         $installmentSelected = $sale->installments_amount;
-        $freeInstallments = $sale->project->installments_interest_free;
+        $freeInstallments = $checkoutConfig->interest_free_installments;
         $installmentValueTax = intval(($newTotalvalue / 100) * $company->installment_tax);
 
         if ($installmentSelected == 1) {
@@ -942,7 +935,7 @@ class SaleService
             }
         }
 
-        if ($sale->project->installments_interest_free > 1 && $sale->installments_amount <= $sale->project->installments_interest_free) {
+        if ($checkoutConfig->interest_free_installments > 1 && $sale->installments_amount <= $checkoutConfig->interest_free_installments) {
             $installmentFreeTaxValue = $totalValueWithTax - $newTotalvalue;
         } else {
             $interestValue = $totalValueWithTax - $newTotalvalue;
@@ -972,7 +965,7 @@ class SaleService
             ',',
             [
                 $transactionModel->present()->getStatusEnum('transfered'),
-                $transactionModel->present()->getStatusEnum('paid'),                
+                $transactionModel->present()->getStatusEnum('paid'),
             ]
         );
 
@@ -1363,9 +1356,20 @@ class SaleService
 
     public function getCreditCardApprovedSalesInPeriod(User $user, Carbon $startDate, Carbon $endDate)
     {
-        $gatewayIds = [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID];
+        $gatewayIds = [
+            Gateway::ASAAS_PRODUCTION_ID,
+            Gateway::GETNET_PRODUCTION_ID,
+            Gateway::SAFE2PAY_PRODUCTION_ID
+        ];
         if(!FoxUtils::isProduction()){
-            $gatewayIds = array_merge($gatewayIds, [Gateway::ASAAS_SANDBOX_ID, Gateway::GETNET_SANDBOX_ID]);
+            $gatewayIds = array_merge(
+                $gatewayIds,
+                [
+                    Gateway::ASAAS_SANDBOX_ID,
+                    Gateway::GETNET_SANDBOX_ID,
+                    Gateway::SAFE2PAY_SANDBOX_ID,
+                ]
+            );
         }
         return Sale::whereIn('gateway_id', $gatewayIds)
             ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
@@ -1436,8 +1440,9 @@ class SaleService
         }
     }
 
-    public function getGatewayIdsByFilter($nameGateway){
-        switch($nameGateway){
+    public function getGatewayIdsByFilter($nameGateway)
+    {
+        switch ($nameGateway) {
             case 'Asaas';
                 return [
                     Gateway::ASAAS_PRODUCTION_ID,
@@ -1458,13 +1463,11 @@ class SaleService
                     Gateway::CIELO_PRODUCTION_ID,
                     Gateway::CIELO_SANDBOX_ID
                 ];
-            break;
             case 'Vega':
                 return [
                     Gateway::SAFE2PAY_PRODUCTION_ID,
                     Gateway::SAFE2PAY_SANDBOX_ID
                 ];
-            break;
         }
         return [];
     }

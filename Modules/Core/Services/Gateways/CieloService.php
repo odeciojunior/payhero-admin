@@ -70,7 +70,7 @@ class CieloService implements Statement
                                     ->orWhere(function($query) {
                                         $query->where('gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('created_at', '<', '2021-09');
                                     });
-                            })                            
+                            })
                             ->whereDoesntHave('blockReasonSale',function ($query) {
                                 $query->where('status', BlockReasonSale::STATUS_BLOCKED);
                             })
@@ -86,9 +86,8 @@ class CieloService implements Statement
         return Transaction::where('company_id', $this->company->id)
                             ->whereIn('gateway_id', $this->gatewayIds)
                             ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-                            ->whereHas('blockReasonSale',function ($query) {
-                                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
+                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
                             ->sum('value');
     }
 
@@ -101,9 +100,8 @@ class CieloService implements Statement
         return Transaction::where('company_id', $this->company->id)
                             ->whereIn('gateway_id', $this->gatewayIds)
                             ->where('status_enum', Transaction::STATUS_PAID)
-                            ->whereHas('blockReasonSale',function ($query) {
-                                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
+                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
                             ->sum('value');
     }
 
@@ -117,7 +115,7 @@ class CieloService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $availableBalance += $pendingBalance;        
+        $availableBalance += $pendingBalance;
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
@@ -136,7 +134,7 @@ class CieloService implements Statement
     public function withdrawalValueIsValid($withdrawalValue): bool
     {
         $availableBalance = $this->company->cielo_balance;
-        
+
         if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance) {
             return false;
         }

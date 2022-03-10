@@ -299,12 +299,12 @@ select, .select-pad {
 }
 
 input:active, input:hover {
-    outline: none !important;
+    outline: 1px solid #2bb2ff;
 }
 
 
 select:active, select:hover {
-    outline: none !important;
+    outline: 1px solid #2bb2ff;
 }
 
 
@@ -437,6 +437,16 @@ input[type=radio] {
     -o-transition: all 0.3s;
     transition: all 0.3s;
 }
+
+.nav-link:hover > svg {
+    filter: invert(33%) sepia(64%) saturate(1981%) hue-rotate(199deg) brightness(102%) contrast(107%);
+}
+
+.nav-link.active > svg {
+    filter: invert(33%) sepia(64%) saturate(1981%) hue-rotate(199deg) brightness(102%) contrast(107%);
+}
+
+
 
 .nav-tabs-line .nav-link {
     padding: .715rem 1.1rem;
@@ -745,7 +755,7 @@ input[type=radio] {
 }
 
 .table-striped > tbody > tr:nth-child(2n+2) > td, .table-striped > tbody > tr:nth-child(2n+2) > th {
-    background-color: #F8FBFF;
+    background-color: #FBFBFB !important;
 }
 
 .table-striped tbody tr:nth-of-type(2n+1) {

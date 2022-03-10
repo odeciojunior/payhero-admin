@@ -10,7 +10,8 @@ $(function () {
     //comportamento da tela
     var cuponType = 0;
     $('.coupon-value').mask('00%', {reverse: true});
-    $(document).on('change', '.coupon-type', function () {
+
+    $(document).on('change', '#edit-coupon-type', function (event) {
         if ($(this).val() == 1) {
             cuponType = 1;
             $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
@@ -19,6 +20,16 @@ $(function () {
             $('.coupon-value').mask('00%', {reverse: true});
         }
     });
+    $(document).on('change', '#create-coupon-type', function (event) {
+        if ($(this).val() == 1) {
+            cuponType = 1;
+            $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
+        } else {
+            cuponType = 0;
+            $('.coupon-value').mask('00%', {reverse: true});
+        }
+    });
+
     $(".rule-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
 
     $('.rule-value').on('blur', function () {
@@ -95,17 +106,17 @@ $(function () {
                 $('#modal-edit-coupon .rule-value').val(response.rule_value);
                 $('#modal-edit-coupon .rule-value').trigger('input');
                 if (response.type == 1) {
-                    $('#modal-edit-coupon .coupon-type').prop("selectedIndex", 1).change();
+                    $('#edit-coupon-type').prop("selectedIndex", 1).change();
                 } else {
-                    $('#modal-edit-coupon .coupon-type').prop("selectedIndex", 0).change();
+                    $('#edit-coupon-type').prop("selectedIndex", 0).change();
                 }
 
                 $('#modal-edit-coupon .coupon-code').val(response.code);
 
                 if (response.status == 1) {
-                    $('#modal-edit-coupon .coupon-status').prop("selectedIndex", 0).change();
+                    $('#edit-coupon-status').prop("selectedIndex", 0).change();
                 } else {
-                    $('#modal-edit-coupon .coupon-status').prop("selectedIndex", 1).change();
+                    $('#edit-coupon-status').prop("selectedIndex", 1).change();
                 }
                 $('#modal-edit-coupon').modal('show');
             }
@@ -238,7 +249,7 @@ $(function () {
                         <tr class='text-center'>
                             <td colspan='8' style='height: 70px; vertical-align: middle;'>
                                 <div class='d-flex justify-content-center align-items-center'>
-                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <img src='/modules/global/img/empty-state-table.svg' style='margin-right: 60px;'>
                                     <div class='text-left'>
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum cupom configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro cupom para poder

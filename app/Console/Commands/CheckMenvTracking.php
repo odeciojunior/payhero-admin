@@ -9,7 +9,6 @@ use Modules\Core\Entities\MelhorenvioIntegration;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Events\CheckSaleHasValidTrackingEvent;
 use Modules\Core\Services\MelhorenvioService;
-use Illuminate\Support\Facades\Log;
 
 class CheckMenvTracking extends Command
 {
@@ -19,7 +18,6 @@ class CheckMenvTracking extends Command
 
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -97,8 +95,6 @@ class CheckMenvTracking extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }
