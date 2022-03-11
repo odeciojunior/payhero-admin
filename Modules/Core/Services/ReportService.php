@@ -20,6 +20,7 @@ use Modules\Core\Entities\DiscountCoupon;
 use Modules\Core\Entities\Gateway;
 use Modules\Reports\Transformers\SalesByOriginResource;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\UserProject;
 
 class ReportService
 {
@@ -1575,6 +1576,10 @@ class ReportService
                 if (!empty($affiliate)) {
                     $query->where('sales.affiliate_id', $affiliate->id);
                 }
+            } else {
+                $user_projects = UserProject::where('user_id', $userId)->get()->pluck('id');
+
+                $query->whereIn('checkouts.project_id', $user_projects);
             }
 
             $regions = $query->get();
