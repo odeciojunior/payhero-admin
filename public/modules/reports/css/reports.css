@@ -1595,5 +1595,18 @@ h4.number{
     margin: 0px 0 -8px -7px; 
     display: none;
 } 
-#comission-graph.invisible { display: none; } 
+#comission-graph.invisible { display: none !important; } 
 #comission-graph.visible { display: block; } 
+#comission-graph + .no-graph { height: 110px; }
+
+#card-comission .new-graph.visible { height: 159px; }
+
+#card-regions .new-graph-regions.visible {
+    width: 180px;
+    height: 200px;
+}
+#card-regions .no-graph {
+    height: 215px;
+    background-position: center;
+}
+#card-regions .ske-load { top: 55%; }

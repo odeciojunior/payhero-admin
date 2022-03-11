@@ -141,10 +141,7 @@
                                                                 </em>
                                                             </div>
                                                         </header>
-                                                        <div style="height: 159px;">
-                                                            <canvas id="comission-graph" class="new-graph graph"></canvas>
-                                                        </div>
-                                                        
+                                                        <div class="new-graph graph"></div>
                                                     </div>
 												</div>
                                                 
@@ -278,7 +275,7 @@
 																		
 																		<div class="box-payment-option option">
 																			<div class="col-payment grey" id='percent-credit-card'>0</div>
-																			<div class="col-payment col-graph"><div class="bar">barrinha</div></div>
+																			<div class="col-payment col-graph"><div class="bar">-</div></div>
 																			<div class="col-payment end"><span class="money-td green bold grey" id='credit-card-value'></span></div>
 																		</div>
 																	</div>
@@ -314,7 +311,7 @@
 																				0
 																			</div>
 																			<div class="col-payment col-graph">
-																				<div class="bar">barrinha</div>
+																				<div class="bar">-</div>
 																			</div>
 																			<div class="col-payment end">
 																				<span class="money-td green grey bold" id='pix-value'></span>
@@ -349,7 +346,7 @@
 																				0
 																			</div>
 																			<div class="col-payment col-graph">
-																				<div class="bar">barrinha</div>
+																				<div class="bar">-</div>
 																			</div>
 																			<div class="col-payment end">
 																				<span class="money-td green bold grey" id='boleto-value'></span>
@@ -442,28 +439,41 @@
                                                     </div>
 												</div>
 											</div>
-											<div class="card">
+											<div class="card" id="card-regions">
 												<div class="card-body">
+                                                    <div class="ske-load">
+                                                        <div class="px-20 py-0">
+                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                                        </div>
+                                                        <div class="px-20 py-0">
+                                                            <div class="row align-items-center mx-0 py-10">
+                                                                <div class="skeleton skeleton-circle"></div>
+                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                            </div>
+                                                            <div class="skeleton skeleton-text"></div>
+                                                        </div>
+                                                    </div>
+
                                                     <header class="container">
                                                         <h6 class="font-size-16 gray-700 grey"> Regiões </h6>
                                                         <!-- <h4 id='qtd-chargeback' class=" font-size-24 bold">0</h4> -->
                                                     </header>
                                                     <footer class="container footer-regions">
-                                                        <section class="">
-                                                            <canvas id="regionsChart" width="180" height="200"></canvas>
+                                                        <section class="new-graph-regions graph">
+                                                            
                                                         </section>
-                                                        <section>
+                                                        <section class="info-regions">
                                                             <ul class="conversion-colors">
-                                                                <li class="blue">60%</li>
+                                                                <!-- <li class="blue">60%</li>
                                                                 <li class="purple">42%</li>
                                                                 <li class="pink">48%</li>
-                                                                <li class="orange">35%</li>
+                                                                <li class="orange">35%</li> -->
                                                             </ul>
                                                         </section>
-                                                        <section class="">
+                                                        <section class="info-regions">
                                                             <ul class="regions-legend">
-                                                                <li class="access"><span></span>Acessos</li>
-                                                                <li class="conversion"><span></span>Conversões</li>
+                                                                <!-- <li class="access"><span></span>Acessos</li>
+                                                                <li class="conversion"><span></span>Conversões</li> -->
                                                             </ul>
                                                         </section>
                                                     </footer>
@@ -963,6 +973,5 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=' . uniqid())}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/regions.js?v=' . uniqid())}}'></script>
 @endpush
 

@@ -1,8 +1,4 @@
 $(function () {
-    
-    
-
-
     loadingOnScreen();
     newFinanceGraph();
     distributionGraph();
@@ -138,23 +134,24 @@ $(function () {
                         $("#comission").html("<span class='currency'>R$ </span>" + value).addClass('visible');
                         
                         if(response.data !== '0,00') {
-                            $('.new-graph').html('<div class=graph-comission></div>');
+                            $('.new-graph').html('<canvas id=comission-graph></canvas>').addClass('visible');
                             $(".new-graph").next('.no-graph').remove();
-                            let series = [120, 90, 17, 998, 5];                            
+
+                            let series = [120, 90, 17, 998, 5];             
                             
                             graphComission(series);
-                            $('#graph-comission').removeClass('invisible');
-                            $('#graph-comission').addClass('visible');
+                            
                             
                         } else {
                             $('#graph-comission').addClass('invisible');
                             $('#graph-comission').after('<div class=no-graph>Não há dados suficientes</div>');
                             $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
-                            
                         }
                     } else {
-                        $('#graph-comission').remove();
+                        $('#comission-graph').remove();
                         $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
+                        $('.new-graph').removeClass('visible');
+                        $('.new-graph').next('.no-graph').remove();
                         $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
                         
                     }
@@ -289,6 +286,7 @@ $(function () {
             },
             beforeSend: function() {
                 currentRequest.abort();
+                $(".data-pie ul li").remove();
                 $('#card-coupons .ske-load').show();
                 $(".new-graph-pie").next('.no-graph').remove();
             },
@@ -312,6 +310,7 @@ $(function () {
                             $.each(response.data, function (i, coupon) {
                                 arr.push(coupon);
                             });
+                            
     
                             for(let i = 0; i < arr.length; i++) {
                                 if(arr[i].amount != undefined) {
@@ -347,17 +346,17 @@ $(function () {
                                 labelOffset: 0,
                             });
                         } else {
+                            $(".data-pie ul li").remove();
                             $("#qtd-dispute").html('0').addClass('visible');
                             $('#card-coupons .value-price').removeClass('invisible');
-                            
                             $('.box-donut').css('height','0');
                             $(".box-donut").next('.no-graph').remove();
                             $('.box-donut').after('<div class=no-graph>Não há dados suficientes</div>');
                         }
                     } else {
+                        $(".data-pie ul li").remove();
                         $("#qtd-dispute").html('0').addClass('visible');
                         $('#card-coupons .value-price').removeClass('invisible');
-                        
                         $('.box-donut').css('height','0');
                         $(".box-donut").next('.no-graph').remove();
                         $('.box-donut').after('<div class=no-graph>Não há dados suficientes</div>');
@@ -429,6 +428,56 @@ $(function () {
         });
     }
 
+    function getRegions() {
+        const currentRequest = $.ajax({
+            type: 'GET',
+            url: "/api/reports/resume/regions?date_range=" + $("input[name='daterange']").val(),
+        });
+
+        return $.ajax({
+            method: "GET",
+            url: "/api/reports/resume/regions?date_range=" + $("input[name='daterange']").val(),
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            beforeSend: function() {
+                currentRequest.abort();
+                $('#card-regions .ske-load').show();
+                $(".new-graph-regions").next('.no-graph').remove();
+            },
+            error: function error(response) {
+                errorAjaxResponse(response);
+            },
+            success: function success(response, status) {                
+
+                if(status !== ''){
+                    if(response.data == ''){
+                        $('.new-graph-regions').html('<canvas id=regionsChart></canvas>').addClass('visible');
+                        $(".new-graph-regions").next('.no-graph').remove();
+                        graphRegions();
+
+                        let percentage = `<li class='blue'>60%</li>`;
+                        let legend = `<li class='conversion'><span></span>Conversões</li>`;
+                        $('.conversion-colors').append(percentage);
+                        $('.regions-legend').append(legend);
+                                                               
+                        
+                    } else {
+                        $('.info-regions li').remove();
+                        $('#regionsChart').remove();
+                        $(".new-graph-regions").next('.no-graph').remove();
+                        $('.new-graph-regions').after('<div class=no-graph>Não há dados suficientes</div>');
+                        $('.new-graph-regions').removeClass('visible');
+                    }
+                    $('#card-regions .ske-load').hide();
+                }
+            }
+        });
+    }
+
+
     // show/hide modal de exportar relatórios
     $(".lk-export").on('click', function(e) {
         e.preventDefault();
@@ -484,6 +533,7 @@ $(function () {
 
     $("#select_projects").on("change", function () {
         updateReports();
+        $(".data-pie ul li").remove();
     });
 
     $("#origin").on("change", function () {
@@ -500,16 +550,9 @@ $(function () {
             getPending(),
             getCashback(),
             getSales(),
-            getCoupons()
-        ).then((comission,payments,products,pending,cashback,sales,coupons) => {
-            // console.log('comission ', comission);
-            // console.log('payments ', payments);
-            // console.log('products ', products[1]);
-            // console.log('pending ', pending[1]);
-            // console.log('cashback ', cashback[1]);
-            // console.log('sales ', sales[1]);
-            // console.log('coupons ', coupons);
-
+            getCoupons(),
+            getRegions()
+        ).then((comission,payments,products,pending,cashback,sales,coupons, regions) => {
             if(comission[1] == "success") {
                 $('#card-comission .ske-load').hide();
             }
@@ -530,6 +573,10 @@ $(function () {
             }
             if(coupons[1] == "success") {
                 $('#card-coupons .ske-load').hide();
+            }
+
+            if(regions[0].data != '') {
+                console.log(regions[0].data);
             }
         });        
     }
@@ -983,39 +1030,12 @@ $(function () {
         function (start, end) {
             startDate = start.format("YYYY-MM-DD");
             endDate = end.format("YYYY-MM-DD");
+            $(".data-pie ul li").remove();
             updateReports();
         }
     );
 
-    // new graphs
-    function newGraph(series) {
-        new Chartist.Line('.graph-comission', {
-            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-            series: [
-              series
-            ]
-          },
-          {
-            fullWidth: true,
-            showArea: true,
-            chartPadding: 0,
-            axisX: {
-              showLabel: false,
-              offset: 0,
-              showGrid: false
-            },
-            axisY: {
-              showLabel: false,
-              offset: 0,
-              showGrid: false
-            },
-        plugins: [
-            Chartist.plugins.tooltip()
-        ]
-          }
-        );      
-        
-    }
+    
     
     function newGraphSell() {
         new Chartist.Line('.graph-sell', {
@@ -1248,5 +1268,85 @@ $(function () {
                   },
             });
     }
+
+   
+    function graphRegions() {
+        
+        const ctx = document.getElementById('regionsChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['SP', 'MG', 'RS', 'PR'],
+                    datasets: [
+                        {
+                            label: '',
+                            data: [60,22,48,35],
+                            color:'#636363',
+                            backgroundColor: [
+                                'rgba(46, 133, 236, 1)',
+                                'rgba(102, 95, 232, 1)',
+                                'rgba(244, 63, 94, 1)',
+                                'rgba(255, 121, 0, 1)',
+                            ],
+                            borderRadius: 4,
+                            barThickness: 30,
+                        }, 
+                        {
+                            label: '',
+                            data: [100,42,58,45],
+                            color:'#636363',
+                            backgroundColor: [
+                                'rgba(46, 133, 236, .2)',
+                                'rgba(102, 95, 232, .2)',
+                                'rgba(244, 63, 94, .2)',
+                                'rgba(255, 121, 0, .2)',
+                            ],
+                            borderRadius: 4,
+                            barThickness: 30,
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {display: false},
+                        title: {display: false},
+                    },
+                    
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: false,
+                        },
+                        y: {
+                            stacked: true,
+                            grid: {
+                                color: '#ECE9F1',
+                                drawBorder: false,
+                                display: false
+                            },
+                            beginAtZero: true,
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                padding: 0,
+                                  stepSize: 100,
+                                font: {
+                                    family: 'Muli',
+                                    size: 12,
+                                },
+                                color: "#636363",
+                                callback: function(value, index){
+                                    return this.getLabelForValue(value);
+                                }
+                            }
+                        }
+                    },
+                }
+            });
+    
+    }
+    
 
 });
