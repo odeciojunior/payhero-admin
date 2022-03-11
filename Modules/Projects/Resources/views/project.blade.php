@@ -443,8 +443,6 @@
                                                 <label class="text-left" for="opt_webhooks" style="margin-right:15px;margin-bottom: 3px; width:346px">
                                                     Sincronizar webhooks com WooCommerce</label>
                                             </div>
-
-                                        </p>
                                     </div>
                                     <div class="modal-footer d-flex align-items-center justify-content-center">
                                         <button id="close-modal" type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">

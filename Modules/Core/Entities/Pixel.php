@@ -23,14 +23,18 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $platform
  * @property bool $status
  * @property string $checkout
- * @property string $purchase_boleto
+ * @property string $send_value_checkout
+ * @property string $basic_data
+ * @property string $delivery
+ * @property string $coupon
+ * @property string $payment_info
  * @property string $purchase_card
+ * @property string $purchase_boleto
+ * @property string $purchase_pix
+ * @property string $upsell
+ * @property string $purchase_upsell
  * @property int $affiliate_id
- * @property string $created_at
- * @property string $updated_at
- * @property string $deleted_at
  * @property Project $project
- * @property int|null $purchase_pix
  * @property int|null $campaign_id
  * @property mixed|null $apply_on_plans
  * @property string|null $purchase_event_name
@@ -41,6 +45,9 @@ use Spatie\Activitylog\Models\Activity;
  * @property-read int|null $activities_count
  * @property-read Affiliate|null $affiliate
  * @property-read string $id_code
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $deleted_at
  * @method static Builder|Pixel newModelQuery()
  * @method static Builder|Pixel newQuery()
  * @method static \Illuminate\Database\Query\Builder|Pixel onlyTrashed()
@@ -103,9 +110,16 @@ class Pixel extends Model
         'platform',
         'status',
         'checkout',
-        'purchase_boleto',
+        'send_value_checkout',
+        'basic_data',
+        'delivery',
+        'coupon',
+        'payment_info',
         'purchase_card',
+        'purchase_boleto',
         'purchase_pix',
+        'upsell',
+        'purchase_upsell',
         'affiliate_id',
         'apply_on_plans',
         'purchase_event_name',
