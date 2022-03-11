@@ -919,7 +919,7 @@ class ReportsApiController extends Controller
         $data = $request->all();
 
         $saleService = new ReportService();
-        $regions = $saleService->getResumeCoupons($data);
+        $regions = $saleService->getResumeRegions($data);
 
         return response()->json([
             'data' => $regions

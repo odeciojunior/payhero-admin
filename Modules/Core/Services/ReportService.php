@@ -1551,24 +1551,75 @@ class ReportService
         }
     }
 
-    public function getResumeRegions()
+    public function getResumeRegions($filters)
     {
         try {
-            $saleModel = new Sale();
-            // ->select(\DB::raw('count(*) as count, HOUR(sales.start_date) as hour, SUM(transaction.value) as value, sales.payment_method'))
-            // ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
-            //     $join->on('transaction.sale_id', '=', 'sales.id');
-            //     $join->whereIn('transaction.company_id', $userCompanies);
-            // })
-            // ->where('sales.owner_id', auth()->user()->account_owner_id)
-            // ->where('sales.project_id', $projectId)
-            // ->whereDate('sales.start_date', $data['startDate'])
-            // ->groupBy('hour', 'sales.payment_method')
-            // ->get()->toArray();
+            $userId = auth()->user()->account_owner_id;
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
+            $query = Checkout::select(
+                DB::raw('ip, COUNT(DISTINCT CASE WHEN status_enum = 1 then id end) as acessed, COUNT(DISTINCT CASE WHEN status_enum = 4 then id end) as finalized')
+            )
+            ->whereIn('checkouts.status_enum', [ Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED])
+            ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+            ->groupBy('checkouts.ip');
+
+            if (!empty($filters['project_id'])) {
+                $affiliate = Affiliate::where([
+                    ['user_id', $userId],
+                    ['project_id', $filters['project_id']],
+                ])->first();
+
+                $query->where('checkouts.project_id', current(Hashids::decode($filters['project_id'])));
+
+                if (!empty($affiliate)) {
+                    $query->where('sales.affiliate_id', $affiliate->id);
+                }
+            }
+
+            $regions = $query->get();
+            foreach($regions as $region)
+            {
+                $region->state = json_decode($this->getRegionByIp($region->ip))->state;
+            }
+
+            $regionsArray = $regions->toArray();
+            foreach($regionsArray as $key => $region)
+            {
+                unset($regionsArray[$key]['id_code']);
+            }
+
+            return $regionsArray;
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
+    }
+
+    public function getRegionByIp($ip)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => "https://geolocation-db.com/json/".$ip,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_POSTFIELDS => "",
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            return response()->json($err);
+        }
+
+        return $response;
     }
 
     public function getResumeOrigins($filters)
@@ -1604,8 +1655,6 @@ class ReportService
                     $query->where('sales.affiliate_id', $affiliate->id);
                 }
             }
-
-            dd($query->toSql());
 
             $orders = $query->get();
 
