@@ -113,7 +113,7 @@
                 <i class="material-icons md-16">close</i>
             </a>
         </div>
-        <div class="modal-body">
+        <div class="modal-body pb-0">
             <div class="row">
                 <form id='form-register-pixel'>
                     @csrf
@@ -234,50 +234,216 @@
                                     </div>
 
                                     <div class='mb-1 col-12'>
-                                        <label>Rodar Pixel:</label>
+                                        <label>Configurar Eventos do Pixel:</label>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="switch-holder">
-                                            <label for="checkout" class='mb-10'>Checkout<br>(venda)</label>
-                                            <br>
-                                            <label class="switch">
-                                                <input type="checkbox" value="" name='checkout'
-                                                       class='checkout' checked>
-                                                <span class="slider round"></span>
-                                            </label>
+
+                                    <div class="row single-event d-none mb-20">
+                                        <select name="single-event" id="single-event" class="sirius-select col-8">
+                                            <option value='checkout' name='checkout' class='checkout' selected>
+                                                Entrou no Checkout - (InitiateCheckout)
+                                            </option>
+                                            <option value='basic_data' name='basic_data' class='basic-data'>
+                                                Informação do cliente - (BasicDataComplete)
+                                            </option>
+                                            <option value='payment_info' name='checkout' class='checkout'>
+                                                Informação de pagamento - (AddPaymentInfo)
+                                            </option>
+                                            <option value='delivery' name='delivery' class='delivery'>
+                                                Informação de endereço - (DeliveryComplete)
+                                            </option>
+                                            <option value='coupon' name='coupon' class='coupon'>
+                                                Cupom - (AddCouponDiscount)
+                                            </option>
+                                            <option value='purchase_card' name='purchase_card' class='purchase-card'>
+                                                Purchase - (Cartão - Purchase)
+                                            </option>
+                                            <option value='purchase_boleto' name='purchase_boleto' class='purchase-boleto'>
+                                                Purchase - (Boleto - Purchase)
+                                            </option>
+                                            <option value='purchase_pix' name='purchase_pix' class='purchase-pix'>
+                                                Purchase - (Pix - Purchase)
+                                            </option>
+                                            <option value='upsell' name='upsell' class='upsell'>
+                                                Entrou no Upsell - (InitiateUpsell)
+                                            </option>
+                                            <option value='purchase-upsell' name='purchase-upsell' class='purchase-upsell'>
+                                                Purchase - (Upsell - UpsellPurchase)
+                                            </option>
+                                        </select>
+                                        <div class="col-4">
+                                            <div class="switch-holder flex-column align-items-start">
+                                                <label for="send_value" class='mb-10'>
+                                                    <span>Disparar valor com evento</span>
+                                                </label>
+                                                <label class="switch">
+                                                    <input id="send_value" type="checkbox" value="" name='send_value' class='send-value'>
+                                                    <span id="send_value_switch" class="slider round"></span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="switch-holder">
-                                            <label for="purchase_card">Purchase<br>(cartão)</label>
-                                            <br>
-                                            <label class='switch'>
-                                                <input type="checkbox" value="" name='purchase_card'
-                                                       class='purchase-card'
-                                                       checked>
-                                                <span class='slider round'></span>
-                                            </label>
+
+                                    <div class="multiple-event row mx-0 mb-20">
+                                        <div class="col-3">
+                                            <div class="switch-holder">
+                                                <label for="checkout" class='mb-10'>Checkout<br>(venda)</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" value="" name='checkout'
+                                                           class='checkout' checked>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="switch-holder">
-                                            <label for="purchase_boleto">Purchase<br>(boleto)</label>
-                                            <label class='switch'>
-                                                <input type="checkbox" value="" name='purchase_boleto'
-                                                       class='purchase-boleto' checked>
-                                                <span class='slider round'></span>
-                                            </label>
+                                        <div class="col-3">
+                                            <div class="switch-holder">
+                                                <label for="purchase_card">Purchase<br>(cartão)</label>
+                                                <br>
+                                                <label class='switch'>
+                                                    <input type="checkbox" value="" name='purchase_card'
+                                                           class='purchase-card'
+                                                           checked>
+                                                    <span class='slider round'></span>
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="switch-holder">
-                                            <label for="pix">Purchase<br>(pix)</label>
-                                            <label class='switch'>
-                                                <input type="checkbox" value="" name='purchase_pix'
-                                                       class='purchase-pix' checked>
-                                                <span class='slider round'></span>
-                                            </label>
+                                        <div class="col-3">
+                                            <div class="switch-holder">
+                                                <label for="purchase_boleto">Purchase<br>(boleto)</label>
+                                                <label class='switch'>
+                                                    <input type="checkbox" value="" name='purchase_boleto'
+                                                           class='purchase-boleto' checked>
+                                                    <span class='slider round'></span>
+                                                </label>
+                                            </div>
                                         </div>
+                                        <div class="col-3">
+                                            <div class="switch-holder">
+                                                <label for="pix">Purchase<br>(pix)</label>
+                                                <label class='switch'>
+                                                    <input type="checkbox" value="" name='purchase_pix'
+                                                           class='purchase-pix' checked>
+                                                    <span class='slider round'></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+{{--                                        <div class="row mx-0 justify-content-between mb-20">--}}
+{{--                                            <div class="row col-6">--}}
+{{--                                                <div class="col-12">--}}
+{{--                                                    <div class="switch-holder">--}}
+{{--                                                        <label for="checkout" class='mb-10'>--}}
+{{--                                                            <span>Entrou no Checkout</span>--}}
+{{--                                                            <br>(InitiateCheckout)</label>--}}
+{{--                                                        <label class="switch">--}}
+{{--                                                            <input type="checkbox" value="" name='checkout' class='checkout' checked>--}}
+{{--                                                            <span class="slider round"></span>--}}
+{{--                                                        </label>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="col-12">--}}
+{{--                                                    <div class="switch-holder">--}}
+{{--                                                        <label for="checkout" class='mb-10'>--}}
+{{--                                                            <span>Informação do cliente</span>--}}
+{{--                                                            <br>(BasicDataComplete)</label>--}}
+{{--                                                        <label class="switch">--}}
+{{--                                                            <input type="checkbox" value="" name='basic_data' class='basic-data' checked>--}}
+{{--                                                            <span class="slider round"></span>--}}
+{{--                                                        </label>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="col-12">--}}
+{{--                                                    <div class="switch-holder">--}}
+{{--                                                        <label for="checkout" class='mb-10'>--}}
+{{--                                                            <span>Informação de pagamento</span>--}}
+{{--                                                            <br>(AddPaymentInfo)</label>--}}
+{{--                                                        <label class="switch">--}}
+{{--                                                            <input type="checkbox" value="" name='checkout' class='checkout' checked>--}}
+{{--                                                            <span class="slider round"></span>--}}
+{{--                                                        </label>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="col-12">--}}
+{{--                                                    <div class="switch-holder">--}}
+{{--                                                        <label for="checkout" class='mb-10'>--}}
+{{--                                                            <span>Informação de endereço</span>--}}
+{{--                                                            <br>(DeliveryComplete)</label>--}}
+{{--                                                        <label class="switch">--}}
+{{--                                                            <input type="checkbox" value="" name='delivery' class='delivery' checked>--}}
+{{--                                                            <span class="slider round"></span>--}}
+{{--                                                        </label>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="col-12">--}}
+{{--                                                    <div class="switch-holder">--}}
+{{--                                                        <label for="checkout" class='mb-10'>--}}
+{{--                                                            <span>Cupom</span>--}}
+{{--                                                            <br>(AddCouponDiscount)</label>--}}
+{{--                                                        <label class="switch">--}}
+{{--                                                            <input type="checkbox" value="" name='coupon' class='coupon' checked>--}}
+{{--                                                            <span class="slider round"></span>--}}
+{{--                                                        </label>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="row col-6">--}}
+{{--                                                <div class="col-12">--}}
+{{--                                                    <div class="switch-holder">--}}
+{{--                                                        <label for="purchase_card">--}}
+{{--                                                            <span>Purchase</span>--}}
+{{--                                                            <br>(Cartão - Purchase)</label>--}}
+{{--                                                        <label class='switch'>--}}
+{{--                                                            <input type="checkbox" value="" name='purchase_card' class='purchase-card' checked>--}}
+{{--                                                            <span class='slider round'></span>--}}
+{{--                                                        </label>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="col-12">--}}
+{{--                                                    <div class="switch-holder">--}}
+{{--                                                        <label for="purchase_boleto">--}}
+{{--                                                            <span>Purchase</span>--}}
+{{--                                                            <br>(Boleto - Purchase)</label>--}}
+{{--                                                        <label class='switch'>--}}
+{{--                                                            <input type="checkbox" value="" name='purchase_boleto' class='purchase-boleto' checked>--}}
+{{--                                                            <span class='slider round'></span>--}}
+{{--                                                        </label>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="col-12">--}}
+{{--                                                    <div class="switch-holder">--}}
+{{--                                                        <label for="pix">--}}
+{{--                                                            <span>Purchase</span>--}}
+{{--                                                            <br>(Pix - Purchase)</label>--}}
+{{--                                                        <label class='switch'>--}}
+{{--                                                            <input type="checkbox" value="" name='purchase_pix' class='purchase-pix' checked>--}}
+{{--                                                            <span class='slider round'></span>--}}
+{{--                                                        </label>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="col-12">--}}
+{{--                                                    <div class="switch-holder">--}}
+{{--                                                        <label for="checkout" class='mb-10'>--}}
+{{--                                                            <span>Entrou no Upsell</span>--}}
+{{--                                                            <br>(InitiateUpsell)</label>--}}
+{{--                                                        <label class="switch">--}}
+{{--                                                            <input type="checkbox" value="" name='upsell' class='upsell' checked>--}}
+{{--                                                            <span class="slider round"></span>--}}
+{{--                                                        </label>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="col-12">--}}
+{{--                                                    <div class="switch-holder">--}}
+{{--                                                        <label for="pix">--}}
+{{--                                                            <span>Purchase</span>--}}
+{{--                                                            <br>(Upsell - UpsellPurchase)</label>--}}
+{{--                                                        <label class="switch">--}}
+{{--                                                            <input type="checkbox" value="" name='purchase-upsell' class='purchase-upsell' checked>--}}
+{{--                                                            <span class="slider round"></span>--}}
+{{--                                                        </label>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
                                     </div>
                                 </div>
                             </div>
