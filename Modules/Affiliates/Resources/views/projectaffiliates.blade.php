@@ -2,7 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/affiliates/table.min.css') }}">
     @endpush
 
     <div class='page'>

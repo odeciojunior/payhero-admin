@@ -21,7 +21,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('modules/global/img/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('modules/global/img/favicon-16x16.png') }}">
     <link rel="mask-icon" href="{{ mix('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
-    <!-- Stylesheets -->
+    {{-- <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
@@ -46,7 +46,8 @@
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ mix('modules/global/css/new-site.min.css') }}">
     <link rel="stylesheet" href="{{ mix('modules/global/css/finances.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/global.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/global/css/global.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/affiliates/master.min.css') }}">
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production')
@@ -74,7 +75,7 @@
 @yield('content')
 
 <!-- Plugins -->
-<script src="{{ asset('modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
+{{-- <script src="{{ asset('modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.js') }}"></script>
@@ -96,7 +97,8 @@
 <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ mix('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ mix('modules/global/js/global.min.js') }}"></script>
+<script src="{{ mix('modules/global/js/global.min.js') }}"></script> --}}
+<script src="{{ mix('build/layouts/affiliates/master.min.js') }}"></script>
 <script>
     verifyDocumentPending();
 </script>

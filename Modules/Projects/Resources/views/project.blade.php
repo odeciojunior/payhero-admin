@@ -1,16 +1,17 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/jquery.raty.min.css"/>
     <link rel="stylesheet" href="{{ mix('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.min.css') }}">
     <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
     <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/projects/css/style.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/projects/css/style.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/projects/project.min.css') }}">
     <style>
         @font-face {
             font-family: raty;
-            src: url(https://cdnjs.cloudflare.com/ajax/libs/raty/3.0.0/fonts/raty.svg);
+            src: url('/build/layouts/projects/raty.svg');
         }
     </style>
 @endpush
@@ -468,7 +469,7 @@
         <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
-        <script src="{{ mix('modules/domains/js/domainEdit.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/domains/js/domainEdit.min.js') }}"></script>
         <script src="{{ mix('modules/plans/js/loading.min.js') }}"></script>
         <script src="{{ mix('modules/plans/js/plans.min.js') }}"></script>
         <script src="{{ mix('modules/shipping/js/shipping.min.js') }}"></script>
@@ -485,8 +486,8 @@
         <script src="{{ mix('modules/global/js/jquery.raty.min.js') }}"></script>
         <script src="{{ mix('modules/global/js-extra/jquery-loading.min.js') }}"></script>
         <script src="{{ mix('modules/woocommerce/js/syncproducts.min.js') }}"></script>
-
         <script src="{{ mix('modules/global/scrollbar-plugin/jquery.mousewheel.min.js') }}"></script>
-        <script src="{{ mix('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.min.js') }}"></script>
+        <script src="{{ mix('modules/global/scrollbar-plugin/jquery.mCustomScrollbar.min.js') }}"></script> --}}
+        <script src="{{ mix('build/layouts/projects/project.min.js') }}"></script>
     @endpush
 @endsection

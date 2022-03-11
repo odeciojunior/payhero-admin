@@ -1,8 +1,9 @@
 @extends("layouts.master")
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/projects/css/index.min.css') }}">
+        {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('modules/projects/css/index.min.css') }}"> --}}
+        <link rel="stylesheet" href="{{ mix('build/layouts/projects/index.min.css') }}">
         <style>
             .card{
                 min-height:403px;
@@ -82,7 +83,7 @@
     </div>
     <!-- End Modal -->
     @push('scripts')
-        <script src="{{ mix('modules/projects/js/index.min.js') }}"></script>
+        <script src="{{ mix('build/layouts/projects/index.min.js') }}"></script>
     @endpush
 @endsection
 

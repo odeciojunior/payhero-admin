@@ -1,9 +1,10 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
     <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/projects/css/style.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/projects/css/style.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/projects/projectaffiliate.min.css') }}">
 @endpush
 
 @section('content')
@@ -105,10 +106,11 @@
     </div>
 
     @push('scripts')
-        <script src="{{ mix('modules/pixels/js/pixelsaffiliate.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/pixels/js/pixelsaffiliate.min.js') }}"></script>
         <script src="{{ mix('modules/projects/js/projectaffiliate.min.js') }}"></script>
         <script src="{{ mix('modules/affiliates/js/links.min.js') }}"></script>
-        <script src="{{ mix('modules/global/js/select2.min.js') }}"></script>
+        <script src="{{ mix('modules/global/js/select2.min.js') }}"></script> --}}
+        <script src="{{ mix('build/layouts/projects/projectaffiliate.min.js') }}"></script>
     @endpush
 @endsection
 

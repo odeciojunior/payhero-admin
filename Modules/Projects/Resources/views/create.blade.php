@@ -1,9 +1,10 @@
 @extends("layouts.master")
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ mix('modules/global/css/empty.min.css') }}">
+        {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/empty.min.css') }}">
         <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css?v=' . versionsFile()) }}">
-        <link rel="stylesheet" href="{{ mix('modules/projects/css/create.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('modules/projects/css/create.min.css') }}"> --}}
+        <link rel="stylesheet" href="{{ mix('build/layouts/projects/create.min.css') }}">
     @endpush
 
     <div class="page" style="display: none; margin-bottom: 0 !important;">
@@ -72,9 +73,10 @@
     </div>
 
     @push('scripts')
-        <script src="{{ mix('modules/projects/js/create.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/projects/js/create.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js?v=' . versionsFile()) }}"></script>
-        <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js?v=' . versionsFile()) }}"></script> --}}
+        <script src="{{ mix('build/layouts/projects/create.min.js') }}"></script>
     @endpush
 
 

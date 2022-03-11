@@ -155,6 +155,6 @@
         <!-- End Modal -->
     </div>
     @push('scripts')
-        <script src="{{ mix('modules/affiliates/js/index.min.js') }}"></script>
+        <script src="{{ mix('build/layouts/affiliates/index.min.js') }}"></script>
     @endpush
 @endsection

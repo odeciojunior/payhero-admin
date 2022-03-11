@@ -3,8 +3,9 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-        <link rel="stylesheet" href="{{ mix('modules/products/css/create.min.css') }}">
+        {{-- <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
+        <link rel="stylesheet" href="{{ mix('modules/products/css/create.min.css') }}"> --}}
+        <link rel="stylesheet" href="{{ mix('build/layouts/products/create.min.css') }}">
     @endpush
 
     <!-- Page -->
@@ -72,10 +73,10 @@
     </div>
 
     @push('scripts')
-        <script src="{{ mix('modules/products/js/create-digital.min.js') }}"></script>
-
+        {{-- <script src="{{ mix('modules/products/js/create-digital.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
-        <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script> --}}
+        <script src="{{ mix('build/layouts/products/create-digital.min.js') }}"></script>
     @endpush
 
 @endsection

@@ -1,5 +1,6 @@
 @push('css')
-    <link rel="stylesheet" href="{{ mix('modules/projects/css/edit.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ mix('modules/projects/css/edit.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/projects/edit.min.css') }}">
 @endpush
 
 <div class='row card no-gutters p-30 rounded-top'>
