@@ -371,7 +371,7 @@ class ShopifyService
                 var myDate = new Date();
                 myDate.setMonth(myDate.getMonth() + 12);
 
-                document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;Secure;expires=' + myDate.toUTCString();
+                document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;expires=' + myDate.toUTCString();
             }
 
         </script>
