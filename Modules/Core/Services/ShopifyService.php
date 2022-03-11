@@ -366,12 +366,12 @@ class ShopifyService
 
             if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campaign != null) || (utm_term != null) || (utm_content != null) )
             {
-                var cookieName = '_landing_page';
+                var cookieName = '_sirius_track';
                 var cookieValue = 'src='+src+'|'+'utm_source='+utm_source+'|'+'utm_medium='+utm_medium+'|'+'utm_campaign='+utm_campaign+'|'+'utm_term='+utm_term+'|'+'utm_content='+utm_content;
                 var myDate = new Date();
                 myDate.setMonth(myDate.getMonth() + 12);
 
-                document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;expires=' + myDate;
+                document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;Secure;expires=' + myDate.toUTCString();
             }
 
         </script>
