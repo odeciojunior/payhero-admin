@@ -30,7 +30,9 @@ class CreateCompanyBankAccounts extends Migration
             $table->string('account_digit',3)->default(null);
             $table->tinyInteger('is_default')->default(0);
             $table->enum('status',['PENDING','VERIFIED','REFUSED']);
+            $table->string('gateway_transaction_id')->default(null);;            
             $table->timestamps();
+            $table->softDeletes();
         });
 
         $companies = DB::table('companies')->where('document','<>','')
@@ -48,21 +50,21 @@ class CreateCompanyBankAccounts extends Migration
                     'key_pix'=>$company->document,
                     'is_default'=>true,
                     'status'=>'VERIFIED',
-                   ]);     
-                   $default =false;
+                ]);     
+                $default =false;
             }
 
-           CompanyBankAccount::create([
-            'company_id'=>$company->id,
-            'transfer_type'=>'TED',
-            'bank'=>$company->bank,
-            'agency'=>$company->agency,
-            'agency_digit'=>$company->agency_digit,
-            'account'=>$company->account,
-            'account_digit'=>$company->account_digit,
-            'is_default'=>$default,
-            'status',
-           ]); 
+            CompanyBankAccount::create([
+                'company_id'=>$company->id,
+                'transfer_type'=>'TED',
+                'bank'=>$company->bank,
+                'agency'=>$company->agency,
+                'agency_digit'=>$company->agency_digit,
+                'account'=>$company->account,
+                'account_digit'=>$company->account_digit,
+                'is_default'=>$default,
+                'status',
+            ]); 
         }
     }
 

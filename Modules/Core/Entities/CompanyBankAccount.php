@@ -38,6 +38,7 @@ class CompanyBankAccount extends Model
         'account_digit',
         'is_default',
         'status',
+        'gateway_transaction_id',
         'created_at',
         'updated_at',
     ];
