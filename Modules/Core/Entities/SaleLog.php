@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Spatie\Activitylog\Models\Activity;
 
@@ -34,6 +35,8 @@ use Spatie\Activitylog\Models\Activity;
  */
 class SaleLog extends Model
 {
+    use SoftDeletes;
+    
     protected $table = 'sale_logs';
 
     protected $keyType = 'integer';
