@@ -152,7 +152,7 @@ class BoletoService
                                     $data = [
                                         'message' => $smsMessage,
                                         'telephone' => $clientTelephone,
-                                        'checkout' => $checkout,
+                                        'checkout_id' => $checkout->id,
 
                                     ];
                                     event(new SendSmsEvent($data));
@@ -212,7 +212,7 @@ class BoletoService
                                             //'templateId'  => 'd-957fe3c5ecc6402dbd74e707b3d37a9b',
                                             'templateId' => 'd-32a6a7b666ed49f6be2392ba8a5f6973',
                                             'bodyEmail' => $data,
-                                            'checkout' => $checkout,
+                                            'checkout_id' => $checkout->id,
                                         ];
                                         event(new SendEmailEvent($dataEmail));
                                     }
@@ -383,7 +383,7 @@ class BoletoService
                                                     //'templateId'  => 'd-59dab7e71d4045e294cb6a14577da236',
                                                     'templateId' => 'd-32a6a7b666ed49f6be2392ba8a5f6973',
                                                     'bodyEmail' => $data,
-                                                    'checkout' => $checkout,
+                                                    'checkout_id' => $checkout->id,
                                                 ];
                                                 event(new SendEmailEvent($dataEmail));
                                             }
@@ -557,7 +557,7 @@ class BoletoService
                                                 //'templateId'  => 'd-690a6140f72643c1af280b079d5e84c5',
                                                 'templateId' => 'd-792f7ecb932e40e09403149653e013e1',
                                                 'bodyEmail' => $data,
-                                                'checkout' => $checkout,
+                                                'checkout_id' => $checkout->id,
                                             ];
                                             event(new SendEmailEvent($dataEmail));
                                         }
@@ -647,7 +647,7 @@ class BoletoService
             ->where(
                 [
                     ['payment_method', '=', '2'],
-                    ['status', '=', '5'],                    
+                    ['status', '=', '5'],
                     ['gateway_id','=',21],
                     [
                         DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"),
@@ -660,14 +660,14 @@ class BoletoService
             foreach ($boletos->cursor() as $boleto){
 
                 //verificando se prazo de compensação foi final de semana
-                $bankSlipCompensationDate = Carbon::parse($boleto->boleto_due_date)->addDay($compensationDays);                    
+                $bankSlipCompensationDate = Carbon::parse($boleto->boleto_due_date)->addDay($compensationDays);
                 if ($bankSlipCompensationDate->isWeekend()){
                     $bankSlipCompensationDate = $bankSlipCompensationDate->nextWeekday();
                 }
                 $dueDate = $bankSlipCompensationDate->toDateString();
-                
+
                 if($dueDate >= $compensationDate) continue;
-                
+
                 $boleto->update(
                     [
                         'status' => 5,
@@ -696,7 +696,7 @@ class BoletoService
                     event(new BilletExpiredEvent($boleto));
                 }
             }
-            
+
         } catch (Exception $e) {
             report($e);
         }
