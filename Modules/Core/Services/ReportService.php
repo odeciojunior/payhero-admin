@@ -1566,16 +1566,7 @@ class ReportService
             ->groupBy('checkouts.ip');
 
             if (!empty($filters['project_id'])) {
-                $affiliate = Affiliate::where([
-                    ['user_id', $userId],
-                    ['project_id', $filters['project_id']],
-                ])->first();
-
                 $query->where('checkouts.project_id', current(Hashids::decode($filters['project_id'])));
-
-                if (!empty($affiliate)) {
-                    $query->where('sales.affiliate_id', $affiliate->id);
-                }
             } else {
                 $user_projects = UserProject::where('user_id', $userId)->get()->pluck('id');
 
@@ -1649,16 +1640,9 @@ class ReportService
             ->orderBy('sales_amount', 'DESC');
 
             if (!empty($filters['project_id'])) {
-                $affiliate = Affiliate::where([
-                    ['user_id', $userId],
-                    ['project_id', $filters['project_id']],
-                ])->first();
-
                 $query->where('sales.project_id', current(Hashids::decode($filters['project_id'])));
-
-                if (!empty($affiliate)) {
-                    $query->where('sales.affiliate_id', $affiliate->id);
-                }
+            } else {
+                $query->where('sales.owner_id', $userId);
             }
 
             $orders = $query->get();
