@@ -1,5 +1,6 @@
 @push('css')
-    <link rel="stylesheet" href='{{ mix('modules/sales/css/index.min.css') }}'>
+    {{-- <link rel="stylesheet" href='{{ mix('modules/sales/css/index.min.css') }}'> --}}
+    <link rel="stylesheet" href='{{ mix('build/layouts/chargebacks/contestations-files.min.css') }}'>
 
     <style>
         input[type="file"] {
@@ -170,5 +171,6 @@
 </div>
 </div>
 @push('scripts')
-    <script src="{{ mix('modules/chargebacks/js/contestations-detail.min.js') }}"></script>
+    {{-- <script src="{{ mix('modules/chargebacks/js/contestations-detail.min.js') }}"></script> --}}
+    <script src="{{ mix('build/layouts/chargebacks/contestations-files.min.js') }}"></script>
 @endpush

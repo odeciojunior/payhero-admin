@@ -67,6 +67,78 @@ mix.babel([
 ],'public/build/layouts/affiliates/master.min.js')
 
 /**
+ * Modules/Attendance/Resources/views/index.blade.php
+ */
+mix.styles([
+    'resources/modules/global/css/new-dashboard.css',
+    'resources/modules/global/select3/select3.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
+    'Modules/Attendance/Resources/assets/css/index.css',
+],'public/build/layouts/attendance/index.min.css')
+mix.babel([
+    'resources/modules/global/select3/select3.js',
+    'resources/modules/global/js-extra/moment.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
+    'Modules/Tickets/Resources/assets/js/emoji-button.min.js',
+    'Modules/Tickets/Resources/assets/js/index.js',
+],'public/build/layouts/attendance/index.min.js')
+
+/**
+ * Modules/Chargebacks/Resources/views/contestations-files.blade.php
+ */
+mix.styles([
+    'Modules/Sales/Resources/assets/css/index.css'
+],'public/build/layouts/chargebacks/contestations-files.min.css');
+mix.babel([
+    'Modules/Chargebacks/Resources/assets/js/contestations-detail.js'
+],'public/build/layouts/chargebacks/contestations-files.min.js');
+
+/**
+ * Modules/Chargebacks/Resources/views/contestations-index.blade.php
+ */
+mix.styles([
+    'resources/modules/global/css/table.css',
+    'Modules/Sales/Resources/assets/css/index.css',
+    'resources/modules/global/css/empty.css',
+    'resources/modules/global/css/switch.css',
+    'resources/modules/global/css/new-dashboard.css',
+    'Modules/Chargebacks/Resources/assets/css/contestations-index.css'
+],'public/build/layouts/chargebacks/contestations-index.min.css');
+mix.babel([
+    'Modules/Chargebacks/Resources/assets/js/contestations-index.js',
+    'resources/modules/global/js-extra/moment.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js'
+],'public/build/layouts/chargebacks/contestations-index.min.js');
+
+/**
+ * Modules/CheckoutEditor/Resources/views/index.blade.php
+ */
+ mix.copy([
+    'resources/modules/global/adminremark/global/vendor/dropify/!(*.css)',
+],'public/build/layouts/checkouteditor');
+mix.styles([
+    'resources/modules/global/css/empty.css',
+    'resources/modules/global/adminremark/global/vendor/dropify/dropify.css',
+    'Modules/CheckoutEditor/Resources/assets/css/quill.snow.css',
+    'Modules/CheckoutEditor/Resources/assets/css/dropfy.css',
+    'Modules/CheckoutEditor/Resources/assets/css/custom-inputs.css',
+    'Modules/CheckoutEditor/Resources/assets/css/cropper.min.css',
+    'Modules/CheckoutEditor/Resources/assets/css/style.css',
+    'Modules/CheckoutEditor/Resources/assets/css/preview-styles.css'
+],'public/build/layouts/checkouteditor/index.min.css');
+mix.babel([
+    ////////'modules/global/adminremark/global/js/Plugin/cropper.js',
+    'resources/modules/global/adminremark/global/vendor/dropify/dropify.min.js',
+    'resources/modules/global/adminremark/global/js/Plugin/dropify.js',
+    'Modules/CheckoutEditor/Resources/assets/js/quill.min.js',
+    'Modules/CheckoutEditor/Resources/assets/js/cropper.min.js',
+    'Modules/CheckoutEditor/Resources/assets/js/verifyPhone.js',
+    'Modules/CheckoutEditor/Resources/assets/js/checkoutEditor.js',
+    'Modules/CheckoutEditor/Resources/assets/js/loadCheckoutData.js',
+    'Modules/CheckoutEditor/Resources/assets/js/scrollPreview.js'
+],'public/build/layouts/checkouteditor/index.min.js');
+
+/**
  * Modules/Dashboard/Resources/views/dashboard.blade
  */
  mix.styles([
@@ -339,36 +411,36 @@ mix.babel('Modules/Apps/Resources/assets/js/index.js', 'public/modules/apps/js/i
 mix.babel('Modules/AstronMembers/Resources/assets/js/index.js', 'public/modules/astronmembers/js/index.min.js');
 
 // Attendance
-mix.styles('Modules/Attendance/Resources/assets/css/index.css', 'public/modules/attendance/css/index.min.css');
+/*##*/ mix.styles('Modules/Attendance/Resources/assets/css/index.css', 'public/modules/attendance/css/index.min.css');
 // USADO AONDE ??? mix.babel('Modules/Attendance/Resources/assets/js/index.js', 'public/modules/attendance/js/index.min.js');
 // USADO AONDE ??? mix.babel('Modules/Attendance/Resources/assets/js/show.js', 'public/modules/attendance/js/show.min.js');
 
 // Chargebacks
 mix.copy('Modules/Chargebacks/Resources/assets/svg', 'public/modules/chargebacks/svg');
-mix.styles('Modules/Chargebacks/Resources/assets/css/contestations-index.css', 'public/modules/chargebacks/css/contestations-index.min.css');
-mix.babel('Modules/Chargebacks/Resources/assets/js/contestations-detail.js', 'public/modules/chargebacks/js/contestations-detail.min.js');
-mix.babel('Modules/Chargebacks/Resources/assets/js/contestations-index.js', 'public/modules/chargebacks/js/contestations-index.min.js');
+/*##*/ mix.styles('Modules/Chargebacks/Resources/assets/css/contestations-index.css', 'public/modules/chargebacks/css/contestations-index.min.css');
+/*##*/ mix.babel('Modules/Chargebacks/Resources/assets/js/contestations-detail.js', 'public/modules/chargebacks/js/contestations-detail.min.js');
+/*##*/ mix.babel('Modules/Chargebacks/Resources/assets/js/contestations-index.js', 'public/modules/chargebacks/js/contestations-index.min.js');
 // USADO AONDE ??? mix.babel('Modules/Chargebacks/Resources/assets/js/index.js', 'public/modules/chargebacks/js/index.min.js');
 // USADO AONDE ??? mix.babel('Modules/Chargebacks/Resources/assets/js/old-index.js', 'public/modules/chargebacks/js/old-index.min.js');
 
 // CheckoutEditor
-mix.copy('Modules/CheckoutEditor/Resources/assets/css/cropper.min.css', 'public/modules/checkouteditor/css/cropper.min.css');
-mix.copy('Modules/CheckoutEditor/Resources/assets/js/cropper.min.js', 'public/modules/checkouteditor/js/cropper.min.js');
-mix.copy('Modules/CheckoutEditor/Resources/assets/js/quill.min.js', 'public/modules/checkouteditor/js/quill.min.js');
+/*##*/ mix.copy('Modules/CheckoutEditor/Resources/assets/css/cropper.min.css', 'public/modules/checkouteditor/css/cropper.min.css');
+/*##*/ mix.copy('Modules/CheckoutEditor/Resources/assets/js/cropper.min.js', 'public/modules/checkouteditor/js/cropper.min.js');
+/*##*/ mix.copy('Modules/CheckoutEditor/Resources/assets/js/quill.min.js', 'public/modules/checkouteditor/js/quill.min.js');
 mix.copy('Modules/CheckoutEditor/Resources/assets/img', 'public/modules/checkouteditor/img');
 mix.copy('Modules/CheckoutEditor/Resources/assets/img/banner', 'public/modules/checkouteditor/img/banner');
 mix.copy('Modules/CheckoutEditor/Resources/assets/img/svg', 'public/modules/checkouteditor/img/svg');
 mix.copy('Modules/CheckoutEditor/Resources/assets/img/svg/credit-card-icons', 'public/modules/checkouteditor/img/svg/credit-card-icons');
 mix.copy('Modules/CheckoutEditor/Resources/assets/files', 'public/modules/checkouteditor/files');
-mix.styles('Modules/CheckoutEditor/Resources/assets/css/custom-inputs.css', 'public/modules/checkouteditor/css/custom-inputs.min.css');
-mix.styles('Modules/CheckoutEditor/Resources/assets/css/dropfy.css', 'public/modules/checkouteditor/css/dropfy.min.css');
-mix.styles('Modules/CheckoutEditor/Resources/assets/css/preview-styles.css', 'public/modules/checkouteditor/css/preview-styles.min.css');
-mix.styles('Modules/CheckoutEditor/Resources/assets/css/quill.snow.css', 'public/modules/checkouteditor/css/quill.snow.min.css');
-mix.styles('Modules/CheckoutEditor/Resources/assets/css/style.css', 'public/modules/checkouteditor/css/style.min.css');
-mix.babel('Modules/CheckoutEditor/Resources/assets/js/checkoutEditor.js', 'public/modules/checkouteditor/js/checkoutEditor.min.js');
-mix.babel('Modules/CheckoutEditor/Resources/assets/js/loadCheckoutData.js', 'public/modules/checkouteditor/js/loadCheckoutData.min.js');
-mix.babel('Modules/CheckoutEditor/Resources/assets/js/scrollPreview.js', 'public/modules/checkouteditor/js/scrollPreview.min.js');
-mix.babel('Modules/CheckoutEditor/Resources/assets/js/verifyPhone.js', 'public/modules/checkouteditor/js/verifyPhone.min.js');
+/*##*/ mix.styles('Modules/CheckoutEditor/Resources/assets/css/custom-inputs.css', 'public/modules/checkouteditor/css/custom-inputs.min.css');
+/*##*/ mix.styles('Modules/CheckoutEditor/Resources/assets/css/dropfy.css', 'public/modules/checkouteditor/css/dropfy.min.css');
+/*##*/ mix.styles('Modules/CheckoutEditor/Resources/assets/css/preview-styles.css', 'public/modules/checkouteditor/css/preview-styles.min.css');
+/*##*/ mix.styles('Modules/CheckoutEditor/Resources/assets/css/quill.snow.css', 'public/modules/checkouteditor/css/quill.snow.min.css');
+/*##*/ mix.styles('Modules/CheckoutEditor/Resources/assets/css/style.css', 'public/modules/checkouteditor/css/style.min.css');
+/*##*/ mix.babel('Modules/CheckoutEditor/Resources/assets/js/checkoutEditor.js', 'public/modules/checkouteditor/js/checkoutEditor.min.js');
+/*##*/ mix.babel('Modules/CheckoutEditor/Resources/assets/js/loadCheckoutData.js', 'public/modules/checkouteditor/js/loadCheckoutData.min.js');
+/*##*/ mix.babel('Modules/CheckoutEditor/Resources/assets/js/scrollPreview.js', 'public/modules/checkouteditor/js/scrollPreview.min.js');
+/*##*/ mix.babel('Modules/CheckoutEditor/Resources/assets/js/verifyPhone.js', 'public/modules/checkouteditor/js/verifyPhone.min.js');
 
 // Companies
 mix.babel('Modules/Companies/Resources/assets/js/create.js', 'public/modules/companies/js/create.min.js');
@@ -530,7 +602,7 @@ mix.babel('Modules/Reports/Resources/assets/js/reports.js', 'public/modules/repo
 // USADO AONDE ??? mix.babel('Modules/Reports/Resources/assets/js/sales_by_origin.js', 'public/modules/reports/js/sales_by_origin.min.js');
 
 // Sales
-mix.styles('Modules/Sales/Resources/assets/css/index.css', 'public/modules/sales/css/index.min.css');
+/*##*/ mix.styles('Modules/Sales/Resources/assets/css/index.css', 'public/modules/sales/css/index.min.css');
 mix.babel('Modules/Sales/Resources/assets/js/detail.js', 'public/modules/sales/js/detail.min.js');
 mix.babel('Modules/Sales/Resources/assets/js/index.js', 'public/modules/sales/js/index.min.js');
 
@@ -555,8 +627,8 @@ mix.babel('Modules/Shopify/Resources/assets/js/index.js', 'public/modules/shopif
 mix.babel('Modules/Smartfunnel/Resources/assets/js/index.js', 'public/modules/smartfunnel/js/index.min.js');
 
 // Tickets
-mix.copy('Modules/Tickets/Resources/assets/js/emoji-button.min.js', 'public/modules/tickets/js/emoji-button.min.js');
-mix.babel('Modules/Tickets/Resources/assets/js/index.js', 'public/modules/tickets/js/index.min.js');
+/*##*/ mix.copy('Modules/Tickets/Resources/assets/js/emoji-button.min.js', 'public/modules/tickets/js/emoji-button.min.js');
+/*##*/ mix.babel('Modules/Tickets/Resources/assets/js/index.js', 'public/modules/tickets/js/index.min.js');
 
 // Trackings
 mix.copy('Modules/Trackings/Resources/assets/svg','public/modules/trackings/svg');
@@ -638,7 +710,7 @@ mix.copy('resources/modules/global/img/svg',                'public/modules/glob
 // global / js
 mix.copy('resources/modules/global/js/circle-progress.min.js',  'public/modules/global/js/circle-progress.min.js');
 /*##*/ mix.copy('resources/modules/global/js/confetti.browser.min.js', 'public/modules/global/js/confetti.browser.min.js');
-mix.copy('resources/modules/global/js/daterangepicker.min.js',  'public/modules/global/js/daterangepicker.min.js');
+/*##*/ mix.copy('resources/modules/global/js/daterangepicker.min.js',  'public/modules/global/js/daterangepicker.min.js');
 /*##*/ mix.copy('resources/modules/global/js/jquery.raty.min.js',      'public/modules/global/js/jquery.raty.min.js');
 // USADO AONDE ??? mix.copy('resources/modules/global/js/jquery.scrollbar.min.js', 'public/modules/global/js/jquery.scrollbar.min.js');
 /*##*/ mix.copy('resources/modules/global/js/select2.min.js', 'public/modules/global/js/select2.min.js');
@@ -650,7 +722,7 @@ mix.babel('resources/modules/global/js/notifications.js', 'public/modules/global
 // global / js-extra
 /*##*/ mix.copy('resources/modules/global/js-extra/jquery.mask.min.js', 'public/modules/global/js-extra/jquery.mask.min.js');
 /*##*/ mix.copy('resources/modules/global/js-extra/jquery-loading.min.js', 'public/modules/global/js-extra/jquery-loading.min.js');
-mix.copy('resources/modules/global/js-extra/moment.min.js', 'public/modules/global/js-extra/moment.min.js');
+/*##*/ mix.copy('resources/modules/global/js-extra/moment.min.js', 'public/modules/global/js-extra/moment.min.js');
 mix.copy('resources/modules/global/js-extra/pusher.min.js', 'public/modules/global/js-extra/pusher.min.js');
 mix.copy('resources/modules/global/js-extra/sentry-bundle.min.js', 'public/modules/global/js-extra/sentry-bundle.min.js');
 /*##*/ mix.copy('resources/modules/global/js-extra/sweetalert2.all.min.js', 'public/modules/global/js-extra/sweetalert2.all.min.js');
@@ -675,12 +747,12 @@ mix.copy('resources/modules/global/js-extra/sentry-bundle.min.js', 'public/modul
 // validacao-checkout.js
 
 // global / select3
-mix.styles('resources/modules/global/select3/select3.css', 'public/modules/global/select3/select3.min.css');
-mix.babel('resources/modules/global/select3/select3.js', 'public/modules/global/select3/select3.min.js');
+/*##*/ mix.styles('resources/modules/global/select3/select3.css', 'public/modules/global/select3/select3.min.css');
+/*##*/ mix.babel('resources/modules/global/select3/select3.js', 'public/modules/global/select3/select3.min.js');
 
 // global / jquery-daterangepicker
-mix.styles('resources/modules/global/jquery-daterangepicker/daterangepicker.css', 'public/modules/global/jquery-daterangepicker/daterangepicker.min.css');
-mix.babel('resources/modules/global/jquery-daterangepicker/daterangepicker.js', 'public/modules/global/jquery-daterangepicker/daterangepicker.min.js');
+/*##*/ mix.styles('resources/modules/global/jquery-daterangepicker/daterangepicker.css', 'public/modules/global/jquery-daterangepicker/daterangepicker.min.css');
+/*##*/ mix.babel('resources/modules/global/jquery-daterangepicker/daterangepicker.js', 'public/modules/global/jquery-daterangepicker/daterangepicker.min.js');
 
 // global / jquery-imgareaselect
 mix.copy('resources/modules/global/jquery-imgareaselect/css/border-anim-h.gif', 'public/modules/global/jquery-imgareaselect/css/border-anim-h.gif');

@@ -1,12 +1,13 @@
 @push('css')
-<link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
+{{-- <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
 <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
 <link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/quill.snow.min.css') }}">
 <link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/dropfy.min.css') }}">
 <link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/custom-inputs.min.css') }}">
 <link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/cropper.min.css') }}">
 <link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/style.min.css') }}">
-<link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/preview-styles.min.css') }}">
+<link rel="stylesheet" href="{{ mix('modules/checkouteditor/css/preview-styles.min.css') }}"> --}}
+<link rel="stylesheet" href="{{ mix('build/layouts/checkouteditor/index.min.css') }}">
 @endpush
 
 <!-- Page -->
@@ -1839,7 +1840,7 @@
 </div>
 
 @push('scripts')
-<script src="{{ asset('modules/global/adminremark/global/js/Plugin/cropper.js') }}"></script>
+{{-- <script src="{{ asset('modules/global/adminremark/global/js/Plugin/cropper.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
 <script src="{{ mix('modules/checkouteditor/js/quill.min.js') }}"></script>
@@ -1847,6 +1848,6 @@
 <script src="{{ mix('modules/checkouteditor/js/verifyPhone.min.js') }}"></script>
 <script src="{{ mix('modules/checkouteditor/js/checkoutEditor.min.js') }}"></script>
 <script src="{{ mix('modules/checkouteditor/js/loadCheckoutData.min.js') }}"></script>
-<script src="{{ mix('modules/checkouteditor/js/scrollPreview.min.js') }}"></script>
-
+<script src="{{ mix('modules/checkouteditor/js/scrollPreview.min.js') }}"></script> --}}
+<script src="{{ mix('build/layouts/checkouteditor/index.min.js') }}"></script>
 @endpush
