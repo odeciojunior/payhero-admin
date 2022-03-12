@@ -442,8 +442,6 @@
                                                 <label class="text-left" for="opt_webhooks" style="margin-right:15px;margin-bottom: 3px; width:346px">
                                                     Sincronizar webhooks com WooCommerce</label>
                                             </div>
-
-                                        </p>
                                     </div>
                                     <div class="modal-footer d-flex align-items-center justify-content-center">
                                         <button id="close-modal" type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">
@@ -472,7 +470,7 @@
         <script src="{{asset('modules/plans/js/loading.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/plans/js/plans.js?v=' . versionsFile()) }}"></script>
         <script src="{{asset('modules/shipping/js/shipping.js?v=' . versionsFile()) }}"></script>
-        <script src="{{asset('modules/pixels/js/pixels.js?v='.versionsFile())}}"></script>
+        <script src="{{asset('modules/pixels/js/pixels.js?v=1'.versionsFile())}}"></script>
         <script src="{{asset('modules/projectupsell/js/index.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/orderbump/js/index.js?v='.versionsFile())}}"></script>
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js?v=0'.versionsFile())}}"></script>
