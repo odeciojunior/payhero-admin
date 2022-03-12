@@ -56,26 +56,29 @@
 
                     <input name="id" type="hidden" id="discount-id" />
 
-                    <div class="row" id="display_name" style="color:#636363">
-                        <div class="col-6">
-                            <span class="small-text"> Nome</span> <br>
-                            <span id="d-name"></span>
-                        </div>
-                        <div class="col-6">
-                            
-                            <span class="small-text"> Tipo</span> <br>
-                            <span id="">Desconto Progressivo</span>
+                    <div id="edit-name-box" style=" ">
 
+                        <div class="row" id="display_name" style="color:#636363">
+                            <div class="col-6">
+                                <span class="small-text"> Nome</span> <br>
+                                <span id="d-name"></span>
+                            </div>
+                            <div class="col-6">
+                                
+                                <span class="small-text"> Tipo</span> <br>
+                                <span id="">Desconto Progressivo</span>
+    
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="" id="display_name_edit" style="display: none; color: #636363">
-                        <div style="margin-bottom: 4px">Nome</div>
-                        <input class="input-pad" id="name-edit" name="name" maxlength="20" type="text" style="margin-bottom: 24px; height:48px" /> <br>
-                        <div class="d-flex flex-row-reverse">
                         
-                            <button id="save_name_edit" class="btn btn-primary save-name-btn" type="button" style="margin-left: 4px">Finalizar</button>
-                            <button id="cancel_name_edit" class="clean-cancel  btn btn-default btn-lg mr-10" type="button">Cancelar</button>
+                        <div class="" id="display_name_edit" style=" display: none; color: #636363">
+                            <div style="margin-bottom: 4px">Nome</div>
+                            <input class="input-pad" id="name-edit" name="name" maxlength="20" type="text" style="margin-bottom: 24px; height:48px" /> <br>
+                            <div class="d-flex flex-row-reverse">
+                            
+                                <button id="save_name_edit" class="btn btn-primary save-name-btn" type="button" style="margin-left: 4px">Finalizar</button>
+                                <button id="cancel_name_edit" class="clean-cancel  btn btn-default btn-lg mr-10" type="button">Cancelar</button>
+                            </div>
                         </div>
                     </div>
                 </div>

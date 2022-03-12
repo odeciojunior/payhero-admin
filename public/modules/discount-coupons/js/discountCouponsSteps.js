@@ -421,6 +421,9 @@ $(function () {
 
     $('#coupon').on('click', function () {
 
+        $('#date_range').removeClass('warning-input')
+        $('#date_range').val('')
+
         $('#search_result, #search_result2').html('');
 
         $('#modal-create-holder').css( {'width':'600px'});
@@ -708,13 +711,13 @@ $(function () {
         $('#percent_opt input').focus()
     })
 
-    $('#c_name').keyup(validate_coupon);
-    $('#c_code').keyup(validate_coupon);
-    $('#discount_value').keyup(validate_coupon);
-    $('#percent_value').keyup(validate_coupon);
-    $('#minimum_value').keyup(validate_coupon);
-    $('#c_type_value').click(validate_coupon);
-    $('#c_type_percent').click(validate_coupon);
+    // $('#c_name').keyup(validate_coupon);
+    // $('#c_code').keyup(validate_coupon);
+    // $('#discount_value').keyup(validate_coupon);
+    // $('#percent_value').keyup(validate_coupon);
+    // $('#minimum_value').keyup(validate_coupon);
+    // $('#c_type_value').click(validate_coupon);
+    // $('#c_type_percent').click(validate_coupon);
 
     function validate_coupon() {
         var ok = true;
@@ -730,11 +733,11 @@ $(function () {
         if($('#c_type_percent').prop('checked') && !$('#percent_value').val()) ok = false;
 
         //
-        if(ok){
-            $('.add-coupon').prop('disabled',false)
-        }else{
-            $('.add-coupon').prop('disabled',true)
-        }
+        // if(ok){
+        //     $('.add-coupon').prop('disabled',false)
+        // }else{
+        //     $('.add-coupon').prop('disabled',true)
+        // }
 
     }
 
@@ -747,6 +750,19 @@ $(function () {
     })
 
     $(".add-coupon").on('click', function () {
+        if(!$('#c_name').val()){
+            $('#c_name').focus().addClass('warning-input')
+            alertCustom("error", 'Preencha um nome para o cupom');
+            return false;
+        }
+
+        if(!$('#c_code').val()){
+            $('#c_code').focus().addClass('warning-input')
+            alertCustom("error", 'Preencha um código para o cupom');
+            return false;
+        }
+
+
         if($('#c_type_value').prop('checked') && (!$('#discount_value').val() || $('#discount_value').val().replace(',','').replace('.','') == 0 ) ) {
             $('#discount_value').focus().addClass('warning-input')
             
@@ -763,6 +779,12 @@ $(function () {
             alertCustom("error", 'Preencha um valor acima de R$ 0,00');
 
             $('#minimum_value').focus().addClass('warning-input')
+            return false;
+        }
+        // console.log($('#date_range').val(), $('#nao_vence').is(':checked')); return false;
+        if($('#date_range').val()=='' && !$('#nao_vence').is(':checked')){
+            $('#date_range').focus().addClass('warning-input')
+            alertCustom("error", 'Preencha uma data de vencimento ou marque "Não vence"');
             return false;
         }
 
@@ -820,6 +842,9 @@ $(function () {
 
         $('#c-display_name').hide()
         $('#c-display_name_edit').show()
+        $('#edit-name-box-c').animate({'height':162})
+        
+        
         $('#c-name-edit').focus()
         $('#c-name-edit').val($('#c-d-name').html());
         $('#c-code-edit').val($('#d-code').html());
@@ -835,14 +860,17 @@ $(function () {
 
             $('#c-edit-plans').show()
             $('#c-edit-rules').show()
+
+            $('#edit-name-box-c').animate({height:68})
+
         })
     }
-
+    
     var cupom_data = []
     $("#c-save_name_edit").on('click', function () {
         let formData = new FormData(document.getElementById('form-update-coupon'));
         let id = $('#coupon-id2').val();
-        
+        $('#c-cancel_name_edit').click()
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/discounts/" + id,

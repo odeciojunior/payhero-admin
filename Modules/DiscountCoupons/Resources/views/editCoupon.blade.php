@@ -26,7 +26,7 @@
             <div id="c-edit_step0" >
                 <div id="coupon_edit_step0" style="height: 553px; overflow:hidden">
 
-                    <div style=' position: relative; padding: 25px 30px 44px' class=" simple-border-bottom">
+                    <div style=' position: relative; padding: 25px 30px 20px' class=" simple-border-bottom">
     
                         <div class="modal-disc">
     
@@ -60,41 +60,44 @@
     
                         <input name="id" type="hidden" id="coupon-id2" />
                         <input name="plans" type="hidden" id="edited-plans" />
-    
-                        <div class="row mt-20" id="c-display_name" style="color: #636363">
-                            <div class="col-6">
-                                <span class="small-text"> Nome</span> <br>
-                                <span style="font-size: 16px" id="c-d-name"></span>
+                        
+                        <div id="edit-name-box-c" style=" height: 68px; ">
+
+                            <div class="row pt-20" id="c-display_name" style="color: #636363; padding-bottom:2px">
+                                <div class="col-6">
+                                    <span class="small-text"> Nome</span> <br>
+                                    <span style="font-size: 16px" id="c-d-name"></span>
+                                </div>
+                                <div class="col-6">
+        
+                                    <span class="small-text"> Código do cupom</span> <br>
+                                    <span style="font-size: 16px" id="d-code"></span>
+        
+                                </div>
                             </div>
-                            <div class="col-6">
-    
-                                <span class="small-text"> Código do cupom</span> <br>
-                                <span style="font-size: 16px" id="d-code"></span>
-    
-                            </div>
-                        </div>
-    
-                        <div class="row mt-20" id="c-display_name_edit" style="display: none; color:#636363">
-                            <div class="col-6">
-    
-                                Nome <br>
-                                <input class="input-pad" maxlength="20" id="c-name-edit" name="name" type="text"
-                                    style="margin-bottom: 20px; height:48px" /> <br>
-                            </div>
-    
-                            <div class="col-6">
-    
-                                Código do cupom <br>
-                                <input class="input-pad" maxlength="20" id="c-code-edit" name="code" type="text"
-                                    style="margin-bottom: 20px; height:48px" /> <br>
-                            </div>
-    
-                            <div class="col-12 text-right">
-    
-                                <button id="c-cancel_name_edit" class="mr-10 btn btn-default btn-lg clean-cancel"
-                                    type="button">Cancelar</button>
-                                <button id="c-save_name_edit" class="btn btn-primary save-name-btn" type="button"
-                                    style="margin-left: 4px">Atualizar</button>
+        
+                            <div class="row pt-20" id="c-display_name_edit" style="  display: none; color:#636363">
+                                <div class="col-6">
+        
+                                    Nome <br>
+                                    <input class="input-pad" maxlength="20" id="c-name-edit" name="name" type="text"
+                                        style="margin-bottom: 20px; height:48px" /> <br>
+                                </div>
+        
+                                <div class="col-6">
+        
+                                    Código do cupom <br>
+                                    <input class="input-pad" maxlength="20" id="c-code-edit" name="code" type="text"
+                                        style="margin-bottom: 20px; height:48px" /> <br>
+                                </div>
+        
+                                <div class="col-12 text-right">
+        
+                                    <button id="c-cancel_name_edit" class="mr-10 btn btn-default btn-lg clean-cancel"
+                                        type="button">Cancelar</button>
+                                    <button id="c-save_name_edit" class="btn btn-primary save-name-btn" type="button"
+                                        style="margin-left: 4px">Atualizar</button>
+                                </div>
                             </div>
                         </div>
                     </div>

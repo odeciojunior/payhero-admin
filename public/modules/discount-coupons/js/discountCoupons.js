@@ -197,8 +197,14 @@ function show_plans(){
     var show_plans = ''
     for(i in items_selected){
         
+        if(items_selected[i].name.length > 18){
+
+            toolTip = 'aria-describedby="tt'+items_selected[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+items_selected[i].name+'"'
+        }else{
+            toolTip = ''
+        }
         
-        show_plans += `<div class="item_raw" >
+        show_plans += `<div ${toolTip} class="item_raw" >
     
             <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
                 <span style="background-image: url(`+(items_selected[i].image?items_selected[i].image:'https://cloudfox-files.s3.amazonaws.com/produto.svg')+`)" class="image2"></span>
@@ -210,6 +216,12 @@ function show_plans(){
     }
     if(show_plans)
         $('#show_plans, #c-show_plans').html(show_plans)
+    
+    $('[data-toggle="tooltip"]').tooltip('dispose')
+
+    $('[data-toggle="tooltip"]').tooltip({
+        container: '.page'
+    });
 }
 
 function atualizarCoupon() {
@@ -509,8 +521,11 @@ $(function () {
         $('#edit-rules').hide()
 
 
+        $('#edit-name-box').animate({height:146})
         $('#display_name').hide()
         $('#display_name_edit').show()
+
+        // 44 146
         $('#name-edit').focus()
         $('#name-edit').val($('#d-name').html());
         
@@ -522,6 +537,7 @@ $(function () {
             $('#display_name_edit').hide()
             $('#display_name').show()
             $('#edit-name').show()
+            $('#edit-name-box').animate({height:44})
 
         })   
     }

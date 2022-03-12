@@ -116,11 +116,11 @@
                         <div class="flex row" style="padding-left: 5px">
                             <div class="col-6" >
                                 <label>Nome</label>
-                                <input class="input-pad" style="height: 48px" name="name" id="c_name" maxlength="20" autocomplete="" autofocus placeholder="Digite um nome" type="text">
+                                <input  onkeyup="$(this).removeClass('warning-input')" class="input-pad" style="height: 48px" name="name" id="c_name" maxlength="20" autocomplete="" autofocus placeholder="Digite um nome" type="text">
                             </div>
                             <div class="col-6" >
                                 <label>Código do cupom</label>
-                                <input class="input-pad" style="height: 48px" name="code" id="c_code" maxlength="20"  autocomplete=""  placeholder="Crie um código" type="text">
+                                <input   onkeyup="$(this).removeClass('warning-input')" class="input-pad" style="height: 48px" name="code" id="c_code" maxlength="20"  autocomplete=""  placeholder="Crie um código" type="text">
                             </div>
                         </div>
                         
@@ -185,7 +185,7 @@
 
                                 <label>Vence em</label>
                                 
-                                <input class="input-pad"  name="expires" type="text" id="date_range" style="padding-right: 40px; height: 48px" autocomplete="off">
+                                <input  onkeyup="$(this).removeClass('warning-input')" class="input-pad"  name="expires" type="text" id="date_range" style="padding-right: 40px; height: 48px" autocomplete="off">
                                 <svg id="cal-icon" class="pointer" style="pointer-events: none;
                                 position: absolute; top:43px; right: 28px;" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18.75 0C20.5449 0 22 1.45507 22 3.25V18.75C22 20.5449 20.5449 22 18.75 22H3.25C1.45507 22 0 20.5449 0 18.75V3.25C0 1.45507 1.45507 0 3.25 0H18.75ZM20.5 6.503H1.5V18.75C1.5 19.7165 2.2835 20.5 3.25 20.5H18.75C19.7165 20.5 20.5 19.7165 20.5 18.75V6.503ZM18.75 1.5H3.25C2.2835 1.5 1.5 2.2835 1.5 3.25V5.003H20.5V3.25C20.5 2.2835 19.7165 1.5 18.75 1.5Z" fill="#636363"/>
@@ -197,7 +197,7 @@
                                 
 
                                 <label class="custom-check">
-                                    <input name="nao_vence" type="checkbox" class="custom-control-input" id="nao_vence">
+                                    <input  onchange="$('#date_range').removeClass('warning-input')" name="nao_vence" type="checkbox" class="custom-control-input" id="nao_vence">
                                     <span class="icone"></span>
                                     Não vence
                                 </label>
@@ -222,7 +222,7 @@
                     <div class="modal-footer">
                         <div style="width: 100%" class="justify-center text-center mt-10">
                             <button class="btn back-btn add-coupon-back" type="button">Voltar</button>
-                            <button class="btn btn-primary coupon-next btn2 add-coupon" disabled type="button">Finalizar</button>
+                            <button class="btn btn-primary coupon-next btn2 add-coupon"  type="button">Finalizar</button>
                         </div>
                     </div>
 
