@@ -108,7 +108,7 @@ class Kernel extends ConsoleKernel
 
         // $schedule->command('verify:boletopaid')->dailyAt('10:30');  remover dependencias
 
-        $schedule->command('listener:delay')->everyTenMinutes();
+        //$schedule->command('listener:delay')->everyTenMinutes();
     }
 
 
