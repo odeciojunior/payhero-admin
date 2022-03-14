@@ -59,7 +59,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('06:25');
         $schedule->command('getnet:check-withdrawals-released-cloudfox')->mondays()->at('22:00');
         $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->mondays()->at('22:30');
-        
+
         $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
         $schedule->command('asaas:transfers-chargebacks')->dailyAt('00:20');
         $schedule->command('check:has-valid-tracking')->dailyAt('00:30');
@@ -107,6 +107,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:promotional-tax')->dailyAt('23:45');
 
         // $schedule->command('verify:boletopaid')->dailyAt('10:30');  remover dependencias
+
+        //$schedule->command('listener:delay')->everyTenMinutes();
     }
 
 
