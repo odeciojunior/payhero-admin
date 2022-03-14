@@ -36,7 +36,7 @@ class ListenerDelayListener implements ShouldQueue
 
     public function __construct()
     {
-        $this->delay = 60;
+        $this->delay(60);
     }
 
     public function handle(ListenerDelayEvent $event)
