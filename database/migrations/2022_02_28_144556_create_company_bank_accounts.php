@@ -35,37 +35,37 @@ class CreateCompanyBankAccounts extends Migration
             $table->softDeletes();
         });
 
-        $companies = DB::table('companies')->where('document','<>','')
-        ->whereNotNull('agency')->whereNotNull('bank')->whereNotNull('account')->whereNotNull('account_ddigit')->get();
+        // $companies = DB::table('companies')->where('document','<>','')
+        // ->whereNotNull('agency')->whereNotNull('bank')->whereNotNull('account')->whereNotNull('account_ddigit')->get();
 
-        $default = true;
-        foreach($companies as $company)
-        {
-            $default = true;
-            if($company->has_pix_key){
-                CompanyBankAccount::create([
-                    'company_id'=>$company->id,
-                    'transfer_type'=>'PIX',
-                    'type_key_pix'=>$company->company_type==Company::JURIDICAL_PERSON?'CNPJ':'CPF',
-                    'key_pix'=>$company->document,
-                    'is_default'=>true,
-                    'status'=>'VERIFIED',
-                ]);     
-                $default =false;
-            }
+        // $default = true;
+        // foreach($companies as $company)
+        // {
+        //     $default = true;
+        //     if($company->has_pix_key){
+        //         CompanyBankAccount::create([
+        //             'company_id'=>$company->id,
+        //             'transfer_type'=>'PIX',
+        //             'type_key_pix'=>$company->company_type==Company::JURIDICAL_PERSON?'CNPJ':'CPF',
+        //             'key_pix'=>$company->document,
+        //             'is_default'=>true,
+        //             'status'=>'VERIFIED',
+        //         ]);     
+        //         $default =false;
+        //     }
 
-            CompanyBankAccount::create([
-                'company_id'=>$company->id,
-                'transfer_type'=>'TED',
-                'bank'=>$company->bank,
-                'agency'=>$company->agency,
-                'agency_digit'=>$company->agency_digit,
-                'account'=>$company->account,
-                'account_digit'=>$company->account_digit,
-                'is_default'=>$default,
-                'status',
-            ]); 
-        }
+        //     CompanyBankAccount::create([
+        //         'company_id'=>$company->id,
+        //         'transfer_type'=>'TED',
+        //         'bank'=>$company->bank,
+        //         'agency'=>$company->agency,
+        //         'agency_digit'=>$company->agency_digit,
+        //         'account'=>$company->account,
+        //         'account_digit'=>$company->account_digit,
+        //         'is_default'=>$default,
+        //         'status',
+        //     ]); 
+        // }
     }
 
     /**
