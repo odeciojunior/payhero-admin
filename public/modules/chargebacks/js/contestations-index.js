@@ -35,139 +35,18 @@ $(document).ready(function () {
         null: "badge-primary",
     };
 
-    $('#date_range').val(moment().subtract(29, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY')).dateRangePicker();
-    atualizar();
-    getTotalValues();
-    getProjects();
-    $("#bt_filtro").on("click", function (event) {
-        event.preventDefault();
-        atualizar();
-        getTotalValues();
-    });
-    
-    // Obtem o os campos dos filtros
-    function getProjects() {
-        loadingOnScreen();
-        $.ajax({
-            method: "GET",
-            url: "/api/projects?select=true",
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                if (!isEmpty(response.data)) {
-                    $("#project-empty").hide();
-                    $("#project-not-empty").show();
-                    // $("#export-excel").show();
-
-                    $.each(response.data, function (i, project) {
-                        $("#project").append(
-                            $("<option>", {
-                                value: project.id,
-                                text: project.name,
-                            })
-                        );
-                    });
-
-                    atualizar();
-                } else {
-                    // $("#export-excel").hide();
-                    $("#project-not-empty").hide();
-                    $("#project-empty").show();
-                }
-
-                loadingOnScreenRemove();
-            },
-        });
-    }
-
-    $('#transaction').on('change paste keyup select', function () {
-        let val = $(this).val();
-
-        if (val === '') {
-            $('#date_type').attr('disabled', false).removeClass('disableFields');
-            $('#date_range').attr('disabled', false).removeClass('disableFields');
-        } else {
-            $("#date_range").val(moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY"));
-            $('#date_type').attr('disabled', true).addClass('disableFields');
-            $('#date_range').attr('disabled', true).addClass('disableFields');
-        }
-    });
-
-    //Search user
-    $("#usuario").select2({
-        placeholder: "Nome do usuário",
-        allowClear: true,
-        language: {
-            noResults: function () {
-                return "Nenhum usuário encontrado";
-            },
-            searching: function () {
-                return "Procurando...";
-            },
-        },
-        ajax: {
-            data: function (params) {
-                return {
-                    list: "user",
-                    search: params.term,
-                };
-            },
-            method: "POST",
-            url: "/users/searchuser",
-            delay: 300,
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            processResults: function (res) {
-                return {
-                    results: $.map(res.data, function (obj) {
-                        return { id: obj.id, text: obj.name };
-                    }),
-                };
-            },
-        },
-    });
-
-    $(".btn-light-1").click(function () {
-        var collapse = $("#icon-filtro");
-        var text = $("#text-filtro");
-
-        text.fadeOut(10);
-        if (
-            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
-            collapse.css("transform") == "none"
-        ) {
-            collapse.css("transform", "rotate(180deg)");
-            text.text("Minimizar filtros").fadeIn();
-        } else {
-            collapse.css("transform", "rotate(0deg)");
-            text.text("Filtros avançados").fadeIn();
-        }
-    });
+    $('#date_range').val(moment().subtract(29, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY')).dateRangePicker({format: 'DD/MM/YYYY'});
 
     function getFilters(urlParams = true) {
         let current_url = window.location.href;
         let vazio = current_url.includes("vazio") ? "true" : "";
-        let date_range = $("#date_range").val();
-        if (transaction.length > 0){
-            date_range = moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY")
-        }
 
         let data = {
             transaction: $("#transaction").val().split("#").join(""),
             project: $("#project").val() ?? "",
             customer: $("#customer").val() ?? "",
             customer_document: $("#customer_document").val() ?? "",
-            date_range: date_range,
+            date_range: $('#date_range').val().replace(" à ", " - ") ?? "",
             date_type: $("#date_type").val() ?? "",
             order_by_expiration_date: $("#expiration_date").is(":checked") ? 1 : 0,
             contestation_situation: $("#contestation_situation").val() ?? "",
@@ -187,6 +66,137 @@ $(document).ready(function () {
         return data;
     }
 
+    const addZeroLeft = (value) => value > 0 && value < 10 ? String(value).padStart(2, '0') : value
+
+    function pagination(response) {
+        $("#pagination").html("");
+
+        if (response.meta.total <= response.meta.per_page) {
+            return;
+        }
+
+        var primeira_pagina =
+            "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+
+        $("#pagination").append(primeira_pagina);
+
+        if (response.meta.current_page == "1") {
+            $("#primeira_pagina").attr("disabled", true);
+            $("#primeira_pagina").addClass("nav-btn");
+            $("#primeira_pagina").addClass("active");
+        }
+
+        $("#primeira_pagina").on("click", function () {
+            atualizar("?page=1");
+        });
+
+        for (x = 3; x > 0; x--) {
+            if (response.meta.current_page - x <= 1) {
+                continue;
+            }
+
+            $("#pagination").append(
+                "<button id='pagina_" +
+                    (response.meta.current_page - x) +
+                    "' class='btn nav-btn'>" +
+                    (response.meta.current_page - x) +
+                    "</button>"
+            );
+
+            $("#pagina_" + (response.meta.current_page - x)).on(
+                "click",
+                function () {
+                    atualizar("?page=" + $(this).html());
+                }
+            );
+        }
+
+        if (
+            response.meta.current_page != 1 &&
+            response.meta.current_page != response.meta.last_page
+        ) {
+            var pagina_atual =
+                "<button id='pagina_atual' class='btn nav-btn active'>" +
+                response.meta.current_page +
+                "</button>";
+
+            $("#pagination").append(pagina_atual);
+
+            $("#pagina_atual").attr("disabled", true);
+            $("#pagina_atual").addClass("nav-btn");
+            $("#pagina_atual").addClass("active");
+        }
+        for (x = 1; x < 4; x++) {
+            if (response.meta.current_page + x >= response.meta.last_page) {
+                continue;
+            }
+
+            $("#pagination").append(
+                "<button id='pagina_" +
+                    (response.meta.current_page + x) +
+                    "' class='btn nav-btn'>" +
+                    (response.meta.current_page + x) +
+                    "</button>"
+            );
+
+            $("#pagina_" + (response.meta.current_page + x)).on(
+                "click",
+                function () {
+                    atualizar("?page=" + $(this).html());
+                }
+            );
+        }
+
+        if (response.meta.last_page != "1") {
+            var ultima_pagina =
+                "<button id='ultima_pagina' class='btn nav-btn'>" +
+                response.meta.last_page +
+                "</button>";
+
+            $("#pagination").append(ultima_pagina);
+
+            if (response.meta.current_page == response.meta.last_page) {
+                $("#ultima_pagina").attr("disabled", true);
+                $("#ultima_pagina").addClass("nav-btn");
+                $("#ultima_pagina").addClass("active");
+            }
+
+            $("#ultima_pagina").on("click", function () {
+                atualizar("?page=" + response.meta.last_page);
+            });
+        }
+    }
+
+    function contestationDetails() {
+        $(".detalhes_ckargeback").unbind("click");
+        $(".detalhes_ckargeback").on("click", function (event) {
+            event.preventDefault();
+            var ckargeback = $(this).attr("ckargeback");
+            $("#modal_titulo").html("Detalhes da contestação");
+            loadOnAny("#modal-details .modal-body");
+
+            $.ajax({
+                method: "GET",
+                url: "api/contestations/" + ckargeback,
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr(
+                        "content"
+                    ),
+                    Accept: "application/json",
+                },
+                error: function (response) {
+                    loadOnAny("#modal-details .modal-body", true);
+                    errorAjaxResponse(response);
+                },
+                success: function (response) {
+                    $(".modal-body").html("");
+                    loadOnAny("#modal-details .modal-body", true);
+                    $(".modal-body").html(response);
+                },
+            });
+        });
+    }
+    
     function atualizar(link = null) {
         loadOnTable("#chargebacks-table-data", "#chargebacks-table");
 
@@ -221,49 +231,56 @@ $(document).ready(function () {
 
                     dados = "";
                     dados += `
-                                <tr ${value.expiration_user == "Ganha" ? "class='won-contestation'" : ""}>
-                                    <td id='${value.id}'><span>${value.sale_code}</span></td>
-                                    <td class="line-overflow" title="${value.company}">${value.company_limit}<br><small class="text-muted">${value.project}</small></td>
-                                    <td class="line-overflow" title="${value.customer}">${value.customer}<br><small class="text-muted"> Pagamento em ${value.adjustment_date}</small></td>
-                                   `;
+                        <tr ${value.expiration_user == "Ganha" ? "class='won-contestation'" : ""}>
+                            <td id='${value.id}'>
+                                <span>${value.sale_code}</span>
+                            </td>
 
-                    if (value.sale_status in statusObject) {
-                        dados += `<td class='copy_link'>
-                                    <div class="d-flex justify-content-center align-items-center text-center" >
-                                        <span class='badge ${
-                                            badgeObject[value.sale_status]
-                                        } ${
-                            value.sale_status === 10
-                                ? "pointer"
-                                : "cursor-default"
-                            } font-size-14' data-toggle="tooltip" data-html="true" data-placement="top" title="${valuesObject}">${
-                            statusObject[value.sale_status]
-                        }</span>
-                                        ${
-                                            value.sale_has_valid_tracking
-                                                ? "" +
-                                                  '<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>'
-                                                : value.sale_only_digital_products
+                            <td class="line-overflow" title="${value.company}">
+                                ${value.company_limit}
+                                <br>
+                                <small class="text-muted">
+                                    ${value.project}
+                                </small>
+                            </td>
+
+                            <td class="line-overflow" title="${value.customer}">
+                                ${value.customer}
+                                <br>
+                                <small class="text-muted">
+                                    Pagamento em ${value.adjustment_date}
+                                </small>
+                            </td>`;
+
+                            if (value.sale_status in statusObject) {
+                                dados +=`
+                                    <td class='copy_link'>
+                                        <div class="d-flex justify-content-center align-items-center text-center" >
+                                            <span class='badge ${badgeObject[value.sale_status]} ${value.sale_status === 10 ? "pointer" : "cursor-default"} font-size-14' data-toggle="tooltip" data-html="true" data-placement="top" title="${valuesObject}">
+                                                ${statusObject[value.sale_status]}
+                                            </span>
+                                            ${value.sale_has_valid_tracking ? "" +'<span class="o-truck-1 font-size-20 text-success cursor-default ml-5" data-toggle="tooltip" title="Rastreamento válido"></span>' : value.sale_only_digital_products
                                                 ? '<i class="material-icons font-size-20 text-info cursor-default ml-5" data-toggle="tooltip" title="A venda não tem produtos físicos">computer</i>'
-                                                : '<span class="o-truck-1 font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado"></span>'
-                                        }
-                                        ${
-                                            value.sale_is_chargeback_recovered
-                                                ? '<img class="orange-gradient ml-5" src="/global/img/svg/chargeback.svg" width="20px" title="Chargeback recuperado">'
-                                                : ""
-                                        }
-                                    </div>
-                                </td>`;
-                    } else {
-                        dados += `<td><span class='badge badge-danger'> Vazio</span></td>`;
-                    }
-                    //<td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia") ? '<br><span class="font-size-12 text-muted"> para expirar</span>' : ""}</td>
-                    dados += `
-                                    
-                                    <td class="font-size-12 bold line-overflow" style="white-space: normal;">${value.reason}</td>
-<!--                                    <td style='white-space: nowrap'><b>${
-                        value.amount
-                    }</b></td>-->
+                                                : '<span class="o-truck-1 font-size-20 text-danger cursor-default ml-5" data-toggle="tooltip" title="Rastreamento inválido ou não informado"></span>'}
+                                            ${value.sale_is_chargeback_recovered ? '<img class="orange-gradient ml-5" src="/global/img/svg/chargeback.svg" width="20px" title="Chargeback recuperado">' : ""}
+                                        </div>
+                                    </td>`
+                                ;
+                            } else {
+                                dados +=`
+                                    <td>
+                                        <span class='badge badge-danger'>
+                                            Vazio
+                                        </span>
+                                    </td>`
+                                ;
+                            }
+                            //<td class="bold">${value.expiration_user} ${value.expiration_user.includes("dia") ? '<br><span class="font-size-12 text-muted"> para expirar</span>' : ""}</td>
+                            dados +=`
+                                <td class="font-size-12 bold line-overflow" style="white-space: normal;">
+                                    ${value.reason}
+                                </td>
+                                <!-- <td style='white-space: nowrap'> <b>${value.amount}</b> </td>-->
                                     <td>
                                         ${
                                             value.is_file_user_completed
@@ -372,7 +389,6 @@ $(document).ready(function () {
         });
     }
 
-    const addZeroLeft = (value) => value > 0 && value < 10 ? String(value).padStart(2, '0') : value
     function getTotalValues() {
         loadOnAny(".total-number", false, {
             styles: {
@@ -414,134 +430,120 @@ $(document).ready(function () {
         });
     }
 
-    function contestationDetails() {
-        $(".detalhes_ckargeback").unbind("click");
-        $(".detalhes_ckargeback").on("click", function (event) {
-            event.preventDefault();
-            var ckargeback = $(this).attr("ckargeback");
-            $("#modal_titulo").html("Detalhes da contestação");
-            loadOnAny("#modal-details .modal-body");
+    // Obtem o os campos dos filtros
+    function getProjects() {
+        loadingOnScreen();
+        $.ajax({
+            method: "GET",
+            url: "/api/projects?select=true",
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                if (!isEmpty(response.data)) {
+                    $("#project-empty").hide();
+                    $("#project-not-empty").show();
+                    // $("#export-excel").show();
 
-            $.ajax({
-                method: "GET",
-                url: "api/contestations/" + ckargeback,
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr(
-                        "content"
-                    ),
-                    Accept: "application/json",
-                },
-                error: function (response) {
-                    loadOnAny("#modal-details .modal-body", true);
-                    errorAjaxResponse(response);
-                },
-                success: function (response) {
-                    $(".modal-body").html("");
-                    loadOnAny("#modal-details .modal-body", true);
-                    $(".modal-body").html(response);
-                },
-            });
+                    $.each(response.data, function (i, project) {
+                        $("#project").append(
+                            $("<option>", {
+                                value: project.id,
+                                text: project.name,
+                            })
+                        );
+                    });
+
+                    atualizar();
+                } else {
+                    // $("#export-excel").hide();
+                    $("#project-not-empty").hide();
+                    $("#project-empty").show();
+                }
+
+                loadingOnScreenRemove();
+            },
         });
     }
 
-    function pagination(response) {
-        $("#pagination").html("");
+    $("#bt_filtro").on("click", function (event) {
+        event.preventDefault();
+        atualizar();
+        getTotalValues();
+    });
+    
+    $('#transaction').on('change paste keyup select', function () {
+        let val = $(this).val();
 
-        if (response.meta.total <= response.meta.per_page) {
-            return;
+        if (val === '') {
+            $('#date_type').attr('disabled', false).removeClass('disableFields');
+            $('#date_range').attr('disabled', false).removeClass('disableFields');
+        } else {
+            $('#date_range').val(moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY"));
+            $('#date_type').attr('disabled', true).addClass('disableFields');
+            $('#date_range').attr('disabled', true).addClass('disableFields');
         }
+    });
 
-        var primeira_pagina =
-            "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+    //Search user
+    $("#usuario").select2({
+        placeholder: "Nome do usuário",
+        allowClear: true,
+        language: {
+            noResults: function () {
+                return "Nenhum usuário encontrado";
+            },
+            searching: function () {
+                return "Procurando...";
+            },
+        },
+        ajax: {
+            data: function (params) {
+                return {
+                    list: "user",
+                    search: params.term,
+                };
+            },
+            method: "POST",
+            url: "/users/searchuser",
+            delay: 300,
+            dataType: "json",
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            processResults: function (res) {
+                return {
+                    results: $.map(res.data, function (obj) {
+                        return { id: obj.id, text: obj.name };
+                    }),
+                };
+            },
+        },
+    });
 
-        $("#pagination").append(primeira_pagina);
+    $(".btn-light-1").click(function () {
+        var collapse = $("#icon-filtro");
+        var text = $("#text-filtro");
 
-        if (response.meta.current_page == "1") {
-            $("#primeira_pagina").attr("disabled", true);
-            $("#primeira_pagina").addClass("nav-btn");
-            $("#primeira_pagina").addClass("active");
-        }
-
-        $("#primeira_pagina").on("click", function () {
-            atualizar("?page=1");
-        });
-
-        for (x = 3; x > 0; x--) {
-            if (response.meta.current_page - x <= 1) {
-                continue;
-            }
-
-            $("#pagination").append(
-                "<button id='pagina_" +
-                    (response.meta.current_page - x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page - x) +
-                    "</button>"
-            );
-
-            $("#pagina_" + (response.meta.current_page - x)).on(
-                "click",
-                function () {
-                    atualizar("?page=" + $(this).html());
-                }
-            );
-        }
-
+        text.fadeOut(10);
         if (
-            response.meta.current_page != 1 &&
-            response.meta.current_page != response.meta.last_page
+            collapse.css("transform") == "matrix(1, 0, 0, 1, 0, 0)" ||
+            collapse.css("transform") == "none"
         ) {
-            var pagina_atual =
-                "<button id='pagina_atual' class='btn nav-btn active'>" +
-                response.meta.current_page +
-                "</button>";
-
-            $("#pagination").append(pagina_atual);
-
-            $("#pagina_atual").attr("disabled", true);
-            $("#pagina_atual").addClass("nav-btn");
-            $("#pagina_atual").addClass("active");
+            collapse.css("transform", "rotate(180deg)");
+            text.text("Minimizar filtros").fadeIn();
+        } else {
+            collapse.css("transform", "rotate(0deg)");
+            text.text("Filtros avançados").fadeIn();
         }
-        for (x = 1; x < 4; x++) {
-            if (response.meta.current_page + x >= response.meta.last_page) {
-                continue;
-            }
-
-            $("#pagination").append(
-                "<button id='pagina_" +
-                    (response.meta.current_page + x) +
-                    "' class='btn nav-btn'>" +
-                    (response.meta.current_page + x) +
-                    "</button>"
-            );
-
-            $("#pagina_" + (response.meta.current_page + x)).on(
-                "click",
-                function () {
-                    atualizar("?page=" + $(this).html());
-                }
-            );
-        }
-
-        if (response.meta.last_page != "1") {
-            var ultima_pagina =
-                "<button id='ultima_pagina' class='btn nav-btn'>" +
-                response.meta.last_page +
-                "</button>";
-
-            $("#pagination").append(ultima_pagina);
-
-            if (response.meta.current_page == response.meta.last_page) {
-                $("#ultima_pagina").attr("disabled", true);
-                $("#ultima_pagina").addClass("nav-btn");
-                $("#ultima_pagina").addClass("active");
-            }
-
-            $("#ultima_pagina").on("click", function () {
-                atualizar("?page=" + response.meta.last_page);
-            });
-        }
-    }
+    });
 
     $(document).on("keypress", function (e) {
         if (e.keyCode == 13) {
@@ -551,4 +553,8 @@ $(document).ready(function () {
     });
 
     $("#pagination").css({ marginBottom: "100px" });
+
+    atualizar();
+    getTotalValues();
+    getProjects();
 });
