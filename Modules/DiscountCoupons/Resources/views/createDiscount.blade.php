@@ -62,7 +62,7 @@
                     </div> --}}
                     <div class="d-flex modal-new-layout box-description">
                         <input class="form-control form-control-lg search_input_create_discount" type="text" id="search_input" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
-                        <div class="input-group input-group-lg" style="width: 650px;">
+                        <div class="input-group input-group-lg" style="width: 690px;">
                             <input onkeyup="set_description_value(this, $('.search_input_create_discount'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
                             <div class="input-group-append">
                                 <span class="input-group-text">
