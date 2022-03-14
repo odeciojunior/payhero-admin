@@ -72,3 +72,25 @@
 #chargebacks-table-data span.o-upload-to-cloud-1, #chargebacks-table-data span.o-eye-1 {
 	font-size: 27px;
 }
+
+#date_range{
+	cursor: pointer;
+}
+.filter-badge.daterange:not(.active)::after {
+    content: url('/modules/global/img/calendar.svg') !important;
+    top: 9px;
+    visibility: visible;
+}
+
+.filter-badge.daterange.focused::after {
+    content: url('/modules/global/img/calendar-blue.svg') !important;
+    visibility: visible;
+}
+.filter-badge {
+    position: absolute;
+	cursor: pointer;
+}
+.filter-badge.focused {
+    border: 1px solid #2E85EC;
+    color: #2E85EC;
+}
