@@ -155,7 +155,7 @@ class ProjectsApiController extends Controller
             $checkoutConfig = CheckoutConfig::create([
                 'company_id' => $company->id,
                 'project_id' => $project->id,
-                'pix_enabled' => $company->has_pix_key
+                'pix_enabled' => !!$company->has_pix_key
             ]);
 
             if (empty($checkoutConfig)) {
