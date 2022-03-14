@@ -59,7 +59,6 @@
                 border-radius: 50px;
                 margin-top: -12px;
             }
-
         </style>
     @endpush
 
@@ -268,6 +267,7 @@
             @include('projects::empty')
             {{-- FIM loja nao existem lojas--}}
         </div>
+
         @push('scripts')
             <script src="{{ asset('/modules/chargebacks/js/contestations-index.js?v='. random_int(100, 10000)) }}"></script>
             <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
