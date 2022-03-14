@@ -479,13 +479,27 @@
                                                     </footer>
 												</div>
 											</div>
-											<div class="card ">
+											<div class="card " id="card-origin">
 												<div class="card-body card-origin">
 													<div class="row">
-														<header class="col-8">
+                                                        <div class="ske-load">
+                                                            <div class="px-20 py-0">
+                                                                <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+                                                            </div>
+                                                            <div class="px-20 py-0">
+                                                                <div class="row align-items-center mx-0 py-10">
+                                                                    <div class="skeleton skeleton-circle"></div>
+                                                                    <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                                </div>
+                                                                <div class="skeleton skeleton-text"></div>
+                                                            </div>
+                                                        </div>
+
+														<header class="col-6">
 															<h6 class="font-size-16 gray-700"> Origens </h6>
 														</header>
-														<div class="col-4">
+                                                        
+														<div class="col-6">
 															<select class="form-control float-right" id='origin'>
 																<option selected value="src">SRC</option>
 																<option value="utm_source">UTM Source</option>
@@ -501,7 +515,7 @@
 															<div class="row">
 																<div class="col-12">
 																	<table class="table-vendas table table-striped "style="width:100%;margin: auto; margin-top:15px">
-																		<tbody id="origins-table">
+																		<tbody id="origins-table"  class="origin-report">
 																			{{-- js carrega... --}}
 																		</tbody>
 																	</table>

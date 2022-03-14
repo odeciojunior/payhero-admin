@@ -1609,4 +1609,5 @@ h4.number{
     height: 215px;
     background-position: center;
 }
-#card-regions .ske-load { top: 55%; }
+#card-regions .ske-load,
+#card-origin .ske-load { top: 55%; }

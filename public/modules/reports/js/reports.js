@@ -5,6 +5,8 @@ $(function () {
     newSellGraph();
     distributionGraphSeller();
 
+    let resumeUrl = '/api/reports/resume';
+
     function getCashback() {
         const currentRequest = $.ajax({
             type: 'GET',
@@ -431,12 +433,12 @@ $(function () {
     function getRegions() {
         const currentRequest = $.ajax({
             type: 'GET',
-            url: "/api/reports/resume/regions?date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/regions?date_range=" + $("input[name='daterange']").val(),
         });
 
         return $.ajax({
             method: "GET",
-            url: "/api/reports/resume/regions?date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/regions?date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -453,7 +455,7 @@ $(function () {
             success: function success(response, status) {                
 
                 if(status !== ''){
-                    if(response.data == ''){
+                    if(response.data != ''){
                         $('.new-graph-regions').html('<canvas id=regionsChart></canvas>').addClass('visible');
                         $(".new-graph-regions").next('.no-graph').remove();
                         graphRegions();
@@ -537,6 +539,9 @@ $(function () {
     });
 
     $("#origin").on("change", function () {
+        $("#card-origin .ske-load").show();
+        $('.origin-report').hide();
+        
         $("#origin").val($(this).val());
         updateSalesByOrigin();
     });
@@ -553,27 +558,6 @@ $(function () {
             getCoupons(),
             getRegions()
         ).then((comission,payments,products,pending,cashback,sales,coupons, regions) => {
-            if(comission[1] == "success") {
-                $('#card-comission .ske-load').hide();
-            }
-            if(payments[1] == "success") {
-                $('#card-typepayments .ske-load').hide();
-            }
-            if(products[1] == "success") {
-                $('#card-products .ske-load').hide();
-            }
-            if(pending[1] == "success") {
-                $('#card-pending .ske-load').hide();
-            }
-            if(cashback[1] == "success") {
-                $('#card-cashback .ske-load').hide();
-            }
-            if(sales[1] == "success") {
-                $('#card-sales .ske-load').hide();
-            }
-            if(coupons[1] == "success") {
-                $('#card-coupons .ske-load').hide();
-            }
 
             if(regions[0].data != '') {
                 console.log(regions[0].data);
@@ -602,6 +586,7 @@ $(function () {
             $('.value-price *').removeClass('visible');
             $("#type-payment").removeClass('visible');
             $('.list-products li').remove();
+            $(".origin-report").hide();
         }
 
         $.ajax({
@@ -730,32 +715,35 @@ $(function () {
                 ? arguments[0]
                 : null;
 
-        loadOnTable("#origins-table", ".table-vendas");
+        // loadOnTable("#origins-table", ".table-vendas");
 
-        if (link == null) {
-            link =
-                "/api/reports/getsalesbyorigin?" +
-                "project_id=" +
-                $("#select_projects").val() +
-                "&start_date=" +
-                startDate +
-                "&end_date=" +
-                endDate +
-                "&origin=" +
-                $("#origin").val();
-        } else {
-            link =
-                "/api/reports/getsalesbyorigin" +
-                link +
-                "&project_id=" +
-                $("#select_projects").val() +
-                "&start_date=" +
-                startDate +
-                "&end_date=" +
-                endDate +
-                "&origin=" +
-                $("#origin").val();
-        }
+        link = `${resumeUrl}/origins?date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}`;
+
+        // if (link == null) {
+        //     link =
+        //         "/api/reports/getsalesbyorigin?" +
+        //         "project_id=" +
+        //         $("#select_projects").val() +
+        //         "&start_date=" +
+        //         startDate +
+        //         "&end_date=" +
+        //         endDate +
+        //         "&origin=" +
+        //         $("#origin").val();
+                
+        // } else {
+        //     link =
+        //         "/api/reports/getsalesbyorigin" +
+        //         link +
+        //         "&project_id=" +
+        //         $("#select_projects").val() +
+        //         "&start_date=" +
+        //         startDate +
+        //         "&end_date=" +
+        //         endDate +
+        //         "&origin=" +
+        //         $("#origin").val();
+        // }
 
         $.ajax({
             url: link,
@@ -769,10 +757,19 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                if (response.data.length == 0) {
-                    $("#origins-table").html(
-                        "<td><img src='" + $("#origins-table-itens").attr("img-empty") + "'></td><td> <p class='no-data-origin'><strong>Sem dados, por enquanto...</strong>Ainda faltam dados suficientes a comparação, continue rodando!</p></td>"
-                    );
+                let td = `
+                    <td>
+                        <img src=${$("#origins-table-itens").attr("img-empty")}></td>
+                    <td>
+                        <p class='no-data-origin'>
+                            <strong>Sem dados, por enquanto...</strong>
+                            Ainda faltam dados suficientes a comparação, continue rodando!
+                        </p>
+                    </td>`;
+                
+
+                if (response.data == '') {
+                    $("#origins-table").html(td);
                     $("#pagination").html("");
                     $("#pagination-origins").hide();
                 } else {
@@ -797,6 +794,8 @@ $(function () {
 
                     pagination(response, "origins", updateSalesByOrigin);
                 }
+                $("#card-origin .ske-load").hide();
+                $(".origin-report").show();
             },
         });
     }
