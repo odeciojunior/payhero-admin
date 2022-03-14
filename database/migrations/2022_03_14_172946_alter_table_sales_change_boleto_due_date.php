@@ -32,6 +32,8 @@ class AlterTableSalesChangeBoletoDueDate extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('sales', function(Blueprint $table) {
+            $table->dropIndex(['boleto_due_date']);
+        });
     }
 }
