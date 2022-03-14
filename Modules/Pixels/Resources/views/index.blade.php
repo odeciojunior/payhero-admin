@@ -30,6 +30,26 @@
     .font-text {
         font: normal normal normal 16px Muli;
     }
+
+    /*.switch-holder {*/
+    /*    display: flex;*/
+    /*    justify-content: space-between;*/
+    /*    align-items: center;*/
+    /*}*/
+
+    /*.switch-holder label {*/
+    /*    margin-bottom: 0 !important;*/
+    /*    font-size: 12px;*/
+    /*}*/
+
+    /*.switch-holder span {*/
+    /*    font-weight: bold;*/
+    /*}*/
+
+    #modal-create-pixel .sirius-select-container,
+    #modal-edit-pixel .sirius-select-container {
+        width: 500px
+    }
 </style>
 
 <div class="card card-body" style="margin-bottom: 25px; padding-bottom: 0;">

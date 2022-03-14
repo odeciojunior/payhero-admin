@@ -16,17 +16,18 @@ abstract class GatewayAbstract{
 
     public function requestHttp(GatewayCurlOptions $option)
     {
-        $arrEndpoint = $this->getEndpoint($option);        
-           
-        $curl = curl_init($option->baseUrl??$this->baseUrl . $arrEndpoint['route']);
+        $arrEndpoint = $this->getEndpoint($option);
+
+        $urlApi = (!empty($option->baseUrl)? $option->baseUrl : $this->baseUrl) . $arrEndpoint['route'];
+
+        $curl = curl_init($urlApi);
 
         $headers = $option->headers ?? $this->getDefaultHeader();
-
+        
         curl_setopt($curl, CURLOPT_ENCODING, '');
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $arrEndpoint['method']);
 
         if (!is_null($option->data)) {
-
             curl_setopt($curl, CURLOPT_POSTFIELDS, $option->getData());
         }
 
@@ -40,7 +41,7 @@ abstract class GatewayAbstract{
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
         $result = curl_exec($curl);
-        
+
         $this->curlInfo = curl_getinfo($curl);
         
         curl_close($curl);

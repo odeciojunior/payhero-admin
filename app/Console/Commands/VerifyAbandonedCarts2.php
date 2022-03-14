@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\ProjectNotification;
 use Modules\Core\Services\CartRecoveryService;
 
 class VerifyAbandonedCarts2 extends Command
@@ -34,7 +35,7 @@ class VerifyAbandonedCarts2 extends Command
         try {
 
             $cartRecoveryService = new CartRecoveryService();
-            $cartRecoveryService->verifyAbandonedCarts2();
+            $cartRecoveryService->verifyAbandonedCarts(true);
 
         } catch (Exception $e) {
             report($e);

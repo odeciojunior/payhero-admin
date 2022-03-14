@@ -44,6 +44,7 @@ $(document).ready(function () {
         atualizar();
         getTotalValues();
     });
+    
     // Obtem o os campos dos filtros
     function getProjects() {
         loadingOnScreen();
@@ -93,6 +94,7 @@ $(document).ready(function () {
             $('#date_type').attr('disabled', false).removeClass('disableFields');
             $('#date_range').attr('disabled', false).removeClass('disableFields');
         } else {
+            $("#date_range").val(moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY"));
             $('#date_type').attr('disabled', true).addClass('disableFields');
             $('#date_range').attr('disabled', true).addClass('disableFields');
         }
@@ -152,7 +154,6 @@ $(document).ready(function () {
         }
     });
 
-
     function getFilters(urlParams = true) {
         let current_url = window.location.href;
         let vazio = current_url.includes("vazio") ? "true" : "";
@@ -166,7 +167,7 @@ $(document).ready(function () {
             project: $("#project").val() ?? "",
             customer: $("#customer").val() ?? "",
             customer_document: $("#customer_document").val() ?? "",
-            date_range: $("#date_range").val(),
+            date_range: date_range,
             date_type: $("#date_type").val() ?? "",
             order_by_expiration_date: $("#expiration_date").is(":checked") ? 1 : 0,
             contestation_situation: $("#contestation_situation").val() ?? "",

@@ -2,264 +2,123 @@
 
 namespace Modules\Core\Services;
 
-use Exception;
-use Carbon\Carbon;
-use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\DB;
+use \Illuminate\Support\Carbon;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\ProjectNotification;
 use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\SendSmsEvent;
-use Modules\Core\Entities\Log as CheckoutLog;
-use Vinkla\Hashids\Facades\Hashids;
 
-/**
- * Class CartRecoveryService
- * @package Modules\Core\Services
- */
 class CartRecoveryService
 {
-    public function verifyAbandonedCarts()
+    public function verifyAbandonedCarts($lastDay = false)
     {
         try {
-
-            $checkoutModel              = new Checkout();
-            $checkoutLogModel           = new CheckoutLog();
-            $domainModel                = new Domain();
-            $projectNotificationModel   = new ProjectNotification();
             $projectNotificationService = new ProjectNotificationService();
+            $domainApproved = Domain::STATUS_APPROVED;
+            $notificationActive = ProjectNotification::STATUS_ACTIVE;
 
-            $dateStart = new \DateTime();
-            $dateEnd   = new \DateTime();
+            if ($lastDay) {
+                $startDate = now()->subDay()->startOfDay();
+                $endDate = now()->subDay()->endOfDay();
+                $smsNotificationEnum = ProjectNotification::NOTIFICATION_SMS_ABANDONED_CART_NEXT_DAY;
+                $emailNotificationEnum = ProjectNotification::NOTIFICATION_EMAIL_ABANDONED_CART_NEXT_DAY;
+            } else {
+                $startDate = now()->subMinutes(75);
+                $endDate = now()->subHour();
+                $smsNotificationEnum = ProjectNotification::NOTIFICATION_SMS_ABANDONED_CART_AN_HOUR_LATER;
+                $emailNotificationEnum = ProjectNotification::NOTIFICATION_EMAIL_ABANDONED_CART_AN_HOUR_LATER;
+            }
 
-            $dateEnd->modify('-1 hours');
-            $dateStart->modify('-75 minutes');
-            $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
-            $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
-            $checkoutModel->where([
-                                      ['status_enum', '=', $checkoutModel->present()->getStatusEnum('abandoned cart'),
-                                      ], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd],
-                                  ])
-                          ->with('project.checkoutConfig', 'project.users', 'checkoutPlans.plan.productsPlans.product')
-                          ->chunk(400, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
-                              try {
-                                  foreach ($abandonedCarts as $abandonedCart) {
-                                      $products = [];
-                                      try {
-                                          foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
-                                              foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
-                                                  $productArray           = [];
-                                                  $productArray["name"]   = $productPlan->product->name;
-                                                  $productArray["photo"]  = $productPlan->product->photo;
-                                                  $productArray["amount"] = $productPlan->amount;
-                                                  $products[]             = $productArray;
-                                              }
-                                          }
+            DB::select("SET SESSION sort_buffer_size =  @@sort_buffer_size * 2");
+            $query = Checkout::select([
+                'checkouts.id as id',
+                'checkouts.project_id',
+                'p2.name as project_name',
+                'cc.checkout_logo as logo',
+                DB::raw("(select message from project_notifications where notification_enum = {$smsNotificationEnum} and status = {$notificationActive} and project_id = p2.id limit 1) as sms_message"),
+                DB::raw("(select message from project_notifications where notification_enum = {$emailNotificationEnum} and status = {$notificationActive} and project_id = p2.id limit 1) as email_message"),
+                DB::raw("(select d.name from domains as d where d.project_id = p2.id and d.status = {$domainApproved} limit 1) as domain"),
+                DB::raw("cast(concat('[', group_concat(json_object('id', p.id , 'name', p.name, 'photo', p.photo, 'amount', pp.amount)), ']') as json) as products"),
+                DB::raw("(select json_object('name', l.name, 'email', l.email, 'phone', l.telephone) from logs l where l.checkout_id = checkouts.id order by l.id desc limit 1) as customer"),
+            ])->join('checkout_plans as cp', 'checkouts.id', '=', 'cp.checkout_id')
+                ->join('products_plans as pp', 'cp.plan_id', '=', 'pp.plan_id')
+                ->join('products as p', 'pp.product_id', '=', 'p.id')
+                ->join('projects as p2', 'checkouts.project_id', '=', 'p2.id')
+                ->join('checkout_configs as cc', 'cc.project_id', '=', 'p2.id')
+                ->where('checkouts.status_enum', Checkout::STATUS_ABANDONED_CART)
+                ->whereBetween('checkouts.created_at', [$startDate, $endDate])
+                ->groupBy('checkouts.id', 'checkouts.project_id', 'p2.name', 'cc.checkout_logo', 'sms_message', 'email_message', 'domain');
 
-                                          $log = $checkoutLogModel->where('checkout_id', $abandonedCart->id)
-                                                                  ->orderBy('created_at', 'desc')
-                                                                  ->first();
+            $query->chunk(100, function ($abandonedCarts) use ($emailNotificationEnum, $smsNotificationEnum, $projectNotificationService) {
+                foreach ($abandonedCarts as $abandonedCart) {
+                    try {
+                        $customer = json_decode($abandonedCart->customer);
+                        $products = json_decode($abandonedCart->products);
+                        $project = (object)[
+                            'id' => $abandonedCart->project_id,
+                            'name' => $abandonedCart->project_name
+                        ];
 
-                                          $project = $abandonedCart->project;
-                                          $domain  = $domainModel->where('project_id', $project->id)
-                                                                 ->where('status', 3)
-                                                                 ->first();
+                        $domain = $abandonedCart->domain ?? 'cloudfox.net';
+                        $linkCheckout = "https://checkout." . $domain . "/recovery/" . hashids_encode($abandonedCart->id);
 
-                                          $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log['telephone']);
+                        $customerFirstName = current(explode(' ', $customer->name));
+                        $customerPhone = '+55' . preg_replace("/[^0-9]/", "", $customer->phone);
 
-                                          $domainName = $domain->name ?? 'cloudfox.net';
+                        if (!empty($abandonedCart->sms_message)) {
+                            $message = $abandonedCart->sms_message;
+                            $smsMessage = $projectNotificationService->formatNotificationData($message, null, $project, 'sms', $linkCheckout, $customer);
+                            if (!empty($smsMessage) && !empty($customerPhone)) {
+                                $dataSms = [
+                                    'message' => $smsMessage,
+                                    'telephone' => $customerPhone,
+                                    'checkout_id' => $abandonedCart->id,
+                                ];
+                                event(new SendSmsEvent($dataSms));
+                            }
+                        }
 
-                                          $linkCheckout       = "https://checkout." . $domainName . "/recovery/" . Hashids::encode($log->checkout_id);
-                                          $clientNameExploded = explode(' ', $log->name);
+                        if (!empty($abandonedCart->email_message)) {
+                            $message = json_decode($abandonedCart->email_message);
+                            $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $customer);
+                            $titleMessage = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $customer);
+                            $contentMessage = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $customer);
+                            $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
 
-                                          //Traz a mensagem do sms formatado
-                                          $projectNotificationPresenter = $projectNotificationModel->present();
-                                          $projectNotificationSms       = $projectNotificationModel->where('project_id', $project->id)
-                                                                                                   ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('sms_abandoned_cart_an_hour_later'))
-                                                                                                   ->where('status', $projectNotificationPresenter->getStatus('active'))
-                                                                                                   ->first();
-                                          if (!empty($projectNotificationSms)) {
-                                              $message    = $projectNotificationSms->message;
-                                              $smsMessage = $projectNotificationService->formatNotificationData($message, null, $project, 'sms', $linkCheckout, $log);
-                                              if (!empty($smsMessage) && !empty($clientTelephone)) {
-                                                  $dataSms = [
-                                                      'message'   => $smsMessage,
-                                                      'telephone' => $clientTelephone,
-                                                      'checkout'  => $abandonedCart,
-                                                  ];
-                                                  event(new SendSmsEvent($dataSms));
-                                              }
-                                          }
+                            if (!empty($domain)) {
+                                $bodyEmail = [
+                                    'name' => $customerFirstName,
+                                    'project_logo' => $abandonedCart->logo,
+                                    'checkout_link' => $linkCheckout,
+                                    "subject" => $subjectMessage,
+                                    "title" => $titleMessage,
+                                    "content" => $contentMessage,
+                                    "products" => $products,
+                                ];
 
-                                          //Traz o assunto, titulo e texto do email formatados
-                                          $projectNotificationPresenter = $projectNotificationModel->present();
-                                          $projectNotificationEmail     = $projectNotificationModel->where('project_id', $project->id)
-                                                                                                   ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_abandoned_cart_an_hour_later'))
-                                                                                                   ->where('status', $projectNotificationPresenter->getStatus('active'))
-                                                                                                   ->first();
-                                          if (!empty($projectNotificationEmail)) {
-                                              $message        = json_decode($projectNotificationEmail->message);
-                                              $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
-                                              $titleMessage   = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
-                                              $contentMessage = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
-                                              $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
+                                $dataEmail = [
+                                    'domainName' => $domain,
+                                    'projectName' => $project->name ?? '',
+                                    'clientEmail' => $customer->email,
+                                    'clientName' => $customer->name ?? '',
+                                    'templateId' => 'd-92937608e68b47b79dbd2641fd20fd0d',
+                                    'bodyEmail' => $bodyEmail,
+                                    'checkout_id' => $abandonedCart->id,
+                                    'sac_link' => "https://sac." . $domain,
+                                ];
 
-                                              if (!empty($domain)) {
-                                                  $bodyEmail = [
-                                                      'name'            => $clientNameExploded[0],
-                                                      'project_logo'    => $project->checkoutConfig->checkout_logo,
-                                                      'checkout_link'   => $linkCheckout,
-                                                      "subject"         => $subjectMessage,
-                                                      "title"           => $titleMessage,
-                                                      "content"         => $contentMessage,
-                                                      "products"        => $products,
-                                                  ];
+                                event(new SendEmailEvent($dataEmail));
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        report($e);
+                    }
+                }
+            });
 
-                                                  $dataEmail = [
-                                                      'domainName'  => $domain['name'],
-                                                      'projectName' => $project['name'] ?? '',
-                                                      'clientEmail' => $log['email'],
-                                                      'clientName'  => $log['name'] ?? '',
-                                                      'templateId'  => 'd-92937608e68b47b79dbd2641fd20fd0d',
-                                                      'bodyEmail'   => $bodyEmail,
-                                                      'checkout'    => $abandonedCart,
-                                                      'sac_link'    => "https://sac." . $domain->name,
-                                                  ];
-
-                                                  event(new SendEmailEvent($dataEmail));
-                                              }
-                                          }
-                                      } catch (Exception $e) {
-                                          report($e);
-                                      }
-                                  }
-                              } catch (Exception $e) {
-                                  report($e);
-                              }
-                          });
-        } catch (Exception $e) {
-            report($e);
-        }
-    }
-
-    //Carrinho abandonado dia seguinte
-    public function verifyAbandonedCarts2()
-    {
-        try {
-            $checkoutModel              = new Checkout();
-            $checkoutLogModel           = new CheckoutLog();
-            $domainModel                = new Domain();
-            $projectNotificationModel   = new ProjectNotification();
-            $projectNotificationService = new ProjectNotificationService();
-
-            $date = Carbon::now()->subDay('1')->toDateString();
-
-            $checkoutModel->where([
-                                      [
-                                          'status_enum', '=', $checkoutModel->present()
-                                                                            ->getStatusEnum('abandoned cart'),
-                                      ], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date],
-                                  ])
-                          ->with('project.checkoutConfig', 'project.users', 'checkoutPlans.plan.productsPlans.product')
-                          ->chunk(500, function($abandonedCarts) use ($checkoutLogModel, $domainModel, $projectNotificationService, $projectNotificationModel) {
-                              foreach ($abandonedCarts as $abandonedCart) {
-                                  try {
-
-                                      $products = [];
-
-                                      foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
-                                          foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
-                                              $productArray           = [];
-                                              $productArray["name"]   = $productPlan->product->name;
-                                              $productArray["photo"]  = $productPlan->product->photo;
-                                              $productArray["amount"] = $productPlan->amount;
-                                              $products[]             = $productArray;
-                                          }
-                                      }
-
-                                      $log = $checkoutLogModel->where('checkout_id', $abandonedCart->id)
-                                                              ->orderBy('created_at', 'desc')
-                                                              ->first();
-
-                                      $project = $abandonedCart->project;
-                                      $domain  = $domainModel->where('project_id', $project->id)
-                                                             ->where('status', 3)
-                                                             ->first();
-
-                                      if (empty($domain)) {
-                                          $domainName = 'cloudfox.net';
-                                      } else {
-                                          $domainName = $domain->name;
-                                      }
-
-                                      $linkCheckout = "https://checkout." . $domainName . "/recovery/" . Hashids::encode($log->checkout_id);
-
-                                      $clientTelephone = '+55' . preg_replace("/[^0-9]/", "", $log->telephone);
-
-                                      $clientNameExploded = explode(' ', $log->name);
-
-                                      //Traz a mensagem do sms formatado
-                                      $projectNotificationPresenter = $projectNotificationModel->present();
-                                      $projectNotificationSms       = $projectNotificationModel->where('project_id', $project->id)
-                                                                                               ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('sms_abandoned_cart_next_day'))
-                                                                                               ->where('status', $projectNotificationPresenter->getStatus('active'))
-                                                                                               ->first();
-                                      if (!empty($projectNotificationSms)) {
-                                          $message    = $projectNotificationSms->message;
-                                          $smsMessage = $projectNotificationService->formatNotificationData($message, null, $project, 'sms', $linkCheckout, $log);
-                                          if (!empty($smsMessage) && !empty($clientTelephone)) {
-                                              $dataSms = [
-                                                  'message'   => $smsMessage,
-                                                  'telephone' => $clientTelephone,
-                                                  'checkout'  => $abandonedCart,
-                                              ];
-                                              event(new SendSmsEvent($dataSms));
-                                          }
-                                      }
-                                      //Traz o assunto, titulo e texto do email formatados
-                                      $projectNotificationPresenter = $projectNotificationModel->present();
-                                      $projectNotificationEmail     = $projectNotificationModel->where('project_id', $project->id)
-                                                                                               ->where('notification_enum', $projectNotificationPresenter->getNotificationEnum('email_abandoned_cart_next_day'))
-                                                                                               ->where('status', $projectNotificationPresenter->getStatus('active'))
-                                                                                               ->first();
-                                      if (!empty($projectNotificationEmail)) {
-                                          $message        = json_decode($projectNotificationEmail->message);
-                                          $subjectMessage = $projectNotificationService->formatNotificationData($message->subject, null, $project, null, $linkCheckout, $log);
-                                          $titleMessage   = $projectNotificationService->formatNotificationData($message->title, null, $project, null, $linkCheckout, $log);
-                                          $contentMessage = $projectNotificationService->formatNotificationData($message->content, null, $project, null, $linkCheckout, $log);
-                                          $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
-
-                                          if (!empty($domain)) {
-                                              $bodyEmail = [
-                                                  'name'            => $clientNameExploded[0],
-                                                  'project_logo'    => $project->checkoutConfig->checkout_logo,
-                                                  'checkout_link'   => $linkCheckout,
-                                                  "subject"         => $subjectMessage,
-                                                  "title"           => $titleMessage,
-                                                  "content"         => $contentMessage,
-                                                  "products"        => $products,
-                                              ];
-
-                                              $dataEmail = [
-                                                  'domainName'  => $domain['name'],
-                                                  'projectName' => $project['name'] ?? '',
-                                                  'clientEmail' => $log['email'],
-                                                  'clientName'  => $clientNameExploded[0] ?? '',
-                                                  'templateId'  => 'd-613da0ac5d7e478ba436e4d51e2ee42c',
-                                                  'bodyEmail'   => $bodyEmail,
-                                                  'checkout'    => $abandonedCart,
-                                                  'sac_link'    => "https://sac." . $domain->name,
-                                              ];
-
-                                              event(new SendEmailEvent($dataEmail));
-                                          }
-                                      }
-                                  } catch (Exception $e) {
-                                      report($e);
-                                  }
-                              }
-                          });
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             report($e);
         }
     }
