@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\ProjectNotification;
 use Modules\Core\Services\CartRecoveryService;
 
 class VerifyAbandonedCarts2 extends Command
@@ -34,7 +35,11 @@ class VerifyAbandonedCarts2 extends Command
         try {
 
             $cartRecoveryService = new CartRecoveryService();
-            $cartRecoveryService->verifyAbandonedCarts2();
+            $cartRecoveryService->verifyAbandonedCarts(now()->subDay()->startOfDay(),
+                now()->subDay()->endOfDay(),
+            ProjectNotification::NOTIFICATION_SMS_ABANDONED_CART_NEXT_DAY,
+                ProjectNotification::NOTIFICATION_EMAIL_ABANDONED_CART_NEXT_DAY
+            );
 
         } catch (Exception $e) {
             report($e);

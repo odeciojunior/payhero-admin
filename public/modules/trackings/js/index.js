@@ -54,6 +54,7 @@ $(() => {
         if (val === '') {
             $('#date_updated').attr('disabled', false).removeClass('disableFields');
         } else {
+            $('#date_updated').val(moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY"));
             $('#date_updated').attr('disabled', true).addClass('disableFields');
         }
     });

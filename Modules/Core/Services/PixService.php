@@ -26,7 +26,8 @@ class PixService
     {
         try {
 
-            $sales = Sale::where('payment_method', '=', Sale::PIX_PAYMENT)
+            $sales = Sale::with('transactions')
+                            ->where('payment_method', '=', Sale::PIX_PAYMENT)
                             ->where('status', Sale::STATUS_PENDING)
                             ->where( 'created_at', '<=', Carbon::now()->subHour()->toDateTimeString());
 

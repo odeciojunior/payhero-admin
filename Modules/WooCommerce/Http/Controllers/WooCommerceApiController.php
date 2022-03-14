@@ -171,7 +171,7 @@ class WooCommerceApiController extends Controller
             $checkoutConfig = CheckoutConfig::create([
                 'company_id' => $company->id,
                 'project_id' => $projectCreated->id,
-                'pix' => $company->has_pix_key,
+                'pix_enabled' => !!$company->has_pix_key,
             ]);
 
             if (empty($checkoutConfig)) {

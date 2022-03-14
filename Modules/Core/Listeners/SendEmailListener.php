@@ -4,6 +4,7 @@ namespace Modules\Core\Listeners;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Modules\Core\Entities\Checkout;
 use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Services\EmailService;
 use Modules\Core\Services\SendgridService;
@@ -37,7 +38,7 @@ class SendEmailListener implements ShouldQueue
         $data      = $event->request;
         $smsReturn = $this->emailService->sendEmail('help@' . $data['domainName'], $data['projectName'], $data['clientEmail'], $data['clientName'], $data['templateId'], $data['bodyEmail']);
         if ($smsReturn) {
-            $data['checkout']->increment('email_sent_amount');
+            Checkout::where('id', $data['checkout_id'])->increment('sms_sent_amount');
         }
     }
 

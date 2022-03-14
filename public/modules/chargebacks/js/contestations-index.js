@@ -157,6 +157,10 @@ $(document).ready(function () {
     function getFilters(urlParams = true) {
         let current_url = window.location.href;
         let vazio = current_url.includes("vazio") ? "true" : "";
+        let date_range = $("#date_range").val();
+        if (transaction.length > 0){
+            date_range = moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY")
+        }
 
         let data = {
             transaction: $("#transaction").val().split("#").join(""),
