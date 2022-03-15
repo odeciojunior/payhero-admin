@@ -36,6 +36,7 @@ class BoletoService
             $smsNotificationEnum = ProjectNotification::NOTIFICATION_SMS_BOLETO_DUE_TODAY;
             $emailNotificationEnum = ProjectNotification::NOTIFICATION_EMAIL_BOLETO_DUE_TODAY;
 
+            DB::select("SET SESSION group_concat_max_len = @@max_allowed_packet");
             DB::select("SET SESSION sort_buffer_size =  @@sort_buffer_size * 2");
             Sale::select([
                 'sales.id',
