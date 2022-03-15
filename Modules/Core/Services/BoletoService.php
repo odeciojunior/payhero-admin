@@ -835,9 +835,8 @@ class BoletoService
             $boletos = Sale::with(['customer'])
                 ->where(
                     [
-                        ['payment_method', '=', '2'],
-                        ['status', '=', '5'],
-                        ['gateway_id', '=', 21],
+                        ['payment_method', Sale::BOLETO_PAYMENT],
+                        ['status', Sale::STATUS_PENDING],
                         [
                             DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"),
                             '<',
@@ -859,7 +858,7 @@ class BoletoService
 
                 $boleto->update(
                     [
-                        'status' => 5,
+                        'status' => Sale::STATUS_CANCELED,
                         'gateway_status' => 'canceled',
                     ]
                 );
@@ -867,7 +866,7 @@ class BoletoService
                 SaleLog::create(
                     [
                         'status' => 'canceled',
-                        'status_enum' => 5,
+                        'status_enum' => Sale::STATUS_CANCELED,
                         'sale_id' => $boleto->id,
                     ]
                 );
