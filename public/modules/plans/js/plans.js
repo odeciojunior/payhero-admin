@@ -1952,7 +1952,7 @@ $(function () {
             $(modal).find('#stage4').find('.box-products').html(append).promise().done(function() {
                 $(modal).find('#stage4').find('.box-products').css({'max-height': '314px', 'position': 'relative', 'overflow': 'hidden'});
 
-                $(modal).find('#stage4').find('.body-products').mCustomScrollbar();
+                $(modal).find('#stage4').find('.box-products').mCustomScrollbar();
 
                 $(modal).find('#stage4').find('.product-photo').on('error', function() {
                     $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg').fadeIn(300);
