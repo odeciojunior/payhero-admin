@@ -1234,10 +1234,32 @@ $(function () {
         .dateRangePicker({
             format: 'DD/MM/YYYY',
             singleDate: true,
-            showShortcuts: false,
+            showShortcuts: true,
             startDate: false,
 	        endDate: false,
             container: '#modal-create-coupon',
+            customShortcuts: [
+                {
+                    name: 'Hoje',
+                    dates: () => [moment().startOf('day').toDate(), new Date()]
+                },
+                {
+                    name: '7 dias',
+                    dates: () => [moment().add(6, 'days').toDate(), new Date()]
+                },
+                {
+                    name: '15 dias',
+                    dates: () => [moment().add(14, 'days').toDate(), new Date()]
+                },
+                {
+                    name: '1 mês',
+                    dates: () => [moment().add(30, 'days').toDate(), new Date()]
+                },
+                {
+                    name: '3 meses',
+                    dates: () => [moment().add(90, 'days').toDate(), new Date()]
+                }
+            ],
         }).bind('datepicker-opened',function()
         {
             $('.modal-open .modal').animate({scrollTop: $(document).height() + $(window).height()});
