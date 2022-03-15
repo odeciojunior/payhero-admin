@@ -35,12 +35,15 @@ $(function () {
                         let value = response.data.replace("R$", "");
                         $("#cashback").html("<span class='currency'>R$ </span>" + value).addClass('visible');
     
-                        if(response.data !== '0,00') {
-                            $('.new-graph-cashback').html('<div class=graph-cashback></div>');
+                        if(response.data == '0,00') {
+                            $('.new-graph-cashback').html('<canvas id=graph-cashback></canvas>').addClass('visible');
                             $(".new-graph-cashback").next('.no-graph').remove();
-                            newGraphCashback();
+                            
+                            let series = [120, 90, 700, 500, 5, 150, 20];
+                            newGraphCashback(series);
                             
                         } else {
+                            $('#graph-cashback').addClass('invisible');
                             $(".new-graph-cashback").next('.no-graph').remove();
                             $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
                             $("#cashback").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
@@ -48,6 +51,7 @@ $(function () {
                     } else {
                         $('.graph-cashback').remove();
                         $("#cashback").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
+                        $('.new-graph-cashback').removeClass('visible');
                         $('.new-graph-cashback').next('.no-graph').remove();
                         $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
                     }
@@ -86,16 +90,22 @@ $(function () {
                         $("#pending").html("<span class='currency'>R$ </span>" + value).addClass('visible');
                         
                         if(response.data !== '0,00') {
-                            $('.new-graph-pending').html('<div class=graph-pending></div>');
+                            $('.new-graph-pending').html('<canvas id=graph-pending></canvas>').addClass('visible');
                             $(".new-graph-pending").next('.no-graph').remove();
-                            newGraphPending();
+                            
+                            let series = [12, 9, 7, 8, 5]; 
+                            newGraphPending(series);
+
+
                         } else {
+                            $('#graph-pending').addClass('invisible');
                             $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
                             $("#pending").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
                         }
                     } else {
                         $('.graph-pending').remove();
                         $("#pending").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
+                        $('.new-graph-pending').removeClass('visible');
                         $('.new-graph-pending').next('.no-graph').remove();
                         $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
                     }
@@ -108,12 +118,12 @@ $(function () {
     function getCommission() {
         const currentRequest = $.ajax({
             type: 'GET',
-            url: "/api/reports/resume/commissions?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/commissions?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         });
 
         return $.ajax({
             method: "GET",
-            url: "/api/reports/resume/commissions?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/commissions?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -189,14 +199,17 @@ $(function () {
                 if(status !== ''){
                     $("#sales").addClass('visible');
                     if(response.data != '0'){
-                        $("#sales").html(response.data);
-                        $('.new-graph-sell').html('<div class=graph-sell></div>');
+                        $("#sales").html(response.data);                        
+                        $('.new-graph-sell').html('<canvas id=graph-sell></canvas>').addClass('visible');
                         $(".new-graph-sell").next('.no-graph').remove();
-                        newGraphSell();
+
+                        let series = [120, 90, 17, 998, 5];  
+                        newGraphSell(series);
                         
                     } else {
-                        $('.graph-sell').remove();
+                        $('#graph-sell').remove();
                         $("#sales").html('0');
+                        $('.new-graph-sell').removeClass('visible');
                         $(".new-graph-sell").next('.no-graph').remove();
                         $('.new-graph-sell').after('<div class=no-graph>Não há dados suficientes</div>');
                     }
@@ -359,7 +372,6 @@ $(function () {
                         $(".data-pie ul li").remove();
                         $("#qtd-dispute").html('0').addClass('visible');
                         $('#card-coupons .value-price').removeClass('invisible');
-                        $('.box-donut').css('height','0');
                         $(".box-donut").next('.no-graph').remove();
                         $('.box-donut').after('<div class=no-graph>Não há dados suficientes</div>');
                     }
@@ -1036,68 +1048,249 @@ $(function () {
 
     
     
-    function newGraphSell() {
-        new Chartist.Line('.graph-sell', {
-            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-            series: [
-              [12, 9, 7, 8, 5],
-            ]
-          }, {
-            fullWidth: true,
-            showArea: true,
-            chartPadding: 0,
-            axisX: {
-              showLabel: false,
-              offset: 0,
-              showGrid: false
-            },
-            axisY: {
-              showLabel: false,
-              offset: 0,
-              showGrid: false
+    function newGraphSell(series) {
+        const titleTooltip = (tooltipItems) => {
+            return '';
+        }   
+    
+        const legendMargin = {
+            id: 'legendMargin',
+            beforeInit(chart, legend, options) {
+                const fitValue = chart.legend.fit;
+                chart.legend.fit = function () {  
+                    fitValue.bind(chart.legend)();
+                    return this.height += 20;
+                }
             }
-          });
+        };
+    
+        const ctx = document.getElementById('graph-sell').getContext('2d');
+        var gradient = ctx.createLinearGradient(0, 0, 0, 450);
+        gradient.addColorStop(0, 'rgba(76, 152,242, 0.23)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+            const myChart = new Chart(ctx, {
+                plugins: [legendMargin],
+                type: 'line',
+                data: {
+                    labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'],
+                    datasets: [
+                        {
+                            label: 'Legenda',
+                            data: series,
+                            color:'#636363',
+                            backgroundColor: gradient,
+                            borderColor: "#2E85EC",
+                            borderWidth: 4,
+                            fill: true,
+                            borderRadius: 4,
+                            barThickness: 30,
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {display: false},
+                        title: {display: false},
+                    },
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: false,
+                        },
+                        y: {
+                            display: false,
+                        },
+                    },
+                    pointBackgroundColor:"#2E85EC",
+                    radius: 3,
+                    interaction: {
+                      intersect: false,
+                      mode: "index",
+                      borderRadius: 4,
+                      usePointStyle: true,
+                      yAlign: 'bottom',
+                      padding: 10,
+                      titleSpacing: 10,
+                      callbacks: {
+                          label: function (tooltipItem) {
+                              return Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(tooltipItem.raw);
+                          },
+                          labelPointStyle: function (context) {
+                              return {
+                                  pointStyle: 'rect',
+                                  borderRadius: 4,
+                                  rotatio: 0,
+                              }
+                          }
+                      }
+                    }
+                  },
+            });
     }
 
-    function newGraphCashback() {
-        new Chartist.Line('.graph-cashback', {
-            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-            series: [[12, 9, 7, 8, 5],]
-          }, {
-            fullWidth: true,
-            showArea: true,
-            chartPadding: 0,
-            axisX: {
-              showLabel: false,
-              offset: 0,
-              showGrid: false,
-            },
-            axisY: {
-              showLabel: false,
-              showGrid: false,
-              offset: 0
+    function newGraphCashback(series) {
+        const titleTooltip = (tooltipItems) => {
+            return '';
+        }   
+    
+        const legendMargin = {
+            id: 'legendMargin',
+            beforeInit(chart, legend, options) {
+                const fitValue = chart.legend.fit;
+                chart.legend.fit = function () {  
+                    fitValue.bind(chart.legend)();
+                    return this.height += 20;
+                }
             }
-          });
+        };
+    
+        const ctx = document.getElementById('graph-cashback').getContext('2d');
+        var gradient = ctx.createLinearGradient(0, 0, 0, 450);
+        gradient.addColorStop(0, 'rgba(54,216,119, 0.23)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+            const myChart = new Chart(ctx, {
+                plugins: [legendMargin],
+                type: 'line',
+                data: {
+                    labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'],
+                    datasets: [
+                        {
+                            label: 'Legenda',
+                            data: series,
+                            color:'#636363',
+                            backgroundColor: gradient,
+                            borderColor: "#1BE4A8",
+                            borderWidth: 4,
+                            fill: true,
+                            borderRadius: 4,
+                            barThickness: 30,
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {display: false},
+                        title: {display: false},
+                    },
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: false,
+                        },
+                        y: {
+                            display: false,
+                        },
+                    },
+                    pointBackgroundColor:"#1BE4A8",
+                    radius: 3,
+                    interaction: {
+                      intersect: false,
+                      mode: "index",
+                      borderRadius: 4,
+                      usePointStyle: true,
+                      yAlign: 'bottom',
+                      padding: 10,
+                      titleSpacing: 10,
+                      callbacks: {
+                          label: function (tooltipItem) {
+                              return Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(tooltipItem.raw);
+                          },
+                          labelPointStyle: function (context) {
+                              return {
+                                  pointStyle: 'rect',
+                                  borderRadius: 4,
+                                  rotatio: 0,
+                              }
+                          }
+                      }
+                    }
+                  },
+            });
     }
-    function newGraphPending() {
-        new Chartist.Line('.graph-pending', {
-            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-            series: [[12, 9, 7, 8, 5],]
-          }, {
-            fullWidth: true,
-            showArea: true,
-            chartPadding: 0,
-            axisX: {
-              showLabel: false,
-              offset: 0,
-              showGrid: false,
-            },
-            axisY: {
-              showLabel: false,
-              showGrid: false,
-              offset: 0
+    function newGraphPending(series) {
+        const titleTooltip = (tooltipItems) => {
+            return '';
+        }   
+    
+        const legendMargin = {
+            id: 'legendMargin',
+            beforeInit(chart, legend, options) {
+                const fitValue = chart.legend.fit;
+                chart.legend.fit = function () {  
+                    fitValue.bind(chart.legend)();
+                    return this.height += 20;
+                }
             }
-          });
+        };
+    
+        const ctx = document.getElementById('graph-pending').getContext('2d');
+        var gradient = ctx.createLinearGradient(0, 0, 0, 450);
+        gradient.addColorStop(0, 'rgba(255,121,0, 0.23)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+            const myChart = new Chart(ctx, {
+                plugins: [legendMargin],
+                type: 'line',
+                data: {
+                    labels: ['Março', 'Abril', 'Maio', 'Junho', 'Julho'],
+                    datasets: [
+                        {
+                            label: 'Legenda',
+                            data: series,
+                            color:'#636363',
+                            backgroundColor: gradient,
+                            borderColor: "#FF7900",
+                            borderWidth: 4,
+                            fill: true,
+                            borderRadius: 4,
+                            barThickness: 30,
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {display: false},
+                        title: {display: false},
+                    },
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: false,
+                        },
+                        y: {
+                            display: false,
+                        },
+                    },
+                    pointBackgroundColor:"#FF7900",
+                    radius: 3,
+                    interaction: {
+                        intersect: false,
+                        mode: "index",
+                        borderRadius: 4,
+                        usePointStyle: true,
+                        yAlign: 'bottom',
+                        padding: 10,
+                        titleSpacing: 10,
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(tooltipItem.raw);
+                            },
+                            labelPointStyle: function (context) {
+                                return {
+                                    pointStyle: 'rect',
+                                    borderRadius: 4,
+                                    rotatio: 0,
+                                }
+                            }
+                        }
+                      }
+                  },
+            });
           
     }
     
@@ -1229,7 +1422,7 @@ $(function () {
                 plugins: [legendMargin],
                 type: 'line',
                 data: {
-                    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                    labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'],
                     datasets: [
                         {
                             label: 'Legenda',
@@ -1263,6 +1456,24 @@ $(function () {
                     radius: 3,
                     interaction: {
                       intersect: false,
+                      mode: "index",
+                      borderRadius: 4,
+                      usePointStyle: true,
+                      yAlign: 'bottom',
+                      padding: 10,
+                      titleSpacing: 10,
+                      callbacks: {
+                          label: function (tooltipItem) {
+                              return Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(tooltipItem.raw);
+                          },
+                          labelPointStyle: function (context) {
+                              return {
+                                  pointStyle: 'rect',
+                                  borderRadius: 4,
+                                  rotatio: 0,
+                              }
+                          }
+                      }
                     }
                   },
             });

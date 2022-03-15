@@ -557,7 +557,7 @@ h4.number{
 /* new graph pie */
 .box-donut { 
     padding-left: 0; 
-    height: 190px;
+    height: 0px;
     align-items: center;
 }
 @media only screen and (min-width: 768px) and (max-width : 1219px){
@@ -723,9 +723,9 @@ h4.number{
 }
 .finance-card.pink .number { color: #F54A68; }
 .finance-card.pink strong.number { 
-    color: #9E9E9E; 
-    font-weight: 400; 
-    font-size: 16px; 
+    /* color: #9E9E9E;  */
+    font-weight: bold; 
+    font-size: 24px; 
 }
 .finance-card.pink strong.number span {
     color: #F43F5E;
@@ -1591,15 +1591,32 @@ h4.number{
     to {background-position:left;}
 }
 
-#comission-graph { 
-    margin: 0px 0 -8px -7px; 
+#comission-graph,
+#graph-pending,
+#graph-sell,
+#graph-cashback { 
+    margin: 0px 0 -8px -8px; 
     display: none;
 } 
-#comission-graph.invisible { display: none !important; } 
-#comission-graph.visible { display: block; } 
-#comission-graph + .no-graph { height: 110px; }
+#comission-graph.invisible,
+#graph-pending.invisible,
+#graph-sell.invisible,
+#graph-cashback.invisible { display: none !important; }
 
-#card-comission .new-graph.visible { height: 159px; }
+#comission-graph.visible,
+#graph-pending.visible,
+#graph-sell.visible,
+#graph-cashback.visible { display: block; } 
+
+#comission-graph + .no-graph,
+#graph-pending + .no-graph,
+#graph-sell + .no-graph,
+#graph-cashback + .no-graph { height: 110px; }
+
+#card-comission .new-graph.visible,
+#card-pending .new-graph-pending.visible,
+#card-sales .new-graph-sell.visible,
+#card-cashback .new-graph-cashback.visible { height: 159px; }
 
 #card-regions .new-graph-regions.visible {
     width: 180px;
@@ -1610,4 +1627,5 @@ h4.number{
     background-position: center;
 }
 #card-regions .ske-load,
-#card-origin .ske-load { top: 55%; }
+#card-origin .ske-load,
+#card-coupons .ske-load { top: 55%; }
