@@ -82,7 +82,7 @@ $(function () {
                         <tr class="text-center">
                             <td colspan="8" style="height: 70px; vertical-align: middle;">
                                 <div class='d-flex justify-content-center align-items-center'>
-                                    <img src='/modules/global/img/empty-state-table.png' style='margin-right: 60px;'>
+                                    <img src='/modules/global/img/empty-state-table.svg' style='margin-right: 60px;'>
                                     <div class='text-left'>
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum pixel configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro pixel para poder
@@ -188,11 +188,21 @@ $(function () {
         const imgPlatform = $(".img-edit-selected");
         const codeEditInput = $(".code-edit");
         const conversionalEditInput = $(".conversional-edit");
+        const singleEvent = $('.single-event-edit')
+        const multipleEvent = $('.multiple-event-edit')
 
         let code =  inputCodeByPlatform(pixel.platform, pixel.code, '', true)
 
         if (newPlatform == null) {
             newPlatform = pixel.platform;
+        }
+
+        if (pixel.platform !== 'google_adwords') {
+            singleEvent.addClass('d-none');
+            multipleEvent.removeClass('d-none')
+        } else {
+            singleEvent.removeClass('d-none');
+            multipleEvent.addClass('d-none')
         }
 
         $(".platform-edit").val(newPlatform);
@@ -208,6 +218,7 @@ $(function () {
             codeEditInput.val(code);
             conversionalEditInput.val('');
         }
+
         $('.percentage-boleto-value-edit').val(pixel.value_percentage_purchase_boleto);
 
         // plans
@@ -228,9 +239,23 @@ $(function () {
         // Run Pixel
         isChecked($(".status-edit"), pixel.status);
         isChecked($(".checkout-edit"), pixel.checkout);
-        isChecked($(".purchase-boleto-edit"), pixel.purchase_boleto);
+        isChecked($(".basic-data-edit"), pixel.basic_data);
+        isChecked($(".delivery-edit"), pixel.delivery);
+        isChecked($(".coupon-edit"), pixel.coupon);
+        isChecked($(".payment-info-edit"), pixel.payment_info);
         isChecked($(".purchase-card-edit"), pixel.purchase_card);
+        isChecked($(".purchase-boleto-edit"), pixel.purchase_boleto);
         isChecked($(".purchase-pix-edit"), pixel.purchase_pix);
+        isChecked($(".upsell-edit"), pixel.upsell);
+        isChecked($(".purchase-upsell-edit"), pixel.purchase_upsell);
+        isChecked($(".send-value-edit"), pixel.send_value_checkout);
+        $("#single-event-edit").val(pixel.event_select).change();
+
+        if (pixel.send_value_checkout == 'true') {
+            $(".send-value-edit").addClass('is-checked');
+        } else {
+            $(".send-value-edit").removeClass('is-checked');
+        }
 
         // Manipulation Modal pixel
         changePlaceholderInput(newPlatform, codeEditInput, $("#text-type-code-edit"),  $('#conversional-pixel-edit'));
@@ -351,7 +376,7 @@ $(function () {
         }
 
         let codeEdit = inputCodeByPlatform(inputPlatformEdit, inputCodeEdit, inputConversionalEdit)
-        console.log(codeEdit)
+
         $.ajax({
             method: "PUT",
             url: `/api/project/${projectId}/pixels/${pixelEdit.id_code}`,
@@ -366,9 +391,17 @@ $(function () {
                 platform: inputPlatformEdit,
                 status: $("#modal-edit-pixel .status-edit").is(':checked'),
                 checkout: $("#modal-edit-pixel .checkout-edit").is(':checked'),
+                basic_data: true, // $("#modal-edit-pixel .basic-data-edit").is(':checked'),
+                delivery: true, // $("#modal-edit-pixel .delivery-edit").is(':checked'),
+                coupon: true, // $("#modal-edit-pixel .coupon-edit").is(':checked'),
+                payment_info: true, // $("#modal-edit-pixel .payment-info-edit").is(':checked'),
                 purchase_card: $("#modal-edit-pixel .purchase-card-edit").is(':checked'),
                 purchase_boleto: $("#modal-edit-pixel .purchase-boleto-edit").is(':checked'),
                 purchase_pix: $("#modal-edit-pixel .purchase-pix-edit").is(':checked'),
+                upsell: true, // $("#modal-edit-pixel .upsell-edit").is(':checked'),
+                purchase_upsell: true, // $("#modal-edit-pixel .purchase-upsell-edit").is(':checked'),
+                event_select: $("#modal-edit-pixel #single-event-edit").val(),
+                send_value_checkout: $("#modal-edit-pixel .send-value-edit").is(':checked'),
                 edit_pixel_plans: plansApply,
                 purchase_event_name: inputPurchaseEventName,
                 is_api: isApi,
@@ -454,44 +487,65 @@ $(function () {
         inputAW.html('').hide();
         inputConversional.hide();
 
+        const singleEvent = $('.single-event')
+        const multipleEvent = $('.multiple-event')
         switch (value) {
             case "facebook":
                 inputPlatform.attr("placeholder", '52342343245553');
                 inputPlatform.parent().parent().find('label').html('Código');
+                singleEvent.addClass('d-none');
+                multipleEvent.removeClass('d-none')
                 break;
             case "google_adwords":
                 inputAW.html('AW-').show();
                 inputConversional.show();
                 inputPlatform.attr("placeholder", '8981445741-4');
                 inputPlatform.parent().parent().find('label').html('Código de conversão');
+                singleEvent.removeClass('d-none');
+                multipleEvent.addClass('d-none')
                 break;
             case "google_analytics":
                 inputPlatform.attr("placeholder", 'UA-8984567741-3');
                 inputPlatform.parent().parent().find('label').html('Código');
+                singleEvent.addClass('d-none');
+                multipleEvent.removeClass('d-none')
                 break;
             case "google_analytics_four":
                 inputPlatform.attr("placeholder", 'G-KZSV4LMBAC');
                 inputPlatform.parent().parent().find('label').html('Código');
+                singleEvent.addClass('d-none');
+                multipleEvent.removeClass('d-none')
                 break;
             case "taboola":
                 inputPlatform.attr("placeholder", '1010100');
                 inputPlatform.parent().parent().find('label').html('Código');
+                singleEvent.addClass('d-none');
+                multipleEvent.removeClass('d-none')
                 break;
             case "outbrain":
                 inputPlatform.attr("placeholder", '00de2748d47f2asdl39877mash');
                 inputPlatform.parent().parent().find('label').html('Código');
+                singleEvent.addClass('d-none');
+                multipleEvent.removeClass('d-none')
                 break;
             case 'uol_ads':
                 inputPlatform.attr("placeholder", 'hutu27');
                 inputPlatform.parent().parent().find('label').html('Código');
+                singleEvent.addClass('d-none');
+                multipleEvent.removeClass('d-none')
                 break;
             case 'tiktok':
                 inputPlatform.attr("placeholder", 'C5OSDKKVNBDLN9M5C6UG');
                 inputPlatform.parent().parent().find('label').html('ID');
+                singleEvent.addClass('d-none');
+                multipleEvent.removeClass('d-none')
                 break;
             default:
                 inputPlatform.attr("placeholder", 'Código');
                 inputPlatform.parent().parent().find('label').html('Código');
+                singleEvent.addClass('d-none');
+                multipleEvent.removeClass('d-none');
+                break;
         }
     }
 
@@ -533,9 +587,15 @@ $(function () {
 
         isChecked($("#modal-create-pixel .status"), true);
         isChecked($("#modal-create-pixel .checkout"), true);
-        isChecked($("#modal-create-pixel .purchase-boleto"), true);
+        isChecked($("#modal-create-pixel .basic-data"), true);
+        isChecked($("#modal-create-pixel .delivery"), true);
+        isChecked($("#modal-create-pixel .coupon"), true);
+        isChecked($("#modal-create-pixel .payment-info"), true);
         isChecked($("#modal-create-pixel .purchase-card"), true);
+        isChecked($("#modal-create-pixel .purchase-boleto"), true);
         isChecked($("#modal-create-pixel .purchase-pix"), true);
+        isChecked($("#modal-create-pixel .upsell"), true);
+        isChecked($("#modal-create-pixel .purchase-upsell"), true);
 
         $("#select-platform-pixel").hide();
         $("#configure-new-pixel").show();
@@ -592,15 +652,47 @@ $(function () {
         return true;
     }
 
+    // Create
+    $('#modal-create-pixel #single-event').on('change', function () {
+        const switchValue = $('#modal-create-pixel #send_value_switch').parent()
+        const sendValue = $('#modal-create-pixel .send-value')
+
+        sendValue.prop('checked', false)
+        if ($(this).val() !== 'checkout') switchValue.addClass('disabled')
+        else switchValue.removeClass('disabled')
+    })
+
+    // Edit
+    $('#modal-edit-pixel #single-event-edit').on('change', function () {
+        const switchValue = $('#modal-edit-pixel #send_value_switch-edit').parent()
+        const sendValue = $('#modal-edit-pixel .send-value-edit')
+
+        if ($(this).val() !== 'checkout') {
+            switchValue.addClass('disabled')
+            sendValue.prop('checked', false)
+        } else {
+            switchValue.removeClass('disabled')
+            sendValue.prop('checked', sendValue.hasClass('is-checked'))
+        }
+    })
+
     //Save Create new Pixel
     $("#modal-create-pixel #btn-store-pixel").on('click', function () {
         const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
 
         formData.append('status', $("#modal-create-pixel .status").is(':checked'));
         formData.append('checkout', $("#modal-create-pixel .checkout").is(':checked'));
+        formData.append('basic_data', true) // $("#modal-create-pixel .basic-data").is(':checked'));
+        formData.append('delivery', true) // $("#modal-create-pixel .delivery").is(':checked'));
+        formData.append('coupon', true) // $("#modal-create-pixel .coupon").is(':checked'));
+        formData.append('payment_info', true) // $("#modal-create-pixel .payment-info").is(':checked'));
         formData.append('purchase_card', $("#modal-create-pixel .purchase-card").is(':checked'));
         formData.append('purchase_boleto', $("#modal-create-pixel .purchase-boleto").is(':checked'));
         formData.append('purchase_pix', $("#modal-create-pixel .purchase-pix").is(':checked'));
+        formData.append('upsell', true) // $("#modal-create-pixel .upsell").is(':checked'));
+        formData.append('purchase_upsell', true) // $("#modal-create-pixel .purchase-upsell").is(':checked'));
+        formData.append('event_select', $("#modal-create-pixel #single-event").val());
+        formData.append('send_value_checkout', $("#modal-create-pixel .send-value").is(':checked'));
 
         if (!validateDataPixelForm({
             'name': formData.get('name'),

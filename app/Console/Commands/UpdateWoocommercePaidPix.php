@@ -9,8 +9,6 @@ use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Log;
 
 class UpdateWoocommercePaidPix extends Command
 {
@@ -46,8 +44,6 @@ class UpdateWoocommercePaidPix extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
 
             $sales = Sale::whereNotNull('woocommerce_order')->where('payment_method', Sale::PIX_PAYMENT)->where('status', Sale::STATUS_APPROVED)->get();
@@ -75,8 +71,6 @@ class UpdateWoocommercePaidPix extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }

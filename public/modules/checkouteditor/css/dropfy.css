@@ -36,7 +36,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 110px !important;
+    min-height: 100px !important;
     height: fit-content !important;
     width: 100% !important;
     border: 1px dashed #2e85ec;
@@ -185,4 +185,11 @@
 #upload_favicon .dropify-wrapper .dropify-message span.file-icon {
     font-size: 25px;
     color: #ccc;
+}
+
+
+@media (max-width: 1600px){
+    #upload-banner > .dropify-wrapper {
+        height: 100px !important;
+    }
 }

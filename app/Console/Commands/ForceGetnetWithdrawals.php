@@ -45,8 +45,6 @@ class ForceGetnetWithdrawals extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
 
             $getnetService = new GetnetService();
@@ -120,8 +118,6 @@ class ForceGetnetWithdrawals extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 

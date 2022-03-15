@@ -5,10 +5,8 @@ namespace App\Console\Commands;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Services\SendgridService;
-use Illuminate\Support\Facades\Log;
 
 class ValidateLastDomains extends Command
 {
@@ -38,8 +36,6 @@ class ValidateLastDomains extends Command
 
     public function handle()
     {
-
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -74,8 +70,6 @@ class ValidateLastDomains extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }

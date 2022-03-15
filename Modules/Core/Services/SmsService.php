@@ -27,6 +27,11 @@ class SmsService
                 $easySms = new EasySendSmsService($number, $message, $sender, $msgType);
                 $easySms->submit();
             */
+
+            if (getenv('APP_ENV') != 'production') {
+                $number = getenv('APP_NUMBER_PHONE_TEST');
+            }
+
             $number = preg_replace("/[^0-9]/", "", $number);
             if (strlen($number) == 11) {
                 $number = '55' . $number;

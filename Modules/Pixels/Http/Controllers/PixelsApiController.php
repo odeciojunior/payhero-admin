@@ -106,13 +106,6 @@ class PixelsApiController extends Controller
                 return response()->json(['message' => __('controller.pixel.permission.edit')], 403);
             }
 
-            activity()->on((new Pixel()))->tap(
-                function (Activity $activity) use ($pixel) {
-                    $activity->log_name = 'visualization';
-                    $activity->subject_id = $pixel->id;
-                }
-            )->log(__('controller.pixel.log.visualization.edit ') . $pixel->name);
-
             $applyPlanArray = [];
             $planModel = new Plan();
 
@@ -140,6 +133,12 @@ class PixelsApiController extends Controller
                             ];
                         }
                     }
+                }
+            }
+
+            foreach (PixelService::EVENTS as $EVENT) {
+                if ($pixel->$EVENT == true) {
+                    $pixel->event_select = $EVENT;
                 }
             }
 
