@@ -372,6 +372,7 @@ $(function () {
                         $(".data-pie ul li").remove();
                         $("#qtd-dispute").html('0').addClass('visible');
                         $('#card-coupons .value-price').removeClass('invisible');
+                        $('.box-donut').css('height','0');
                         $(".box-donut").next('.no-graph').remove();
                         $('.box-donut').after('<div class=no-graph>Não há dados suficientes</div>');
                     }
