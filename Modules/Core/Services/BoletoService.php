@@ -65,7 +65,6 @@ class BoletoService
                 ->where('sales.payment_method', Sale::PAYMENT_TYPE_BANK_SLIP)
                 ->where('sales.status', Sale::STATUS_PENDING)
                 ->where('sales.api_flag', 0)
-                ->where('owner_id', 1949)
                 ->whereDate('sales.boleto_due_date', now()->startOfDay())
                 ->groupBy([
                     'sales.id',
