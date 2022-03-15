@@ -97,7 +97,7 @@ class ReportService
             ->toArray();
 
         $orders = $saleModel
-            ->select(\DB::raw('count(*) as count, HOUR(sales.start_date) as hour, SUM(transaction.value) as value, sales.payment_method'))
+            ->select(DB::raw('count(*) as count, HOUR(sales.start_date) as hour, SUM(transaction.value) as value, sales.payment_method'))
             ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                 $join->on('transaction.sale_id', '=', 'sales.id');
                 $join->whereIn('transaction.company_id', $userCompanies);
@@ -172,12 +172,12 @@ class ReportService
             $userCompanies = $companyModel->where('user_id', $userId)->pluck('id')->toArray();
 
             $affiliate = $affiliateModel->where([
-                                                    ['user_id', $userId],
-                                                    ['project_id', $projectId],
-                                                ])->first();
+                ['user_id', $userId],
+                ['project_id', $projectId],
+            ])->first();
 
             $orders = $saleModel
-                ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
+                ->select(DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                 ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
@@ -191,10 +191,11 @@ class ReportService
             } else {
                 $orders->where('sales.owner_id', $userId);
             }
+
             $orders         = $orders->get()->toArray();
             $creditCardData = [];
             $boletoData     = [];
-            $pixData     = [];
+            $pixData        = [];
 
             foreach ($labelList as $label) {
                 $creditCardValue = 0;
@@ -270,7 +271,7 @@ class ReportService
                                                 ])->first();
 
             $orders = $saleModel
-                ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
+                ->select(DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                 ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
@@ -366,7 +367,7 @@ class ReportService
                                                 ])->first();
 
             $orders = $saleModel
-                ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
+                ->select(DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                 ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
@@ -460,7 +461,7 @@ class ReportService
                                                 ])->first();
 
             $orders = $saleModel
-                ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
+                ->select(DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                 ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
@@ -549,7 +550,7 @@ class ReportService
                                                 ])->first();
 
             $orders = $saleModel
-                ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
+                ->select(DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                 ->leftJoin('transactions as transaction', function ($join) use ($userCompanies) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->whereIn('transaction.company_id', $userCompanies);
@@ -673,7 +674,7 @@ class ReportService
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
             $orders = $checkoutModel
-                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
+                ->select(DB::raw('count(*) as count, DATE(created_at) as date'))
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
@@ -736,7 +737,7 @@ class ReportService
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
             $orders = $checkoutModel
-                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
+                ->select(DB::raw('count(*) as count, DATE(created_at) as date'))
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
@@ -803,7 +804,7 @@ class ReportService
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . '+ 1 day'));
 
             $orders = $checkoutModel
-                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
+                ->select(DB::raw('count(*) as count, DATE(created_at) as date'))
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
@@ -871,7 +872,7 @@ class ReportService
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
             $orders = $checkoutModel
-                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
+                ->select(DB::raw('count(*) as count, DATE(created_at) as date'))
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
@@ -935,7 +936,7 @@ class ReportService
                                                 ])->first();
 
             $orders = $checkoutModel
-                ->select(\DB::raw('count(*) as count, DATE(created_at) as date'))
+                ->select(DB::raw('count(*) as count, DATE(created_at) as date'))
                 ->where('project_id', $projectId)
                 ->whereBetween('created_at', [$data['startDate'], date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'))])
                 ->groupBy('date');
@@ -1000,7 +1001,7 @@ class ReportService
                                             ])->first();
 
         $orders = $checkoutModel
-            ->select(\DB::raw('count(*) as count, HOUR(created_at) as hour'))
+            ->select(DB::raw('count(*) as count, HOUR(created_at) as hour'))
             ->where('project_id', $projectId)
             ->whereDate('created_at', $data['startDate'])
             ->groupBy('hour');
@@ -1042,7 +1043,7 @@ class ReportService
             }
 
             $transactions = $transactionModel
-                ->select(\DB::raw('(SUM(transactions.value) - SUM(CASE WHEN transactions.status_enum = 12 THEN anticipated_transactions.value ELSE 0 END)) as value, DATE(release_date) as date'))
+                ->select(DB::raw('(SUM(transactions.value) - SUM(CASE WHEN transactions.status_enum = 12 THEN anticipated_transactions.value ELSE 0 END)) as value, DATE(release_date) as date'))
                 ->leftJoin('anticipated_transactions', 'transactions.id', 'anticipated_transactions.transaction_id')
                 ->where('company_id', $companyId)
                 ->whereIn('type', collect([2, 3, 4, 5]))
@@ -1099,7 +1100,7 @@ class ReportService
             $startDate = Carbon::now()->subMonth()->subDays(5)->format('Y-m-d');
             $endDate   = Carbon::now()->addDay()->format('Y-m-d');
 
-            $orders = Sale::select(\DB::raw('count(*) as count, DATE(sales.end_date) as date, SUM(transaction.value) as value'))
+            $orders = Sale::select(DB::raw('count(*) as count, DATE(sales.end_date) as date, SUM(transaction.value) as value'))
                 ->leftJoin('transactions as transaction', function ($join) use ($companyId) {
                     $join->on('transaction.sale_id', '=', 'sales.id');
                     $join->where('transaction.company_id', $companyId);
@@ -1160,6 +1161,91 @@ class ReportService
         }
 
         return $colors;
+    }
+
+    public function getSalesQueryBuilder($filters)
+    {
+        try {
+            $companyModel = new Company();
+            $transactionModel = new Transaction();
+
+            $userId = auth()->user()->account_owner_id;
+
+            if (empty($filters["company"])) {
+                $userCompanies = $companyModel->where('user_id', $userId)
+                    ->get()
+                    ->pluck('id')
+                    ->toArray();
+
+            } else {
+                $userCompanies = [];
+                $companies = explode(',', $filters["company"]);
+
+                foreach($companies as $company){
+                    array_push($userCompanies, current(Hashids::decode($company)));
+                }
+            }
+
+            $relationsArray = [
+                'sale',
+                'sale.project',
+                'sale.customer',
+                'sale.plansSales',
+                'sale.shipping',
+                'sale.checkout',
+                'sale.delivery',
+                'sale.affiliate.user',
+                'sale.saleRefundHistory',
+            ];
+
+            $transactions = $transactionModel
+                            ->with($relationsArray)
+                            ->whereIn('company_id', $userCompanies)
+                            ->join('sales', 'sales.id', 'transactions.sale_id')
+                            ->whereNull('invitation_id');
+
+            if (!empty($filters["project"])) {
+                $projectIds =[];
+                $projects = explode(',', $filters["project"]);
+
+                foreach($projects as $project){
+                    array_push($projectIds, current(Hashids::decode($project)));
+                }
+
+                //$projectId = current(Hashids::decode($filters["project"]));
+                $transactions->whereHas(
+                    'sale',
+                    function ($querySale) use ($projectIds) {
+                        $querySale->whereIn('project_id', $projectIds);
+                    }
+                );
+            }
+
+            $status = [1, 2, 4, 7, 8, 12, 20, 21, 22, 24];
+            $transactions->whereHas(
+                'sale',
+                function ($querySale) use ($status) {
+                    $querySale->whereIn('status', $status);
+                }
+            );
+
+            //tipo da data e periodo obrigatorio
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateType = $filters["date_type"];
+
+            $transactions->whereHas(
+                'sale',
+                function ($querySale) use ($dateRange, $dateType) {
+                    $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                }
+            )->selectRaw('transactions.*, sales.start_date')
+            ->orderByDesc('sales.start_date');
+
+            return $transactions;
+        } catch (Exception $e) {
+            report($e);
+            return null;
+        }
     }
 
     // FINANCES --------------------------------------------------------------------------------------
@@ -1230,6 +1316,85 @@ class ReportService
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
+    }
+
+    public function getResumeCommissionsByHours($filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        if (Carbon::parse($dateRange[0])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
+            $labelList   = [];
+            $currentHour = date('H');
+            $startHour   = 0;
+
+            while ($startHour <= $currentHour) {
+                array_push($labelList, $startHour . 'h');
+                $startHour++;
+            }
+        } else {
+            $labelList = [
+                '0h', '1h', '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', '10h', '11h',
+                '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h',
+            ];
+        }
+
+        $transactions = $this->getSalesQueryBuilder($filters, false, null, true);
+        $transactionStatus = implode(',', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ]);
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+
+        $resume = $transactions->without(['sale'])
+        ->select(DB::raw("sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission"))
+        ->get();
+
+        $comissionData = [];
+
+        foreach ($labelList as $label) {
+            $comissionDataValue = 0;
+
+            foreach ($resume as $r) {
+                if ($r['hour'] == preg_replace("/[^0-9]/", "", $label)) {
+                    $comissionDataValue = substr(intval($r['commission']), 0, -2);
+                }
+            }
+
+            array_push($comissionData, $comissionDataValue);
+        }
+
+        $total = array_sum($comissionData);
+
+        return [
+            'chart' => [
+                'label_list' => $labelList,
+                'values' => $comissionData
+            ],
+            'total' => $total
+        ];
+    }
+
+    public function getResumeCommissionsByDays($filters)
+    {
+
+    }
+
+    public function getResumeCommissionsByTwentyDays($filters)
+    {
+
+    }
+
+    public function getResumeCommissionsByFortyDays($filters)
+    {
+
+    }
+
+    public function getResumeCommissionsByWeeks($filters)
+    {
+
+    }
+
+    public function getResumeCommissionsByMonths($filters)
+    {
+
     }
 
     public function getResumePendings($filters)
@@ -1591,33 +1756,6 @@ class ReportService
         }
     }
 
-    public function getRegionByIp($ip)
-    {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "https://geolocation-db.com/json/".$ip,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_POSTFIELDS => "",
-        ]);
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            return response()->json($err);
-        }
-
-        return $response;
-    }
-
     public function getResumeOrigins($filters)
     {
         try {
@@ -1651,5 +1789,37 @@ class ReportService
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
+    }
+
+    public function getRegionByIp($ip)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => "https://geolocation-db.com/json/".$ip,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_POSTFIELDS => "",
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            return response()->json($err);
+        }
+
+        return $response;
+    }
+
+    public function getState($state)
+    {
+
     }
 }
