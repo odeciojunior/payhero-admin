@@ -36,6 +36,7 @@ class BoletoService
             $smsNotificationEnum = ProjectNotification::NOTIFICATION_SMS_BOLETO_DUE_TODAY;
             $emailNotificationEnum = ProjectNotification::NOTIFICATION_EMAIL_BOLETO_DUE_TODAY;
 
+            DB::select("SET SESSION group_concat_max_len = @@max_allowed_packet");
             DB::select("SET SESSION sort_buffer_size =  @@sort_buffer_size * 2");
             Sale::select([
                 'sales.id',
@@ -65,7 +66,6 @@ class BoletoService
                 ->where('sales.payment_method', Sale::PAYMENT_TYPE_BANK_SLIP)
                 ->where('sales.status', Sale::STATUS_PENDING)
                 ->where('sales.api_flag', 0)
-                ->where('owner_id', 1949)
                 ->whereDate('sales.boleto_due_date', now()->startOfDay())
                 ->groupBy([
                     'sales.id',
@@ -835,9 +835,8 @@ class BoletoService
             $boletos = Sale::with(['customer'])
                 ->where(
                     [
-                        ['payment_method', '=', '2'],
-                        ['status', '=', '5'],
-                        ['gateway_id', '=', 21],
+                        ['payment_method', Sale::BOLETO_PAYMENT],
+                        ['status', Sale::STATUS_PENDING],
                         [
                             DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"),
                             '<',
@@ -859,7 +858,7 @@ class BoletoService
 
                 $boleto->update(
                     [
-                        'status' => 5,
+                        'status' => Sale::STATUS_CANCELED,
                         'gateway_status' => 'canceled',
                     ]
                 );
@@ -867,7 +866,7 @@ class BoletoService
                 SaleLog::create(
                     [
                         'status' => 'canceled',
-                        'status_enum' => 5,
+                        'status_enum' => Sale::STATUS_CANCELED,
                         'sale_id' => $boleto->id,
                     ]
                 );
