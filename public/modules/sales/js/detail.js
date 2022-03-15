@@ -525,6 +525,15 @@ $(() => {
             $('#comission-details').css('display','none');
         }
 
+        if (sale.progressive_discount) {
+            $("#discount-prog-title").show();
+            $("#discount-prog-data span").html(sale.progressive_discount);
+            $("#discount-prog-data").show();
+        } else {
+            $("#discount-prog-data").hide();
+            $("#discount-prog-title").hide();
+        }
+
         // Taxas detalhadas
         $("#taxas-label").html(
             sale.percentage_rate
