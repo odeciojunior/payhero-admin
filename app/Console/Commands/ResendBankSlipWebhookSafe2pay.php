@@ -43,7 +43,7 @@ class ResendBankSlipWebhookSafe2pay extends Command
     public function handle()
     {
         $this->verifyBankSlip(self::SAFE2PAY_STATUS_PROCESSAMENTO);
-        $this->verifyBankSlip(self::SAFE2PAY_STATUS_PROCESSAMENTO);
+        $this->verifyBankSlip(self::SAFE2PAY_STATUS_AUTORIZADO);
     }
 
     public function verifyBankSlip($option)
@@ -83,6 +83,7 @@ class ResendBankSlipWebhookSafe2pay extends Command
                     }
                 }
             }
-        } while ($itens <= $total);
+            
+        } while ($itens < $total);
     }
 }

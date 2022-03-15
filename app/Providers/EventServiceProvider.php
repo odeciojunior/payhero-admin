@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Console\Commands\ListenerDelayEvent;
-use App\Console\Commands\ListenerDelayListener;
 use App\Listeners\IntegrationOrderCancelListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Core\Events\AffiliateEvent;
@@ -205,9 +203,6 @@ class EventServiceProvider extends ServiceProvider
             CreateChargebackDebitListener::class,
             SendChargebackNotificationsListener::class,
             NotifyAntifraudChargebackListener::class,
-        ],
-        ListenerDelayEvent::class => [
-            ListenerDelayListener::class
         ]
     ];
 
