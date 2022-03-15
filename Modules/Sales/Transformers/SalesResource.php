@@ -79,6 +79,7 @@ class SalesResource extends JsonResource
             //extra info
             'total' => $this->details->total ?? null,
             'subTotal' => $this->details->subTotal ?? null,
+            'progressive_discount' => FoxUtils::formatMoney($this->progressive_discount / 100,) ?? null,
             'discount' => $this->details->discount ?? null,
             'comission' => $this->details->comission ?? 0 + ($this->cashback->value ?? 0),
             'convertax_value' => $this->details->convertax_value ?? null,
