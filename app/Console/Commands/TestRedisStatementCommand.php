@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Modules\Core\Entities\Sale;
-use Illuminate\Support\Facades\Log;
 
 class TestRedisStatementCommand extends Command
 {
@@ -42,8 +41,6 @@ class TestRedisStatementCommand extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
 
             $this->info('Redis: ' . env('REDIS_STATEMENT_HOST'));
@@ -71,8 +68,6 @@ class TestRedisStatementCommand extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }

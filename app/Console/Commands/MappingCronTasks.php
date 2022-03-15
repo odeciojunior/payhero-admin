@@ -42,6 +42,7 @@ class MappingCronTasks extends Command
      */
     public function handle()
     {
+
         try {
 
             $cronTasks = $this->getCronTask();
@@ -113,7 +114,7 @@ class MappingCronTasks extends Command
         $i = 0;
         foreach($schedulesTasks as $task){
             $i++;
-            // \Log::info(
+            // Log::info(
             //     str_pad($task->expression,15,' ',STR_PAD_RIGHT).
             //     $task->command
             // );
@@ -215,7 +216,7 @@ class MappingCronTasks extends Command
                     }
                 }
                 if($total>10){
-                    \Log::info(['time'=>$dateFormat,'total'=>$total,'commands'=>$commands]);
+                    Log::info(['time'=>$dateFormat,'total'=>$total,'commands'=>$commands]);
                 }
             }
 

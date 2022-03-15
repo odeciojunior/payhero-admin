@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Services\NotazzService;
-use Illuminate\Support\Facades\Log;
 
 class GenerateNotazzInvoicesSalesApproved extends Command
 {
@@ -32,8 +31,6 @@ class GenerateNotazzInvoicesSalesApproved extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
             $notazzService = new NotazzService();
 
@@ -46,7 +43,5 @@ class GenerateNotazzInvoicesSalesApproved extends Command
             report($e);
         }
 
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
-        
     }
 }

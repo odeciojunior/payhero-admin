@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Services\TrackingService;
-use Illuminate\Support\Facades\Log;
 
 class VerifyTrackingsWithoutInfo extends Command
 {
@@ -35,7 +34,6 @@ class VerifyTrackingsWithoutInfo extends Command
 
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         $trackingService = new TrackingService();
 
@@ -63,6 +61,5 @@ class VerifyTrackingsWithoutInfo extends Command
 
         $bar->finish();
 
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 }

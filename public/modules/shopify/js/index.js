@@ -489,4 +489,31 @@ $(document).ready(function () {
         $("#bt-cancel").trigger("click");
         $("#bt-close").trigger("click");
     });
+
+    $('#bt-shopify-verify-permissions').on('click', function (event) {
+        event.preventDefault();
+        $('#bt-close').trigger('click')
+        loadingOnScreen();
+
+        $.ajax({
+            method: 'POST',
+            url: '/api/apps/shopify/verifypermissions',
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            data: {
+                project_id: projectId,
+            },
+            error: function (response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function (response) {
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+            }
+        });
+    });
 });
