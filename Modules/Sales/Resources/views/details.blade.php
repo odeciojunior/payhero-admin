@@ -82,7 +82,7 @@
                             <span class="text-muted ft-12"> Desconto progressivo</span>
                         </div>
                         <div id="discount-prog-data" class="col-sm-6 col-6 text-right" style="display: nonex;">
-                            <span id="desconto-value" class="text-muted ft-12"></span>
+                            <span id="desconto-prog-value" class="text-muted ft-12"></span>
                         </div>
                         <div id="discount-title" class="col-sm-6 col-6" style="display: none;">
                             <span class="text-muted ft-12"> Desconto do cupom</span>
