@@ -262,7 +262,9 @@ $(function () {
                                     );
                                     $(".list-products, .footer-products").addClass('visible');
                                     $('#card-products .value-price').addClass('invisible');
-                                    $('[data-toggle="tooltip"]').tooltip();
+                                    $('[data-toggle="tooltip"]').tooltip({
+                                        container: '.list-products'
+                                    });
                                 }
                             } else {
                                 $('#card-products .value-price').removeClass('invisible');
