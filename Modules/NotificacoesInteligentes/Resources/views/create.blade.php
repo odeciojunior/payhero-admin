@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-{{-- 
+
         <div class="row mt-20">
             <div class="col-6">
                 <div class="switch-holder">
@@ -122,7 +122,7 @@
             
         </div>
 
-        --}}
+       
 
         
 

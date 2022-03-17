@@ -24,7 +24,7 @@
                     <h1 class="page-title my-10" style="min-height: 28px">
                         <a href="/apps">
                             <span class="o-arrow-right-1 font-size-30 ml-2" aria-hidden="true"></span>
-                            Integrações com AstronMembers
+                            Integrações com Notificacoes Inteligentes
                         </a>
                     </h1>
                 </div>
@@ -55,8 +55,8 @@
                             <h4 class="modal-title" style="font-weight: 700;"></h4>
                         </div>
                         <div class="pt-10 pr-20 pl-20 modal_integracao_body">
-                            @include('astronmembers::create')
-                            @include('astronmembers::edit')
+                            @include('notificacoesinteligentes::create')
+                            @include('notificacoesinteligentes::edit')
                         </div>
                         <div class="modal-footer" style="margin-top: 15px">
                             <button id="bt_integration" type="button" class="btn btn-success"
@@ -87,7 +87,7 @@
             <div class="content-error text-center">
                 <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                <p class="desc gray">Integre suas lojas com AstronMembers de forma totalmente automatizada!</p>
+                <p class="desc gray">Integre suas lojas com Notificacoes Inteligentes de forma totalmente automatizada!</p>
             </div>
         </div>
     </div>
@@ -120,6 +120,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/astronmembers/js/index.js?v=s0')}}"></script>
+        <script src="{{asset('modules/notificacoes-inteligentes/js/index.js?v=s0')}}"></script>
     @endpush
 @endsection

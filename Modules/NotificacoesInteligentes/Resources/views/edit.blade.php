@@ -13,14 +13,14 @@
             </div>
         </div>
 
-        <div class="row">
+        {{-- <div class="row">
             <div class='form-group col-12'>
                 <label for="url_store">Token</label>
                 <div class="d-flex input-group">
                     <input type="text" class="input-pad addon" name="link" id="token_edit" placeholder="" value='' disabled>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="row">
             <div class='form-group col-12'>

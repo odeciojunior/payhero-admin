@@ -11,6 +11,12 @@
 |
 */
 
-Route::prefix('notificacoesinteligentes')->group(function() {
-    Route::get('/', 'NotificacoesInteligentesController@index');
-});
+Route::group(
+    [
+        'middleware' => ['web', 'auth','permission:apps'],
+        'as' => 'notificacoesinteligentes'
+    ],
+    function() {
+        Route::resource('/apps/notificacoesinteligentes', 'NotificacoesInteligentesController')->only('index');
+    }
+);
