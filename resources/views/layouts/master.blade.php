@@ -64,8 +64,8 @@
     <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fluent-icons/fluentIcons-Filled.css') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=29') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=83') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=30') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=85') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
     @stack('css')
     <!-- Google Tag Manager -->
