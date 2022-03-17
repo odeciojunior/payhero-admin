@@ -302,6 +302,10 @@ input:active, input:hover {
     outline: 1px solid #2bb2ff;
 }
 
+.modal-plans .informations-data:not(.edit) .form-control:hover {
+    outline: none;
+}
+
 
 select:active, select:hover {
     outline: 1px solid #2bb2ff;

@@ -3,16 +3,15 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use function foo\func;
+use Modules\Core\Entities\Product;
+use Modules\Core\Entities\ProductPlanSale;
 use Illuminate\Support\Carbon;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Project;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\Customer;
 use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\SendEmailEvent;
@@ -27,10 +26,200 @@ use Modules\Core\Entities\SaleLog;
  */
 class BoletoService
 {
+    public function verifyBoletosExpiring()
+    {
+        try {
+            $projectNotificationService = new ProjectNotificationService();
+            $domainApproved = Domain::STATUS_APPROVED;
+            $notificationActive = ProjectNotification::STATUS_ACTIVE;
+
+            $smsNotificationEnum = ProjectNotification::NOTIFICATION_SMS_BOLETO_DUE_TODAY;
+            $emailNotificationEnum = ProjectNotification::NOTIFICATION_EMAIL_BOLETO_DUE_TODAY;
+
+            DB::select("SET SESSION group_concat_max_len = @@max_allowed_packet");
+            DB::select("SET SESSION sort_buffer_size =  @@sort_buffer_size * 2");
+            Sale::select([
+                'sales.id',
+                'sales.checkout_id',
+                'sales.sub_total',
+                'sales.shipment_value',
+                'sales.shopify_discount',
+                'sales.total_paid_value',
+                'sales.boleto_digitable_line',
+                'sales.boleto_link',
+                'sales.boleto_due_date',
+                'c.name as customer_name',
+                'c.email as customer_email',
+                'c.telephone as customer_phone',
+                'sales.project_id',
+                'p2.name as project_name',
+                'cc.checkout_logo as logo',
+                DB::raw("(select message from project_notifications where notification_enum = {$smsNotificationEnum} and status = {$notificationActive} and project_id = p2.id limit 1) as sms_message"),
+                DB::raw("(select message from project_notifications where notification_enum = {$emailNotificationEnum} and status = {$notificationActive} and project_id = p2.id limit 1) as email_message"),
+                DB::raw("(select d.name from domains as d where d.project_id = p2.id and d.status = {$domainApproved} limit 1) as domain"),
+                DB::raw("cast(concat('[', group_concat(json_object('pps_id', pps.id, 'name', p.name, 'photo', p.photo, 'amount', pps.amount, 'type_enum', p.type_enum, 'url', p.digital_product_url, 'expiration', p.url_expiration_time)), ']') as json) as products"),
+            ])->join('products_plans_sales as pps', 'pps.sale_id', '=', 'sales.id')
+                ->join('products as p', 'p.id', '=', 'pps.product_id')
+                ->join('customers as c', 'c.id', '=', 'sales.customer_id')
+                ->join('projects as p2', 'p2.id', '=', 'sales.project_id')
+                ->join('checkout_configs as cc', 'cc.project_id', '=', 'p2.id')
+                ->where('sales.payment_method', Sale::PAYMENT_TYPE_BANK_SLIP)
+                ->where('sales.status', Sale::STATUS_PENDING)
+                ->where('sales.api_flag', 0)
+                ->whereDate('sales.boleto_due_date', now()->startOfDay())
+                ->groupBy([
+                    'sales.id',
+                    'sales.checkout_id',
+                    'sales.sub_total',
+                    'sales.shipment_value',
+                    'sales.shopify_discount',
+                    'sales.total_paid_value',
+                    'sales.boleto_digitable_line',
+                    'sales.boleto_link',
+                    'sales.boleto_due_date',
+                    'c.name',
+                    'c.email',
+                    'c.telephone',
+                    'sales.project_id',
+                    'p2.name',
+                    'cc.checkout_logo',
+                    'sms_message',
+                    'email_message',
+                    'domain',
+                ])->chunk(500, function ($sales) use ($projectNotificationService) {
+                    foreach ($sales as $sale) {
+                        try {
+                            $products = json_decode($sale->products);
+                            foreach ($products as $product) {
+                                if ($product->type_enum === Product::TYPE_DIGITAL && !empty($product->url)) {
+                                    $product->url = FoxUtils::getAwsSignedUrl($product->url, $product->expiration);
+                                    ProductPlanSale::where('id', $product->pps_id)->update(['temporary_url' => $product->url]);
+                                } else {
+                                    $product->url = '';
+                                }
+                                $product->photo = FoxUtils::checkFileExistUrl($product->photo) ? $product->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/produto.png';
+                            }
+
+                            $subTotal = preg_replace("/[^0-9]/", "", $sale->sub_total);
+                            $subTotal = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+
+                            $sale->shipment_value = preg_replace("/[^0-9]/", "", $sale->shipment_value);
+                            $sale->shipment_value = substr_replace($sale->shipment_value, ',', strlen($sale->shipment_value) - 2, 0);
+
+                            $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+                            if ($discount == 0 || $discount == null) {
+                                $discount = '';
+                            }
+                            $sale->total_paid_value = preg_replace("/[^0-9]/", "", $sale->total_paid_value);
+                            if ($discount != '') {
+                                $sale->total_paid_value = $sale->total_paid_value - preg_replace("/[^0-9]/", "", $discount);
+                                $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
+                            }
+                            $sale->total_paid_value = substr_replace($sale->total_paid_value, ',', strlen($sale->total_paid_value) - 2, 0);
+
+                            $boletoDigitableLine = [];
+                            $boletoDigitableLine[0] = substr($sale->boleto_digitable_line, 0, 24);
+                            $boletoDigitableLine[1] = substr($sale->boleto_digitable_line, 24, strlen($sale->boleto_digitable_line) - 1);
+                            $sale->boleto_due_date = Carbon::parse($sale->boleto_due_date)->format('d/m/y');
+
+                            $saleData = (object)[
+                                'id' => $sale->id,
+                                'project_id' => $sale->project_id,
+                                'boleto_link' => $sale->boleto_link,
+                                'customer' => (object)[
+                                    'name' => $sale->customer_name
+                                ]
+                            ];
+
+                            $projectData = (object)[
+                                'id' => $sale->project_id,
+                                'name' => $sale->project_name
+                            ];
+
+                            if (!empty($sale->sms_message)) {
+                                $message = $sale->sms_message;
+                                $smsMessage = $projectNotificationService->formatNotificationData(
+                                    $message,
+                                    $saleData,
+                                    $projectData,
+                                    'sms'
+                                );
+                                if (!empty($smsMessage) && !empty($sale->customer_phone)) {
+                                    $data = [
+                                        'message' => $smsMessage,
+                                        'telephone' => $sale->customer_phone,
+                                        'checkout_id' => $sale->checkout_id,
+                                    ];
+                                    event(new SendSmsEvent($data));
+                                }
+                            }
+
+                            if (!empty($sale->email_message) && !empty($sale->domain) && !empty($sale->customer_email)) {
+                                if (stristr($sale->customer_email, 'invalido') === false) {
+                                    $message = json_decode($sale->email_message);
+                                    if (!empty($message->title)) {
+                                        $subjectMessage = $projectNotificationService->formatNotificationData(
+                                            $message->subject,
+                                            $saleData,
+                                            $projectData
+                                        );
+                                        $titleMessage = $projectNotificationService->formatNotificationData(
+                                            $message->title,
+                                            $saleData,
+                                            $projectData
+                                        );
+                                        $contentMessage = $projectNotificationService->formatNotificationData(
+                                            $message->content,
+                                            $saleData,
+                                            $projectData
+                                        );
+                                        $contentMessage = preg_replace("/\r\n/", "<br/>", $contentMessage);
+                                        $customerFirstName = current(explode(' ', $sale->customer_name));
+
+                                        $data = [
+                                            "name" => $customerFirstName,
+                                            "boleto_link" => $sale->boleto_link,
+                                            "boleto_digitable_line" => $boletoDigitableLine,
+                                            "boleto_due_date" => $sale->boleto_due_date,
+                                            "total_paid_value" => $sale->total_paid_value,
+                                            "shipment_value" => $sale->shipment_value,
+                                            "subtotal" => strval($subTotal),
+                                            'discount' => $discount,
+                                            "project_logo" => $sale->logo,
+                                            "subject" => $subjectMessage,
+                                            "title" => $titleMessage,
+                                            "content" => $contentMessage,
+                                            "products" => $products,
+                                            'sac_link' => "https://sac." . $sale->domain,
+                                        ];
+                                        $dataEmail = [
+                                            'domainName' => $sale->domain,
+                                            'projectName' => $projectData->name ?? '',
+                                            'clientEmail' => $sale->customer_email,
+                                            'clientName' => $customerFirstName ?? '',
+                                            'templateId' => 'd-32a6a7b666ed49f6be2392ba8a5f6973',
+                                            'bodyEmail' => $data,
+                                            'checkout_id' => $sale->checkout_id,
+                                        ];
+                                        event(new SendEmailEvent($dataEmail));
+                                    }
+                                }
+                            }
+                        } catch (\Exception $e) {
+                            report($e);
+                        }
+                    }
+                });
+
+        } catch (\Exception $e) {
+            report($e);
+        }
+    }
+
     /**
      * Hoje vence o seu pedido
      */
-    public function verifyBoletosExpiring()
+    public function verifyBoletosExpiring2()
     {
         try {
             $saleModel = new Sale();
@@ -644,33 +833,32 @@ class BoletoService
 
         try {
             $boletos = Sale::with(['customer'])
-            ->where(
-                [
-                    ['payment_method', '=', '2'],
-                    ['status', '=', '5'],
-                    ['gateway_id','=',21],
+                ->where(
                     [
-                        DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"),
-                        '<',
-                        $compensationDate,
-                    ],
-                ]
-            );
+                        ['payment_method', Sale::BOLETO_PAYMENT],
+                        ['status', Sale::STATUS_PENDING],
+                        [
+                            DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"),
+                            '<',
+                            $compensationDate,
+                        ],
+                    ]
+                );
 
-            foreach ($boletos->cursor() as $boleto){
+            foreach ($boletos->cursor() as $boleto) {
 
                 //verificando se prazo de compensação foi final de semana
                 $bankSlipCompensationDate = Carbon::parse($boleto->boleto_due_date)->addDay($compensationDays);
-                if ($bankSlipCompensationDate->isWeekend()){
+                if ($bankSlipCompensationDate->isWeekend()) {
                     $bankSlipCompensationDate = $bankSlipCompensationDate->nextWeekday();
                 }
                 $dueDate = $bankSlipCompensationDate->toDateString();
 
-                if($dueDate >= $compensationDate) continue;
+                if ($dueDate >= $compensationDate) continue;
 
                 $boleto->update(
                     [
-                        'status' => 5,
+                        'status' => Sale::STATUS_CANCELED,
                         'gateway_status' => 'canceled',
                     ]
                 );
@@ -678,7 +866,7 @@ class BoletoService
                 SaleLog::create(
                     [
                         'status' => 'canceled',
-                        'status_enum' => 5,
+                        'status_enum' => Sale::STATUS_CANCELED,
                         'sale_id' => $boleto->id,
                     ]
                 );
@@ -692,7 +880,7 @@ class BoletoService
                     );
                 }
 
-                if ( !$boleto->api_flag ) {
+                if (!$boleto->api_flag) {
                     event(new BilletExpiredEvent($boleto));
                 }
             }

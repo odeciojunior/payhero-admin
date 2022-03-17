@@ -59,7 +59,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('asaas:transfers-surplus-balance')->mondays()->at('06:25');
         $schedule->command('getnet:check-withdrawals-released-cloudfox')->mondays()->at('22:00');
         $schedule->command('getnet:check-withdrawals-liquidated-cloudfox')->mondays()->at('22:30');
-        
+
         $schedule->command('whiteblacklist:verifyexpires')->dailyAt('00:00');
         $schedule->command('asaas:transfers-chargebacks')->dailyAt('00:20');
         $schedule->command('check:has-valid-tracking')->dailyAt('00:30');
@@ -73,6 +73,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('check:automatic-withdrawals')->dailyAt('03:10');
         $schedule->command('command:deleteTemporaryFiles')->dailyAt('03:20');
         $schedule->command('getnet:update-confirm-date-debt-pending')->dailyAt('03:30');
+        $schedule->command('safe2pay:resend-bankslip-webhook')->dailyAt('03:40');
         $schedule->command('command:validateLastDomains')->dailyAt('04:00');
         $schedule->command('command:WoocommerceRetryFailedRequests')->dailyAt('04:15');
         $schedule->command('under-attack:update-card-declined')->dailyAt('05:00');

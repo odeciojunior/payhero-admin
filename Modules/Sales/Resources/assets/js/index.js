@@ -43,6 +43,7 @@ $(document).ready(function () {
             $('#date_type').attr('disabled', false).removeClass('disableFields');
             $('#date_range').attr('disabled', false).removeClass('disableFields');
         } else {
+            $('#date_range').val(moment("2018-01-01").format("DD/MM/YYYY") + ' - ' + moment().format("DD/MM/YYYY"));
             $('#date_type').attr('disabled', true).addClass('disableFields');
             $('#date_range').attr('disabled', true).addClass('disableFields');
         }

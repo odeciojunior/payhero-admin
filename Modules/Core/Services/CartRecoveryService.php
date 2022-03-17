@@ -12,23 +12,26 @@ use Modules\Core\Events\SendSmsEvent;
 
 class CartRecoveryService
 {
-    public function verifyAbandonedCarts(
-        Carbon $startDate = null,
-        Carbon $endDate = null,
-        int    $smsNotificationEnum = ProjectNotification::NOTIFICATION_SMS_ABANDONED_CART_AN_HOUR_LATER,
-        int    $emailNotificationEnum = ProjectNotification::NOTIFICATION_EMAIL_ABANDONED_CART_AN_HOUR_LATER
-    )
+    public function verifyAbandonedCarts($lastDay = false)
     {
         try {
             $projectNotificationService = new ProjectNotificationService();
             $domainApproved = Domain::STATUS_APPROVED;
             $notificationActive = ProjectNotification::STATUS_ACTIVE;
 
-            if (empty($startDate) && empty($endDate)) {
+            if ($lastDay) {
+                $startDate = now()->subDay()->startOfDay();
+                $endDate = now()->subDay()->endOfDay();
+                $smsNotificationEnum = ProjectNotification::NOTIFICATION_SMS_ABANDONED_CART_NEXT_DAY;
+                $emailNotificationEnum = ProjectNotification::NOTIFICATION_EMAIL_ABANDONED_CART_NEXT_DAY;
+            } else {
                 $startDate = now()->subMinutes(75);
                 $endDate = now()->subHour();
+                $smsNotificationEnum = ProjectNotification::NOTIFICATION_SMS_ABANDONED_CART_AN_HOUR_LATER;
+                $emailNotificationEnum = ProjectNotification::NOTIFICATION_EMAIL_ABANDONED_CART_AN_HOUR_LATER;
             }
 
+            DB::select("SET SESSION group_concat_max_len = @@max_allowed_packet");
             DB::select("SET SESSION sort_buffer_size =  @@sort_buffer_size * 2");
             $query = Checkout::select([
                 'checkouts.id as id',
