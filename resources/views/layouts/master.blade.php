@@ -65,9 +65,10 @@
     {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/master/icons.min.css') }}">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=30') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=85') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
+    {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/new-site.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/global/css/global.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/master/new-site.min.css') }}">
     @stack('css')
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
