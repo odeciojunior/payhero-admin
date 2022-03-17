@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableNotificacoesInteligentesIntegration extends Migration
+class CreateNewTableNotificacoesInteligentesIntegrations extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTableNotificacoesInteligentesIntegration extends Migration
      */
     public function up()
     {
-        Schema::create('table_notificacoes_inteligentes_integration', function (Blueprint $table) {
+        Schema::create('notificacoes_inteligentes_integrations', function (Blueprint $table) {
             
             $table->bigIncrements('id');
             $table->string('link');
@@ -48,6 +48,6 @@ class CreateTableNotificacoesInteligentesIntegration extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_notificacoes_inteligentes_integration');
+        Schema::dropIfExists('notificacoes_inteligentes_integrations');
     }
 }
