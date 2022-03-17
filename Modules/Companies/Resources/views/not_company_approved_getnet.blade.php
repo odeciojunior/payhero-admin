@@ -1,5 +1,4 @@
 @push('css')
-    {{-- <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/companies/not_company_approved_getnet.min.css') }}">
 @endpush
 <div class="content-error text-center" id="companies-not-approved-getnet" style="display:none;">

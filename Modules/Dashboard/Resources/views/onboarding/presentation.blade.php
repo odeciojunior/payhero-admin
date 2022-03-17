@@ -1,7 +1,4 @@
 @push('css')
-    {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ mix('modules/dashboard/css/onboarding-details.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/dashboard/onboarding-details.min.css') }}">
 @endpush
 
@@ -40,6 +37,5 @@
 </div>
 
 @push('scripts')
-    {{-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> --}}
     <script type="text/javascript" src="{{ mix('build/layouts/dashboard/onboarding-details.min.js')}}"></script>
 @endpush

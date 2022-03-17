@@ -3,11 +3,6 @@
 @section('content')
 
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ mix('modules/sales/css/index.min.css') }}">
-        <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
-        <link rel="stylesheet" href="{!! mix('modules/global/css/switch.min.css') !!}">
-        <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/> --}}
         <link rel="stylesheet" href="{{ mix('build/layouts/reports/blockedbalance.min.css') }}">
         <style>
             .select2-selection--single {
@@ -255,10 +250,6 @@
 
 
     @push('scripts')
-        {{-- <script src='{{ mix('modules/reports/js/report-blockedbalance.min.js') }}'></script>
-        <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script> --}}
         <script src='{{ mix('build/layouts/reports/blockedbalance.min.js') }}'></script>
     @endpush
 

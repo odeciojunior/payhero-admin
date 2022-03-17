@@ -1,11 +1,6 @@
 @extends("layouts.master")
 
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/empty.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/finances/css/new-finances.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/finances/css/multi-finances.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/finances/multi.min.css') }}">
 @endpush
 
@@ -407,12 +402,5 @@
 @include('finances::components.new-withdrawal-modal')
 
 @push('scripts')
-    {{-- <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
-    <script src="{{ mix('modules/global/js/daterangepicker.min.js') }}"></script>
-    <script src="{{ mix('modules/finances/js/jPages.min.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.js?v=' . versionsFile()) }}"></script>
-    <script src="{{ mix('modules/finances/js/multi-finances.min.js') }}"></script>
-    <script src="{{ mix('modules/finances/js/multi-finances-withdrawals.min.js') }}"></script>
-    <script src="{{ mix('modules/finances/js/settings.min.js') }}"></script> --}}
     <script src="{{ mix('build/layouts/finances/multi.min.js') }}"></script>
 @endpush

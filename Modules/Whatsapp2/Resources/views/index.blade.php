@@ -1,8 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ mix('modules/digitalmanager/css/index.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/whatsapp2/index.min.css') }}">
-    {{-- <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
     <style>
         .o-arrow-right-1 {
             font-size: 30px;
@@ -135,7 +133,6 @@
         </div>
     </div>
     @push('scripts')
-        {{-- <script src="{{ mix('modules/whatsapp2/js/index.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/whatsapp2/index.min.js') }}"></script>
     @endpush
 @endsection

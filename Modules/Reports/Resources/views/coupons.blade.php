@@ -4,10 +4,6 @@
 @section('content')
 
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
-        <link rel="stylesheet" href="{!! mix('modules/reports/css/coupons.min.css') !!}">
-        <link rel="stylesheet" href="{!! mix('modules/reports/css/reports.min.css') !!}">
-        <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
         <link rel="stylesheet" href="{!! mix('build/layouts/reports/coupons.min.css') !!}">
     @endpush
 
@@ -120,8 +116,5 @@
 @endsection
 
 @push('scripts')
-    {{-- <script src='{{ mix('modules/reports/js/report-coupons.min.js') }}'></script>
-    <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
-    <script src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script> --}}
     <script src='{{ mix('build/layouts/reports/coupons.min.js') }}'></script>
 @endpush

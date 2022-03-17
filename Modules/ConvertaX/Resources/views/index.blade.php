@@ -1,9 +1,6 @@
 @extends("layouts.master")
 
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/convertax/css/index.min.css') }}">
-    <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
     <link rel="stylesheet" href="{!! mix('build/layouts/convertax/index.min.css') !!}">
     <style>
         .gray:hover{
@@ -96,7 +93,6 @@
         </div>
     </div>
     @push('scripts')
-        {{-- <script src="{{ mix('modules/convertax/js/index.min.js' )}}"></script> --}}
         <script src="{{ mix('build/layouts/convertax/index.min.js' )}}"></script>
     @endpush
 @endsection

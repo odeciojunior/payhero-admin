@@ -1,5 +1,4 @@
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ mix('modules/shipping/css/shipping-edit.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/shipping/edit.min.css') }}">
 @endpush
 

@@ -12,7 +12,7 @@
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     @endif
 
-<!-- access token used for api ajax requests -->
+    <!-- access token used for api ajax requests -->
     <meta name="access-token"
           content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
@@ -21,32 +21,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('build/global/img/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('build/global/img/favicon-16x16.png') }}">
     <link rel="mask-icon" href="{{ mix('build/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
-    {{-- <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/loading.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/checkAnimation.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/ribbon.min.css') }}">
-    <!-- Plugins -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/jquery-imgareaselect/css/imgareaselect-default.min.css') }}">
-    <link rel='stylesheet' href="{{ mix('modules/global/css/sweetalert2.min.css') }}">
-    <link rel='stylesheet' href="{{ mix('modules/global/css/daterangepicker.min.css') }}">
-    <!-- Fonts -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/newFonts.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
-    <!-- Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/materialdesignicons.min.css') }}">
-    <!-- New CSS -->
-    <link rel="stylesheet" href="{{ mix('modules/global/css/new-site.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/finances.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/global.min.css') }}"> --}}
+    <!-- CSS -->
     <link rel="stylesheet" href="{{ mix('build/layouts/affiliates/master.min.css') }}">
     @stack('css')
 
@@ -56,8 +31,7 @@
             Sentry.init({dsn: {{getenv('SENTRY_LARAVEL_DSN')}});
         </script>
     @endif
-    {{-- <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script> --}}
+
     <script src="{{ mix('build/layouts/affiliates/master2.min.js') }}"></script>
     <script>
         Breakpoints();
@@ -75,36 +49,12 @@
 </div>
 @yield('content')
 
-<!-- Plugins -->
-{{-- <script src="{{ asset('modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
-<script src="{{ mix('modules/global/js-extra/jquery.mask.min.js') }}"></script>
-<script src="{{ mix('modules/global/js-extra/jquery.maskMoney.min.js') }}"></script>
-<script src="{{ mix('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Component.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Plugin.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Base.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Config.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/js/Section/Menubar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/js/Section/Sidebar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/js/Section/PageAside.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/js/Section/GridMenu.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
-<script src="{{ mix('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-<script src="{{ mix('modules/global/js/global.min.js') }}"></script> --}}
+<!-- JS -->
 <script src="{{ mix('build/layouts/affiliates/master.min.js') }}"></script>
 <script>
     verifyDocumentPending();
 </script>
 @stack('scripts')
-{{-- Laravel Mix - JS File --}}
-{{-- <script src="{{ mix('js/affiliates.js') }}"></script> --}}
+
 </body>
 </html>

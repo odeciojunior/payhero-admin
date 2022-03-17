@@ -127,6 +127,5 @@
 
 </div>
 @push('scripts')
-    {{-- <script src="{{ mix('modules/finances/js/detail.min.js') }}"></script> --}}
     <script src="{{ mix('build/layouts/finances/detail.min.js') }}"></script>
 @endpush

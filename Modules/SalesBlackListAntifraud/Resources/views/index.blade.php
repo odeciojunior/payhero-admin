@@ -2,10 +2,6 @@
 
 @section('content')
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ mix('modules/salesBlackListAntifraud/css/index.min.css') }}">
-        <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
-        <link rel="stylesheet" href="{!! mix('modules/global/css/switch.min.css') !!}">
-        <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}"> --}}
         <link rel="stylesheet" href="{{ mix('build/layouts/salesblacklistantifraud/index.min.css') }}">
     @endpush
 
@@ -103,10 +99,6 @@
     </div>
 
     @push('scripts')
-        {{-- <script src="{{ mix('modules/salesBlackListAntifraud/js/index.min.js') }}"></script>
-        <script src="{{ mix('modules/salesBlackListAntifraud/js/detail.min.js') }}"></script>
-        <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script> --}}
         <script src='{{ mix('build/layouts/salesblacklistantifraud/index.min.js') }}'></script>
     @endpush
 

@@ -1,6 +1,5 @@
 @extends("layouts.master")
 @push('css')
-    {{-- <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/wooCommerce/index.min.css') }}">
     <style>
         .o-arrow-right-1 {
@@ -398,7 +397,6 @@
     </div>
 
     @push('scripts')
-        {{-- <script src="{{ mix('modules/woocommerce/js/index.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/wooCommerce/index.min.js') }}"></script>
     @endpush
 

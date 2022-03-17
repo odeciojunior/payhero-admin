@@ -3,10 +3,6 @@
 @section('content')
 
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/global/select3/select3.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/global/jquery-daterangepicker/daterangepicker.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/attendance/css/index.min.css') }}"> --}}
         <link rel="stylesheet" href="{{ mix('build/layouts/attendance/index.min.css') }}">
     @endpush
 
@@ -217,11 +213,6 @@
     @include('projects::empty')
 
     @push('scripts')
-        {{-- <script src="{{ mix('modules/global/select3/select3.min.js') }}"></script>
-        <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src="{{ mix('modules/global/jquery-daterangepicker/daterangepicker.min.js') }}"></script>
-        <script src="{{ mix('modules/tickets/js/emoji-button.min.js')}}"></script>
-        <script src="{{ mix('modules/tickets/js/index.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/attendance/index.min.js') }}"></script>
     @endpush
 

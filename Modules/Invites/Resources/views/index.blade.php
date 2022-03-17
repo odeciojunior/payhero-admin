@@ -2,9 +2,6 @@
 
 @section('content')
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/global/css/empty.min.css') }}"> --}}
         <link rel="stylesheet" href="{{ mix('build/layouts/invites/index.min.css') }}">
         <style>
             .badge {
@@ -324,7 +321,6 @@
         </div>
     </div>
     @push('scripts')
-        {{-- <script src="{{ mix('modules/invites/js/invites.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/invites/index.min.js') }}"></script>
     @endpush
 

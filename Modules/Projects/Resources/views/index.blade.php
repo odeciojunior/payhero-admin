@@ -1,8 +1,6 @@
 @extends("layouts.master")
 @section('content')
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/projects/css/index.min.css') }}"> --}}
         <link rel="stylesheet" href="{{ mix('build/layouts/projects/index.min.css') }}">
         <style>
             .card{

@@ -7,8 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manual de Integração com Melhor Envio</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
-
-    {{-- <link rel="stylesheet" href="{{ mix('modules/melhorenvio/css/tutorial.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/melhorenvio/tutorial.min.css') }}">
 </head>
 

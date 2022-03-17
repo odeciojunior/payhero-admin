@@ -2,7 +2,6 @@
 @section('content')
 
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ mix('modules/apps/css/index.min.css') }}"> --}}
         <link rel="stylesheet" href="{{ mix('build/layouts/apps/index.min.css') }}">
     @endpush
 
@@ -201,8 +200,6 @@
     </div>
 
     @push('scripts')
-        {{-- <script src="{{ mix('modules/apps/js/index.min.js') }}"></script>
-        <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/apps/index.min.js') }}"></script>
     @endpush
 @endsection

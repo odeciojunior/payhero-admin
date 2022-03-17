@@ -2,9 +2,6 @@
 
 @section('content')
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/global/css/empty.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/integrations/css/edit-integrations.min.css') }}"> --}}
         <link rel="stylesheet" href="{{ mix('build/layouts/integrations/index.min.css') }}">
     @endpush
     <div class="page new-layout">
@@ -228,7 +225,6 @@
         </div>
     </div>
     @push('scripts')
-        {{-- <script src="{{ mix('modules/integrations/js/index.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/integrations/index.min.js') }}"></script>
     @endpush
 

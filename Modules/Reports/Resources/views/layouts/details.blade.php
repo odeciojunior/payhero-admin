@@ -1,5 +1,4 @@
 @push('css')
-    {{-- <link rel="stylesheet" href='{{ mix('modules/sales/css/index.min.css') }}'> --}}
     <link rel="stylesheet" href='{{ mix('build/layouts/reports/details.min.css') }}'>
 @endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle"
@@ -325,6 +324,5 @@
     </div>
 </div>
 @push('scripts')
-    {{-- <script src="{{ mix('modules/sales/js/detail.min.js') }}"></script> --}}
     <script src="{{ mix('build/layouts/reports/details.min.js') }}"></script>
 @endpush

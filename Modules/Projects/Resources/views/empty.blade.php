@@ -18,6 +18,5 @@
     </a>
 </div>
 @push('css')
-    {{-- <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
     <link rel="stylesheet" href="{!! mix('build/layouts/projects/empty.min.css') !!}">
 @endpush

@@ -4,12 +4,6 @@
 @section('content')
 
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
-        <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist.min.css') !!}">
-        <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{{ mix('modules/dashboard/css/index.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/dashboard/css/dashboard-performance.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/dashboard/css/dashboard-account-health.min.css') }}"> --}}
         <link rel="stylesheet" href="{{ mix('build/layouts/dashboard/stylesheets.min.css') }}">
     @endpush
 
@@ -235,15 +229,6 @@
     </div>
 
     @push('scripts')
-        {{-- <script src='{{ mix('modules/dashboard/js/gauge.min.js') }}'></script>
-        <script src='{{ mix('modules/reports/js/chartist.min.js') }}'></script>
-        <script src='{{ mix('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
-        <script src='{{ mix('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
-        <script src='{{ mix('modules/global/js/confetti.browser.min.js') }}'></script> --}}
-{{--        <script src="{{ mix('modules/global/js/circle-progress.min.js') }}"></script>--}}
-        {{-- <script src="{{ mix('modules/dashboard/js/dashboard-performance.min.js') }}"></script>
-        <script src="{{ mix('modules/dashboard/js/dashboard.min.js') }}"></script>
-        <script src="{{ mix('modules/dashboard/js/dashboard-account-health.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/dashboard/scripts.min.js') }}"></script>
     @endpush
 

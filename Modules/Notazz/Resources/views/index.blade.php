@@ -1,7 +1,5 @@
 @extends("layouts.master")
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ mix('modules/notazz/css/index.min.css') }}">
-    <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/notazz/index.min.css') }}">
     <style>
         .gray:hover{
@@ -103,8 +101,6 @@
         </div>
     </div>
     @push('scripts')
-        {{-- <script src="{{ mix('modules/notazz/js/index.min.js') }}"></script>
-        <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/notazz/index.min.js') }}"></script>
     @endpush
 @endsection

@@ -1,11 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>--}}
     <link rel="stylesheet" href="{{ mix('build/layouts/activecampaign/show.min.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('css/style.css') }}"> --}}
 @endpush
 
 @section('content')
@@ -78,9 +74,6 @@
     </div>
 
     @push('scripts')
-        {{-- <script src="{{ mix('modules/activecampaign/js/edit.min.js') }}"></script>
-        <script src="{{ mix('modules/activecampaign/js/events.min.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script> --}}
         <script src="{{ mix('build/layouts/activecampaign/show.min.js') }}"></script>
     @endpush
 @endsection

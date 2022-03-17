@@ -218,7 +218,6 @@
         </div>
     </div>
     @push('scripts')
-        {{-- <script src="{{ mix('modules/notazz/js/detail.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/notazz/details.min.js') }}"></script>
     @endpush
 </div>

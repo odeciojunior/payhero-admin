@@ -223,7 +223,6 @@
         {{-- FIM loja nao existem lojas--}}
     </div>
     @push('scripts')
-        {{-- <script src="{{ mix('modules/affiliates/js/projectaffiliates.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/affiliates/projectaffiliates.min.js') }}"></script>
     @endpush
 @endsection

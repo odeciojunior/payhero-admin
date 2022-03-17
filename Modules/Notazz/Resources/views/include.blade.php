@@ -1,7 +1,6 @@
 <div class='col-md-12'>
     @if(count($projectsIntegrated) == 0)
         @push('css')
-            {{-- <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
             <link rel="stylesheet" href="{{ mix('build/layouts/notazz/include.min.css') }}">
         @endpush
         <div class='row justify-content-center'>

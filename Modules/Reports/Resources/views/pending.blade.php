@@ -4,10 +4,6 @@
 @section('content')
 
     @push('css')
-        {{-- <link rel="stylesheet" href="{!! mix('modules/reports/css/reports.min.css') !!}">
-        <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
-        <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
-        <link rel="stylesheet" href="{!! mix('modules/global/css/switch.min.css') !!}"> --}}
         <link rel="stylesheet" href="{!! mix('build/layouts/reports/pending.min.css') !!}"> --}}
         <style>
             @media only screen and (min-width: 768px){
@@ -219,9 +215,5 @@
 @endsection
 
 @push('scripts')
-    {{-- <script src="{{ mix('modules/reports/js/detail.min.js') }}"></script>
-    <script src='{{ mix('modules/reports/js/report-pending.min.js') }}'></script>
-    <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
-    <script src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script> --}}
     <script src='{{ mix('build/layouts/reports/pending.min.js') }}'></script>
 @endpush

@@ -1,6 +1,5 @@
 @extends("layouts.master")
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ mix('modules/digitalmanager/css/index.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/smartfunnel/index.min.css') }}">
     <style>
         .o-arrow-right-1 {
@@ -101,7 +100,6 @@
     </div>
 
     @push('scripts')
-        {{-- <script src="{{ mix('modules/smartfunnel/js/index.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/smartfunnel/index.min.js') }}"></script>
     @endpush
 @endsection

@@ -5,15 +5,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Module ConvertaX</title>
-
-       {{-- Laravel Mix - CSS File --}}
-       {{-- <link rel="stylesheet" href="{{ mix('css/convertax.css') }}"> --}}
-
     </head>
     <body>
         @yield('content')
-
-        {{-- Laravel Mix - JS File --}}
-        {{-- <script src="{{ mix('js/convertax.js') }}"></script> --}}
     </body>
 </html>

@@ -1,8 +1,6 @@
 @extends("layouts.master")
 
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ mix('modules/shopify/css/index.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/shopify/index.min.css') }}"> --}}
 @endpush
 <style>
@@ -629,7 +627,6 @@
     </div>
 
     @push('scripts')
-        {{-- <script src="{{ mix('modules/shopify/js/index.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/shopify/index.min.js') }}"></script>
     @endpush
 

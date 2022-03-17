@@ -1,8 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    {{-- <link rel="stylesheet" href="{{ mix('modules/digitalmanager/css/index.min.css') }}"> --}}
     <link rel="stylesheet" href="{{ mix('build/layouts/unicodrop/index.min.css') }}">
-    {{-- <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
     <style>
         .o-arrow-right-1 {
             font-size: 30px;
@@ -93,7 +91,6 @@
     </div>
 
     @push('scripts')
-        {{-- <script src="{{ mix('modules/unicodrop/js/index.min.js') }}"></script> --}}
         <script src="{{ mix('build/layouts/unicodrop/index.min.js') }}"></script>
     @endpush
 @endsection
