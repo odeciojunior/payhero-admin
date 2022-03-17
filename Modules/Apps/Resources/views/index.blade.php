@@ -172,7 +172,7 @@
                     </div>
 
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
-                        <div class="card app-integration" data-url="/apps/hotbillet" style='width: 270px;'>
+                        <div class="card app-integration" data-url="/apps/notificacoesinteligentes" style='width: 270px;'>
                             <a id="hotbillet-bt" href="/apps/hotbillet" class="add-btn">
                                 <i id="hotbillet-icon" class="o-add-1" aria-hidden="true"></i></a>
                                 <div style="height: 250px; line-height:250px">

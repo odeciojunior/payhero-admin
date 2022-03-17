@@ -13,6 +13,16 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/notificacoesinteligentes', function (Request $request) {
-    return $request->user();
-});
+Route::group(
+    [
+        'middleware' => ['auth:api', 'scopes:admin','permission:apps'],
+    ],
+    function() {
+        Route::get('/apps/notificacoesinteligentes', 'NotificacoesInteligentesApiController@index');
+        Route::get('/apps/notificacoesinteligentes/{id}', 'NotificacoesInteligentesApiController@show');
+        Route::get('/apps/notificacoesinteligentes/{id}/edit', 'NotificacoesInteligentesApiController@edit');
+
+        Route::apiResource('/apps/notificacoesinteligentes', 'NotificacoesInteligentesApiController')
+            ->only('store', 'update', 'destroy')->middleware('permission:apps_manage');
+    }
+);

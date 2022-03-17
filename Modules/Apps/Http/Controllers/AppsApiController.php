@@ -18,6 +18,7 @@ use Modules\Core\Entities\Whatsapp2Integration;
 use Modules\Core\Entities\HotbilletIntegration;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Entities\MelhorenvioIntegration;
+use Modules\Core\Entities\NotificacoesInteligentesIntegration;
 
 class AppsApiController extends Controller
 {
@@ -37,6 +38,7 @@ class AppsApiController extends Controller
             'smartfunnelIntegrations' => SmartfunnelIntegration::where('user_id', $accountOwnerId)->count(),
             'woocommerceIntegrations' => WooCommerceIntegration::where('user_id', $accountOwnerId)->count(),
             'astronmembersIntegrations' => AstronMembersIntegration::where('user_id', $accountOwnerId)->count(),
+            'notificacoesInteligentesIntegrations' => NotificacoesInteligentesIntegration::where('user_id', $accountOwnerId)->count(),
             'hotbilletIntegrations' => HotbilletIntegration::where('user_id', $accountOwnerId)->count(),
             'melhorenvioIntegrations' => MelhorenvioIntegration::where('user_id', $accountOwnerId)->count(),
         ]);

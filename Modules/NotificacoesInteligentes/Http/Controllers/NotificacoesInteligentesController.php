@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\NotificacoesInteligentes\Http\Controllers;
+namespace Modules\notificacoesinteligentes\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
