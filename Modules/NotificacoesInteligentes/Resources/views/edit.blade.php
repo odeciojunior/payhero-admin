@@ -26,12 +26,12 @@
             <div class='form-group col-12'>
                 <label for="url_store">Link</label>
                 <div class="d-flex input-group">
-                    <input type="text" class="input-pad addon" name="link" id="link_edit" placeholder="Digite o link" value=''>
+                    <input type="text" class="input-pad " name="link" id="link_edit" placeholder="Digite o link" value=''>
                 </div>
             </div>
         </div>
 
-{{-- 
+
         <div class="row mt-20">
             <div class="col-6">
                 <div class="switch-holder">
@@ -137,7 +137,7 @@
                     </label>
                 </div>
             </div>
-        </div> --}}
+        </div>
         
     </div>
 </form>

@@ -51,7 +51,7 @@ class NotificacoesInteligentesApiController extends Controller
                                         'projects'     => ProjectsSelectResource::collection($projects),
                                     ]);
         } catch (Exception $e) {
-            Log::debug($e);
+            // Log::debug($e);
             return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
@@ -89,43 +89,43 @@ class NotificacoesInteligentesApiController extends Controller
                                                 'message' => 'Projeto já integrado',
                                             ], 400);
                 }
-                // if (empty($data['boleto_generated'])) {
-                //     $data['boleto_generated'] = 0;
-                // }
-                // if (empty($data['boleto_paid'])) {
-                //     $data['boleto_paid'] = 0;
-                // }
-                // if (empty($data['credit_card_paid'])) {
-                //     $data['credit_card_paid'] = 0;
-                // }
-                // if (empty($data['credit_card_refused'])) {
-                //     $data['credit_card_refused'] = 0;
-                // }
-                // if (empty($data['abandoned_cart'])) {
-                //     $data['abandoned_cart'] = 0;
-                // }
+                if (empty($data['boleto_generated'])) {
+                    $data['boleto_generated'] = 0;
+                }
+                if (empty($data['boleto_paid'])) {
+                    $data['boleto_paid'] = 0;
+                }
+                if (empty($data['credit_card_paid'])) {
+                    $data['credit_card_paid'] = 0;
+                }
+                if (empty($data['credit_card_refused'])) {
+                    $data['credit_card_refused'] = 0;
+                }
+                if (empty($data['abandoned_cart'])) {
+                    $data['abandoned_cart'] = 0;
+                }
 
-                // if (empty($data['pix_paid'])) {
-                //     $data['pix_paid'] = 0;
-                // }
-                // if (empty($data['pix_generated'])) {
-                //     $data['pix_generated'] = 0;
-                // }
-                // if (empty($data['pix_expired'])) {
-                //     $data['pix_expired'] = 0;
-                // }
+                if (empty($data['pix_paid'])) {
+                    $data['pix_paid'] = 0;
+                }
+                if (empty($data['pix_generated'])) {
+                    $data['pix_generated'] = 0;
+                }
+                if (empty($data['pix_expired'])) {
+                    $data['pix_expired'] = 0;
+                }
 
                 $integrationCreated = $notificacoesInteligentesIntegrationModel->create([
                                                                            'link'                => $data['link'],
                                                                            'token'                => $token,
-                                                                        //    'boleto_generated'    => $data['boleto_generated'],
-                                                                        //    'boleto_paid'         => $data['boleto_paid'],
-                                                                        //    'credit_card_refused' => $data['credit_card_refused'],
-                                                                        //    'credit_card_paid'    => $data['credit_card_paid'],
-                                                                        //    'abandoned_cart'      => $data['abandoned_cart'],
-                                                                        //    'pix_generated'       => $data['pix_generated'],
-                                                                        //    'pix_paid'            => $data['pix_paid'],
-                                                                        //    'pix_expired'         => $data['pix_expired'],
+                                                                           'boleto_generated'    => $data['boleto_generated'],
+                                                                           'boleto_paid'         => $data['boleto_paid'],
+                                                                           'credit_card_refused' => $data['credit_card_refused'],
+                                                                           'credit_card_paid'    => $data['credit_card_paid'],
+                                                                           'abandoned_cart'      => $data['abandoned_cart'],
+                                                                           'pix_generated'       => $data['pix_generated'],
+                                                                           'pix_paid'            => $data['pix_paid'],
+                                                                           'pix_expired'         => $data['pix_expired'],
                                                                            'project_id'          => $projectId,
                                                                            'user_id'             => auth()->user()->account_owner_id,
                                                                        ]);
@@ -206,46 +206,46 @@ class NotificacoesInteligentesApiController extends Controller
         $data                    = $request->all();
         $integrationId           = current(Hashids::decode($id));
         $notificacoesInteligentesIntegration      = $notificacoesInteligentesIntegrationModel->find($integrationId);
-        // if (empty($data['boleto_generated'])) {
-        //     $data['boleto_generated'] = 0;
-        // }
-        // if (empty($data['boleto_paid'])) {
-        //     $data['boleto_paid'] = 0;
-        // }
-        // if (empty($data['credit_card_paid'])) {
-        //     $data['credit_card_paid'] = 0;
-        // }
-        // if (empty($data['credit_card_refused'])) {
-        //     $data['credit_card_refused'] = 0;
-        // }
-        // if (empty($data['abandoned_cart'])) {
-        //     $data['abandoned_cart'] = 0;
-        // }
-        // if (empty($data['abandoned_cart'])) {
-        //     $data['abandoned_cart'] = 0;
-        // }
+        if (empty($data['boleto_generated'])) {
+            $data['boleto_generated'] = 0;
+        }
+        if (empty($data['boleto_paid'])) {
+            $data['boleto_paid'] = 0;
+        }
+        if (empty($data['credit_card_paid'])) {
+            $data['credit_card_paid'] = 0;
+        }
+        if (empty($data['credit_card_refused'])) {
+            $data['credit_card_refused'] = 0;
+        }
+        if (empty($data['abandoned_cart'])) {
+            $data['abandoned_cart'] = 0;
+        }
+        if (empty($data['abandoned_cart'])) {
+            $data['abandoned_cart'] = 0;
+        }
 
-        // if (empty($data['pix_generated'])) {
-        //     $data['pix_generated'] = 0;
-        // }
-        // if (empty($data['pix_paid'])) {
-        //     $data['pix_paid'] = 0;
-        // }
-        // if (empty($data['pix_expired'])) {
-        //     $data['pix_expired'] = 0;
-        // }
+        if (empty($data['pix_generated'])) {
+            $data['pix_generated'] = 0;
+        }
+        if (empty($data['pix_paid'])) {
+            $data['pix_paid'] = 0;
+        }
+        if (empty($data['pix_expired'])) {
+            $data['pix_expired'] = 0;
+        }
 
         $integrationUpdated = $notificacoesInteligentesIntegration->update([
                                                               'link'                => $data['link'],
-                                                            //   'boleto_generated'    => $data['boleto_generated'],
-                                                            //   'boleto_paid'         => $data['boleto_paid'],
-                                                            //   'credit_card_refused' => $data['credit_card_refused'],
-                                                            //   'credit_card_paid'    => $data['credit_card_paid'],
-                                                            //   'abandoned_cart'      => $data['abandoned_cart'],
+                                                              'boleto_generated'    => $data['boleto_generated'],
+                                                              'boleto_paid'         => $data['boleto_paid'],
+                                                              'credit_card_refused' => $data['credit_card_refused'],
+                                                              'credit_card_paid'    => $data['credit_card_paid'],
+                                                              'abandoned_cart'      => $data['abandoned_cart'],
 
-                                                            //   'pix_generated'       => $data['pix_generated'],
-                                                            //   'pix_paid'            => $data['pix_paid'],
-                                                            //   'pix_expired'         => $data['pix_expired'],
+                                                              'pix_generated'       => $data['pix_generated'],
+                                                              'pix_paid'            => $data['pix_paid'],
+                                                              'pix_expired'         => $data['pix_expired'],
                                                           ]);
         if ($integrationUpdated) {
             return response()->json([

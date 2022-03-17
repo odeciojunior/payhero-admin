@@ -13,7 +13,7 @@
             <div class='form-group col-12'>
                 <label for="url_store">Link</label>
                 <div class="d-flex input-group">
-                    <input type="text" class="input-pad addon" name="link" id="link" placeholder="Digite o link">
+                    <input type="text" class="input-pad " name="link" id="link" placeholder="Digite o link">
                 </div>
             </div>
         </div>
