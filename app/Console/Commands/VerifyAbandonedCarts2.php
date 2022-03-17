@@ -35,11 +35,7 @@ class VerifyAbandonedCarts2 extends Command
         try {
 
             $cartRecoveryService = new CartRecoveryService();
-            $cartRecoveryService->verifyAbandonedCarts(now()->subDay()->startOfDay(),
-                now()->subDay()->endOfDay(),
-            ProjectNotification::NOTIFICATION_SMS_ABANDONED_CART_NEXT_DAY,
-                ProjectNotification::NOTIFICATION_EMAIL_ABANDONED_CART_NEXT_DAY
-            );
+            $cartRecoveryService->verifyAbandonedCarts(true);
 
         } catch (Exception $e) {
             report($e);
