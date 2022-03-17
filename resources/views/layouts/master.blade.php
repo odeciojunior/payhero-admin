@@ -35,15 +35,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('build/global/img/logos/2021/favicon/favicon-16x16.png') }}">
     <link rel="mask-icon" href="{{ mix('build/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ mix('build/layouts/master/stylesheets.min.css') }}">
-    <!-- Plugins -->
-    <link rel="stylesheet" href="{{ mix('build/layouts/master/plugins.min.css') }}">
-    <!-- Fonts -->
-    <link rel="stylesheet" href="{{ mix('build/layouts/master/fonts.min.css') }}">
-    <!-- Icons -->
-    <link rel="stylesheet" href="{{ mix('build/layouts/master/icons.min.css') }}">
-    <!-- New CSS -->
-    <link rel="stylesheet" href="{{ mix('build/layouts/master/new-css.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/master/master.min.css') }}">
     @stack('css')
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

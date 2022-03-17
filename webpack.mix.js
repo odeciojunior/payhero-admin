@@ -1034,39 +1034,38 @@ mix.copy([
 mix.copy([
     'resources/modules/global/adminremark/global/fonts/orion-icons/!(*.css|*.html)',
 ],'public/build/layouts/master');
+
 mix.styles([
+    // Stylesheets
     'resources/modules/global/css/normalize.css',
     'resources/modules/global/adminremark/global/css/bootstrap.min.css',
     'resources/modules/global/adminremark/global/css/bootstrap-extend.min.css',
     'resources/modules/global/adminremark/assets/css/site.min.css',
     'resources/modules/global/css/loading.css',
     'resources/modules/global/css/checkAnimation.css',
-    'resources/modules/global/css/ribbon.css'
-],'public/build/layouts/master/stylesheets.min.css');
-mix.styles([
+    'resources/modules/global/css/ribbon.css',
+    // Plugins
     'resources/modules/global/adminremark/global/vendor/animsition/animsition.css',
     'resources/modules/global/css/placeholder-loading.min.css',
     'resources/modules/global/jquery-imgareaselect/css/imgareaselect-default.css',
     'resources/modules/global/css/sweetalert2.min.css',
     'resources/modules/global/css/daterangepicker.css',
-    'resources/modules/global/adminremark/global/vendor/sortable/sortable.css'
-],'public/build/layouts/master/plugins.min.css');
-mix.styles([
+    'resources/modules/global/adminremark/global/vendor/sortable/sortable.css',
+    // Fonts
     'resources/modules/global/adminremark/global/fonts/web-icons/web-icons.css',
     'resources/modules/global/adminremark/global/fonts/font-awesome/font-awesome.css',
     'resources/modules/global/css/newFonts.css',
-    'resources/assets/fonts-googleapis-muli-400-700-800.css'
-],'public/build/layouts/master/fonts.min.css');
-mix.styles([
+    'resources/assets/fonts-googleapis-muli-400-700-800.css',
+    // Icons
     'resources/assets/fonts-googleapis-material-icons.css',
     'resources/modules/global/css/materialdesignicons.min.css',
-    'resources/modules/global/adminremark/global/fonts/orion-icons/iconfont.css'
-],'public/build/layouts/master/icons.min.css');
-mix.styles([
+    'resources/modules/global/adminremark/global/fonts/orion-icons/iconfont.css',
+    // New CSS
     'resources/modules/global/css/new-site.css',
     'resources/modules/global/css/global.css',
-    'resources/modules/global/adminremark/global/vendor/asscrollable/asScrollable.css'
-],'public/build/layouts/master/new-css.min.css');
+    'resources/modules/global/adminremark/global/vendor/asscrollable/asScrollable.css',
+],'public/build/layouts/master/master.min.css');
+
 mix.babel([
     'resources/modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js',
     'resources/modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js',
