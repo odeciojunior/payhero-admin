@@ -20,6 +20,7 @@ use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Entities\MelhorenvioIntegration;
 use Modules\Core\Entities\NotificacoesInteligentesIntegration;
 
+
 class AppsApiController extends Controller
 {
     public function index(): JsonResponse
@@ -38,7 +39,7 @@ class AppsApiController extends Controller
             'smartfunnelIntegrations' => SmartfunnelIntegration::where('user_id', $accountOwnerId)->count(),
             'woocommerceIntegrations' => WooCommerceIntegration::where('user_id', $accountOwnerId)->count(),
             'astronmembersIntegrations' => AstronMembersIntegration::where('user_id', $accountOwnerId)->count(),
-            'notificacoesInteligentesIntegrations' => NotificacoesInteligentesIntegration::where('user_id', $accountOwnerId)->count(),
+            'notificacoesinteligentesIntegrations' => NotificacoesInteligentesIntegration::where('user_id', $accountOwnerId)->count(),
             'hotbilletIntegrations' => HotbilletIntegration::where('user_id', $accountOwnerId)->count(),
             'melhorenvioIntegrations' => MelhorenvioIntegration::where('user_id', $accountOwnerId)->count(),
         ]);
