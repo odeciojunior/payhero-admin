@@ -66,7 +66,7 @@
 
                 <div class="row pr-15 form-buttons">
                     <a type="button" class="btn btn-cancelar" href="/products">Cancelar</a>
-                    <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="{{ mix('modules/global/img/svg/check-all.svg') }}">Salvar</button>
+                    <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">Salvar</button>
                 </div>
             </form>
         </div>

@@ -35,7 +35,7 @@
 <small>{{date('d/m/Y H:i:s')}}</small>
 
 <header>
-    <img src="{{mix('modules/global/img/getnet-logo.png')}}" alt="Getnet Logo">
+    <img src="{{mix('build/global/img/getnet-logo.png')}}" alt="Getnet Logo">
 </header>
 
 <h2>Comprovante de Estorno</h2>

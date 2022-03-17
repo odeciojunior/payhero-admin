@@ -66,7 +66,7 @@ $(() => {
     }
 
     // CARD 1 FOTO, NOME, CRIADO EM, DESCRICAO E RESUMO
-    const getImageProject = projectPhoto => projectPhoto ? dropifyOptions.defaultFile = projectPhoto : "/modules/global/img/produto.svg";
+    const getImageProject = projectPhoto => projectPhoto ? dropifyOptions.defaultFile = projectPhoto : "/build/global/img/produto.svg";
 
     function show() {
         $(".page").addClass("low-opacity");
@@ -270,12 +270,12 @@ $(() => {
         let getStatusAffiliation = statusUrlAffiliatesEl.prop("checked");
         if (project.status_url_affiliates == 1 && getStatusAffiliation == false) {
             statusUrlAffiliatesEl.trigger('click');
-            $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg").css("background-color", "#F2F8FF");
+            $(".affiliation").children("img").attr("src", "/build/global/img/projects/afiliatesIcon.svg").css("background-color", "#F2F8FF");
             $("#affiliation-access").show();
         }
 
         if(project.status_url_affiliates == 0){
-            $(".affiliation").children("img").attr("src", "/modules/global/img/projects/affiliationDisable.svg").css("background-color", "#F2F8FF");
+            $(".affiliation").children("img").attr("src", "/build/global/img/projects/affiliationDisable.svg").css("background-color", "#F2F8FF");
             $("#affiliation-access").hide();
 
             if(project.status_url_affiliates == 0 && getStatusAffiliation == true){
@@ -448,10 +448,10 @@ $(() => {
     statusUrlAffiliatesEl.on("click", function(){
         let affiliationStatus = statusUrlAffiliatesEl.prop("checked")
         if(affiliationStatus == false){
-            $(".affiliation").children("img").attr("src", "/modules/global/img/projects/affiliationDisable.svg");
+            $(".affiliation").children("img").attr("src", "/build/global/img/projects/affiliationDisable.svg");
 
         }else if(affiliationStatus == true){
-            $(".affiliation").children("img").attr("src", "/modules/global/img/projects/afiliatesIcon.svg");
+            $(".affiliation").children("img").attr("src", "/build/global/img/projects/afiliatesIcon.svg");
         }
     });
 

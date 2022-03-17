@@ -256,7 +256,7 @@ $(() => {
         //Status
         let status = $('.modal-body #status');
         status.html('');
-        status.append('<img style="width: 50px;" src="/modules/global/img/cartoes/' + sale.flag + '.png">');
+        status.append('<img style="width: 50px;" src="/build/global/img/cartoes/' + sale.flag + '.png">');
 
         switch (sale.status) {
             case 1:
@@ -705,14 +705,14 @@ $(() => {
         $("#table-product").html('');
         $('#data-tracking-products').html('');
         let div = '';
-        let photo = '/modules/global/img/produto.png';
+        let photo = '/build/global/img/produto.png';
         $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;
             }
             div += `<div class="row align-items-baseline justify-content-between mb-15">
                         <div class="col-lg-2">
-                            <img src='${value.photo}' onerror=this.src='/modules/global/img/produto.png' width='50px' style='border-radius: 6px;'>
+                            <img src='${value.photo}' onerror=this.src='/build/global/img/produto.png' width='50px' style='border-radius: 6px;'>
                         </div>
                         <div class="col-lg-5">
                             <h4 class="table-title mb-0">${value.name}</h4>
@@ -728,7 +728,7 @@ $(() => {
             if ((value.sale_status == 1 || value.sale_status == 4) && sale.delivery_id != '') {
                 let data = `<tr>
                                 <td>
-                                    <img onerror="this.src='/modules/global/img/produto.png'" src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
+                                    <img onerror="this.src='/build/global/img/produto.png'" src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
                                     <span class='small ellipsis'>${value.name}</span>
                                 </td>
                                 <td>

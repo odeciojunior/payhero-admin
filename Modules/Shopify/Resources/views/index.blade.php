@@ -1,8 +1,9 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ mix('modules/shopify/css/index.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ mix('modules/shopify/css/index.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/shopify/index.min.css') }}"> --}}
 @endpush
 <style>
     .gray:hover {
@@ -310,7 +311,7 @@
             <style>
                 .bt-action {
                     cursor: pointer;
-                    background-image: url('/modules/apps/imgs/bt-action.svg');
+                    background-image: url('/build/layouts/apps/imgs/bt-action.svg');
                     padding-left: 46px;
                     background-repeat: no-repeat;
                     background-position: left;
@@ -319,7 +320,7 @@
 
                 .bt-action:hover,
                 .bt-action:focus {
-                    background-image: url('/modules/apps/imgs/bt-action-hover.svg');
+                    background-image: url('/build/layouts/apps/imgs/bt-action-hover.svg');
                     border: none !important;
 
 
@@ -628,7 +629,8 @@
     </div>
 
     @push('scripts')
-        <script src="{{ mix('modules/shopify/js/index.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/shopify/js/index.min.js') }}"></script> --}}
+        <script src="{{ mix('build/layouts/shopify/index.min.js') }}"></script>
     @endpush
 
 @endsection

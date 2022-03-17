@@ -284,14 +284,14 @@ $(() => {
 
     function setEmptyViews() {
         const ticketEmpty = `<div class="tickets-empty">
-                               <img src="/modules/global/img/tickets.svg">
+                               <img src="/build/global/img/tickets.svg">
                                <h3>Tudo tranquilo por aqui!</h3>
                                <div>Por enquanto, não há nenhum atendimento a ser resolvido. Volte mais tarde!</div>
                              </div>`;
         $('.tickets-container').html(ticketEmpty);
 
         const messageEmpty = `<div class="messages-empty">
-                                <img src="/modules/global/img/chat.svg">
+                                <img src="/build/global/img/chat.svg">
                                 <h3>Esse é o seu espaço de chat.</h3>
                                 <div>
                                   Para usar o chat e responder seus clientes, basta selecionar algum dos tickets

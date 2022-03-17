@@ -17,10 +17,10 @@
           content="Bearer {{ auth()->check() && auth()->user()->status != 3 ? auth()->user()->createToken("Laravel Password Grant Client")->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('modules/global/img/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('modules/global/img/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('modules/global/img/favicon-16x16.png') }}">
-    <link rel="mask-icon" href="{{ mix('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('build/global/img/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('build/global/img/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('build/global/img/favicon-16x16.png') }}">
+    <link rel="mask-icon" href="{{ mix('build/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     {{-- <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
@@ -51,13 +51,14 @@
     @stack('css')
 
     @if(env('APP_ENV', 'production') == 'production')
-        <script src="{{ mix('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
+        <script src="{{ mix('build/layouts/master/sentry-bundle.min.js') }}"></script>
         <script>
             Sentry.init({dsn: {{getenv('SENTRY_LARAVEL_DSN')}});
         </script>
     @endif
-    <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
+    {{-- <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script> --}}
+    <script src="{{ mix('build/layouts/affiliates/master2.min.js') }}"></script>
     <script>
         Breakpoints();
     </script>

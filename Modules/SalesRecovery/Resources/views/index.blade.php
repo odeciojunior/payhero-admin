@@ -3,10 +3,11 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
+        {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
         <link rel="stylesheet" href="{{ mix('modules/sales/css/index.min.css') }}">
         <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/> --}}
+        <link rel="stylesheet" href="{{ mix('build/layouts/salesrecovery/index.min.css') }}">
     @endpush
 
     <!-- Page -->
@@ -90,13 +91,13 @@
                     <div class="row mb-10 mb-sm-0" style="height: 30px">
                         <div class="col-6 col-xl-3 mt-20 offset-xl-6 pr-0">
                             <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center" data-toggle="collapse" data-target="#bt_collapse" aria-expanded="false"aria-controls="bt_collapse">
-                                <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('modules/global/img/svg/filter-2-line.svg') }} "/>
+                                <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "/>
                                 <div id="text-filtro" style="white-space: normal">Filtros avançados</div>
                             </div>
                         </div>
                         <div class="col-6 col-xl-3 mt-20">
                             <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
-                                <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('modules/global/img/svg/check-all.svg') }} "/>
+                                <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/check-all.svg') }} "/>
                                 Aplicar <br class="d-flex d-sm-none"> filtros
                             </div>
                         </div>
@@ -133,7 +134,7 @@
                                     <td class="table-title display-sm-none">Detalhes</td>
                                 </tr>
                             </thead>
-                            <tbody id="table_data" class='min-row-height'  img-empty="{!! mix('modules/global/img/geral-1.svg')!!}">
+                            <tbody id="table_data" class='min-row-height'  img-empty="{!! mix('build/global/img/geral-1.svg')!!}">
                             </tbody>
                         </table>
                     </div>
@@ -329,10 +330,11 @@
     <!-- End Modal -->
     @push('scripts')
 
-        <script src="{{ mix('modules/salesrecovery/js/salesrecovery.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/salesrecovery/js/salesrecovery.min.js') }}"></script>
         <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
         <script src="{{ mix('modules/global/js/daterangepicker.min.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script> --}}
+        <script src="{{ mix('build/layouts/salesrecovery/index.min.js') }}"></script>
 
     @endpush
 

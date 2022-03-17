@@ -84,17 +84,17 @@ $(document).ready(function () {
                                 shopifyIntegration.id
                             }">
 
-                            <svg  
-                            class="open-cfg" app="${data.id}" 
+                            <svg
+                            class="open-cfg" app="${data.id}"
                             data-img="${
                                 !data.project_photo
-                                    ? "/modules/global/img/produto.png"
+                                    ? "/build/global/img/produto.png"
                                     : data.project_photo
                             }"
-                            data-name="${data.project_name}" 
-                            data-token="${data.token}" 
-                            data-skip="${shopifyIntegration.skip_to_cart}" 
-                            style="position:absolute; top:8px; right:8px; cursor:pointer" 
+                            data-name="${data.project_name}"
+                            data-token="${data.token}"
+                            data-skip="${shopifyIntegration.skip_to_cart}"
+                            style="position:absolute; top:8px; right:8px; cursor:pointer"
                             width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M30.5519 15.2167C30.5519 23.4694 23.8618 30.1596 15.6091 30.1596C7.35639 30.1596 0.66626 23.4694 0.66626 15.2167C0.66626 6.96405 7.35639 0.273926 15.6091 0.273926C23.8618 0.273926 30.5519 6.96405 30.5519 15.2167Z" fill="white"/>
                                 <g clip-path="url(#clip0_0_1)">
@@ -108,9 +108,9 @@ $(document).ready(function () {
                                 </defs>
                                 <title>Configurações da Integração</title>
                             </svg>
-                                <img class="card-img-top img-fluid w-full" onerror="this.src = '/modules/global/img/produto.png'" src="${
+                                <img class="card-img-top img-fluid w-full" onerror="this.src = '/build/global/img/produto.png'" src="${
                                     !shopifyIntegration.project_photo
-                                        ? "/modules/global/img/produto.png"
+                                        ? "/build/global/img/produto.png"
                                         : shopifyIntegration.project_photo
                                 }"  alt="Photo Project"/>
                                 <div class="card-body">
@@ -238,10 +238,10 @@ $(document).ready(function () {
         function imageFound() {
 
         }
-        
+
         function imageNotFound() {
 
-            img = '/modules/global/img/produto.png';
+            img = '/build/global/img/produto.png';
             $("#project-img").attr("src", img);
 
         }
@@ -250,7 +250,7 @@ $(document).ready(function () {
         tester.onload=imageFound;
         tester.onerror=imageNotFound;
         tester.src=img;
-        
+
         $("#project-img").attr("src", img);
         img = null
         $("#project-name").html(name);
@@ -260,9 +260,9 @@ $(document).ready(function () {
 
     }
 
-    
+
     let syncAction = "";
-    
+
     $("#token-change").click(function () {
         if($(this).html() == 'Cancelar'){
             $("#project-token").val(token);
@@ -320,7 +320,7 @@ $(document).ready(function () {
     $('#bt-update-keys').on('click', function () {
 
         if(!$('#project-token').val()){
-            
+
             alertCustom('error', 'Insira um token válido!');
 
             return
@@ -340,11 +340,11 @@ $(document).ready(function () {
                 token: $('#project-token').val(),
             },
             error: function (response) {
-                
+
                 errorAjaxResponse(response);
             },
             success: function (response) {
-                
+
                 btnTokenClick = "enable click";
                 $('#shopify-token').prop("disabled", true);
                 $('.btn-edit-token').text('Alterar').removeClass('bg-grey-700');
@@ -385,7 +385,7 @@ $(document).ready(function () {
         $("#modal-confirm").modal('show');
 
         function fill() {
-            
+
             $("#sync-name").html(name);
             if (desc) {
                 $("#sync-desc").html(
@@ -401,7 +401,7 @@ $(document).ready(function () {
             //     $("#bts-confirm").slideDown();
             // });
             fill()
-            
+
         } else {
             fill()
             //$("#bts-confirm").show()
@@ -450,13 +450,13 @@ $(document).ready(function () {
                         project_id: projectId
                     },
                     error: function (response) {
-                        
+
                         errorAjaxResponse(response);
-    
-                        
+
+
                     },
                     success: function (response) {
-                        
+
                         alertCustom('success', response.message);
                     }
                 });

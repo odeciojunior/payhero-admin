@@ -11,9 +11,9 @@
             <i class="icon wb-more-horizontal" aria-hidden="true"></i>
         </button>
         <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
-            <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('modules/global/img/logos/2021/svg/icon-sirius.svg') }}">
-            <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('modules/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100">
-        <!-- <span class="navbar-brand-text hidden-xs-down" style="color: black"> <img id="logoSirius" class="navbar-brand-logo"  width="100" height="80" src="{{ mix('modules/global/img/logos/2021/svg/sirius-logo.svg') }}"> </span> -->
+            <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}">
+            <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100">
+        <!-- <span class="navbar-brand-text hidden-xs-down" style="color: black"> <img id="logoSirius" class="navbar-brand-logo"  width="100" height="80" src="{{ mix('build/global/img/logos/2021/svg/sirius-logo.svg') }}"> </span> -->
         </div>
         {{--        <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">--}}
         {{--            <span class="sr-only">Toggle Search</span>--}}
@@ -39,7 +39,7 @@
                 @hasanyrole('account_owner|admin')
                     <li id="notifications_button" class="nav-item dropdown" disabled='true'>
                         <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
-                            <img class="svg-menu" src="{{ mix('modules/global/img/svg/notificacao.svg') }}" alt="Notificacao">
+                            <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Notificacao">
 
                             @if( count(auth()->user()->unreadNotifications) > 0)
                                 <span class="badge badge-notification" id="notification-amount"></span>
@@ -48,7 +48,7 @@
                             @endif
                         </span>
                         <div id="notifications_card" class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
-                            <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! mix('modules/global/img/notificacoes.svg')!!}">
+                            <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! mix('build/global/img/notificacoes.svg')!!}">
                             </div>
                         </div>
                     </li>
@@ -64,19 +64,19 @@
                         @if(foxutils()->isHomolog())
                             <div data-toggle="tooltip" data-placement="left" title="Desabilitado na versão de testes">
                                 <a class="dropdown-item disabled" disabled>
-                                    <img height="24" width="24" src="{{ mix('modules/global/img/svg/settings.svg') }}"/>
+                                    <img height="24" width="24" src="{{ mix('build/global/img/svg/settings.svg') }}"/>
                                     Configurações
                                 </a>
                             </div>
                         @else
                             <a id="accounts-service" class="dropdown-item redirect-to-accounts" href="" data-url-value=""role="menuitem">
-                                <img height="24" width="24" src="{{ mix('modules/global/img/svg/settings.svg') }}"/>
+                                <img height="24" width="24" src="{{ mix('build/global/img/svg/settings.svg') }}"/>
                                 Configurações
                             </a>
                         @endif
                         <div class="dropdown-divider" role="presentation"></div>
                         <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <img height="24" width="24" src="{{ mix('modules/global/img/svg/power_settings_new.svg') }}"/>
+                            <img height="24" width="24" src="{{ mix('build/global/img/svg/power_settings_new.svg') }}"/>
                             Logout
                         </a>
                         <form id="logout-form" action="/logout" method="POST" style="display: none;">
@@ -109,7 +109,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('dashboard.index') }}">
                     <span class="bg-menu">
-                        <img class="svg-menu" src="{{ mix('modules/global/img/svg/dashboard.svg') }}" alt="Dashboard">
+                        <img class="svg-menu" src="{{ mix('build/global/img/svg/dashboard.svg') }}" alt="Dashboard">
                     </span>
                     <span class="site-menu-title ml-5">Dashboard</span>
                 </a>
@@ -120,7 +120,7 @@
 {{--            <li class="site-menu-item has-sub disabled">--}}
 {{--                <a class="disabled" href="/dashboard">--}}
 {{--                    <span class="bg-menu">--}}
-{{--                        <img src="{{ mix('modules/global/img/svg/vitrine.svg') }}" alt="Vitrine">--}}
+{{--                        <img src="{{ mix('build/global/img/svg/vitrine.svg') }}" alt="Vitrine">--}}
 {{--                    </span>--}}
 {{--                    <span class="site-menu-title">Vitrine (em breve)</span>--}}
 {{--                </a>--}}
@@ -132,7 +132,7 @@
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="sales-link">
                     <span class="bg-menu">
-                        <img src="{{ mix('modules/global/img/svg/vendas.svg') }}" alt="Vendas">
+                        <img src="{{ mix('build/global/img/svg/vendas.svg') }}" alt="Vendas">
                     </span>
                     <span class="site-menu-title">Vendas</span>
                     <span class="site-menu-arrow"></span>
@@ -189,7 +189,7 @@
             <li class="site-menu-item has-sub">
                 <a href="/projects" id="projects-link">
                     <span class="bg-menu">
-                        <img src="{{ mix('modules/global/img/svg/vitrine.svg') }}" alt="Lojas">
+                        <img src="{{ mix('build/global/img/svg/vitrine.svg') }}" alt="Lojas">
                     </span>
                     <span class="site-menu-title">Lojas</span>
                 </a>
@@ -200,7 +200,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('products.index') }}" id="products-link">
                     <span class="bg-menu">
-                        <img src="{{ mix('modules/global/img/svg/produtos.svg') }}" alt="Produtos">
+                        <img src="{{ mix('build/global/img/svg/produtos.svg') }}" alt="Produtos">
                     </span>
                     <span class="site-menu-title">Produtos</span>
                 </a>
@@ -211,7 +211,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('attendance.index') }}">
                     <span class="bg-menu">
-                        <img src="{{ mix('modules/global/img/svg/atendimento.svg') }}" alt="Atendimento">
+                        <img src="{{ mix('build/global/img/svg/atendimento.svg') }}" alt="Atendimento">
                     </span>
                     <span class="site-menu-title">Atendimento</span>
                 </a>
@@ -230,7 +230,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{!! route('finances') !!}" id="finances-link">
                     <span class="bg-menu">
-                        <img src="{{ mix('modules/global/img/svg/financas.svg') }}" alt="Finanças">
+                        <img src="{{ mix('build/global/img/svg/financas.svg') }}" alt="Finanças">
                     </span>
                     <span class="site-menu-title">Finanças</span>
                 </a>
@@ -243,7 +243,7 @@
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="reports-link">
                     <span class="bg-menu">
-                        <img src="{{ mix('modules/global/img/svg/relatorios.svg') }}" alt="Relatórios">
+                        <img src="{{ mix('build/global/img/svg/relatorios.svg') }}" alt="Relatórios">
                     </span>
                     <span class="site-menu-title">Relatórios</span>
                     <span class="site-menu-arrow"></span>
@@ -306,7 +306,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('projectaffiliates') }}" id="affiliates-link">
                     <span class="bg-menu">
-                        <img src="{{ mix('modules/global/img/svg/afiliados.svg') }}" alt="Afiliados">
+                        <img src="{{ mix('build/global/img/svg/afiliados.svg') }}" alt="Afiliados">
                     </span>
                     <span class="site-menu-title mb-5">Afiliados</span>
                 </a>
@@ -317,7 +317,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('apps') }}" id='apps-link'>
                     <span class="bg-menu">
-                        <img src="{{ mix('modules/global/img/svg/aplicativos.svg') }}" alt="Aplicativos">
+                        <img src="{{ mix('build/global/img/svg/aplicativos.svg') }}" alt="Aplicativos">
                     </span>
                     <span class="site-menu-title">Aplicativos</span>
                 </a>
@@ -327,7 +327,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('integrations.index') }}" id='api-sirius-link'>
                     <span class="bg-menu">
-                        <img src="{{ mix('modules/global/img/svg/api-sirius-menu.svg') }}" alt="API Sirius">
+                        <img src="{{ mix('build/global/img/svg/api-sirius-menu.svg') }}" alt="API Sirius">
                     </span>
                     <span class="site-menu-title">API Sirius</span>
                 </a>
@@ -338,7 +338,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('invitations.index') }}">
                     <span class="bg-menu">
-                        <img src="{{ mix('modules/global/img/svg/convites.svg') }}" alt="Convites">
+                        <img src="{{ mix('build/global/img/svg/convites.svg') }}" alt="Convites">
                     </span>
                     <span class="site-menu-title">Convites</span>
                 </a>

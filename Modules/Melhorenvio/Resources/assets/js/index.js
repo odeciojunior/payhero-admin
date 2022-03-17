@@ -20,7 +20,7 @@ $(() => {
                     for (let integration of resp.data){
                         let data =`<div class="col-sm-6 col-md-4 col-lg-3" id="integration-${integration.id}">
                                        <div class="card shadow">
-                                           <img class="card-img-top img-fluid w-full" src="/modules/global/img/melhorenvio-mono.png" alt=""/>
+                                           <img class="card-img-top img-fluid w-full" src="/build/global/img/melhorenvio-mono.png" alt=""/>
                                            ${ !integration.completed
                                                 ? `<div class="btn-authorize" data-id="${integration.id}"><b>INTEGRAÇÃO NÃO AUTORIZADA.</b> <br> Clique para autorizar </div>`
                                                 : ''

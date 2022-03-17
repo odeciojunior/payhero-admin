@@ -43,7 +43,7 @@ $(document).ready(function () {
                                     <a href='/apps/notazz/${data.id}' class=''>
                                         <img class="card-img-top img-fluid w-full" src="${
                                             !data.project_photo
-                                                ? "/modules/global/img/produto.png"
+                                                ? "/build/global/img/produto.png"
                                                 : data.project_photo
                                         }" style='cursor:pointer'/>
                                     </a>

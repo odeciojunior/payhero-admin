@@ -112,7 +112,8 @@
     </div>
 
     @push('scripts')
-        <script src="{{ mix('modules/companies/js/create.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/companies/js/create.min.js') }}"></script> --}}
+        <script src="{{ mix('build/layouts/companies/create.min.js') }}"></script>
     @endpush
 
 @endsection

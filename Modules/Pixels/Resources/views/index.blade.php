@@ -61,13 +61,13 @@
                         <div class="btn-holder d-flex align-items-center pointer btn-config-pixel" style="padding-right: 10px; border-right: 1px solid #EDEDED; margin-top: -20px; margin-bottom: -20px; margin-right: 20px;">
                             <span class="link-button-dependent">Configurações </span>
                             <a class="rounded-add pointer" style="background: none;">
-                                <img src="{{ mix('modules/global/img/svg/settings.svg') }}" height="22">
+                                <img src="{{ mix('build/global/img/svg/settings.svg') }}" height="22">
                             </a>
                         </div>
                         <div class="btn-holder add-pixel d-flex align-items-center pointer">
                             <span class="link-button-dependent blue">Adicionar </span>
                             <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
-                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                                <img src="/build/global/img/icon-add.svg" style="width: 18px;">
                             </a>
                         </div>
                     </div>

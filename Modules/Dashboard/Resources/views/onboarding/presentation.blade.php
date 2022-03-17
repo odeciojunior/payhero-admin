@@ -1,7 +1,8 @@
 @push('css')
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ mix('modules/dashboard/css/onboarding-details.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/dashboard/css/onboarding-details.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/dashboard/onboarding-details.min.css') }}">
 @endpush
 
 <div id="modal-onboarding" class="modal fade modal-fade-in-scale-up show">
@@ -12,7 +13,7 @@
                     <div id="modal-presentation">
                         <div id="header-onboarding-1" class="modal-header flex-wrap">
                             <div class="w-p100 d-flex justify-content-center">
-                                <img id="icon" src="{{ mix('modules/global/img/onboarding-presentation.png') }}" alt="Image">
+                                <img id="icon" src="{{ mix('build/global/img/onboarding-presentation.png') }}" alt="Image">
                             </div>
                         </div>
                         <div class="modal-body text-center">
@@ -39,5 +40,6 @@
 </div>
 
 @push('scripts')
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    {{-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> --}}
+    <script type="text/javascript" src="{{ mix('build/layouts/dashboard/onboarding-details.min.js')}}"></script>
 @endpush

@@ -30,10 +30,10 @@
     <meta name="access-token" content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('modules/global/img/logos/2021/favicon/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('modules/global/img/logos/2021/favicon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('modules/global/img/logos/2021/favicon/favicon-16x16.png') }}">
-    <link rel="mask-icon" href="{{ mix('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('build/global/img/logos/2021/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('build/global/img/logos/2021/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('build/global/img/logos/2021/favicon/favicon-16x16.png') }}">
+    <link rel="mask-icon" href="{{ mix('build/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
     {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/normalize.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
@@ -77,8 +77,9 @@
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-TDM6SV5');</script>
     <!-- End Google Tag Manager -->
-    <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
+    {{-- <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script> --}}
+    <script src="{{ mix('build/layouts/master/master.min.js') }}"></script>
     <script>
         Breakpoints();
     </script>
@@ -148,8 +149,9 @@
     @stack('scripts')
 
     @if(env('APP_ENV', 'production') == 'production')
-        <script src="{{ mix('modules/global/js-extra/pusher.min.js') }}"></script>
-        <script src="{{ mix('modules/global/js/notifications.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/global/js-extra/pusher.min.js') }}"></script>
+        <script src="{{ mix('modules/global/js/notifications.min.js') }}"></script> --}}
+        <script src="{{ mix('build/layouts/master/production.min.js') }}"></script>
         <style>
             .margin-chat-pagination {
                 display:block !important; height:20px  !important;

@@ -150,7 +150,7 @@ $(function () {
                                     if (product.status_enum != 1 && product.status_enum != 3) {
                                         append += '<div class="check">';
                                             if (index_product != -1) {
-                                                append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                                                append += '<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">';
                                             }
                                         append += '</div>';
                                     }
@@ -161,7 +161,7 @@ $(function () {
                         $('.tooltip').remove();
 
                         append += '<div class="col-sm-12">';
-                            append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
+                            append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/build/global/img/search-product_not-found.png" ></div>';
                             append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhum resultado encontrado.</p>';
                             append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A; margin-bottom: 20px;">Por aqui, nenhum produto com esse nome.</p>';
                         append += '</div>';
@@ -279,7 +279,7 @@ $(function () {
                                     if (product.status_enum != 1 && product.status_enum != 3) {
                                         append += '<div class="check">';
                                             if (index_product != -1) {
-                                                append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                                                append += '<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">';
                                             }
                                         append += '</div>';
                                     }
@@ -288,7 +288,7 @@ $(function () {
                         });
                     } else {
                         append += '<div class="col-sm-12">';
-                            append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
+                            append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/build/global/img/search-product_not-found.png" ></div>';
                             append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhum resultado encontrado.</p>';
                             append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A;">Por aqui, nenhum produto com esse nome.</p>';
                         append += '</div>';
@@ -434,11 +434,11 @@ $(function () {
                                     append += '<div class="d-flex align-items-center justify-content-center ">';
                                         append += '<div class="input-number">';
                                             append += '<button class="btn-sub">';
-                                                append += '<img src="/modules/global/img/minus.svg">';
+                                                append += '<img src="/build/global/img/minus.svg">';
                                             append += '</button>';
                                             append += '<input type="number" class="form-control" name="amount" value="' + amount + '" min="1" max="99" step="1">';
                                             append += '<button class="btn-add">';
-                                                append += '<img src="/modules/global/img/plus.svg">';
+                                                append += '<img src="/build/global/img/plus.svg">';
                                             append += '</button>';
                                         append += '</div>';
                                     append += '</div>';
@@ -857,7 +857,7 @@ $(function () {
                                             if (product.custom_configs.map(function(e) { return e.type }).indexOf('Text') != -1) {
                                                 append += '<div class="d-flex align-items-center">';
                                                     append += '<div class="custom-type">';
-                                                        append += '<img src="/modules/global/img/icon-custom-product-text.svg">';
+                                                        append += '<img src="/build/global/img/icon-custom-product-text.svg">';
                                                     append += '</div>';
                                                 append += '</div>';
                                             }
@@ -865,7 +865,7 @@ $(function () {
                                             if (product.custom_configs.map(function(e) { return e.type }).indexOf('Image') != -1) {
                                                 append += '<div class="d-flex align-items-center">';
                                                     append += '<div class="custom-type">';
-                                                        append += '<img src="/modules/global/img/icon-custom-product-image.svg">';
+                                                        append += '<img src="/build/global/img/icon-custom-product-image.svg">';
                                                     append += '</div>';
                                                 append += '</div>';
                                             }
@@ -873,7 +873,7 @@ $(function () {
                                             if (product.custom_configs.map(function(e) { return e.type }).indexOf('File') != -1) {
                                                 append += '<div class="d-flex align-items-center">';
                                                     append += '<div class="custom-type">';
-                                                        append += '<img src="/modules/global/img/icon-custom-product-file.svg">';
+                                                        append += '<img src="/build/global/img/icon-custom-product-file.svg">';
                                                     append += '</div>';
                                                 append += '</div>';
                                             }
@@ -1294,7 +1294,7 @@ $(function () {
             if ((tabID == 'tabs-modal-edit-plans' && stageID == 'stage2') || (tabID == 'tabs-modal-create-plans' && stageID == 'stage1')) {
                 if (!$(this).hasClass('selected')) {
                     $(this).addClass('selected');
-                    $(this).find('.check').append('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
+                    $(this).find('.check').append('<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">');
                     selected_products.push({'id': product_id});
 
                     if (tabID == 'tabs-modal-edit-plans' && stageID == 'stage2') {
@@ -2133,7 +2133,7 @@ $(function () {
                             <tr class='text-center'>
                                 <td colspan='11' style='height: 70px; vertical-align: middle;'>
                                     <div class='d-flex justify-content-center align-items-center'>
-                                        <img src='/modules/global/img/empty-state-table.svg' style='margin-right: 60px;'>
+                                        <img src='/build/global/img/empty-state-table.svg' style='margin-right: 60px;'>
                                         <div class='text-left'>
                                             <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum plano configurado</h1>
                                             <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro plano para poder
@@ -2165,7 +2165,7 @@ $(function () {
                                 data += '<td id="" class="" style="vertical-align: middle;">' + value.price + '</td>';
                                 data += '<td id="link" data-status="' + value.status + '" class="copy_link text-center" title="Copiar Link" style="vertical-align: middle; ' + (value.status == 1 ? 'cursor:pointer;' : '') + '" link="' + value.code + '">';
                                     data += '<span ' + (value.status == 0 ? 'data-toggle="tooltip" title="Domínio não confirugado"' : '') + '>';
-                                        data += '<span class="display-sm-none display-m-none">Copiar </span><img src="/modules/global/img/icon-copy-c.svg">';
+                                        data += '<span class="display-sm-none display-m-none">Copiar </span><img src="/build/global/img/icon-copy-c.svg">';
                                     data += '</span>';
                                 data += '</td>';
                                 data += '<td id="" class="text-center"><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
@@ -2302,7 +2302,7 @@ $(function () {
                                     if (plan.status_enum != 1 && plan.status_enum != 3) {
                                         append += '<div class="check">';
                                             if (index_plan != -1) {
-                                                append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                                                append += '<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">';
                                             }
                                         append += '</div>';
                                     }
@@ -2315,7 +2315,7 @@ $(function () {
                         $(modal).find('.modal-body').find('.box-plans').css('height', '274px');
 
                         append += '<div class="col-sm-12">';
-                            append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
+                            append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/build/global/img/search-product_not-found.png" ></div>';
                             append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhum resultado encontrado.</p>';
                             append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A; margin-bottom: 40px;">Por aqui, nenhum plano com esse nome.</p>';
                         append += '</div>';
@@ -2361,10 +2361,10 @@ $(function () {
         if (!$(this).hasClass('selected')) {
             $(this).attr('data-selected', true);
             $(this).addClass('selected');
-            $(this).find('.check').html('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
+            $(this).find('.check').html('<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">');
 
             $('#modal_config_cost_plan').find('.box-plan').addClass('selected');
-            $('#modal_config_cost_plan').find('.box-plan').find('.check').html('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
+            $('#modal_config_cost_plan').find('.box-plan').find('.check').html('<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">');
         } else {
             $(this).attr('data-selected', false);
             $(this).removeClass('selected');
@@ -2384,7 +2384,7 @@ $(function () {
         } else {
             if (!$(this).hasClass('selected')) {
                 $(this).addClass('selected');
-                $(this).find('.check').html('<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">');
+                $(this).find('.check').html('<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">');
 
                 selected_plans.push({'id': plan_id});
             } else {
@@ -2439,7 +2439,7 @@ $(function () {
                                             '<input class="form-control" type="text" id="search-product-description_config" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">'+
                                             '<div class="input-group-append">'+
                                                 '<span class="input-group-text">'+
-                                                    '<img src="/modules/global/img/icon-search.svg" alt="Icon Search">'+
+                                                    '<img src="/build/global/img/icon-search.svg" alt="Icon Search">'+
                                                 '</span>'+
                                             '</div>'+
                                         '</div>'+
@@ -2451,7 +2451,7 @@ $(function () {
                                         '<input class="form-control" type="text" id="search-product_config" placeholder="Pesquisa por nome">'+
                                         '<div class="input-group-append">'+
                                             '<span class="input-group-text">'+
-                                                '<img src="/modules/global/img/icon-search.svg" alt="Icon Search">'+
+                                                '<img src="/build/global/img/icon-search.svg" alt="Icon Search">'+
                                             '</span>'+
                                         '</div>'+
                                     '</div>'
@@ -2477,7 +2477,7 @@ $(function () {
                                             if (plan.status_enum != 1 && plan.status_enum != 3) {
                                                 append += '<div class="check">';
                                                     if (index_plan != -1) {
-                                                        append += '<img src="/modules/global/img/icon-product-selected.svg" alt="Icon Check">';
+                                                        append += '<img src="/build/global/img/icon-product-selected.svg" alt="Icon Check">';
                                                     }
                                                 append += '</div>';
                                             }
@@ -2488,7 +2488,7 @@ $(function () {
                                 $(modal).find('.modal-body').find('.box-plans').css('height', '274px').css('max-height', '274px');
 
                                 append += '<div class="col-sm-12">';
-                                    append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/modules/global/img/search-product_not-found.png" ></div>';
+                                    append += '<div class="text-center" style="height: 150px; margin-bottom: 25px; margin-top: 15px;"><img style="margin: 0 auto;" class="product-photo" src="/build/global/img/search-product_not-found.png" ></div>';
                                     append += '<p class="m-0 text-center" style="font-size: 24px; line-height: 30px; color: #636363;">Nenhum resultado encontrado.</p>';
                                     append += '<p class="text-center" style="font-size: 16px; line-height: 20px; color: #9A9A9A;">Por aqui, nenhum plano com esse nome.</p>';
                                 append += '</div>';

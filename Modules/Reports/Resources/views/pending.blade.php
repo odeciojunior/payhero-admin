@@ -4,10 +4,11 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!! mix('modules/reports/css/reports.min.css') !!}">
+        {{-- <link rel="stylesheet" href="{!! mix('modules/reports/css/reports.min.css') !!}">
         <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
         <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
-        <link rel="stylesheet" href="{!! mix('modules/global/css/switch.min.css') !!}">
+        <link rel="stylesheet" href="{!! mix('modules/global/css/switch.min.css') !!}"> --}}
+        <link rel="stylesheet" href="{!! mix('build/layouts/reports/pending.min.css') !!}"> --}}
         <style>
             @media only screen and (min-width: 768px){
                 .col-md-4.card {
@@ -128,13 +129,13 @@
                                              data-target="#bt_collapse"
                                              aria-expanded="false"
                                              aria-controls="bt_collapse">
-                                            <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('modules/global/img/svg/filter-2-line.svg') }} "/>
+                                            <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "/>
                                             <span id="text-filtro">Filtros avançados</span>
                                         </div>
                                     </div>
                                     <div class="col-6 col-xl-3 mt-20">
                                         <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                            <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('modules/global/img/svg/check-all.svg') }} "/>
+                                            <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/check-all.svg') }} "/>
                                             Aplicar filtros
                                         </div>
                                     </div>
@@ -190,7 +191,7 @@
                                         <td class="table-title"></td>
                                     </tr>
                                     </thead>
-                                    <tbody id="body-table-pending"  img-empty="{!! mix('modules/global/img/vendas.svg')!!}">
+                                    <tbody id="body-table-pending"  img-empty="{!! mix('build/global/img/vendas.svg')!!}">
                                     {{-- js carrega... --}}
                                     </tbody>
                                 </table>
@@ -218,8 +219,9 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ mix('modules/reports/js/detail.min.js') }}"></script>
+    {{-- <script src="{{ mix('modules/reports/js/detail.min.js') }}"></script>
     <script src='{{ mix('modules/reports/js/report-pending.min.js') }}'></script>
     <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
-    <script src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script>
+    <script src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script> --}}
+    <script src='{{ mix('build/layouts/reports/pending.min.js') }}'></script>
 @endpush

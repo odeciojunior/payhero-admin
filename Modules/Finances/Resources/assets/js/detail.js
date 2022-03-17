@@ -57,7 +57,7 @@ $(() => {
                     dataHtml += `
                         <tr>
                             <td>
-                                <img src='/modules/global/img/${value.brand}.svg'   width='50px;' style='border-radius:6px;' alt="brand"><br>
+                                <img src='/build/global/img/${value.brand}.svg'   width='50px;' style='border-radius:6px;' alt="brand"><br>
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center align-items-center align-self-center ">

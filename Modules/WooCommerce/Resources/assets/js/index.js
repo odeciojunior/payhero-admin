@@ -77,12 +77,12 @@ $(document).ready(function () {
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                             <div class="card shadow card-edit" project="${data.id}" >
 
-                            
-                            <svg  
-                            class="open-cfg" app="${data.id}" 
-                            data-img="${!data.project_photo ? '/modules/global/img/produto.png' : data.project_photo}"
-                            data-name="${data.project_name}" 
-                            style="position:absolute; top:8px; right:8px; cursor:pointer" 
+
+                            <svg
+                            class="open-cfg" app="${data.id}"
+                            data-img="${!data.project_photo ? '/build/global/img/produto.png' : data.project_photo}"
+                            data-name="${data.project_name}"
+                            style="position:absolute; top:8px; right:8px; cursor:pointer"
                             width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M30.5519 15.2167C30.5519 23.4694 23.8618 30.1596 15.6091 30.1596C7.35639 30.1596 0.66626 23.4694 0.66626 15.2167C0.66626 6.96405 7.35639 0.273926 15.6091 0.273926C23.8618 0.273926 30.5519 6.96405 30.5519 15.2167Z" fill="white"/>
                                 <g clip-path="url(#clip0_0_1)">
@@ -97,8 +97,8 @@ $(document).ready(function () {
                                 <title>Configurações da Integração</title>
                             </svg>
 
-                            
-                                <img class="card-img-top img-fluid w-full" src="${!data.project_photo ? '/modules/global/img/produto.png' : data.project_photo}"  alt="Photo Project"/>
+
+                                <img class="card-img-top img-fluid w-full" src="${!data.project_photo ? '/build/global/img/produto.png' : data.project_photo}"  alt="Photo Project"/>
                                 <div class="card-body">
                                     <div class='row'>
                                         <div class='col-md-12'>
@@ -111,7 +111,7 @@ $(document).ready(function () {
                         </div>
                     `);
                 });
-            
+
                 $('.open-cfg').on('click', openCfg)
 
 
@@ -208,16 +208,16 @@ $(document).ready(function () {
         projectId = $(this).attr('app')
         var img = $(this).attr('data-img')
         var name = $(this).attr('data-name')
-        
+
         $("#modal_edit").modal('show');
-        
+
         function imageFound() {
 
         }
-        
+
         function imageNotFound() {
 
-            img = '/modules/global/img/produto.png';
+            img = '/build/global/img/produto.png';
             $("#project-img").attr("src", img);
 
         }
@@ -226,13 +226,13 @@ $(document).ready(function () {
         tester.onload=imageFound;
         tester.onerror=imageNotFound;
         tester.src=img;
-        
+
         $("#project-img").attr("src", img);
         img = null
-        
+
         $('#project-name').html(name)
 
-        
+
         $.ajax({
             method: "POST",
             data:{projectId:projectId},
@@ -247,7 +247,7 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                
+
                 if(response.status){
                     $('#consumer-k').attr('placeholder', response.consumer_k+'...')
                     $('#consumer-s').attr('placeholder', response.consumer_s+'...')
@@ -258,7 +258,7 @@ $(document).ready(function () {
 
 
     $('#bt-update-keys').on('click', function () {
-        
+
 
         var consumer_key = $('#consumer-k').val()
         var consumer_secret = $('#consumer-s').val()
@@ -290,7 +290,7 @@ $(document).ready(function () {
                 if(r.status == true){
                     alertCustom('success', 'Chaves de acesso atualizadas com sucesso!');
 
-                    
+
 
                 }else{
                     alertCustom('error', 'Erro ao atualizar as chaves!');
@@ -306,10 +306,10 @@ $(document).ready(function () {
 
         $('#bt-update-keys').hide()
         $('#bt-close').show()
-        
+
         $('#bt-close').trigger('click')
     })
-    
+
     $('#open-keys').on('click', function () {
         if($('#keys-content').is(':visible')){
 
@@ -341,7 +341,7 @@ $(document).ready(function () {
         webhook = false
 
         toggle_confirm('Produtos', 'A sincronização pode demorar algumas horas.')
-        
+
 
     })
 
@@ -352,10 +352,10 @@ $(document).ready(function () {
         webhook = false
 
         toggle_confirm('Rastreios', 'A sincronização pode demorar algumas horas.')
-        
+
 
     })
-    
+
     $('#bt-confirm').on('click', function () {
         sync_data(prod, track, webhook)
         $('#bt-cancel').trigger('click')
@@ -373,7 +373,7 @@ $(document).ready(function () {
         prod = false
         track = false
         webhook = true
-        
+
         toggle_confirm('Webhooks', 'A sincronização pode demorar algumas horas.')
     })
 
@@ -383,7 +383,7 @@ $(document).ready(function () {
         $("#modal-confirm").modal('show');
 
         function fill() {
-            
+
             $("#sync-name").html(name);
             if (desc) {
                 $("#sync-desc").html(
@@ -399,7 +399,7 @@ $(document).ready(function () {
             //     $("#bts-confirm").slideDown();
             // });
             fill()
-            
+
         } else {
             fill()
             //$("#bts-confirm").show()
@@ -420,13 +420,13 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             error: function error(response) {
-                
+
                 errorAjaxResponse(response);
             },
             success: function success(r) {
 
 
-                
+
 
                 if(r.status == true){
                     alertCustom('success', 'Sincronização de dados foi iniciada!');

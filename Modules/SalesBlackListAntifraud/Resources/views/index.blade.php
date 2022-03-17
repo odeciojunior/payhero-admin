@@ -2,10 +2,11 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ mix('modules/salesBlackListAntifraud/css/index.min.css') }}">
+        {{-- <link rel="stylesheet" href="{{ mix('modules/salesBlackListAntifraud/css/index.min.css') }}">
         <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
         <link rel="stylesheet" href="{!! mix('modules/global/css/switch.min.css') !!}">
-        <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}"> --}}
+        <link rel="stylesheet" href="{{ mix('build/layouts/salesblacklistantifraud/index.min.css') }}">
     @endpush
 
     <!-- Page -->
@@ -60,7 +61,7 @@
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label></label>
                                 <button id="bt_filtro" class="btn btn-primary col-sm-12">
-                                    <img style="height: 12px; margin-right: 4px" src=" {{ mix('modules/global/img/svg/check-all.svg') }} ">Aplicar
+                                    <img style="height: 12px; margin-right: 4px" src=" {{ mix('build/global/img/svg/check-all.svg') }} ">Aplicar
                                 </button>
                             </div>
                         </div>
@@ -102,10 +103,11 @@
     </div>
 
     @push('scripts')
-        <script src="{{ mix('modules/salesBlackListAntifraud/js/index.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/salesBlackListAntifraud/js/index.min.js') }}"></script>
         <script src="{{ mix('modules/salesBlackListAntifraud/js/detail.min.js') }}"></script>
         <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script>
+        <script src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script> --}}
+        <script src='{{ mix('build/layouts/salesblacklistantifraud/index.min.js') }}'></script>
     @endpush
 
 

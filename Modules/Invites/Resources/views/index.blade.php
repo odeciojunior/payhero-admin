@@ -2,9 +2,10 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
+        {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
         <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
-        <link rel="stylesheet" href="{{ mix('modules/global/css/empty.min.css') }}">
+        <link rel="stylesheet" href="{{ mix('modules/global/css/empty.min.css') }}"> --}}
+        <link rel="stylesheet" href="{{ mix('build/layouts/invites/index.min.css') }}">
         <style>
             .badge {
                 color: white;
@@ -94,7 +95,7 @@
             </div>
         </div>
         <div id="content-error" class='content-error text-center' style="display:none !important;">
-                <img src="modules/global/img/convites.svg" width="156px"/>
+                <img src="build/global/img/convites.svg" width="156px"/>
                 <h4 class="big gray">Você ainda não enviou convites!</h4> <br>
                 <p class="desc gray">Envie convites, e
                     <strong>ganhe 1% de tudo que seu convidado vender durante 6 meses!</strong></p>
@@ -323,7 +324,8 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ mix('modules/invites/js/invites.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/invites/js/invites.min.js') }}"></script> --}}
+        <script src="{{ mix('build/layouts/invites/index.min.js') }}"></script>
     @endpush
 
 @endsection

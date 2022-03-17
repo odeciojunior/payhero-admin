@@ -310,7 +310,7 @@ $(document).ready(function () {
                                         <span class="font-size-12 gray-600">Últimos 140 dias</span>
                                         <span class="font-size-12 gray-600">20 dias</span>
                                     </div>
-                                    <img class="col-12 p-0" src="/modules/global/img/timeline-chargeback.svg" style="max-width: 100%;height: 15px;">
+                                    <img class="col-12 p-0" src="/build/global/img/timeline-chargeback.svg" style="max-width: 100%;height: 15px;">
                                 </div>
                             </div>
 

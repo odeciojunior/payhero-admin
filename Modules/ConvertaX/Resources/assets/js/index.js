@@ -26,7 +26,7 @@ $(document).ready(function () {
                                     <img class="card-img-top img-fluid w-full" src="${
                                         data.project_photo
                                             ? data.project_photo
-                                            : "/modules/global/img/produto.png"
+                                            : "/build/global/img/produto.png"
                                     }"/>
                                     <div class="card-body">
                                         <div class='row'>

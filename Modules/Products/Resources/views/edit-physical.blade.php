@@ -59,7 +59,7 @@
                     <div class="px-40 row justify-content-between">
                         <div class="col-12 col-md-4 col-lg-2 col-xl-4 text-center">
                             <img id="caixinha-img"
-                                 src="{{ mix('modules/global/img/svg/caixinha.svg') }}"
+                                 src="{{ mix('build/global/img/svg/caixinha.svg') }}"
                                  class="img-fluid"
                                  alt="novo produto fisico">
                         </div>
@@ -128,7 +128,7 @@
 
                     <div>
                         <a class="btn btn-lg btn-cancelar" href="/products">Cancelar</a>
-                        <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="{{ mix('modules/global/img/svg/check-all.svg') }}">Salvar</button>
+                        <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">Salvar</button>
                     </div>
                 </div>
             </form>

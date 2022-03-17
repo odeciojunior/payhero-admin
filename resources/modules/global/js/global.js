@@ -199,7 +199,7 @@ function loading(elementId, loaderClass) {
 function loadingOnScreen() {
     $('#loadingOnScreen').append(
         `<div class="sirius-loading">
-            <img style="height: 125px; width: 125px" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
+            <img style="height: 125px; width: 125px" src="/build/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
     ).fadeIn()
@@ -210,7 +210,7 @@ function loadingOnScreen() {
 function loadingOnChart(target) {
     $(target).fadeIn().append(
         `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading">
-            <img style="height: 125px; width: 125px;" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
+            <img style="height: 125px; width: 125px;" src="/build/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
     )
@@ -219,7 +219,7 @@ function loadingOnChart(target) {
 function loadingOnAccountsHealth(target) {
     $(target).fadeIn().append(
         `<div style="z-index: 100; border-radius: 16px; position: absolute;" class="sirius-loading d-flex justify-content-center align-items-center align-self-center">
-            <img style="height: 125px; width: 125px; top: auto;" src="/modules/global/img/logos/2021/svg/icon-sirius.svg"
+            <img style="height: 125px; width: 125px; top: auto;" src="/build/global/img/logos/2021/svg/icon-sirius.svg"
                  class="img-responsive"/>
         </div>`
     )
@@ -700,20 +700,20 @@ function ajaxVerifyDocumentPending() {
             $('#accountStatus').val(response.accountStatus);
             if (response.accountType == 'owner') {
                 if (response.analyzing) {
-                    $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-amar.svg');
+                    $('.top-alert-img').attr('src', '/build/global/img/svg/alerta-amar.svg');
                     $('.top-alert-message').html('Seu acesso ainda é <strong>restrito</strong> pois sua conta está <strong>em análise</strong>');
                     $('#document-pending .top-alert-action').hide();
                     $('#document-pending').show();
                 } else if (response.refused) {
                     $('.top-alert').removeClass('warning');
                     $('.top-alert').addClass('top-bar-danger');
-                    $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-verm.svg');
+                    $('.top-alert-img').attr('src', '/build/global/img/svg/alerta-verm.svg');
                     $('.top-alert-message').addClass('top-alert-danger');
                     $('.top-alert-message').html('Um de seus documentos foi recusado');
                     $('#document-pending').show();
                     $('#document-pending .top-alert-action').attr('data-value-url', response.link);
                 } else if (response.accountStatus == 'account frozen') {
-                    $('.top-alert-img').attr('src', '/modules/global/img/svg/alerta-amar.svg');
+                    $('.top-alert-img').attr('src', '/build/global/img/svg/alerta-amar.svg');
                     $('.top-alert-message').html('Seu acesso é <strong>restrito</strong>, sua conta está <strong>congelada</strong>');
                     $('#document-pending .top-alert-action').hide();
                     $('#document-pending').show();

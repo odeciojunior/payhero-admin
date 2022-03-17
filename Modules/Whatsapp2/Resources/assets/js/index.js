@@ -80,7 +80,7 @@ $(document).ready(function () {
             ` style='cursor:pointer;'>
                                     <img class="card-img-top img-fluid w-full" src=` +
             data.project_photo +
-            ` onerror="this.onerror=null;this.src='/modules/global/img/produto.png';" alt="` +
+            ` onerror="this.onerror=null;this.src='/build/global/img/produto.png';" alt="` +
             data.project_name +
             `"/>
                                     <div class="card-body">

@@ -57,10 +57,10 @@ $(function () {
                                 ? '<div class="ribbon-left"><span>Afiliado</span></div>'
                                 : ""
                         }
-                                            <img class="card-img-top" onerror="this.src = '/modules/global/img/produto.svg'" src="${
+                                            <img class="card-img-top" onerror="this.src = '/build/global/img/produto.svg'" src="${
                             project.photo
                                 ? project.photo
-                                : "/modules/global/img/produto.svg"
+                                : "/build/global/img/produto.svg"
                         }" alt="${project.name}">
                                             <div class="card-body">
                                                 <h5 class="card-title">${

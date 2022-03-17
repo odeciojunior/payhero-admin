@@ -239,7 +239,7 @@ $(function () {
                             <tr class='text-center'>
                                 <td colspan='11' style='height: 70px; vertical-align: middle;'>
                                     <div class='d-flex justify-content-center align-items-center'>
-                                        <img src='/modules/global/img/empty-state-table.svg' style='margin-right: 60px;'>
+                                        <img src='/build/global/img/empty-state-table.svg' style='margin-right: 60px;'>
                                         <div class='text-left'>
                                             <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum link configurado</h1>
                                             <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro link para poder<br>gerenciá-los nesse painel.</p>
@@ -276,7 +276,7 @@ $(function () {
 
                                 data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="pointer copy_link_plan" link="' + value.link + '"> <span class="material-icons icon-copy-1"> content_copy </span> </a></td>';
 
-                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">Copiar </span><img src="/modules/global/img/icon-copy-c.svg"></td>';
+                                data += '<td class="display-sm-none display-m-none copy_link" title="Copiar Link" style="cursor:pointer;" link="' + value.link_affiliate + '">Copiar </span><img src="/build/global/img/icon-copy-c.svg"></td>';
                                 data += '<td class="display-lg-none display-xlg-none" title="Copiar Link"><a class="material-icons pointer gradient copy_link" link="' + value.link_affiliate + '"> </a></td>';
                                 if (value.price != '' && value.commission != '') {
                                     data += '<td class="text-center" >' + value.price + '<br><small>(' + value.commission + ' comissão)<small></td>';

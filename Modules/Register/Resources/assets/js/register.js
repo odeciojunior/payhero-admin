@@ -12,7 +12,8 @@ $(document).ready(function () {
             },
             error: (response) => {
                 if (response.responseJSON.data === 'invalido') {
-                    $('head').append('<link rel="stylesheet" href="/modules/global/css/page-error.min.css" type="text/css" />');
+                    //$('head').append('<link rel="stylesheet" href="/modules/global/css/page-error.min.css" type="text/css" />');
+                    $('head').append('<link rel="stylesheet" href="/build/layouts/register/page-error.min.css" type="text/css" />');
                     $("#register-body").html('').append(createHtmlLinkInvalid());
 
                 } else {
@@ -39,7 +40,7 @@ $(document).ready(function () {
     function createHtmlLinkInvalid() {
         return '<div id="link-invalid" class="page-holder">' +
             '        <div class="content-error d-flex text-center">' +
-            '            <img class="svgorange" src="/modules/global/img/error.png">' +
+            '            <img class="svgorange" src="/build/global/img/error.png">' +
             '            <h1 class="big"> Ops! Link de convite inválido</h1>' +
             '            <p style="font-size:12px">Parece que esse link é inválido. </p>' +
             '        </div>' +

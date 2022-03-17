@@ -39,7 +39,7 @@ $(() => {
         $('#payment-type').text(`Pagamento via ${(sale.payment_method === 2 ? 'Boleto' : 'Cartao ' + sale.flag)} em ${sale.start_date} `);
 
         let status = $(".modal-body-detalhes-black-antifraud #status");
-        status.html('').append(`<img style='width: 50px;' src='/modules/global/img/cartoes/${sale.flag}.png' alt='Cartao utilizado'>`);
+        status.html('').append(`<img style='width: 50px;' src='/build/global/img/cartoes/${sale.flag}.png' alt='Cartao utilizado'>`);
         if (sale.delivery_id != '') {
             $('#div_delivery').css('display', 'block');
         } else {
@@ -68,7 +68,7 @@ $(() => {
     function renderProducts(products) {
         $("#table-product-black-antifraud").html('');
         let div = '';
-        let photo = '/modules/global/img/produto.img';
+        let photo = '/build/global/img/produto.img';
         $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;
@@ -76,7 +76,7 @@ $(() => {
 
             div += `<div class="row align-items-baseline justify-content-between mb-15">
                         <div class="col-lg-2">
-                            <img onerror=this.src='/modules/global/img/produto.png' src='${value.photo}' width='50px' style='border-radius: 6px;'>
+                            <img onerror=this.src='/build/global/img/produto.png' src='${value.photo}' width='50px' style='border-radius: 6px;'>
                         </div>
                         <div class="col-lg-5">
                             <h4 class="table-title">${value.name}</h4>

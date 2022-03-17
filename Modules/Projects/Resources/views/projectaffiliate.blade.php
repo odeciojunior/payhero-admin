@@ -78,7 +78,7 @@
                             <a id="tab_settings_affiliate" class="nav-link"
                                data-toggle="tab" href="#tab_settings_affiliate-panel"
                                aria-controls="tab_settings_affiliate" role="tab">
-                                <img height="15" src="{{ mix('modules/global/img/svg/settings.svg') }}"/>
+                                <img height="15" src="{{ mix('build/global/img/svg/settings.svg') }}"/>
                             </a>
                         </li>
                     </ul>

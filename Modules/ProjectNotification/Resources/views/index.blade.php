@@ -7,7 +7,7 @@
                         <div id="add-sms" class="btn-holder d-flex align-items-center pointer">
                             <span class="link-button-dependent blue">Adicionar </span>
                             <button type="button" class="btn rounded-add pointer ml-10" style="display: inline-flex;" disabled>
-                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                                <img src="/build/global/img/icon-add.svg" style="width: 18px;">
                             </button>
                         </div>
                     </div>

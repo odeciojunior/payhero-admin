@@ -1,6 +1,6 @@
 <div class="modal-header flex-wrap">
     <div id="title-news-onboarding">
-        <img src="{{ mix('modules/global/img/logos/2021/svg/icon-sirius.svg') }}" width="40"
+        <img src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}" width="40"
              alt="Image"> <span>Novidades</span>
     </div>
     <div class="pages">
@@ -20,7 +20,7 @@
                 <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-md-baseline align-items-lg-center mb-10">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
-                            <img class="img-fluid" alt="Image" src="{{ mix('modules/global/img/pix/pix.svg') }}">
+                            <img class="img-fluid" alt="Image" src="{{ mix('build/global/img/pix/pix.svg') }}">
                         </div>
                     </div>
                     <span class="col-12 col-lg-8 text-center text-lg-left pl-lg-2">
@@ -31,7 +31,7 @@
                 <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-10">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
-                            <img class="img-fluid" alt="Image" src="{{ mix('modules/global/img/pix/secure-environment.svg') }}">
+                            <img class="img-fluid" alt="Image" src="{{ mix('build/global/img/pix/secure-environment.svg') }}">
                         </div>
                     </div>
                     <span class="col-12 col-lg-8 text-center text-lg-left pl-lg-2">
@@ -41,7 +41,7 @@
                 <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-10">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
-                            <img class="img-fluid" alt="Image" src="{{ mix('modules/global/img/pix/pix-payment.svg') }}">
+                            <img class="img-fluid" alt="Image" src="{{ mix('build/global/img/pix/pix-payment.svg') }}">
                         </div>
                     </div>
                     <span class="col-12 col-lg-8 text-center text-lg-left pl-lg-2 mb-md-15 mb-lg-0 h-md-p100 h-lg-auto">
@@ -56,7 +56,7 @@
         </div>
 
         <div class="col-12 col-lg-5 order-lg-0 d-flex justify-content-center">
-            <img id="img-onboarding" class="img-fluid" alt="Image" src="{{ mix('modules/global/img/pix/pix-checkout.png') }}">
+            <img id="img-onboarding" class="img-fluid" alt="Image" src="{{ mix('build/global/img/pix/pix-checkout.png') }}">
         </div>
     </div>
 </div>

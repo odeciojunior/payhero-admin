@@ -1,7 +1,8 @@
 @push('css')
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-    <link rel="stylesheet" href="{{ mix('modules/dashboard/css/pix.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/dashboard/css/pix.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/dashboard/pix.min.css') }}">
 @endpush
 
 <div id="modal-pix-onboarding" class="modal fade modal-fade-in-scale-up show">
@@ -12,8 +13,8 @@
                 <div id="modal-pix-content-0">
                     <div id="header-pix-onboarding-1" class="modal-header flex-wrap">
                         <div class="w-p100 d-flex flex-column justify-content-center align-items-center">
-                            <img id="icon" class="mb-20" src="{{ mix('modules/global/img/pix/sirius-icon.svg') }}" width="35">
-                            <img class="img-fluid" src="{{ mix('modules/global/img/pix/presentation.png') }}" width="350">
+                            <img id="icon" class="mb-20" src="{{ mix('build/global/img/pix/sirius-icon.svg') }}" width="35">
+                            <img class="img-fluid" src="{{ mix('build/global/img/pix/presentation.png') }}" width="350">
                         </div>
                     </div>
                     <div class="modal-body text-center">
@@ -44,5 +45,6 @@
 </div>
 
 @push('scripts')
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    {{-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> --}}
+    <script type="text/javascript" src="{{ mix('build/layouts/dashboard/pix.min.js') }}"></script>
 @endpush

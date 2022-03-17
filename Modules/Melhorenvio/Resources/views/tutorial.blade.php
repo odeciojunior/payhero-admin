@@ -8,7 +8,8 @@
     <title>Manual de Integração com Melhor Envio</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ mix('modules/melhorenvio/css/tutorial.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ mix('modules/melhorenvio/css/tutorial.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/melhorenvio/tutorial.min.css') }}">
 </head>
 
 <body>
@@ -38,11 +39,11 @@
                 <h4>Integração</h4>
                 <div>
                     Na sua conta no Sirius acesse: <span class="breadcrumb">Aplicativos > Melhor Envio</span> e Clique
-                    no botão <img class="inline-img" src="{{ mix('modules/melhorenvio/img/step-1a.jpg') }}"
+                    no botão <img class="inline-img" src="{{ mix('build/layouts/melhorenvio/img/step-1a.jpg') }}"
                                   alt="Botão adicionar integração"> para adicionar uma nova integração. Feito isso
                     dê um nome para a sua integração e clique em <span class="btn green">Realizar integração</span>.
                     <div class="img-container">
-                        <img src="{{ mix('modules/melhorenvio/img/step-1b.jpg') }}" alt="Imagem 2 do passo 1">
+                        <img src="{{ mix('build/layouts/melhorenvio/img/step-1b.jpg') }}" alt="Imagem 2 do passo 1">
                     </div>
                 </div>
             </li>
@@ -55,9 +56,9 @@
                             postagem (caso use Jadlog)</b> para que a integração funcione corretamente. Clique em <span
                             class="btn blue">Autorizar</span> e você será redirecionado de volta ao Sirius.</p>
                     <div class="img-container">
-                        <img src="{{ mix('modules/melhorenvio/img/step-2a.jpg') }}"
+                        <img src="{{ mix('build/layouts/melhorenvio/img/step-2a.jpg') }}"
                              alt="Imagem 1 do passo 2">
-                        <img src="{{ mix('modules/melhorenvio/img/step-2b.jpg') }}"
+                        <img src="{{ mix('build/layouts/melhorenvio/img/step-2b.jpg') }}"
                              alt="Imagem 2 do passo 2">
                     </div>
                 </div>
@@ -69,8 +70,8 @@
                         class="breadcrumb">Frete</span> e depois no botão <b>Adicionar Frete</b>. Preencha os dados e
                     clique em <span class="btn green">Salvar</span>.
                     <div class="img-container">
-                        <img src="{{ mix('modules/melhorenvio/img/step-3a.jpg') }}" alt="Imagem 1 do passo 3">
-                        <img src="{{ mix('modules/melhorenvio/img/step-3b.jpg') }}" alt="Imagem 2 do passo 3">
+                        <img src="{{ mix('build/layouts/melhorenvio/img/step-3a.jpg') }}" alt="Imagem 1 do passo 3">
+                        <img src="{{ mix('build/layouts/melhorenvio/img/step-3b.jpg') }}" alt="Imagem 2 do passo 3">
                     </div>
                 </div>
             </li>
@@ -82,8 +83,8 @@
                     do
                     Melhor Envio.
                     <div class="img-container">
-                        <img src="{{ mix('modules/melhorenvio/img/step-4a.jpg') }}" alt="Imagem 1 do passo 4">
-                        <img src="{{ mix('modules/melhorenvio/img/step-4b.jpg') }}" alt="Imagem 2 do passo 4">
+                        <img src="{{ mix('build/layouts/melhorenvio/img/step-4a.jpg') }}" alt="Imagem 1 do passo 4">
+                        <img src="{{ mix('build/layouts/melhorenvio/img/step-4b.jpg') }}" alt="Imagem 2 do passo 4">
                     </div>
                 </div>
             </li>

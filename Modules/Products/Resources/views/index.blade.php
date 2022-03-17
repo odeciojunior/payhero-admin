@@ -51,7 +51,7 @@
                     </div>
                     <div class="col-lg-3 col-md-6 mt-auto">
                         <button type=submit id="btn-filtro" class="btn btn-primary w-full mb-10">
-                            <img style="height: 12px; margin-right: 4px" src="{{ mix('modules/global/img/svg/check-all.svg') }}">Aplicar filtros
+                            <img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">Aplicar filtros
                         </button>
                     </div>
                 </div>
@@ -64,10 +64,10 @@
             </div>
             <div class='products-is-empty' style='display:none;'>
                 @push('css')
-                <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
+                <link rel="stylesheet" href="{!! mix('build/layouts/products/index.min.css') !!}">
                 @endpush
                 <div class="content-error text-center pt-0">
-                    <img src="{!! mix('modules/global/img/produtos.svg') !!}" width="156px">
+                    <img src="{!! mix('build/global/img/produtos.svg') !!}" width="156px">
                     <h1 class="big gray">Zero produtos por aqui!</h1>
                     {{-- <div class='product-is-empty-cla'>--}}
                     {{-- <p class="gray"> Vamos adicionar seu primeiro produto? </p>--}}
@@ -92,13 +92,13 @@
                         <div class="row text-center">
                             <div class="col-6 d-flex flex-column align-items-center">
                                 <a href="/products/create/physical" class="mb-2 new-product-icon">
-                                    <img src="{{ mix('modules/global/img/svg/caixa-fisica.svg') }}" data-value="product_physical" alt="novo produto fisico">
+                                    <img src="{{ mix('build/global/img/svg/caixa-fisica.svg') }}" data-value="product_physical" alt="novo produto fisico">
                                 </a>
                                 <p>Físico</p>
                             </div>
                             <div class="col-6 d-flex flex-column align-items-center">
                                 <a href="/products/create/digital" class="mb-2 new-product-icon">
-                                    <img src="{{ mix('modules/global/img/svg/phone.svg') }}" data-value="product_digital" alt="novo produto digital">
+                                    <img src="{{ mix('build/global/img/svg/phone.svg') }}" data-value="product_digital" alt="novo produto digital">
                                 </a>
                                 <p>Digital</p>
                             </div>

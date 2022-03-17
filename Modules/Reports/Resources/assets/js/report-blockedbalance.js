@@ -220,13 +220,13 @@ $(document).ready(function () {
                                     <td class="text-left font-size-14">${value.product}${value.affiliate != null && value.user_sale_type == 'producer' ? `<br><small>(Afiliado: ${value.affiliate})</small>` : ''}</td>
                                     <td class='display-sm-none display-m-none display-lg-none text-left font-size-14'>${value.client}</td>
                                     <td>
-                                        <img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
+                                        <img src='/build/global/img/cartoes/${value.brand}.png'  style='width: 45px'>
                                     </td>
                                     <td>
                                        <div class="d-flex align-items-center">
                                             <span class="badge badge-${statusArray[value.status]} ${value.status_translate === 'Pendente' ? 'boleto-pending' : ''}" ${value.status_translate === 'Pendente' ? 'status="' + value.status_translate + '" sale="' + value.id_default + '"' : ''}>${value.status_translate}</span>
                                                ${value.is_chargeback_recovered && value.status_translate === 'Aprovado' ? `
-                                                <img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
+                                                <img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">`
                                                 : ''}
                                         </div>
                                     </td>
@@ -262,7 +262,7 @@ $(document).ready(function () {
         let value = $(this).val();
         $("#plan").val(null).trigger('change');
     });
-    
+
     //Search plan
     $('#plan').select2({
         placeholder: 'Nome do plano',

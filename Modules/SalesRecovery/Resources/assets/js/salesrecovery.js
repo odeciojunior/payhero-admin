@@ -171,18 +171,18 @@ $(document).ready(function () {
             .val()}&date_type=created_at&client_document=${$("#client-cpf")
 
             .val()}&plan=${$("#plan").val()}`;
-            
+
         } else {
             url = `${link}&project=${$("#project").val()}
 
             &recovery_type=${$("#recovery_type option:selected").val()}
-            
+
             &date_range=${$("#date-range-sales-recovery").val()}
-            
+
             &client=${$("#client-name").val()}
-            
+
             &date_type=created_at&client_document=${$("#client-cpf").val()}
-            
+
             &plan=${$("#plan").val()}`;
         }
 
@@ -239,7 +239,7 @@ $(document).ready(function () {
                             </td>
                         </tr>`
                     );
-                
+
                 } else {
                     createHTMLTable(response);
                     $("#pagination-salesRecovery").show();
@@ -522,7 +522,7 @@ $(document).ready(function () {
          * Produtos
          */
         let div = "";
-        let photo = "public/modules/global/img/produto.png";
+        let photo = "public/build/global/img/produto.png";
         $.each(data.products, function (index, value) {
             if (!isEmpty(value.photo)) {
                 photo = value.photo;
@@ -531,7 +531,7 @@ $(document).ready(function () {
             div +=
                 '<div class="row align-items-baseline justify-content-between mb-15">' +
                 '<div class="col-lg-2">' +
-                "<img onerror=this.src='/modules/global/img/produto.png' src='" +
+                "<img onerror=this.src='/build/global/img/produto.png' src='" +
                 value.photo +
                 "' width='50px' style='border-radius: 6px;'>" +
                 "</div>" +
@@ -753,7 +753,7 @@ $(document).ready(function () {
             if (values) {
               values.splice(0, values.lenght);
               $select.val(null).change();
-              
+
               values.push('all');
               $select.val('all').change();
             }
@@ -780,21 +780,21 @@ $(document).ready(function () {
         $('.select2-selection.select2-selection--multiple').scrollTop(0);
     });
 
-    $(".applySelect2").on("change", function () {            
+    $(".applySelect2").on("change", function () {
         let idTarget = $(this).attr('id');
         deniedEmptyFilter(idTarget);
     });
-    
+
     $(document).on('focusout', '.select2-selection__rendered', function () {
         $('.select2-selection.select2-selection--multiple').scrollTop(0);
     });
-    
+
     $(document).on('focusin', '.select2-selection__rendered', function () {
         $('.select2-selection.select2-selection--multiple').scrollTop(0);
     });
     // FIM DO COMPORTAMENTO DO FILTRO
 
-    
+
     //Search plan
     $("#plan").select2({
         language: {

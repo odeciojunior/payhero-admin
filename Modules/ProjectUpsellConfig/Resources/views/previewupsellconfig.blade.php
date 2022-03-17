@@ -1,4 +1,5 @@
-<link rel="stylesheet" href="{{ mix('modules/global/css/upsell.min.css') }}">
+{{-- <link rel="stylesheet" href="{{ mix('modules/global/css/upsell.min.css') }}"> --}}
+<link rel="stylesheet" href="{{ mix('build/layouts/projectupsellconfig/previewupsellconfig.min.css') }}">
 <div class="row justify-content-center">
     <div class="col pb-5">
         <div class="topbar" id="upsell-header"></div>

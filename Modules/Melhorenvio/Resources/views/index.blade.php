@@ -1,7 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-        <link rel="stylesheet" href="{{ mix('modules/melhorenvio/css/index.min.css') }}">
+        {{-- <link rel="stylesheet" href="{{ mix('modules/melhorenvio/css/index.min.css') }}"> --}}
+        <link rel="stylesheet" href="{{ mix('build/layouts/melhorenvio/index.min.css') }}">
 @endpush
 
 @section('content')
@@ -105,7 +106,8 @@
     <!-- End modal -->
 
     @push('scripts')
-        <script src="{{ mix('modules/melhorenvio/js/index.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/melhorenvio/js/index.min.js') }}"></script> --}}
+        <script src="{{ mix('build/layouts/melhorenvio/index.min.js') }}"></script>
     @endpush
 
 @endsection

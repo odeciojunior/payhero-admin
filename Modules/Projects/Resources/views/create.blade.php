@@ -57,7 +57,7 @@
                         <a type="button" class="btn btn-cancelar" href="/projects">Cancelar</a>
 
                         <button id="btn-save" type="submit" class="btn btn-primary btn-lg ml-15">
-                            <img style="height: 12px; margin-right: 4px" src="{{ mix('modules/global/img/svg/check-all.svg') }}">Salvar
+                            <img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">Salvar
                         </button>
                     </div>
                 </form>
@@ -65,7 +65,7 @@
         </div>
         <div id="empty-companies-error" style="display:none;position: absolute; top: 25%;">
             <div class="text-center" style="display:flex;color: black;align-content: center;align-items: center;justify-content: center;flex-direction: column;text-align: center;padding: 20px;">
-                <img src="{!! mix('modules/global/img/empty.svg') !!}" width="250px">
+                <img src="{!! mix('build/global/img/empty.svg') !!}" width="250px">
                 <p class="desc gray" style='font-size:20px;'>Para criar uma loja você precisa ter pelo menos uma empresa aprovada para transacionar
                     e todos os documentos da empresa e do seu perfil precisam estar aprovados! </p>
             </div>

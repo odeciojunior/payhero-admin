@@ -1,11 +1,12 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ mix('modules/finances/css/jPages.min.css?') }}">
+    {{-- <link rel="stylesheet" href="{{ mix('modules/finances/css/jPages.min.css?') }}">
     <link rel="stylesheet" href="{{ mix('modules/global/css/empty.min.css') }}">
     <link rel="stylesheet" href="{{ mix('modules/global/css/switch.min.css') }}">
     <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
-    <link rel="stylesheet" href="{{ mix('modules/finances/css/new-finances.min.css') }}">
+    <link rel="stylesheet" href="{{ mix('modules/finances/css/new-finances.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/finances/index.min.css') }}">
 @endpush
 
 @section('content')
@@ -67,14 +68,15 @@
 
 
         @push('scripts')
-            <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
+            {{-- <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
             <script src="{{ mix('modules/global/js/daterangepicker.min.js') }}"></script>
             <script src="{{ mix('modules/finances/js/jPages.min.js') }}"></script>
             <script src="{{ mix('modules/finances/js/statement-index.min.js') }}"></script>
             <script src="{{ mix('modules/finances/js/balances.min.js') }}"></script>
             <script src="{{ mix('modules/finances/js/withdrawals-table.min.js') }}"></script>
             <script src="{{ mix('modules/finances/js/withdrawal-handler.min.js') }}"></script>
-            <script src="{{ mix('modules/finances/js/statement.min.js') }}"></script>
+            <script src="{{ mix('modules/finances/js/statement.min.js') }}"></script> --}}
+            <script src="{{ mix('build/layouts/finances/index.min.css') }}"></script>
         @endpush
     </div>
 

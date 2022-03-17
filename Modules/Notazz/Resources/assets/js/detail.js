@@ -122,7 +122,7 @@ $(() => {
         //Status
         let status = $('.modal-body #status');
         status.html('');
-        status.append('<img style="width: 50px;" src="/modules/global/img/cartoes/' + sale.flag + '.png">');
+        status.append('<img style="width: 50px;" src="/build/global/img/cartoes/' + sale.flag + '.png">');
 
         switch (sale.status) {
             case 1:
@@ -408,7 +408,7 @@ $(() => {
         $("#table-product").html('');
         $('#data-tracking-products').html('');
         let div = '';
-        let photo = '/modules/global/img/produto.png';
+        let photo = '/build/global/img/produto.png';
         $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;

@@ -1,6 +1,7 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ mix('modules/digitalmanager/css/index.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ mix('modules/digitalmanager/css/index.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/whatsapp2/index.min.css') }}">
     {{-- <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
     <style>
         .o-arrow-right-1 {
@@ -99,7 +100,7 @@
 
         <div id="no-integration-found" class='row justify-content-center' style="display:none !important; width:100%;">
             <div class="content-error text-center">
-                <img src="{!! mix('modules/global/img/aplicativos.svg') !!}" width="250px">
+                <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
                 <p class="desc gray">Integre sua loas com SAK de forma totalmente automatizada!</p>
             </div>
@@ -134,6 +135,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ mix('modules/whatsapp2/js/index.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/whatsapp2/js/index.min.js') }}"></script> --}}
+        <script src="{{ mix('build/layouts/whatsapp2/index.min.js') }}"></script>
     @endpush
 @endsection

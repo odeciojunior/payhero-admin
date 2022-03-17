@@ -364,7 +364,7 @@ $(() => {
         let status = $(".modal-body #status");
         status.html("");
         status.append(
-            '<img style="width: 50px;" src="/modules/global/img/cartoes/' +
+            '<img style="width: 50px;" src="/build/global/img/cartoes/' +
             sale.flag +
             '.png">'
         );
@@ -1125,7 +1125,7 @@ $(() => {
         $.each(products, function (index, value) {
             div += '<div class="row justify-content-between mb-15">';
                 div += '<div class="col-lg-2">';
-                    div += '<img src="/modules/global/img/produto.svg" width="50px" height="50px" style="border-radius: 6px;">';
+                    div += '<img src="/build/global/img/produto.svg" width="50px" height="50px" style="border-radius: 6px;">';
                 div += '</div>';
                 div += '<div class="col-md-5 col-lg-6">';
                     div += '<h4 class="table-title m-0">' + value.name + '</h4>';
@@ -1144,14 +1144,14 @@ $(() => {
 
     function renderProducts(products, sale) {
         let div = "";
-        let photo = "/modules/global/img/produto.svg";
+        let photo = "/build/global/img/produto.svg";
         $.each(products, function (index, value) {
             if (!value.photo) {
                 value.photo = photo;
             }
             div += `<div class="row justify-content-between mb-15">
                         <div class="col-lg-2">
-                            <img src='${value.photo}' onerror=this.src='/modules/global/img/produto.png' width='50px' height='50px' style='border-radius: 6px;'>
+                            <img src='${value.photo}' onerror=this.src='/build/global/img/produto.png' width='50px' height='50px' style='border-radius: 6px;'>
                         </div>
                         <div class="col-md-5 col-lg-6">
                             <h4 class="table-title m-0">${value.name}</h4>
@@ -1193,7 +1193,7 @@ $(() => {
                             case 'Text':
                                 div += `
                                                         <div class="col-md-3">
-                                                            <img src="/modules/global/img/custom-product/icon_text.svg" class="img-fluid border-icon">
+                                                            <img src="/build/global/img/custom-product/icon_text.svg" class="img-fluid border-icon">
                                                         </div>
                                                         <div class="col-md-6 px-0 py-13">
                                                             <h5>${custom.value}</h5>
@@ -1207,28 +1207,28 @@ $(() => {
                             case 'File':
                                 div += `
                                                     <div class="col-md-3">
-                                                        <img src="/modules/global/img/custom-product/icon_attachment.svg" class="img-fluid border-icon" />
+                                                        <img src="/build/global/img/custom-product/icon_attachment.svg" class="img-fluid border-icon" />
                                                     </div>
                                                     <div class="col-md-6 px-0 py-13">
                                                         <h5>${file_name}</h5>
                                                     </div>
                                                     <div class="col-md-3 pl-0 py-11" align="right">
                                                         <a href="${custom.value}" style="cursor: pointer;" download="${file_name}" title="Baixar Arquivo" target="_blank">
-                                                            <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" />
+                                                            <img src="/build/global/img/custom-product/icon_download.png" class="img-fluid" />
                                                         </a>
                                                     </div>`;
                                 break;
                             case 'Image':
                                 div += `
                                                     <div class="col-md-3">
-                                                        <img src="/modules/global/img/custom-product/icon_image.svg" class="img-fluid border-icon">
+                                                        <img src="/build/global/img/custom-product/icon_image.svg" class="img-fluid border-icon">
                                                     </div>
                                                     <div class="col-md-6 px-0 py-13">
                                                         <h5>${file_name}</h5>
                                                     </div>
                                                     <div class="col-md-3 pl-0 py-11" align="right">
                                                         <a href="${custom.value}" style="cursor: pointer;" download="${file_name}" title="Baixar Imagem"  target="_blank">
-                                                            <img src="/modules/global/img/custom-product/icon_download.png" class="img-fluid" />
+                                                            <img src="/build/global/img/custom-product/icon_download.png" class="img-fluid" />
                                                         </a>
                                                     </div>`;
                                 break;

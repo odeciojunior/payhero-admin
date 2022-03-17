@@ -498,7 +498,7 @@ $(document).ready(function () {
                             cupomCode = `
                                     <a data-toggle="tooltip" title="Utilizado o cupom ${value.cupom_code}"
                                         role="button" style='margin-left: 5px;' >
-                                            <img width="20px" src="/modules/global/img/coupon.svg">
+                                            <img width="20px" src="/build/global/img/coupon.svg">
                                     </a>`;
                         }
 
@@ -507,7 +507,7 @@ $(document).ready(function () {
                             upsell = `
                                     <a data-toggle="tooltip" title="Upsell"
                                         role="button" style='margin-left: 5px;' >
-                                            <img width="20px" src="/modules/global/img/upsell.svg">
+                                            <img width="20px" src="/build/global/img/upsell.svg">
                                     </a>`;
                         }
 
@@ -516,7 +516,7 @@ $(document).ready(function () {
                             has_order_bump = `
                                             <a data-toggle="tooltip" title="Order Bump"
                                                 role="button" style='margin-left: 5px;' >
-                                                    <img width="20px" src="/modules/global/img/order-bump.svg">
+                                                    <img width="20px" src="/build/global/img/order-bump.svg">
                                             </a>`;
                         }
 
@@ -558,7 +558,7 @@ $(document).ready(function () {
                                         value.client
                                     }</td>
                                     <td>
-                                        <img src='/modules/global/img/cartoes/${
+                                        <img src='/build/global/img/cartoes/${
                                             value.brand
                                         }.png'  style='width: 45px'>
                                     </td>

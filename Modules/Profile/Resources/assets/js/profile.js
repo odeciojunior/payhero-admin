@@ -54,9 +54,9 @@ $(document).ready(function () {
                 /**
                  * Imagem Perfil
                  */
-                $('#previewimage').attr("src", response.user.photo ? response.user.photo : '/modules/global/img/user-default.png');
+                $('#previewimage').attr("src", response.user.photo ? response.user.photo : '/build/global/img/user-default.png');
                 $("#previewimage").on("error", function () {
-                    $(this).attr('src', '/modules/global/img/user-default.png');
+                    $(this).attr('src', '/build/global/img/user-default.png');
                 });
 
                 /**

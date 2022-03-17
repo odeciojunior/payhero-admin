@@ -48,7 +48,7 @@ $(() => {
 
                 let project = response.data;
                 $('.title-pad').text(project.name);
-                $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
+                $('#show-photo').attr('src', project.photo ? project.photo : '/build/global/img/projeto.svg');
                 $('#created_at').text('Afiliado em ' + project.affiliate_date);
                 if (project.visibility === 'public') {
                     $('#show-visibility').text('Público').addClass('text-white details-text md p-2 pr-4 pl-4 badge-pill badge-primary');
@@ -124,8 +124,8 @@ $(() => {
                 errorAjaxResponse(response);
 
             }, success: function (data) {
-                $('#update-project #previewimage').attr('src', data.data.project_photo ? data.data.project_photo : '/modules/global/img/projeto.svg');
-                $('#update-project #image-logo-email').attr('src', data.data.project_logo ? data.data.project_logo : '/modules/global/img/projeto.svg');
+                $('#update-project #previewimage').attr('src', data.data.project_photo ? data.data.project_photo : '/build/global/img/projeto.svg');
+                $('#update-project #image-logo-email').attr('src', data.data.project_logo ? data.data.project_logo : '/build/global/img/projeto.svg');
                 $('#update-project #contact').val(data.data.suport_contact);
                 $('#update-project #suport_phone').val(data.data.suport_phone);
                 loadOnAny('#tab_setiings_affiliate .card', true);

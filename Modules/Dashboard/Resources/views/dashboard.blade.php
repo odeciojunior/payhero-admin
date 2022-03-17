@@ -121,7 +121,7 @@
                                     <div id="scoreLineToMonth" class="ct-chart"></div>
                                     <div id="empty-sale" class="row" style="display: none;">
                                         <div class="col-sm-8">
-                                            <img src="{!! mix('modules/global/img/sem-dados.svg') !!}" alt="">
+                                            <img src="{!! mix('build/global/img/sem-dados.svg') !!}" alt="">
                                         </div>
                                         <p style="font-size: 23px" class="col-sm-4 gray justify-content-center align-items-center d-flex flex-column p-5">Nenhuma venda encontrada</p>
                                      </div>
@@ -180,7 +180,7 @@
 {{--                                        <b class="card-desc">Bem-vindo(a) ao Sirius!</b>--}}
 {{--                                    </div>--}}
 {{--                                    <img class="img-fluid"--}}
-{{--                                         src="{{ mix('modules/global/img/svg/sirius-stars-b.png') }}"--}}
+{{--                                         src="{{ mix('build/global/img/svg/sirius-stars-b.png') }}"--}}
 {{--                                         height="60px" width="60px">--}}
 {{--                                </div>--}}
 {{--                                <div class="card-body d-flex flex-column justify-content-between">--}}
@@ -208,7 +208,7 @@
 {{--                                        <b class="card-desc">Bem-vindo(a) ao Sirius!</b>--}}
 {{--                                    </div>--}}
 {{--                                    <img class="img-fluid"--}}
-{{--                                         src="{{ mix('modules/global/img/svg/sirius-stars-b.png') }}"--}}
+{{--                                         src="{{ mix('build/global/img/svg/sirius-stars-b.png') }}"--}}
 {{--                                         height="60px" width="60px">--}}
 {{--                                </div>--}}
 {{--                                <div class="card-body d-flex flex-column justify-content-between">--}}

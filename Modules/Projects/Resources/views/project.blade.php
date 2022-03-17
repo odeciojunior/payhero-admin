@@ -75,7 +75,7 @@
 
                                             <div class="d-flex justify-content-start padding-cards-l">
                                                 <div class="pl-5">
-                                                    <img class="img-default mr-3 mr-lg-10" src="{{ mix('modules/global/img/projects/icon-arrowback.svg') }}">
+                                                    <img class="img-default mr-3 mr-lg-10" src="{{ mix('build/global/img/projects/icon-arrowback.svg') }}">
 
                                                 </div>
 
@@ -93,7 +93,7 @@
 
                                             <div class="d-flex justify-content-start padding-cards-l">
                                                 <div class="d-flex pl-5">
-                                                    <img class="img-default mr-3 mr-lg-10" src="{{ mix('modules/global/img/projects/trackIcon.svg') }}">
+                                                    <img class="img-default mr-3 mr-lg-10" src="{{ mix('build/global/img/projects/trackIcon.svg') }}">
                                                 </div>
                                                 <span class="s-data-project-values pl-5 align-self-center" id="value-without-tracking"></span>
                                             </div>
@@ -109,7 +109,7 @@
 
                                             <div class="d-flex justify-content-start padding-cards-l">
                                                 <div class="d-flex pl-5">
-                                                    <img class="img-default mr-3 mr-lg-10" src="{{ mix('modules/global/img/projects/icon-chat.svg') }}">
+                                                    <img class="img-default mr-3 mr-lg-10" src="{{ mix('build/global/img/projects/icon-chat.svg') }}">
                                                 </div>
 
                                                 <span class="s-data-project-values pl-5 align-self-center" id="value-open-tickets"></span>
@@ -134,7 +134,7 @@
                                 <div class="pl-20 pl-md-30 pt-15 pt-lg-40 pt-md-20 pl-lg-20 pl-xl-30 pt-xl-45 pb-xl-25">
                                     <div class="d-flex">
                                         <div class="p-5 resume-sales mr-10">
-                                            <img class="control-img mr-5" src="{{ mix('modules/global/img/projects/groceryCart.svg') }}">
+                                            <img class="control-img mr-5" src="{{ mix('build/global/img/projects/groceryCart.svg') }}">
                                         </div>
                                         <span class="d-flex align-items-center font-size-14"> Vendas aprovadas </span>
                                     </div>
@@ -148,7 +148,7 @@
                                 <div class="pl-20 pl-md-30 pb-15 pl-lg-20 pl-xl-30 pb-lg-40 pb-xl-50">
                                     <div class="d-flex pt-10">
                                         <div class="p-5 resume-sales mr-10">
-                                            <img class="mr-5" src="{{ mix('modules/global/img/projects/arrowBalance.svg') }}">
+                                            <img class="mr-5" src="{{ mix('build/global/img/projects/arrowBalance.svg') }}">
                                         </div>
                                         <span class="d-flex align-items-center font-size-14">Total em receita</span>
                                     </div>
@@ -462,12 +462,13 @@
     </div>
 
     @push('scripts')
-        <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
+        <script src="{{ mix('build/layouts/projects/ckeditor.js') }}"></script>
+        {{-- <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
         <script type="text/javascript" src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/translations/pt-br.js"></script>
         <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
-        {{-- <script src="{{ mix('modules/domains/js/domainEdit.min.js') }}"></script>
+        <script src="{{ mix('modules/domains/js/domainEdit.min.js') }}"></script>
         <script src="{{ mix('modules/plans/js/loading.min.js') }}"></script>
         <script src="{{ mix('modules/plans/js/plans.min.js') }}"></script>
         <script src="{{ mix('modules/shipping/js/shipping.min.js') }}"></script>

@@ -30,7 +30,7 @@ $(() => {
             success: (response) => {
                 let project = response.data;
                 $('.page-title, .title-pad').text(project.project_name);
-                $('#show-photo').attr('src', project.project_photo ? project.project_photo : '/modules/global/img/projeto.svg');
+                $('#show-photo').attr('src', project.project_photo ? project.project_photo : '/build/global/img/projeto.svg');
                 $('#created_at').text('Criado em ' + project.created_at);
 
                 $('#show-description').text(project.project_description);
@@ -83,7 +83,7 @@ $(() => {
 
 //         let {project, companies, userProject, shopifyIntegrations} = data;
 
-//         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.svg');
+//         $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/build/global/img/projeto.svg');
 //         $('#update-project #name').val(project.name);
 //         $('#update-project #description').text(project.description);
 //         if (project.visibility === 'public') {
@@ -91,7 +91,7 @@ $(() => {
 //         } else {
 //             $('#update-project #visibility').prop('selectedIndex', 1).change();
 //         }
-//         $('#update-project #image-logo-email').attr('src', project.logo ? project.logo : '/modules/global/img/projeto.svg');
+//         $('#update-project #image-logo-email').attr('src', project.logo ? project.logo : '/build/global/img/projeto.svg');
 
 
 //         if (project.shopify_id) {
@@ -225,7 +225,7 @@ $(() => {
     //                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
     //                             <div class="card shadow card-edit" project=` + data.id + ` style='cursor:pointer;'>
     //                                 <a href="/apps/activecampaign/${data.id}" class="activecampaign-link">
-    //                                     <img class="card-img-top img-fluid w-full" src=` + data.project_photo + ` onerror="this.onerror=null;this.src='/modules/global/img/produto.png';" alt="` + data.project_name + `"/>
+    //                                     <img class="card-img-top img-fluid w-full" src=` + data.project_photo + ` onerror="this.onerror=null;this.src='/build/global/img/produto.png';" alt="` + data.project_name + `"/>
     //                                 </a>
     //                                 <div class="card-body">
     //                                     <div class='row'>

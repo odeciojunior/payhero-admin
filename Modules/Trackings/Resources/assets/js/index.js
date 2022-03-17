@@ -193,7 +193,7 @@ $(() => {
                     $("#export-excel").show()
 
                     if(response.data != 'api sales') {
-                        
+
                         $.each(response.data, function (i, project) {
                             $("#project-select").append($('<option>', {
                                 value: project.id,
@@ -327,7 +327,7 @@ $(() => {
             if ($('#noData').length > 0) {
                 return;
             }
-            $('#dataCharts').append('<img id="noData" src="/modules/global/img/sem-dados.svg" />')
+            $('#dataCharts').append('<img id="noData" src="/build/global/img/sem-dados.svg" />')
             $('#data-labels').append('<span id="warning-text" class="d-flex"> Nenhum rastreamento encontrado </span>')
             $('#myChart, .labels, .total-container').hide();
 
@@ -454,7 +454,7 @@ $(() => {
 
                             <td style="width: 2%;padding: 0px !important;">
                                 ${systemStatus[tracking.system_status_enum]}
-                                ${tracking.is_chargeback_recovered ? '<img class="orange-gradient ml-10" width="20px" src="/modules/global/img/svg/chargeback.svg" title="Chargeback recuperado">' : ''}
+                                ${tracking.is_chargeback_recovered ? '<img class="orange-gradient ml-10" width="20px" src="/build/global/img/svg/chargeback.svg" title="Chargeback recuperado">' : ''}
                             </td>
 
                             <td class="text-left mb-0" style="max-height:74px!important;">

@@ -1,6 +1,7 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
+    {{-- <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/wooCommerce/index.min.css') }}">
     <style>
         .o-arrow-right-1 {
             font-size: 30px;
@@ -59,10 +60,10 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
                                     <a class="dropdown-item"
-                                        href="https://sirius.cloudfox.net/modules/woocommerce/plugins/plugin_cloudfox.zip">Adiciona
+                                        href="https://sirius.cloudfox.net/build/layouts/woocommerce/plugins/plugin_cloudfox.zip">Adiciona
                                         ao carrinho de compras</a>
                                     <a class="dropdown-item"
-                                        href="https://sirius.cloudfox.net/modules/woocommerce/plugins/plugin_cloudfox_skip_to_checkout.zip">Envia
+                                        href="https://sirius.cloudfox.net/build/layouts/woocommerce/plugins/plugin_cloudfox_skip_to_checkout.zip">Envia
                                         direto pro checkout</a>
                                 </div>
                             </div>
@@ -105,7 +106,7 @@
             <style>
                 .bt-action {
                     cursor: pointer;
-                    background-image: url('/modules/apps/imgs/bt-action.svg');
+                    background-image: url('/build/layouts/apps/imgs/bt-action.svg');
                     padding-left: 46px;
                     background-repeat: no-repeat;
                     background-position: left;
@@ -114,7 +115,7 @@
 
                 .bt-action:hover,
                 .bt-action:focus {
-                    background-image: url('/modules/apps/imgs/bt-action-hover.svg');
+                    background-image: url('/build/layouts/apps/imgs/bt-action-hover.svg');
                     border: none;
 
 
@@ -397,7 +398,8 @@
     </div>
 
     @push('scripts')
-        <script src="{{ mix('modules/woocommerce/js/index.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/woocommerce/js/index.min.js') }}"></script> --}}
+        <script src="{{ mix('build/layouts/wooCommerce/index.min.js') }}"></script>
     @endpush
 
 @endsection

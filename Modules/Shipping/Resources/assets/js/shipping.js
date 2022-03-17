@@ -379,7 +379,7 @@ $(document).ready(function () {
                         <tr class='text-center'>
                             <td colspan='8' style='height: 70px; vertical-align: middle;'>
                                 <div class='d-flex justify-content-center align-items-center'>
-                                    <img src='/modules/global/img/empty-state-table.svg' style='margin-right: 60px;'>
+                                    <img src='/build/global/img/empty-state-table.svg' style='margin-right: 60px;'>
                                     <div class='text-left'>
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum frete configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro frete para poder

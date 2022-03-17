@@ -67,7 +67,7 @@ $(document).ready(function () {
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow card-edit" project=` + data.id + ` style='cursor:pointer;'>
                                     <a href="/apps/activecampaign/${data.id}" class="activecampaign-link">
-                                        <img class="card-img-top img-fluid w-full" src=` + data.project_photo + ` onerror="this.onerror=null;this.src='/modules/global/img/produto.png';" alt="` + data.project_name + `"/>
+                                        <img class="card-img-top img-fluid w-full" src=` + data.project_photo + ` onerror="this.onerror=null;this.src='/build/global/img/produto.png';" alt="` + data.project_name + `"/>
                                     </a>
                                     <div class="card-body">
                                         <div class='row'>

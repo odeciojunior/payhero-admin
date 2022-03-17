@@ -140,7 +140,7 @@ $(document).ready(function () {
                         <tr class='text-center'>
                             <td colspan='11' style='height: 70px;vertical-align: middle'>
                                 <div class='d-flex justify-content-center align-items-center'>
-                                    <img src='/modules/global/img/empty-state-table.svg' style='margin-right: 60px;'>
+                                    <img src='/build/global/img/empty-state-table.svg' style='margin-right: 60px;'>
                                     <div class='text-left'>
                                         <h1 style='font-size: 24px; font-weight: normal; line-height: 30px; margin: 0; color: #636363;'>Nenhum review configurado</h1>
                                         <p style='font-style: normal; font-weight: normal; font-size: 16px; line-height: 20px; color: #9A9A9A;'>Cadastre o seu primeiro review para poder
@@ -201,7 +201,7 @@ $(document).ready(function () {
         form.find('#name').val('');
         form.find('#description_review').val('');
         form.find('#review_stars').html('');
-        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.svg')
+        form.find('#previewimagereview').attr('src', '/build/global/img/projeto.svg')
         form.find('#review_apply_on_plans').val('').trigger('change');
 
         initStarsPlugin('#review_stars', 5, false);
@@ -260,7 +260,7 @@ $(document).ready(function () {
         form.find('#description_review').val('');
         form.find('#review_stars').html('');
         form.find('.review-id').val(reviewId);
-        form.find('#previewimagereview').attr('src', '/modules/global/img/projeto.svg')
+        form.find('#previewimagereview').attr('src', '/build/global/img/projeto.svg')
         previewImageReview.imgAreaSelect({remove: true});
 
         $.ajax({
@@ -278,7 +278,7 @@ $(document).ready(function () {
                 form.find('[name=name]').val(review.name);
                 form.find('[name=description]').val(review.description);
                 form.find('[name=active_flag]').val(review.active_flag);
-                form.find('#previewimagereview').attr('src', review.photo || '/modules/global/img/projeto.svg')
+                form.find('#previewimagereview').attr('src', review.photo || '/build/global/img/projeto.svg')
 
                 // Seleciona a opção do select de acordo com o que vem do banco
                 form.find('#review_apply_on_plans').html('');

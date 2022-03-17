@@ -291,7 +291,7 @@
                                         <b class="card-desc">Bem-vindo(a) ao Sirius!</b>
                                     </div>
                                     <img class="img-fluid"
-                                         src="{{ mix('modules/global/img/svg/sirius-stars-b.png') }}"
+                                         src="{{ mix('build/global/img/svg/sirius-stars-b.png') }}"
                                          height="60px" width="60px">
                                 </div>
                                 <div class="card-body d-flex flex-column justify-content-between">

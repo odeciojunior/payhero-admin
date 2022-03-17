@@ -281,7 +281,7 @@ $(document).ready(function () {
                                         start_date[1]
                                     +" </small>";
                         }
-                        
+
                         let end_date='';
                         if (value.end_date) {
                             end_date=value.end_date.split(/\s/g);//data final
@@ -294,7 +294,7 @@ $(document).ready(function () {
                         let is_security_reserve = "";
                         if (value.is_security_reserve) {
                             is_security_reserve = `<br><label data-toggle="tooltip" title="Reserva de Segurança">
-                                                       <img width="12px" src="/modules/global/img/money_lock.svg" alt="Reserva de Segurança">
+                                                       <img width="12px" src="/build/global/img/money_lock.svg" alt="Reserva de Segurança">
                                                    </label>`;
                         }
 
@@ -306,7 +306,7 @@ $(document).ready(function () {
                                     <td class="text-left font-size-14">${value.project}</td>
                                     <td class="text-left font-size-14">${value.client}</td>
                                     <td class="display-sm-none display-m-none display-lg-none">
-                                        <img src='/modules/global/img/cartoes/${value.brand}.png' alt="${value.brand}"  style='width: 45px'>
+                                        <img src='/build/global/img/cartoes/${value.brand}.png' alt="${value.brand}"  style='width: 45px'>
                                     </td>
                                     <td class="display-sm-none display-m-none display-lg-none text-left font-size-14">${start_date}</td>
                                     <td class="text-left font-size-14">${end_date}</td>

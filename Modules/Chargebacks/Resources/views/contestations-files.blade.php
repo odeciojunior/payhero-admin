@@ -108,7 +108,7 @@
                                 {{--                            <div class="col-sm-6 col-xl-3 text-right mt-20">--}}
                                 {{--                                <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">--}}
                                 {{--                                    <input type="file" id="test">--}}
-                                {{--                                    <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">--}}
+                                {{--                                    <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/build/global/img/svg/check-all.svg ">--}}
                                 {{--                                    Aplicar filtros--}}
                                 {{--                                </div>--}}
                                 {{--                            </div>--}}

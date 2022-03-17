@@ -215,13 +215,13 @@ button:active {
 }
 
 .filter-badge.daterange:not(.active)::after {
-    content: url('/modules/global/img/calendar.svg') !important;
+    content: url('/build/global/img/calendar.svg') !important;
     top: 9px;
     visibility: visible;
 }
 
 .filter-badge.daterange.focused::after {
-    content: url('/modules/global/img/calendar-blue.svg') !important;
+    content: url('/build/global/img/calendar-blue.svg') !important;
     visibility: visible;
 }
 
@@ -230,13 +230,13 @@ button:active {
 }
 
 .filter-badge.dropdown:not(.active)::after {
-    content: url('/modules/global/img/down.svg') !important;
+    content: url('/build/global/img/down.svg') !important;
     top: 16px;
     visibility: visible;
 }
 
 .filter-badge.dropdown.focused::after {
-    content: url('/modules/global/img/down-blue.svg') !important;
+    content: url('/build/global/img/down-blue.svg') !important;
 }
 
 .filter-badge-input {

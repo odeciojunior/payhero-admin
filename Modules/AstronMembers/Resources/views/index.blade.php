@@ -1,8 +1,8 @@
 @extends("layouts.master")
 @push('css')
-
-    <link rel="stylesheet" href="{{ mix('modules/convertax/css/index.min.css') }}">
-    <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
+    {{-- <link rel="stylesheet" href="{{ mix('modules/convertax/css/index.min.css') }}">
+    <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/astronmembers/index.min.css') }}">
      <style>
         .o-arrow-right-1 {
             font-size: 30px;
@@ -85,7 +85,7 @@
 
         <div id="no-integration-found" class='row justify-content-center' style="display:none !important;">
             <div class="content-error text-center">
-                <img src="{!! mix('modules/global/img/aplicativos.svg') !!}" width="250px">
+                <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
                 <p class="desc gray">Integre suas lojas com AstronMembers de forma totalmente automatizada!</p>
             </div>
@@ -120,6 +120,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ mix('modules/astronmembers/js/index.min.js') }}"></script>
+        {{-- <script src="{{ mix('modules/astronmembers/js/index.min.js') }}"></script> --}}
+        <script src="{{ mix('build/layouts/astronmembers/index.min.js') }}"></script>
     @endpush
 @endsection

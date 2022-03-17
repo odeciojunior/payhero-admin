@@ -4,10 +4,11 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
+        {{-- <link rel="stylesheet" href="{{ mix('modules/global/css/table.min.css') }}">
         <link rel="stylesheet" href="{!! mix('modules/reports/css/coupons.min.css') !!}">
         <link rel="stylesheet" href="{!! mix('modules/reports/css/reports.min.css') !!}">
-        <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}">
+        <link rel="stylesheet" href="{!! mix('modules/global/css/empty.min.css') !!}"> --}}
+        <link rel="stylesheet" href="{!! mix('build/layouts/reports/coupons.min.css') !!}">
     @endpush
 
         <div class="page">
@@ -54,7 +55,7 @@
                                         </div>
                                         <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                             <button id="bt_filtro" class="btn btn-primary w-full" style="padding: 14px 15px;margin-top: 27px !important;">
-                                                <img style="height: 12px; margin-right: 4px" src=" {{ mix('modules/global/img/svg/check-all.svg') }} ">Aplicar filtros
+                                                <img style="height: 12px; margin-right: 4px" src=" {{ mix('build/global/img/svg/check-all.svg') }} ">Aplicar filtros
                                             </button>
                                         </div>
                                     </div>
@@ -68,13 +69,13 @@
                                                 data-target="#bt_collapse"
                                                 aria-expanded="false"
                                                 aria-controls="bt_collapse">
-                                                <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('modules/global/img/svg/filter-2-line.svg') }} "/>
+                                                <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "/>
                                                 <span id="text-filtro">Filtros avançados</span>
                                             </div>
                                         </div> --}}
                                         {{-- <div class="col-6 col-xl-3 mt-20 offset-xl-9">
                                             <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                                <img style="height: 12px; margin-right: 4px" src=" {{ mix('modules/global/img/svg/check-all.svg') }} "/>
+                                                <img style="height: 12px; margin-right: 4px" src=" {{ mix('build/global/img/svg/check-all.svg') }} "/>
                                                 Aplicar filtros
                                             </div>
                                         </div> --}}
@@ -95,7 +96,7 @@
                                             <td class="table-title">Quantidade utilizada</td>
                                         </tr>
                                         </thead>
-                                        <tbody id="body-table-coupons"  img-empty="{!! mix('modules/global/img/geral-1.svg')!!}">
+                                        <tbody id="body-table-coupons"  img-empty="{!! mix('build/global/img/geral-1.svg')!!}">
                                         {{-- js carrega... --}}
                                         </tbody>
                                     </table>
@@ -119,7 +120,8 @@
 @endsection
 
 @push('scripts')
-    <script src='{{ mix('modules/reports/js/report-coupons.min.js') }}'></script>
+    {{-- <script src='{{ mix('modules/reports/js/report-coupons.min.js') }}'></script>
     <script src="{{ mix('modules/global/js-extra/moment.min.js') }}"></script>
-    <script src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script>
+    <script src='{{ mix('modules/global/js/daterangepicker.min.js') }}'></script> --}}
+    <script src='{{ mix('build/layouts/reports/coupons.min.js') }}'></script>
 @endpush
