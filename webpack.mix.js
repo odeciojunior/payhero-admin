@@ -173,6 +173,7 @@ mix.styles([
     'resources/modules/global/css/switch.css',
     'resources/modules/global/css/new-dashboard.css',
     'Modules/Chargebacks/Resources/assets/css/contestations-index.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
     'resources/cdn/select2.min.css'
 ],'public/build/layouts/chargebacks/contestations-index.min.css');
 mix.babel([
