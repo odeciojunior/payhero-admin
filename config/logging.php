@@ -72,7 +72,7 @@ return [
 
         'database' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path('logs/database.log'),
             'level' => 'debug',
         ]
     ],
