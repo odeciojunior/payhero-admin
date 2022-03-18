@@ -69,6 +69,12 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'database' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/laravel.log'),
+            'level' => 'debug',
+        ]
     ],
 
 ];

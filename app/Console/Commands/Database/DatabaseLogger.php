@@ -26,7 +26,7 @@ class DatabaseLogger extends Command
             foreach ($results as $result) {
                 if (!is_null($result->Info) && $result->Info != self::STATEMENT) {
                     $data = collect($result)->only($headers);
-                    Log::debug("DATABASE\n". json_encode($data, JSON_PRETTY_PRINT));
+                    Log::channel('database')->debug(json_encode($data, JSON_PRETTY_PRINT));
                 }
             }
         }
