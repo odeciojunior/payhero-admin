@@ -53,7 +53,7 @@ class CheckAdjustmentGateway extends Command
                 ->whereHas('gatewayCompanyCredential')
                 //->onlyTrashed()
                 ->withTrashed()
-                ->where('id', '>=', 5364)
+                ->where('id', '>=', 5482)
                 ->where('id', '<=', 5500)
             ;
 
