@@ -6,13 +6,9 @@ use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\Gateway;
-use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Events\NewChargebackEvent;
-use Modules\Core\Services\AdjustmentRequest;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\GetnetBackOfficeService;
 use Modules\Core\Services\SaleService;
 
 class CreateChargebackDebitListener implements ShouldQueue
@@ -29,7 +25,7 @@ class CreateChargebackDebitListener implements ShouldQueue
         try{
 
             $sale = $event->sale;
-            
+
             $saleService = new SaleService();
             $cashbackValue = !empty($sale->cashback) ? $sale->cashback->value:0;
             $saleTax = $saleService->getSaleTax($sale,$cashbackValue);
@@ -50,7 +46,7 @@ class CreateChargebackDebitListener implements ShouldQueue
                 $company = $transaction->company;
 
                 $company->update([
-                    'asaas_balance' => $company->asaas_balance -= $chargebackValue
+                    'safe2pay_balance' => $company->safe2pay_balance -= $chargebackValue
                 ]);
 
                 Transfer::create(
@@ -62,7 +58,7 @@ class CreateChargebackDebitListener implements ShouldQueue
                         'type' => 'out',
                         'type_enum' => Transfer::TYPE_OUT,
                         'reason' => 'chargedback',
-                        'gateway_id' => foxutils()->isProduction() ? Gateway::ASAAS_PRODUCTION_ID : Gateway::ASAAS_SANDBOX_ID,
+                        'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID,
                     ]
                 );
 
@@ -73,59 +69,6 @@ class CreateChargebackDebitListener implements ShouldQueue
         }
 
     }
-
-
-    // public function handle(NewChargebackEvent $event)    GETNET
-    // {
-    //     $sale = $event->sale;
-    //     $cloudfoxTransaction = $sale->transactions()->whereNull('company_id')->first();
-    //     $inviteTransaction = $sale->transactions()->whereNotNull('invitation_id')->first();
-    //     $saleTax = $this->getSaleTax($cloudfoxTransaction, $sale);
-
-    //     foreach ($sale->transactions as $transaction) {
-    //         if (empty($transaction->company)) {
-    //             continue;
-    //         }
-
-    //         $chargebackValue = $transaction->value;
-    //         if ($transaction->type == Transaction::TYPE_PRODUCER) {
-    //             if (!empty($transaction->sale->automatic_discount)) {
-    //                 $chargebackValue -= $transaction->sale->automatic_discount;
-    //             }
-    //             $chargebackValue += $saleTax;
-    //             if (!empty($inviteTransaction)) {
-    //                 $chargebackValue += $inviteTransaction->value;
-    //             }
-    //         }
-
-    //         $company = $transaction->company;
-    //         $getnetKeys = $this->getnetKeys();
-    //         $merchantId = $getnetKeys['merchantId'];
-    //         $sellerId = $getnetKeys['sellerId'];
-
-    //         $hasPendingDebt = PendingDebt::where('sale_id', $sale->id)
-    //             ->where('company_id', $company->id)
-    //             ->count();
-
-    //         if ($hasPendingDebt >= 1) {
-    //             $e = new Exception('Já existe debito pendente para esta venda: ' . $sale->id);
-    //             report($e);
-    //         } else {
-    //             $adjustment = new AdjustmentRequest();
-    //             $adjustment->setAmount($chargebackValue)
-    //                 ->setSaleId($sale->id)
-    //                 ->setCompanyId($company->id)
-    //                 ->setDescription('Chargeback da venda #' . hashids_encode($sale->id, 'sale_id'))
-    //                 ->setMerchantId($merchantId)
-    //                 ->setSellerId($sellerId)
-    //                 ->setSubSellerId(CompanyService::getSubsellerId($company))
-    //                 ->setTypeAdjustment(AdjustmentRequest::DEBIT_ADJUSTMENT);
-
-    //             (new GetnetBackOfficeService())->requestAdjustment($adjustment);
-    //         }
-    //     }
-    // }
-
 
     private function getnetKeys(): array
     {
