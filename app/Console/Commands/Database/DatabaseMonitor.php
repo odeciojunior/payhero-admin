@@ -14,7 +14,7 @@ class DatabaseMonitor extends Command
     {
         $cursor = new Cursor($this->output);
         while (true) {
-            $results = DB::select('show full processlist');
+            $results = DB::select('show processlist');
 
             $headers = ['User', 'Host', 'Time', 'Info'];
             $data = [];
