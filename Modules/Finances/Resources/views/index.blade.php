@@ -63,7 +63,7 @@
 
 
         @push('scripts')
-            <script src="{{ mix('build/layouts/finances/index.min.css') }}"></script>
+            <script src="{{ mix('build/layouts/finances/index.min.js') }}"></script>
         @endpush
     </div>
 

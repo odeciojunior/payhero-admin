@@ -1,5 +1,3 @@
-const { mix } = require("laravel-mix");
-
 $(window).on("load", function() {
 
     if(window.gatewayCode == 'w7YL9jZD6gp4qmv') {
