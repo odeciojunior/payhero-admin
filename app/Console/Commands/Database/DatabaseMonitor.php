@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Database;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -14,12 +14,12 @@ class DatabaseMonitor extends Command
     {
         $cursor = new Cursor($this->output);
         while (true) {
-            $results = DB::select('show processlist');
+            $results = DB::select('show full processlist');
 
             $headers = ['User', 'Host', 'Time', 'Info'];
             $data = [];
             foreach ($results as $result) {
-                if(!is_null($result->Info)) {
+                if (!is_null($result->Info)) {
                     $data[] = collect($result)
                         ->only($headers)
                         ->values()
