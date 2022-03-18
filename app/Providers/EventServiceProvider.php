@@ -50,6 +50,7 @@ use Modules\Core\Listeners\DomainApprovedNotifyUserListener;
 use Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener;
 use Modules\Core\Listeners\EvaluateAffiliateRequestSendEmailListener;
 use Modules\Core\Listeners\HotBilletPixExpiredListener;
+use Modules\Core\Listeners\NotificacoesInteligentesPixExpiredListener;
 use Modules\Core\Listeners\NotifyAntifraudChargebackListener;
 use Modules\Core\Listeners\NotifyExtractExportedListener;
 use Modules\Core\Listeners\NotifyFinancesExportedListener;
@@ -191,6 +192,7 @@ class EventServiceProvider extends ServiceProvider
         PixExpiredEvent::class => [
             PixExpiredSendEmailListener::class,
             HotBilletPixExpiredListener::class,
+            NotificacoesInteligentesPixExpiredListener::class,
             SakPixExpiredListener::class,
             PixExpiredUnicodropListener::class,
             IntegrationOrderCancelListener::class,
