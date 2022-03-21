@@ -77,13 +77,13 @@
 	cursor: pointer;
 }
 .filter-badge.daterange:not(.active)::after {
-    content: url('/modules/global/img/calendar.svg') !important;
+    content: url('/build/global/img/calendar.svg') !important;
     top: 9px;
     visibility: visible;
 }
 
 .filter-badge.daterange.focused::after {
-    content: url('/modules/global/img/calendar-blue.svg') !important;
+    content: url('/build/global/img/calendar-blue.svg') !important;
     visibility: visible;
 }
 .filter-badge {

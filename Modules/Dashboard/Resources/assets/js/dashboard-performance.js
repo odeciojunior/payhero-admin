@@ -4,7 +4,7 @@ $(document).ready(function () {
         1: {
             name: 'Aventureiro',
             description: 'Pronto para começar?',
-            icon: '/modules/global/adminremark/assets/images/nivel-1.png',
+            icon: '/build/global/adminremark/assets/images/nivel-1.png',
             storytelling: 'Nossa jornada está apenas começando. Você já pode começar a olhar o céu noturno e se imaginar navegando na imensidão do desconhecido, é hora de mirar as estrelas e se preparar para a maior aventura de sua vida empreendedora.',
             billedStart: '0',
             messageStart: '0K',
@@ -14,7 +14,7 @@ $(document).ready(function () {
         2: {
             name: 'Viajante Espacial',
             description: 'Nível 2',
-            icon: '/modules/global/adminremark/assets/images/nivel-2.png',
+            icon: '/build/global/adminremark/assets/images/nivel-2.png',
             storytelling: 'Nosso foguete está saindo da Terra, este momento de fortes emoções foi experimentado por poucos! Quem diria, de tanto olhar para o céu estrelado, hoje você está navegando por ele, rumo à nossa primeira parada: a lua!',
             billedStart: '100000',
             messageStart: '100K',
@@ -24,7 +24,7 @@ $(document).ready(function () {
         3: {
             name: 'Conquistador',
             description: 'Nível 3',
-            icon: '/modules/global/adminremark/assets/images/nivel-3.png',
+            icon: '/build/global/adminremark/assets/images/nivel-3.png',
             storytelling: 'Nível 3? Você está avançando bem, daqui da lua você já consegue enxergar que a Terra é pequena demais para você. Aproveite a vista, faça pequenos reparos porque ainda temos bastante aventura pela frente e a próxima parada é Marte!',
             billedStart: '1000000',
             messageStart: '1M',
@@ -34,7 +34,7 @@ $(document).ready(function () {
         4: {
             name: 'Colonizador',
             description: 'Nível 4',
-            icon: '/modules/global/adminremark/assets/images/nivel-4.png',
+            icon: '/build/global/adminremark/assets/images/nivel-4.png',
             storytelling: 'Elon Musk ficaria orgulhoso, pisar em Marte é para poucos, seja na vida real ou até mesmo no nosso game. 10 milhões de faturamento te coloca na mais alta patente, com os mais destemidos empreendedores da galáxia!',
             billedStart: '10000000',
             messageStart: '10M',
@@ -44,7 +44,7 @@ $(document).ready(function () {
         5: {
             name: 'Capitão Galáctico',
             description: 'Nível 5',
-            icon: '/modules/global/adminremark/assets/images/nivel-5.png',
+            icon: '/build/global/adminremark/assets/images/nivel-5.png',
             storytelling: 'Existe vida fora da Terra e agora você é capaz de provar. Apesar de estarmos bem longe, nossa viagem deve continuar, mas se fosse para ficar... os nativos ficariam orgulhosos com sua história, de onde você veio e para onde está indo!',
             billedStart: '50000000',
             messageStart: '50M',
@@ -54,7 +54,7 @@ $(document).ready(function () {
         6: {
             name: 'Sirius Major',
             description: 'Nível 6',
-            icon: '/modules/global/adminremark/assets/images/nivel-6.png',
+            icon: '/build/global/adminremark/assets/images/nivel-6.png',
             storytelling: 'Parabéns! Você atingiu os confins do universo e a expressiva marca de 100M de faturamento, um verdadeiro explorador do espaço e dos negócios. Você acaba de chegar na Canis Major e conhecer de perto a Sirius, a estrela mais brilhante!',
             billedStart: '100000000',
             messageStart: '100M',
@@ -295,7 +295,7 @@ $(document).ready(function () {
                     <div class="benefits mt-10 d-flex flex-column flex-nowrap justify-content-start ">
                         <span class="mb-10 title-performance">Benefícios atuais</span>
                         <div id="benefits-active-container" class="benefits-empty">
-                            <img src="/modules/global/adminremark/assets/images/empty-benefits.png" alt="Não há benefício">
+                            <img src="/build/global/adminremark/assets/images/empty-benefits.png" alt="Não há benefício">
                             <div>
                                 <strong class="benefits-name">Você ainda não tem nenhum benefício ativo em sua conta.</strong>
 <!--                                <p class="benefits-description">-->

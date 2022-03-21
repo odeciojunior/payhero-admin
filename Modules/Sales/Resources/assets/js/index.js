@@ -390,7 +390,8 @@ $(document).ready(function () {
     }
 
     // Obtem lista de vendas
-    atualizar = function (link = null) {
+    //atualizar = function (link = null) {
+    function atualizar(link = null) {
         currentPage = link;
 
         let updateResume = true;

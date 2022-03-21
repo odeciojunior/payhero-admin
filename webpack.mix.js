@@ -1123,6 +1123,10 @@ mix.copy(
  * assets genericos
  */
 
+ mix.copy(
+    'resources/modules/global/adminremark/assets/images',
+'public/build/global/adminremark/assets/images');
+
 // global / css / font
  mix.copy(
      'resources/modules/global/css/font',
