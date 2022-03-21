@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
     "/build/layouts/activecampaign/index.min.css": "/build/layouts/activecampaign/index.min.css?id=af8878ab32abe2c0abf3af54f070552a",
     "/build/layouts/activecampaign/index.min.js": "/build/layouts/activecampaign/index.min.js?id=aa56c970895e353db30cc2cfdd1978a9",
     "/build/layouts/activecampaign/show.min.css": "/build/layouts/activecampaign/show.min.css?id=6e0ef65eedd2569bbdbe1db3a29a52dd",
@@ -590,4 +591,8 @@
     "/build/global/img/svg/vitrine.png": "/build/global/img/svg/vitrine.png?id=599899880b9b4167a5e08cbefcfdc820",
     "/build/global/img/svg/vitrine.svg": "/build/global/img/svg/vitrine.svg?id=7c8778ecc27cd7bcdcd8eecda1844f4c",
     "/build/global/img/svg/whatsapp.svg": "/build/global/img/svg/whatsapp.svg?id=97764c009265fbf698c85400a55016eb"
+=======
+    "/modules/astronmembers/css/index.css": "/modules/astronmembers/css/index.css?id=35ba55107cb922959fcc",
+    "/modules/astronmembers/js/index.js": "/modules/astronmembers/js/index.js?id=fcde8f1777dbd579c594"
+>>>>>>> Stashed changes
 }
