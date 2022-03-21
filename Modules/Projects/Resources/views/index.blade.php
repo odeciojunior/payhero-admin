@@ -57,4 +57,3 @@
         <script src="{{ mix('build/layouts/projects/index.min.js') }}"></script>
     @endpush
 @endsection
-
