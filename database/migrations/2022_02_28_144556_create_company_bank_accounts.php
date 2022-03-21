@@ -29,7 +29,7 @@ class CreateCompanyBankAccounts extends Migration
             $table->string('account',10)->nullable()->default(null);
             $table->string('account_digit',3)->nullable()->default(null);
             $table->tinyInteger('is_default')->default(0);
-            $table->enum('status',['PENDING','VERIFIED','REFUSED']);
+            $table->enum('status',['PENDING','VALIDATING','VERIFIED','REFUSED']);
             $table->string('gateway_transaction_id')->nullable()->default(null);;            
             $table->timestamps();
             $table->softDeletes();

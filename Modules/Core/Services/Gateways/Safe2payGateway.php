@@ -80,6 +80,16 @@ class Safe2payGateway extends GatewayAbstract
         return json_decode($this->requestHttp($options));
     }
 
+    public function listChargebacks($queryString){
+        $options = new GatewayCurlOptions([     
+            'baseUrl'=>$this->baseUrlApi,       
+            'endpoint' => 'listChargebacks',
+            'queryString'=>$queryString
+        ]);
+
+        return json_decode($this->requestHttp($options));
+    }
+
     public function loadEndpoints(){
         $this->endpoints = [
             "getTransaction" => [
@@ -93,7 +103,11 @@ class Safe2payGateway extends GatewayAbstract
             "listTransactions" => [
                 "route" => "v2/Transaction/List",
                 "method" => "GET"
-            ],                        
+            ],  
+            "listChargebacks"=> [
+                "route" => "v2/Chargeback/List",
+                "method" => "GET"
+            ], 
         ];
     }
 
