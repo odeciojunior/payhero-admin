@@ -261,7 +261,7 @@ class AsaasService implements Statement
                                         ->where('company_id', $this->company->id)
                                         ->orderBy('id', 'desc')->first();
 
-        if(empty($lastTransaction)) {
+        if(empty($lastTransaction) && $this->company->asaas_balance  == 0) {
             return [];
         }
         $pendingBalance = $this->getPendingBalance();
