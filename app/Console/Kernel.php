@@ -39,6 +39,8 @@ class Kernel extends ConsoleKernel
 
         setlocale(LC_ALL, 'pt_BR');
 
+        $schedule->command('database-logger')->everyMinute()->withoutOverlapping();
+
         $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
@@ -89,6 +91,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:update-user-level')->dailyAt('07:00');
         $schedule->command('updateTransactionsReleaseDate')->dailyAt('07:15');
         $schedule->command('update:currencyquotation')->dailyAt('07:20');
+        $schedule->command('verify:tickets') ->dailyAt('07:30');
+        $schedule->command('notify:mediation')->dailyAt('08:30');
 
         $schedule->command('verify:boletowaitingpayment')->dailyAt('09:30');
         $schedule->command('verify:boletoexpiring')->dailyAt('11:00');
