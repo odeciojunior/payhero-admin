@@ -75,7 +75,7 @@ class NotificacoesInteligentesService
             'cms_aff' => '',
             'aff' => '',
             'aff_name' => '',
-            'pix_qrcode' => $pixCharge->qrcode,
+            'pix_qrcode' => '',//$pixCharge->qrcode,
             'transaction_error_msg' => '',
             'paid_at' => '',
             'payment_method' => 'pix',
