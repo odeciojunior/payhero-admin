@@ -208,7 +208,7 @@ $(function () {
                                 $(".list-products").append(
                                     $("<li class='" + ( (i > 3 && i < 8) ? 'line': '' ) + "'>"+
                                         "<div class='box-list-products'>"+
-                                        "<figure data-container='body' data-viewport='.container' data-placement='top' data-toggle='tooltip' title='" + product.name +"'><img src='"+ product.image +"' width='24px' height='24px' /></figure>"+
+                                        "<figure data-container='body' data-viewport='.container' data-placement='top' data-toggle='tooltip' title='" + product.name +"'><img class='photo' src='"+ product.image +"' width='24px' height='24px' /></figure>"+
                                         "<div class='bars " +product.color+ "' style='width:"+ product.percentage +"'>"+
                                         "<span>" + product.amount + "</span></div></div></li>"
                                     )
@@ -217,6 +217,10 @@ $(function () {
                                 $('#card-products .value-price').addClass('invisible');
                                 $('[data-toggle="tooltip"]').tooltip({
                                     container: '.list-products'
+                                });
+
+                                $('.photo').on('error', function() {
+                                    $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
                                 });
                             }
                         } else {
