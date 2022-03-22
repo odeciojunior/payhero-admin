@@ -992,10 +992,11 @@ class ShopifyService
             if ($products->count()) {
                 $productIds = $products->pluck('id');
 
-                $plans = Plan::with(['productsPlans', 'plansSales', 'affiliateLinks'])
-                    ->whereHas('productsPlans', function ($query) use ($productIds) {
-                        $query->whereIn('product_id', $productIds);
-                    })->get();
+                $plans = Plan::selectRaw('plans.*')->with('productsPlans')->with('plansSales')->with('affiliateLinks')
+                                ->join('products_plans', 'products_plans.plan_id', '=', 'plans.id')
+                                ->whereIn('products_plans.product_id', $productIds)
+                                ->get();
+
                 $arrayDelete = [];
                 foreach ($plans as $plan) {
                     if (count($plan->plansSales) == 0) {
