@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
 
         setlocale(LC_ALL, 'pt_BR');
 
-        $schedule->command('database-logger')->everyMinute()->withoutOverlapping();
+        $schedule->command('database:logger')->everyMinute()->withoutOverlapping();
 
         $schedule->command('change:pix-to-canceled')->everyMinute()->withoutOverlapping();
 
