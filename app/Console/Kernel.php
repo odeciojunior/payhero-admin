@@ -101,6 +101,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('verify:trackingWithoutInfo')->dailyAt('18:00');
         $schedule->command('safe2pay:manual-anticipation')->dailyAt('18:40');
+        
+        $schedule->command('safe2pay:update-reason-sale-contestations')->dailyAt('19:30');
+        
         $schedule->command('antifraud:backfill-asaas-chargebacks')->dailyAt('20:00');
         $schedule->command('getnet:check-withdrawals-released')->dailyAt('20:30');
         $schedule->command('check:menv-tracking')->dailyAt('20:45');
