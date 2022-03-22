@@ -49,6 +49,10 @@
         <div class="page-content container" style="padding-top: 0">
             <div id="data-table-projects" class="row" style="margin-top: 0">
             </div>
+            <div class="font-size-14">
+                Você pode reordenar suas lojas utilizando o arrastar e soltar
+                <img src="build/layouts/projects/img/dragItem.svg" class="ml-5"/>
+            </div>
         </div>
 
     </div>

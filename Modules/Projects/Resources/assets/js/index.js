@@ -61,14 +61,14 @@ $(function () {
                                         </div>` : ""
                                     }
 
-                                    <img class="card-img-top" onerror="this.src = '/modules/global/img/produto.svg'" src="${project.photo ? project.photo : "/modules/global/img/produto.svg"}" alt="${project.name}">
+                                    <img class="card-img-top" onerror="this.src = 'build/global/img/produto.svg'" src="${project.photo ? project.photo : "build/global/img/produto.svg"}" alt="${project.name}">
                                     
                                     <div class="card-body">
-                                        <h5 class="card-title">${project.name}</h5>
+                                        <h5 class="card-title text-truncate">${project.name}</h5>
 
                                         <div class="d-flex align-item-center justify-content-between">
                                             <p class="card-text sm mb-0">Criado em ${project.created_at}</p>
-                                            <img src="modules/global/img/projects/dragItem.svg" />
+                                            <img src="build/layouts/projects/img/dragItem.svg" />
                                         </div>
 
                                         ${linkProject}
@@ -144,14 +144,13 @@ $(function () {
 
         },
         start: function (event, ui) {
-            ui.helper.css('margin-top', $("body").scrollTop());
+            ui.helper.css({
+                'margin-top':$("body").scrollTop(),
+                top: '0px'
+            });
         },
         beforeStop: function (event, ui){ 
             ui.helper.css('margin-top',0); 
-        },
-        sort: function(event, ui) {
-            var top = event.clientY - sortableElement.offset().top  -  $("body").scrollTop() - 10;
-            ui.helper.css({'top' : top + 'px'});
         }
     });
 

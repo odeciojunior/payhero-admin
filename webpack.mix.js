@@ -688,10 +688,12 @@ mix.babel([
  * Modules/Projects/Resources/views/index.blade.php
  */
 mix.styles([
+    'resources/cdn/jquery-ui.min.css',
     'Modules/Projects/Resources/assets/css/index.css',
     'resources/modules/global/css/switch.css'
 ], 'public/build/layouts/projects/index.min.css');
 mix.babel([
+    'resources/cdn/jquery-ui.min.js',
     'Modules/Projects/Resources/assets/js/index.js'
 ], 'public/build/layouts/projects/index.min.js');
 
