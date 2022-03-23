@@ -68,7 +68,7 @@ $(function () {
 
                                         <div class="d-flex align-item-center justify-content-between">
                                             <p class="card-text sm mb-0">Criado em ${project.created_at}</p>
-                                            <img src="build/layouts/projects/img/dragItem.svg" />
+                                            <img src="build/layouts/projects/img/dragItem.svg" class="drag-drop-icon p-5"/>
                                         </div>
 
                                         ${linkProject}
@@ -180,5 +180,6 @@ $(function () {
             },
         });
     });
+
     index();
 });
