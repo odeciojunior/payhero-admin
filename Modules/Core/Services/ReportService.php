@@ -1170,7 +1170,6 @@ class ReportService
             $transactionModel = new Transaction();
 
             $userId = auth()->user()->account_owner_id;
-
             if (empty($filters["company"])) {
                 $userCompanies = $companyModel->where('user_id', $userId)
                     ->get()
@@ -1193,40 +1192,16 @@ class ReportService
             ->whereNull('invitation_id');
 
             if (!empty($filters["project"])) {
-                $projectIds =[];
-                $projects = explode(',', $filters["project"]);
+                $projectId = current(Hashids::decode($filters["project"]));
 
-                foreach($projects as $project){
-                    array_push($projectIds, current(Hashids::decode($project)));
-                }
-
-                //$projectId = current(Hashids::decode($filters["project"]));
-                $transactions->whereHas(
-                    'sale',
-                    function ($querySale) use ($projectIds) {
-                        $querySale->whereIn('project_id', $projectIds);
-                    }
-                );
+                $transactions->where('sales.project_id', $projectId);
             }
 
             $status = [1, 2, 4, 7, 8, 12, 20, 21, 22, 24];
-            $transactions->whereHas(
-                'sale',
-                function ($querySale) use ($status) {
-                    $querySale->whereIn('status', $status);
-                }
-            );
+            $transactions->whereIn('sales.status', $status);
 
-            //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-
-            $transactions
-            ->whereHas(
-                'sale',
-                function ($querySale) use ($dateRange) {
-                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-                }
-            );
+            $transactions->whereBetween('sales.start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
 
             $transactions
             ->selectRaw('transactions.*, sales.start_date')
@@ -1389,14 +1364,13 @@ class ReportService
 
         $total = number_format(array_sum($comissionData), 2, ',', '.');
 
-        //$percentage = round(($comissionData[count($comissionData) - 1] - $comissionData[0]) / $comissionData[0], 1, PHP_ROUND_HALF_UP);
-
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
-            'total' => $total
+            'total' => $total,
+            'variation' => ''
         ];
     }
 
@@ -1451,7 +1425,7 @@ class ReportService
                 'values' => $comissionData
             ],
             'total' => $total,
-            'percentage' => ''
+            'variation' => ''
         ];
     }
 
@@ -1512,7 +1486,8 @@ class ReportService
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
-            'total' => $total
+            'total' => $total,
+            'variation' => ''
         ];
     }
 
@@ -1572,7 +1547,8 @@ class ReportService
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
-            'total' => $total
+            'total' => $total,
+            'variation' => ''
         ];
     }
 
@@ -1632,7 +1608,8 @@ class ReportService
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
-            'total' => $total
+            'total' => $total,
+            'variation' => ''
         ];
     }
 
@@ -1684,7 +1661,8 @@ class ReportService
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
-            'total' => $total
+            'total' => $total,
+            'variation' => ''
         ];
     }
 
@@ -1792,14 +1770,370 @@ class ReportService
        try {
             $transactions = $this->getSalesQueryBuilder($filters);
 
-            $resume = $transactions->without(['sale'])
-            ->select(DB::raw("count(sales.id) as total_sales"))
-            ->first();
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $date['startDate'] = $dateRange[0];
+            $date['endDate'] = $dateRange[1];
 
-            return $resume->total_sales;
+            if ($date['startDate'] == $date['endDate']) {
+                return $this->getResumeSalesByHours($transactions, $filters);
+            } elseif ($date['startDate'] != $date['endDate']) {
+                $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
+                $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
+                $diffInDays = $endDate->diffInDays($startDate);
+
+                if ($diffInDays <= 20) {
+                    dd('days');
+                    return $this->getResumeSalesByDays($transactions, $filters);
+                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                    dd('twenty days');
+                    return $this->getResumeSalesByTwentyDays($transactions, $filters);
+                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                    return $this->getResumeSalesByFortyDays($transactions, $filters);
+                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                    return $this->getResumeSalesByWeeks($transactions, $filters);
+                } elseif ($diffInDays > 140) {
+                    return $this->getResumeSalesByMonths($transactions, $filters);
+                }
+            }
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
+    }
+
+    public function getResumeSalesByHours($transactions, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        if (Carbon::parse($dateRange[0])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
+            $labelList   = [];
+            $currentHour = date('H');
+            $startHour   = 0;
+
+            while ($startHour <= $currentHour) {
+                array_push($labelList, $startHour . 'h');
+                $startHour++;
+            }
+        } else {
+            $labelList = [
+                '0h', '1h', '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', '10h', '11h',
+                '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h',
+            ];
+        }
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sales.id as sale, HOUR(sales.start_date) as hour'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                if ($r->hour == preg_replace("/[^0-9]/", "", $label)) {
+                    $saleDataValue += 1;
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = array_sum($saleData);
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumeSalesByDays($transactions, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $labelList    = [];
+        $dataFormated = Carbon::parse($dateRange[0]);
+        $endDate      = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d-m'));
+            $dataFormated = $dataFormated->addDays(1);
+        }
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                if (Carbon::parse($r->date)->format('d-m') == $label) {
+                    $saleDataValue += 1;
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = array_sum($saleData);
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumeSalesByTwentyDays($transactions, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList    = [];
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(1);
+        $endDate      = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(2);
+            if ($dataFormated->diffInDays($endDate) < 2 && $dataFormated->diffInDays($endDate) > 0) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                if ((Carbon::parse($r->date)->subDays(1)->format('d/m') == $label) || (Carbon::parse($r->date)->format('d/m') == $label)) {
+                    $saleDataValue += 1;
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = array_sum($saleData);
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumeSalesByFortyDays($transactions, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(2);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(3);
+            if ($dataFormated->diffInDays($endDate) < 3) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                for ($x = 1; $x <= 3; $x++) {
+                    if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
+                        $saleDataValue += 1;
+                    }
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = array_sum($saleData);
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumeSalesByWeeks($transactions, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(6);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(7);
+            if ($dataFormated->diffInDays($endDate) < 7) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                for ($x = 1; $x <= 6; $x++) {
+                    if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
+                        $saleDataValue += 1;
+                    }
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = array_sum($saleData);
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumeSalesByMonths($transactions, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0]);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('m/y'));
+            $dataFormated = $dataFormated->addMonths(1);
+        }
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                if (Carbon::parse($r->date)->format('m/y') == $label) {
+                    $saleDataValue += 1;
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = array_sum($saleData);
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
     }
 
     public function getResumeTypePayments($filters)
