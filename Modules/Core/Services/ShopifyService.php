@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Plan;
@@ -992,10 +993,12 @@ class ShopifyService
             if ($products->count()) {
                 $productIds = $products->pluck('id');
 
-                $plans = Plan::with(['productsPlans', 'plansSales', 'affiliateLinks'])
-                    ->whereHas('productsPlans', function ($query) use ($productIds) {
-                        $query->whereIn('product_id', $productIds);
-                    })->get();
+                $plans = Plan::select(DB::raw('plans.*'))
+                    ->with(['productsPlans', 'plansSales', 'affiliateLinks'])
+                    ->join('products_plans', 'products_plans.plan_id', '=', 'plans.id')
+                    ->whereIn('products_plans.product_id', $productIds)
+                    ->get();
+
                 $arrayDelete = [];
                 foreach ($plans as $plan) {
                     if (count($plan->plansSales) == 0) {
@@ -1015,8 +1018,9 @@ class ShopifyService
                         }
                     }
                 }
-                Product::whereIn('id', collect($arrayDelete))
-                    ->doesntHave('productsPlans')
+                Product::whereIn('products.id', collect($arrayDelete))
+                    ->leftJoin('products_plans as pp', 'pp.product_id', '=', 'products.id')
+                    ->whereNull('pp.id')
                     ->delete();
             }
 

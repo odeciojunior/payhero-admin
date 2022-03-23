@@ -1,9 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"/>
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/projects/css/style.css?v=08') }}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/projects/projectaffiliate.min.css') }}">
 @endpush
 
 @section('content')
@@ -77,7 +75,7 @@
                             <a id="tab_settings_affiliate" class="nav-link"
                                data-toggle="tab" href="#tab_settings_affiliate-panel"
                                aria-controls="tab_settings_affiliate" role="tab">
-                                <img height="15" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
+                                <img height="15" src="{{ mix('build/global/img/svg/settings.svg') }}"/>
                             </a>
                         </li>
                     </ul>
@@ -105,10 +103,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/pixels/js/pixelsaffiliate.js?v='. uniqid())}}"></script>
-        <script src="{{asset('modules/projects/js/projectaffiliate.js?v='. uniqid())}}"></script>
-        <script src="{{asset('modules/affiliates/js/links.js?v='. uniqid())}}"></script>
-        <script src="{{asset('modules/global/js/select2.min.js')}}"></script>
+        <script src="{{ mix('build/layouts/projects/projectaffiliate.min.js') }}"></script>
     @endpush
 @endsection
 

@@ -11,7 +11,7 @@
                 <td style="min-width: 120px" class="table-title">Valor</td>
             </tr>
         </thead>
-        <tbody id="withdrawals-table-data" class="custom-t-body" img-empty="{!! asset('modules/global/img/extrato.svg')!!}">
+        <tbody id="withdrawals-table-data" class="custom-t-body" img-empty="{!! mix('build/global/img/extrato.svg')!!}">
         </tbody>
     </table>
 </div>

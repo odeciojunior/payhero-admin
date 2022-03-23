@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href='{{asset('/modules/sales/css/index.css?v=' . uniqid())}}'>
+    <link rel="stylesheet" href='{{ mix('build/layouts/chargebacks/contestations-files.min.css') }}'>
 
     <style>
         input[type="file"] {
@@ -100,14 +100,14 @@
 
                             <div class="form-group">
                                 <label for="type">Escolha uma categoria</label>
-                                <div id="type-select"></div>                               
+                                <div id="type-select"></div>
                             </div>
                             <div class="form-group">
 
                                 {{--                            <div class="col-sm-6 col-xl-3 text-right mt-20">--}}
                                 {{--                                <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">--}}
                                 {{--                                    <input type="file" id="test">--}}
-                                {{--                                    <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/modules/global/img/svg/check-all.svg ">--}}
+                                {{--                                    <img style="height: 12px; margin-right: 4px" src=" http://dev.admin.com/build/global/img/svg/check-all.svg ">--}}
                                 {{--                                    Aplicar filtros--}}
                                 {{--                                </div>--}}
                                 {{--                            </div>--}}
@@ -170,5 +170,5 @@
 </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/chargebacks/js/contestations-detail.js?v=' . random_int(100, 10000)) }}"></script>
+    <script src="{{ mix('build/layouts/chargebacks/contestations-files.min.js') }}"></script>
 @endpush

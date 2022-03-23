@@ -3,11 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=123') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=123') }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="{{ mix('build/layouts/reports/blockedbalance.min.css') }}">
         <style>
             .select2-selection--single {
                 border: 1px solid #dddddd !important;
@@ -150,13 +146,13 @@
                                      data-target="#bt_collapse"
                                      aria-expanded="false"
                                      aria-controls="bt_collapse">
-                                    <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                    <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "/>
                                     <span id="text-filtro">Filtros avançados</span>
                                 </div>
                             </div>
                             <div class="col-6 col-xl-3 mt-20">
                                 <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                    <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                    <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/check-all.svg') }} "/>
                                     Aplicar filtros
                                 </div>
                             </div>
@@ -233,7 +229,7 @@
                                     <td class="table-title">Motivo bloqueio</td>
                                 </tr>
                                 </thead>
-                                <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
+                                <tbody id="dados_tabela"  img-empty="{!! mix('build/global/img/vendas.svg')!!}">
                                 {{-- js carrega... --}}
                                 </tbody>
                             </table>
@@ -254,10 +250,7 @@
 
 
     @push('scripts')
-        <script src='{{asset('modules/reports/js/report-blockedbalance.js?v=' . random_int(100, 10000))}}'></script>
-        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+        <script src='{{ mix('build/layouts/reports/blockedbalance.min.js') }}'></script>
     @endpush
 
 @endsection

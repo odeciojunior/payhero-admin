@@ -1,0 +1,96 @@
+#filter-contestations {
+    padding: 20px 35px;
+    border-radius: 21px;
+}
+
+#filter-contestations input, #filter-contestations select, #filter-contestations label {
+	font-size: 16px;
+	color: #707070;
+}
+
+#filter-contestations label {
+	margin-bottom: 0;
+}
+
+#filter-contestations .form-control {
+	color: #828282;
+	font-size: 16px;
+	border-radius: 8px;
+	margin-top: 8px;
+	border-color: #7070704D;
+	height: auto;
+}
+
+.text-muted {
+	color: #959595 !important;
+}
+
+/* Alinhar valores nos cards */
+
+.card-body h4 span.font-size-30 {
+	vertical-align: sub;
+}
+
+/* Contestation Alert */
+
+.alert-contestation {
+	background-color: #F6FAFF;
+}
+
+.alert-contestation span.alert-text {
+	vertical-align: middle;
+	padding-left: 5px;
+}
+
+.alert-contestation img {
+	width: 24px;
+}
+
+.text-muted {
+	color: #959595 !important;
+}
+
+/* Contestation Table */
+
+#chargebacks-table-data .line-overflow {
+	overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 250px;
+}
+
+#chargebacks-table-data .won-contestation > td {
+	background-color: #ECFFE8 !important;
+}
+
+#chargebacks-table .table {
+	border: 16px !important;
+}
+
+/* Alinhar icones da tabela */
+
+#chargebacks-table-data span.o-upload-to-cloud-1, #chargebacks-table-data span.o-eye-1 {
+	font-size: 27px;
+}
+
+#date_range{
+	cursor: pointer;
+}
+.filter-badge.daterange:not(.active)::after {
+    content: url('/build/global/img/calendar.svg') !important;
+    top: 9px;
+    visibility: visible;
+}
+
+.filter-badge.daterange.focused::after {
+    content: url('/build/global/img/calendar-blue.svg') !important;
+    visibility: visible;
+}
+.filter-badge {
+    position: absolute;
+	cursor: pointer;
+}
+.filter-badge.focused {
+    border: 1px solid #2E85EC;
+    color: #2E85EC;
+}

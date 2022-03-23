@@ -2,7 +2,7 @@
     <div class="box-breadcrumbs">
         <div class="d-flex" style="justify-content: space-between !important;">
             <div class="d-flex align-items-center">
-                <div class="icon mr-15"><img src="/modules/global/img/icon-products-plans.svg" alt="Icon Products"></div>
+                <div class="icon mr-15"><img src="/build/global/img/icon-products-plans.svg" alt="Icon Products"></div>
                 <div class="title">Personalização de produtos</div>
             </div>
         </div>

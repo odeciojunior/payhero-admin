@@ -9,7 +9,7 @@
                                                                 -webkit-justify-content: center;
                                                                 justify-content: center;
                                                                 padding-bottom:116px">
-    <img src="{!! asset('modules/global/img/empty-cloud.svg') !!}" width="156px">
+    <img src="{!! mix('build/global/img/empty-cloud.svg') !!}" width="156px">
     <h1 class="big gray">Você ainda não tem nenhuma empresa!</h1>
     <p class="desc gray">Vamos cadastrar a primeira empresa? </p>
     <a href="{{env('ACCOUNT_FRONT_URL', 'https://accounts.cloudfox.net/')}}/companies/company-type" class="btn btn-primary btn-floating text-center align-items-center d-flex justify-content-center text-white" style="position: relative;">
@@ -17,5 +17,5 @@
     </a>
 </div>
 @push('css')
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=06') !!}">
+    <link rel="stylesheet" href="{!! mix('build/layouts/projects/empty-company.min.css') !!}">
 @endpush
