@@ -28,7 +28,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class TrackingsApiController extends Controller
 {
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse|AnonymousResourceCollection
      */
     public function index(Request $request)
@@ -81,14 +81,12 @@ class TrackingsApiController extends Controller
                 }
             )->log('Visualizou tela detalhes do rastreamento');
 
-            $tracking = $trackingModel->with(
-                [
-                    'productPlanSale.plan.project.domains',
-                    'productPlanSale.productSaleApi',
-                    'product',
-                    'delivery',
-                ]
-            )->find($trackingId);
+            $tracking = $trackingModel->with([
+                'productPlanSale.plan.project.domains',
+                'productPlanSale.productSaleApi',
+                'product',
+                'delivery',
+            ])->find($trackingId);
 
             $apiTracking = $trackingService->findTrackingApi($tracking);
 
@@ -100,7 +98,7 @@ class TrackingsApiController extends Controller
                 [
                     'tracking_status_enum' => $postedStatus,
                     'tracking_status' => __(
-                        'definitions.enum.tracking.tracking_status_enum.'.$tracking->present()
+                        'definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
                             ->getTrackingStatusEnum($postedStatus)
                     ),
                     'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
@@ -149,7 +147,7 @@ class TrackingsApiController extends Controller
                     [
                         'tracking_status_enum' => $postedStatus,
                         'tracking_status' => __(
-                            'definitions.enum.tracking.tracking_status_enum.'.$tracking->present()
+                            'definitions.enum.tracking.tracking_status_enum.' . $tracking->present()
                                 ->getTrackingStatusEnum($postedStatus)
                         ),
                         'created_at' => Carbon::parse($tracking->created_at)->format('d/m/Y'),
@@ -181,7 +179,7 @@ class TrackingsApiController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse
      */
     public function resume(Request $request)
@@ -211,7 +209,7 @@ class TrackingsApiController extends Controller
     }
 
     /**
-     * @param  TrackingStoreRequest  $request
+     * @param TrackingStoreRequest $request
      * @return JsonResponse
      */
     public function store(TrackingStoreRequest $request)
@@ -233,7 +231,7 @@ class TrackingsApiController extends Controller
                             'id' => Hashids::encode($tracking->id),
                             'tracking_code' => $tracking->tracking_code,
                             'tracking_status_enum' => $tracking->tracking_status_enum,
-                            'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.'.$trackingModel->present()
+                            'tracking_status' => Lang::get('definitions.enum.tracking.tracking_status_enum.' . $trackingModel->present()
                                     ->getTrackingStatusEnum($tracking->tracking_status_enum)),
                         ],
                     ], 200);
@@ -284,7 +282,7 @@ class TrackingsApiController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse
      * @see https://docs.laravel-excel.com/3.1/exports/queued.html
      */
@@ -299,7 +297,7 @@ class TrackingsApiController extends Controller
 
             $user = auth()->user();
 
-            $filename = 'trackings_report_'.Hashids::encode($user->id).'.'.$data['format'];
+            $filename = 'trackings_report_' . Hashids::encode($user->id) . '.' . $data['format'];
 
             (new TrackingsReportExport($data, $user, $filename))->queue($filename);
 
@@ -313,7 +311,7 @@ class TrackingsApiController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse
      */
     public function import(Request $request)
