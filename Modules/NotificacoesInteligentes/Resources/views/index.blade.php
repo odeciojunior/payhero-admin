@@ -1,8 +1,8 @@
 @extends("layouts.master")
 @push('css')
 
-    <link rel="stylesheet" href="{{ asset('modules/convertax/css/index.css?v=' .  versionsFile()) }}">
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/notificacoesInteligentes/index.min.css') }}">
+    
      <style>
         .o-arrow-right-1 {
             font-size: 30px;
@@ -120,6 +120,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/notificacoes-inteligentes/js/index.js?v=s0')}}"></script>
+        <script src="{{asset('build/layouts/notificacoesInteligentes/index.min.js')}}"></script>
     @endpush
 @endsection
