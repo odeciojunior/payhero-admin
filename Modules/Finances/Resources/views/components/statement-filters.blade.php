@@ -80,13 +80,13 @@
                     <div class="row flex-nowrap mx-0 justify-content-center" style="height: 0">
                         <div class="col-auto col-xl-3 offset-xl-6 px-0">
                             <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center flex-column flex-lg-row" data-toggle="collapse" data-target="#bt_collapse" aria-expanded="false" aria-controls="bt_collapse">
-                                <img id="icon-filtro" src="{{ asset('/modules/global/img/svg/filter-2-line.svg') }}"/>
+                                <img id="icon-filtro" src="{{ mix('build/global/img/svg/filter-2-line.svg') }}"/>
                                 <span class="w-p100 w-md-auto" id="text-filtro">Filtros avançados</span>
                             </div>
                         </div>
                         <div class="col-auto pr-0">
                             <div id="bt_filtro" class="btn btn-primary-1 bold d-flex justify-content-center align-items-center flex-column flex-lg-row">
-                                <img style="height: 12px; margin-right: 4px" src="{{ asset('/modules/global/img/svg/check-all.svg') }}">
+                                <img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">
                                 <span class="w-p100 w-md-auto"> Aplicar filtros </span>
                             </div>
                         </div>
@@ -186,14 +186,14 @@
                     <div class="row flex-nowrap mx-0 justify-content-center" style="height: 0">
                         <div class="col-auto col-xl-3 offset-xl-6 px-0">
                             <div class="btn btn-light-1 w-p100 bold d-flex justify-content-center align-items-center flex-column flex-lg-row collapsed" data-toggle="collapse" data-target="#bt-collapse-custom" aria-expanded="false" aria-controls="bt_collapse">
-                                <img id="icon-filtro" src="{{ asset('/modules/global/img/svg/filter-2-line.svg') }}"/>
+                                <img id="icon-filtro" src="{{ mix('build/global/img/svg/filter-2-line.svg') }}"/>
                                 <span class="w-p100 w-md-auto" id="text-filtro">Filtros avançados</span>
                             </div>
                         </div>
 
                         <div class="col-auto pr-0">
                             <div id="bt_filtro_statement" class="btn btn-primary-1 bold d-flex justify-content-center align-items-center flex-column flex-lg-row">
-                                <img style="height: 12px; margin-right: 4px" src="{{ asset('/modules/global/img/svg/check-all.svg') }}">
+                                <img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">
                                 <span class="w-p100 w-md-auto"> Aplicar filtros </span>
                             </div>
                         </div>

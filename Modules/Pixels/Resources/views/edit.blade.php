@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{!! asset('/modules/pixels/css/pixel-edit.css?v=10') !!}">
+    <link rel="stylesheet" href="{!! mix('build/layouts/pixels/edit.min.css') !!}">
 @endpush
 <div style="display: none; width: 100%;" id="select-platform-edit-pixel">
     <div class="modal-content p-10 s-border-radius">

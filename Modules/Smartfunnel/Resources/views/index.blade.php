@@ -1,6 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/digitalmanager/css/index.css?v=' .  versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/smartfunnel/index.min.css') }}">
     <style>
         .o-arrow-right-1 {
             font-size: 30px;
@@ -92,7 +92,7 @@
                                                                 justify-content: center;
                                                                 padding-bottom:116px">
             <div class="content-error text-center">
-                <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
+                <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
                 <p class="desc gray">Integre suas lojas com Smart Funnel de forma totalmente automatizada!</p>
             </div>
@@ -100,6 +100,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/smartfunnel/js/index.js?v=s0"></script>
+        <script src="{{ mix('build/layouts/smartfunnel/index.min.js') }}"></script>
     @endpush
 @endsection

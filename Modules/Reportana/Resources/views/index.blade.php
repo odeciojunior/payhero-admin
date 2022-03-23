@@ -1,7 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/digitalmanager/css/index.css?v=' .  versionsFile()) }}">
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/reportana/index.min.css') }}">
     <style>
         .o-arrow-right-1 {
             font-size: 30px;
@@ -92,7 +91,7 @@
                                                                         -webkit-justify-content: center;
                                                                         justify-content: center;">
             <div class="content-error text-center">
-                <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
+                <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
                 <p class="desc gray">Integre sua loja com Reportana de forma totalmente automatizada!</p>
             </div>
@@ -100,6 +99,6 @@
     </div>
 
     @push('scripts')
-        <script src="/modules/reportana/js/index.js?v=s0"></script>
+        <script src="{{ mix('build/layouts/reportana/index.min.js') }}"></script>
     @endpush
 @endsection

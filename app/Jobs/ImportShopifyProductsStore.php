@@ -30,7 +30,7 @@ class ImportShopifyProductsStore implements ShouldQueue
         $this->shopifyIntegrantion = $shopifyIntegration;
         $this->userId = $userId;
 
-        $this->allOnQueue('low');
+        $this->allOnQueue('long');
     }
 
     public function tags()

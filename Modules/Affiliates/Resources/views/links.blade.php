@@ -7,7 +7,7 @@
                         <input type="text" class="form-control" id='plan-name' name="plan" placeholder="Pesquisa por nome">
                         <span class="input-group-append" id='btn-search-link'>
                             <button type="submit" class="btn btn-primary btn-sm">
-                                <img src="/modules/global/img/icon-search_.svg">
+                                <img src="/build/global/img/icon-search_.svg">
                             </button>
                         </span>
                     </div>
@@ -17,7 +17,7 @@
                         <div class="btn-holder add-plan d-flex align-items-center pointer">
                             <span class="link-button-dependent blue">Adicionar </span>
                             <a class="ml-10 rounded-add pointer add-link" data-toggle="modal" data-target="#modal-create-link" style="display: inline-flex;">
-                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                                <img src="/build/global/img/icon-add.svg" style="width: 18px;">
                             </a>
                         </div>
                     </div>

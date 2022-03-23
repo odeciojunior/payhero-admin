@@ -4,12 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=12') }}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=12') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-performance.css?v=12') }}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/dashboard-account-health.css?v=12') }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/dashboard/stylesheets.min.css') }}">
     @endpush
 
     <div class="page dashboard">
@@ -120,7 +115,7 @@
                                     <div id="scoreLineToMonth" class="ct-chart"></div>
                                     <div id="empty-sale" class="row" style="display: none;">
                                         <div class="col-sm-8">
-                                            <img src="{!! asset('modules/global/img/sem-dados.svg') !!}" alt="">
+                                            <img src="{!! mix('build/global/img/sem-dados.svg') !!}" alt="">
                                         </div>
                                         <p style="font-size: 23px" class="col-sm-4 gray justify-content-center align-items-center d-flex flex-column p-5">Nenhuma venda encontrada</p>
                                      </div>
@@ -179,7 +174,7 @@
 {{--                                        <b class="card-desc">Bem-vindo(a) ao Sirius!</b>--}}
 {{--                                    </div>--}}
 {{--                                    <img class="img-fluid"--}}
-{{--                                         src="{{ asset('modules/global/img/svg/sirius-stars-b.png') }}"--}}
+{{--                                         src="{{ mix('build/global/img/svg/sirius-stars-b.png') }}"--}}
 {{--                                         height="60px" width="60px">--}}
 {{--                                </div>--}}
 {{--                                <div class="card-body d-flex flex-column justify-content-between">--}}
@@ -207,7 +202,7 @@
 {{--                                        <b class="card-desc">Bem-vindo(a) ao Sirius!</b>--}}
 {{--                                    </div>--}}
 {{--                                    <img class="img-fluid"--}}
-{{--                                         src="{{ asset('modules/global/img/svg/sirius-stars-b.png') }}"--}}
+{{--                                         src="{{ mix('build/global/img/svg/sirius-stars-b.png') }}"--}}
 {{--                                         height="60px" width="60px">--}}
 {{--                                </div>--}}
 {{--                                <div class="card-body d-flex flex-column justify-content-between">--}}
@@ -234,15 +229,7 @@
     </div>
 
     @push('scripts')
-        <script src='{{ asset('modules/dashboard/js/gauge.js?v=231') }}'></script>
-        <script src='{{ asset('modules/reports/js/chartist.min.js') }}'></script>
-        <script src='{{ asset('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
-        <script src='{{ asset('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
-        <script src='{{ asset('modules/global/js/confetti.browser.min.js') }}'></script>
-{{--        <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>--}}
-        <script src="{{ asset('modules/dashboard/js/dashboard-performance.js?v=' . versionsFile()) }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=' . versionsFile()) }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard-account-health.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ mix('build/layouts/dashboard/scripts.min.js') }}"></script>
     @endpush
 
 @endsection

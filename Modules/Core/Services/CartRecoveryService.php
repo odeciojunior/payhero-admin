@@ -31,6 +31,7 @@ class CartRecoveryService
                 $emailNotificationEnum = ProjectNotification::NOTIFICATION_EMAIL_ABANDONED_CART_AN_HOUR_LATER;
             }
 
+            DB::select("SET SESSION group_concat_max_len = @@max_allowed_packet");
             DB::select("SET SESSION sort_buffer_size =  @@sort_buffer_size * 2");
             $query = Checkout::select([
                 'checkouts.id as id',

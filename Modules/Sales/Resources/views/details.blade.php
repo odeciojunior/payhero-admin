@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=101') }}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/sales/details.min.css') }}">
 @endpush
 <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-simple modal-sidebar modal-lg">
@@ -32,7 +32,7 @@
                     <div id="status" class="status d-inline">
                     </div>
                     <div class="status d-inline">
-                        <img id='chargeback-recovered' class="orange-gradient" src="{{ asset('modules/global/img/svg/chargeback.svg') }}" title="Chargeback recuperado" style='width:20px; display:none;'>
+                        <img id='chargeback-recovered' class="orange-gradient" src="{{ mix('build/global/img/svg/chargeback.svg') }}" title="Chargeback recuperado" style='width:20px; display:none;'>
                     </div>
                 </div>
                 <div class='div-refund-observation mt-20' style='display:none;'>
@@ -459,5 +459,5 @@
     </div>
 </div>
 @push('scripts')
-    <script src="{{ asset('/modules/sales/js/detail.js?v=' . uniqid()) }}"></script>
+    <script src="{{ mix('build/layouts/sales/details.min.js') }}"></script>
 @endpush

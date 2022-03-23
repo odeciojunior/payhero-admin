@@ -182,7 +182,7 @@ class GetnetService implements Statement
 
             $transactionsSum = $this->company->transactions()
                 ->whereIn('gateway_id', $this->gatewayIds)
-                ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
+                ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED, Transaction::STATUS_CHARGEBACK])
                 ->where('is_waiting_withdrawal', 1)
                 ->whereNull('withdrawal_id')
                 ->orderBy('id');
