@@ -110,35 +110,37 @@ $(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
                 $('#card-comission .ske-load').hide();
+                $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
+                $('.new-graph').removeClass('visible');
+                $('.new-graph').next('.no-graph').remove();
+                $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
             },
             success: function success(response) {
                 
                 if(response.data != ''){
-                    let value = response.data.replace("R$", "");
+                    let value = response.data.total;
                     
                     $("#comission").html("<span class='currency'>R$ </span>" + value).addClass('visible');
                     
-                    if(response.data !== '0,00') {
+                    if(response.data.total !== '0,00') {
                         $('.new-graph').html('<canvas id=comission-graph></canvas>').addClass('visible');
                         $(".new-graph").next('.no-graph').remove();
 
-                        let series = [120, 90, 17, 998, 5];             
-                        
-                        graphComission(series);
-                        
+                        let labels = [...response.data.chart.labels];
+                        let series = [...response.data.chart.values];
+                        graphComission(series, labels);
                         
                     } else {
-                        $('#graph-comission').addClass('invisible');
-                        $('#graph-comission').after('<div class=no-graph>Não há dados suficientes</div>');
+                        $('#comission-graph').addClass('invisible');
+                        $('.new-graph').removeClass('visible');
+                        $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
                         $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
                     }
                 } else {
-                    $('#comission-graph').remove();
                     $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
                     $('.new-graph').removeClass('visible');
                     $('.new-graph').next('.no-graph').remove();
                     $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
-                    
                 }
                 $('#card-comission .ske-load').hide();
                 console.log("Durou " + Number((Date.now() - antes) / 1000) + "s");
@@ -1317,7 +1319,7 @@ $(function () {
     }
 
 
-    function graphComission(series) {
+    function graphComission(series, labels) {
        const titleTooltip = (tooltipItems) => {
             return '';
         }   
@@ -1342,7 +1344,7 @@ $(function () {
                 plugins: [legendMargin],
                 type: 'line',
                 data: {
-                    labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'],
+                    labels,
                     datasets: [
                         {
                             label: 'Legenda',
