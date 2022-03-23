@@ -1186,23 +1186,11 @@ class ReportService
                 }
             }
 
-            $relationsArray = [
-                'sale',
-                'sale.project',
-                'sale.customer',
-                'sale.plansSales',
-                'sale.shipping',
-                'sale.checkout',
-                'sale.delivery',
-                'sale.affiliate.user',
-                'sale.saleRefundHistory',
-            ];
-
             $transactions = $transactionModel
-                            ->with($relationsArray)
-                            ->whereIn('company_id', $userCompanies)
-                            ->join('sales', 'sales.id', 'transactions.sale_id')
-                            ->whereNull('invitation_id');
+            ->with('sale')
+            ->whereIn('company_id', $userCompanies)
+            ->join('sales', 'sales.id', 'transactions.sale_id')
+            ->whereNull('invitation_id');
 
             if (!empty($filters["project"])) {
                 $projectIds =[];
@@ -1231,14 +1219,17 @@ class ReportService
 
             //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-            $dateType = $filters["date_type"];
 
-            $transactions->whereHas(
+            $transactions
+            ->whereHas(
                 'sale',
-                function ($querySale) use ($dateRange, $dateType) {
-                    $querySale->whereBetween($dateType, [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+                function ($querySale) use ($dateRange) {
+                    $querySale->whereBetween('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
                 }
-            )->selectRaw('transactions.*, sales.start_date')
+            );
+
+            $transactions
+            ->selectRaw('transactions.*, sales.start_date')
             ->orderByDesc('sales.start_date');
 
             return $transactions;
@@ -1252,8 +1243,42 @@ class ReportService
     public function getResumeCommissions($filters)
     {
         try {
-            if ($this->getResumeSales($filters) == 0) {
-                return [];
+            $companyModel = new Company();
+            $affiliateModel = new Affiliate();
+            $transactionModel = new Transaction();
+
+            $userId = auth()->user()->account_owner_id;
+
+            $userCompanies = $companyModel->where('user_id', $userId)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+            $transactions = $transactionModel
+            ->with('sale')
+            ->whereIn('company_id', $userCompanies)
+            ->join('sales', 'sales.id', 'transactions.sale_id')
+            ->whereNull('invitation_id');
+
+            if (!empty($filters["project"])) {
+                $projectId = current(Hashids::decode($filters["project"]));
+                $transactions->whereHas(
+                    'sale',
+                    function ($querySale) use ($projectId) {
+                        $querySale->where('project_id', $projectId);
+                    }
+                );
+
+                $affiliate = $affiliateModel
+                ->where('user_id', $userId)
+                ->where('project_id', $projectId)
+                ->first();
+
+                if (!empty($affiliate)) {
+                    $transactions->where('sales.affiliate_id', $affiliate->id);
+                } else {
+                    $transactions->where('sales.owner_id', $userId);
+                }
             }
 
             $status = [
@@ -1267,58 +1292,43 @@ class ReportService
                 Sale::STATUS_BILLET_REFUNDED,
                 Sale::STATUS_IN_DISPUTE
             ];
-            $status = implode(',', $status);
 
-            $transactionStatus = implode(',', [
-                Transaction::STATUS_TRANSFERRED,
-                Transaction::STATUS_PAID
-            ]);
-
-            $statusDispute = Sale::STATUS_IN_DISPUTE;
-
-            $companieIds = [];
-            if (empty($filters["company"])) {
-                $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
-            } else {
-                $companieIds = [];
-
-                $companies = explode(',', $filters["company"]);
-                foreach($companies as $company) {
-                    array_push($companieIds, current(Hashids::decode($company)));
+            $transactions->whereHas(
+                'sale',
+                function ($querySale) use ($status) {
+                    $querySale->whereIn('status', $status);
                 }
-            }
-            $companieIds = implode(',', $companieIds);
-
-            $filterProjects = '';
-            $projectIds = [];
-            if (!empty($filters["project"])) {
-                $projectIds = [];
-
-                $projects = explode(',', $filters["project"]);
-
-                foreach($projects as $project){
-                    array_push($projectIds, current(Hashids::decode($project)));
-                }
-
-                $filterProjects = 'sales.project_id IN ('.implode($projectIds).') AND';
-            }
+            );
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $date['startDate'] = $dateRange[0];
+            $date['endDate'] = $dateRange[1];
 
-            $query = 'SELECT SUM(if(transactions.status_enum in ('.$transactionStatus.') && sales.status <> '.$statusDispute.', transactions.value, 0)) / 100 as commission
-            FROM transactions INNER JOIN sales ON sales.id = transactions.sale_id
-            WHERE '.$filterProjects.' transactions.company_id IN ('.$companieIds.') AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
-            AND sales.status IN('.$status.') AND sales.deleted_at IS NULL AND transactions.deleted_at IS NULL AND transactions.type <> 8 AND transactions.invitation_id IS NULL';
+            if ($date['startDate'] == $date['endDate']) {
+                return $this->getResumeCommissionsByHours($transactions, $filters);
+            } elseif ($date['startDate'] != $date['endDate']) {
+                $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
+                $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
+                $diffInDays = $endDate->diffInDays($startDate);
 
-            $dbResults = DB::select($query);
-
-            return number_format($dbResults[0]->commission, 2, ',', '.');
+                if ($diffInDays <= 20) {
+                    return $this->getResumeCommissionsByDays($transactions, $filters);
+                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                    return $this->getResumeCommissionsByTwentyDays($transactions, $filters);
+                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                    return $this->getResumeCommissionsByFortyDays($transactions, $filters);
+                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                    return $this->getResumeCommissionsByWeeks($transactions, $filters);
+                } elseif ($diffInDays > 140) {
+                    return $this->getResumeCommissionsByMonths($transactions, $filters);
+                }
+            }
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 
-    public function getResumeCommissionsByHours($filters)
+    public function getResumeCommissionsByHours($transactions, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -1339,62 +1349,343 @@ class ReportService
             ];
         }
 
-        $transactions = $this->getSalesQueryBuilder($filters, false, null, true);
-        $transactionStatus = implode(',', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ]);
+        $transactions->whereHas(
+            'sale',
+            function ($querySale) use ($dateRange) {
+                $querySale->whereDate('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
+            }
+        );
+
+        $transactions
+        ->selectRaw('transactions.*, sales.start_date')
+        ->orderByDesc('sales.start_date');
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
         $statusDispute = Sale::STATUS_IN_DISPUTE;
 
-        $resume = $transactions->without(['sale'])
-        ->select(DB::raw("sum(if(transactions.status_enum in ({$transactionStatus}) && sales.status <> {$statusDispute}, transactions.value, 0)) / 100 as commission"))
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->select(DB::raw('transactions.value as commission, HOUR(sales.start_date) as hour'))
         ->get();
 
         $comissionData = [];
+        $valuesConcat = [];
 
         foreach ($labelList as $label) {
-            $comissionDataValue = 0;
+            $comissionValue = 0;
+            $comissionFormatedValue = number_format(0, 2, ',', '.');
 
             foreach ($resume as $r) {
-                if ($r['hour'] == preg_replace("/[^0-9]/", "", $label)) {
-                    $comissionDataValue = substr(intval($r['commission']), 0, -2);
+                if ($r->hour == preg_replace("/[^0-9]/", "", $label)) {
+                    $comissionValue = intval(preg_replace("/[^0-9]/", "", $r->commission));
+                    $comissionFormatedValue = number_format($r->commission, 2, ',', '.');
                 }
             }
 
-            array_push($comissionData, $comissionDataValue);
+            array_push($comissionData, $comissionValue);
+            array_push($valuesConcat, $label.": ".$comissionFormatedValue);
         }
 
-        $total = array_sum($comissionData);
+        $total = number_format(array_sum($comissionData), 2, ',', '.');
+
+        //$percentage = round(($comissionData[count($comissionData) - 1] - $comissionData[0]) / $comissionData[0], 1, PHP_ROUND_HALF_UP);
 
         return [
             'chart' => [
-                'label_list' => $labelList,
+                'labels' => $labelList,
                 'values' => $comissionData
             ],
             'total' => $total
         ];
     }
 
-    public function getResumeCommissionsByDays($filters)
+    public function getResumeCommissionsByDays($transactions, $filters)
     {
+        date_default_timezone_set('America/Sao_Paulo');
 
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $labelList    = [];
+        $dataFormated = Carbon::parse($dateRange[0]);
+        $endDate      = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d-m'));
+            $dataFormated = $dataFormated->addDays(1);
+        }
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
+        ->get();
+
+        $comissionData = [];
+        $valuesConcat = [];
+
+        foreach ($labelList as $label) {
+            $comissionValue = 0;
+            $comissionFormatedValue = number_format(0, 2, ',', '.');
+
+            foreach ($resume as $r) {
+                if (Carbon::parse($r->date)->format('d-m') == $label) {
+                    $comissionValue = intval(preg_replace("/[^0-9]/", "", $r->commission));
+                    $comissionFormatedValue = number_format($r->commission, 2, ',', '.');
+                }
+            }
+
+            array_push($comissionData, $comissionValue);
+            array_push($valuesConcat, $label.": ".$comissionFormatedValue);
+        }
+
+        $total = number_format(array_sum($comissionData), 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $comissionData
+            ],
+            'total' => $total,
+            'percentage' => ''
+        ];
     }
 
-    public function getResumeCommissionsByTwentyDays($filters)
+    public function getResumeCommissionsByTwentyDays($transactions, $filters)
     {
+        date_default_timezone_set('America/Sao_Paulo');
 
+        $labelList    = [];
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(1);
+        $endDate      = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(2);
+            if ($dataFormated->diffInDays($endDate) < 2 && $dataFormated->diffInDays($endDate) > 0) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
+        ->get();
+
+        $comissionData = [];
+        $valuesConcat = [];
+
+        foreach ($labelList as $label) {
+            $comissionDataValue = 0;
+            $comissionFormatedValue = number_format(0, 2, ',', '.');
+
+            foreach ($resume as $r) {
+                if ((Carbon::parse($r->date)->subDays(1)->format('d/m') == $label) || (Carbon::parse($r->date)->format('d/m') == $label)) {
+                    $comissionDataValue += intval(preg_replace("/[^0-9]/", "", $r->commission));
+                }
+            }
+
+            array_push($comissionData, $comissionDataValue);
+            array_push($valuesConcat, $label.": ".number_format($comissionDataValue, 2, ',', '.'));
+        }
+
+        $total = number_format(array_sum($comissionData), 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $comissionData
+            ],
+            'total' => $total
+        ];
     }
 
-    public function getResumeCommissionsByFortyDays($filters)
+    public function getResumeCommissionsByFortyDays($transactions, $filters)
     {
+        date_default_timezone_set('America/Sao_Paulo');
 
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(2);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(3);
+            if ($dataFormated->diffInDays($endDate) < 3) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
+        ->get();
+
+        $comissionData = [];
+        $valuesConcat = [];
+
+        foreach ($labelList as $label) {
+            $comissionDataValue = 0;
+
+            foreach ($resume as $r) {
+                for ($x = 1; $x <= 3; $x++) {
+                    if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
+                        $comissionDataValue += intval(preg_replace("/[^0-9]/", "", $r->commission));
+                    }
+                }
+            }
+
+            array_push($comissionData, $comissionDataValue);
+            array_push($valuesConcat, $label.": ".number_format($comissionDataValue, 2, ',', '.'));
+        }
+
+        $total = number_format(array_sum($comissionData), 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $comissionData
+            ],
+            'total' => $total
+        ];
     }
 
-    public function getResumeCommissionsByWeeks($filters)
+    public function getResumeCommissionsByWeeks($transactions, $filters)
     {
+        date_default_timezone_set('America/Sao_Paulo');
 
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(6);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(7);
+            if ($dataFormated->diffInDays($endDate) < 7) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
+        ->get();
+
+        $comissionData = [];
+        $valuesConcat = [];
+
+        foreach ($labelList as $label) {
+            $comissionDataValue = 0;
+
+            foreach ($resume as $r) {
+                for ($x = 1; $x <= 6; $x++) {
+                    if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
+                        $comissionDataValue += intval(preg_replace("/[^0-9]/", "", $r->commission));
+                    }
+                }
+            }
+
+            array_push($comissionData, $comissionDataValue);
+            array_push($valuesConcat, $label.": ".number_format($comissionDataValue, 2, ',', '.'));
+        }
+
+        $total = number_format(array_sum($comissionData), 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $comissionData
+            ],
+            'total' => $total
+        ];
     }
 
-    public function getResumeCommissionsByMonths($filters)
+    public function getResumeCommissionsByMonths($transactions, $filters)
     {
+        date_default_timezone_set('America/Sao_Paulo');
 
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0]);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('m/y'));
+            $dataFormated = $dataFormated->addMonths(1);
+        }
+
+        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $transactions
+        ->whereIn('status_enum', $transactionStatus)
+        ->where('sales.status', '<>', $statusDispute)
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
+        ->get();
+
+        $comissionData = [];
+        $valuesConcat = [];
+
+        foreach ($labelList as $label) {
+            $comissionDataValue = 0;
+
+            foreach ($resume as $r) {
+                if (Carbon::parse($r->date)->format('m/y') == $label) {
+                    $comissionDataValue += intval(preg_replace("/[^0-9]/", "", $r->commission));
+                }
+            }
+
+            array_push($comissionData, $comissionDataValue);
+            array_push($valuesConcat, $label.": ".number_format($comissionDataValue, 2, ',', '.'));
+        }
+
+        $total = number_format(array_sum($comissionData), 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $comissionData
+            ],
+            'total' => $total
+        ];
     }
 
     public function getResumePendings($filters)
@@ -1499,24 +1790,13 @@ class ReportService
     public function getResumeSales($filters)
     {
        try {
-            $userId = auth()->user()->account_owner_id;
-            $statusId = Sale::STATUS_APPROVED;
+            $transactions = $this->getSalesQueryBuilder($filters);
 
-            $projectId = '';
-            if (!empty($filters["project"])) {
-                $projectId = 'AND project_id = ' . Hashids::decode($filters["project"]);
-            }
+            $resume = $transactions->without(['sale'])
+            ->select(DB::raw("count(sales.id) as total_sales"))
+            ->first();
 
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-
-            $query = 'SELECT COUNT(*) as sales
-            FROM sales
-            WHERE owner_id = '.$userId.' AND status = '.$statusId.'
-            AND (start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")' .$projectId;
-
-            $dbResults = DB::select($query);
-
-           return $dbResults[0]->sales;
+            return $resume->total_sales;
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }

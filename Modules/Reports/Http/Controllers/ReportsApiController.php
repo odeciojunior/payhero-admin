@@ -808,8 +808,8 @@ class ReportsApiController extends Controller
 
         $data = $request->all();
 
-        $saleService = new ReportService();
-        $comission = $saleService->getResumeCommissions($data);
+        $reportService = new ReportService();
+        $comission = $reportService->getResumeCommissions($data);
 
         return response()->json(['data' => $comission]);
     }
@@ -822,8 +822,8 @@ class ReportsApiController extends Controller
 
         $data = $request->all();
 
-        $saleService = new ReportService();
-        $pending = $saleService->getResumePendings($data);
+        $reportService = new ReportService();
+        $pending = $reportService->getResumePendings($data);
 
         return response()->json(['data' => $pending]);
     }
@@ -851,8 +851,8 @@ class ReportsApiController extends Controller
 
         $data = $request->all();
 
-        $saleService = new ReportService();
-        $sales = $saleService->getResumeSales($data);
+        $reportService = new ReportService();
+        $sales = $reportService->getResumeSales($data);
 
         return response()->json(['data' => $sales]);
     }
@@ -865,8 +865,8 @@ class ReportsApiController extends Controller
 
         $data = $request->all();
 
-        $saleService = new ReportService();
-        $typePayments = $saleService->getResumeTypePayments($data);
+        $reportService = new ReportService();
+        $typePayments = $reportService->getResumeTypePayments($data);
 
         return response()->json([
             'data' => $typePayments
@@ -881,8 +881,8 @@ class ReportsApiController extends Controller
 
         $data = $request->all();
 
-        $saleService = new ReportService();
-        $products = $saleService->getResumeProducts($data);
+        $reportService = new ReportService();
+        $products = $reportService->getResumeProducts($data);
 
         return response()->json([
             'data' => $products
@@ -898,8 +898,8 @@ class ReportsApiController extends Controller
 
         $data = $request->all();
 
-        $saleService = new ReportService();
-        $coupons = $saleService->getResumeCoupons($data);
+        $reportService = new ReportService();
+        $coupons = $reportService->getResumeCoupons($data);
 
         return response()->json([
             'data' => $coupons
@@ -914,8 +914,8 @@ class ReportsApiController extends Controller
 
         $data = $request->all();
 
-        $saleService = new ReportService();
-        $regions = $saleService->getResumeRegions($data);
+        $reportService = new ReportService();
+        $regions = $reportService->getResumeRegions($data);
 
         return response()->json([
             'data' => $regions
@@ -931,8 +931,8 @@ class ReportsApiController extends Controller
 
         $data = $request->all();
 
-        $saleService = new ReportService();
-        $orders = $saleService->getResumeOrigins($data);
+        $reportService = new ReportService();
+        $orders = $reportService->getResumeOrigins($data);
 
         return response()->json([
             'data' => $orders
