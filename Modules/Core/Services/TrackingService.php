@@ -354,7 +354,7 @@ class TrackingService
                     return $carry;
                 }, []);
 
-                $where->where('t2.tracking_status_enum', $statusArray);
+                $where->whereIn('t2.tracking_status_enum', $statusArray);
 
                 if (in_array('unknown', $filterStatus)) {
                     $where->orWhereNull('t2.id');
@@ -372,6 +372,8 @@ class TrackingService
             $where->whereNotNull('p.id')
                 ->orWhereNotNull('psa.id');
         });
+
+        $sql = builder2sql($productPlanSales);
 
         return $productPlanSales;
     }
