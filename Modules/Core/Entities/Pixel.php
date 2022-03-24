@@ -24,6 +24,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property bool $status
  * @property string $checkout
  * @property string $send_value_checkout
+ * @property string $purchase_all
  * @property string $basic_data
  * @property string $delivery
  * @property string $coupon
@@ -111,6 +112,7 @@ class Pixel extends Model
         'status',
         'checkout',
         'send_value_checkout',
+        'purchase_all',
         'basic_data',
         'delivery',
         'coupon',

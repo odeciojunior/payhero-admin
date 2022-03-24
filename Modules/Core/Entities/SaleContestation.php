@@ -70,6 +70,7 @@ class SaleContestation extends Model
         'gateway_id',
         'data',
         'nsu',
+        'gateway_case_number',
         'file_date',
         'transaction_date',
         'request_date',

@@ -136,9 +136,12 @@ class PixelsApiController extends Controller
                 }
             }
 
-            foreach (PixelService::EVENTS as $EVENT) {
-                if ($pixel->$EVENT == true) {
-                    $pixel->event_select = $EVENT;
+            $pixel->event_select = '';
+            if ($pixel->platform == 'google_adwords') {
+                foreach (PixelService::EVENTS as $EVENT) {
+                    if ($pixel->$EVENT == true) {
+                        $pixel->event_select = $EVENT;
+                    }
                 }
             }
 
