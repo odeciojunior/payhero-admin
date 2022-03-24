@@ -56,11 +56,10 @@ $(document).ready(function () {
                 if (parseInt(response.qtd_notification) > 0) {
                     $("#notification-amount").removeClass("badge-notification-false");
                     $("#notification-amount").addClass("badge-notification");
-                    $("#notification-amount").text(response.qtd_notification);
+
                 }else {
                     $("#notification-amount").removeClass("badge-notification");
                     $("#notification-amount").addClass("badge-notification-false");
-                    $("#notification-amount").text();
 
                 }
 
