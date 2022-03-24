@@ -653,7 +653,9 @@ mix.styles([
     'resources/modules/global/scrollbar-plugin/jquery.mCustomScrollbar.css',
     'resources/modules/global/css/switch.css',
     'resources/modules/global/css/table.css',
-    'Modules/Projects/Resources/assets/css/style.css'
+    'Modules/Projects/Resources/assets/css/style.css',
+    'Modules/DiscountCoupons/Resources/assets/css/styles.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
 ],'public/build/layouts/projects/project.min.css')
 mix.copy(
     'resources/cdn/ckeditor.js'
@@ -670,7 +672,6 @@ mix.babel([
     'Modules/Pixels/Resources/assets/js/pixels.js',
     'resources/modules/projectupsell/js/index.js',
     'Modules/OrderBump/Resources/assets/js/index.js',
-    'Modules/DiscountCoupons/Resources/assets/js/discountCoupons.js',
     'Modules/ProjectReviews/Resources/assets/js/index.js',
     'Modules/ProjectNotification/Resources/assets/js/projectNotification.js',
     'Modules/Projects/Resources/assets/js/projects.js',
@@ -682,6 +683,10 @@ mix.babel([
     'Modules/WooCommerce/Resources/assets/js/syncproducts.js',
     'resources/modules/global/scrollbar-plugin/jquery.mousewheel.min.js',
     'resources/modules/global/scrollbar-plugin/jquery.mCustomScrollbar.js',
+    'resources/modules/global/js-extra/moment.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
+    'Modules/DiscountCoupons/Resources/assets/js/discountCoupons.js',
+    'Modules/DiscountCoupons/Resources/assets/js/discountCouponsSteps.js',
 ],'public/build/layouts/projects/project.min.js')
 
 /**

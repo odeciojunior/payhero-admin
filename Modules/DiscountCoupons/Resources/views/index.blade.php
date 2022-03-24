@@ -12,7 +12,7 @@
                         <input type="text" class="form-control" id="search-name" name="discount-coupons" placeholder="Pesquisa por nome">
                         <span class="input-group-append" id="bt-search">
                             <button type="submit" class="btn btn-primary btn-sm">
-                                <img id="bt-search" src="/modules/global/img/icon-search_.svg">
+                                <img id="bt-search" src="/build/global/img/icon-search_.svg">
                             </button>
                         </span>
                     </div>
@@ -187,21 +187,3 @@
     </div>
 
 </div>
-
-
-
-@push('css')
-
-    <link rel="stylesheet" href="{!! asset('modules/discount-coupons/css/styles.css?v=01') !!}">
-    <link rel="stylesheet"
-        href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css?v=' . versionsFile()) }}">
-@endpush
-
-@push('scripts')
-
-    <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-    <script src="{{ asset('modules/global/jquery-daterangepicker/src/daterangepicker.js?v=' . versionsFile()) }}">
-    </script>
-
-
-@endpush

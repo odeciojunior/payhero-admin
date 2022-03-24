@@ -516,10 +516,10 @@ input::placeholder {
 }
 
 .add_rule {
-    background-image: url(/modules/discount-coupons/images/add.svg);
+    background-image: url(/build/global/img/add.svg);
 }
 .add_rule:hover {
-    background-image: url(/modules/discount-coupons/images/add-hover.svg);
+    background-image: url(/build/global/img/add-hover.svg);
 }
 
 .warning select,

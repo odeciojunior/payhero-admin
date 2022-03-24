@@ -65,7 +65,7 @@
                                 <input onkeyup="set_description_value(this, $('.search_input_create_coupon'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
                                 <div class="input-group-append">
                                     <span class="input-group-text">
-                                        <img src="/modules/global/img/icon-search.svg" alt="Icon Search">
+                                        <img src="/build/global/img/icon-search.svg" alt="Icon Search">
                                     </span>
                                 </div>
                             </div>
