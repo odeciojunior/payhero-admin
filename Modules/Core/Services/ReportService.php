@@ -18,6 +18,7 @@ use Modules\Core\Entities\Cashback;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\DiscountCoupon;
 use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\Product;
 use Modules\Reports\Transformers\SalesByOriginResource;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserProject;
@@ -2819,33 +2820,37 @@ class ReportService
     public function getResumeProducts($filters)
     {
         try {
+            $productModel = new Product();
+
             $userId = auth()->user()->account_owner_id;
-            $statusId = Sale::STATUS_APPROVED;
-
-            $projectId = '';
-            if (!empty($filters["project"])) {
-                $projectId = 'AND project_id = ' . Hashids::decode($filters["project"]);
-            }
-
+            $status = Sale::STATUS_APPROVED;
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $query = 'SELECT products.name, products.photo as image, COUNT(*) as amount FROM products
-            INNER JOIN products_plans_sales ON products.id = products_plans_sales.product_id
-            INNER JOIN sales ON products_plans_sales.sale_id = sales.id
-            WHERE sales.owner_id = '.$userId.' AND sales.status = '.$statusId.'
-            AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
-            '.$projectId.'
-            GROUP BY products.id ORDER BY amount DESC LIMIT 8';
-            $dbResults = DB::select($query);
+            $query = $productModel
+            ->join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
+            ->join('sales', 'products_plans_sales.id', 'sales.id')
+            ->where('sales.owner_id', $userId)
+            ->where('sales.status', $status)
+            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[0].' 23:59:59' ])
+            ->select(DB::raw('products.name, products.photo as image, COUNT(*) as amount'))
+            ->groupBy('products.id')
+            ->orderByDesc('amount')
+            ->get();
+
+            if (!empty($filters["project"])) {
+                $projectId = Hashids::decode($filters["project"]);
+
+                $query->where('project_id', $projectId);
+            }
 
             $total = 0;
-            foreach($dbResults as $r)
+            foreach($query as $r)
             {
                 $total += $r->amount;
             }
 
             $index = 0;
-            foreach($dbResults as $result)
+            foreach($query as $result)
             {
                 $percentage = round(number_format(($result->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
 
@@ -2856,11 +2861,18 @@ class ReportService
                 $index++;
             }
 
-            array_push($dbResults, (object) [
+            $productsArray = $query->toArray();
+
+            foreach($productsArray as $key => $product)
+            {
+                unset($productsArray[$key]['id_code']);
+            }
+
+            array_push($productsArray, (object) [
                 'total' => $total
             ]);
 
-            return $dbResults;
+            return $productsArray;
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -2928,14 +2940,18 @@ class ReportService
     public function getResumeRegions($filters)
     {
         try {
+            $checkoutModel = new Checkout();
+
             $userId = auth()->user()->account_owner_id;
+            $status = [Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED];
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $query = Checkout::select(
+
+            $query = $checkoutModel->select(
                 DB::raw('ip, COUNT(DISTINCT CASE WHEN status_enum = 1 then id end) as acessed, COUNT(DISTINCT CASE WHEN status_enum = 4 then id end) as finalized')
             )
-            ->whereIn('checkouts.status_enum', [ Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED])
-            ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+            ->whereIn('checkouts.status_enum', $status)
+            ->whereBetween('checkouts.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
             ->groupBy('checkouts.ip');
 
             if (!empty($filters['project_id'])) {
@@ -2949,7 +2965,7 @@ class ReportService
             $regions = $query->get();
             foreach($regions as $region)
             {
-                $region->state = json_decode($this->getRegionByIp($region->ip))->state;
+                $region->state = json_decode(getRegionByIp($region->ip))->state;
             }
 
             $regionsArray = $regions->toArray();
@@ -2967,10 +2983,13 @@ class ReportService
     public function getResumeOrigins($filters)
     {
         try {
+            $saleModel = new Sale();
+
             $userId = auth()->user()->account_owner_id;
+            $status = Sale::STATUS_APPROVED;
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $query = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
+            $query = $saleModel->select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
             ->leftJoin('transactions as transaction', function ($join) use ($userId) {
                 $join->on('transaction.sale_id', '=', 'sales.id');
                 $join->where('transaction.user_id', $userId);
@@ -2978,15 +2997,17 @@ class ReportService
             ->leftJoin('checkouts as checkout', function ($join) {
                 $join->on('checkout.id', '=', 'sales.checkout_id');
             })
-            ->where('sales.status', Sale::STATUS_APPROVED)
-            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+            ->where('sales.status', $status)
+            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
             ->whereNotIn('checkout.'.$filters['origin'], ['', 'null'])
             ->whereNotNull('checkout.'.$filters['origin'])
             ->groupBy('checkout.'.$filters['origin'])
             ->orderBy('sales_amount', 'DESC');
 
             if (!empty($filters['project_id'])) {
-                $query->where('sales.project_id', current(Hashids::decode($filters['project_id'])));
+                $projectId = current(Hashids::decode($filters['project_id']));
+
+                $query->where('sales.project_id', $projectId);
             } else {
                 $query->where('sales.owner_id', $userId);
             }
@@ -2997,37 +3018,5 @@ class ReportService
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
-    }
-
-    public function getRegionByIp($ip)
-    {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "https://geolocation-db.com/json/".$ip,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_POSTFIELDS => "",
-        ]);
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            return response()->json($err);
-        }
-
-        return $response;
-    }
-
-    public function getState($state)
-    {
-
     }
 }
