@@ -239,7 +239,20 @@
 
                                     <div class="row single-event d-none mb-20">
                                         <select name="single-event" id="single-event" class="sirius-select col-8">
-                                            <option value='checkout' name='checkout' class='checkout' selected>
+                                            <option value='purchase_all' name='purchase_pix' class='purchase-pix' selected>
+                                                Purchase - (Todos os métodos de pagamento)
+                                            </option>
+                                            <option value='purchase_card' name='purchase_card' class='purchase-card'>
+                                                Purchase - (Cartão)
+                                            </option>
+                                            <option value='purchase_boleto' name='purchase_boleto' class='purchase-boleto'>
+                                                Purchase - (Boleto)
+                                            </option>
+                                            <option value='purchase_pix' name='purchase_pix' class='purchase-pix'>
+                                                Purchase - (Pix)
+                                            </option>
+
+                                            <option value='checkout' name='checkout' class='checkout'>
                                                 Entrou no Checkout - (InitiateCheckout)
                                             </option>
                                             <option value='basic_data' name='basic_data' class='basic-data'>
@@ -253,18 +266,6 @@
                                             </option>
                                             <option value='coupon' name='coupon' class='coupon'>
                                                 Cupom - (AddCouponDiscount)
-                                            </option>
-                                            <option value='purchase_card' name='purchase_card' class='purchase-card'>
-                                                Purchase - (Cartão - Purchase)
-                                            </option>
-                                            <option value='purchase_boleto' name='purchase_boleto' class='purchase-boleto'>
-                                                Purchase - (Boleto - Purchase)
-                                            </option>
-                                            <option value='purchase_pix' name='purchase_pix' class='purchase-pix'>
-                                                Purchase - (Pix - Purchase)
-                                            </option>
-                                            <option value='purchase_all' name='purchase_pix' class='purchase-pix'>
-                                                Purchase - (Todos - Purchase)
                                             </option>
                                             <option value='upsell' name='upsell' class='upsell'>
                                                 Entrou no Upsell - (InitiateUpsell)
