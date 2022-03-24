@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\SaleContestation;
@@ -69,10 +70,12 @@ class UpdateReasonSafe2payContestations extends Command
                         $saleContestation = SaleContestation::where('sale_id',$sale->id)->first();
                         if(!empty($saleContestation) && empty($saleContestation->reason)){
                             $saleContestation->update([
-                                'request_date'=>$row->DisputeDueDate,
+                                'request_date'=>$row->ChargebackDate,
                                 'reason'=>$row->ReasonMessage,
                                 'nsu'=>$row->IdTransaction,
-                                'data'=>json_encode($row)
+                                'gateway_case_number'=>$row->CaseNumber,
+                                'data'=>json_encode($row),
+                                'expiration_date'=>$row->DisputeDueDate, //Data final para defesa da contestação.
                             ]);
                             $this->comment('Atualizando sale contestation '.$saleContestation->id);
                         }                       
