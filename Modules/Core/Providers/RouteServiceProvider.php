@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Profile\Providers;
+namespace Modules\Core\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
@@ -11,7 +11,7 @@ class RouteServiceProvider extends ServiceProvider
      * The module namespace to assume when generating URLs to actions.
      * @var string
      */
-    protected $moduleNamespace = 'Modules\Profile\Http\Controllers';
+    protected $moduleNamespace = 'Modules\Core\Http\Controllers';
 
     /**
      * Called before routes are registered.
@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->mapApiRoutes();
 
-        $this->mapWebRoutes();
+        // $this->mapWebRoutes();
     }
 
     /**
@@ -52,10 +52,10 @@ class RouteServiceProvider extends ServiceProvider
      * These routes all receive session state, CSRF protection, etc.
      * @return void
      */
-    protected function mapWebRoutes()
-    {
-        Route::middleware('web')
-             ->namespace($this->moduleNamespace)
-             ->group(__DIR__ . '/../Routes/web.php');
-    }
+    // protected function mapWebRoutes()
+    // {
+    //     Route::middleware('web')
+    //          ->namespace($this->moduleNamespace)
+    //          ->group(__DIR__ . '/../Routes/web.php');
+    // }
 }

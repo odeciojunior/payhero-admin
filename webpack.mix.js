@@ -232,14 +232,14 @@ mix.copy(
 
 /**
  * Modules/Companies/Resources/views/create.blade.php
- */
+ * /
 mix.babel([
     'Modules/Companies/Resources/assets/js/create.js'
 ],'public/build/layouts/companies/create.min.js');
 
 /**
  * Modules/Companies/Resources/views/edit_cnpj.blade.php
- */
+ * /
 mix.styles([
     'Modules/Profile/Resources/assets/css/basic.css',
     'Modules/Profile/Resources/assets/css/dropzone.css',
@@ -254,7 +254,7 @@ mix.babel([
 
 /**
  * Modules/Companies/Resources/views/edit_cpf.blade.php
- */
+ * /
 mix.styles([
     'Modules/Profile/Resources/assets/css/basic.css',
     'Modules/Profile/Resources/assets/css/dropzone.css',
@@ -269,28 +269,28 @@ mix.babel([
 
 /**
  * Modules/Companies/Resources/views/empty.blade.php
- */
+ * /
 mix.styles([
     'resources/modules/global/css/empty.css',
 ],'public/build/layouts/companies/empty.min.css')
 
 /**
  * Modules/Companies/Resources/views/index.blade.php
- */
+ * /
 mix.babel([
     'Modules/Companies/Resources/assets/js/index.js'
 ],'public/build/layouts/companies/index.min.js');
 
 /**
  * Modules/Companies/Resources/views/not_company_approved_getnet.blade.php
- */
+ * /
 mix.styles([
     'resources/modules/global/css/empty.css',
 ],'public/build/layouts/companies/not_company_approved_getnet.min.css')
 
 /**
  * Modules/Companies/Resources/views/testecreate.blade.php
- */
+ * /
 mix.styles([
     'Modules/Profile/Resources/assets/css/basic.css',
     'Modules/Profile/Resources/assets/css/dropzone.css'
@@ -613,7 +613,7 @@ mix.styles([
 
 /**
  * Modules/Profile/Resources/views/index.blade.php
- */
+
  mix.styles([
     'Modules/Profile/Resources/assets/css/basic.css',
     'Modules/Profile/Resources/assets/css/dropzone.css',
@@ -625,7 +625,7 @@ mix.babel([
     'Modules/Profile/Resources/assets/js/profile.js',
     'resources/cdn/select2.min.js'
 ],'public/build/layouts/profile/index.min.js');
-
+ */
 /**
  * Modules/Projects/Resources/views/projectaffiliate.blade.php
  */

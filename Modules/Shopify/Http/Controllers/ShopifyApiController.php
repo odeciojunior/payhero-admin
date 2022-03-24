@@ -11,7 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
