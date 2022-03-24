@@ -263,6 +263,9 @@
                                             <option value='purchase_pix' name='purchase_pix' class='purchase-pix'>
                                                 Purchase - (Pix - Purchase)
                                             </option>
+                                            <option value='purchase_all' name='purchase_pix' class='purchase-pix'>
+                                                Purchase - (Todos - Purchase)
+                                            </option>
                                             <option value='upsell' name='upsell' class='upsell'>
                                                 Entrou no Upsell - (InitiateUpsell)
                                             </option>

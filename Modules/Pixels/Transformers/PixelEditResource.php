@@ -15,6 +15,7 @@ class PixelEditResource extends JsonResource
             'code' => $this->code,
             'status' => $this->status,
             'checkout' => $this->checkout ? 'true' : 'false',
+            'purchase_all' => $this->purchase_all ? 'true' : 'false',
             'basic_data' => $this->basic_data ? 'true' : 'false',
             'delivery' => $this->delivery ? 'true' : 'false',
             'coupon' => $this->coupon ? 'true' : 'false',
