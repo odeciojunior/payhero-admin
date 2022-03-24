@@ -2768,19 +2768,31 @@ class ReportService
     public function getResumeTypePayments($filters)
     {
         try {
-            if ($this->getResumeSales($filters) == 0) {
-                return [];
-            }
+            $saleModel = new Sale();
 
-            $total = $this->getResumeTypePaymentsSum($filters);
+            $userId = auth()->user()->account_owner_id;
+            $status = Sale::STATUS_APPROVED;
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $totalCreditCard = $this->getResumeTypePaymentsSum($filters, Sale::CREDIT_CARD_PAYMENT);
+            $query = $saleModel
+            ->where('owner_id', $userId)
+            ->where('status', $status)
+            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[0].' 23:59:59' ])
+            ->selectRaw('SUM((sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100) as total')
+            ->selectRaw('SUM(IF(payment_method = 1, (sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100, 0)) as total_credit_card')
+            ->selectRaw('SUM(IF(payment_method = 2, (sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100, 0)) as total_boleto')
+            ->selectRaw('SUM(IF(payment_method = 4, (sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100, 0)) as total_pix')
+            ->first();
+
+            $total = $query->total;
+
+            $totalCreditCard = $query->total_credit_card;
             $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCard * 100) / $total, 2, '.', ',') : 0;
 
-            $totalBoleto = $this->getResumeTypePaymentsSum($filters, Sale::BOLETO_PAYMENT);
+            $totalBoleto = $query->total_boleto;
             $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoleto * 100) / $total, 2, '.', ',') : 0;
 
-            $totalPix = $this->getResumeTypePaymentsSum($filters, Sale::PIX_PAYMENT);
+            $totalPix = $query->total_pix;
             $percentagePix = $totalPix > 0 ? number_format(($totalPix * 100) / $total, 2, '.', ',') : 0;
 
             return [
@@ -2804,54 +2816,9 @@ class ReportService
         }
     }
 
-    public function getResumeTypePaymentsSum($filters, $typePayment = null)
-    {
-        try {
-            if ($this->getResumeSales($filters) == 0) {
-                return [];
-            }
-
-            $companieIds = [];
-            if (empty($filters["company"])) {
-                $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
-            } else {
-                $companieIds = [];
-
-                $companies = explode(',', $filters["company"]);
-                foreach($companies as $company) {
-                    array_push($companieIds, current(Hashids::decode($company)));
-                }
-            }
-
-            $typePaymentWhere = '';
-            if (!empty($typePayment)) {
-                $typePaymentWhere = 'AND sales.payment_method = '.$typePayment;
-            } else {
-                $typePaymentWhere = '';
-            }
-
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-
-            $query = 'SELECT SUM((sales.sub_total + sales.shipment_value) - (IFNULL(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as total
-            FROM transactions INNER JOIN sales ON sales.id = transactions.sale_id
-            WHERE transactions.company_id IN ('.implode(',', $companieIds).') AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")
-            AND sales.status = 1 AND sales.deleted_at IS NULL AND transactions.deleted_at IS NULL AND transactions.type <> 8 '.$typePaymentWhere.' AND transactions.invitation_id IS NULL';
-
-            $dbResults = DB::select($query);
-
-            return $dbResults[0]->total;
-        } catch(Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
-        }
-    }
-
     public function getResumeProducts($filters)
     {
         try {
-            if ($this->getResumeSales($filters) == 0) {
-                return [];
-            }
-
             $userId = auth()->user()->account_owner_id;
             $statusId = Sale::STATUS_APPROVED;
 
@@ -2903,10 +2870,6 @@ class ReportService
     public function getResumeCoupons($filters)
     {
         try {
-            if ($this->getResumeSales($filters) == 0) {
-                return [];
-            }
-
             $userId = auth()->user()->account_owner_id;
             $status = [1, 2, 4, 6, 7, 8, 12, 20, 22];
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
@@ -2918,7 +2881,9 @@ class ReportService
             ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
 
             if (!empty($filters["project"])) {
-                $query->where('project_id', Hashids::decode($filters["project"]));
+                $projectId = Hashids::decode($filters["project"]);
+
+                $query->where('project_id', $projectId);
             }
 
             $coupons = $query
