@@ -1237,12 +1237,7 @@ class ReportService
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
-                $transactions->whereHas(
-                    'sale',
-                    function ($querySale) use ($projectId) {
-                        $querySale->where('project_id', $projectId);
-                    }
-                );
+                $transactions->where('project_id', $projectId);
 
                 $affiliate = $affiliateModel
                 ->where('user_id', $userId)
@@ -1268,12 +1263,7 @@ class ReportService
                 Sale::STATUS_IN_DISPUTE
             ];
 
-            $transactions->whereHas(
-                'sale',
-                function ($querySale) use ($status) {
-                    $querySale->whereIn('status', $status);
-                }
-            );
+            $transactions->whereIn('status', $status);
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $date['startDate'] = $dateRange[0];
@@ -1308,6 +1298,7 @@ class ReportService
         date_default_timezone_set('America/Sao_Paulo');
 
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
         if (Carbon::parse($dateRange[0])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
             $labelList   = [];
             $currentHour = date('H');
@@ -1324,45 +1315,31 @@ class ReportService
             ];
         }
 
-        $transactions->whereHas(
-            'sale',
-            function ($querySale) use ($dateRange) {
-                $querySale->whereDate('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
-            }
-        );
-
-        $transactions
-        ->selectRaw('transactions.*, sales.start_date')
-        ->orderByDesc('sales.start_date');
-
         $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
         $statusDispute = Sale::STATUS_IN_DISPUTE;
 
         $resume = $transactions
         ->whereIn('status_enum', $transactionStatus)
         ->where('sales.status', '<>', $statusDispute)
+        ->whereDate('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
         ->select(DB::raw('transactions.value as commission, HOUR(sales.start_date) as hour'))
         ->get();
 
         $comissionData = [];
-        $valuesConcat = [];
 
         foreach ($labelList as $label) {
             $comissionValue = 0;
-            $comissionFormatedValue = number_format(0, 2, ',', '.');
 
             foreach ($resume as $r) {
                 if ($r->hour == preg_replace("/[^0-9]/", "", $label)) {
                     $comissionValue = intval(preg_replace("/[^0-9]/", "", $r->commission));
-                    $comissionFormatedValue = number_format($r->commission, 2, ',', '.');
                 }
             }
 
             array_push($comissionData, $comissionValue);
-            array_push($valuesConcat, $label.": ".$comissionFormatedValue);
         }
 
-        $total = number_format(array_sum($comissionData), 2, ',', '.');
+        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
         return [
             'chart' => [
@@ -1400,24 +1377,20 @@ class ReportService
         ->get();
 
         $comissionData = [];
-        $valuesConcat = [];
 
         foreach ($labelList as $label) {
             $comissionValue = 0;
-            $comissionFormatedValue = number_format(0, 2, ',', '.');
 
             foreach ($resume as $r) {
                 if (Carbon::parse($r->date)->format('d-m') == $label) {
-                    $comissionValue = intval(preg_replace("/[^0-9]/", "", $r->commission));
-                    $comissionFormatedValue = number_format($r->commission, 2, ',', '.');
+                    $comissionValue += intval(preg_replace("/[^0-9]/", "", $r->commission));
                 }
             }
 
             array_push($comissionData, $comissionValue);
-            array_push($valuesConcat, $label.": ".$comissionFormatedValue);
         }
 
-        $total = number_format(array_sum($comissionData), 2, ',', '.');
+        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
         return [
             'chart' => [
@@ -1463,11 +1436,9 @@ class ReportService
         ->get();
 
         $comissionData = [];
-        $valuesConcat = [];
 
         foreach ($labelList as $label) {
             $comissionDataValue = 0;
-            $comissionFormatedValue = number_format(0, 2, ',', '.');
 
             foreach ($resume as $r) {
                 if ((Carbon::parse($r->date)->subDays(1)->format('d/m') == $label) || (Carbon::parse($r->date)->format('d/m') == $label)) {
@@ -1476,10 +1447,9 @@ class ReportService
             }
 
             array_push($comissionData, $comissionDataValue);
-            array_push($valuesConcat, $label.": ".number_format($comissionDataValue, 2, ',', '.'));
         }
 
-        $total = number_format(array_sum($comissionData), 2, ',', '.');
+        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
         return [
             'chart' => [
@@ -1523,7 +1493,6 @@ class ReportService
         ->get();
 
         $comissionData = [];
-        $valuesConcat = [];
 
         foreach ($labelList as $label) {
             $comissionDataValue = 0;
@@ -1537,10 +1506,9 @@ class ReportService
             }
 
             array_push($comissionData, $comissionDataValue);
-            array_push($valuesConcat, $label.": ".number_format($comissionDataValue, 2, ',', '.'));
         }
 
-        $total = number_format(array_sum($comissionData), 2, ',', '.');
+        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
         return [
             'chart' => [
@@ -1584,7 +1552,6 @@ class ReportService
         ->get();
 
         $comissionData = [];
-        $valuesConcat = [];
 
         foreach ($labelList as $label) {
             $comissionDataValue = 0;
@@ -1598,10 +1565,9 @@ class ReportService
             }
 
             array_push($comissionData, $comissionDataValue);
-            array_push($valuesConcat, $label.": ".number_format($comissionDataValue, 2, ',', '.'));
         }
 
-        $total = number_format(array_sum($comissionData), 2, ',', '.');
+        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
         return [
             'chart' => [
@@ -1639,7 +1605,6 @@ class ReportService
         ->get();
 
         $comissionData = [];
-        $valuesConcat = [];
 
         foreach ($labelList as $label) {
             $comissionDataValue = 0;
@@ -1651,10 +1616,9 @@ class ReportService
             }
 
             array_push($comissionData, $comissionDataValue);
-            array_push($valuesConcat, $label.": ".number_format($comissionDataValue, 2, ',', '.'));
         }
 
-        $total = number_format(array_sum($comissionData), 2, ',', '.');
+        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
         return [
             'chart' => [
@@ -1666,102 +1630,768 @@ class ReportService
         ];
     }
 
+    // ----------------------------------------
     public function getResumePendings($filters)
     {
         try {
-            if ($this->getResumeSales($filters) == 0) {
-                return [];
-            }
+            $saleModel = new Sale();
+            $affiliateModel = new Affiliate();
 
-            $status = Transaction::STATUS_PAID;
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $userId = auth()->user()->account_owner_id;
+            $status = Sale::STATUS_PENDING;
 
-            $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
-            if (!empty($filters["company"])) {
-                $companieIds = [];
+            $sales = $saleModel
+            ->where('owner_id', $userId)
+            ->where('status', $status);
 
-                $companies = explode(',', $filters["company"]);
-                foreach($companies as $company) {
-                    array_push($companieIds, current(Hashids::decode($company)));
-                }
-            }
-
-            $filterProjects = '';
-            $projectIds = [];
             if (!empty($filters["project"])) {
-                $projectIds = [];
+                $projectId = current(Hashids::decode($filters["project"]));
+                $sales->where('project_id', $projectId);
 
-                $projects = explode(',', $filters["project"]);
+                $affiliate = $affiliateModel
+                ->where('user_id', $userId)
+                ->where('project_id', $projectId)
+                ->first();
 
-                foreach($projects as $project){
-                    array_push($projectIds, current(Hashids::decode($project)));
+                if (!empty($affiliate)) {
+                    $sales->where('affiliate_id', $affiliate->id);
+                } else {
+                    $sales->where('owner_id', $userId);
                 }
-
-                $filterProjects = 'sales.project_id IN ('.implode($projectIds).') AND';
             }
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $date['startDate'] = $dateRange[0];
+            $date['endDate'] = $dateRange[1];
 
-            $query = 'SELECT SUM((sales.sub_total + sales.shipment_value) - (IFNULL(sales.shopify_discount, 0) + sales.automatic_discount) / 100) as pending
-            FROM transactions
-            INNER JOIN sales ON sales.id = transactions.sale_id
-            WHERE transactions.status_enum = '.$status.' '.$filterProjects.'
-            AND transactions.company_id in ('.implode($companieIds).')
-            AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")';
+            if ($date['startDate'] == $date['endDate']) {
+                return $this->getResumePendingsByHours($sales, $filters);
+            } elseif ($date['startDate'] != $date['endDate']) {
+                $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
+                $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
+                $diffInDays = $endDate->diffInDays($startDate);
 
-            $dbResults = DB::select($query);
-
-            return number_format($dbResults[0]->pending, 2, ',', '.');
+                if ($diffInDays <= 20) {
+                    return $this->getResumePendingsByDays($sales, $filters);
+                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                    return $this->getResumePendingsByTwentyDays($sales, $filters);
+                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                    return $this->getResumePendingsByFortyDays($sales, $filters);
+                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                    return $this->getResumePendingsByWeeks($sales, $filters);
+                } elseif ($diffInDays > 140) {
+                    return $this->getResumePendingsByMonths($sales, $filters);
+                }
+            }
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 
+    public function getResumePendingsByHours($sales, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        if (Carbon::parse($dateRange[0])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
+            $labelList   = [];
+            $currentHour = date('H');
+            $startHour   = 0;
+
+            while ($startHour <= $currentHour) {
+                array_push($labelList, $startHour . 'h');
+                $startHour++;
+            }
+        } else {
+            $labelList = [
+                '0h', '1h', '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', '10h', '11h',
+                '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h',
+            ];
+        }
+
+        $resume = $sales
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, HOUR(start_date) as hour'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                if ($r->hour == preg_replace("/[^0-9]/", "", $label)) {
+                    $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
+                    $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
+                    $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
+                    $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
+
+                    $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumePendingsByDays($sales, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $labelList    = [];
+        $dataFormated = Carbon::parse($dateRange[0]);
+        $endDate      = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d-m'));
+            $dataFormated = $dataFormated->addDays(1);
+        }
+
+        $resume = $sales
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, DATE(start_date) as date'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                if (Carbon::parse($r->date)->format('d-m') == $label) {
+                    $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
+                    $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
+                    $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
+                    $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
+
+                    $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumePendingsByTwentyDays($sales, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList    = [];
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(1);
+        $endDate      = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(2);
+            if ($dataFormated->diffInDays($endDate) < 2 && $dataFormated->diffInDays($endDate) > 0) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $sales
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, DATE(start_date) as date'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                if ((Carbon::parse($r->date)->subDays(1)->format('d/m') == $label) || (Carbon::parse($r->date)->format('d/m') == $label)) {
+                    $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
+                    $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
+                    $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
+                    $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
+
+                    $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumePendingsByFortyDays($sales, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(2);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(3);
+            if ($dataFormated->diffInDays($endDate) < 3) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $sales
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, DATE(start_date) as date'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                for ($x = 1; $x <= 3; $x++) {
+                    if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
+                        $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
+                        $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
+                        $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
+                        $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
+
+                        $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                    }
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumePendingsByWeeks($sales, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(6);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(7);
+            if ($dataFormated->diffInDays($endDate) < 7) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $sales
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, DATE(start_date) as date'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                for ($x = 1; $x <= 6; $x++) {
+                    if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
+                        $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
+                        $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
+                        $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
+                        $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
+
+                        $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                    }
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumePendingsByMonths($sales, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0]);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('m/y'));
+            $dataFormated = $dataFormated->addMonths(1);
+        }
+
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $sales
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, DATE(start_date) as date'))
+        ->get();
+
+        $saleData = [];
+
+        foreach ($labelList as $label) {
+            $saleDataValue = 0;
+
+            foreach ($resume as $r) {
+                if (Carbon::parse($r->date)->format('m/y') == $label) {
+                    $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
+                    $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
+                    $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
+                    $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
+
+                    $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                }
+            }
+
+            array_push($saleData, $saleDataValue);
+        }
+
+        $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $saleData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    // -----------------------------------------
     public function getResumeCashbacks($filters)
     {
         try {
-            if ($this->getResumeSales($filters) == 0) {
-                return [];
-            }
+            $cashbackModel = new Cashback();
+            $companyModel = new Company();
 
-            $filterProjects = '';
-            $projectIds = [];
+            $userId = auth()->user()->account_owner_id;
+
+            $userCompanies = $companyModel->where('user_id', $userId)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+            $cashbacks = $cashbackModel
+            ->with('sale')
+            ->whereIn('company_id', $userCompanies)
+            ->join('sales', 'sales.id', 'cashbacks.sale_id');
+
             if (!empty($filters["project"])) {
-                $projectIds = [];
+                $projectId = current(Hashids::decode($filters["project"]));
 
-                $projects = explode(',', $filters["project"]);
-
-                foreach($projects as $project){
-                    array_push($projectIds, current(Hashids::decode($project)));
-                }
-
-                $filterProjects = 'sales.project_id IN ('.implode($projectIds).') AND';
-            }
-
-            $companieIds = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
-            if (!empty($filters["company"])) {
-                $companieIds = [];
-
-                $companies = explode(',', $filters["company"]);
-                foreach($companies as $company) {
-                    array_push($companieIds, current(Hashids::decode($company)));
-                }
+                $cashbacks->where('sales.project_id', $projectId);
             }
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $date['startDate'] = $dateRange[0];
+            $date['endDate'] = $dateRange[1];
 
-            $query = 'SELECT SUM(cashbacks.value) / 100 as cashback
-            FROM cashbacks
-            INNER JOIN sales ON sales.id = cashbacks.sale_id
-            WHERE '.$filterProjects.'
-            cashbacks.company_id in ('.implode($companieIds).')
-            AND (sales.start_date BETWEEN "'.$dateRange[0].' 00:00:00" AND "'.$dateRange[1].' 23:59:59")';
+            if ($date['startDate'] == $date['endDate']) {
+                return $this->getResumeCashbacksByHours($cashbacks, $filters);
+            } elseif ($date['startDate'] != $date['endDate']) {
+                $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
+                $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
+                $diffInDays = $endDate->diffInDays($startDate);
 
-            $dbResults = DB::select($query);
-
-            return number_format($dbResults[0]->cashback, 2, ',', '.');
+                if ($diffInDays <= 20) {
+                    dd('days');
+                    return $this->getResumeCashbacksByDays($cashbacks, $filters);
+                } elseif ($diffInDays > 20 && $diffInDays <= 40) {
+                    dd('twenty days');
+                    return $this->getResumeCashbacksByTwentyDays($cashbacks, $filters);
+                } elseif ($diffInDays > 40 && $diffInDays <= 60) {
+                    return $this->getResumeCashbacksByFortyDays($cashbacks, $filters);
+                } elseif ($diffInDays > 60 && $diffInDays <= 140) {
+                    return $this->getResumeCashbacksByWeeks($cashbacks, $filters);
+                } elseif ($diffInDays > 140) {
+                    return $this->getResumeCashbacksByMonths($cashbacks, $filters);
+                }
+            }
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
+    }
+
+    public function getResumeCashbacksByHours($cashbacks, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        if (Carbon::parse($dateRange[0])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
+            $labelList   = [];
+            $currentHour = date('H');
+            $startHour   = 0;
+
+            while ($startHour <= $currentHour) {
+                array_push($labelList, $startHour . 'h');
+                $startHour++;
+            }
+        } else {
+            $labelList = [
+                '0h', '1h', '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', '10h', '11h',
+                '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h',
+            ];
+        }
+
+        $resume = $cashbacks
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('cashbacks.value as cashback, HOUR(sales.start_date) as hour'))
+        ->get();
+
+        $cashbackData = [];
+
+        foreach ($labelList as $label) {
+            $cashbackDataValue = 0;
+
+            foreach ($resume as $r) {
+                if ($r->hour == preg_replace("/[^0-9]/", "", $label)) {
+                    $cashbackDataValue += intval(preg_replace("/[^0-9]/", "", $r->cashback));
+                }
+            }
+
+            array_push($cashbackData, $cashbackDataValue);
+        }
+
+        $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $cashbackData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumeCashbacksByDays($cashbacks, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $labelList    = [];
+        $dataFormated = Carbon::parse($dateRange[0]);
+        $endDate      = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d-m'));
+            $dataFormated = $dataFormated->addDays(1);
+        }
+
+        $resume = $cashbacks
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
+        ->get();
+
+        $cashbackData = [];
+
+        foreach ($labelList as $label) {
+            $cashbackDataValue = 0;
+
+            foreach ($resume as $r) {
+                if (Carbon::parse($r->date)->format('d-m') == $label) {
+                    $cashbackDataValue += intval(preg_replace("/[^0-9]/", "", $r->cashback));
+                }
+            }
+
+            array_push($saleData, $cashbackDataValue);
+        }
+
+        $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $cashbackData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumeCashbacksByTwentyDays($cashbacks, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList    = [];
+
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(1);
+        $endDate      = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(2);
+            if ($dataFormated->diffInDays($endDate) < 2 && $dataFormated->diffInDays($endDate) > 0) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $cashbacks
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
+        ->get();
+
+        $cashbackData = [];
+
+        foreach ($labelList as $label) {
+            $cashbackDataValue = 0;
+
+            foreach ($resume as $r) {
+                if ((Carbon::parse($r->date)->subDays(1)->format('d/m') == $label) || (Carbon::parse($r->date)->format('d/m') == $label)) {
+                    $cashbackDataValue += intval(preg_replace("/[^0-9]/", "", $r->cashback));
+                }
+            }
+
+            array_push($cashbackData, $cashbackDataValue);
+        }
+
+        $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $cashbackData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumeCashbacksByFortyDays($cashbacks, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(2);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(3);
+            if ($dataFormated->diffInDays($endDate) < 3) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $cashbacks
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
+        ->get();
+
+        $cashbackData = [];
+
+        foreach ($labelList as $label) {
+            $cashbackDataValue = 0;
+
+            foreach ($resume as $r) {
+                for ($x = 1; $x <= 3; $x++) {
+                    if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
+                        $cashbackDataValue += intval(preg_replace("/[^0-9]/", "", $r->cashback));
+                    }
+                }
+            }
+
+            array_push($cashbackData, $cashbackDataValue);
+        }
+
+        $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $cashbackData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumeCashbacksByWeeks($cashbacks, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0])->addDays(6);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('d/m'));
+            $dataFormated = $dataFormated->addDays(7);
+            if ($dataFormated->diffInDays($endDate) < 7) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                array_push($labelList, $dataFormated->format('d/m'));
+                break;
+            }
+        }
+
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $cashbacks
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
+        ->get();
+
+        $cashbackData = [];
+
+        foreach ($labelList as $label) {
+            $cashbackDataValue = 0;
+
+            foreach ($resume as $r) {
+                for ($x = 1; $x <= 6; $x++) {
+                    if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
+                        $cashbackDataValue += intval(preg_replace("/[^0-9]/", "", $r->cashback));
+                    }
+                }
+            }
+
+            array_push($cashbackData, $cashbackDataValue);
+        }
+
+        $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $cashbackData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
+    }
+
+    public function getResumeCashbacksByMonths($cashbacks, $filters)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $labelList = [];
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dataFormated = Carbon::parse($dateRange[0]);
+        $endDate = Carbon::parse($dateRange[1]);
+
+        while ($dataFormated->lessThanOrEqualTo($endDate)) {
+            array_push($labelList, $dataFormated->format('m/y'));
+            $dataFormated = $dataFormated->addMonths(1);
+        }
+
+        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+        $resume = $cashbacks
+        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
+        ->get();
+
+        $cashbackData = [];
+
+        foreach ($labelList as $label) {
+            $cashbackDataValue = 0;
+
+            foreach ($resume as $r) {
+                if (Carbon::parse($r->date)->format('m/y') == $label) {
+                    $cashbackDataValue += intval(preg_replace("/[^0-9]/", "", $r->cashback));
+                }
+            }
+
+            array_push($cashbackData, $cashbackDataValue);
+        }
+
+        $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $cashbackData
+            ],
+            'total' => $total,
+            'variation' => ''
+        ];
     }
 
     // SALES --------------------------------------------------------------------------------------
@@ -2136,6 +2766,7 @@ class ReportService
         ];
     }
 
+    // --------------------------------------------
     public function getResumeTypePayments($filters)
     {
         try {
