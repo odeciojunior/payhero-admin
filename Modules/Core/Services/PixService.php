@@ -54,7 +54,7 @@ class PixService
                     ]
                 );
 
-                $pix = $sale->pixCharges->where('pix_charges.status', 'ATIVA')->first();
+                $pix = $sale->pixCharges->where('status', 'ATIVA')->first();
 
                 if (!FoxUtils::isEmpty($pix)) {
                     //Atualizar pixCharges
