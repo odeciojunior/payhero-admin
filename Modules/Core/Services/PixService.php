@@ -4,13 +4,10 @@ namespace Modules\Core\Services;
 
 use Exception;
 use Carbon\Carbon;
-use Modules\Core\Entities\Gateway;
-use Modules\Core\Entities\PixCharge;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\PixExpiredEvent;
-use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class PixService
@@ -24,12 +21,19 @@ class PixService
      */
     public function changePixToCanceled()
     {
+
         try {
 
             $sales = Sale::with('transactions')
-                            ->where('payment_method', '=', Sale::PIX_PAYMENT)
-                            ->where('status', Sale::STATUS_PENDING)
-                            ->where( 'created_at', '<=', Carbon::now()->subHour()->toDateTimeString());
+            ->where('payment_method', '=', Sale::PIX_PAYMENT)
+            ->where('status', Sale::STATUS_PENDING)
+            ->whereHas(
+                'pixCharges',
+                function ($querySale) {
+                    $querySale->where('status', 'ATIVA');
+                    $querySale->where( 'created_at', '<=', Carbon::now()->subHour()->toDateTimeString());
+                }
+            );
 
             foreach ($sales->cursor() as $sale) {
 
@@ -42,11 +46,20 @@ class PixService
                     ]);
                 }
 
-                SaleLog::create([
+                SaleLog::create(
+                    [
                         'status' => 'canceled',
                         'status_enum' => 5,
                         'sale_id' => $sale->id,
-                ]);
+                    ]
+                );
+
+                $pix = $sale->pixCharges->where('pix_charges.status', 'ATIVA')->first();
+
+                if (!FoxUtils::isEmpty($pix)) {
+                    //Atualizar pixCharges
+                    $pix->update(['status' => 'EXPIRED']);
+                }
 
                 event(new PixExpiredEvent($sale));
 
