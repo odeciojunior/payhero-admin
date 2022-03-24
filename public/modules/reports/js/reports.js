@@ -19,23 +19,31 @@ $(function () {
             
             error: function error(response) {
                 errorAjaxResponse(response);
+                $('#card-cashback .ske-load').hide();
+                $('.graph-cashback').remove();
+                $("#cashback").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
+                $('.new-graph-cashback').removeClass('visible');
+                $('.new-graph-cashback').next('.no-graph').remove();
+                $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
             },
             success: function success(response, status) {
                 if(status !== ''){
                     if(response.data != ''){
-                        let value = response.data.replace("R$", "");
+                        let value = response.data.total;
                         $("#cashback").html("<span class='currency'>R$ </span>" + value).addClass('visible');
     
-                        if(response.data != '0,00') {
+                        if(response.data.total != '0,00') {
                             $('.new-graph-cashback').html('<canvas id=graph-cashback></canvas>').addClass('visible');
                             $(".new-graph-cashback").next('.no-graph').remove();
                             
-                            let series = [120, 90, 700, 500, 5, 150, 20];
-                            newGraphCashback(series);
+                            let labels = [...response.data.chart.labels];
+                            let series = [...response.data.chart.values];
+                            newGraphCashback(series, labels);
                             
                         } else {
                             $('#graph-cashback').addClass('invisible');
                             $(".new-graph-cashback").next('.no-graph').remove();
+                            $('.new-graph-cashback').removeClass('visible');
                             $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
                             $("#cashback").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
                         }                    
@@ -53,7 +61,7 @@ $(function () {
     }
 
     function getPending() {
-        
+        let antes = Date.now();
         return $.ajax({
             method: "GET",
             url: resumeUrl+ "/pendings?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -64,41 +72,39 @@ $(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
+                $('#card-pending .ske-load').hide();
+                $('.graph-pending').remove();
+                $("#pending").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
+                $('.new-graph-pending').removeClass('visible');
+                $('.new-graph-pending').next('.no-graph').remove();
+                $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
             },
             success: function success(response, status) {
-                if(response.data != ''){
-                    let value = response.data.replace("R$", " ");
-                    $("#pending").html("<span class='currency'>R$ </span>" + value).addClass('visible');
+                $("#pending").html("<span class='currency'>R$ </span>" + response.data.total).addClass('visible');
+                
+                if(response.data.total !== '0,00') {
+                    $('.new-graph-pending').html('<canvas id=graph-pending></canvas>').addClass('visible');
+                    $(".new-graph-pending").next('.no-graph').remove();
                     
-                    if(response.data !== '0,00') {
-                        $('.new-graph-pending').html('<canvas id=graph-pending></canvas>').addClass('visible');
-                        $(".new-graph-pending").next('.no-graph').remove();
-                        
-                        let series = [12, 9, 7, 8, 5]; 
-                        newGraphPending(series);
+                    let labels = [...response.data.chart.labels];
+                    let series = [...response.data.chart.values]; 
+                    newGraphPending(series,labels);
 
-
-                    } else {
-                        $('#graph-pending').addClass('invisible');
-                        $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
-                        $("#pending").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
-                    }
                 } else {
-                    $('.graph-pending').remove();
-                    $("#pending").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
+                    $('#graph-pending').addClass('invisible');
                     $('.new-graph-pending').removeClass('visible');
-                    $('.new-graph-pending').next('.no-graph').remove();
                     $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
+                    $("#pending").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
                 }
+
                 $('#card-pending .ske-load').hide();
+                console.log("Durou " + Number((Date.now() - antes) / 1000) + "s");
             }
         });
     }
                 
     function getCommission() {               
 
-        let antes = Date.now();
-        
         return $.ajax({
             method: "GET",
             url: resumeUrl + "/commissions?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -117,33 +123,24 @@ $(function () {
             },
             success: function success(response) {
                 
-                if(response.data != ''){
-                    let value = response.data.total;
-                    
-                    $("#comission").html("<span class='currency'>R$ </span>" + value).addClass('visible');
-                    
-                    if(response.data.total !== '0,00') {
-                        $('.new-graph').html('<canvas id=comission-graph></canvas>').addClass('visible');
-                        $(".new-graph").next('.no-graph').remove();
+                $("#comission").html("<span class='currency'>R$ </span>" + response.data.total).addClass('visible');
+                
+                if(response.data.total !== '0,00') {
+                    $('.new-graph').html('<canvas id=comission-graph></canvas>').addClass('visible');
+                    $(".new-graph").next('.no-graph').remove();
 
-                        let labels = [...response.data.chart.labels];
-                        let series = [...response.data.chart.values];
-                        graphComission(series, labels);
-                        
-                    } else {
-                        $('#comission-graph').addClass('invisible');
-                        $('.new-graph').removeClass('visible');
-                        $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
-                        $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
-                    }
+                    let labels = [...response.data.chart.labels];
+                    let series = [...response.data.chart.values];
+                    graphComission(series, labels);
+                    
                 } else {
-                    $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
+                    $('#comission-graph').addClass('invisible');
                     $('.new-graph').removeClass('visible');
-                    $('.new-graph').next('.no-graph').remove();
                     $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
+                    $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
                 }
+
                 $('#card-comission .ske-load').hide();
-                console.log("Durou " + Number((Date.now() - antes) / 1000) + "s");
             }
         });
         
@@ -161,16 +158,19 @@ $(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
+                
             },
             success: function success(response) {
                 $("#sales").addClass('visible');
-                if(response.data != '0'){
-                    $("#sales").html(response.data);                        
+                $("#sales").html(response.data.total);
+                
+                if(response.data.total !== 0){
                     $('.new-graph-sell').html('<canvas id=graph-sell></canvas>').addClass('visible');
                     $(".new-graph-sell").next('.no-graph').remove();
 
-                    let series = [120, 90, 17, 998, 5];  
-                    newGraphSell(series);
+                    let labels = [...response.data.chart.labels];
+                    let series = [...response.data.chart.values];
+                    newGraphSell(series, labels);
                     
                 } else {
                     $('#graph-sell').remove();
@@ -196,6 +196,13 @@ $(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
+                // $('#card-products .ske-load').hide();
+                // $('#card-products .value-price').removeClass('invisible');
+                // $("#qtd").html(0);
+                // $("#card-products .value-price").next('.no-graph').remove();
+                // $("#card-products .value-price").after('<div class=no-graph>Não há dados suficientes</div>');
+                // $('.no-graph').css('height','111px');
+                // $(".footer-products").removeClass('visible');
             },
             success: function success(response) {
                 $('#card-products .ske-load').show();
@@ -203,43 +210,36 @@ $(function () {
                 $("#card-products .value-price").next('.no-graph').remove();
                 $('.list-products li').remove();
 
-                if(response.data != ''){
-                    $.each(response.data, function (i, product) {
-                        if(product.total != 0) {
-                            if(product.amount) {
-                                $(".list-products").append(
-                                    $("<li class='" + ( (i > 3 && i < 8) ? 'line': '' ) + "'>"+
-                                        "<div class='box-list-products'>"+
-                                        "<figure data-container='body' data-viewport='.container' data-placement='top' data-toggle='tooltip' title='" + product.name +"'><img class='photo' src='"+ product.image +"' width='24px' height='24px' /></figure>"+
-                                        "<div class='bars " +product.color+ "' style='width:"+ product.percentage +"'>"+
-                                        "<span>" + product.amount + "</span></div></div></li>"
-                                    )
-                                );
-                                $(".list-products, .footer-products").addClass('visible');
-                                $('#card-products .value-price').addClass('invisible');
-                                $('[data-toggle="tooltip"]').tooltip({
-                                    container: '.list-products'
-                                });
+                $.each(response.data, function (i, product) {
+                    if(product.total != 0) {
+                        if(product.amount) {
+                            $(".list-products").append(
+                                $("<li class='" + ( (i > 3 && i < 8) ? 'line': '' ) + "'>"+
+                                    "<div class='box-list-products'>"+
+                                    "<figure data-container='body' data-viewport='.container' data-placement='top' data-toggle='tooltip' title='" + product.name +"'><img class='photo' src='"+ product.image +"' width='24px' height='24px' /></figure>"+
+                                    "<div class='bars " +product.color+ "' style='width:"+ product.percentage +"'>"+
+                                    "<span>" + product.amount + "</span></div></div></li>"
+                                )
+                            );
+                            $(".list-products, .footer-products").addClass('visible');
+                            $('#card-products .value-price').addClass('invisible');
+                            $('[data-toggle="tooltip"]').tooltip({
+                                container: '.list-products'
+                            });
 
-                                $('.photo').on('error', function() {
-                                    $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
-                                });
-                            }
-                        } else {
-                            $('#card-products .value-price').removeClass('invisible');
-                            $("#qtd").html(0);
-                            $(".footer-products").removeClass('visible');
+                            $('.photo').on('error', function() {
+                                $(this).attr('src', 'https://cloudfox-files.s3.amazonaws.com/produto.svg');
+                            });
                         }
-                    });
-                } else {
-                    $('#card-products .value-price').removeClass('invisible');
-                    $("#qtd").html('0');
-                    
-                    $("#card-products .value-price").next('.no-graph').remove();
-                    $("#card-products .value-price").after('<div class=no-graph>Não há dados suficientes</div>');
-                    $('.no-graph').css('height','111px');
-                    $(".footer-products").removeClass('visible');
-                }
+                    } else {
+                        $('#card-products .value-price').removeClass('invisible');
+                        $("#qtd").html(0);
+                        $("#card-products .value-price").next('.no-graph').remove();
+                        $("#card-products .value-price").after('<div class=no-graph>Não há dados suficientes</div>');
+                        $('.no-graph').css('height','111px');
+                        $(".footer-products").removeClass('visible');
+                    }
+                });
                 $('#card-products .ske-load').hide();
             }
         });
@@ -970,7 +970,7 @@ $(function () {
 
     
     
-    function newGraphSell(series) {
+    function newGraphSell(series, labels) {
         const titleTooltip = (tooltipItems) => {
             return '';
         }   
@@ -995,7 +995,7 @@ $(function () {
                 plugins: [legendMargin],
                 type: 'line',
                 data: {
-                    labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'],
+                    labels,
                     datasets: [
                         {
                             label: 'Legenda',
@@ -1052,7 +1052,7 @@ $(function () {
             });
     }
 
-    function newGraphCashback(series) {
+    function newGraphCashback(series, labels) {
         const titleTooltip = (tooltipItems) => {
             return '';
         }   
@@ -1077,7 +1077,7 @@ $(function () {
                 plugins: [legendMargin],
                 type: 'line',
                 data: {
-                    labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'],
+                    labels,
                     datasets: [
                         {
                             label: 'Legenda',
@@ -1133,7 +1133,7 @@ $(function () {
                   },
             });
     }
-    function newGraphPending(series) {
+    function newGraphPending(series, labels) {
         const titleTooltip = (tooltipItems) => {
             return '';
         }   
@@ -1158,7 +1158,7 @@ $(function () {
                 plugins: [legendMargin],
                 type: 'line',
                 data: {
-                    labels: ['Março', 'Abril', 'Maio', 'Junho', 'Julho'],
+                    labels,
                     datasets: [
                         {
                             label: 'Legenda',
