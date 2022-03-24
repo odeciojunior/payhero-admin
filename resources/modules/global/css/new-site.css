@@ -1146,6 +1146,10 @@ input[type=radio] {
     padding: 12px;
 }
 
+#notificationTemplate::-webkit-scrollbar{
+    width: 10px;
+}
+
 #notifications_card > #notificationTemplate {
     /* width: 358px;  */
     height: 100%

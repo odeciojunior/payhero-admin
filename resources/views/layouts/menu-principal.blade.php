@@ -53,7 +53,7 @@
                         <div id="notifications_card" class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
                             <div id="my-iframe" class="announcekit-widget"></div>
                             
-                            <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! mix('build/global/img/notificacoes.svg')!!}"></div>
+                            <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! mix('build/global/img/notificacoes.svg')!!}" style="scrollbar-width:thin;"></div>
                             
                         </div>
 
