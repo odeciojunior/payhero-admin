@@ -1263,7 +1263,7 @@ class ReportService
                 Sale::STATUS_IN_DISPUTE
             ];
 
-            $transactions->whereIn('status', $status);
+            $transactions->whereIn('transactions.status', $status);
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $date['startDate'] = $dateRange[0];
@@ -2066,10 +2066,8 @@ class ReportService
                 $diffInDays = $endDate->diffInDays($startDate);
 
                 if ($diffInDays <= 20) {
-                    dd('days');
                     return $this->getResumeCashbacksByDays($cashbacks, $filters);
                 } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                    dd('twenty days');
                     return $this->getResumeCashbacksByTwentyDays($cashbacks, $filters);
                 } elseif ($diffInDays > 40 && $diffInDays <= 60) {
                     return $this->getResumeCashbacksByFortyDays($cashbacks, $filters);
@@ -2167,7 +2165,7 @@ class ReportService
                 }
             }
 
-            array_push($saleData, $cashbackDataValue);
+            array_push($cashbackData, $cashbackDataValue);
         }
 
         $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
