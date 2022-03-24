@@ -675,13 +675,13 @@ input[type=radio] {
     padding: 0px !important;
     display: flex !important;
     position: absolute !important;
-    top: 2.1em;
-    right: 1.6em;
+    top: 1.4em;
+    right: 1.2em;
     align-items: center;
     justify-content: center;
-    height: 8px !important;
-    width: 8px !important;
-    background-color: #F41C1C;
+    height: 12px !important;
+    width: 12px !important;
+    background-color: #2E85EC;
 }
 
 .badge-notification-true {
@@ -697,6 +697,11 @@ input[type=radio] {
     justify-content: center;
     height: 8px !important;
     width: 8px !important;
+}
+#my-iframe{
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
 }
 
 .badge-pendente, .badge-pending {
@@ -1137,8 +1142,8 @@ input[type=radio] {
     min-height: 150px;
     background-color: #FFFFFF;
     box-shadow: 0px 1px 30px #00000026;
-    border-radius: 16px !important;
-    padding: 8px;
+    border-radius: 6px !important;
+    padding: 12px;
 }
 
 #notifications_card > #notificationTemplate {

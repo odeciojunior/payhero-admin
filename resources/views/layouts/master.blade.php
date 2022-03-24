@@ -51,9 +51,11 @@
 </head>
 <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TDM6SV5"
-                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TDM6SV5" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
     <!-- End Google Tag Manager (noscript) -->
+    
     @include("layouts.loading")
 
     @include("layouts.menu-principal")
@@ -79,12 +81,9 @@
 
     <!-- Plugins -->
     <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
-    <script>
-        verifyDocumentPending();
-    </script>
+    <script> verifyDocumentPending(); </script>
     <script src="{{ mix('build/layouts/master/plugins2.min.js') }}"></script>
-
-
+    
     @stack('scripts')
 
     @if(env('APP_ENV', 'production') == 'production')

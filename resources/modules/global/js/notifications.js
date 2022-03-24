@@ -209,5 +209,4 @@ $(document).ready(function () {
 
         return { message: message, iconClass: iconClass, iconColor: iconColor, iconBackgroundColor: iconBackgroundColor, link: link, time: data.time, background: backgroundColor};
     }
-
 });

@@ -35,9 +35,11 @@
                     </a>
                 </li>
             </ul>
+
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
                 @hasanyrole('account_owner|admin')
                     <li id="notifications_button" class="nav-item dropdown" disabled='true'>
+
                         <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
                             <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Notificacao">
 
@@ -47,10 +49,14 @@
                                 <span class="badge badge-notification-false" id="notification-amount"></span>
                             @endif
                         </span>
+
                         <div id="notifications_card" class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
-                            <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! mix('build/global/img/notificacoes.svg')!!}">
-                            </div>
+                            <div id="my-iframe" class="announcekit-widget"></div>
+                            
+                            <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! mix('build/global/img/notificacoes.svg')!!}"></div>
+                            
                         </div>
+
                     </li>
                 @endhasanyrole
                 <li class="nav-item dropdown">
@@ -346,3 +352,15 @@
         @endcan
     </ul>
 </div>
+<script>
+    window.announcekit = (window.announcekit || { queue: [], on: function(n, x) { 
+      window.announcekit.queue.push([n, x]); }, push: function(x) { window.announcekit.queue.push(x); } 
+    });
+    
+    window.announcekit.push({
+      "widget": "https://updates.cloudfox.net/widgets/v2/2gTmDK",
+      "selector": ".announcekit-widget",
+      "embed": true
+    })
+</script>
+<script async src="https://cdn.announcekit.app/widget-v2.js"></script>
