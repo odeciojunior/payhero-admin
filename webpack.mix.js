@@ -231,76 +231,6 @@ mix.copy(
 'public/build/layouts/checkouteditor/files');
 
 /**
- * Modules/Companies/Resources/views/create.blade.php
- * /
-mix.babel([
-    'Modules/Companies/Resources/assets/js/create.js'
-],'public/build/layouts/companies/create.min.js');
-
-/**
- * Modules/Companies/Resources/views/edit_cnpj.blade.php
- * /
-mix.styles([
-    'Modules/Profile/Resources/assets/css/basic.css',
-    'Modules/Profile/Resources/assets/css/dropzone.css',
-    'resources/cdn/select2.min.css',
-    'resources/modules/global/css/switch.css'
-],'public/build/layouts/companies/edit_cnpj.min.css')
-mix.babel([
-    'resources/modules/global/js/dropzone.js',
-    'Modules/Companies/Resources/assets/js/edit_cnpj.js',
-    'resources/cdn/select2.min.js'
-],'public/build/layouts/companies/edit_cnpj.min.js');
-
-/**
- * Modules/Companies/Resources/views/edit_cpf.blade.php
- * /
-mix.styles([
-    'Modules/Profile/Resources/assets/css/basic.css',
-    'Modules/Profile/Resources/assets/css/dropzone.css',
-    'resources/cdn/select2.min.css',
-    'resources/modules/global/css/switch.css'
-],'public/build/layouts/companies/edit_cpf.min.css')
-mix.babel([
-    'resources/modules/global/js/dropzone.js',
-    'Modules/Companies/Resources/assets/js/edit_cpf.js',
-    'resources/cdn/select2.min.js'
-],'public/build/layouts/companies/edit_cpf.min.js');
-
-/**
- * Modules/Companies/Resources/views/empty.blade.php
- * /
-mix.styles([
-    'resources/modules/global/css/empty.css',
-],'public/build/layouts/companies/empty.min.css')
-
-/**
- * Modules/Companies/Resources/views/index.blade.php
- * /
-mix.babel([
-    'Modules/Companies/Resources/assets/js/index.js'
-],'public/build/layouts/companies/index.min.js');
-
-/**
- * Modules/Companies/Resources/views/not_company_approved_getnet.blade.php
- * /
-mix.styles([
-    'resources/modules/global/css/empty.css',
-],'public/build/layouts/companies/not_company_approved_getnet.min.css')
-
-/**
- * Modules/Companies/Resources/views/testecreate.blade.php
- * /
-mix.styles([
-    'Modules/Profile/Resources/assets/css/basic.css',
-    'Modules/Profile/Resources/assets/css/dropzone.css'
-],'public/build/layouts/companies/testecreate.min.css')
-mix.babel([
-    'resources/modules/global/js/dropzone.js',
-    'Modules/Companies/Resources/assets/js/edit.js'
-],'public/build/layouts/companies/testecreate.min.js');
-
-/**
  * Modules/ConvertaX/Resources/views/include.blade.php
  */
  mix.styles([
@@ -947,6 +877,7 @@ mix.babel([
  */
  mix.styles([
     'Modules/Shopify/Resources/assets/css/index.css',
+    'resources/modules/global/css/empty.css',
     'resources/modules/global/css/switch.css'
 ],'public/build/layouts/shopify/index.min.css')
 mix.babel([
@@ -1088,12 +1019,10 @@ mix.babel([
     'resources/modules/global/adminremark/assets/examples/js/dashboard/v1.js',
     'resources/modules/global/adminremark/global/vendor/sortable/Sortable.js',
     'resources/modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js',
-    'resources/modules/global/js/global.js'
-],'public/build/layouts/master/plugins.min.js')
-mix.babel([
+    'resources/modules/global/js/global.js',
     'resources/modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js',
     'resources/modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js'
-],'public/build/layouts/master/plugins2.min.js')
+],'public/build/layouts/master/plugins.min.js')
 mix.babel([
     'resources/modules/global/js-extra/pusher.min.js',
     'resources/modules/global/js/notifications.js'
