@@ -686,7 +686,6 @@ mix.babel([
     'resources/modules/global/js-extra/moment.min.js',
     'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
     'Modules/DiscountCoupons/Resources/assets/js/discountCoupons.js',
-    'Modules/DiscountCoupons/Resources/assets/js/discountCouponsSteps.js',
 ],'public/build/layouts/projects/project.min.js')
 
 /**
