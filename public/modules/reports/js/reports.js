@@ -32,9 +32,16 @@ $(function () {
                         let value = response.data.total;
                         $("#cashback").html("<span class='currency'>R$ </span>" + value).addClass('visible');
     
-                        if(response.data.total != '0,00') {
+                        if(response.data.total !== '0,00') {
                             $('.new-graph-cashback').html('<canvas id=graph-cashback></canvas>').addClass('visible');
                             $(".new-graph-cashback").next('.no-graph').remove();
+
+                            let variation = `
+                            <em class="${response.data.variation.color} visible">
+                                <i class="ms-Icon ms-Icon--SkypeArrow x-hidden-focus"></i>
+                                ${response.data.variation.value}%
+                            </em>`;
+                            $("#cashback").after(variation);
                             
                             let labels = [...response.data.chart.labels];
                             let series = [...response.data.chart.values];
@@ -128,6 +135,14 @@ $(function () {
                 if(response.data.total !== '0,00') {
                     $('.new-graph').html('<canvas id=comission-graph></canvas>').addClass('visible');
                     $(".new-graph").next('.no-graph').remove();
+                    
+                    let variation = `
+                    <em class="${response.data.variation.color} visible">
+                        <i class="ms-Icon ms-Icon--SkypeArrow x-hidden-focus"></i>
+                        ${response.data.variation.value}%
+                    </em>`;
+                    
+                    $("#comission").after(variation);
 
                     let labels = [...response.data.chart.labels];
                     let series = [...response.data.chart.values];
@@ -167,6 +182,13 @@ $(function () {
                 if(response.data.total !== 0){
                     $('.new-graph-sell').html('<canvas id=graph-sell></canvas>').addClass('visible');
                     $(".new-graph-sell").next('.no-graph').remove();
+
+                    let variation = `
+                    <em class="${response.data.variation.color} visible">
+                        <i class="ms-Icon ms-Icon--SkypeArrow x-hidden-focus"></i>
+                        ${response.data.variation.value}%
+                    </em>`;
+                    $("#sales").after(variation);
 
                     let labels = [...response.data.chart.labels];
                     let series = [...response.data.chart.values];

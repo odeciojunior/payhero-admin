@@ -135,10 +135,6 @@
                                                             <h6 class="font-size-16 gray-700 grey"> Comissão </h6>
                                                             <div class="d-flex value-price">
                                                                 <h4 id='comission' class="font-size-24 bold grey"></h4>
-                                                                <em class="pink">
-                                                                    <i class="ms-Icon ms-Icon--SkypeArrow x-hidden-focus"></i>
-                                                                    23%
-                                                                </em>
                                                             </div>
                                                         </header>
                                                         <div class="new-graph graph"></div>
