@@ -57,7 +57,7 @@ $(function () {
                                 ? '<div class="ribbon-left"><span>Afiliado</span></div>'
                                 : ""
                         }
-                                            <img class="card-img-top" onerror="this.src = '/build/global/img/produto.svg'" src="${
+                                            <img class="card-img-top" style="object-fit: contain;" onerror="this.src = '/build/global/img/produto.svg'" src="${
                             project.photo
                                 ? project.photo
                                 : "/build/global/img/produto.svg"
