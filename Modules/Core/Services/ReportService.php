@@ -1264,7 +1264,7 @@ class ReportService
                 Sale::STATUS_IN_DISPUTE
             ];
 
-            $transactions->whereIn('transactions.status', $status);
+            $transactions->whereIn('sales.status', $status);
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $date['startDate'] = $dateRange[0];
@@ -1342,13 +1342,28 @@ class ReportService
 
         $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($comissionData[0] > 0) {
+            $variation = round((($comissionData[count($comissionData) - 1] / $comissionData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -1384,7 +1399,7 @@ class ReportService
 
             foreach ($resume as $r) {
                 if (Carbon::parse($r->date)->format('d-m') == $label) {
-                    $comissionValue += intval(preg_replace("/[^0-9]/", "", $r->commission));
+                    $comissionValue = intval(preg_replace("/[^0-9]/", "", $r->commission));
                 }
             }
 
@@ -1393,13 +1408,28 @@ class ReportService
 
         $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($comissionData[0] > 0) {
+            $variation = round((($comissionData[count($comissionData) - 1] / $comissionData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -1452,13 +1482,28 @@ class ReportService
 
         $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($comissionData[0] > 0) {
+            $variation = round((($comissionData[count($comissionData) - 1] / $comissionData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -1511,13 +1556,28 @@ class ReportService
 
         $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($comissionData[0] > 0) {
+            $variation = round((($comissionData[count($comissionData) - 1] / $comissionData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -1570,13 +1630,28 @@ class ReportService
 
         $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($comissionData[0] > 0) {
+            $variation = round((($comissionData[count($comissionData) - 1] / $comissionData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -1621,13 +1696,28 @@ class ReportService
 
         $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($comissionData[0] > 0) {
+            $variation = round((($comissionData[count($comissionData) - 1] / $comissionData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -1737,13 +1827,28 @@ class ReportService
 
         $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -1788,13 +1893,28 @@ class ReportService
 
         $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -1848,13 +1968,28 @@ class ReportService
 
         $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -1908,13 +2043,28 @@ class ReportService
 
         $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -1968,13 +2118,28 @@ class ReportService
 
         $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2020,13 +2185,28 @@ class ReportService
 
         $total = number_format(array_sum($saleData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2125,13 +2305,28 @@ class ReportService
 
         $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($cashbackData[0] > 0) {
+            $variation = round((($cashbackData[count($cashbackData) - 1] / $cashbackData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $cashbackData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2171,13 +2366,28 @@ class ReportService
 
         $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($cashbackData[0] > 0) {
+            $variation = round((($cashbackData[count($cashbackData) - 1] / $cashbackData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $cashbackData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2226,13 +2436,28 @@ class ReportService
 
         $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($cashbackData[0] > 0) {
+            $variation = round((($cashbackData[count($cashbackData) - 1] / $cashbackData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $cashbackData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2281,13 +2506,28 @@ class ReportService
 
         $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($cashbackData[0] > 0) {
+            $variation = round((($cashbackData[count($cashbackData) - 1] / $cashbackData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $cashbackData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2336,13 +2576,28 @@ class ReportService
 
         $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($cashbackData[0] > 0) {
+            $variation = round((($cashbackData[count($cashbackData) - 1] / $cashbackData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $cashbackData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2383,13 +2638,28 @@ class ReportService
 
         $total = number_format(array_sum($cashbackData) / 100, 2, ',', '.');
 
+        $variation = 0;
+        if ($cashbackData[0] > 0) {
+            $variation = round((($cashbackData[count($cashbackData) - 1] / $cashbackData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $cashbackData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2474,13 +2744,28 @@ class ReportService
 
         $total = array_sum($saleData);
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2525,13 +2810,28 @@ class ReportService
 
         $total = array_sum($saleData);
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2584,13 +2884,28 @@ class ReportService
 
         $total = array_sum($saleData);
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2643,13 +2958,28 @@ class ReportService
 
         $total = array_sum($saleData);
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2702,13 +3032,28 @@ class ReportService
 
         $total = array_sum($saleData);
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
@@ -2753,13 +3098,28 @@ class ReportService
 
         $total = array_sum($saleData);
 
+        $variation = 0;
+        if ($saleData[0] > 0) {
+            $variation = round((($saleData[count($saleData) - 1] / $saleData[0]) - 1) * 100, 0, PHP_ROUND_HALF_UP);
+        }
+
+        $color = 'grey';
+        if ($variation > 0) {
+            $color = 'green';
+        } else if ($variation < 0) {
+            $color = 'pink';
+        }
+
         return [
             'chart' => [
                 'labels' => $labelList,
                 'values' => $saleData
             ],
             'total' => $total,
-            'variation' => ''
+            'variation' => [
+                'value' => $variation,
+                'color' => $color
+            ]
         ];
     }
 
