@@ -332,7 +332,6 @@ class Safe2PayService implements Statement
             $safe2payBalance = 0;
             foreach ($sale->transactions as $refundTransaction) {
 
-                $safe2payBalance = $refundTransaction->company->safe2pay_balance;
                 if(empty($refundTransaction->company_id)) {
                     $refundTransaction->update([
                         'status_enum' => Transaction::STATUS_REFUNDED,
@@ -340,6 +339,8 @@ class Safe2PayService implements Statement
                     ]);
                     continue;
                 }
+                
+                $safe2payBalance = $refundTransaction->company->safe2pay_balance;
 
                 if($refundTransaction->status_enum == Transaction::STATUS_PAID) {
 

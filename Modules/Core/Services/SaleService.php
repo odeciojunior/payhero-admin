@@ -815,7 +815,6 @@ class SaleService
         $safe2payBalance = 0;
         foreach ($sale->transactions as $transaction) {
 
-            $safe2payBalance = $transaction->company->safe2pay_balance;
             if(empty($transaction->company_id)) {
                 $transaction->update([
                     'status_enum' => Transaction::STATUS_BILLET_REFUNDED,
@@ -823,6 +822,8 @@ class SaleService
                 ]);
                 continue;
             }
+            
+            $safe2payBalance = $transaction->company->safe2pay_balance;
 
             if($transaction->status_enum == Transaction::STATUS_PAID) {
 
