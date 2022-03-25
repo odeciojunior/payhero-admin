@@ -149,7 +149,7 @@
 
                     <label class=" mb-10">Adicionar novo desconto de</label>
                     <div class="row ">
-                        <div class="col-3">
+                        <div class="col-3" style="padding-left: 18px;">
                             <input name="type" value="1" class="discount_radio " type="radio" id="type_value" checked style="outline: none" />
                             <label for="type_value">
                                 Valor em R$

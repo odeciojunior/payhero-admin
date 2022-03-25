@@ -193,7 +193,7 @@
             
             
             <div id="edit_step1" style="display: none">
-                <div style='min-height: 100px; position: relative;' class="pt-20 pr-30 pl-20 ">
+                <div style='min-height: 100px; position: relative;' class="pt-25 pr-30 pl-30 ">
                 
                     <p>
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -231,7 +231,7 @@
 
                     <div class="d-flex modal-new-layout box-description">
                         <input class="form-control form-control-lg search_input_create_coupon search_coupon" type="text" id="search_input2" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
-                        <div class="input-group input-group-lg" style="width: 690px;">
+                        <div class="input-group input-group-lg" style="width: 660px;">
                             <input onkeyup="set_description_value(this, $('.search_input_create_coupon'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
                             <div class="input-group-append">
                                 <span class="input-group-text">
@@ -241,7 +241,7 @@
                         </div>
                     </div>
                         
-                    <div id="search_result2" class="mt-30  " style="height: 328px;  overflow: hidden">
+                    <div id="search_result2" class="mt-30  " style="height: 328px; width:596px; overflow: hidden">
 
                         {{-- <div class="item item_selected" >
                             <span style="background-image: url(http://dev.woo.com/wp-content/uploads/2021/07/sunglasses-2.jpg)" class="image"></span>
@@ -281,7 +281,7 @@
                 <div style='min-height: 100px' class="inputs-warning2 pl-30 pr-30 simple-border-bottom">
 
 
-                    <div class="mt-20 mb-20">
+                    <div class="mt-25 mb-20">
 
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect width="36" height="36" rx="8" fill="#F8F8F8"/>
@@ -301,14 +301,14 @@
 
                     <label class="mb-10">Adicionar novo desconto de</label>
                     <div class="row ">
-                        <div class="col-3">
+                        <div class="col-3" style="padding-left: 18px;">
 
                             <input name="type" value="1"  class="discount_radio" type="radio" id="type_value-edit" checked style="outline: none" /> 
                             <label for="type_value-edit">
                                 Valor em R$
                             </label>
                         </div>
-                        <div class="col-3">
+                        <div class="col-3" >
                             <input name="type" value="0" class="discount_radio " type="radio" id="type_percent-edit" style="outline: none"/> 
                             <label for="type_percent-edit">Porcentagem</label>
                         </div>
