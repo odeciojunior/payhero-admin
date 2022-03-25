@@ -415,14 +415,9 @@ class TrackingService
 
     public function getAveragePostingTimeInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
-        $gatewayIds = [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID];
-        if (!FoxUtils::isProduction()) {
-            $gatewayIds = array_merge($gatewayIds, [Gateway::ASAAS_SANDBOX_ID, Gateway::GETNET_SANDBOX_ID]);
-        }
 
         $approvedSalesWithTrackingCode = Tracking::select(DB::raw('ceil(avg(datediff(trackings.created_at, sales.end_date))) as averagePostingTime'))
             ->join('sales', 'sales.id', '=', 'trackings.sale_id')
-            ->whereIn('sales.gateway_id', $gatewayIds)
             ->where('sales.payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
             ->whereIn('sales.status', [
                 Sale::STATUS_APPROVED,
