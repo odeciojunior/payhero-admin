@@ -227,7 +227,7 @@ function show_plans(){
 function atualizarCoupon() {
 
     var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
+    console.log(link);
     if (link == null) {
         link = '/api/project/' + projectId + '/couponsdiscounts';
     } else {
