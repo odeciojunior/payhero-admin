@@ -38,12 +38,7 @@ $(document).ready(function () {
             $('#button-information').hide();
             $("#companies-not-approved-getnet").show();
         } else if (!allCompanyNotApproved) {
-            if (woocommerceIntegrationNotFound) {
-                $("#no-integration-found").show();
-            }else{
-                $("#no-integration-found").hide();
-
-            }
+            
 
             $('#btn-integration-model').show();
             $('#button-information').show().addClass('d-flex').css('display', 'flex');
@@ -69,6 +64,11 @@ $(document).ready(function () {
 
                 if (isEmpty(data)) {
                     woocommerceIntegrationNotFound = true;
+                    if (woocommerceIntegrationNotFound) {
+                        $("#no-integration-found").show();
+                    }else{
+                        $("#no-integration-found").hide();
+                    }
                     return;
                 }
 
