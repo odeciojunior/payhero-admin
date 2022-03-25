@@ -2,6 +2,7 @@
 
 namespace Modules\Trackings\Exports;
 
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -36,52 +37,61 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
     {
         $trackingService = new TrackingService();
 
-        return $trackingService->getTrackingsQueryBuilder($this->filters, $this->user->account_owner_id);
+        return $trackingService->getTrackingsQueryBuilder($this->filters, $this->user->account_owner_id)
+            ->join('customers as c', 'c.id', '=', 's.customer_id')
+            ->join('deliveries as d', 'd.id', '=', 's.delivery_id')
+            ->select([
+                'products_plans_sales.id',
+                't2.id as tracking_id',
+                't2.tracking_code',
+                's.id as sale_id',
+                's.end_date as approved_date',
+                DB::raw('ifnull(p.id, psa.id) as product_id'),
+                DB::raw('ifnull(p.name, psa.name) as product_name'),
+                'p.description as product_description',
+                'p.sku as product_sku',
+                'products_plans_sales.amount as product_amount',
+                'c.name as customer_name',
+                'c.telephone as customer_telephone',
+                'c.email as customer_email',
+                'c.document as customer_document',
+                'd.street as delivery_street',
+                'd.number as delivery_number',
+                'd.complement as delivery_complement',
+                'd.neighborhood as delivery_neighborhood',
+                'd.zip_code as delivery_zip_code',
+                'd.city as delivery_city',
+                'd.state as delivery_state',
+                'd.country as delivery_country',
+            ]);
     }
 
     public function map($row): array
     {
-        $productName = '';
-        if (!$row->sale->api_flag) {
-            $productName = $row->product->name . ($row->product->description ? ' (' . $row->product->description . ')' : '');
-        } else {
-            $productName = $row->productSaleApi->name;
-        }
+        $productName = utf8_encode($row->product_name . ($row->product_description ? ' (' . $row->product_description . ')' : ''));
+        $productID = hashids_encode($row->product_id);
 
-        $productID = '';
-        if (!$row->sale->api_flag) {
-            $productID = Hashids::encode($row->product->id);
-        } else {
-            $productID = Hashids::encode($row->productSaleApi->id);
-        }
-
-        $return = [
-            'sale' => '#' . Hashids::connection('sale_id')->encode($row->sale->id),
-            'tracking_code' => '',
+        return [
+            'sale' => '#' . hashids_encode($row->sale_id, 'sale_id'),
+            'tracking_code' => $row->tracking_code,
             'product_id' => '#' . $productID,
-            'product_name' => utf8_encode($productName),
-            'product_amount' => $row->amount,
-            'product_sku' => !$row->sale->api_flag ? $row->product->sku : '',
-            'client_name' => $row->sale->customer->name ?? '',
-            'client_telephone' => $row->sale->customer->telephone ?? '',
-            'client_email' => $row->sale->customer->email ?? '',
-            'client_document' => $row->sale->customer->document ?? '',
-            'client_street' => $row->sale->delivery->street ?? '',
-            'client_number' => $row->sale->delivery->number ?? '',
-            'client_complement' => $row->sale->delivery->complement ?? '',
-            'client_neighborhood' => $row->sale->delivery->neighborhood ?? '',
-            'client_zip_code' => $row->sale->delivery->zip_code ?? '',
-            'client_city' => $row->sale->delivery->city ?? '',
-            'client_state' => $row->sale->delivery->state ?? '',
-            'client_country' => $row->sale->delivery->country ?? '',
-            'date' => (!empty($row->sale->end_date)) ? Carbon::parse($row->sale->end_date)->format('d/m/Y') : '',
+            'product_name' => $productName,
+            'product_amount' => $row->product_amount,
+            'product_sku' => $row->product_sku ?? '',
+            'customer_name' => $row->customer_name ?? '',
+            'client_telephone' => $row->customer_telephone ?? '',
+            'customer_telephone' => $row->customer_email ?? '',
+            'customer_document' => $row->customer_document ?? '',
+            'delivery_street' => $row->delivery_street ?? '',
+            'delivery_number' => $row->delivery_number ?? '',
+            'delivery_complement' => $row->delivery_complement ?? '',
+            'delivery_neighborhood' => $row->delivery_neighborhood ?? '',
+            'delivery_zip_code' => $row->delivery_zip_code ?? '',
+            'delivery_city' => $row->delivery_city ?? '',
+            'delivery_state' => $row->delivery_state ?? '',
+            'delivery_country' => $row->delivery_country ?? '',
+            'date' => (!empty($row->approved_date)) ? Carbon::parse($row->approved_date)->format('d/m/Y') : '',
         ];
-
-        if ($row->tracking) {
-            $return['tracking_code'] = $row->tracking->tracking_code;
-        }
-
-        return $return;
     }
 
     public function registerEvents(): array
@@ -109,7 +119,7 @@ class TrackingsReportExport implements FromQuery, WithHeadings, ShouldAutoSize, 
                     }
                     if ($setGray) {
                         $event->sheet->getDelegate()
-                            ->getStyle('A' . $row . ':R' . $row)
+                            ->getStyle('A' . $row . ':S' . $row)
                             ->getFill()
                             ->setFillType('solid')
                             ->getStartColor()
