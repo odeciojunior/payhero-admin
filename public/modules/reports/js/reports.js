@@ -68,7 +68,6 @@ $(function () {
     }
 
     function getPending() {
-        let antes = Date.now();
         return $.ajax({
             method: "GET",
             url: resumeUrl+ "/pendings?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -105,7 +104,6 @@ $(function () {
                 }
 
                 $('#card-pending .ske-load').hide();
-                console.log("Durou " + Number((Date.now() - antes) / 1000) + "s");
             }
         });
     }
@@ -1059,7 +1057,7 @@ $(function () {
                       titleSpacing: 10,
                       callbacks: {
                           label: function (tooltipItem) {
-                              return Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(tooltipItem.raw);
+                              return tooltipItem.raw + ' vendas';
                           },
                           labelPointStyle: function (context) {
                               return {
@@ -1140,9 +1138,19 @@ $(function () {
                       padding: 10,
                       titleSpacing: 10,
                       callbacks: {
-                          label: function (tooltipItem) {
-                              return Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(tooltipItem.raw);
-                          },
+                        label: function (tooltipItem) {
+                            let tooltipValue = tooltipItem.raw;
+                            tooltipValue = tooltipValue + '';
+                            tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ''));
+                            tooltipValue = tooltipValue + '';
+                            tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
+                    
+                            if (tooltipValue.length > 6) {
+                                tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+                            }
+                            
+                            return 'R$ ' + tooltipValue;
+                        },
                           labelPointStyle: function (context) {
                               return {
                                   pointStyle: 'rect',
@@ -1222,7 +1230,17 @@ $(function () {
                         titleSpacing: 10,
                         callbacks: {
                             label: function (tooltipItem) {
-                                return Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(tooltipItem.raw);
+                                let tooltipValue = tooltipItem.raw;
+                                tooltipValue = tooltipValue + '';
+                                tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ''));
+                                tooltipValue = tooltipValue + '';
+                                tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
+                        
+                                if (tooltipValue.length > 6) {
+                                    tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+                                }
+                                
+                                return 'R$ ' + tooltipValue;
                             },
                             labelPointStyle: function (context) {
                                 return {
@@ -1408,7 +1426,17 @@ $(function () {
                       titleSpacing: 10,
                       callbacks: {
                           label: function (tooltipItem) {
-                              return Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(tooltipItem.raw);
+                            let tooltipValue = tooltipItem.raw;
+                            tooltipValue = tooltipValue + '';
+                            tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ''));
+                            tooltipValue = tooltipValue + '';
+                            tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
+                    
+                            if (tooltipValue.length > 6) {
+                                tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+                            }
+                              
+                              return 'R$ ' + tooltipValue;
                           },
                           labelPointStyle: function (context) {
                               return {
