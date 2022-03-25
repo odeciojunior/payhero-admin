@@ -134,7 +134,7 @@ class Safe2PayService implements Statement
             DB::beginTransaction();
 
             $this->company->update([
-                'safe2pay_balance' => $this->company->safe2pay_balance -= $value
+                'safe2pay_balance' => $this->company->safe2pay_balance - $value
             ]);
 
             $withdrawal = Withdrawal::where([
@@ -227,7 +227,7 @@ class Safe2PayService implements Statement
                 );
 
                 $company->update([
-                    'safe2pay_balance' => $company->safe2pay_balance += $transaction->value
+                    'safe2pay_balance' => $company->safe2pay_balance + $transaction->value
                 ]);
 
                 $transaction->update([
@@ -235,6 +235,7 @@ class Safe2PayService implements Statement
                     'status_enum' => Transaction::STATUS_TRANSFERRED,
                 ]);
             }
+            
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -328,9 +329,10 @@ class Safe2PayService implements Statement
             $saleTax = $saleService->getSaleTaxRefund($sale,$cashbackValue);
 
             $totalSale = $saleService->getSaleTotalValue($sale);
-
+            $safe2payBalance = 0;
             foreach ($sale->transactions as $refundTransaction) {
 
+                $safe2payBalance = $refundTransaction->company->safe2pay_balance;
                 if(empty($refundTransaction->company_id)) {
                     $refundTransaction->update([
                         'status_enum' => Transaction::STATUS_REFUNDED,
@@ -352,9 +354,9 @@ class Safe2PayService implements Statement
                             'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
                         ]
                     );
-
+                    $safe2payBalance+= $refundTransaction->value;
                     $refundTransaction->company->update([
-                        'safe2pay_balance' => $refundTransaction->company->safe2pay_balance += $refundTransaction->value
+                        'safe2pay_balance' => $safe2payBalance
                     ]);
                 }
 
@@ -380,7 +382,7 @@ class Safe2PayService implements Statement
                 ]);
 
                 $refundTransaction->company->update([
-                    'safe2pay_balance' => $refundTransaction->company->safe2pay_balance -= $refundValue
+                    'safe2pay_balance' => $safe2payBalance - $refundValue
                 ]);
 
                 $refundTransaction->status = 'refunded';
