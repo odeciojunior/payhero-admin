@@ -812,8 +812,10 @@ class SaleService
 
     public function refundBillet(Sale $sale)
     {
+        $safe2payBalance = 0;
         foreach ($sale->transactions as $transaction) {
 
+            $safe2payBalance = $transaction->company->safe2pay_balance;
             if(empty($transaction->company_id)) {
                 $transaction->update([
                     'status_enum' => Transaction::STATUS_BILLET_REFUNDED,
@@ -836,8 +838,9 @@ class SaleService
                     ]
                 );
 
+                $safe2payBalance+= $transaction->value;
                 $transaction->company->update([
-                    'safe2pay_balance' => $transaction->company->safe2pay_balance += $transaction->value
+                    'safe2pay_balance' =>  $safe2payBalance
                 ]);
             }
 
@@ -859,7 +862,7 @@ class SaleService
             ]);
 
             $transaction->company->update([
-                'safe2pay_balance' => $transaction->company->safe2pay_balance -= $refundValue,
+                'safe2pay_balance' => $safe2payBalance - $refundValue,
             ]);
 
             $transaction->update([
