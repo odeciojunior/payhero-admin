@@ -148,7 +148,7 @@ function coupon_rules(data) {
         expires = '<span style="color:">Vencido</span>'
     }
     if(data.expires_days > 0){
-        expires = '<span style="color:">Vence em '+data.expires_days+' dias</span>'
+        expires = '<span style="color:">Vence em '+data.expires_days+' dia(s)</span>'
     }
     if(data.expires_days == 0){
         expires = '<span style="color:">Vence hoje</span>'
@@ -278,6 +278,7 @@ function atualizarCoupon() {
 
                     $("#data-table-coupon").append(data);
                 });
+                // response.meta.current_page = 2
                 pagination(response, 'coupons', atualizarCoupon);
             }
         }
@@ -394,7 +395,7 @@ function run_search(search, now){
                         <div class="title">
                         Nenhum resultado encontrado.</div>
                         <div class="description">
-                        Por aqui, nenhum produto com esse nome.
+                        Por aqui, nenhum plano com esse nome.
                         </div>
                     </div>`);
 
@@ -1002,7 +1003,7 @@ $(function () {
             format: 'DD/MM/YYYY',
             singleDate: true,
             showShortcuts: true,
-            startDate: false,
+            startDate: new Date(),
 	        endDate: false,
             container: '#modal-edit-coupon',
             customShortcuts: [
@@ -1030,7 +1031,7 @@ $(function () {
         }).bind('datepicker-opened',function()
         {
             $('.modal-open .modal').animate({scrollTop: $(document).height() + $(window).height()});
-            
+            $('.date-picker-wrapper').attr('tabindex',0).focus()
         });
 
     $('#edit-name').on('click', edit_name);

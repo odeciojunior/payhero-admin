@@ -334,7 +334,7 @@ $(function () {
             rules[editingRule1].value = rules[editingRule1].type=='percent'?go('.percent').val():go('.value').val()
             mount_rules(rules, 1);
 
-            console.log(rules);
+            
 
 
 
@@ -658,7 +658,7 @@ $(function () {
                             <div class="title">
                             Nenhum resultado encontrado.</div>
                             <div class="description">
-                            Por aqui, nenhum produto com esse nome.
+                            Por aqui, nenhum plano com esse nome.
                             </div>
                         </div>`);
 
@@ -1167,6 +1167,7 @@ $(function () {
             var db = moment.now();
             
             cupom_data.expires_days = da.diff(db, 'days')
+            cupom_data.expires_days++
         }
 
         cupom_data.code = $('#d-code').html()
@@ -1178,7 +1179,7 @@ $(function () {
 
 
     })
-
+    
     $('#c-edit_status').click(function(){
         if($(this).is(':checked')){
             // $('#c-edit_status_label').css('color', '#41DC8F');
@@ -1235,8 +1236,9 @@ $(function () {
             format: 'DD/MM/YYYY',
             singleDate: true,
             showShortcuts: true,
-            startDate: false,
+            startDate: new Date(),
 	        endDate: false,
+            selectForward: true,
             container: '#modal-create-coupon',
             customShortcuts: [
                 {
@@ -1263,7 +1265,7 @@ $(function () {
         }).bind('datepicker-opened',function()
         {
             $('.modal-open .modal').animate({scrollTop: $(document).height() + $(window).height()});
-            
+            $('.date-picker-wrapper').attr('tabindex',0).focus()
             
         });
 

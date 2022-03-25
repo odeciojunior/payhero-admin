@@ -1167,6 +1167,7 @@ $(function () {
             var db = moment.now();
             
             cupom_data.expires_days = da.diff(db, 'days')
+            cupom_data.expires_days++
         }
 
         cupom_data.code = $('#d-code').html()
@@ -1178,7 +1179,7 @@ $(function () {
 
 
     })
-
+    alert()
     $('#c-edit_status').click(function(){
         if($(this).is(':checked')){
             // $('#c-edit_status_label').css('color', '#41DC8F');
@@ -1237,6 +1238,7 @@ $(function () {
             showShortcuts: true,
             startDate: false,
 	        endDate: false,
+            selectForward: true,
             container: '#modal-create-coupon',
             customShortcuts: [
                 {
