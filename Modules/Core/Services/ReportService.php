@@ -2411,10 +2411,8 @@ class ReportService
                 $diffInDays = $endDate->diffInDays($startDate);
 
                 if ($diffInDays <= 20) {
-                    dd('days');
                     return $this->getResumeSalesByDays($transactions, $filters);
                 } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                    dd('twenty days');
                     return $this->getResumeSalesByTwentyDays($transactions, $filters);
                 } elseif ($diffInDays > 40 && $diffInDays <= 60) {
                     return $this->getResumeSalesByFortyDays($transactions, $filters);
