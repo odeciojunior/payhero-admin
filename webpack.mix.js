@@ -542,21 +542,6 @@ mix.styles([
 ],'public/build/layouts/products/index.min.css');
 
 /**
- * Modules/Profile/Resources/views/index.blade.php
-
- mix.styles([
-    'Modules/Profile/Resources/assets/css/basic.css',
-    'Modules/Profile/Resources/assets/css/dropzone.css',
-    'resources/modules/global/css/switch.css',
-    'resources/cdn/select2.min.css'
-],'public/build/layouts/profile/index.min.css')
-mix.babel([
-    'resources/modules/global/js/dropzone.js',
-    'Modules/Profile/Resources/assets/js/profile.js',
-    'resources/cdn/select2.min.js'
-],'public/build/layouts/profile/index.min.js');
- */
-/**
  * Modules/Projects/Resources/views/projectaffiliate.blade.php
  */
 mix.styles([
@@ -673,13 +658,6 @@ mix.copy(
  mix.styles([
     'resources/modules/global/css/upsell.css'
 ], 'public/build/layouts/projectupsellconfig/previewupsellconfig.min.css');
-
-/**
- * Modules/Register/Resources/assets/js/register.js
- */
- mix.styles([
-    'resources/modules/global/css/page-error.css'
-], 'public/build/layouts/register/page-error.min.css');
 
 /**
  * Modules/Reportana/Resources/views/index.blade.php
