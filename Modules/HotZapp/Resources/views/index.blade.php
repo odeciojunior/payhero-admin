@@ -1,7 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/convertax/css/index.css?v=' .  versionsFile()) }}">
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/hotzapp/index.min.css') }}">
     <style>
         .gray:hover{
             color:#a1a1a1 !important;
@@ -77,7 +76,7 @@
 
         <div id="no-integration-found" class='row justify-content-center' style="display:none">
             <div class="content-error text-center">
-                <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
+                <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
                 <p class="desc gray">Integre sua loja com HotZapp de forma totalmente automatizada!</p>
             </div>
@@ -112,6 +111,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/hotzapp/js/index.js?v=s0')}}"></script>
+        <script src="{{ mix('build/layouts/hotzapp/index.min.js') }}"></script>
     @endpush
 @endsection

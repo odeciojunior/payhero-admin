@@ -18,7 +18,7 @@
     @foreach($products as $product)
         <div class='row align-items-baseline justify-content-between mb-15'>
             <div class="col-lg-2">
-                <img onerror=this.src='/modules/global/img/produto.png' src='{{$product['photo'] ?? asset('modules/global/img/produto.png')}}' width='50px' style='border-radius: 6px;'>
+                <img onerror=this.src='/build/global/img/produto.png' src='{{$product['photo'] ?? mix('build/global/img/produto.png')}}' width='50px' style='border-radius: 6px;'>
             </div>
             <div class='col-lg-5'>
                 <h4 class='table-title'>{{$product['name']}}</h4>
@@ -51,7 +51,7 @@
         <br>
         <span class='clear-fields table-title gray'>Telefone: {{$client->telephone}}</span>
         <a href="{{$whatsapp_link}}" target='_blank' title='Enviar mensagem pelo whatsapp'>
-            <img src="{!! asset('modules/global/img/whatsapplogo.png') !!}" width="25px" >
+            <img src="{!! mix('build/global/img/whatsapplogo.png') !!}" width="25px" >
         </a>
         <br>
         <span class="clear-fields table-title gray"> E-mail: {{$client->email}} </span>

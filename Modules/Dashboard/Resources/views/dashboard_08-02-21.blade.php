@@ -4,10 +4,10 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/dashboard/css/index.css?v=10') }}">
+        <link rel="stylesheet" href="{{ mix('modules/global/css/new-dashboard.min.css') }}">
+        <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist.min.css') !!}">
+        <link rel="stylesheet" href="{!! mix('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
+        <link rel="stylesheet" href="{{ mix('modules/dashboard/css/index.min.css') }}">
     @endpush
 
     <div class="page dashboard">
@@ -291,7 +291,7 @@
                                         <b class="card-desc">Bem-vindo(a) ao Sirius!</b>
                                     </div>
                                     <img class="img-fluid"
-                                         src="{{ asset('modules/global/img/svg/sirius-stars-b.png') }}"
+                                         src="{{ mix('build/global/img/svg/sirius-stars-b.png') }}"
                                          height="60px" width="60px">
                                 </div>
                                 <div class="card-body d-flex flex-column justify-content-between">
@@ -318,11 +318,11 @@
     </div>
 
     @push('scripts')
-        <script src='{{ asset('modules/reports/js/chartist.min.js') }}'></script>
-        <script src='{{ asset('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
-        <script src='{{ asset('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
-        <script src="{{ asset('modules/global/js/circle-progress.min.js') }}"></script>
-        <script src="{{ asset('modules/dashboard/js/dashboard.js?v=' . random_int(100, 10000)) }}"></script>
+        <script src='{{ mix('modules/reports/js/chartist.min.js') }}'></script>
+        <script src='{{ mix('modules/reports/js/chartist-plugin-tooltip.min.js') }}'></script>
+        <script src='{{ mix('modules/reports/js/chartist-plugin-legend.min.js') }}'></script>
+        <script src="{{ mix('modules/global/js/circle-progress.min.js') }}"></script>
+        <script src="{{ mix('modules/dashboard/js/dashboard.min.js') }}"></script>
     @endpush
 
 @endsection

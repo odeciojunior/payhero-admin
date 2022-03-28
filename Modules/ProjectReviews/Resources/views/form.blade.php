@@ -13,7 +13,7 @@
                             <label for="photoReview">Selecione uma foto</label>
                             <div style="width:100%" class="text-center">
                                 <img id="previewimagereview" alt="Selecione uma foto"
-                                     src="{{asset('modules/global/img/projeto.svg')}}"
+                                     src="{{mix('build/global/img/projeto.svg')}}"
                                      style="min-width: 250px; max-width: 250px;margin: auto; cursor: pointer;">
                             </div>
                             <input id='photo_x1' name='photo_x1' type='hidden'>

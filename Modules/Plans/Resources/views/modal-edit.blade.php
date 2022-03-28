@@ -58,7 +58,7 @@
 
             <div class="modal-footer border-on justify-content-between">
                 <button id="btn-modal-plan-delete" type="button" class="btn btn-default btn-lg px-0" style="box-shadow: none !important; color: #838383; align-items: center !important; display: flex; padding: 10px 32px; background: transparent; border: none;" role="button">
-                    <img class="mr-10" src="/modules/global/img/icon-trash.svg" alt="Icon Trash" />
+                    <img class="mr-10" src="/build/global/img/icon-trash.svg" alt="Icon Trash" />
                     <span>Excluir plano</span>
                 </button>
                 <button id="btn-modal-plan-close" type="button" data-dismiss="modal" class="btn btn-primary btn-lg">Fechar</button>

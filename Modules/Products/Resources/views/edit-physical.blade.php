@@ -3,8 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css?v=' . versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/products/css/edit.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/products/edit.min.css') }}">
     @endpush
 
     <!-- Page -->
@@ -58,7 +57,7 @@
                     <div class="px-40 row justify-content-between">
                         <div class="col-12 col-md-4 col-lg-2 col-xl-4 text-center">
                             <img id="caixinha-img"
-                                 src="{{ asset('modules/global/img/svg/caixinha.svg') }}"
+                                 src="{{ mix('build/global/img/svg/caixinha.svg') }}"
                                  class="img-fluid"
                                  alt="novo produto fisico">
                         </div>
@@ -127,7 +126,7 @@
 
                     <div>
                         <a class="btn btn-lg btn-cancelar" href="/products">Cancelar</a>
-                        <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
+                        <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">Salvar</button>
                     </div>
                 </div>
             </form>
@@ -208,9 +207,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{asset('modules/products/js/products.js?v=' . versionsFile()) }}"></script>
-        <script src="{{asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js?v=' . versionsFile()) }}"></script>
-        <script src="{{asset('modules/global/adminremark/global/js/Plugin/dropify.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ mix('build/layouts/products/edit.min.js') }}"></script>
     @endpush
 
 @endsection

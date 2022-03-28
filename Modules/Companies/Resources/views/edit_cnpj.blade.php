@@ -1,9 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/basic.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css?v=' . versionsFile()) }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=' . versionsFile()) }}">
+    <link rel="stylesheet" type="text/css" href="{{ mix('build/layouts/companies/edit_cnpj.min.css') }}">
 @endpush
 
 @section('content')
@@ -469,9 +466,7 @@
     </style>
 
     @push('scripts')
-        <script src="{{asset('/modules/global/js/dropzone.js?v=' . versionsFile()) }}"></script>
-        <script src="{{asset('/modules/companies/js/edit_cnpj.js?v=' . versionsFile()) }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+        <script src="{{ mix('build/layouts/companies/edit_cnpj.min.js') }}"></script>
     @endpush
 
 @endsection

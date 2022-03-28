@@ -2,7 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/affiliates/projectaffiliates.min.css') }}">
     @endpush
 
     <div class='page'>
@@ -56,7 +56,7 @@
                                         </div>
                                         <div class="col-lg-2 col-md-6" style="margin-top: 28px">
                                             <button id="btn-filter-affiliates" class="btn btn-primary w-full px-10" style="height: 50px;">
-                                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
+                                                <img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">Aplicar filtros
                                             </button>
                                         </div>
                                     </div>
@@ -74,9 +74,9 @@
                                                 {{-- excluir, ativar/inativar --}}
                                             </tr>
                                         </thead>
-                                        <tbody id="body-table-affiliates" img-empty="{!! asset('modules/global/img/afiliados.svg')!!}">
+                                        <tbody id="body-table-affiliates" img-empty="{!! mix('build/global/img/afiliados.svg')!!}">
                                             <tr class='text-center'><td colspan='8' style='height: 257px; vertical-align: middle;'>
-                                                <img style='width:124px;margin-right:12px;' src='{!! asset('modules/global/img/afiliados.svg')!!}'> Nenhum afiliado encontrado</td>
+                                                <img style='width:124px;margin-right:12px;' src='{!! mix('build/global/img/afiliados.svg')!!}'> Nenhum afiliado encontrado</td>
                                             </tr>
                                             {{-- js carrega --}}
                                         </tbody>
@@ -109,7 +109,7 @@
                                         </div>
                                         <div class="col-lg-2 col-md-6" style="margin-top: 28px">
                                             <button id="btn-filter-affiliates-request" class="btn btn-primary w-full px-10" style="height: 50px;">
-                                                <img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Aplicar filtros
+                                                <img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">Aplicar filtros
                                             </button>
                                         </div>
                                     </div>
@@ -125,7 +125,7 @@
                                                 {{-- aceitar, recusar --}}
                                             </tr>
                                         </thead>
-                                        <tbody id="body-table-affiliate-requests"  img-empty="{!! asset('modules/global/img/afiliados.svg')!!}">
+                                        <tbody id="body-table-affiliate-requests"  img-empty="{!! mix('build/global/img/afiliados.svg')!!}">
                                         </tbody>
                                     </table>
                                 </div>
@@ -223,6 +223,6 @@
         {{-- FIM loja nao existem lojas--}}
     </div>
     @push('scripts')
-        <script src="{{asset('modules/affiliates/js/projectaffiliates.js?v=' . random_int(100, 10000)) }}"></script>
+        <script src="{{ mix('build/layouts/affiliates/projectaffiliates.min.js') }}"></script>
     @endpush
 @endsection

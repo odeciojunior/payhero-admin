@@ -46,54 +46,55 @@ class GerencianetService implements Statement
         return $this;
     }
 
-    public function getAvailableBalanceWithoutBlocking() : int
+    public function getAvailableBalanceWithoutBlocking(): int
     {
         return Transaction::whereIn('gateway_id', $this->gatewayIds)
-                            ->where('company_id', $this->company->id)
-                            ->where('is_waiting_withdrawal', 1)
-                            ->whereNull('withdrawal_id')
-                            ->sum('value');
+            ->where('company_id', $this->company->id)
+            ->where('is_waiting_withdrawal', 1)
+            ->whereNull('withdrawal_id')
+            ->sum('value');
     }
 
-    public function getAvailableBalance() : int
+    public function getAvailableBalance(): int
     {
         return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
-    public function getPendingBalance() : int
+    public function getPendingBalance(): int
     {
-        return Transaction::where('company_id', $this->company->id)
-                            ->where('status_enum', Transaction::STATUS_PAID)
-                            ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('is_waiting_withdrawal', 0)
-                            ->whereNull('withdrawal_id')
-                            ->whereDoesntHave('blockReasonSale',function ($query) {
-                                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
-                            ->sum('value');
+        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
+            $join->on('brs.sale_id', '=', 'transactions.sale_id')
+                ->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
+        })->whereNull('brs.id')
+            ->where('transactions.company_id', $this->company->id)
+            ->where('transactions.status_enum', Transaction::STATUS_PAID)
+            ->whereIn('transactions.gateway_id', $this->gatewayIds)
+            ->where('transactions.is_waiting_withdrawal', 0)
+            ->whereNull('transactions.withdrawal_id')
+            ->sum('transactions.value');
     }
 
-    public function getBlockedBalance() : int
+    public function getBlockedBalance(): int
     {
         return Transaction::where('company_id', $this->company->id)
-                            ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-                            ->sum('value');
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+            ->sum('value');
     }
 
-    public function getBlockedBalancePending() : int
+    public function getBlockedBalancePending(): int
     {
         return Transaction::where('company_id', $this->company->id)
-                            ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('status_enum', Transaction::STATUS_PAID)
-                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-                            ->sum('value');
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->where('status_enum', Transaction::STATUS_PAID)
+            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+            ->sum('value');
     }
 
-    public function getPendingDebtBalance() : int
+    public function getPendingDebtBalance(): int
     {
         return 0;
     }
@@ -101,8 +102,8 @@ class GerencianetService implements Statement
     public function getWithdrawals(): JsonResource
     {
         $withdrawals = Withdrawal::where('company_id', $this->company->id)
-                                    ->whereIn('gateway_id', $this->gatewayIds)
-                                    ->orderBy('id', 'DESC');
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->orderBy('id', 'DESC');
 
         return WithdrawalResource::collection($withdrawals->paginate(10));
     }
@@ -154,10 +155,10 @@ class GerencianetService implements Statement
             );
 
             $transactionsSum = $this->company->transactions()
-                                        ->where('is_waiting_withdrawal', 1)
-                                        ->whereIn('gateway_id', $this->gatewayIds)
-                                        ->whereNull('withdrawal_id')
-                                        ->orderBy('id');
+                ->where('is_waiting_withdrawal', 1)
+                ->whereIn('gateway_id', $this->gatewayIds)
+                ->whereNull('withdrawal_id')
+                ->orderBy('id');
 
             $currentValue = 0;
 
@@ -275,8 +276,8 @@ class GerencianetService implements Statement
                     );
 
                     $transaction->update([
-                            'is_waiting_withdrawal' => 1,
-                        ]);
+                        'is_waiting_withdrawal' => 1,
+                    ]);
                 }
             });
         } catch (Exception $e) {
@@ -292,10 +293,10 @@ class GerencianetService implements Statement
     public function getResume()
     {
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
-                                        ->where('company_id', $this->company->id)
-                                        ->orderBy('id', 'desc')->first();
+            ->where('company_id', $this->company->id)
+            ->orderBy('id', 'desc')->first();
 
-        if(empty($lastTransaction)) {
+        if (empty($lastTransaction)) {
             return [];
         }
 
@@ -320,17 +321,18 @@ class GerencianetService implements Statement
         ];
     }
 
-    public function getGatewayAvailable(){
+    public function getGatewayAvailable()
+    {
         $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
-                                        ->where('company_id', $this->company->id)
-                                        ->orderBy('id', 'desc')->first();
+            ->where('company_id', $this->company->id)
+            ->orderBy('id', 'desc')->first();
 
-        return !empty($lastTransaction) ? ['Gerencianet']:[];
+        return !empty($lastTransaction) ? ['Gerencianet'] : [];
     }
 
     public function getGatewayId()
     {
-        return FoxUtils::isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID:Gateway::GERENCIANET_SANDBOX_ID;
+        return FoxUtils::isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID : Gateway::GERENCIANET_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool

@@ -3,11 +3,12 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 
 class SaleWoocommerceRequests extends Model
 {
-    
+
     /**
      * @var array
      */
@@ -21,5 +22,10 @@ class SaleWoocommerceRequests extends Model
         'created_at',
         'updated_at'
     ];
-    
+
+    public function sale(): BelongsTo
+    {
+        return $this->belongsTo(Sale::class);
+    }
+
 }

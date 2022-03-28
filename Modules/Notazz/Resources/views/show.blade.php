@@ -3,12 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href='{{asset('/modules/sales/css/index.css?v=' . uniqid())}}'>
-        <link rel="stylesheet" href="{{ asset('/modules/notazz/css/index.css?v=10') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=10') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=10') }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/notazz/show.min.css') }}">
         <style>
             .fas {
                 color: #9c47fc;
@@ -79,7 +74,7 @@
                     <div class="row mt-15">
                         <div class="offset-sm-6 col-sm-6 offset-md-6 col-md-6 offset-xl-9 col-xl-3 col-12">
                             <button id="bt_filtro" class="btn btn-primary col-sm-12">
-                                <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
+                                <img style="height: 12px; margin-right: 4px" src=" {{ mix('build/global/img/svg/check-all.svg') }} ">Aplicar
                             </button>
                         </div>
                         <div class="col-2">
@@ -192,9 +187,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('/modules/notazz/js/show.js?v=s2') }}"></script>
-        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
+        <script src='{{ mix('build/layouts/notazz/show.min.js') }}'></script>
     @endpush
 
 @endsection

@@ -104,10 +104,10 @@ class Safe2payGateway extends GatewayAbstract
                 "route" => "v2/Transaction/List",
                 "method" => "GET"
             ],  
-            "listChargebacks"=> [
+            "listChargebacks" => [
                 "route" => "v2/Chargeback/List",
                 "method" => "GET"
-            ], 
+            ],  
         ];
     }
 

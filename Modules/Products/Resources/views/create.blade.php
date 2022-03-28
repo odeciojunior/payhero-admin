@@ -37,7 +37,7 @@
                                     <div class="d-flex flex-column" id="div_img" style="position: relative">
                                         <input name="product_photo" type="file" class="form-control" id="photo" style="display:none !important;">
                                         <label for="name">Selecione uma imagem</label>
-                                        <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="{{ asset('modules/global/img/produto.svg') }}" style="max-height: 300px; max-width: 300px;">
+                                        <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="{{ mix('build/global/img/produto.svg') }}" style="max-height: 300px; max-width: 300px;">
                                         <input type="hidden" name="photo_x1" value=''>
                                         <input type="hidden" name="photo_y1" value=''>
                                         <input type="hidden" name="photo_w" id="photo_w" value=''>
@@ -156,7 +156,7 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create.js?v=' . random_int(100, 10000)) }}"></script>
+        <script src="{{ mix('modules/products/js/create.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
         <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush

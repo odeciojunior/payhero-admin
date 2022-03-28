@@ -1,7 +1,6 @@
 @extends("layouts.master")
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/digitalmanager/css/index.css?v=' .  versionsFile()) }}">
-    {{-- <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}"> --}}
+    <link rel="stylesheet" href="{{ mix('build/layouts/unicodrop/index.min.css') }}">
     <style>
         .o-arrow-right-1 {
             font-size: 30px;
@@ -84,7 +83,7 @@
         @include('projects::empty')
         <div id="no-integration-found" class='row justify-content-center' style="display:none; width:100%;">
             <div class="content-error text-center">
-                <img src="{!! asset('modules/global/img/empty.svg') !!}" width="250px">
+                <img src="{!! mix('build/global/img/empty.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
                 <p class="desc gray">Integre suas loja com Unicodrop de forma totalmente automatizada!</p>
             </div>
@@ -92,6 +91,6 @@
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/unicodrop/js/index.js?v='.uniqid()) }}"></script>
+        <script src="{{ mix('build/layouts/unicodrop/index.min.js') }}"></script>
     @endpush
 @endsection

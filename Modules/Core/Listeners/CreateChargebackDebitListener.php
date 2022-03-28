@@ -45,10 +45,6 @@ class CreateChargebackDebitListener implements ShouldQueue
 
                 $company = $transaction->company;
 
-                $company->update([
-                    'safe2pay_balance' => $company->safe2pay_balance -= $chargebackValue
-                ]);
-
                 Transfer::create(
                     [
                         'user_id' => $company->user_id,
@@ -61,6 +57,10 @@ class CreateChargebackDebitListener implements ShouldQueue
                         'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID,
                     ]
                 );
+
+                $company->update([
+                    'safe2pay_balance' => $company->safe2pay_balance - $chargebackValue
+                ]);
 
             }
         }

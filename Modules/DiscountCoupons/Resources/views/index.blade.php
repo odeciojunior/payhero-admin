@@ -7,7 +7,7 @@
                         <div class="btn-holder add-coupon d-flex align-items-center pointer" data-toggle="modal" data-target="#modal-create-coupon">
                             <span class="link-button-dependent blue"> Adicionar </span>
                             <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
-                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                                <img src="/build/global/img/icon-add.svg" style="width: 18px;">
                             </a>
                         </div>
                     </div>
