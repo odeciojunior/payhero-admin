@@ -244,15 +244,15 @@
                                         </div>
                                     </div>
                                     <div class="inner-comission">
-                                        <!-- <div class="card inner relative">
+                                        <div class="card inner relative">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Saques</strong>
                                                 </h5>
                                             </header>
                                             <canvas id="financesChart" height="285"></canvas>
-                                        </div> -->
-                                        <div class="card inner relative">
+                                        </div>
+                                        <!-- <div class="card inner relative">
                                             <header class="d-flex title-graph no-withdrawals">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Saques</strong>
@@ -301,7 +301,7 @@
                                                     </p>
                                                 </div>
                                             </footer>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>

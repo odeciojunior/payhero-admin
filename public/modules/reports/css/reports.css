@@ -416,6 +416,7 @@ h4.number{
     display: none;
     justify-content: space-between;
 }
+.value-price svg { height: 12px; }
 .value-price em.visible { display: flex; }
 
 .value-price .green { color:#1BE4A8; }
@@ -423,8 +424,16 @@ h4.number{
 
 .value-price .pink { color: #F43F5E; }
 .value-price .pink i { transform: rotate(225deg); }
+.value-price .pink path { 
+    fill: #F43F5E; 
+    transform: rotate(86deg) translate(-1px, -7px);
+}
 
 .value-price .grey i { transform: rotate(-180deg); }
+.value-price .grey path { 
+    transform: rotate(45deg) translate(1px, -3px);
+    fill:#636363; 
+}
 
 @media only screen and (min-width: 1220px) {
     .cards-reports .card { 
@@ -816,6 +825,11 @@ h4.number{
 .finances-values svg.pink path  {
     fill: #F43F5E;
     transform: translate(0px, 11px) scale(1, -1);
+}
+
+.finances-values svg.grey path  {
+    fill: #636363;
+    transform: translate(5px, -6px) scale(1, 1) rotate(42deg);
 }
 
 .finances-values em {
@@ -1400,7 +1414,7 @@ h4.number{
 
 .list-products li.line { 
     border: 0; 
-    margin: 0;
+    margin: 0 0 10px 0;
     padding: 0;
 }
 
