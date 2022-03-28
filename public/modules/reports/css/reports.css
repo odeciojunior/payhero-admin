@@ -411,7 +411,7 @@ h4.number{
 .value-price em {
     font-style: normal;
     font-weight: 700;
-    flex: 0.155;
+    flex: 0.1;
     align-items: center;
     display: none;
     justify-content: space-between;
@@ -423,6 +423,8 @@ h4.number{
 
 .value-price .pink { color: #F43F5E; }
 .value-price .pink i { transform: rotate(225deg); }
+
+.value-price .grey i { transform: rotate(-180deg); }
 
 @media only screen and (min-width: 1220px) {
     .cards-reports .card { 
