@@ -1361,7 +1361,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -1427,7 +1427,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -1501,7 +1501,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -1575,7 +1575,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -1649,7 +1649,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -1715,7 +1715,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -1846,7 +1846,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -1912,7 +1912,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -1987,7 +1987,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2062,7 +2062,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2137,7 +2137,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2204,7 +2204,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2324,7 +2324,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2385,7 +2385,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2455,7 +2455,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2525,7 +2525,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2595,7 +2595,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2657,7 +2657,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2763,7 +2763,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2829,7 +2829,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2903,7 +2903,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -2977,7 +2977,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -3051,7 +3051,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -3117,7 +3117,7 @@ class ReportService
             ],
             'total' => $total,
             'variation' => [
-                'value' => $variation,
+                'value' => $variation.'%',
                 'color' => $color
             ]
         ];
@@ -3193,6 +3193,7 @@ class ReportService
             ->select(DB::raw('products.name, products.photo as image, COUNT(*) as amount'))
             ->groupBy('products.id')
             ->orderByDesc('amount')
+            ->limit(8)
             ->get();
 
             if (!empty($filters["project"])) {
