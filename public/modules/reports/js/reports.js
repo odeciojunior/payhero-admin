@@ -39,7 +39,7 @@ $(function () {
                             let variation = `
                             <em class="${response.data.variation.color} visible">
                                 <i class="ms-Icon ms-Icon--SkypeArrow x-hidden-focus"></i>
-                                ${response.data.variation.value}%
+                                ${response.data.variation.value}
                             </em>`;
                             $("#cashback").after(variation);
                             
@@ -137,7 +137,7 @@ $(function () {
                     let variation = `
                     <em class="${response.data.variation.color} visible">
                         <i class="ms-Icon ms-Icon--SkypeArrow x-hidden-focus"></i>
-                        ${response.data.variation.value}%
+                        ${response.data.variation.value}
                     </em>`;
                     
                     $("#comission").after(variation);
@@ -184,7 +184,7 @@ $(function () {
                     let variation = `
                     <em class="${response.data.variation.color} visible">
                         <i class="ms-Icon ms-Icon--SkypeArrow x-hidden-focus"></i>
-                        ${response.data.variation.value}%
+                        ${response.data.variation.value}
                     </em>`;
                     $("#sales").after(variation);
 
@@ -1139,17 +1139,7 @@ $(function () {
                       titleSpacing: 10,
                       callbacks: {
                         label: function (tooltipItem) {
-                            let tooltipValue = tooltipItem.raw;
-                            tooltipValue = tooltipValue + '';
-                            tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ''));
-                            tooltipValue = tooltipValue + '';
-                            tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
-                    
-                            if (tooltipValue.length > 6) {
-                                tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-                            }
-                            
-                            return 'R$ ' + tooltipValue;
+                            return convertToReal(tooltipItem);
                         },
                           labelPointStyle: function (context) {
                               return {
@@ -1230,17 +1220,7 @@ $(function () {
                         titleSpacing: 10,
                         callbacks: {
                             label: function (tooltipItem) {
-                                let tooltipValue = tooltipItem.raw;
-                                tooltipValue = tooltipValue + '';
-                                tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ''));
-                                tooltipValue = tooltipValue + '';
-                                tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
-                        
-                                if (tooltipValue.length > 6) {
-                                    tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-                                }
-                                
-                                return 'R$ ' + tooltipValue;
+                                return convertToReal(tooltipItem);
                             },
                             labelPointStyle: function (context) {
                                 return {
@@ -1426,17 +1406,7 @@ $(function () {
                       titleSpacing: 10,
                       callbacks: {
                           label: function (tooltipItem) {
-                            let tooltipValue = tooltipItem.raw;
-                            tooltipValue = tooltipValue + '';
-                            tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ''));
-                            tooltipValue = tooltipValue + '';
-                            tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
-                    
-                            if (tooltipValue.length > 6) {
-                                tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-                            }
-                              
-                              return 'R$ ' + tooltipValue;
+                              return convertToReal(tooltipItem);
                           },
                           labelPointStyle: function (context) {
                               return {
@@ -1528,6 +1498,20 @@ $(function () {
                 }
             });
     
+    }
+
+    function convertToReal(tooltipItem) {
+        let tooltipValue = tooltipItem.raw;
+            tooltipValue = tooltipValue + '';
+            tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ''));
+            tooltipValue = tooltipValue + '';
+            tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
+    
+            if (tooltipValue.length > 6) {
+                tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+            }
+            
+            return 'R$ ' + tooltipValue;
     }
     
 
