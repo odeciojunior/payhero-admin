@@ -320,6 +320,7 @@ class DiscountCouponsApiController extends Controller
                 if(!empty($request['code'])){
                     $result = DiscountCoupon::where('project_id', current(Hashids::decode($projectId)))
                         ->where('id', '!=', $coupon->id)
+                        ->where('status', 1)
                         ->where('code', $request["code"])->first();
                     if(!empty($result)){
                         return response()->json(

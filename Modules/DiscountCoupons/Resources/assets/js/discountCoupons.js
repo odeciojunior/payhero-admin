@@ -145,7 +145,7 @@ function coupon_rules(data) {
     }
     var expires = data.expires?data.expires:'Não vence';
     if(data.expires_days < 0){
-        expires = '<span style="color:">Vencido</span>'
+        expires = '<span id="c-expire-label" style="color:">Vencido</span>'
     }
     if(data.expires_days > 0){
         expires = '<span style="color:">Vence em '+data.expires_days+' dia(s)</span>'
@@ -153,6 +153,7 @@ function coupon_rules(data) {
     if(data.expires_days == 0){
         expires = '<span style="color:">Vence hoje</span>'
     }
+    console.log(data.expires_days);
     html += '<br><small>'+expires+'</small><br>'
     html += '<strong>'+value+' de desconto</strong> em compras <strong>de R$'+data.rule_value+' ou mais</strong> com o cupom <strong>'+data.code+'</strong>'
     
@@ -2682,6 +2683,10 @@ $(function () {
     })
     
     $('#c-edit_status').click(function(){
+        if($('#c-expire-label').html()=='Vencido'){
+            alertCustom("error", "Não é possivel ativar um cupom vencido!");
+            return false
+        }
         if($(this).is(':checked')){
             // $('#c-edit_status_label').css('color', '#41DC8F');
             $('#c-edit_status_label').html('Desconto ativo');
