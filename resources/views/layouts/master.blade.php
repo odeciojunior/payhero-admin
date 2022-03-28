@@ -106,21 +106,25 @@
 
         @if(\Auth::user())
             <script>
-                function initFreshChat() {
-                    window.fcWidget.init(@json(\Modules\Core\Services\ChatService::getData()));
-                    window.fcWidget.user.setProperties(@json(\Modules\Core\Services\ChatService::getExtraData()));
-                }
+                (function (o, c, t, a, d, e, s, k) {
+                o.octadesk = o.octadesk || {};
+                s = c.getElementsByTagName("body")[0];
+                k = c.createElement("script");
+                k.async = 1;
+                k.src = t + '/' + a + '?showButton=' +  d + '&openOnMessage=' + e;
+                s.appendChild(k);
+                })(window, document, 'https://chat.octadesk.services/api/widget', 'cloudfoxpagamentos',  true, true);
+            </script>
 
-                function initialize(i, t) {
-                    var e;
-                    i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e))
-                }
-
-                function initiateCall() {
-                    initialize(document, "freshchat-js-sdk")
-                }
-
-                window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
+            <script>
+                window.addEventListener('onOctaChatReady', function(e) {
+                    octadesk.chat.login({
+                        user: {
+                            name: '{{ auth()->user()->name }}',
+                            email: '{{ auth()->user()->email }}'
+                        },
+                    })
+                })
             </script>
         @endif
     @endif
