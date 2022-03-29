@@ -867,11 +867,8 @@ $(document).ready(function () {
             atualizar();
         }
     });
-//});
 
-
-//$(() => {
-    // COMPORTAMENTOS DA JANELA
+/** INICIO - bloco identico a Modules/Reports/Resources/assets/js/report-pending.js */
 
     $("#discount_value").mask("00%", {reverse: true});
 
@@ -2371,10 +2368,5 @@ $(document).ready(function () {
         }
     }
 
-    /* $('#').on('submit', function (e) {
-         // validation code here
-        if (!valid) {
-            e.preventDefault();
-        }
-    });*/
+    /** FIM - bloco de codigo identico a ... */
 });

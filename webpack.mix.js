@@ -676,9 +676,6 @@ mix.babel([
 mix.styles([
     'Modules/Sales/Resources/assets/css/index.css'
 ], 'public/build/layouts/reports/details.min.css');
-mix.babel([
-    'Modules/Sales/Resources/assets/js/detail.js'
-], 'public/build/layouts/reports/details.min.js');
 
 /**
  * Modules/Reports/Resources/views/blockedbalance.blade.php
@@ -754,7 +751,6 @@ mix.styles([
     'resources/modules/global/css/switch.css'
 ], 'public/build/layouts/reports/pending.min.css');
 mix.babel([
-    'Modules/Reports/Resources/assets/js/detail.js',
     'Modules/Reports/Resources/assets/js/report-pending.js',
     'resources/modules/global/js-extra/moment.min.js',
     'resources/modules/global/js/daterangepicker.min.js',
