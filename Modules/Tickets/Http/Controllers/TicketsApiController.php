@@ -120,6 +120,7 @@ class TicketsApiController extends Controller
 
                 $ticket = Ticket::select([
                     'tickets.id',
+                    'tickets.sale_id',
                     'tickets.description',
                     'tickets.ticket_category_enum',
                     'tickets.ticket_status_enum',

@@ -33,6 +33,7 @@ class TicketShowResource extends JsonResource
 
         return [
             'id' => Hashids::encode($this->id),
+            'sale_id' => hashids_encode($this->sale_id, 'sale_id'),
             'ticket_status_enum' => $this->ticket_status_enum,
             'ticket_category_enum' => $this->ticket_category_enum,
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y'),
