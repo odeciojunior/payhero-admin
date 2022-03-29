@@ -782,9 +782,6 @@ mix.babel([
 mix.styles([
     'Modules/Sales/Resources/assets/css/index.css'
 ],'public/build/layouts/sales/details.min.css')
-mix.babel([
-    'Modules/Sales/Resources/assets/js/detail.js'
-],'public/build/layouts/sales/details.min.js')
 
 /**
  * Modules/Sales/Resources/views/index.blade.php
