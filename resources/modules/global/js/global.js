@@ -1,15 +1,11 @@
 $(document).ready(function () {
 
+    const user_id = $("#user_hash").val();
+    const user_name = $("#user_name").val();
+    const user_email = $("#user_email").val();
+
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
-
-    // var current_url = window.location.pathname;
-    // if (current_url.includes('reports')) {
-    //     $("#reports-link").addClass('menu-active');
-    // } else if (current_url.includes('sales') || current_url.includes('recovery') || current_url.includes('trackings')) {
-    //     $("#sales-link").addClass('menu-active');
-    // }
-
     $(".mm-panels").css('scrollbar-width', 'none');
 
     $('.redirect-to-accounts').click(function (e) {
@@ -34,23 +30,19 @@ $(document).ready(function () {
         });
     })
 
-    // $('#accounts-service').click(function (e) {
-    //     e.preventDefault()
-    //     $.ajax({
-    //         method: 'GET',
-    //         url: '/send-authenticated',
-    //         headers: {
-    //             'Authorization': $('meta[name="access-token"]').attr('content'),
-    //             'Accept': 'application/json',
-    //         },
-    //         error: response => {
-    //             errorAjaxResponse(response);
-    //         },
-    //         success: response => {
-    //             window.location.href = response.url
-    //         },
-    //     });
-    // })
+    window.announcekit = (window.announcekit || { queue: [], on: function(n, x) { 
+        window.announcekit.queue.push([n, x]); }, push: function(x) { window.announcekit.queue.push(x); } 
+    });
+
+    announcekit.push({
+        "widget": "https://updates.cloudfox.net/widgets/v2/2gTmDK",
+        "selector": ".announcekit-widget",
+        "user": {
+            id: user_id,
+            name: user_name,
+            email: user_email,
+        }
+    });
 });
 
 function stringToMoney(string, currency = 'BRL') {
