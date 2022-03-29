@@ -2129,3 +2129,55 @@ tbody td{
     background: none;
     border-color: #EBEBEB;
 }
+
+/* Tooltip */
+.custom-tooltip {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.custom-tooltip-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: -190px;
+}
+
+.custom-tooltip-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 8px;
+    min-width: 280px;
+    min-height: 130px;
+    z-index: 1;
+    box-shadow:0 6px 6px rgba(0,0,0,0.1);
+
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.custom-tooltip-arrow {
+    width: 20px;
+    height: 20px;
+    margin-top: -9px;
+    transform: rotate(45deg);
+    background: #ffffff;
+    border-radius: 2px;
+    border-bottom: 1px solid #e1e1e1;
+    border-right: 1px solid #e1e1e1;
+    z-index: 2;
+}
+
+.custom-tooltip > svg {
+    width: 15px;
+    height: 15px;
+}
