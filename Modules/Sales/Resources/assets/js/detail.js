@@ -521,6 +521,15 @@ $(() => {
             $("#partial-refund-value").hide();
         }
 
+        if (sale.progressive_discount) {
+            $("#discount-prog-title").show();
+            $("#discount-prog-data span").html(sale.progressive_discount);
+            $("#discount-prog-data").show();
+        } else {
+            $("#discount-prog-data").hide();
+            $("#discount-prog-title").hide();
+        }
+
         if (sale.status_name == 'refunded') {
             $('#comission-details').css('display','none');
         }

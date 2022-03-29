@@ -1007,6 +1007,7 @@ $(function () {
     $('#nao_vence').on('click', function(){
         if($(this).prop('checked')){
             $('#date_range').prop('disabled', true)
+            $('#date_range').val('')
         }else{
             $('#date_range').prop('disabled', false)
             $('#date_range').focus()
@@ -1017,6 +1018,7 @@ $(function () {
     $('#nao_vence2').on('click', function(){
         if($(this).prop('checked')){
             $('#date_range2').prop('disabled', true)
+            $('#date_range2').val('')
         }else{
             $('#date_range2').prop('disabled', false)
             $('#date_range2').focus()
