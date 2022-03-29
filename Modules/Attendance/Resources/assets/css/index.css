@@ -630,7 +630,6 @@ button:active {
     -ms-flex-pack: center;
     justify-content: center;
     height: 50px;
-    width: 146px;
     padding: 10px 26px;
     border-right: 1px solid #ECECEC;
 }
@@ -653,6 +652,7 @@ button:active {
 }
 
 .ticket-category {
+    flex: 1;
     padding: 0 20px;
     font-size: 12px;
 }
@@ -660,6 +660,22 @@ button:active {
 .ticket-category-text,
 .ticket-project {
     font-weight: bold;
+}
+
+.ticket-sale {
+    flex: .34;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    height: 100%;
+    padding: 0 20px;
+    border-left: 1px solid #ECECEC;
+    font-size: 12px;
+}
+
+.ticket-sale span {
+    margin-left: 3px;
 }
 
 /* Messages */
@@ -982,6 +998,10 @@ button:active {
     }
 
     .ticket-category {
+        display: none !important;
+    }
+
+    .ticket-sale {
         display: none !important;
     }
 

@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     let scoreInfo = {
         0: {
             textColor: 'text-color-red',
@@ -300,26 +299,67 @@ $(document).ready(function () {
                         </div>
                         <div class="card-body pt-0 mt-20 d-flex flex-column justify-content-start align-items-start account-chargeback">
 
-                            <div class="d-flex flex-row flex-nowrap" style="width: 100%;">
-                                <div class="col-6 p-0 d-flex flex-row justify-content-start align-items-center align-self-start" >
+                            <div class="d-flex flex-row flex-nowrap justify-content-between" style="width: 100%;">
+                                <div class="col-4 p-0 d-flex flex-row justify-content-start align-items-center align-self-start" >
                                     <span class="mr-10 ${scoreInfo[Math.floor(data.chargeback_score)].bgColor} account-health-note-circle"></span>
                                     <span class="account-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor}">${data.chargeback_score}</span>
                                 </div>
-                                <div class="col-6 p-0" >
-                                    <div class="d-flex flex-row flex-nowrap justify-content-between">
-                                        <span class="font-size-12 gray-600">Últimos 140 dias</span>
-                                        <span class="font-size-12 gray-600">20 dias</span>
+                                <div class="col-6 p-0 d-flex flex-row justify-content-end align-items-center" >
+                                    <span class="font-size-12 gray-600">Como analisamos</span>
+
+                                    <div class="custom-tooltip" >
+                                        <div id="chargeback-custom-tooltip-icon" data-target="chargeback-custom-tooltip-container" style="margin-left: 3px;">
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M8 0C12.4183 0 16 3.58172 16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0ZM8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1ZM8 11.5C8.41421 11.5 8.75 11.8358 8.75 12.25C8.75 12.6642 8.41421 13 8 13C7.58579 13 7.25 12.6642 7.25 12.25C7.25 11.8358 7.58579 11.5 8 11.5ZM8 3.5C9.38071 3.5 10.5 4.61929 10.5 6C10.5 6.72959 10.1848 7.40774 9.6513 7.8771L9.49667 8.00243L9.27817 8.16553L9.19065 8.23718C9.1348 8.28509 9.08354 8.33373 9.03456 8.38592C8.69627 8.74641 8.5 9.24223 8.5 10C8.5 10.2761 8.27614 10.5 8 10.5C7.72386 10.5 7.5 10.2761 7.5 10C7.5 8.98796 7.79312 8.24747 8.30535 7.70162C8.41649 7.5832 8.53202 7.47988 8.66094 7.37874L8.90761 7.19439L9.02561 7.09468C9.325 6.81435 9.5 6.42206 9.5 6C9.5 5.17157 8.82843 4.5 8 4.5C7.17157 4.5 6.5 5.17157 6.5 6C6.5 6.27614 6.27614 6.5 6 6.5C5.72386 6.5 5.5 6.27614 5.5 6C5.5 4.61929 6.61929 3.5 8 3.5Z" fill="#78838E"/>
+                                            </svg>
+                                        </div>
+
+                                        <div id="chargeback-custom-tooltip-container" class="custom-tooltip-container mx-2" style="display: none; margin-top: -430px;">
+                                            <div class="custom-tooltip-content" style="margin-right: 150px">
+                                                <p>
+                                                O chargeback acontece quando uma cobrança é contestada pelo titular do cartão de crédito.
+                                                </p>
+
+                                                <p>
+                                                Analisamos uma janela de 150 dias (5 meses), excluindo os últimos 20 dias* de vendas, para calcular o índice e atribuir uma nota que vai de 0 a 10.
+                                                </p>
+
+                                                <p>
+                                                O índice exigido pelas regras internacionais das bandeiras é de não exceder 1,5%. 
+                                                Dentre 1,5% e 3% é considerado alto, podendo sofrer multas por cada chargeback.
+                                                Acima de 3%, além das multas, a sua conta poderá ser bloqueada definitivamente.
+                                                </p>
+
+                                                <p>
+                                                *A exclusão dos últimos 20 dias é para tornar o cálculo mais preciso, uma vez que os chargebacks geralmente aparecem após este período.
+                                                </p>
+
+                                                <div class="border border-1 rounded" style="padding: 5px 20px;">
+                                                    <div class="d-flex flex-row flex-nowrap justify-content-between">
+                                                        <span class="font-size-12 gray-600 font-weight-bold">Últimos 150 dias</span>
+                                                        <span class="font-size-12 gray-600 font-weight-bold">20 dias</span>
+                                                    </div>
+                                                    <img class="col-12 p-0" src="/build/global/img/timeline-chargeback.svg" style="max-width: 100%;height: 15px;">
+                                                </div>
+
+                                            </div>
+                                            <div class="custom-tooltip-arrow"></div>
+                                        </div>
                                     </div>
-                                    <img class="col-12 p-0" src="/build/global/img/timeline-chargeback.svg" style="max-width: 100%;height: 15px;">
+
                                 </div>
                             </div>
 
-                            <div class="mt-10 d-flex flex-row flex-nowrap" style="width: 100%;">
-                                <div class="col-6 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
+                            <div class="mt-10 d-flex flex-row flex-nowrap justify-content-between" style="width: 100%;">
+                                <div class="col-2 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
+                                    <span class="account-health-note ${scoreInfo[Math.floor(2.4)].textColor}" style="font-size: 20px;">${parseFloat( data.chargeback_rate ).toFixed(1)}%</span>
+                                    <span class="account-health-note-description">Índice</span>
+                                </div>
+                                <div class="col-3 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
                                     <span class="account-health-note">${data.total_sales_approved}</span>
                                     <span class="account-health-note-description">Vendas no cartão</span>
                                 </div>
-                                <div class="col-6 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
+                                <div class="col-3 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
                                     <span class="account-health-note">${data.total_sales_chargeback}
                                         <!-- <span class="account-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat( data.chargeback_rate ).toFixed(2)}%</span> -->
                                     </span>
@@ -328,7 +368,7 @@ $(document).ready(function () {
                             </div>
 
                             <div class="hr-horizontal mt-25 d-flex justify-content-start align-items-start align-self-start"></div>
-                            <div class="mt-10 d-flex flex-row flex-nowrap justify-content-start align-items-start align-self-start" >
+                            <div class="d-flex flex-row flex-nowrap justify-content-start align-items-center align-self-start" style="height: 100%;" >
                                 <a href="./contestations" class="tips-chargeback">Acesse o painel de Contestações <i class="o-arrow-right-1 ml-10 align-items-center"></i></a>
                             </div>
                             <div class="sirius-account-loading"></div>
@@ -336,6 +376,15 @@ $(document).ready(function () {
                 `;
 
                 $('.sirius-account > .card').append(item);
+
+                $('#chargeback-custom-tooltip-icon').on({
+                    mouseenter: function () {
+                        $( "#chargeback-custom-tooltip-container" ).fadeIn();
+                    },
+                    mouseleave: function () {
+                        $( "#chargeback-custom-tooltip-container" ).fadeOut();
+                    }
+                });
 
                 nextCard();
             }
@@ -486,5 +535,4 @@ $(document).ready(function () {
             }
         });
     }
-
 });
