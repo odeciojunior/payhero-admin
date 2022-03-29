@@ -316,8 +316,8 @@ $(document).ready(function () {
 
                                         <div id="chargeback-custom-tooltip-container" class="custom-tooltip-container mx-2" style="display: none">
                                             <div class="custom-tooltip-content" style="margin-right: 150px">
-                                                <p>Levamos em conta os chargebacks dos últimos 150 dias, 
-                                                excluindo os realizados nos últimos 20 dias, que é o 
+                                                <p>Levamos em conta os chargebacks e as contestações dos últimos 150 dias, 
+                                                excluindo os chargebacks ocorridos nos últimos 20 dias, que é o 
                                                 prazo médio de resolução negativa ou positiva destes casos.</p>
 
                                                 <div class="border border-1 rounded" style="padding: 5px 20px;">

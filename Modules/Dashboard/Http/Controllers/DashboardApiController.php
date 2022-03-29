@@ -410,7 +410,7 @@ class DashboardApiController extends Controller
                 return [];
             }
 
-            $startDate = now()->startOfDay()->subDays(140);
+            $startDate = now()->startOfDay()->subDays(150);
             $endDate = now()->endOfDay()->subDays(20);
 
             $chargebackService = new ChargebackService();
