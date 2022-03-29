@@ -82,7 +82,6 @@
     <script>
         verifyDocumentPending();
     </script>
-    <script src="{{ mix('build/layouts/master/plugins2.min.js') }}"></script>
 
 
     @stack('scripts')
