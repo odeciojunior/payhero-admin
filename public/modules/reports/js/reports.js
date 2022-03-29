@@ -1,9 +1,10 @@
 $(function () {
     loadingOnScreen();
-    newFinanceGraph();
     distributionGraph();
     newSellGraph();
     distributionGraphSeller();
+    getInfo();
+    sessionStorage.removeItem('info');
 
     let resumeUrl = '/api/reports/resume';
 
@@ -144,9 +145,6 @@ $(function () {
                         ${response.data.variation.value}
                     </em>`;
 
-                    
-
-                    
                     $("#comission").after(variation);
 
                     let labels = [...response.data.chart.labels];
@@ -226,13 +224,6 @@ $(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-                // $('#card-products .ske-load').hide();
-                // $('#card-products .value-price').removeClass('invisible');
-                // $("#qtd").html(0);
-                // $("#card-products .value-price").next('.no-graph').remove();
-                // $("#card-products .value-price").after('<div class=no-graph>Não há dados suficientes</div>');
-                // $('.no-graph').css('height','111px');
-                // $(".footer-products").removeClass('visible');
             },
             success: function success(response) {
                 $('#card-products .ske-load').show();
@@ -1244,43 +1235,8 @@ $(function () {
                   },
             });
           
-    }
+    }   
     
-    function newFinanceGraph() {
-        new Chartist.Line('.new-finance-graph', {
-            labels: [1, 5, 10, 15, 20, 30 ],
-            series: [[1, 5, 10, 15, 20, 30]]
-        }, {
-            chartPadding: {
-                top: 40,
-                right: 0,
-                left: -3,
-                bottom: 20
-            },
-            axisX: {
-                labelOffset: {
-                    x: -15,
-                    y: 15
-                },
-                showGrid: false,
-            },
-            axisY: {
-                labelOffset: {
-                    x: 0,
-                    y: 0
-                },
-                offset: 55,
-                labelInterpolationFnc: function(value) {
-                    return 'R$ ' + value + 'K'
-                },
-                scaleMinSpace: 40
-            },
-            fullWidth: true,
-            low: 0,
-            height: 289,
-            showArea: true
-        });
-    }
 
     function distributionGraph() {
         new Chartist.Pie('.distribution-graph', {
@@ -1524,5 +1480,16 @@ $(function () {
             return 'R$ ' + tooltipValue;
     }
     
+    function getInfo() {
+        $('.box-link').on('click', function(e) {
+            let calendar = $('input[name=daterange]').val();
+            let company = $('#select_projects').val();
 
+            let obj = {
+                calendar,
+                company
+            }
+            sessionStorage.setItem('info', JSON.stringify(obj));
+        });
+    }
 });
