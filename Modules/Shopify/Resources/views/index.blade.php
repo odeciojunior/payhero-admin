@@ -621,9 +621,11 @@
             {{-- end modal --}}
 
         </div>
-        @include('companies::empty')
-        @include('companies::not_company_approved_getnet')
+
+        @include('utils.empty-companies-error')
+        @include('utils.companies-not-approved-getnet')
         @include('shopify::not-integration')
+
     </div>
 
     @push('scripts')

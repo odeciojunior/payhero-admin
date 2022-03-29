@@ -4,8 +4,8 @@ namespace Modules\Core\Services;
 
 use Exception;
 use LogicException;
-use Modules\Companies\Transformers\CompaniesSelectResource;
-use Modules\Companies\Transformers\CompanyResource;
+use Modules\Core\Transformers\CompaniesSelectResource;
+use Modules\Core\Transformers\CompanyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
