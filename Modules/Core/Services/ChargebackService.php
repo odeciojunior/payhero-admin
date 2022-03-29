@@ -141,7 +141,6 @@ class ChargebackService
 
     }
 
-
     public function getTotalValueChargebacks($filters)
     {
         $getnetChargebacks = $this->getQuery($filters);
@@ -261,12 +260,14 @@ class ChargebackService
 
     public function getTotalChargebacksInPeriod(User $user, Carbon $startDate, Carbon $endDate)
     {
-        return GetnetChargeback::whereHas('sale', function ($q) use ($startDate, $endDate) {
-            $q->whereBetween(
-                'start_date',
-                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-            );
-        })->where('user_id', $user->account_owner_id)
+        return Sale::where('status', Sale::STATUS_CHARGEBACK)
+            ->whereHas('saleLogs', function($q) use ($startDate, $endDate) {
+                $q->whereBetween(
+                    'created_at',
+                    [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
+                )->where('status_enum', 4);
+            })
+            ->where('owner_id', $user->account_owner_id)
             ->get();
     }
 

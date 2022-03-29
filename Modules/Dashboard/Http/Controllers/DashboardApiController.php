@@ -396,7 +396,6 @@ class DashboardApiController extends Controller
 
     private function getDataAccountChargeback($companyHash): array
     {
-
         try {
             if (empty($companyHash)) {
                 return [];

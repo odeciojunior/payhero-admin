@@ -202,7 +202,7 @@ class AccountHealthService
                 return false;
             }
 
-            $startDate = now()->startOfDay()->subDays(140);
+            $startDate = now()->startOfDay()->subDays(150);
             $endDate = now()->endOfDay()->subDays(20);
 
             $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
