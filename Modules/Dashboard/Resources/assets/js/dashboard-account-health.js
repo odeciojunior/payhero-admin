@@ -337,7 +337,7 @@ $(document).ready(function () {
                             </div>
 
                             <div class="mt-10 d-flex flex-row flex-nowrap justify-content-between" style="width: 100%;">
-                                <div class="col-3 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
+                                <div class="col-2 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
                                     <span class="account-health-note ${scoreInfo[Math.floor(2.4)].textColor}" style="font-size: 20px;">${parseFloat( data.chargeback_rate ).toFixed(1)}%</span>
                                     <span class="account-health-note-description">Índice</span>
                                 </div>
