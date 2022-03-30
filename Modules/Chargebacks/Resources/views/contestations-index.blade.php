@@ -136,15 +136,21 @@
                                     <input id="customer" name="customer" class="input-pad" placeholder="Nome do cliente">
                                 </div>
                             </div>
-                            <div class="row justify-content-end">
-                                <div class='col-sm-12 col-md-2 mt-10 px-0'>
-                                    <label for="sale_approve" class='pl-50 mb-10'>Vendas aprovadas</label>
-                                    <br>
-                                    <label class="switch mr-0" style="margin-left:140px">
+
+                            <div class="row no-gutters justify-content-between justify-content-sm-end mt-20">
+                                <div class="mr-10">
+                                    <label for="sale_approve" class=''>
+                                        Vendas aprovadas
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label class="switch m-0">
                                         <input type="checkbox" id='sale_approve' name="sale_approve" >
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
+
                             </div>
                         </div>
 
