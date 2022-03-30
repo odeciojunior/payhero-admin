@@ -79,9 +79,9 @@
                                 <label for="is_expired">Expiração</label>
                                 <br>
                                 <select name='is_expired' id="is_expired" class="sirius-select">
-                                    <option value="0">Ambos</option>
+                                    <option value="0" selected>Ambos</option>
                                     <option value="1">Expirado</option>
-                                    <option value="2" selected>Não expirado</option>
+                                    <option value="2">Não expirado</option>
                                 </select>
                             </div>
 
