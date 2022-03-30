@@ -414,10 +414,10 @@ class DashboardApiController extends Controller
             $endDate = now()->endOfDay()->subDays(20);
 
             $chargebackService = new ChargebackService();
-            $totalChargeback = $chargebackService->getTotalChargebacksInPeriod($user, $startDate, $endDate)->count();
+            $totalChargeback = $chargebackService->getTotalChargebacksInPeriod($user, $startDate);
 
             $saleService = new SaleService();
-            $totalApprovedSales = $saleService->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate)->count();
+            $totalApprovedSales = $saleService->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate);
 
             return [
                 'chargeback_score'       => $user->chargeback_score > 1 ? round($user->chargeback_score, 1) : $user->chargeback_score,
