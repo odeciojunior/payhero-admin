@@ -160,14 +160,18 @@
                                         <span class="material-icons ml-10">arrow_back_ios</span>
                                     </button>
                                     <div class="ticket-customer"></div>
-                                    <div class="ticket-status" style="display:none">
+                                    <div class="ticket-status d-none">
                                         <span class="ticket-status-icon small"></span>
                                         <span class="ticket-status-text"></span>
                                     </div>
-                                    <div class="ticket-category" style="display:none">
+                                    <div class="ticket-category d-none">
                                         <span class="ticket-category-text"></span> aberta em
                                         <span class="ticket-start-date"></span> para
                                         <span class="ticket-project"></span>
+                                    </div>
+                                    <div class="ticket-sale d-none">
+                                        <b>Venda: </b>
+                                        <span></span>
                                     </div>
                                 </div>
                                 <div class="messages-container">

@@ -246,11 +246,12 @@ $(() => {
         $('.ticket-category-text').text(categoryEnum[ticket.ticket_category_enum]);
         $('.ticket-start-date').text(ticket.created_at);
         $('.ticket-project').text(ticket.project_name);
-        $('.ticket-header *').show();
+        $('.ticket-sale span').text(`#${ticket.sale_id}`)
+        $('.ticket-back, .ticket-customer, .ticket-status, .ticket-category, .ticket-sale').removeClass('d-none');
 
         let html = '';
         if (isMobile()) {
-            html += `<div class="ticket-messages-resume"><b>${categoryEnum[ticket.ticket_category_enum]}</b> aberta em ${ticket.created_at} para <b>${ticket.project_name}</b></div>`;
+            html += `<div class="ticket-messages-resume"><b>${categoryEnum[ticket.ticket_category_enum]}</b> aberta em ${ticket.created_at} para <b>${ticket.project_name}</b> referente a venda <b>#${ticket.sale_id}</b></div>`;
         }
         for (let message of ticket.messages) {
             html += renderMessage(message);
@@ -277,7 +278,7 @@ $(() => {
     function clearViews() {
         $('.tickets-container').html('');
         $('.messages-container').html('');
-        $('.ticket-header *').hide();
+        $('.ticket-back, .ticket-customer, .ticket-status, .ticket-category, .ticket-sale').addClass('d-none');
         $('.write-container').hide();
         $('.pagination-container').hide();
     }
