@@ -1,5 +1,5 @@
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/shipping/css/shipping-edit.css?v=001') }}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/shipping/edit.min.css') }}">
 @endpush
 
 <form id='form-update-shipping' enctype="multipart/form-data">
@@ -8,7 +8,7 @@
     <div class='row'>
         <div class='form-group col-12'>
             <label for='type'>Tipo</label>
-            <select name='type' id="shipping-type" class='sirius-select type'>
+            <select name='type' id="shipping-type" class='sirius-select shipping-type'>
                 <option value='static'>Frete fixo (você define um valor fixo para o frete)</option>
                 <option value='pac'>PAC (Calculado automaticamente pela API)</option>
                 <option value='sedex'>SEDEX (Calculado automaticamente pela API)</option>

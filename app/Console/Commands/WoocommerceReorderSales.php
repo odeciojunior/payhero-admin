@@ -8,8 +8,6 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleWoocommerceRequests;
 use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Services\WooCommerceService;
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Log;
 
 
 class WoocommerceReorderSales extends Command
@@ -36,8 +34,6 @@ class WoocommerceReorderSales extends Command
 
     public function handle()
     {
-
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -95,8 +91,6 @@ class WoocommerceReorderSales extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 }

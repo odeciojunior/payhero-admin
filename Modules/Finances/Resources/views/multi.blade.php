@@ -1,11 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/switch.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/new-finances.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/finances/css/multi-finances.css?v=0' . versionsFile()) }}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/finances/multi.min.css') }}">
 @endpush
 
 @section('content')
@@ -45,8 +41,8 @@
                                 <span class="font-size-24 gray">R$</span>
                                 <span class="font-size-32 bold total-available-balance" style="color: #636363;">0,00</span>
                             </div>
-                            <img id="eye-slash" src="{{ asset('modules/global/img/logos/2021/svg/eye-slash.svg') }}" alt="" class="pointer">
-                            <img id="eye-no-slash" src="{{ asset('modules/global/img/logos/2021/svg/eye-no-slash.svg') }}" alt="" class="pointer d-none">
+                            <img id="eye-slash" src="{{ mix('build/global/img/logos/2021/svg/eye-slash.svg') }}" alt="" class="pointer">
+                            <img id="eye-no-slash" src="{{ mix('build/global/img/logos/2021/svg/eye-no-slash.svg') }}" alt="" class="pointer d-none">
                         </div>
                     </div>
                     <div class="col-9 col-md-6 pointer default-hover order-3" style="display:none;" id="container-return">
@@ -350,7 +346,7 @@
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <button type="submit" class="btn btn-block btn-success-1 py-10 px-15 disabled" disabled="">
-                                                    <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }}">
+                                                    <img style="height: 12px; margin-right: 4px" src=" {{ mix('build/global/img/svg/check-all.svg') }}">
                                                     &nbsp;Salvar&nbsp;
                                                 </button>
                                             </div>
@@ -384,7 +380,7 @@
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <button type="submit" class="btn btn-block py-10 px-15 btn-success">
-                                                    <img style="height: 12px; margin-right: 4px" src=" {{asset('/modules/global/img/svg/check-all.svg')}} ">
+                                                    <img style="height: 12px; margin-right: 4px" src=" {{mix('build/global/img/svg/check-all.svg')}} ">
                                                     &nbsp;Salvar&nbsp;
                                                 </button>
                                             </div>
@@ -406,11 +402,5 @@
 @include('finances::components.new-withdrawal-modal')
 
 @push('scripts')
-    <script src="{{ asset('modules/global/js-extra/moment.min.js?v=' . versionsFile()) }}"></script>
-    <script src="{{ asset('modules/global/js/daterangepicker.min.js?v=' . versionsFile()) }}"></script>
-    <script src="{{ asset('modules/finances/js/jPages.min.js?v=' . versionsFile()) }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/owl-carousel/owl.carousel.min.js?v=' . versionsFile()) }}"></script>
-    <script src="{{ asset('modules/finances/js/multi-finances.js?v=' . versionsFile()) }}"></script>
-    <script src="{{ asset('modules/finances/js/multi-finances-withdrawals.js?v=' . versionsFile()) }}"></script>
-    <script src="{{ asset('modules/finances/js/settings.js?v=' . versionsFile()) }}"></script>
+    <script src="{{ mix('build/layouts/finances/multi.min.js') }}"></script>
 @endpush

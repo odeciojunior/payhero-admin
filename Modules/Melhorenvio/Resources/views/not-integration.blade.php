@@ -10,8 +10,8 @@
                                                                 justify-content: center;
                                                                 padding-bottom:116px">
     <div class="content-error text-center">
-        <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
+        <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
         <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-        <p class="desc gray">Integre seus projetos com Melhor Envio de forma totalmente automatizada!</p>
+        <p class="desc gray">Integre suas lojas com Melhor Envio de forma totalmente automatizada!</p>
     </div>
 </div>

@@ -4,10 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/reports/projections.min.css') }}">
     @endpush
 
     <div class="page">
@@ -111,9 +108,5 @@
 @endsection
 
 @push('scripts')
-    {{-- <script type='text/javascript' src='{{asset('modules/reports/js/moment.min.js')}}'></script> --}}
-    <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/projections.js?v=01')}}'></script>
+    <script type='text/javascript' src='{{ mix('build/layouts/reports/projections.min.js') }}'></script>
 @endpush

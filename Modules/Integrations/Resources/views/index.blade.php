@@ -2,16 +2,14 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=' . versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('modules/integrations/css/edit-integrations.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/integrations/index.min.css') }}">
     @endpush
     <div class="page new-layout">
         <div style="display: none" class="page-header container pb-0">
             <div class="d-flex justify-content-between align-items-center mb-45">
                 <div>
                     <h1 class="page-title my-10" style="min-height: 28px">
-                        <img src="{{ asset('modules/global/img/svg/api-sirius.png') }}" style="height: 40px; width: auto;" alt="API Sirius">
+                        <img src="{{ mix('build/global/img/svg/api-sirius.png') }}" style="height: 40px; width: auto;" alt="API Sirius">
                         <span style="line-height: 40px;">API Sirius</span>
                     </h1>
                     <p id='text-info' style="margin-bottom: 0;">Use nosso checkout API ou faça integrações externas.</p>
@@ -26,7 +24,7 @@
         <div class="page-content container" id='page-integrates'>
             <div id="content-error" class='' style='display: none;'>
                 <div class="content-modal-error text-center">
-                    <img src="modules/global/img/image-empty-state.svg" width="260px" style="margin-bottom: 32px;" />
+                    <img src="build/global/img/image-empty-state.svg" width="260px" style="margin-bottom: 32px;" />
                     <h1 class="m-0" style="color: #636363; font-weight: normal; font-size: 24px; line-height: 30px;">Você ainda não cadastrou nenhuma integração!</h1>
                     <p class="m-0">Use nossa checkout API ou faça uma integração externa para sua loja.</p>
 
@@ -48,7 +46,7 @@
                             <input type="text" class="form-control" id="input-url-antifraud" readonly>
                             <div class="input-group-append">
                                 <button class="btn btn-primary bg-white btnCopiarLinkAntifraud" type="button" data-toggle="tooltip" title="Copiar URL antifraud" style="width: 46px; border-left: 1px solid #F4F4F4;">
-                                    <img src="/modules/global/img/icon-copy-b.svg">
+                                    <img src="/build/global/img/icon-copy-b.svg">
                                 </button>
                             </div>
                         </div>
@@ -227,7 +225,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('modules/integrations/js/index.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ mix('build/layouts/integrations/index.min.js') }}"></script>
     @endpush
 
 @endsection

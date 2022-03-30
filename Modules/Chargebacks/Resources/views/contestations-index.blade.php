@@ -3,13 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=123') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=123') }}">
-        <link rel="stylesheet" href="{{ asset('modules/chargebacks/css/contestations-index.css?v='. versionsFile()) }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="{{ mix('build/layouts/chargebacks/contestations-index.min.css') }}">
         <style>
             .select2-selection--single {
                 border: 1px solid #dddddd !important;
@@ -58,7 +52,6 @@
                 border-radius: 50px;
                 margin-top: -12px;
             }
-
         </style>
     @endpush
 
@@ -104,18 +97,17 @@
                             <div class="col-sm-12 col-md-3 mt-10">
                                 <div class="form-group form-icons">
                                     <label for="date_type">&nbsp;</label>
-                                    <i style="right: 24px;top: 35px;"
-                                       class="form-control-icon form-control-icon-right o-agenda-1 mt-15 font-size-20"></i>
-                                    <input name='date_range' id="date_range" class="input-pad pr-30" placeholder="Clique para editar..." readonly style="">
+                                    <input name='date_range' id="date_range" class="input-pad pr-30" readonly>
+                                    <i style="right: 24px;top: 31px;"class="filter-badge daterange"></i>
                                 </div>
                             </div>
                         </div>
                         <div class="collapse" id="bt_collapse">
                             <div class="row">
                                 <div class="col-sm-12 col-md-3 mt-10">
-                                    <label for="project">Projeto</label><br>
+                                    <label for="project">Lojas</label><br>
                                     <select name='project' id="project" class="sirius-select">
-                                        <option value="">Todos projetos</option>
+                                        <option value="">Todas lojas</option>
                                     </select>
                                 </div>
 
@@ -164,13 +156,13 @@
                                     data-target="#bt_collapse"
                                     aria-expanded="false"
                                     aria-controls="bt_collapse">
-                                    <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                    <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "/>
                                     <span id="text-filtro" class="text-break">Filtros avançados</span>
                                 </div>
                             </div>
                             <div class="col-6 col-xl-3 mt-20">
                                 <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                    <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                    <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/check-all.svg') }} "/>
                                     <span class="text-break">Aplicar filtros</span>
                                 </div>
                             </div>
@@ -180,9 +172,9 @@
                 <div class="fixhalf"></div>
 
                 <div class="row justify-content-center mt-10">
-                    <div class="col-md-3">
+                    <div class="col-md-3 px-0">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body ">
+                            <div class="card-body p-15">
                                 <h5 class="font-size-16 text-muted">N° de contestações</h5>
                                 <h4 class="total-number">
                                     <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestation"></span>
@@ -192,10 +184,10 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-3 pr-0">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body">
-                                <h5 class="font-size-16 text-muted">Resultantes em chargeback</h5>
+                            <div class="card-body p-15">
+                                <h5 class="font-size-16 text-muted">Resultou em chargeback</h5>
                                 <h4 class="total-number">
                                     <span class="font-size-30 bold" style="color:#5A5A5A" id="total-chargeback-tax-val"></span>
                                     <span id="total-chargeback-tax" class="text-muted"></span>
@@ -206,7 +198,7 @@
 
                     <div class="col-md-3">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body">
+                            <div class="card-body p-15">
                                 <h5 class="font-size-16 text-muted">Total</h5>
                                 <h4 class="total-number">
                                     <span class="text-muted">R$ </span>
@@ -221,7 +213,7 @@
                 </div>
 
                 <div class="alert alert-light alert-dismissible fade show text-primary border border-primary alert-contestation" role="alert" style="border-radius: 12px">
-                    <img src="{{ asset('modules/chargebacks/svg/info-contestation.svg') }}" alt="Informação sobre contestação">
+                    <img src="{{ mix('build/layouts/chargebacks/svg/info-contestation.svg') }}" alt="Informação sobre contestação">
                     <span class="alert-text">
                         <span class="bold">Contestações</span>
                         são ocorrências enviadas pelas operadoras de crédito após contestação de alguma compra pelo titular do cartão.
@@ -248,7 +240,7 @@
                                 <td class="table-title" style="min-width: 100px;"></td>
                             </tr>
                             </thead>
-                            <tbody id="chargebacks-table-data" img-empty="{!! asset('modules/global/img/contestacoes.svg')!!}">
+                            <tbody id="chargebacks-table-data" img-empty="{!! mix('build/global/img/contestacoes.svg')!!}">
                             {{-- js carrega... --}}
                             </tbody>
                         </table>
@@ -264,15 +256,13 @@
                 @include('sales::details')
 
             </div>
-            {{-- Quando não tem projeto cadastrado  --}}
+            {{-- Quando não tem loja cadastrado  --}}
             @include('projects::empty')
-            {{-- FIM projeto nao existem projetos--}}
+            {{-- FIM loja nao existem lojas--}}
         </div>
+
         @push('scripts')
-            <script src="{{ asset('/modules/chargebacks/js/contestations-index.js?v='. random_int(100, 10000)) }}"></script>
-            <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-            <script src="{{ asset('modules/global/js/daterangepicker.min.js') }}"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+            <script src="{{ mix('build/layouts/chargebacks/contestations-index.min.js') }}"></script>
     @endpush
 
 @endsection

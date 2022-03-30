@@ -29,7 +29,7 @@ class CieloService implements Statement
     {
         $this->gatewayIds = [
             Gateway::CIELO_PRODUCTION_ID,
-            Gateway::CIELO_SANDBOX_ID ,
+            Gateway::CIELO_SANDBOX_ID,
             // extrato cielo engloba as vendas antigas zoop e pagarme
             Gateway::PAGARME_PRODUCTION_ID,
             Gateway::PAGARME_SANDBOX_ID,
@@ -44,70 +44,69 @@ class CieloService implements Statement
         return $this;
     }
 
-    public function getAvailableBalanceWithoutBlocking() : int
+    public function getAvailableBalanceWithoutBlocking(): int
     {
-        if (!$this->company->user->show_old_finances){
+        if (!$this->company->user->show_old_finances) {
             return 0;
         }
         return $this->company->cielo_balance;
     }
 
-    public function getAvailableBalance() : int
+    public function getAvailableBalance(): int
     {
-        return  $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
+        return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
-    public function getPendingBalance() : int
+    public function getPendingBalance(): int
     {
-        if (!$this->company->user->show_old_finances){
+        if (!$this->company->user->show_old_finances) {
+            return 0;
+        }
+
+        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
+            $join->on('brs.sale_id', '=', 'transactions.sale_id')
+                ->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
+        })->whereNull('brs.id')
+            ->where('transactions.company_id', $this->company->id)
+            ->where('transactions.status_enum', Transaction::STATUS_PAID)
+            ->where(function ($query) {
+                $query->whereIn('transactions.gateway_id', $this->gatewayIds)
+                    ->orWhere(function ($query) {
+                        $query->where('transactions.gateway_id', Gateway::ASAAS_PRODUCTION_ID)
+                            ->where('transactions.created_at', '<', '2021-09');
+                    });
+            })->sum('transactions.value');
+    }
+
+    public function getBlockedBalance(): int
+    {
+        if (!$this->company->user->show_old_finances) {
             return 0;
         }
 
         return Transaction::where('company_id', $this->company->id)
-                            ->where('status_enum', Transaction::STATUS_PAID)
-                            ->where(function($query) {
-                                $query->whereIn('gateway_id', $this->gatewayIds)
-                                    ->orWhere(function($query) {
-                                        $query->where('gateway_id', Gateway::ASAAS_PRODUCTION_ID)->where('created_at', '<', '2021-09');
-                                    });
-                            })                            
-                            ->whereDoesntHave('blockReasonSale',function ($query) {
-                                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
-                            ->sum('value');
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+            ->sum('value');
     }
 
-    public function getBlockedBalance() : int
+    public function getBlockedBalancePending(): int
     {
-        if (!$this->company->user->show_old_finances){
+        if (!$this->company->user->show_old_finances) {
             return 0;
         }
 
         return Transaction::where('company_id', $this->company->id)
-                            ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-                            ->whereHas('blockReasonSale',function ($query) {
-                                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
-                            ->sum('value');
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->where('status_enum', Transaction::STATUS_PAID)
+            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+            ->sum('value');
     }
 
-    public function getBlockedBalancePending() : int
-    {
-        if (!$this->company->user->show_old_finances){
-            return 0;
-        }
-
-        return Transaction::where('company_id', $this->company->id)
-                            ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('status_enum', Transaction::STATUS_PAID)
-                            ->whereHas('blockReasonSale',function ($query) {
-                                    $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
-                            ->sum('value');
-    }
-
-    public function getPendingDebtBalance() : int
+    public function getPendingDebtBalance(): int
     {
         return 0;
     }
@@ -117,7 +116,7 @@ class CieloService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
-        $availableBalance += $pendingBalance;        
+        $availableBalance += $pendingBalance;
 
         $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
 
@@ -127,8 +126,8 @@ class CieloService implements Statement
     public function getWithdrawals(): JsonResource
     {
         $withdrawals = Withdrawal::where('company_id', $this->company->id)
-                                    ->whereIn('gateway_id', $this->gatewayIds)
-                                    ->orderBy('id', 'DESC');
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->orderBy('id', 'DESC');
 
         return WithdrawalResource::collection($withdrawals->paginate(10));
     }
@@ -136,7 +135,7 @@ class CieloService implements Statement
     public function withdrawalValueIsValid($withdrawalValue): bool
     {
         $availableBalance = $this->company->cielo_balance;
-        
+
         if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance) {
             return false;
         }
@@ -154,11 +153,11 @@ class CieloService implements Statement
             ]);
 
             $withdrawal = Withdrawal::where([
-                                        ['company_id', $this->company->id],
-                                        ['status', Withdrawal::STATUS_PENDING],
-                                ])
-                                ->whereIn('gateway_id', $this->gatewayIds)
-                                ->first();
+                ['company_id', $this->company->id],
+                ['status', Withdrawal::STATUS_PENDING],
+            ])
+                ->whereIn('gateway_id', $this->gatewayIds)
+                ->first();
 
             if (empty($withdrawal)) {
 
@@ -259,15 +258,15 @@ class CieloService implements Statement
 
     public function getResume()
     {
-        if(!$this->company->user->show_old_finances) {
+        if (!$this->company->user->show_old_finances) {
             return [];
         }
 
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
-                                        ->where('company_id', $this->company->id)
-                                        ->orderBy('id', 'desc')->first();
+            ->where('company_id', $this->company->id)
+            ->orderBy('id', 'desc')->first();
 
-        if(empty($lastTransaction)) {
+        if (empty($lastTransaction)) {
             return [];
         }
 
@@ -294,19 +293,19 @@ class CieloService implements Statement
 
     public function getGatewayAvailable()
     {
-        if(!$this->company->user->show_old_finances) {
+        if (!$this->company->user->show_old_finances) {
             return [];
         }
 
         $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
-                                        ->where('company_id', $this->company->id)
-                                        ->orderBy('id', 'desc')->first();
+            ->where('company_id', $this->company->id)
+            ->orderBy('id', 'desc')->first();
 
-        return !empty($lastTransaction) ? ['Cielo']:[];
+        return !empty($lastTransaction) ? ['Cielo'] : [];
     }
 
     public function getGatewayId()
     {
-        return FoxUtils::isProduction() ? Gateway::CIELO_PRODUCTION_ID:Gateway::CIELO_SANDBOX_ID;
+        return FoxUtils::isProduction() ? Gateway::CIELO_PRODUCTION_ID : Gateway::CIELO_SANDBOX_ID;
     }
 }

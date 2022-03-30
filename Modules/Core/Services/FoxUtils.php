@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use NumberFormatter;
 use Symfony\Component\HttpFoundation\File\File;
 use Vinkla\Hashids\Facades\Hashids;
@@ -532,12 +533,6 @@ class FoxUtils
         }
     }
 
-    public static function formatCellPhoneBraspag($number)
-    {
-        $number = self::onlyNumbers($number);
-        return substr($number, 2);
-    }
-
     public static function getPortionOfString($string, $start, $length = null)
     {
         return $length != null ? substr($string, $start, $length) : substr($string, $start);
@@ -736,11 +731,26 @@ class FoxUtils
 
     public static function gitInfo()
     {
-        $output = exec("git log -1 --pretty=format:'%D|%h|%cn (%ce)|%s|%ci'");
-        $data = explode('|', $output);
-        $data[0] = preg_replace("/HEAD -> ([^,]+).*/", '$1', $data[0]);
-        $data[4] = Carbon::parse($data[4])->format('d/m/Y H:i:s');
-        return "CURRENT BRANCH: $data[0] | LAST COMMIT: $data[1] - $data[3] | AUTHOR: $data[2] | DATE: $data[4]";
+        $output = shell_exec("git log -10 --pretty=format:'%D|%h|%cn (%ce)|%s|%ci'");
+        $outputArray = explode("\n", $output);
+        $info = (object)[
+            'branch' => null,
+            'commits' => []
+        ];
+        foreach ($outputArray as $key => $item) {
+            $result = explode('|', $item);
+            if($key === 0) {
+                $info->branch = preg_replace("/HEAD -> ([^,]+).*/", '$1', $result[0]);
+            }
+            $info->commits[] = (object) [
+                'hash' => $result[1],
+                'comment' => $result[3],
+                'author' => $result[2],
+                'date' => Carbon::parse($result[4])->format('d/m/Y H:i:s'),
+                'is_merge' => Str::contains($result[3], 'Merge')
+            ];
+        }
+        return $info;
     }
 
     public static function remoteUrlExists($url)

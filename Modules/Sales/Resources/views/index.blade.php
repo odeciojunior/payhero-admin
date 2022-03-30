@@ -3,12 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href='{{asset('/modules/sales/css/index.css?v=' . uniqid())}}'>
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=101') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=101') }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="{{ mix('build/layouts/sales/index.min.css') }}">
     @endpush
 
     <!-- Page -->
@@ -107,9 +102,9 @@
                                     </div>
 
                                     <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
-                                        <label for="projeto">Projeto</label>
+                                        <label for="projeto">Lojas</label>
                                         <select name='select_project' id="projeto" class="form-control select-pad applySelect2">
-                                            <option value="">Todos projetos</option>
+                                            <option value="">Todas lojas</option>
                                         </select>
                                     </div>
 
@@ -195,7 +190,7 @@
                                          data-target="#bt_collapse"
                                          aria-expanded="false"
                                          aria-controls="bt_collapse">
-                                        <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                        <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "/>
                                         <div id="text-filtro" style="white-space: normal">Filtros <br class="d-flex d-sm-none"> avançados</div>
                                     </div>
                                 </div>
@@ -203,7 +198,7 @@
 
                                 <div class="col-6 col-xl-3 mt-20">
                                     <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
-                                        <img class="hidden-xs-down" style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                        <img class="hidden-xs-down" style="height: 12px; margin-right: 4px" src=" {{ mix('build/global/img/svg/check-all.svg') }} "/>
                                         Aplicar <br class="d-flex d-sm-none"> filtros
                                     </div>
                                 </div>
@@ -299,7 +294,7 @@
 
                                     </tr>
                                     </thead>
-                                    <tbody id="dados_tabela"  img-empty="{!! asset('modules/global/img/vendas.svg')!!}">
+                                    <tbody id="dados_tabela"  img-empty="{!! mix('build/global/img/vendas.svg')!!}">
                                     {{-- js carrega... --}}
                                     </tbody>
                                 </table>
@@ -316,9 +311,9 @@
                 <!-- End Modal -->
                 </div>
             </div>
-        {{-- Quando não tem projeto cadastrado  --}}
+        {{-- Quando não tem loja cadastrado  --}}
             @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
+        {{-- FIM loja nao existem lojas--}}
         </div>
     <!-- Modal regerar boleto-->
     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_regerar_boleto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
@@ -521,10 +516,7 @@
     </div>
     <!-- End Modal -->
     @push('scripts')
-        <script src="{{ asset('/modules/sales/js/index.js?v=' . random_int(100, 10000)) }}"></script>
-        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src="{{ asset('modules/global/js/daterangepicker.min.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+        <script src="{{ mix('build/layouts/sales/index.min.js') }}"></script>
     @endpush
 @endsection
 

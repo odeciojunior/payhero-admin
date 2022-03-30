@@ -2,12 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\BlockReason;
-use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewayPostback;
@@ -56,17 +53,8 @@ class AsaasRetroactiveChargebackPostback extends Command
      * @return int
      */
     public function handle()
-    {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
-        try {
-            $this->verifyAsaasBalance();
-        } catch (Exception $e) {
-            report($e);
-        }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
-
+    {        
+        $this->verifyAsaasBalance();        
     }
 
     public function verifyAsaasBalance(){
@@ -105,38 +93,6 @@ class AsaasRetroactiveChargebackPostback extends Command
 
 
 
-    }
-
-    public function createBlockSaleRetroactiveGetnet()
-    {
-        $sales =  Sale::where('gateway_id',Gateway::GETNET_PRODUCTION_ID)->where('status',Sale::STATUS_APPROVED)
-        ->whereHas('contestations',function($qr){
-            $qr->where('status',SaleContestation::STATUS_IN_PROGRESS);
-        })->doesntHave('blockReasonsSale')->get();
-
-        // dd(Transaction::where('type', Transaction::TYPE_PRODUCER)
-        // ->whereIn('sale_id', $sales)
-        // ->sum('value'));
-
-        $output = new ConsoleOutput();
-        $progress = new ProgressBar($output, count($sales));
-        $progress->start();
-
-        foreach($sales as $sale)
-        {
-            $progress->advance();
-
-            Log::info('bloqueando sale id '.$sale->id);
-
-            BlockReasonSale::create([
-                'sale_id'=>$sale->id,
-                'blocked_reason_id'=>BlockReason::IN_DISPUTE,
-                'status'=>BlockReasonSale::STATUS_BLOCKED,
-                'observation'=>'Em disputa'
-            ]);
-        }
-
-       $progress->finish();
     }
 
     public function revertSaleChargeback(){

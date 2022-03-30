@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Entities\ProductSaleApi;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
@@ -174,7 +175,10 @@ class TrackingService
             $trackingCode = strtoupper($trackingCode);
 
             $productPlanSale = ProductPlanSale::select([
-                DB::raw('products_plans_sales.*'),
+                'products_plans_sales.id',
+                'products_plans_sales.sale_id',
+                'products_plans_sales.product_id',
+                'products_plans_sales.amount',
                 's.delivery_id',
                 's.customer_id',
                 's.upsell_id',
@@ -192,7 +196,7 @@ class TrackingService
                 'product_id' => $productPlanSale->product_id,
                 'product_plan_sale_id' => $productPlanSale->id,
                 'amount' => $productPlanSale->amount,
-                'delivery_id' => $productPlanSale->sale->delivery->id,
+                'delivery_id' => $productPlanSale->delivery_id,
             ];
 
             $newAttributes = [
@@ -246,191 +250,174 @@ class TrackingService
 
     public function getTrackingsQueryBuilder($filters, $userId = 0)
     {
-        $productPlanSaleModel = new ProductPlanSale();
-        $filters['status'] =  is_array($filters['status']) ? implode(',', $filters['status']) : $filters['status'];
-        $filters['project'] =  is_array($filters['project']) ? implode(',', $filters['project']) : $filters['project'];
-        $filters['transaction_status'] =  is_array($filters['transaction_status']) ? implode(',', $filters['transaction_status']) : $filters['transaction_status'];
-
         if (!$userId) {
             $userId = auth()->user()->account_owner_id;
         }
 
-        $saleStatus = [
-            Sale::STATUS_APPROVED,
-            Sale::STATUS_IN_DISPUTE,
-        ];
+        $filters['status'] = is_array($filters['status']) ? implode(',', $filters['status']) : $filters['status'];
+        $filters['project'] = is_array($filters['project']) ? implode(',', $filters['project']) : $filters['project'];
+        $filters['transaction_status'] = is_array($filters['transaction_status']) ? implode(',', $filters['transaction_status']) : $filters['transaction_status'];
 
-        $productPlanSales = $productPlanSaleModel->with([
-            'tracking',
-            'sale.delivery',
-            'sale.customer',
-            'product',
-            'productSaleApi'
-        ]);
+        $productPlanSales = ProductPlanSale::join('sales as s', function ($join) use ($userId, $filters) {
+            $join->on('s.id', '=', 'products_plans_sales.sale_id')
+                ->whereNull('s.deleted_at');
 
+            $saleStatus = [
+                Sale::STATUS_APPROVED,
+                Sale::STATUS_IN_DISPUTE,
+            ];
 
-        $projects = explode(',', $filters['project']);
-        $projectsIds = collect($projects)->map(function ($project) {
-            return current(Hashids::decode($project)) ?: '';
-        })->toArray();
-
-        $productPlanSales->whereHas('sale', function ($query) use ($filters, $saleStatus, $userId, $projectsIds) {
             //tipo da data e periodo obrigatorio
             $dateRange = FoxUtils::validateDateRange($filters["date_updated"]);
-            $query->whereBetween('end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
-                ->whereIn('status', $saleStatus)
-                ->where('owner_id', $userId);
+            $join->whereBetween('s.end_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
+                ->whereIn('s.status', $saleStatus)
+                ->where('s.owner_id', $userId);
 
             if (!empty($filters['sale'])) {
-                $saleId = current(Hashids::connection('sale_id')->decode($filters['sale']));
-                $query->where('id', $saleId);
+                $saleId = hashids_decode($filters['sale'], 'sale_id');
+                $join->where('s.id', $saleId);
             }
 
+            $projects = explode(',', $filters['project']);
+            $projectsIds = collect($projects)->map(function ($project) {
+                return hashids_decode($project);
+            })->toArray();
 
-            //filtro transactions
-            if (!empty($filters['transaction_status'])) {
+            if (!empty($projectsIds) && !in_array('', $projectsIds)) {
+                $join->whereIn('s.project_id', $projectsIds);
+            }
+        });
+
+        //filtro transactions
+        if (!empty($filters['transaction_status'])) {
+            $productPlanSales->join('transactions as t', function ($join) use ($filters) {
+                $join->on('t.sale_id', '=', 's.id')
+                    ->whereNull('t.deleted_at');
+
+                $transactionPresenter = (new Transaction())->present();
                 $filterTransaction = explode(',', $filters['transaction_status']);
-                $query->whereHas('transactions', function ($qrTransaction) use ($filterTransaction)
-                {
-                    $transactionPresenter = (new Transaction())->present();
-                    $statusEnum = [];
-                    foreach($filterTransaction as $item){
-                        if($item <> 'blocked'){
-                            $statusEnum[] = $transactionPresenter->getStatusEnum($item);
-                        }
+                $statusEnum = [];
+                foreach ($filterTransaction as $item) {
+                    if ($item <> 'blocked') {
+                        $statusEnum[] = $transactionPresenter->getStatusEnum($item);
+                    }
+                }
+
+                if (in_array('blocked', $filterTransaction)) {
+
+                    $join->where(function ($where) use ($statusEnum) {
+                        $where->where('t.release_date', '>', '2020-05-25') //data que começou a bloquear
+                        ->orWhere('s.is_chargeback_recovered', true);
+                    })->where('t.release_date', '<=', Carbon::now()->format('Y-m-d'))
+                        ->where('t.tracking_required', true);
+
+                    if (count($statusEnum) > 0) {
+                        $join->orWhereIn('t.status_enum', $statusEnum);
                     }
 
-                    if(in_array('blocked',$filterTransaction))
-                    {
-                        $qrTransaction->where(function ($qr) use ($statusEnum) {
-                            $qr->where(function ($query) {
-                                $query->where('transactions.release_date', '>', '2020-05-25') //data que começou a bloquear
-                                ->orWhereHas('sale', function ($query) {
-                                    $query->where('is_chargeback_recovered', true);
-                                });
-                            })->where('transactions.release_date', '<=', Carbon::now()->format('Y-m-d'))
-                            ->where('tracking_required', true);
+                } else {
+                    $join->whereIn('t.status_enum', $statusEnum);
+                }
 
-                            if(count($statusEnum)>0){
-                                $qr->orWhereIn('status_enum', $statusEnum);
-                            }
-                        });
+                $join->where('t.type', Transaction::TYPE_PRODUCER)
+                    ->whereNull('t.invitation_id')
+                    ->where('t.is_waiting_withdrawal', 0)
+                    ->whereNull('t.withdrawal_id');
 
-                    }else{
-                        $qrTransaction->whereIn('status_enum', $statusEnum);
-                    }
+            });
+        }
 
-                    $qrTransaction->where('type', Transaction::TYPE_PRODUCER)
-                    ->whereNull('invitation_id')
-                    ->where('is_waiting_withdrawal', 0)
-                    ->whereNull('withdrawal_id');
-                });
+        $productPlanSales->leftJoin('trackings as t2', function ($leftJoin) use ($filters) {
+            $leftJoin->on('t2.product_plan_sale_id', '=', 'products_plans_sales.id')
+                ->whereNull('t2.deleted_at');
+
+            if (!empty($filters['problem']) && $filters['problem'] == 1) {
+                $leftJoin->whereIn('t2.system_status_enum', [
+                    Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
+                    Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
+                    Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
+                    Tracking::SYSTEM_STATUS_DUPLICATED
+                ]);
             }
 
-            if (!empty($projectsIds) && !in_array('', $projectsIds))
-            {
-                $query->whereIn('project_id', $projectsIds);
+            if (!empty($filters['tracking_code'])) {
+                $leftJoin->where('t2.tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
             }
-
         });
 
         if (!empty($filters['status'])) {
-            $filterStatus = explode(',', $filters['status']);
-            $productPlanSales->where(function ($query) use ($filterStatus) {
+            $productPlanSales->where(function ($where) use ($filters) {
+                $filterStatus = explode(',', $filters['status']);
+
                 $statusArray = array_reduce($filterStatus, function ($carry, $item) {
                     if ($item !== 'unknown') $carry[] = (new Tracking())->present()->getTrackingStatusEnum($item);
                     return $carry;
                 }, []);
 
-                $query->whereHas('tracking', function ($trackingQuery) use ($statusArray) {
-                    $trackingQuery->whereIn('tracking_status_enum', $statusArray);
-                });
+                $where->whereIn('t2.tracking_status_enum', $statusArray);
 
                 if (in_array('unknown', $filterStatus)) {
-                    $query->orDoesntHave('tracking');
+                    $where->orWhereNull('t2.id');
                 }
             });
         }
 
-        if (!empty($filters['problem'])) {
-            if ($filters['problem'] == 1) {
-                $productPlanSales->whereHas(
-                    'tracking',
-                    function ($query) {
-                        $query->whereIn('system_status_enum', [
-                                Tracking::SYSTEM_STATUS_UNKNOWN_CARRIER,
-                                Tracking::SYSTEM_STATUS_NO_TRACKING_INFO,
-                                Tracking::SYSTEM_STATUS_POSTED_BEFORE_SALE,
-                                Tracking::SYSTEM_STATUS_DUPLICATED,
-                            ]
-                        );
-                    }
-                );
-            }
-        }
-
-        if (!empty($filters['tracking_code'])) {
-            $productPlanSales->whereHas(
-                'tracking',
-                function ($query) use ($filters) {
-                    $query->where('tracking_code', 'like', '%' . $filters['tracking_code'] . '%');
-                }
-            );
-        }
-
-        $productPlanSales->where(function($q) {
-            
-            $q->whereHas('product', function ($query) {
-                $query->where('type_enum', Product::TYPE_PHYSICAL);
-            })->orWhereNull('products_plans_sales.product_id');
-        
+        $productPlanSales->leftJoin('products as p', function ($leftJoin) {
+            $leftJoin->on('p.id', '=', 'products_plans_sales.product_id')
+                ->where('p.type_enum', Product::TYPE_PHYSICAL);
+        })->leftJoin('products_sales_api as psa', function ($leftJoin) {
+            $leftJoin->on('psa.id', '=', 'products_plans_sales.products_sales_api_id')
+                ->where('psa.product_type', 'physical_goods');
+        })->where(function ($where) {
+            $where->whereNotNull('p.id')
+                ->orWhereNotNull('psa.id');
         });
+
+        $sql = builder2sql($productPlanSales);
 
         return $productPlanSales;
     }
 
     public function getPaginatedTrackings($filters)
     {
-        $productPlanSales = $this->getTrackingsQueryBuilder($filters);
-
-        return $productPlanSales->orderBy('id', 'desc')->paginate(10);
+        return $this->getTrackingsQueryBuilder($filters)
+            ->select([
+                'products_plans_sales.id',
+                't2.id as tracking_id',
+                't2.tracking_code',
+                't2.tracking_status_enum',
+                't2.system_status_enum',
+                's.id as sale_id',
+                's.is_chargeback_recovered',
+                's.end_date as approved_date',
+                DB::raw('ifnull(p.id, psa.id) as product_id'),
+                DB::raw('ifnull(p.name, psa.name) as product_name'),
+                'p.description as product_description',
+                'products_plans_sales.amount as product_amount'
+            ])->orderBy('products_plans_sales.id', 'desc')
+            ->paginate(10);
     }
 
     public function getResume($filters)
     {
-        $productPlanSales = $this->getTrackingsQueryBuilder($filters)
-            ->without(
-                [
-                    'tracking',
-                    'sale',
-                    'product',
-                ]
-            )
-            ->leftJoin('trackings', 'products_plans_sales.id', '=', 'trackings.product_plan_sale_id')
+        return $this->getTrackingsQueryBuilder($filters)
             ->selectRaw(
                 "COUNT(*) as total,
-                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_POSTED . " THEN 1 ELSE 0 END) as posted,
-                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_DISPATCHED . " THEN 1 ELSE 0 END) as dispatched,
-                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_DELIVERED . " THEN 1 ELSE 0 END) as delivered,
-                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_OUT_FOR_DELIVERY . " THEN 1 ELSE 0 END) as out_for_delivery,
-                                SUM(CASE WHEN trackings.tracking_status_enum = " . Tracking::STATUS_EXCEPTION . " THEN 1 ELSE 0 END) as exception,
-                                SUM(CASE WHEN trackings.tracking_status_enum is null THEN 1 ELSE 0 END) as unknown"
-            )
-            ->first();
-
-        return $productPlanSales->toArray();
+                SUM(CASE WHEN t2.tracking_status_enum = " . Tracking::STATUS_POSTED . " THEN 1 ELSE 0 END) as posted,
+                SUM(CASE WHEN t2.tracking_status_enum = " . Tracking::STATUS_DISPATCHED . " THEN 1 ELSE 0 END) as dispatched,
+                SUM(CASE WHEN t2.tracking_status_enum = " . Tracking::STATUS_DELIVERED . " THEN 1 ELSE 0 END) as delivered,
+                SUM(CASE WHEN t2.tracking_status_enum = " . Tracking::STATUS_OUT_FOR_DELIVERY . " THEN 1 ELSE 0 END) as out_for_delivery,
+                SUM(CASE WHEN t2.tracking_status_enum = " . Tracking::STATUS_EXCEPTION . " THEN 1 ELSE 0 END) as exception,
+                SUM(CASE WHEN t2.id is null THEN 1 ELSE 0 END) as unknown"
+            )->first()
+            ->toArray();
     }
 
     public function getAveragePostingTimeInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
-        $gatewayIds = [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID];
-        if(!FoxUtils::isProduction()){
-            $gatewayIds = array_merge($gatewayIds, [Gateway::ASAAS_SANDBOX_ID, Gateway::GETNET_SANDBOX_ID]);
-        }
 
         $approvedSalesWithTrackingCode = Tracking::select(DB::raw('ceil(avg(datediff(trackings.created_at, sales.end_date))) as averagePostingTime'))
             ->join('sales', 'sales.id', '=', 'trackings.sale_id')
-            ->whereIn('sales.gateway_id', $gatewayIds)
             ->where('sales.payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
             ->whereIn('sales.status', [
                 Sale::STATUS_APPROVED,

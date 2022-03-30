@@ -4,7 +4,6 @@ namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Affiliate;
@@ -23,7 +22,6 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\User;
 use Modules\Core\Entities\UserProject;
-use Modules\Core\Entities\WooCommerceIntegration;
 use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Transfers\Services\GetNetStatementService;
@@ -393,7 +391,7 @@ class SaleService
         //valor do produtor
         $value = $userTransaction->value??0;
         $cashbackValue = $sale->cashback->value ?? 0;
-        $comission = 'R$ ' . substr_replace($value, ',', strlen($value) - 2, 0);
+        $comission = 'R$ ' . number_format($value/100, 2, ',', '.');
 
         //valor do afiliado
         $affiliateComission = '';
@@ -496,23 +494,6 @@ class SaleService
             'user_changed_observation' => $sale->saleRefundHistory->count() && !$sale->saleRefundHistory->first()->user_id,
             'company_name' => $companyName
         ];
-    }
-
-    public function getPagarmeItensList(Sale $sale)
-    {
-        $itens = [];
-
-        foreach ($sale->plansSales as $key => $planSale) {
-            $itens[] = [
-                'id' => '#' . Hashids::encode($planSale->plan->id),
-                'title' => $planSale->plan->name,
-                'unit_price' => str_replace('.', '', $planSale->plan->price),
-                'quantity' => $planSale->amount,
-                'tangible' => true,
-            ];
-        }
-
-        return $itens;
     }
 
     public function getProducts($saleId = null)
@@ -675,145 +656,9 @@ class SaleService
         return $total;
     }
 
-    public function saleIsGetnet(Sale $sale): bool
-    {
-        if (in_array($sale->gateway_id, [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function refund($transactionId, $refundObservation = null)
-    {
-        try {
-            $saleModel = new Sale();
-            $transferModel = new Transfer();
-            $companyModel = new Company();
-            $transactionModel = new Transaction();
-
-            $saleId = current(Hashids::connection('sale_id')->decode($transactionId));
-
-            if (!empty($saleId)) {
-                if (getenv('PAGAR_ME_PRODUCTION') == 'true') {
-                    $pagarmeClient = new PagarmeClient(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCTION'));
-                } else {
-                    $pagarmeClient = new PagarmeClient(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
-                }
-
-                $sale = $saleModel->find($saleId);
-                $refundedTransaction = $pagarmeClient->transactions()->refund(
-                    [
-                        'id' => $sale->gateway_transaction_id,
-                    ]
-                );
-
-                $userCompanies = $companyModel->where('user_id', auth()->user()->account_owner_id)->pluck('id');
-                $transaction = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
-                    ->first();
-                $transferModel->create(
-                    [
-                        'transaction_id' => $transaction->id,
-                        'user_id' => auth()->user()->account_owner_id,
-                        'value' => 100,
-                        'type' => 'out',
-                        'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                        'reason' => 'Taxa de estorno',
-                        'is_refund_tax' => 1,
-                        'company_id' => $transaction->company_id,
-                    ]
-                );
-                $transaction->company->update(
-                    [
-                        'cielo_balance' => $transaction->company->cielo_balance -= 100,
-                    ]
-                );
-
-                $transferModel->create(
-                    [
-                        'transaction_id' => $transaction->id,
-                        'user_id' => $transaction->company->user_id,
-                        'value' => $transaction->value,
-                        'type' => 'out',
-                        'type_enum' => $transferModel->present()->getTypeEnum('out'),
-                        'reason' => 'refunded',
-                        'company_id' => $transaction->company->id,
-                    ]
-                );
-
-                $transaction->company->update(
-                    [
-                        'cielo_balance' => $transaction->company->cielo_balance -= $transaction->value,
-                    ]
-                );
-
-                $transaction->update(
-                    [
-                        'status_enum' => (new Transaction())->present()->getStatusEnum('refunded'),
-                        'status' => 'refunded',
-                    ]
-                );
-
-                $transaction->sale->update(
-                    [
-                        'gateway_status' => 'refunded',
-                        'status' => (new Sale())->present()->getStatus('refunded'),
-                    ]
-                );
-                SaleLog::create(
-                    [
-                        'sale_id' => $sale->id,
-                        'status' => 'refunded',
-                        'status_enum' => (new Sale())->present()->getStatus('refunded'),
-                    ]
-                );
-
-                if (!empty($refundedTransaction)) {
-                    SaleRefundHistory::create(
-                        [
-                            'sale_id' => $sale->id,
-                            'refunded_amount' => $sale->original_total_paid_value ?? 0,
-                            'date_refunded' => Carbon::now(),
-                            'gateway_response' => json_encode($refundedTransaction),
-                            'user_id' => auth()->user()->account_owner_id,
-                            'refund_observation' => $refundObservation,
-                        ]
-                    );
-
-                    return
-                        [
-                            'status' => 'success',
-                            'message' => 'Transação estornada com sucesso!',
-                        ];
-                } else {
-                    return [
-                        'status' => 'error',
-                        'message' => 'Erro ao estornar transação',
-                    ];
-                }
-            } else {
-                return [
-                    'status' => 'error',
-                    'message' => 'Erro ao estornar transação',
-                ];
-            }
-        } catch (Exception $e) {
-            Log::warning('Erro ao estornar transação SaleService - refund');
-            report($e);
-            $message = 'Erro ao estornar transação';
-            if ($e->getMessage() == 'Transação já estornada') {
-                $message = 'Transação já estornada';
-            }
-
-            return [
-                'status' => 'error',
-                'message' => $message,
-            ];
-        }
-    }
-
     public function refundBillet(Sale $sale)
     {
+        $safe2payBalance = 0;
         foreach ($sale->transactions as $transaction) {
 
             if(empty($transaction->company_id)) {
@@ -823,6 +668,8 @@ class SaleService
                 ]);
                 continue;
             }
+            
+            $safe2payBalance = $transaction->company->safe2pay_balance;
 
             if($transaction->status_enum == Transaction::STATUS_PAID) {
 
@@ -838,8 +685,9 @@ class SaleService
                     ]
                 );
 
+                $safe2payBalance+= $transaction->value;
                 $transaction->company->update([
-                    'safe2pay_balance' => $transaction->company->safe2pay_balance += $transaction->value
+                    'safe2pay_balance' =>  $safe2payBalance
                 ]);
             }
 
@@ -861,7 +709,7 @@ class SaleService
             ]);
 
             $transaction->company->update([
-                'safe2pay_balance' => $transaction->company->safe2pay_balance -= $refundValue,
+                'safe2pay_balance' => $safe2payBalance - $refundValue,
             ]);
 
             $transaction->update([
@@ -905,64 +753,6 @@ class SaleService
         }
     }
 
-    public function getValuesPartialRefund($sale, $refundValue)
-    {
-        $totalPaidValue = intval(strval($sale->total_paid_value * 100));
-        $totalWithoutInterest = $totalPaidValue - $sale->interest_total_value; // total sem juros
-        $newTotalvalue = $totalWithoutInterest - $refundValue; // novo valor total sem juros
-
-        $newTotalValueWithoutInterest = $newTotalvalue;
-
-        $userProject = UserProject::with('company')->where(
-            [
-                ['type_enum', (new UserProject())->present()->getTypeEnum('producer')],
-                ['project_id', $sale->project->id],
-            ]
-        )->first();
-
-        $user = $userProject->user;
-        $company = $userProject->company;
-
-        $installmentFreeTaxValue = 0;
-        $interestValue = 0;
-
-        $installmentSelected = $sale->installments_amount;
-        $freeInstallments = $sale->project->installments_interest_free;
-        $installmentValueTax = intval(($newTotalvalue / 100) * $company->installment_tax);
-
-        if ($installmentSelected == 1) {
-            $totalValueWithTax = intval($newTotalvalue);
-            $installmentValue = intval($newTotalvalue);
-        } else {
-            $totalValueWithTax = $newTotalvalue + $installmentValueTax * ($installmentSelected - 1);
-            if ($freeInstallments >= $installmentSelected) {
-                $installmentValue = intval($newTotalvalue / $installmentSelected);
-            } else {
-                $installmentValue = intval($totalValueWithTax / $installmentSelected);
-            }
-        }
-
-        if ($sale->project->installments_interest_free > 1 && $sale->installments_amount <= $sale->project->installments_interest_free) {
-            $installmentFreeTaxValue = $totalValueWithTax - $newTotalvalue;
-        } else {
-            $interestValue = $totalValueWithTax - $newTotalvalue;
-            $newTotalvalue = $totalValueWithTax;
-        }
-
-        $cloudfoxValue = ((int)(($newTotalvalue - $interestValue) / 100 * $company->gateway_tax));
-        $cloudfoxValue += str_replace('.', '', $company->transaction_rate);
-        $cloudfoxValue += $interestValue;
-
-        return [
-            'cloudfox_value' => $cloudfoxValue,
-            'total_value_with_interest' => $newTotalvalue,
-            'total_value_without_interest' => $newTotalValueWithoutInterest,
-            'installment_free_tax_value' => $installmentFreeTaxValue,
-            'interest_value' => $interestValue,
-            'value_to_refund' => $totalPaidValue - $newTotalvalue,
-        ];
-    }
-
     public function getResumeBlocked($filters)
     {
         $transactionModel = new Transaction();
@@ -972,7 +762,7 @@ class SaleService
             ',',
             [
                 $transactionModel->present()->getStatusEnum('transfered'),
-                $transactionModel->present()->getStatusEnum('paid'),                
+                $transactionModel->present()->getStatusEnum('paid'),
             ]
         );
 
@@ -1160,21 +950,6 @@ class SaleService
                 $companyId = Hashids::decode($filters["company"]);
                 $transactions->where('company_id', $companyId);
             }
-/*
-            if (!empty($filters['statement']) && $filters['statement'] == 'automatic_liquidation') {
-                $transactions->whereIn(
-                    'transactions.gateway_id',
-                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
-                )
-                    ->whereNull('transactions.withdrawal_id')
-                    ->where('transactions.is_waiting_withdrawal', 0);
-            } else {
-                $transactions->whereNotIn(
-                    'transactions.gateway_id',
-                    [Gateway::GETNET_SANDBOX_ID, Gateway::GETNET_PRODUCTION_ID]
-                );
-            }
-*/
 
             $transactions->whereNull('withdrawal_id');
             if(!empty($filters['acquirer']))
@@ -1363,30 +1138,19 @@ class SaleService
 
     public function getCreditCardApprovedSalesInPeriod(User $user, Carbon $startDate, Carbon $endDate)
     {
-        $gatewayIds = [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID];
-        if(!FoxUtils::isProduction()){
-            $gatewayIds = array_merge($gatewayIds, [Gateway::ASAAS_SANDBOX_ID, Gateway::GETNET_SANDBOX_ID]);
-        }
-        return Sale::whereIn('gateway_id', $gatewayIds)
-            ->where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
-            ->whereIn(
-                'status',
-                [
-                    Sale::STATUS_APPROVED,
-                    Sale::STATUS_CHARGEBACK,
-                    Sale::STATUS_REFUNDED,
-                    Sale::STATUS_IN_DISPUTE
-                ]
-            )->whereBetween(
-                'start_date',
-                [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-            )->where(
-                function ($query) use ($user) {
-                    $query->where('owner_id', $user->id)
-                        ->orWhere('affiliate_id', $user->id);
-                }
-            )
-            ->get();
+        return Sale::where('payment_method', Sale::PAYMENT_TYPE_CREDIT_CARD)
+                        ->whereIn('status',[
+                                Sale::STATUS_APPROVED,
+                                Sale::STATUS_CHARGEBACK,
+                                Sale::STATUS_REFUNDED,
+                                Sale::STATUS_IN_DISPUTE
+                        ])
+                        ->whereBetween('start_date',[$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59'])
+                        ->where(function ($query) use ($user) {
+                                $query->where('owner_id', $user->id)
+                                    ->orWhere('affiliate_id', $user->id);
+                        })
+                        ->count();
     }
 
     public function returnBlacklistBySale(Sale $sale): array
@@ -1436,8 +1200,9 @@ class SaleService
         }
     }
 
-    public function getGatewayIdsByFilter($nameGateway){
-        switch($nameGateway){
+    public function getGatewayIdsByFilter($nameGateway)
+    {
+        switch ($nameGateway) {
             case 'Asaas';
                 return [
                     Gateway::ASAAS_PRODUCTION_ID,
@@ -1458,13 +1223,11 @@ class SaleService
                     Gateway::CIELO_PRODUCTION_ID,
                     Gateway::CIELO_SANDBOX_ID
                 ];
-            break;
             case 'Vega':
                 return [
                     Gateway::SAFE2PAY_PRODUCTION_ID,
                     Gateway::SAFE2PAY_SANDBOX_ID
                 ];
-            break;
         }
         return [];
     }

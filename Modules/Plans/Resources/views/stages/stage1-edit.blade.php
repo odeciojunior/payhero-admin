@@ -2,7 +2,7 @@
     <div class="box-breadcrumbs">
         <div class="d-flex" style="justify-content: space-between !important;">
             <div class="d-flex align-items-center">
-                <div class="icon mr-15"><img src="/modules/global/img/icon-info-plans-c.svg" alt="Icon Informations"></div>
+                <div class="icon mr-15"><img src="/build/global/img/icon-info-plans-c.svg" alt="Icon Informations"></div>
                 <div class="title">Informações do plano</div>
             </div>
             <button class="btn btn-edit" id="btn-edit-informations-plan">
@@ -39,7 +39,7 @@
     <div>
         <div class="d-flex" style="justify-content: space-between !important;">
             <div class="d-flex align-items-center">
-                <div class="icon mr-15"><img src="/modules/global/img/icon-products-plans.svg" alt="Icon Informations"></div>
+                <div class="icon mr-15"><img src="/build/global/img/icon-products-plans.svg" alt="Icon Informations"></div>
                 <div class="title">Produtos no plano <span></span></div>
             </div>
             <button class="btn btn-edit" id="btn-edit-products-plan">
@@ -61,7 +61,7 @@
     <div>
         <div class="d-flex" style="justify-content: space-between !important;">
             <div class="d-flex align-items-center">
-                <div class="icon mr-15"><img src="/modules/global/img/icon-review-plans-c.svg" alt="Icon Informations"></div>
+                <div class="icon mr-15"><img src="/build/global/img/icon-review-plans-c.svg" alt="Icon Informations"></div>
                 <div class="title">Revisão geral</div>
             </div>
         </div>

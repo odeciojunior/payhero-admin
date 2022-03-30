@@ -1,6 +1,6 @@
 <div class="modal-header flex-wrap">
     <div id="title-news-onboarding">
-        <img src="{{ asset('/modules/global/img/logos/2021/svg/icon-sirius.svg') }}" width="40"
+        <img src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}" width="40"
              alt="Image"> <span>Novidades</span>
     </div>
     <div class="pages">
@@ -20,18 +20,18 @@
                 <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-md-baseline align-items-lg-center mb-15">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
-                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/bank-notes.svg?v=02')}}">
+                            <img class="img-fluid" alt="Image" src="{{ mix('build/global/img/svg/bank-notes.svg')}}">
                         </div>
                     </div>
                     <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
-                            São <strong>6 níveis</strong> que sobem de acordo com o faturamento total de seus projetos.
+                            São <strong>6 níveis</strong> que sobem de acordo com o faturamento total de suas lojas.
                         </span>
                 </div>
 
                 <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
-                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/money-box.svg?v=02')}}">
+                            <img class="img-fluid" alt="Image" src="{{ mix('build/global/img/svg/money-box.svg')}}">
                         </div>
                     </div>
                     <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2">
@@ -41,7 +41,7 @@
                 <div class="row col-12 col-md-4 col-lg-12 no-gutters align-items-center mb-15">
                     <div class="col-12 col-lg-2 text-center text-lg-left d-flex justify-content-center">
                         <div class="icon-onboarding-2 text-center">
-                            <img class="img-fluid" alt="Image" src="{{asset('modules/global/img/svg/medal.svg?v=02')}}">
+                            <img class="img-fluid" alt="Image" src="{{ mix('build/global/img/svg/medal.svg')}}">
                         </div>
                     </div>
                     <span class="col-12 col-lg-10 text-center text-lg-left pl-lg-2 mb-md-15 mb-lg-0 h-md-p100 h-lg-auto">
@@ -52,7 +52,7 @@
         </div>
 
         <div class="col-12 col-lg-5 order-lg-0 d-flex justify-content-center">
-            <img id="img-onboarding" class="img-fluid" alt="Image" src="{{asset('modules/global/img/onboarding/performance@2x.png')}}">
+            <img id="img-onboarding" class="img-fluid" alt="Image" src="{{ mix('build/global/img/onboarding/performance@2x.png') }}">
         </div>
     </div>
 </div>

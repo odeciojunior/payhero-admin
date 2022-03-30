@@ -46,19 +46,10 @@ return [
 
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path('logs/' . php_sapi_name() . '/laravel.log'),
             'level' => 'debug',
             'days' => 200,
             'permission' => 0664,
-        ],
-
-        'slack' => [
-            'driver' => 'slack',
-            'url' => env('SLACK_WEBHOOK'),
-            'username' => 'Laravel-Admin',
-            'emoji' => ':scream:',
-            'level' => 'critical',
-            'channel' => env('SLACK_CHANNEL', "#laravel-admin"),
         ],
 
         'stderr' => [
@@ -78,6 +69,12 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'database' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/database.log'),
+            'level' => 'debug',
+        ]
     ],
 
 ];

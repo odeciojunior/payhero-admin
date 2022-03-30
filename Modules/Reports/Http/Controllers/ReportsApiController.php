@@ -244,18 +244,15 @@ class ReportsApiController extends Controller
     public function getSalesByOrigin(Request $request)
     {
         try {
-            $saleModel = new Sale();
-            $affiliateModel = new Affiliate();
-
             $userId = auth()->user()->account_owner_id;
 
             if (!empty($request->project_id) && $request->project_id != null && $request->project_id != 'undefined') {
-                $affiliate = $affiliateModel->where([
+                $affiliate = Affiliate::where([
                     ['user_id', $userId],
                     ['project_id', $request->project_id],
                 ])->first();
-                $orders = $saleModel
-                    ->select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$request->origin.' as origin'))
+
+                $orders = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$request->origin.' as origin'))
                     ->leftJoin('transactions as transaction', function ($join) use ($userId) {
                         $join->on('transaction.sale_id', '=', 'sales.id');
                         $join->where('transaction.user_id', $userId);
@@ -263,8 +260,8 @@ class ReportsApiController extends Controller
                     ->leftJoin('checkouts as checkout', function ($join) {
                         $join->on('checkout.id', '=', 'sales.checkout_id');
                     })
-                    ->where('sales.project_id', current(Hashids::decode($request->project_id)))
-                    ->where('sales.status', 1)
+                    ->where('sales.project_id', hashids_decode($request->project_id))
+                    ->where('sales.status', Sale::STATUS_APPROVED)
                     ->whereBetween('start_date',
                         [$request->start_date, date('Y-m-d', strtotime($request->end_date.' + 1 day'))])
                     ->whereNotIn('checkout.'.$request->origin, ['', 'null'])
@@ -453,27 +450,26 @@ class ReportsApiController extends Controller
                 return response()->json('projeto nao encontrado!');
             }
 
-            $orders = Checkout::select(\DB::raw('count(*) as qtd_checkout, '.$request->origin.' as origin'));
+            $checkouts = Checkout::select(\DB::raw('count(*) as qtd_checkout, '.$request->origin.' as origin'));
             $affiliate = Affiliate::select('id')->where('user_id', auth()->user()->account_owner_id);
 
             if($request->project_id != "all"){
-                $orders = $orders->where('project_id', hashids_decode($request->project_id));
+                $checkouts = $checkouts->where('project_id', hashids_decode($request->project_id));
                 $affiliate = $affiliate->where('project_id', hashids_decode($request->project_id));
             }
 
             $affiliate = $affiliate->first();
 
             if (!empty($affiliate)) {
-                $orders = $orders->where('affiliate_id', $affiliate->id);
+                $checkouts = $checkouts->where('affiliate_id', $affiliate->id);
             }
 
-            $orders = $orders->whereBetween('created_at', [$request->start_date, date('Y-m-d', strtotime($request->end_date.' + 1 day'))])
-                ->whereNotIn($request->origin, ['', 'null', null])
+            $checkouts = $checkouts->whereBetween('created_at', [$request->start_date, date('Y-m-d', strtotime($request->end_date.' + 1 day'))])
+                ->whereNotIn($request->origin, ['', 'null'])
                 ->groupBy($request->origin)
-                ->orderBy('qtd_checkout', 'DESC')
-                ->paginate(6);
+                ->orderBy('qtd_checkout', 'DESC');
 
-            return CheckoutsByOriginResource::collection($orders);
+            return CheckoutsByOriginResource::collection($checkouts->paginate(6));
         } catch (Exception $e) {
             report($e);
             return response()->json('Ocorreu algum erro');

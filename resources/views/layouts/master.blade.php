@@ -30,41 +30,12 @@
     <meta name="access-token" content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
     <meta name="current-url" content="{{ env('APP_URL') }}">
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/logos/2021/favicon/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/img/logos/2021/favicon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/logos/2021/favicon/favicon-16x16.png') }}">
-    <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('build/global/img/logos/2021/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('build/global/img/logos/2021/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('build/global/img/logos/2021/favicon/favicon-16x16.png') }}">
+    <link rel="mask-icon" href="{{ mix('build/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/normalize.css?v=' . versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css?v=' .  versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css?v='.  versionsFile()) }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css?v=' .  versionsFile()) }}">
-    <!-- Plugins -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/placeholder-loading.min.css') }}">
-
-    {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">--}}
-    <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
-    <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
-    <link rel='stylesheet' href="{{ asset('modules/global/css/daterangepicker.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/sortable/sortable.css') }}">
-    <!-- Fonts -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css?v=21') }}">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
-    <!-- Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/orion-icons/iconfont.css?v=21') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/fontello-icons/fontello.css?v=5') }}"> --}}
-    <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css?v=29') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css?v=83') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css?v=21') }}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/master/master.min.css') }}">
     @stack('css')
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -73,8 +44,7 @@
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-TDM6SV5');</script>
     <!-- End Google Tag Manager -->
-    <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
+    <script src="{{ mix('build/layouts/master/master.min.js') }}"></script>
     <script>
         Breakpoints();
     </script>
@@ -108,43 +78,16 @@
     @yield('content')
 
     <!-- Plugins -->
-    <script src="{{ asset('modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.js') }}"></script>
-    {{--<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>--}}
-    {{--<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>--}}
-    {{--<script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>--}}
-    <script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
-    <script src="{{ asset('modules/global/js-extra/jquery.mask.min.js') }}"></script>
-    <script src="{{ asset('modules/global/js-extra/jquery.maskMoney.js') }}"></script>
-    <script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/js/Component.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/js/Plugin.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/js/Base.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/js/Config.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/assets/js/Section/Menubar.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/assets/js/Section/Sidebar.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/assets/js/Section/PageAside.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/assets/js/Section/GridMenu.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/sortable/Sortable.js') }}"></script>
-    <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
-    <script src="{{ asset('modules/global/js/global.js?v=' . versionsFile()) }}"></script>
+    <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
     <script>
         verifyDocumentPending();
     </script>
-
-    <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js?v=2') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js?v=2') }}"></script>
 
 
     @stack('scripts')
 
     @if(env('APP_ENV', 'production') == 'production')
-        <script src="{{ asset('modules/global/js-extra/pusher.min.js?v=13') }}"></script>
-        <script src="{{ asset('modules/global/js/notifications.js?v=13') }}"></script>
+        <script src="{{ mix('build/layouts/master/production.min.js') }}"></script>
         <style>
             .margin-chat-pagination {
                 display:block !important; height:20px  !important;
@@ -163,30 +106,27 @@
 
         @if(\Auth::user())
             <script>
-                function initFreshChat() {
-                    window.fcWidget.init(@json(\Modules\Core\Services\ChatService::getData()));
-                    window.fcWidget.user.setProperties(@json(\Modules\Core\Services\ChatService::getExtraData()));
-                }
+                (function (o, c, t, a, d, e, s, k) {
+                o.octadesk = o.octadesk || {};
+                s = c.getElementsByTagName("body")[0];
+                k = c.createElement("script");
+                k.async = 1;
+                k.src = t + '/' + a + '?showButton=' +  d + '&openOnMessage=' + e;
+                s.appendChild(k);
+                })(window, document, 'https://chat.octadesk.services/api/widget', 'cloudfoxpagamentos',  true, true);
+            </script>
 
-                function initialize(i, t) {
-                    var e;
-                    i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e))
-                }
-
-                function initiateCall() {
-                    initialize(document, "freshchat-js-sdk")
-                }
-
-                window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
+            <script>
+                window.addEventListener('onOctaChatReady', function(e) {
+                    octadesk.chat.login({
+                        user: {
+                            name: '{{ auth()->user()->name }}',
+                            email: '{{ auth()->user()->email }}'
+                        },
+                    })
+                })
             </script>
         @endif
-
-    @endif
-
-    @if(!Modules\Core\Services\FoxUtils::isProduction())
-        <script>
-            console.log('{{Modules\Core\Services\FoxUtils::gitInfo()}}')
-        </script>
     @endif
 
 </body>

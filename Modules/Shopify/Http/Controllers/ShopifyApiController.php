@@ -11,8 +11,9 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
@@ -128,24 +129,16 @@ class ShopifyApiController extends Controller
 
             $company = Company::find(hashids_decode($dataRequest['company']));
 
-            $has_pix_key = ($company && $company->has_pix_key == true) ? 1 : 0;
-
             $projectCreated = Project::create(
                 [
                     'name' => $shopifyName,
                     'status' => Project::STATUS_ACTIVE,
                     'visibility' => 'private',
-                    'pix' => $has_pix_key,
                     'percentage_affiliates' => '0',
                     'description' => $shopifyName,
-                    'invoice_description' => $shopifyName,
                     'url_page' => 'https://' . $shopifyService->getShopDomain(),
                     'automatic_affiliation' => false,
                     'shopify_id' => $shopifyService->getShopId(),
-                    'boleto' => '1',
-                    'installments_amount' => '12',
-                    'installments_interest_free' => '1',
-                    'checkout_type' => Checkout::CHECKOUT_ONE_STEP,
                     'notazz_configs' => json_encode(
                         [
                             'cost_currency_type' => 1,
@@ -156,6 +149,17 @@ class ShopifyApiController extends Controller
             );
 
             if (empty($projectCreated)) {
+                return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+            }
+
+            $checkoutConfig = CheckoutConfig::create([
+                'company_id' => $company->id,
+                'project_id' => $projectCreated->id,
+                'pix_enabled' => !!$company->has_pix_key,
+            ]);
+
+            if (empty($checkoutConfig)) {
+                $projectCreated->delete();
                 return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
             }
 
@@ -542,7 +546,7 @@ class ShopifyApiController extends Controller
 
             return response()->json(
                 [
-                    'message' => 'Os códigos de rastreio sendo importados...',
+                    'message' => 'Os códigos de rastreio estão sendo importados...',
                 ],
                 Response::HTTP_OK
             );
