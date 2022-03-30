@@ -101,7 +101,7 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             //url: '/api/projects?select=true',
-            url: '/api/companies?select=true',
+            url: '/api/core/companies?select=true',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',

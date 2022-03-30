@@ -683,7 +683,7 @@ sessionStorage.removeItem('documentsPending');
 function ajaxVerifyDocumentPending() {
     $.ajax({
         method: 'GET',
-        url: '/api/profile/verifydocuments',
+        url: '/api/core/verifydocuments',
         headers: {
             'Authorization': $('meta[name="access-token"]').attr('content'),
             'Accept': 'application/json',
@@ -729,7 +729,7 @@ function verifyDocumentPending() {
         $('#document-pending').hide();
     }
 
-    if (!window.location.href.includes('/companies') && !window.location.href.includes('/profile')) {
+    if (!window.location.href.includes('/companies') && !window.location.href.includes('/core')) {
         let documentsPending = sessionStorage.getItem('documentsPending');
         if (documentsPending === null) {
             ajaxVerifyDocumentPending();

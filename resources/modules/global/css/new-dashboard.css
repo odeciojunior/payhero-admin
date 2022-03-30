@@ -57,7 +57,7 @@ body {
 
 .page.dashboard .card {
     font-family: 'Muli', sans-serif;
-    border-radius: 16px !important;
+    border-radius: 8px !important;
     background: #FFFFFF 0% 0% no-repeat padding-box;
     opacity: 1;
 }

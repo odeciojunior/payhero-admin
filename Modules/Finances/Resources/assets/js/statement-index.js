@@ -149,7 +149,7 @@ $(window).on("load", function(){
 
         $.ajax({
             method: "GET",
-            url: "/api/companies?select=true",
+            url: "/api/core/companies?select=true",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -273,7 +273,7 @@ $(window).on("load", function(){
                                                 ${gatewayLogos.vega}
                                             </a>`);
                 break;
-    
+
             default:
                 // return html;
                 break;
