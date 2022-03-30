@@ -314,7 +314,7 @@
                                         </header>
                                         <footer class="footer-distribution">
                                             <small>R$</small>
-                                            <strong>830.800,00</strong>
+                                            <strong class="value-pending"></strong>
                                         </footer>
                                     </div>
                                     <div class="distribution-area">
@@ -345,29 +345,17 @@
                             </div>
                             <div class="">
                                 <div class="d-flex sub-distribution">
-                                    <div class="card inner">
+                                    <div class="card inner" id="card-pending">
                                         <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
                                                 <strong>Pendente</strong>
                                             </h5>
-                                            <a href="{{ route('reports.pending') }}" class="box-link silver">
+                                            <a href="{{ route('reports.pending') }} " class="box-link silver">
                                                 <span>Acessar&nbsp&nbsp</span>
                                                 <i class="o-arrow-right-1 redirect"></i>
                                             </a>
                                         </header>
-                                        <footer class="">
-                                            <div class="d-flex">
-                                                <div class="balance col-3">
-                                                    <h6 class="grey font-size-14">Total</h6>
-                                                    <strong class="grey total">1.2K</strong>
-                                                </div>
-                                                <div class="balance col-9">
-                                                    <h6 class="font-size-14">Saldo</h6>
-                                                    <small>R$</small>
-                                                    <strong class="total orange">24.588,52</strong>
-                                                </div>
-                                            </div>
-                                        </footer>
+                                        <div class="onPreLoad mini-block" id="block-pending"></div>
                                     </div>
                                     <div class="card inner">
                                         <header class="d-flex title-graph">
@@ -388,7 +376,7 @@
                                                 <div class="balance col-9">
                                                     <h6 class="font-size-14">Saldo</h6>
                                                     <small>R$</small>
-                                                    <strong class="total red">4.588,52</strong>
+                                                    <strong class="total red ">4.588,52</strong>
                                                 </div>
                                             </div>
                                         </footer>

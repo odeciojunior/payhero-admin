@@ -1583,6 +1583,7 @@ h4.number{
     width: 100%;
     z-index: 4;
     top: 50%;
+    left: 0;
     transform: translate(0, -50%);
 }
 .skeleton{
@@ -1658,3 +1659,8 @@ h4.number{
 #card-regions .ske-load,
 #card-origin .ske-load,
 #card-coupons .ske-load { top: 55%; }
+
+.mini-block {
+    min-height: 130px;
+    position: relative;
+}

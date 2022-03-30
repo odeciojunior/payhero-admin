@@ -1,5 +1,6 @@
 $(function() {
     loadingOnScreen();
+    exportReports();
     
     barGraph();
     updateReports();    
@@ -79,8 +80,8 @@ function onCommission() {
            
 
             $("#finance-commission, #info-commission").find('.ske-load').remove();
-            $("#info-commission").prepend(infoComission);
-            $("#finance-commission").append(data);
+            $("#info-commission").html(infoComission);
+            $("#finance-commission").html(data);
 
             if( response.data.total !== '0,00' ) {
                 $('.new-finance-graph').html('<canvas id=comission-graph></canvas>');
@@ -92,6 +93,46 @@ function onCommission() {
         }
     });    
     
+}
+
+function getPending() {
+    let pendingBlock = '';
+    $('#card-pending .onPreLoad *' ).remove();
+    $("#block-pending").prepend(skeLoad);
+
+    return $.ajax({
+        method: "GET",
+        url: resumeUrl+ "/pendings?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+            
+        },
+        success: function success(response, status) {
+            $(".value-pending").text(response.data.total);
+
+            pendingBlock = `
+            <footer class="">
+                <div class="d-flex">
+                    <div class="balance col-3">
+                        <h6 class="grey font-size-14">Total</h6>
+                        <strong class="grey total">1.2K</strong>
+                    </div>
+                    <div class="balance col-9">
+                        <h6 class="font-size-14">Saldo</h6>
+                        <small>R$</small>
+                        <strong class="total orange">${response.data.total}</strong>
+                    </div>
+                </div>
+            </footer>
+            `;
+            $("#block-pending").html(pendingBlock).removeClass('mini-block');
+        }
+    });
 }
 
 function changeCalendar() {
@@ -154,6 +195,7 @@ function changeCalendar() {
             startDate = start.format("YYYY-MM-DD");
             endDate = end.format("YYYY-MM-DD");
             
+            
             $('.onPreLoad *').remove();
             $('.onPreLoad').append(skeLoad);
             
@@ -162,6 +204,7 @@ function changeCalendar() {
     );
     
     $('input[name="daterange"]').change(function() {
+        $("#block-pending").addClass('mini-block');
         updateStorage({calendar: $(this).val()})
     })
     
@@ -173,7 +216,7 @@ function changeCompany() {
         $('.onPreLoad *').remove();
         $('.onPreLoad').append(skeLoad);
         
-        
+        $("#block-pending").addClass('mini-block');
         updateStorage({company: $(this).val()})
         updateReports();
     });
@@ -246,6 +289,7 @@ function updateReports() {
         success: function success(response) {
             $('.onPreLoad *').remove();
             onCommission();
+            getPending();
         },
     });
 }
@@ -507,6 +551,22 @@ function barGraph() {
         }
         
         return 'R$ ' + tooltipValue;
+}
+
+function exportReports() {
+    // show/hide modal de exportar relatórios
+    $(".lk-export").on('click', function(e) {
+        e.preventDefault();
+        $('.inner-reports').addClass('focus');
+        $('.line-reports').addClass('d-flex');
+    });
+
+    $('.reports-remove').on('click', function (e) {
+        e.preventDefault();
+        $('.inner-reports').removeClass('focus');
+        $('.line-reports').removeClass('d-flex');
+    });
+
 }
 
 let skeLoad = `
