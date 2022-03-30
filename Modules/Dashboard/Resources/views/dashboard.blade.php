@@ -11,22 +11,31 @@
         @include('dashboard::achievement-details')
         @include('dashboard::onboarding.presentation')
         @include('dashboard::pix.pix')
-        <div style="display: none" class="page-header container">
+        <div style="display: none" class="page-header container mb-15">
+
             <div class="row align-items-center justify-content-between" style="min-height:50px">
-                <div class="col-lg-8">
+                
+                <div class="col-lg-6 mb-25">
                     <h1 class="page-title">Dashboard</h1>
                 </div>
+
+                <div class="announcekit-widget-mobile col-lg-2 mb-25 font-size-14 text-primary d-sm-none" name="Qkw3C">
+                    <span id="announcekit-news" class="p-5">
+                        <b>NOVO</b>
+                    </span>
+                    <b>Clique para ver as novidades</b>
+                </div>
+
                 <div class="col-lg-4" id="company-select" style="display:none">
                     <div class="d-lg-flex align-items-center justify-content-end">
-                        {{--                        <div class="mr-10 mb-5 text-lg-right">--}}
-                        {{--                            Empresa:--}}
-                        {{--                        </div>--}}
                         <div>
                             <select id="company" class="sirius-select"> </select>
                         </div>
                     </div>
                 </div>
+
             </div>
+
         </div>
         <div id="project-not-empty" class="page-content container" style="display:none">
             <!-- Saldos -->
@@ -163,62 +172,6 @@
                             </div>
                         </div>
 
-
-{{--                        <div class="col-lg-12 align-items-stretch order-0 order-sm-1">--}}
-{{--                            <div class="card sirius-card">--}}
-{{--                                <div--}}
-{{--                                    class="card-header d-flex justify-content-between align-items-center bg-blue pt-20 pb-10">--}}
-{{--                                    <div class="font-size-16 text-white">--}}
-{{--                                        <b class="card-desc">A CloudFox mudou.</b>--}}
-{{--                                        <br/>--}}
-{{--                                        <b class="card-desc">Bem-vindo(a) ao Sirius!</b>--}}
-{{--                                    </div>--}}
-{{--                                    <img class="img-fluid"--}}
-{{--                                         src="{{ mix('build/global/img/svg/sirius-stars-b.png') }}"--}}
-{{--                                         height="60px" width="60px">--}}
-{{--                                </div>--}}
-{{--                                <div class="card-body d-flex flex-column justify-content-between">--}}
-{{--                                    <p class="font-size-12">--}}
-{{--                                        A CloudFox está crescendo de forma exponencial, e vamos compartilhar nos--}}
-{{--                                        próximos meses novos produtos e serviços que vão te ajudar a vender mais, a--}}
-{{--                                        começar pelo Sirius.--}}
-{{--                                    </p>--}}
-{{--                                    <p class="font-size-12">--}}
-{{--                                        O Sirius é o gateway de pagamentos da CloudFox, ou seja, é o que a CloudFox era--}}
-{{--                                        até este momento: uma empresa de processamento de pagamentos online.--}}
-{{--                                    </p>--}}
-{{--                                    --}}{{-- <a class="font-size-14 text-blue" href="#"><b>Faça um tour ⇾</b></a>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-
-{{--                        <div class="col-lg-12 order-0 order-sm-1">--}}
-{{--                            <div class="card sirius-card">--}}
-{{--                                <div--}}
-{{--                                    class="card-header d-flex justify-content-between align-items-center bg-blue pt-20 pb-10">--}}
-{{--                                    <div class="font-size-16 text-white">--}}
-{{--                                        <b class="card-desc">A CloudFox mudou.</b>--}}
-{{--                                        <br/>--}}
-{{--                                        <b class="card-desc">Bem-vindo(a) ao Sirius!</b>--}}
-{{--                                    </div>--}}
-{{--                                    <img class="img-fluid"--}}
-{{--                                         src="{{ mix('build/global/img/svg/sirius-stars-b.png') }}"--}}
-{{--                                         height="60px" width="60px">--}}
-{{--                                </div>--}}
-{{--                                <div class="card-body d-flex flex-column justify-content-between">--}}
-{{--                                    <p class="font-size-12">--}}
-{{--                                        A CloudFox está crescendo de forma exponencial, e vamos compartilhar nos--}}
-{{--                                        próximos meses novos produtos e serviços que vão te ajudar a vender mais, a--}}
-{{--                                        começar pelo Sirius.--}}
-{{--                                    </p>--}}
-{{--                                    <p class="font-size-12">--}}
-{{--                                        O Sirius é o gateway de pagamentos da CloudFox, ou seja, é o que a CloudFox era--}}
-{{--                                        até este momento: uma empresa de processamento de pagamentos online.--}}
-{{--                                    </p>--}}
-{{--                                    --}}{{-- <a class="font-size-14 text-blue" href="#"><b>Faça um tour ⇾</b></a>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
                     </div>
                 </div>
             </div>
@@ -229,6 +182,7 @@
     </div>
 
     @push('scripts')
+        <script async src="https://cdn.announcekit.app/widget-v2.js"></script>
         <script src="{{ mix('build/layouts/dashboard/scripts.min.js') }}"></script>
     @endpush
 
