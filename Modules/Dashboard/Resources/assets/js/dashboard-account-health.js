@@ -57,6 +57,17 @@ $(document).ready(function () {
         },
     }
 
+    function indexColor(value) {
+        if(value <= 1.5) {
+            return 'color: #1BCE68;';
+            console.log('green');
+        }else {
+            return 'color: #FF3006;';
+            console.log('red');
+        }
+        return '';
+    }
+
 
     function  nextCard() {
         //setTimeout(function(){loadingOnAccountsHealthRemove('.sirius-account > .card  .sirius-loading '); }, 500);
@@ -351,11 +362,7 @@ $(document).ready(function () {
                             </div>
 
                             <div class="mt-10 d-flex flex-row flex-nowrap justify-content-between" style="width: 100%;">
-                                <div class="col-2 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
-                                    <span class="account-health-note ${scoreInfo[Math.floor(2.4)].textColor}" style="font-size: 20px;">${parseFloat( data.chargeback_rate ).toFixed(1)}%</span>
-                                    <span class="account-health-note-description">Índice</span>
-                                </div>
-                                <div class="col-3 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
+                                <div class="col-4 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
                                     <span class="account-health-note">${data.total_sales_approved}</span>
                                     <span class="account-health-note-description">Vendas no cartão</span>
                                 </div>
@@ -364,6 +371,10 @@ $(document).ready(function () {
                                         <!-- <span class="account-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat( data.chargeback_rate ).toFixed(2)}%</span> -->
                                     </span>
                                     <span class="account-health-note-description">Chargebacks</span>
+                                </div>
+                                <div class="col-2 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
+                                    <span class="account-health-note" style="font-size: 20px; ${indexColor(data.chargeback_rate)}">${parseFloat( data.chargeback_rate ).toFixed(1)}%</span>
+                                    <span class="account-health-note-description">Índice</span>
                                 </div>
                             </div>
 
