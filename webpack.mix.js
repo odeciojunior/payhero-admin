@@ -381,7 +381,8 @@ mix.babel([
     'resources/modules/global/js/confetti.browser.min.js',
     'Modules/Dashboard/Resources/assets/js/dashboard-performance.js',
     'Modules/Dashboard/Resources/assets/js/dashboard.js',
-    'Modules/Dashboard/Resources/assets/js/dashboard-account-health.js'
+    'Modules/Dashboard/Resources/assets/js/dashboard-account-health.js',
+    'Modules/Dashboard/Resources/assets/js/announcekit-dashboard-mobile.js'
 ],'public/build/layouts/dashboard/scripts.min.js');
 
 /**
@@ -1090,7 +1091,8 @@ mix.babel([
     'resources/modules/global/adminremark/assets/examples/js/dashboard/v1.js',
     'resources/modules/global/adminremark/global/vendor/sortable/Sortable.js',
     'resources/modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js',
-    'resources/modules/global/js/global.js'
+    'resources/modules/global/js/global.js',
+    'resources/modules/global/js/announcekit-global.js'
 ],'public/build/layouts/master/plugins.min.js')
 mix.babel([
     'resources/modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js',

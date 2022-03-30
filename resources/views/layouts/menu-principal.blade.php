@@ -32,7 +32,7 @@
         <!-- CONTAINER DOS ICONES/LINKS DO ANNOUNCEKIT, NOTIFICACOES E USUARIO -->
         <div class="row no-gutters d-flex justify-content-end">
 
-            <!-- NAO FACO IDEIA DO QUE SEJA -->
+            <!-- HASH USER -->
             <input type='hidden' id='user' value='{{Vinkla\Hashids\Facades\Hashids::connection('pusher_connection')->encode(auth()->user()->id)}}'>
             <input type='hidden' id='user_hash' value='{{Vinkla\Hashids\Facades\Hashids::encode(auth()->user()->id)}}'>
             <input type='hidden' id='user_name' value='{{auth()->user()->name}}'>
@@ -43,7 +43,7 @@
 
                 <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
                 <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center"> 
-                    <b class="pr-5"> Novidades </b> 
+                    <b class="pr-5"> Novidades </b>
                 </div>
 
                 <!-- BOTOES DE NOTIFICAO E USUARIO -->
@@ -356,15 +356,3 @@
         @endcan
     </ul>
 </div>
-
-{{-- MOVER SCRIPT ABAXIO PARA ARQUIVO A PARTE SEGUINDO PADRAO DE MINIFICACAO --}}
-{{-- <script>
-    window.announcekit = (window.announcekit || { queue: [], on: function(n, x) { 
-        window.announcekit.queue.push([n, x]); }, push: function(x) { window.announcekit.queue.push(x); } 
-    });
-
-    window.announcekit.push({
-        "widget": "https://updates.cloudfox.net/widgets/v2/2gTmDK",
-        "selector": ".announcekit-widget"
-    });
-</script> --}}
