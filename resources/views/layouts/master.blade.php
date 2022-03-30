@@ -55,7 +55,7 @@
             <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TDM6SV5" height="0" width="0" style="display:none;visibility:hidden"></iframe>
         </noscript>
         <!-- End Google Tag Manager (noscript) -->
-        
+
         @include("layouts.loading")
 
         @include("layouts.menu-principal")
@@ -82,10 +82,10 @@
         <!-- Plugins -->
         <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
         <script> verifyDocumentPending(); </script>
-        
+
         @stack('scripts')
 
-        @if(env('APP_ENV', 'production') == 'local')
+        @if(env('APP_ENV', 'production') == 'production')
             <script src="{{ mix('build/layouts/master/production.min.js') }}"></script>
 
             <style>
@@ -123,7 +123,7 @@
                     window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
                 </script>
             @endif
-            
+
         @endif
 
         <!-- Announcekiit configuracoes -->
