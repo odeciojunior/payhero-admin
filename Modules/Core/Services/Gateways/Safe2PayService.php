@@ -196,7 +196,6 @@ class Safe2PayService implements Statement
                 ->where('release_date', '<=', Carbon::now()->format('Y-m-d'))
                 ->where('status_enum', Transaction::STATUS_PAID)
                 ->whereIn('gateway_id', $this->gatewayIds)
-                ->where('user_id', 5354)
                 ->whereNotNull('company_id')
                 ->where(function ($where) {
                     $where->where('tracking_required', false)
