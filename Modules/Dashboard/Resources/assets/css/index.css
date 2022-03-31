@@ -39,3 +39,8 @@
 .carousel-indicators {
     bottom: 30px;
 }
+
+#announcekit-news{
+    border-radius: 4px;
+    background-color: #E8EEFE;
+}

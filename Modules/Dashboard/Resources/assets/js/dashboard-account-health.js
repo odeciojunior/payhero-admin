@@ -57,6 +57,17 @@ $(document).ready(function () {
         },
     }
 
+    function indexColor(value) {
+        if(value <= 1.5) {
+            return 'color: #1BCE68;';
+            console.log('green');
+        }else {
+            return 'color: #FF3006;';
+            console.log('red');
+        }
+        return '';
+    }
+
 
     function  nextCard() {
         //setTimeout(function(){loadingOnAccountsHealthRemove('.sirius-account > .card  .sirius-loading '); }, 500);
@@ -314,11 +325,25 @@ $(document).ready(function () {
                                             </svg>
                                         </div>
 
-                                        <div id="chargeback-custom-tooltip-container" class="custom-tooltip-container mx-2" style="display: none">
+                                        <div id="chargeback-custom-tooltip-container" class="custom-tooltip-container mx-2" style="display: none; margin-top: -430px;">
                                             <div class="custom-tooltip-content" style="margin-right: 150px">
-                                                <p>Levamos em conta os chargebacks e as contestações dos últimos 150 dias, 
-                                                excluindo os chargebacks ocorridos nos últimos 20 dias, que é o 
-                                                prazo médio de resolução negativa ou positiva destes casos.</p>
+                                                <p>
+                                                O chargeback acontece quando uma cobrança é contestada pelo titular do cartão de crédito.
+                                                </p>
+
+                                                <p>
+                                                Analisamos uma janela de 150 dias (5 meses), excluindo os últimos 20 dias* de vendas, para calcular o índice e atribuir uma nota que vai de 0 a 10.
+                                                </p>
+
+                                                <p>
+                                                O índice exigido pelas regras internacionais das bandeiras é de não exceder 1,5%. 
+                                                Dentre 1,5% e 3% é considerado alto, podendo sofrer multas por cada chargeback.
+                                                Acima de 3%, além das multas, a sua conta poderá ser bloqueada definitivamente.
+                                                </p>
+
+                                                <p>
+                                                *A exclusão dos últimos 20 dias é para tornar o cálculo mais preciso, uma vez que os chargebacks geralmente aparecem após este período.
+                                                </p>
 
                                                 <div class="border border-1 rounded" style="padding: 5px 20px;">
                                                     <div class="d-flex flex-row flex-nowrap justify-content-between">
@@ -337,11 +362,7 @@ $(document).ready(function () {
                             </div>
 
                             <div class="mt-10 d-flex flex-row flex-nowrap justify-content-between" style="width: 100%;">
-                                <div class="col-2 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
-                                    <span class="account-health-note ${scoreInfo[Math.floor(2.4)].textColor}" style="font-size: 20px;">${parseFloat( data.chargeback_rate ).toFixed(1)}%</span>
-                                    <span class="account-health-note-description">Índice</span>
-                                </div>
-                                <div class="col-3 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
+                                <div class="col-4 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
                                     <span class="account-health-note">${data.total_sales_approved}</span>
                                     <span class="account-health-note-description">Vendas no cartão</span>
                                 </div>
@@ -350,6 +371,10 @@ $(document).ready(function () {
                                         <!-- <span class="account-tax ${scoreInfo[Math.floor(data.chargeback_score)].textColor} ">${parseFloat( data.chargeback_rate ).toFixed(2)}%</span> -->
                                     </span>
                                     <span class="account-health-note-description">Chargebacks</span>
+                                </div>
+                                <div class="col-2 p-0 d-flex flex-column flex-nowrap justify-content-start align-items-start align-self-start" >
+                                    <span class="account-health-note" style="font-size: 20px; ${indexColor(data.chargeback_rate)}">${parseFloat( data.chargeback_rate ).toFixed(1)}%</span>
+                                    <span class="account-health-note-description">Índice</span>
                                 </div>
                             </div>
 
