@@ -148,12 +148,7 @@
     "/build/layouts/reportana/index.min.css": "/build/layouts/reportana/index.min.css?id=2c3d75597e55f6f579d65839cc1705de",
     "/build/layouts/reportana/index.min.js": "/build/layouts/reportana/index.min.js?id=24032b5c7406cce2b070b8a73c3d0af5",
     "/build/layouts/reports/details.min.css": "/build/layouts/reports/details.min.css?id=842168624254584a96af4a5168448181",
-<<<<<<< HEAD
-    "/build/layouts/reports/blockedbalance.min.css": "/build/layouts/reports/blockedbalance.min.css?id=5f67d1d9cae928314489bbef47c8a160",
-=======
-    "/build/layouts/reports/details.min.js": "/build/layouts/reports/details.min.js?id=6bfec24777e78e040cf87ed8d72b04af",
     "/build/layouts/reports/blockedbalance.min.css": "/build/layouts/reports/blockedbalance.min.css?id=5080599290bc89e8e781b83b93e62a8b",
->>>>>>> master
     "/build/layouts/reports/blockedbalance.min.js": "/build/layouts/reports/blockedbalance.min.js?id=f0d3c9aede15aa678d57db528b00a06a",
     "/build/layouts/reports/checkouts.min.css": "/build/layouts/reports/checkouts.min.css?id=28a876ce4d741e0d89125a14d37e9f33",
     "/build/layouts/reports/checkouts.min.js": "/build/layouts/reports/checkouts.min.js?id=b7d8680dc2d08adc0dba1be6218ffd51",
@@ -162,13 +157,12 @@
     "/build/layouts/reports/index.min.css": "/build/layouts/reports/index.min.css?id=28a876ce4d741e0d89125a14d37e9f33",
     "/build/layouts/reports/index.min.js": "/build/layouts/reports/index.min.js?id=30b0cb6d5669f1ac90645af865ae6d30",
     "/build/layouts/reports/pending.min.css": "/build/layouts/reports/pending.min.css?id=1fe461af2762ee6c69e688851620a58f",
-    "/build/layouts/reports/pending.min.js": "/build/layouts/reports/pending.min.js?id=d3cab8be4d331f434a06fe5100a35e51",
+    "/build/layouts/reports/pending.min.js": "/build/layouts/reports/pending.min.js?id=3e434d8d766bab440676f5ca32accc12",
     "/build/layouts/reports/projections.min.css": "/build/layouts/reports/projections.min.css?id=28a876ce4d741e0d89125a14d37e9f33",
     "/build/layouts/reports/projections.min.js": "/build/layouts/reports/projections.min.js?id=d6d478b82d0ff696e322079be34056ee",
     "/build/layouts/sales/details.min.css": "/build/layouts/sales/details.min.css?id=842168624254584a96af4a5168448181",
-    "/build/layouts/sales/details.min.js": "/build/layouts/sales/details.min.js?id=6bfec24777e78e040cf87ed8d72b04af",
     "/build/layouts/sales/index.min.css": "/build/layouts/sales/index.min.css?id=89bb5b718b06fee96d45e89ad86e2ac5",
-    "/build/layouts/sales/index.min.js": "/build/layouts/sales/index.min.js?id=34c396c3ba8c88e24932e833bf114289",
+    "/build/layouts/sales/index.min.js": "/build/layouts/sales/index.min.js?id=7c1b61dcaf397da5e2011deb741d08b0",
     "/build/layouts/salesblacklistantifraud/details.min.css": "/build/layouts/salesblacklistantifraud/details.min.css?id=842168624254584a96af4a5168448181",
     "/build/layouts/salesblacklistantifraud/index.min.css": "/build/layouts/salesblacklistantifraud/index.min.css?id=cdf3e07ea0cff47446235d6ed5e62f68",
     "/build/layouts/salesblacklistantifraud/index.min.js": "/build/layouts/salesblacklistantifraud/index.min.js?id=5f2c60a349ff94aa6bb0377c3f05f135",
