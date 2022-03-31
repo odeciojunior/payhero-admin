@@ -132,6 +132,14 @@ class SalesApiController extends Controller
         try {
             $saleIdDecoded = hashids_decode($saleId, 'sale_id');
             $sale = Sale::find($saleIdDecoded);
+
+            if($sale->status != Sale::STATUS_APPROVED) {
+                return response()->json(
+                    ['status' => 'error', 'message' => 'Somente vendas aprovadas podem ser estornadas.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
             if (!in_array($sale->gateway_id, [
                 Gateway::GERENCIANET_PRODUCTION_ID,
                 Gateway::GERENCIANET_SANDBOX_ID,
