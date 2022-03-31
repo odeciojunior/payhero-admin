@@ -95,19 +95,7 @@ class CreateAccountSafe2Pay extends Command
                 "TechIdentity" => "02901053076",
                 "TechEmail" => "julioleichtweis@cloudfox.net",
                 "TechPhone" => "55996931098",
-                'IsPanelRestricted' => true,
-                "BankData" => [
-                    "Bank" => [
-                        "Code" => $company->bank,
-                    ],
-                    "AccountType" => [
-                        "Code" => "CC",
-                    ],
-                    "BankAgency" => $company->agency,
-                    "BankAgencyDigit" => $company->agency_digit,
-                    "BankAccount" => $company->account,
-                    "BankAccountDigit" => $company->account_digit
-                ],
+                'IsPanelRestricted' => true,                
                 "Address" => [
                     "ZipCode" => $company->zip_code,
                     "Street" => $company->street,
@@ -118,59 +106,23 @@ class CreateAccountSafe2Pay extends Command
                     "StateInitials" => $company->state,
                     "CountryName" => "Brasil",
                 ],
-//                "MerchantSplit" => [
-//                    [
-//                        "PaymentMethodCode" => "1", // 1 - Boleto bancário
-//                        "IsSubaccountTaxPayer" => false, // Informar se a taxa de custo será paga pela subconta
-//                        "Taxes" => [
-//                            [
-//                                "TaxTypeName" => "1", // Tipo da taxa, informar '1' para Percentual ou '2' para Valor
-//                                "Tax" => "1.00" // Informar o valor da taxa, em percentual ou valor.
-//                            ],
-//                        ],
-//                    ],
-//                    [
-//                        "PaymentMethodCode" => "2", // 2 - Cartão de crédito
-//                        "IsSubaccountTaxPayer" => false,
-//                        "Taxes" => [
-//                            [
-//                                "TaxTypeName" => "1",
-//                                "Tax" => "1.00"
-//                            ],
-//                        ],
-//                    ],
-//                    [
-//                        "PaymentMethodCode" => "3", // 3 - Criptomoedas
-//                        "IsSubaccountTaxPayer" => false,
-//                        "Taxes" => [
-//                            [
-//                                "TaxTypeName" => "1",
-//                                "Tax" => "1.00"
-//                            ],
-//                        ],
-//                    ],
-//                    [
-//                        "PaymentMethodCode" => "4", // 4 - Cartão de débito
-//                        "IsSubaccountTaxPayer" => false,
-//                        "Taxes" => [
-//                            [
-//                                "TaxTypeName" => "1",
-//                                "Tax" => "1.00"
-//                            ],
-//                        ],
-//                    ],
-//                    [
-//                        "PaymentMethodCode" => "6", // 6 - Pix
-//                        "IsSubaccountTaxPayer" => false,
-//                        "Taxes" => [
-//                            [
-//                                "TaxTypeName" => "1",
-//                                "Tax" => "1.00"
-//                            ],
-//                        ],
-//                    ],
-//                ],
             ];
+
+            $bankAccounts = $company->getBankAccount();
+            if(!empty($bankAccounts) && $bankAccounts->transfer_type=='TED'){
+                $data['BankData'] = [ 
+                    "Bank" => [
+                        "Code" => $bankAccounts->bank,
+                    ],
+                    "AccountType" => [
+                        "Code" => "CC",
+                    ],
+                    "BankAgency" => $bankAccounts->agency,
+                    "BankAgencyDigit" => $bankAccounts->agency_digit,
+                    "BankAccount" => $bankAccounts->account,
+                    "BankAccountDigit" => $bankAccounts->account_digit
+                ];
+            }
 
             $data['variables']['company_id'] = Hashids::encode($company->id);
 
