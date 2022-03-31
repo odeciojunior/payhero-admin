@@ -11,7 +11,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class ChargebackService
 {
-
     function getQuery($filters)
     {
 
@@ -239,37 +238,26 @@ class ChargebackService
 
     public function getChargebackRateInPeriod(User $user, Carbon $startDate, Carbon $endDate): ?float
     {
-        $approvedSales = (new SaleService)->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate);
+        $approvedSalesAmount = (new SaleService)->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate);
 
-        if ($approvedSales->count() < 50) {
+        if ($approvedSalesAmount < 50) {
             return 1.2;
         }
 
-        $chargebacksAmount = Sale::where('status', Sale::STATUS_CHARGEBACK)
-                                    ->whereHas('saleLogs', function($q) use ($startDate, $endDate) {
-                                        $q->whereBetween(
-                                            'created_at',
-                                            [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-                                        )->where('status_enum', 4);
-                                    })->where('owner_id', $user->account_owner_id);
-
-        $chargebacksAmount = $chargebacksAmount->count();
-        $approvedSalesAmount = $approvedSales->count();
+        $chargebacksAmount = $this->getTotalChargebacksInPeriod($user, $startDate);
 
         return $chargebacksAmount > 0 ? round(($chargebacksAmount * 100 / $approvedSalesAmount), 2) : 0;
     }
 
-    public function getTotalChargebacksInPeriod(User $user, Carbon $startDate, Carbon $endDate)
+    public function getTotalChargebacksInPeriod(User $user, Carbon $startDate)
     {
         return Sale::where('status', Sale::STATUS_CHARGEBACK)
-            ->whereHas('saleLogs', function($q) use ($startDate, $endDate) {
-                $q->whereBetween(
-                    'created_at',
-                    [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-                )->where('status_enum', 4);
-            })
-            ->where('owner_id', $user->account_owner_id)
-            ->get();
+                    ->where(function ($query) use ($user) {
+                        $query->where('owner_id', $user->id)
+                                ->orWhere('affiliate_id', $user->id);
+                    })
+                    ->where('created_at', '>=', $startDate->format('Y-m-d') . ' 00:00:00')
+                    ->count();
     }
 
     public function getTotalContestationsInPeriod($user, $startDate, $endDate)
@@ -305,32 +293,27 @@ class ChargebackService
 
     public function getContestationRateInPeriod($user, $startDate, $endDate)
     {
-        $contestationsCount = Sale::whereIn(
-            'status',
-            [
-                Sale::STATUS_APPROVED,
-                Sale::STATUS_CHARGEBACK,
-                Sale::STATUS_REFUNDED,
-                Sale::STATUS_IN_DISPUTE
-            ]
-        )->whereBetween(
-            'start_date',
-            [$startDate->format('Y-m-d') . ' 00:00:00', $endDate->format('Y-m-d') . ' 23:59:59']
-        )->where(
-            function ($query) use ($user) {
-                $query->where('owner_id', $user->id)
-                    ->orWhere('affiliate_id', $user->id);
-            }
-        )
-        ->whereHas('contestations')->count();
+        $contestationsCount = Sale::whereIn('status',[
+                                            Sale::STATUS_APPROVED,
+                                            Sale::STATUS_CHARGEBACK,
+                                            Sale::STATUS_REFUNDED,
+                                            Sale::STATUS_IN_DISPUTE
+                                    ])
+                                    ->where('start_date', '>', $startDate->format('Y-m-d') . ' 00:00:00')
+                                    ->where(
+                                        function ($query) use ($user) {
+                                            $query->where('owner_id', $user->id)
+                                                ->orWhere('affiliate_id', $user->id);
+                                        }
+                                    )
+                                    ->whereHas('contestations')
+                                    ->count();
 
         if ($contestationsCount == 0) {
             return 2.0;
         }
 
         $approvedSales = (new SaleService)->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate);
-
-        $approvedSales = $approvedSales->count();
 
         if($approvedSales < 20) {
             return 2.0;

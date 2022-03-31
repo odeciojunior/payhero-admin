@@ -1,6 +1,6 @@
 $(document).ready(function () {
-
-    getProjects();
+    
+    let userAccepted = true;
 
     function updateChart() {
         $('#scoreLineToMonth').html('')
@@ -124,12 +124,6 @@ $(document).ready(function () {
 
     }
 
-    $("#company").on("change", function () {
-        updateValues();
-        updateChart();
-    });
-    let userAccepted = true;
-
     function getDataDashboard() {
         $.ajax({
             method: "GET",
@@ -237,7 +231,6 @@ $(document).ready(function () {
             }
         });
     }
-
 
     // function updateTrackings(trackings) {
     //     $('#average_post_time').html(trackings.average_post_time + ' dia' + (trackings.average_post_time === 1 ? '' : 's'));
@@ -387,10 +380,6 @@ $(document).ready(function () {
     //         }
     //     });
     // }
-
-    $("#closeWelcome").click(function () {
-        $("#cardWelcome").slideUp("600");
-    });
 
     function getProjects() {
         loadingOnScreen();
@@ -790,4 +779,15 @@ $(document).ready(function () {
             }
         });
     }
+
+    $("#closeWelcome").click(function () {
+        $("#cardWelcome").slideUp("600");
+    });
+
+    $("#company").on("change", function () {
+        updateValues();
+        updateChart();
+    });
+
+    getProjects();
 });

@@ -311,7 +311,8 @@ mix.babel([
     'resources/modules/global/js/confetti.browser.min.js',
     'Modules/Dashboard/Resources/assets/js/dashboard-performance.js',
     'Modules/Dashboard/Resources/assets/js/dashboard.js',
-    'Modules/Dashboard/Resources/assets/js/dashboard-account-health.js'
+    'Modules/Dashboard/Resources/assets/js/dashboard-account-health.js',
+    'Modules/Dashboard/Resources/assets/js/announcekit-dashboard-mobile.js'
 ],'public/build/layouts/dashboard/scripts.min.js');
 
 /**
@@ -603,10 +604,12 @@ mix.babel([
  * Modules/Projects/Resources/views/index.blade.php
  */
 mix.styles([
+    'resources/cdn/jquery-ui.min.css',
     'Modules/Projects/Resources/assets/css/index.css',
     'resources/modules/global/css/switch.css'
 ], 'public/build/layouts/projects/index.min.css');
 mix.babel([
+    'resources/cdn/jquery-ui.min.js',
     'Modules/Projects/Resources/assets/js/index.js'
 ], 'public/build/layouts/projects/index.min.js');
 
@@ -992,7 +995,8 @@ mix.babel([
     'resources/modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js',
     'resources/modules/global/js/global.js',
     'resources/modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js',
-    'resources/modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js'
+    'resources/modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js',
+    'resources/modules/global/js/announcekit-global.js'
 ],'public/build/layouts/master/plugins.min.js')
 mix.babel([
     'resources/modules/global/js-extra/pusher.min.js',
