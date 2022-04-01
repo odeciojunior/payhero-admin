@@ -868,7 +868,7 @@ $(document).ready(function () {
         }
     });
 
-/** INICIO - bloco identico a Modules/Reports/Resources/assets/js/report-pending.js */
+    //$.getScript('build/layouts/sales/details.min.js')
 
     $("#discount_value").mask("00%", {reverse: true});
 
@@ -2367,6 +2367,4 @@ $(document).ready(function () {
             });
         }
     }
-
-    /** FIM - bloco de codigo identico a ... */
 });

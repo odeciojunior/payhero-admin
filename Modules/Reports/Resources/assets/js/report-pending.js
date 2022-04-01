@@ -341,7 +341,7 @@ $(document).ready(function () {
         }
     });
 
-    /** INICIO - bloco identico a Modules/Sales/Resources/assets/js/index.js */
+    //$.getScript('build/layouts/sales/details.min.js')
 
     $("#discount_value").mask("00%", {reverse: true});
 
@@ -1840,6 +1840,4 @@ $(document).ready(function () {
             });
         }
     }
-
-    /** FIM - bloco de codigo identico a ... */
 });
