@@ -46,7 +46,7 @@
                             </div>
                             
                             <!-- BOTAO ADICIONAR LOJA -->
-                            <a href="/projects/create" class="btn btn-floating btn-primary" id="btn-add-project" style="position: relative; float: right; display:none" title='Adicionar loja'>
+                            <a href="/projects/create" class="btn btn-floating btn-primary" id="btn-add-project" style="position: relative; float: right; display:none;" data-toggle="tooltip" data-placement="bottom" title="Adicionar Loja">
                                 <span style="color: white; font-size: 35px" class='o-add-1'></span>
                             </a>
     
