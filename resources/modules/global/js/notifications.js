@@ -56,9 +56,11 @@ $(document).ready(function () {
                 if (parseInt(response.qtd_notification) > 0) {
                     $("#notification-amount").removeClass("badge-notification-false");
                     $("#notification-amount").addClass("badge-notification");
+
                 }else {
                     $("#notification-amount").removeClass("badge-notification");
                     $("#notification-amount").addClass("badge-notification-false");
+
                 }
 
                 $('#notificationBadge').html('New ' + response.qtd_notification)
@@ -209,5 +211,4 @@ $(document).ready(function () {
 
         return { message: message, iconClass: iconClass, iconColor: iconColor, iconBackgroundColor: iconBackgroundColor, link: link, time: data.time, background: backgroundColor};
     }
-
 });

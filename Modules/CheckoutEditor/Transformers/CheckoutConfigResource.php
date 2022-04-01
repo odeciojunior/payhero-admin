@@ -14,6 +14,7 @@ class CheckoutConfigResource extends JsonResource
             'id',
             'fantasy_name as name',
             'company_type as type',
+            'document',
             'active_flag',
             'capture_transaction_enabled',
             'address_document_status',
@@ -31,9 +32,11 @@ class CheckoutConfigResource extends JsonResource
                         ? 'approved'
                         : 'pending';
                 }
+
                 return (object)[
                     'id' => hashids_encode($company->id),
                     'name' => $company->type == Company::PHYSICAL_PERSON ? 'Pessoa física' : $company->name,
+                    'document' => foxutils()->getDocument($company->document),
                     'active_flag' => $company->active_flag,
                     'capture_transaction_enabled' => $company->capture_transaction_enabled,
                     'status' => $status
