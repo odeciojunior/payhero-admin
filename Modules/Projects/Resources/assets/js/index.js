@@ -100,7 +100,11 @@ $(function () {
                     verifyHasOnlyOne();
 
                 } else {
-                    $("#data-table-projects").hide();
+                    
+                    $("#subtitle_drag_drop").hide();
+                    $("#button_toggle").css({visibility: "hidden"});
+                    $("#data-table-projects").css({visibility: "hidden"});
+
                     $("#btn-config").css({visibility: "hidden"});
 
                     if (response.no_company) {
@@ -162,6 +166,7 @@ $(function () {
         revert: true,
         tolerance: "pointer",
         cursor: "move",
+        disabled: "",
         update: function(event, ui){
             let projectOrder = $(this).sortable('toArray', {
                 attribute: "data-id"
