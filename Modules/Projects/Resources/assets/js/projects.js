@@ -334,6 +334,15 @@ $(() => {
 
 
         // PORCENTAGEM
+        $('#percentage-affiliates').val('0');
+
+        $('#percentage-affiliates').click( function(){
+            if( $(this).val()=='0' ) $(this).val('');
+        });
+        $('#percentage-affiliates').blur( function(){
+            if( $(this).val()=='' ) $(this).val('0');
+        });
+
         $('#percentage-affiliates').mask('000', {
             reverse: true,
             onKeyPress: function (val, e, field, options) {
@@ -342,7 +351,10 @@ $(() => {
                 }
             }
         });
-        formUpdateProject.find('#percentage-affiliates').val(project.percentage_affiliates);
+
+        if(project.percentage_affiliates){
+            formUpdateProject.find('#percentage-affiliates').val(project.percentage_affiliates);
+        }
 
 
         // TIPO DE COMISSAO
