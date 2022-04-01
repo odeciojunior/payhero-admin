@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Benefit;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\NotifyUserLevelEvent;
@@ -66,7 +67,9 @@ class UpdateUserLevel extends Command
                     $level = 1;
                 }
 
-                $user = User::with('benefits')->find($transaction->user_id);
+                $user = User::with(['benefits' => function($query) {
+                    $query->where('benefit_id', '!=', 2); // r+r
+                }])->find($transaction->user_id);
 
                 if (!empty($user)) {
                     $this->line("Verficando o usuário: {$user->name} ({$user->id})...");

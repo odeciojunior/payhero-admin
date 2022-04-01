@@ -372,7 +372,7 @@ class Safe2PayService implements Statement
                     ]);
                     continue;
                 }
-                
+
                 $safe2payBalance = $refundTransaction->company->safe2pay_balance;
 
                 if ($refundTransaction->status_enum == Transaction::STATUS_PAID) {

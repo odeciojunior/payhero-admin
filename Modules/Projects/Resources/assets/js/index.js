@@ -1,5 +1,15 @@
 $(function () {
-
+    
+    // Se existir apenas um prjeto esconder todo conteudo drag e drop
+    function verifyHasOnlyOne(){
+        let hasOnlyOne = $("#data-table-projects").children().length <= 1;
+        if(hasOnlyOne){
+            $("img.drag-drop-icon").hide();
+            $("#subtitle_drag_drop").hide();
+        }
+    }
+    
+    // Funcao Responsavel por gerar cards de cada projeto
     function index() {
         loadingOnScreen();
         $.ajax({
@@ -87,6 +97,7 @@ $(function () {
                             $("#btn-add-project").show();
                         }
                     });
+                    verifyHasOnlyOne();
 
                 } else {
                     $("#data-table-projects").hide();
@@ -107,6 +118,7 @@ $(function () {
         });
     }
 
+    // Seta valor do filtro toggle(ALTERNANCIA) para exibir/esconder projetos 
     $(".check").on("change", function () {
         if ($(this).is(":checked")) {
             $(this).val(1);
@@ -115,6 +127,35 @@ $(function () {
         }
     });
 
+    // Exibi / Esconde projetos Excluidos
+    $("#deleted_project_filter").on("change", function () {
+
+        let showProjectsDeleteds = $("#deleted_project_filter").val();
+        $.ajax({
+            method: "POST",
+            url: "/api/projects/updateconfig",
+            dataType: "json",
+            data: {
+                deleted_project_filter: showProjectsDeleteds,
+            },
+            headers: {
+                Authorization: $('meta[name="access-token"]').attr("content"),
+                Accept: "application/json",
+            },
+            error: (response) => {
+                $("#modal_config").modal("hide");
+                errorAjaxResponse(response);
+            },
+            success: (response) => {
+                $("#modal_config").modal("hide");
+                location.reload(true);
+                index();
+                alertCustom("success", response.message);
+            },
+        });
+    });
+
+    // Funcao responsavel pelo Arrastar e soltar(DRAG e DROP)
     const sortableElement = $("#data-table-projects");
     sortableElement.sortable({
         opacity: 1,
@@ -152,33 +193,6 @@ $(function () {
         beforeStop: function (event, ui){ 
             ui.helper.css('margin-top',0); 
         }
-    });
-
-    $("#deleted_project_filter").on("change", function () {
-
-        let showProjectsDeleteds = $("#deleted_project_filter").val();
-        $.ajax({
-            method: "POST",
-            url: "/api/projects/updateconfig",
-            dataType: "json",
-            data: {
-                deleted_project_filter: showProjectsDeleteds,
-            },
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: (response) => {
-                $("#modal_config").modal("hide");
-                errorAjaxResponse(response);
-            },
-            success: (response) => {
-                $("#modal_config").modal("hide");
-                location.reload(true);
-                index();
-                alertCustom("success", response.message);
-            },
-        });
     });
 
     index();
