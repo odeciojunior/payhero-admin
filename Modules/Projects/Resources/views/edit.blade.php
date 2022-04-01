@@ -145,7 +145,7 @@
                                             <div class="col-md-12">
                                                 <div class="input-group mb-3 test">
 
-                                                    <input id='percentage-affiliates' class="form-control select-pad" name='percentage_affiliates' value='' type='text' min="0" max="100" maxlength="3" style="outline: none;">
+                                                    <input id='percentage-affiliates' class="form-control select-pad" name='percentage_affiliates' value='' type='text' min="0" max="100" maxlength="3" style="outline: none;" placeholder="0">
 
                                                     <div class="input-group-append">
                                                         <span class="input-group-text select-pad percent-border">%</span>
