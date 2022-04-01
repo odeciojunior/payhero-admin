@@ -381,6 +381,14 @@ h4.number{
     padding-top: 1.429rem;
     position: relative;
 }
+.cards-reports .ske-load {
+    position: absolute;
+    width: 100%;
+    z-index: 4;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%); */
+}
 .cards-reports .card-origin { padding: 1.429rem; }
 
 .cards-reports h6 { margin-top: 0; }
@@ -688,9 +696,11 @@ h4.number{
 }
 
 .finance-card { 
-    padding: 16px 16px 25px; 
+    padding: 16px 16px 0 25px;
     border-radius: 12px;
     min-height: 104px;
+    display: flex;
+    flex-direction: column;
 }
 
 .finance-card .title { 
@@ -773,9 +783,13 @@ h4.number{
 .inner { padding: 0 20px 20px 20px; }
 .inner.cash { padding-bottom: 30px; }
 
-#info-commission { min-height: 126px; }
-#info-commission .ske-load { transform: translate(0, -42%); }
-
+#info-commission { 
+    min-height: 126px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#info-commission .ske-load { margin: 20px auto 0; }
 .new-finance-graph {
     height: 359px;
     padding-bottom: 20px;
@@ -1579,12 +1593,12 @@ h4.number{
 }
 
 .ske-load {
-    position: absolute;
+    /* position: absolute; */
     width: 100%;
     z-index: 4;
     top: 50%;
     left: 0;
-    transform: translate(0, -50%);
+    /* transform: translate(0, -50%); */
 }
 .skeleton{
     opacity: .7;
@@ -1609,10 +1623,7 @@ h4.number{
     border-radius: 8px;
 }
 
-.finance-card.commission .ske-load {
-    left: 0;
-    transform: translate(0 ,-48%);
-}
+/* .finance-card.commission .ske-load { margin: 20px auto 0; } */
 
 @-webkit-keyframes m {
     to {background-position:left;}
@@ -1659,8 +1670,3 @@ h4.number{
 #card-regions .ske-load,
 #card-origin .ske-load,
 #card-coupons .ske-load { top: 55%; }
-
-.mini-block {
-    min-height: 130px;
-    position: relative;
-}

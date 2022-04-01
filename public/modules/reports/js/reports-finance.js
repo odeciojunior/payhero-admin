@@ -78,8 +78,6 @@ function onCommission() {
                 </section>
             `;           
            
-
-            $("#finance-commission, #info-commission").find('.ske-load').remove();
             $("#info-commission").html(infoComission);
             $("#finance-commission").html(data);
 
@@ -130,7 +128,70 @@ function getPending() {
                 </div>
             </footer>
             `;
-            $("#block-pending").html(pendingBlock).removeClass('mini-block');
+            $("#block-pending").html(pendingBlock)
+        }
+    });
+}
+
+function getCashback() {
+    let cashBlock = '';
+    $('#card-cashback .onPreLoad *' ).remove();
+    $("#block-cash").prepend(skeLoad);
+
+    return $.ajax({
+        method: "GET",
+        url: resumeUrl + "/cashbacks?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response, status) {
+            if(response.data.total !== '0,00') {
+                cashBlock = `
+                    <div class="balance col-6">
+                        <h6 class="grey font-size-14">
+                            <span class="ico-coin">
+                                <svg width="17" height="17" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 17.5C14.366 17.5 17.5 14.366 17.5 10.5C17.5 6.63401 14.366 3.5 10.5 3.5C6.63401 3.5 3.5 6.63401 3.5 10.5C3.5 14.366 6.63401 17.5 10.5 17.5ZM10.5 19.25C15.3325 19.25 19.25 15.3325 19.25 10.5C19.25 5.66751 15.3325 1.75 10.5 1.75C5.66751 1.75 1.75 5.66751 1.75 10.5C1.75 15.3325 5.66751 19.25 10.5 19.25Z" fill="#1BE4A8"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.625 6.125C9.625 5.64175 10.0168 5.25 10.5 5.25C10.9832 5.25 11.375 5.64175 11.375 6.125C12.8247 6.125 14 7.30025 14 8.75C14 9.23325 13.6082 9.625 13.125 9.625C12.6418 9.625 12.25 9.23325 12.25 8.75C12.25 8.26675 11.8582 7.875 11.375 7.875H10.5H9.40049C9.04123 7.875 8.75 8.16623 8.75 8.52549C8.75 8.80548 8.92916 9.05406 9.19479 9.1426L12.3586 10.1972C13.3388 10.5239 14 11.4413 14 12.4745C14 13.8003 12.9253 14.875 11.5995 14.875H11.375C11.375 15.3582 10.9832 15.75 10.5 15.75C10.0168 15.75 9.625 15.3582 9.625 14.875C8.17525 14.875 7 13.6997 7 12.25C7 11.7668 7.39175 11.375 7.875 11.375C8.35825 11.375 8.75 11.7668 8.75 12.25C8.75 12.7332 9.14175 13.125 9.625 13.125H10.5H11.5995C11.9588 13.125 12.25 12.8338 12.25 12.4745C12.25 12.1945 12.0708 11.9459 11.8052 11.8574L8.64139 10.8028C7.66117 10.4761 7 9.55873 7 8.52549C7 7.19974 8.07474 6.125 9.40049 6.125L9.625 6.125Z" fill="#1BE4A8"/>
+                                </svg>
+                            </span>
+                            Recebido
+                        </h6>
+                        <small>R$</small>
+                        <strong class="total grey">${response.data.total}</strong>
+                    </div>
+                    <div class="balance col-6">
+                        <h6 class="grey font-size-14 qtd">Quantidade</h6>
+                        <strong class="total grey">240 vendas</strong>
+                    </div>
+                `;
+                
+            } else {
+                cashBlock = `                
+                    <div class="balance col-4">
+                        <div class="box-ico-cash">
+                            <span class="ico-cash">
+                                <svg width="47" height="47" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 17.5C14.366 17.5 17.5 14.366 17.5 10.5C17.5 6.63401 14.366 3.5 10.5 3.5C6.63401 3.5 3.5 6.63401 3.5 10.5C3.5 14.366 6.63401 17.5 10.5 17.5ZM10.5 19.25C15.3325 19.25 19.25 15.3325 19.25 10.5C19.25 5.66751 15.3325 1.75 10.5 1.75C5.66751 1.75 1.75 5.66751 1.75 10.5C1.75 15.3325 5.66751 19.25 10.5 19.25Z" fill="#1BE4A8"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.625 6.125C9.625 5.64175 10.0168 5.25 10.5 5.25C10.9832 5.25 11.375 5.64175 11.375 6.125C12.8247 6.125 14 7.30025 14 8.75C14 9.23325 13.6082 9.625 13.125 9.625C12.6418 9.625 12.25 9.23325 12.25 8.75C12.25 8.26675 11.8582 7.875 11.375 7.875H10.5H9.40049C9.04123 7.875 8.75 8.16623 8.75 8.52549C8.75 8.80548 8.92916 9.05406 9.19479 9.1426L12.3586 10.1972C13.3388 10.5239 14 11.4413 14 12.4745C14 13.8003 12.9253 14.875 11.5995 14.875H11.375C11.375 15.3582 10.9832 15.75 10.5 15.75C10.0168 15.75 9.625 15.3582 9.625 14.875C8.17525 14.875 7 13.6997 7 12.25C7 11.7668 7.39175 11.375 7.875 11.375C8.35825 11.375 8.75 11.7668 8.75 12.25C8.75 12.7332 9.14175 13.125 9.625 13.125H10.5H11.5995C11.9588 13.125 12.25 12.8338 12.25 12.4745C12.25 12.1945 12.0708 11.9459 11.8052 11.8574L8.64139 10.8028C7.66117 10.4761 7 9.55873 7 8.52549C7 7.19974 8.07474 6.125 9.40049 6.125L9.625 6.125Z" fill="#1BE4A8"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="balance col-8">
+                        <h6 class="no-cashback">Ainda sem cashback :(</h6>
+                        <p class="txt-no-cashback">Suba de nível e mantenha a saúde da conta boa para receber cashback</p>
+                    </div>
+                `;
+            }
+
+            $("#block-cash").html(cashBlock);
         }
     });
 }
@@ -204,7 +265,6 @@ function changeCalendar() {
     );
     
     $('input[name="daterange"]').change(function() {
-        $("#block-pending").addClass('mini-block');
         updateStorage({calendar: $(this).val()})
     })
     
@@ -215,8 +275,6 @@ function changeCompany() {
         
         $('.onPreLoad *').remove();
         $('.onPreLoad').append(skeLoad);
-        
-        $("#block-pending").addClass('mini-block');
         updateStorage({company: $(this).val()})
         updateReports();
     });
@@ -290,6 +348,7 @@ function updateReports() {
             $('.onPreLoad *').remove();
             onCommission();
             getPending();
+            getCashback();
         },
     });
 }
