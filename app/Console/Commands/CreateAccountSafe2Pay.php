@@ -108,7 +108,7 @@ class CreateAccountSafe2Pay extends Command
                 ],
             ];
 
-            $bankAccounts = $company->getBankAccount();
+            $bankAccounts = $company->getDefaultBankAccount();
             if(!empty($bankAccounts) && $bankAccounts->transfer_type=='TED'){
                 $data['BankData'] = [ 
                     "Bank" => [

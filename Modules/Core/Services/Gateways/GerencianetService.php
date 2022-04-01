@@ -123,6 +123,12 @@ class GerencianetService implements Statement
     {
         try {
 
+            //verifica se existe uma chave pix aprovada 
+            $bankAccount =  $this->company->getDefaultBankAccount();
+            if(empty($bankAccount) || $bankAccount->transfer_type=='TED'){
+                return false;
+            }
+
             if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID : Gateway::GERENCIANET_SANDBOX_ID)) {
                 return false;
             }
@@ -141,11 +147,14 @@ class GerencianetService implements Statement
                 [
                     'value' => $withdrawalValue,
                     'company_id' => $this->company->id,
-                    'bank' => $this->company->bank,
-                    'agency' => $this->company->agency,
-                    'agency_digit' => $this->company->agency_digit,
-                    'account' => $this->company->account,
-                    'account_digit' => $this->company->account_digit,
+                    'transfer_type'=>'PIX',
+                    'type_key_pix'=>$bankAccount->type_key_pix,
+                    'key_pix'=>$bankAccount->key_pix,
+                    // 'bank' => $this->company->bank,
+                    // 'agency' => $this->company->agency,
+                    // 'agency_digit' => $this->company->agency_digit,
+                    // 'account' => $this->company->account,
+                    // 'account_digit' => $this->company->account_digit,
                     'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
                     'tax' => 0,
                     'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
