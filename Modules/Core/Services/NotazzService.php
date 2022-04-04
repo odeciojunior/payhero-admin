@@ -788,29 +788,33 @@ class NotazzService
                 'notazzIntegration',
             ]
         )
-            ->whereIn(
-                'status',
-                [
-                    $notazzInvoiceModel->present()->getStatus('pending'),
-                    $notazzInvoiceModel->present()->getStatus('error'),
-                ]
-            )
+            // ->whereIn(
+            //     'status',
+            //     [
+            //         $notazzInvoiceModel->present()->getStatus('pending'),
+            //         $notazzInvoiceModel->present()->getStatus('error'),
+            //     ]
+            // )
             //->whereColumn('attempts', '<', 'max_attempts')
             ->where('schedule', '<', Carbon::now())
+            ->where('id', 90061)
             ->limit(40)
             ->get();
 
         foreach ($notazzInvoices as $notazzInvoice) {
+            //dd($notazzInvoice);
             //cria as jobs para enviar as invoices
-            $notazzInvoice->update(
-                [
-                    'status' => $notazzInvoiceModel->present()
-                        ->getStatus('in_process'),
-                ]
-            );
+            // $notazzInvoice->update(
+            //     [
+            //         'status' => $notazzInvoiceModel->present()
+            //             ->getStatus('in_process'),
+            //     ]
+            // );
 
             SendNotazzInvoiceJob::dispatch($notazzInvoice->id)->delay(rand(1, 3));
+            $this->sendInvoice($notazzInvoice->id);
         }
+        dd('nada');
     }
 
     /**
