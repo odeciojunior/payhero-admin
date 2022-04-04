@@ -46,7 +46,7 @@ $(() => {
             } else if (range !== null && oldRange === null){
                 $('#topbar_content').addClass('focus-in');
             }
-                
+
         });
 
         var quillThanksPage = new Quill("#post_purchase_message_content", {
@@ -63,11 +63,11 @@ $(() => {
                 $(".shop-message-preview-content").append(
                     $(quillThanksPage.root.innerHTML)
                 );
-                $("#save_changes").fadeIn("slow", "swing");    
+                $("#save_changes").fadeIn("slow", "swing");
             }else{
                 quillThanksPage.deleteText(limit, quillThanksPage.getLength());
             }
-            
+
         });
 
         quillThanksPage.on('selection-change', function(range, oldRange, source) {
@@ -123,13 +123,13 @@ $(() => {
                         formData.append( "topbar_content", '');
                     }else{
                         formData.append( "topbar_content", $("#topbar_content").children().html());
-                    }                                 
+                    }
 
                     if(quillThanksPage.getText().trim().length === 0){
                         formData.append( "post_purchase_message_content", '');
                     }else{
                         formData.append("post_purchase_message_content", $("#post_purchase_message_content").children().html());
-                    } 
+                    }
 
                     if(!formData.get('automatic_discount_credit_card')){
                         $('#automatic_discount_credit_card').val(0);
@@ -156,7 +156,7 @@ $(() => {
                     }else{
                         formData.set("theme_enum", 0);
                     }
-                    
+
                     if ($("#default_finish_color").is(":checked")) {
                         formData.append("color_buy_button", '#23d07d');
                     }
@@ -196,10 +196,10 @@ $(() => {
                                 $('.payment').removeClass('low-opacity')
                                 $('.post-purchase-pages').removeClass('low-opacity')
                                 $('.preview').removeClass('low-opacity')
-    
+
                                 $('#save_load').fadeOut('slow', 'linear');
                                 $('#save_success').fadeIn('slow', 'linear');
-    
+
                                 setTimeout(function() {
                                     $('#save_success').fadeOut('slow', 'linear');
                                 }, 4000)
@@ -211,10 +211,10 @@ $(() => {
                                 $('.payment').removeClass('low-opacity')
                                 $('.post-purchase-pages').removeClass('low-opacity')
                                 $('.preview').removeClass('low-opacity')
-    
+
                                 $('#save_load').fadeOut('slow', 'linear');
                                 $('#save_error').fadeIn('slow', 'linear');
-    
+
                                 setTimeout(function() {
                                     $('#save_error').fadeOut('slow', 'linear');
                                 }, 4000);
@@ -235,13 +235,13 @@ $(() => {
                         }, 4000);
                     }
 
-                    
+
                 });
 
                 setTimeout(()=>{
                    $('#save_changes').hide();
                 },0)
-                
+
 
                 loadOnAny(".checkout-container", true);
             },
@@ -301,9 +301,9 @@ $(() => {
                     },
                     imgFileExtensions: ["png", "jpg", "jpeg"],
                 });
-                
+
                 loadOnAny(".checkout-container", true);
-            
+
             },
         });
 
@@ -343,7 +343,7 @@ $(() => {
                 $('.logo-content').addClass('low-opacity')
                 $("#checkout_editor .logo-preview-container").hide();
             }
-            
+
 
             if (checkout.checkout_logo) {
                 // replacePreview("checkout_logo", checkout.checkout_logo, "Image.jpg");
@@ -377,20 +377,20 @@ $(() => {
                 imgFileExtensions: ["png", "jpg", "jpeg"],
                 defaultFile: (checkout.checkout_logo ? checkout.checkout_logo : ''),
             });
-        
+
             drEventLogo.on("dropify.fileReady", function (event, element) {
                 var files = event.target.files;
                 var done = function (url) {
                     $("#logo_preview_mobile").attr("src", url);
                     $("#logo_preview_desktop").attr("src", url);
                     $("#has_checkout_logo").val("true");
-        
+
                     $("#logo_preview_mobile").fadeIn('slow');
                     $("#logo_preview_desktop").fadeIn('slow');
                 };
                 if (files && files.length > 0) {
                     file = files[0];
-        
+
                     if (URL) {
                         done(URL.createObjectURL(file));
                     } else if (FileReader) {
@@ -401,24 +401,24 @@ $(() => {
                         reader.readAsDataURL(file);
                     }
                 }
-        
-                
+
+
             });
-        
+
             drEventLogo.on('dropify.errors', function(event, element){
                 $("#logo_preview_mobile").attr("src", '');
                 $("#logo_preview_desktop").attr("src", '');
-        
+
                 $("#logo_preview_mobile").fadeOut('slow');
                 $("#logo_preview_desktop").fadeOut('slow');
-        
+
                 $("#has_checkout_logo").val("false");
             });
-        
+
             drEventLogo.on('dropify.afterClear', function(event, element){
                 $("#has_checkout_logo").val("false");
                 });
-            
+
             if (checkout.checkout_favicon_enabled == 1) {
                 $("#checkout_editor #checkout_favicon_enabled").prop("checked", true);
                 $("#checkout_editor #checkout_favicon_enabled").prop("value", 1);
@@ -436,14 +436,14 @@ $(() => {
                 $('#upload_favicon').removeClass('low-opacity')
             }
 
-            
+
             if (checkout.checkout_favicon) {
                 $("#has_checkout_favicon").val("true");
             }else {
                 $("#has_checkout_favicon").val("false");
             }
-            
-                
+
+
             var drEventFavicon = $("#checkout_favicon").dropify({
                 messages: {
                     default: "",
@@ -460,7 +460,7 @@ $(() => {
                 imgFileExtensions: ["png", "jpg", "jpeg", "ico"],
                 defaultFile: (checkout.checkout_favicon ? checkout.checkout_favicon : ''),
             });
-        
+
             drEventFavicon.on('dropify.errors', function(event, element){
                 $('#checkout_favicon_error').fadeIn('slow', 'linear');
                 $("#has_checkout_favicon").val("false");
@@ -471,7 +471,7 @@ $(() => {
                 $("#has_checkout_favicon").val("true");
             });
 
-           
+
 
             if (checkout.checkout_banner) {
                 // $("#checkout_banner").attr('src', checkout.checkout_banner);
@@ -479,7 +479,7 @@ $(() => {
                 $("#preview_banner_img_mobile").attr("src", checkout.checkout_banner);
                 $("#has_checkout_banner").val("true");
             }
-                
+
 
                 var drEventBanner = $("#checkout_banner").dropify({
                     messages: {
@@ -499,21 +499,21 @@ $(() => {
                     imgFileExtensions: ["png", "jpg", "jpeg"],
                     defaultFile: (checkout.checkout_banner ? checkout.checkout_banner : ''),
                 });
-            
+
                 var bs_modal = $("#modal_banner");
                 var image = document.getElementById("cropped_image");
                 var cropper, reader, file;
-            
+
                 drEventBanner.on("dropify.fileReady", function (event, element) {
                     var files = event.target.files;
                     var done = function (url) {
                         image.src = url;
                         bs_modal.modal("show");
                     };
-            
+
                     if (files && files.length > 0) {
                         file = files[0];
-            
+
                         if (URL) {
                             done(URL.createObjectURL(file));
                         } else if (FileReader) {
@@ -525,7 +525,7 @@ $(() => {
                         }
                     }
                 });
-            
+
                 drEventBanner.on('dropify.errors', function(event, element){
                     $("#preview_banner_img_mobile").attr("src", '');
                     $("#preview_banner_img_desktop").attr("src", '');
@@ -533,17 +533,17 @@ $(() => {
                     $("#preview_banner_img_mobile").fadeOut('slow');
                     $("#preview_banner_img_desktop").fadeOut('slow');
                 });
-            
+
                 drEventBanner.on('dropify.afterClear', function(event, element){
                     $("#has_checkout_banner").val("false");
                 });
-            
-                
-            
+
+
+
                 $('.dropify-clear').hide();
-            
+
                 //  ----------------- Crop Modal ----------------------
-            
+
                 var $dataZoom = $("#dataZoom");
                 bs_modal.on("shown.bs.modal", function () {
                         cropper = new Cropper(image, {
@@ -561,15 +561,15 @@ $(() => {
                         cropper.destroy();
                         cropper = null;
                     });
-            
+
                 $("#zoom-in").on("click", () => {
                     cropper.zoom(0.1);
                 });
-            
+
                 $("#zoom-out").on("click", () => {
                     cropper.zoom(-0.1);
                 });
-            
+
                 var lastNum;
                 $("#zoom-slide").on("input change", () => {
                     if (lastNum < $("#zoom-slide").val()) {
@@ -579,12 +579,12 @@ $(() => {
                     }
                     lastNum = $("#zoom-slide").val();
                 });
-            
+
                 $("#crop-reset").on("click", () => {
                     cropper.reset();
                     $("#zoom-slide").val(0);
                 });
-            
+
                 $(".img-profile input")
                     .on("click", function (e) {
                         e.stopPropagation();
@@ -606,22 +606,22 @@ $(() => {
                         };
                         reader.readAsDataURL(file);
                     });
-            
+
                 $("#button-crop").on("click", function () {
                     if (cropper) {
                         var canvas = cropper.getCroppedCanvas();
                         var src = canvas.toDataURL('image/png', 0.7);
-            
+
                         $("#preview_banner_img_mobile").attr("src", src);
                         $("#preview_banner_img_desktop").attr("src", src);
-            
+
                         $("#has_checkout_banner").val("true");
-            
+
                         $("#preview_banner_img_mobile").fadeIn('slow');
                         $("#preview_banner_img_desktop").fadeIn('slow');
-            
+
                         replacePreview("checkout_banner", src, "checkout_banner.jpg");
-            
+
                         cropper.getCroppedCanvas().toBlob((blob) => {
                             let dt = new DataTransfer();
                             let file = new File([blob], "banner." + blob.type.split("/")[1]);
@@ -629,16 +629,16 @@ $(() => {
                             document.querySelector("#checkout_banner").files = dt.files;
                         },'image/jpeg', 0.8);
                     }
-            
+
                     bs_modal.modal("hide");
                 });
-            
+
                 $("#button-cancel-crop").on("click", function () {
                     $("#checkout_banner").parent().find(".dropify-clear").trigger("click");
                 });
 
                 // replacePreview("checkout_banner", checkout.checkout_banner, "Image.jpg");
-            
+
 
             if (checkout.checkout_banner_enabled) {
                 $("#checkout_editor #checkout_banner_enabled").prop("checked", true);
@@ -847,12 +847,12 @@ $(() => {
                 $('#selectable-all-notification').addClass('dash-check');
                 $('#selectable-all-notification').prop('checked', true);
             }
-    
+
             if(selectableCheckboxes.length == 0) {
                 $('#selectable-all-notification').prop('checked', false);
                 $('#selectable-all-notification').removeClass('dash-check');
             }
-            
+
             if (selectableCheckboxes.length == 4){
                 $('#selectable-all-notification').removeClass('dash-check');
                 $('#selectable-all-notification').prop('checked', true);
@@ -876,15 +876,11 @@ $(() => {
             $("#checkout_editor #invoice_description").val(checkout.invoice_description || "");
 
             for (let company of checkout.companies) {
+                const document = (company.document.replace(/\D/g, '').length > 11 ? 'CNPJ: ' : 'CPF: ') + company.document;
                 if ( company.status != "pending") {
-                    $("#checkout_editor #companies").append(
-                        `<option  class="sirius-select-option" value="${company.id}"
-                        ${company.id === checkout.company_id ? "selected" : ""}
-                    >
-                        ${company.name}
-                    </option>
-                  `
-                    );
+                    $("#checkout_editor #companies").append(`<option value="${company.id}" ${company.id === checkout.company_id ? "selected" : ""} data-toggle="tooltip" title="${document}" >
+                                                                ${company.name}
+                                                             </option>`);
                 }
             }
 
@@ -1114,7 +1110,7 @@ $(() => {
         function validadeForm(form) {
             var  validated = false;
 
-            
+
             if(form.get('countdown_enabled') == "1") {
                 if(form.get('countdown_time') !=  '' && form.get('countdown_time') != null){
                     validated = true;
@@ -1145,7 +1141,7 @@ $(() => {
                     $('#topbar_content_error').show('slow', 'linear');
                     return false;
                 }
-            } 
+            }
 
             if(form.get('notifications_enabled') == "1"){
                 if(form.get('notification_buying_minimum') !=  ''){
@@ -1166,18 +1162,18 @@ $(() => {
                     scrollToElement('notification_bought_30_minutes_minimum');
                     return false;
                 }
-    
-    
+
+
                 if(form.get('notification_bought_last_hour_minimum') !=  ''){
                     validated = true;
                 }else{
                     $('#notification_bought_last_hour_minimum').addClass('error-input');
                     $('#notification_error').show('slow', 'linear');
                     scrollToElement('notification_bought_last_hour_minimum');
-                    
+
                     return false;
                 }
-    
+
                 if(form.get('notification_just_bought_minimum') !=  ''){
                     validated = true;
                 }else{
@@ -1186,9 +1182,9 @@ $(() => {
                     scrollToElement('notification_just_bought_minimum');
                     return false;
                 }
-            } 
+            }
 
-            
+
 
 
             if(form.get('social_proof_enabled') == "1"){
@@ -1218,7 +1214,7 @@ $(() => {
                 scrollToElement('companies');
                 return false;
             }
-                
+
 
             if(form.get('bank_slip_due_days') !=  '' && form.get('bank_slip_due_days') != null){
                 validated = true;
@@ -1246,12 +1242,12 @@ $(() => {
                     $('#post_purchase_message_content_error').show('slow', 'linear');
                     scrollToElement('post_purchase_message_content');
                     return false;
-                }   
+                }
             }
 
             if(form.get('checkout_logo_enabled') == "1"){
                 if($("#has_checkout_logo").val() == "true"){
-                    validated = true;  
+                    validated = true;
                 }else{
                     scrollToElement('upload_logo');
                     $('#checkout_logo_error').show('slow', 'linear');
@@ -1261,10 +1257,10 @@ $(() => {
 
             if(form.get('checkout_favicon_enabled') == "1"){
                 if(form.get('checkout_favicon_type') == "1"){
-                    validated = true;  
+                    validated = true;
                 }else{
                     if($("#has_checkout_favicon").val() == "true"){
-                        validated = true;  
+                        validated = true;
                     }else{
                         scrollToElement('upload_logo');
                         $('#checkout_favicon_error').fadeIn('slow', 'linear');
@@ -1276,7 +1272,7 @@ $(() => {
 
             if(form.get('checkout_banner_enabled') == "1"){
                 if($("#has_checkout_banner").val() == "true"){
-                    validated = true;  
+                    validated = true;
                 }else{
                     scrollToElement('banner_type');
                     $('#checkout_banner_error').show('slow', 'linear');
@@ -1286,10 +1282,10 @@ $(() => {
 
             if(form.get('whatsapp_enabled') == "1"){
                 if($('#support_phone').val() == ''){
-                    validated = true;      
+                    validated = true;
                 }else{
                     if(testRegex(/^\([1-9]{2}\)\s(?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/,$('#support_phone').val())){
-                        validated = true;      
+                        validated = true;
                     }else{
                         $('#support_phone').addClass('error-input');
                         $('#support_phone_error').show('slow', 'linear');
@@ -1300,7 +1296,7 @@ $(() => {
             }
 
 
-            
+
             return validated;
         }
     }

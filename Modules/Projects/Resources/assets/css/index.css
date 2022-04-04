@@ -36,6 +36,12 @@
     border-color: #88BFFF;
 }
 
+.ui-tooltip, .arrow:after {
+    background: black;
+    border-style: none !important;
+    color: #FFFFFF;
+    opacity: 0.9;
+  }
 
 #data-table-projects {
     position: absolute;
