@@ -3455,4 +3455,73 @@ class ReportService
 
     }
     // END Page finances
+
+    public function getResumeMarketing($filters)
+    {
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $userProjects = UserProject::where('user_id', auth()->user()->account_owner_id)->pluck('project_id')->toArray();
+
+        $checkoutsCount = Checkout::whereIn('project_id', $userProjects)
+                                    ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                                    ->count();
+
+        $salesCount = Sale::where('owner_id', auth()->user()->account_owner_id)
+                            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                            ->whereNotIn('status', [
+                                Sale::STATUS_CANCELED_ANTIFRAUD,
+                                Sale::STATUS_REFUSED,
+                                Sale::STATUS_SYSTEM_ERROR
+                            ])
+                            ->count();
+
+        $salesValue = Sale::where('owner_id', auth()->user()->account_owner_id)
+                            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                            ->whereNotIn('status', [
+                                Sale::STATUS_CANCELED_ANTIFRAUD,
+                                Sale::STATUS_REFUSED,
+                                Sale::STATUS_SYSTEM_ERROR
+                            ])
+                            ->sum('original_total_paid_value');
+
+        return [
+            'checkouts_count' => number_format($checkoutsCount, 0, '.', '.'),
+            'sales_count' => number_format($salesCount, 0, '.', '.'),
+            'sales_value' => foxutils()->formatMoney($salesValue / 100)
+        ];
+    }
+
+    public function getSalesByState($filters)
+    {
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $data = Sale::select(DB::raw('delivery.state, count(*) as sales_amount, SUM(transaction.value) as value'))
+                        ->leftJoin('transactions as transaction', function ($join) {
+                            $join->on('transaction.sale_id', '=', 'sales.id');
+                            $join->where('transaction.user_id', auth()->user()->account_owner_id);
+                        })
+                        ->leftJoin('deliveries as delivery', function ($join) {
+                            $join->on('delivery.id', '=', 'sales.delivery_id');
+                        })
+                        ->where('sales.status', Sale::STATUS_APPROVED)
+                        ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                        ->groupBy('delivery.state')
+                        ->orderBy('sales_amount', 'DESC')
+                        ->get()
+                        ->toArray();
+
+        $totalSales = 0;
+        foreach($data as $state) {
+            $totalSales += $state['sales_amount'];
+        }
+
+        foreach($data as &$state) {
+            $state['percentage'] = number_format(($state['sales_amount'] * 100) / $totalSales, 2, '.', ',') . '%';
+            $state['sales_amount'] = number_format($state['sales_amount'], 0, '.', '.');
+            $state['value'] = foxutils()->formatMoney($state['value'] / 100);
+        }
+
+        return $data;
+    }
 }
+

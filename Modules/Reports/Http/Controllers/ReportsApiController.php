@@ -947,13 +947,37 @@ class ReportsApiController extends Controller
     {
         $request->validate([ 'date_range' => 'required' ]);
 
+    function getResume(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
         $data = $request->all();
 
         $reportService = new ReportService();
-        $resume = $reportService->getFinancesResume($data);
+        $resume = $reportService->getResumeMarketing($data);
 
         return response()->json([
             'data' => $resume
         ]);
     }
+
+    function getSalesByState(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $resume = $reportService->getSalesByState($data);
+
+        return response()->json([
+            'data' => $resume
+        ]);
+
+    }
 }
+
