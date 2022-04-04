@@ -969,7 +969,38 @@ class ReportsApiController extends Controller
         return response()->json([
             'data' => $resume
         ]);
+    }
 
+    function getMostFrequentSales(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $mostFrequentSales = $reportService->getMostFrequentSales($data);
+
+        return response()->json([
+            'data' => $mostFrequentSales
+        ]);
+    }
+
+    function getDevices(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $devices = $reportService->getDevices($data);
+
+        return response()->json([
+            'data' => $devices
+        ]);
     }
 
 }
