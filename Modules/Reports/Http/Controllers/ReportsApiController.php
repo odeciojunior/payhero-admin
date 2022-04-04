@@ -970,6 +970,20 @@ class ReportsApiController extends Controller
             'data' => $resume
         ]);
     }
+
+    function getFinancesPendings(Request $request)
+    {
+        $request->validate([ 'date_range' => 'required' ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $resume = $reportService->getFinancesPendings($data);
+
+        return response()->json([
+            'data' => $resume
+        ]);
+    }
     // END Page finances
 
     function getResume(Request $request)

@@ -3480,9 +3480,23 @@ class ReportService
     public function getFinancesPendings($filters)
     {
         try {
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $userId = auth()->user()->account_owner_id;
 
+            $saleModel = new Sale();
 
-            return [];
+            $sales = $saleModel
+            ->where('owner_id', $userId)
+            ->where('status', Sale::STATUS_PENDING)
+            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+
+            $salesValue = $sales->sum('original_total_paid_value');
+            $salesCount = $sales->count();
+
+            return [
+                'value' => FoxUtils::formatMoney($salesValue / 100),
+                'amount' => $salesCount
+            ];
         } catch(Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()
@@ -3493,9 +3507,22 @@ class ReportService
     public function getFinancesBlockeds($filters)
     {
         try {
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $userId = auth()->user()->account_owner_id;
 
+            $saleModel = new Sale();
 
-            return [];
+            $sales = $saleModel
+            ->where('owner_id', $userId)
+            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+
+            $salesValue = $sales->sum('original_total_paid_value');
+            $salesCount = $sales->count();
+
+            return [
+                'value' => FoxUtils::formatMoney($salesValue / 100),
+                'amount' => $salesCount
+            ];
         } catch(Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()
