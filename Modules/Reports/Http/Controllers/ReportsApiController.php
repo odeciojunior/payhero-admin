@@ -946,6 +946,15 @@ class ReportsApiController extends Controller
     function getFinancesResume(Request $request)
     {
         $request->validate([ 'date_range' => 'required' ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $resume = $reportService->getFinancesResume($data);
+
+        return response()->json([
+            'data' => $resume
+        ]);
     }
 
     function getResume(Request $request)
