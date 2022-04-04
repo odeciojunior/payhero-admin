@@ -792,7 +792,15 @@ function renderSiriusSelect(target) {
     $options.html('');
     $target.children('option').each(function () {
         let option = $(this);
-        $options.append(`<div data-value="${option.val()}">${option.text()}</div>`);
+        let attributes = Object.values(this.attributes)
+            .reduce((text, attr) => {
+                if (!['id', 'value', 'data-value', 'selected', 'disabled'].includes(attr.name)) {
+                    if(attr.value) return text + ` ${attr.name}="${attr.value}"`;
+                    return text + ` ${attr.name}`;
+                }
+                return text;
+            }, '');
+        $options.append(`<div data-value="${option.val()}" ${attributes}>${option.text()}</div>`);
     });
     $text.text($target.children('option:selected').eq(0).text());
 }

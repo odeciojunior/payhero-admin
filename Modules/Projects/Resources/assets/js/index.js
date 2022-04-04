@@ -1,5 +1,6 @@
 $(function () {
 
+    // Funcao Responsavel por gerar cards de cada projeto
     function index() {
         loadingOnScreen();
         $.ajax({
@@ -87,9 +88,14 @@ $(function () {
                             $("#btn-add-project").show();
                         }
                     });
+                    verifyHasOnlyOne();
 
                 } else {
-                    $("#data-table-projects").hide();
+                    
+                    $("#subtitle_drag_drop").hide();
+                    $("#button_toggle").css({visibility: "hidden"});
+                    $("#data-table-projects").css({visibility: "hidden"});
+
                     $("#btn-config").css({visibility: "hidden"});
 
                     if (response.no_company) {
@@ -106,21 +112,15 @@ $(function () {
             },
         });
     }
-
-    $(".check").on("change", function () {
-        if ($(this).is(":checked")) {
-            $(this).val(1);
-        } else {
-            $(this).val(0);
-        }
-    });
-
+    
+    // Funcao responsavel pelo Arrastar e soltar(DRAG e DROP)
     const sortableElement = $("#data-table-projects");
     sortableElement.sortable({
         opacity: 1,
         revert: true,
         tolerance: "pointer",
         cursor: "move",
+        disabled: "",
         update: function(event, ui){
             let projectOrder = $(this).sortable('toArray', {
                 attribute: "data-id"
@@ -154,6 +154,28 @@ $(function () {
         }
     });
 
+    // Se existir apenas um prjeto esconder todo conteudo drag e drop
+    function verifyHasOnlyOne(){
+        let hasOnlyOne = $("#data-table-projects").children().length <= 1;
+        if(hasOnlyOne){
+            $("img.drag-drop-icon").hide();
+            $("#subtitle_drag_drop").hide();
+            sortableElement.sortable({
+                disabled: true,
+            })
+        }
+    }
+
+    // Seta valor do filtro toggle(ALTERNANCIA) para exibir/esconder projetos 
+    $(".check").on("change", function () {
+        if ($(this).is(":checked")) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
+
+    // Exibi / Esconde projetos Excluidos
     $("#deleted_project_filter").on("change", function () {
 
         let showProjectsDeleteds = $("#deleted_project_filter").val();

@@ -7397,6 +7397,7 @@ input[type=radio] {
     box-shadow: 0px 1px 30px #00000026;
     border-radius: 6px !important;
     padding: 12px;
+    scrollbar-width:thin;
 }
 
 #notificationTemplate::-webkit-scrollbar{
