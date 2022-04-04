@@ -938,4 +938,39 @@ class ReportsApiController extends Controller
             'data' => $orders
         ]);
     }
+
+    function getResume(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $resume = $reportService->getResumeMarketing($data);
+
+        return response()->json([
+            'data' => $resume
+        ]);
+    }
+
+    function getSalesByState(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $resume = $reportService->getSalesByState($data);
+
+        return response()->json([
+            'data' => $resume
+        ]);
+
+    }
+
 }
+

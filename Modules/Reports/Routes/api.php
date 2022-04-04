@@ -45,5 +45,7 @@ Route::group(
         // Reports - sales
 
         // Reports - marketing
+        Route::get('/reports/marketing/resume', 'ReportsApiController@getResume');
+        Route::get('/reports/marketing/sales-by-state', 'ReportsApiController@getSalesByState');
     }
 );
