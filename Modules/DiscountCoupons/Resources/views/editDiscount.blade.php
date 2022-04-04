@@ -26,7 +26,7 @@
 
                 <div style='min-height: 100px; position: relative;' class="pt-25 pb-30 pr-30 pl-30 simple-border-bottom">
 
-                    <div class="modal-disc pb-10">
+                    <div class="modal-disc pb-20">
                         
 
 
@@ -60,12 +60,12 @@
 
                         <div class="row" id="display_name" style="color:#636363">
                             <div class="col-6">
-                                <span class="small-text"> Nome</span> <br>
+                                <span class=""> Nome</span> <br>
                                 <span id="d-name"></span>
                             </div>
                             <div class="col-6">
                                 
-                                <span class="small-text"> Tipo</span> <br>
+                                <span class=""> Tipo</span> <br>
                                 <span id="">Desconto Progressivo</span>
     
                             </div>
@@ -151,7 +151,7 @@
 
                 <div style='min-height: 100px; position: relative' class="pt-20 pb-30 pr-30 pl-30 ">
 
-                    <div class="modal-disc pb-10">
+                    <div class="modal-disc pb-20">
 
 
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -334,12 +334,12 @@
 
                         <div class="float-left">
 
-                            <input class="input-pad " id="qtde-edit" type="text"
+                            <input class="input-pad " id="qtde-edit" type="text" onkeyup="$(this).removeClass('warning-input')"
                                 style="margin: 0 1px; width: 60px; height:49px" maxlength="2" data-mask="0#" />
                             itens, aplicar desconto de
-                            <input class="input-pad " maxlength="9" id="value-edit" type="text"
+                            <input class="input-pad " maxlength="9" id="value-edit" type="text" onkeyup="$(this).removeClass('warning-input')"
                                 style="width: 86px; height:48px; margin-right: 8px" />
-                            <input class="input-pad " type="text"
+                            <input class="input-pad " type="text" onkeyup="$(this).removeClass('warning-input')"
                                 style="width: 86px; display: none; height:48px; margin-right: 8px" id="percent-edit"
                                 maxlength="2" data-mask="0#" autocomplete="off">
                         </div>
@@ -389,14 +389,13 @@
                 </div>
 
                 <div id="rules-edit" class="pb-20" style="
-                height: 242px;
-                padding: 0 15px;
-                margin: 15px;
-                overflow-x: hidden;
-            ">
-                    {{-- <div class="rule_box p-10">
-                        Teste
-                    </div> --}}
+                    height: 242px;
+                    padding: 0 15px;
+                    margin: 15px;
+                    overflow-x: hidden;
+                    margin-right:4px;
+                ">
+                
                 </div>
                 <div id="empty-rules2" class="row" style="position: absolute; bottom:136px">
                     <div class="col-4">

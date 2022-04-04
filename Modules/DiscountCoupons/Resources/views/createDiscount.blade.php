@@ -1,7 +1,7 @@
 <form id="form-register-discount">
     @csrf
     <div style="display: none" id="select-discount" class="">
-        <div class="modal-content  s-border-radius" style="width:646px; height:706px">
+        <div class="modal-content  s-border-radius" style="width:646px; height:696px">
             <div class="mdtpad simple-border-bottom ">
                 <span class="  " id="modal-title"
                     style="color:#636363; font: normal normal bold 22px Muli;">
@@ -16,7 +16,7 @@
                 </a>
             </div>
             <div id="step1">
-                <div style='min-height: 100px; position: relative; padding: 27px 24px 0px 29px'
+                <div style='min-height: 100px; position: relative; padding: 25px 24px 0px 30px'
                     class=" simple-border-bottom">
 
                     <div style="margin-bottom: 21px">
@@ -62,7 +62,7 @@
                     </div> --}}
                     <div class="d-flex modal-new-layout box-description">
                         <input class="form-control form-control-lg search_input_create_discount" type="text" id="search_input" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
-                        <div class="input-group input-group-lg" style="width: 690px;">
+                        <div class="input-group input-group-lg" style="width: 682px;">
                             <input onkeyup="set_description_value(this, $('.search_input_create_discount'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
                             <div class="input-group-append">
                                 <span class="input-group-text">
@@ -129,7 +129,7 @@
 
                 <div style='min-height: 100px; color:#636363' class="inputs-warning pl-30 pr-25 simple-border-bottom">
 
-                    <div class="mt-20 mb-20">
+                    <div class="mt-25 mb-20">
 
                         
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -179,12 +179,12 @@
 
                         <div class="float-left">
 
-                            <input class="input-pad " id="qtde" type="text"
+                            <input class="input-pad " id="qtde" type="text" onkeyup="$(this).removeClass('warning-input')"
                                 style="margin: 0 1px; width: 60px; height:49px" maxlength="2" data-mask="0#" />
                             itens, aplicar desconto de
-                            <input class="input-pad " maxlength="9" id="value" type="text"
+                            <input class="input-pad " maxlength="9" id="value" type="text" onkeyup="$(this).removeClass('warning-input')"
                                 style="width: 86px; height:48px; margin-right: 8px" />
-                            <input class="input-pad " type="text"
+                            <input class="input-pad " type="text" onkeyup="$(this).removeClass('warning-input')"
                                 style="width: 86px; display: none; height:48px; margin-right: 8px" id="percent"
                                 maxlength="2" data-mask="0#" autocomplete="off">
                         </div>
@@ -226,7 +226,7 @@
 
 
                 <div id="rules" style="
-                        height: 242px;
+                        height: 237px;
                         padding: 0 15px;
                         margin: 15px;
                         overflow-x: hidden;

@@ -1,7 +1,7 @@
 <form id="form-register-coupon">
         @csrf
         <div style="display: none; padding:25px" id="select-coupon">
-            <div class="modal-content s-border-radius" style="width:646px; height:706px">
+            <div class="modal-content s-border-radius" style="width:646px; height:698px">
                 <div class="mdtpad simple-border-bottom">
                     <span class=" " id="modal-title"
                         style="color:#636363; font: normal normal bold 22px Muli;">

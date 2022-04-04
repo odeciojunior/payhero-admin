@@ -65,12 +65,12 @@
 
                             <div class="row pt-20" id="c-display_name" style="color: #636363; padding-bottom:2px">
                                 <div class="col-6">
-                                    <span class="small-text"> Nome</span> <br>
+                                    <span class=""> Nome</span> <br>
                                     <span style="font-size: 16px" id="c-d-name"></span>
                                 </div>
                                 <div class="col-6">
         
-                                    <span class="small-text"> Código do cupom</span> <br>
+                                    <span class=""> Código do cupom</span> <br>
                                     <span style="font-size: 16px" id="d-code"></span>
         
                                 </div>
@@ -184,7 +184,7 @@
                     <div style='min-height: 100px; position: relative; padding: 20px 30px 30px;' class="">
     
                         
-                        <div class="modal-disc pb-10">
+                        <div class="modal-disc pb-20">
     
                             <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect width="36" height="36" rx="8" fill="#F8F8F8"/>
@@ -381,12 +381,12 @@
 
                     <div class="row mt-15" id="c-display_name">
                         <div class="col-6">
-                            <span class="small-text"> Nome</span> <br>
+                            <span class=""> Nome</span> <br>
                             <span style="font-size: 16px" id="c-d-name2"></span>
                         </div>
                         <div class="col-6">
 
-                            <span class="small-text"> Código do cupom</span> <br>
+                            <span class=""> Código do cupom</span> <br>
                             <span style="font-size: 16px" id="d-code2"></span>
 
                         </div>
@@ -396,7 +396,7 @@
                 </div>
 
                 <div style='position: relative; min-height: 100px; padding:30px ' class="">
-                    <p>
+                    <div class="mb-20">
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect width="36" height="36" rx="8" fill="#F8F8F8"/>
                             <path d="M18.0005 15.8832C19.8179 15.8832 21.2912 17.3565 21.2912 19.1739C21.2912 20.9913 19.8179 22.4646 18.0005 22.4646C16.1831 22.4646 14.7098 20.9913 14.7098 19.1739C14.7098 17.3565 16.1831 15.8832 18.0005 15.8832ZM18.0005 17.1172C16.8646 17.1172 15.9438 18.038 15.9438 19.1739C15.9438 20.3098 16.8646 21.2306 18.0005 21.2306C19.1364 21.2306 20.0572 20.3098 20.0572 19.1739C20.0572 18.038 19.1364 17.1172 18.0005 17.1172ZM18.0005 13C21.7959 13 25.0723 15.5914 25.9814 19.223C26.0641 19.5536 25.8632 19.8887 25.5327 19.9714C25.2021 20.0542 24.8671 19.8533 24.7843 19.5227C24.0119 16.4371 21.2265 14.234 18.0005 14.234C14.7731 14.234 11.9868 16.439 11.2158 19.5264C11.1332 19.857 10.7983 20.0581 10.4677 19.9755C10.137 19.893 9.93597 19.558 10.0185 19.2274C10.926 15.5937 14.2034 13 18.0005 13Z" fill="#2E85EC"/>
@@ -404,7 +404,7 @@
                             
 
                         <span class="sub-title"> Regras para aplicação de cupom </span>
-                    </p>
+                    </div>
                     <div class="">
 
                         <label>Selecione o tipo de desconto</label>

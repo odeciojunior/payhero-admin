@@ -10,7 +10,7 @@ var cancel_edit_rules = []
 let projectId = $(window.location.pathname.split('/')).get(-1);
 
 
-function count_plans_coupons() { //thumbnails
+function count_plans_coupons(qtde) { //thumbnails
     
     
 
@@ -117,9 +117,9 @@ function plans_count2() {
         }else{
 
             $('#planos-count2, #planos-count-edit2').html('Todos os planos');
+            count_plans_coupons(items_selected.length)
         }
 
-        count_plans_coupons()
     }
 
     if(items_selected.length>2 && items_selected.length<11){
@@ -153,7 +153,14 @@ function coupon_rules(data) {
     if(data.expires_days == 0){
         expires = '<span style="color:">Vence hoje</span>'
     }
-    console.log(data.expires_days);
+    if(data.expires_days >= 0){
+        $('#c-edit_status_label').html('Desconto ativo');
+        $('#c-edit_status').prop('checked', true);
+    }else{
+        $('#c-edit_status_label').html('Desativado');
+        $('#c-edit_status').prop('checked', false);
+    }
+    //console.log(data.expires_days);
     html += '<br><small>'+expires+'</small><br>'
     html += '<strong>'+value+' de desconto</strong> em compras <strong>de R$'+data.rule_value+' ou mais</strong> com o cupom <strong>'+data.code+'</strong>'
     
@@ -328,16 +335,17 @@ function run_search(search, now){
     var search2 = $('#search_input_description_value').val()
     
 
-    var items_saved = mount_selected_items()    
-
+    
     var loading = $('.item_placeholder').is(':visible')
-
+    
     if(loading && !now) return
-
+    
     if(search.length > 0 || now){
-
+        
         $('#search_result, #search_result2').html(items_placeholder);
         //animateItemsPlaceholder()
+        
+        var items_saved = mount_selected_items(search, search2)
 
         $.ajax({
             data: {
@@ -406,7 +414,7 @@ function run_search(search, now){
 
                 if(items.length > 0 || (!search & !search2)){
                     
-                    $('#search_result, #search_result2').html(items + items_saved);
+                    $('#search_result, #search_result2').html(items_saved + items);
                     
                     $('#search_result, #search_result2').mCustomScrollbar('destroy')
 
@@ -636,9 +644,7 @@ $(function () {
             count_plans2()
         }
 
-        //mount_selected_items()
-        //set_item_click()
-        //$('#search_input2').keyup();
+        
         $('#search_input_description_value').val('')
         run_search('', 1)
 
@@ -705,17 +711,23 @@ $(function () {
         
 
         if(!$('#qtde-edit').val() || $('#qtde-edit').val() == 0){
+            $('#qtde-edit').addClass('warning-input')
+            alertCustom("error", 'Digite um valor acima de 0');
             $('#qtde-edit').focus()
             return false
         }
         
         if($("#type_percent-edit").prop('checked') && (!$('#percent-edit').val() || $('#percent-edit').val() == 0 )){
             $('#percent-edit').focus()
+            $('#percent-edit').addClass('warning-input')
+            alertCustom("error", 'Digite um valor acima de 0');
             return false
         }
-
+        
         if($("#type_value-edit").prop('checked') && (!$('#value-edit').val() || $('#value-edit').val().replace(',','').replace('.','') == 0 )){
             $('#value-edit').focus()
+            $('#value-edit').addClass('warning-input')
+            alertCustom("error", 'Digite um valor acima de 0');
             return false
         }
 
@@ -766,11 +778,14 @@ $(function () {
                                         <option `+ (rules[i].buy=='of'?'selected':'') +` value="of">de</option>
                                     </select>
                                     
-                                    <input value="`+ rules[i].qtde +`" class="qtde input-pad" type="text" style="width: 60px; height: 49px;
+                                    <input value="`+ rules[i].qtde +`" class="qtde input-pad" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                     style="width: 60px; height: 49px;
                                     margin-top: 2px;" maxlength="2" data-mask="0#" />
                                     itens, aplicar desconto de
-                                    <input maxlength="9" value="`+ (rules[i].type=='value'?rules[i].value:'') +`" class="input-pad value value_edit" type="text" style="`+ (rules[i].type=='percent'?'display: none;':'') +` width: 86px; height:46px" />
-                                    <input value="`+ (rules[i].type=='percent'?rules[i].value:'') +`" type="text" style="width: 86px; `+ (rules[i].type=='value'?'display: none;':'') +` height:46px" class="input-pad percent" maxlength="2"
+                                    <input maxlength="9" value="`+ (rules[i].type=='value'?rules[i].value:'') +`" class="input-pad value value_edit" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                     style="`+ (rules[i].type=='percent'?'display: none;':'') +` width: 86px; height:46px" />
+                                    <input value="`+ (rules[i].type=='percent'?rules[i].value:'') +`" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                     style="width: 86px; `+ (rules[i].type=='value'?'display: none;':'') +` height:46px" class="input-pad percent" maxlength="2"
                                         data-mask="0#" autocomplete="off">
 
                                     <svg  class="pointer float-right save-edit-rule2" style="" width="19" height="16" viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -802,6 +817,7 @@ $(function () {
                 $(this).val($(this).val().padStart(4, '0'))
             }
         })
+
 
         set_rules_events()
         if(!edit){
@@ -866,7 +882,7 @@ $(function () {
 
         })
 
-        $('.save-edit-rule2').click(function(){
+        $('.save-edit-rule2').on('click', function(){
             
             var that = this;
                 function go(obj) {
@@ -875,16 +891,22 @@ $(function () {
                 
                 if(!go('.qtde').val() || go('.qtde').val()==0){
                     go('.qtde').focus()
+                    go('.qtde').addClass('warning-input')
+                    alertCustom("error", 'Digite um valor acima de 0');
                     return false;
                 }
                 if(edit_rules[editingRule].type=='percent'){
                     if(!go('.percent').val() || go('.percent').val()==0){
                         go('.percent').focus()
+                        go('.percent').addClass('warning-input')
+                        alertCustom("error", 'Digite um valor acima de 0');
                         return false;
                     }
                 }else{
                     if(!go('.value').val() || go('.value').val().replace(',','').replace('.','')==0){
                         go('.value').focus()
+                        go('.value').addClass('warning-input')
+                        alertCustom("error", 'Digite um valor acima de 0');
                         return false;
                     }
                 }
@@ -1207,6 +1229,8 @@ $(function () {
                         $('#nao_vence2').prop('checked', true);
                     }else{
                         $('#nao_vence2').prop('checked', false);
+                        $('#date_range2').prop('disabled', false)
+
                         
                     }
                     
@@ -1556,7 +1580,7 @@ function set_item_click(){
     });
 }
 
-function mount_selected_items(){
+function mount_selected_items(search, search2){
     var items = ''
 
     if(items_selected.length == 0){
@@ -1564,6 +1588,16 @@ function mount_selected_items(){
     }
 
     for(i in items_selected){
+        if(search){
+            if(items_selected[i].name.toLowerCase().search(search.toLowerCase()) < 0){
+                continue;
+            }
+        }
+        if(search2){
+            if(items_selected[i].description.toLowerCase().search(search2.toLowerCase()) < 0){
+                continue;
+            }
+        }
         var toolTip
         if(items_selected[i].name.length > 18){
 
@@ -1583,7 +1617,7 @@ function mount_selected_items(){
                     </div>`;
             items += item;
     }
-    $('#search_result, #search_result2').html(items);
+    //$('#search_result, #search_result2').html(items);
 
     // $('[data-toggle="tooltip"]').tooltip()
     return items;
@@ -1612,22 +1646,28 @@ $(function () {
 
     var rules = []
     var rule_id = 1;
-    $(".add_rule").on('click', function () {
+    $("#add_rule1").on('click', function () {
 
 
 
         if(!$('#qtde').val() || $('#qtde').val() == 0){
             $('#qtde').focus()
+            $('#qtde').addClass('warning-input')
+            alertCustom("error", 'Digite um valor acima de 0');
             return false
         }
 
         if($("#type_percent").prop('checked') && (!$('#percent').val() || $('#percent').val() == 0 )){
             $('#percent').focus()
+            $('#percent').addClass('warning-input')
+            alertCustom("error", 'Digite um valor acima de 0');
             return false
         }
 
         if($("#type_value").prop('checked') && (!$('#value').val() || $('#value').val().replace(',','').replace('.','') == 0 )){
             $('#value').focus()
+            $('#value').addClass('warning-input')
+            alertCustom("error", 'Digite um valor acima de 0');
             return false
         }
         rules.push({
@@ -1676,11 +1716,14 @@ $(function () {
                                     <option `+ (rules[i].buy=='above_of'?'selected':'') +` value="above_of">acima de</option>
                                     <option `+ (rules[i].buy=='of'?'selected':'') +` value="of">de</option>
                                 </select>
-                                <input value="`+ rules[i].qtde +`" class="input-pad qtde" type="text" style="width: 60px; height: 49px;
+                                <input value="`+ rules[i].qtde +`" class="input-pad qtde" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                 style="width: 60px; height: 49px;
                                 margin-top: 2px;" maxlength="2" data-mask="0#" />
                                 itens, aplicar desconto de
-                                <input maxlength="9" value="`+ (rules[i].type=='value'?rules[i].value:'') +`" class="input-pad value value_edit" type="text" style="`+ (rules[i].type=='percent'?'display: none;':'') +` width: 86px; height:46px" />
-                                <input value="`+ (rules[i].type=='percent'?rules[i].value:'') +`" type="text" style="width: 86px; `+ (rules[i].type=='value'?'display: none;':'') +` height:46px" class="input-pad percent" maxlength="2"
+                                <input maxlength="9" value="`+ (rules[i].type=='value'?rules[i].value:'') +`" class="input-pad value value_edit" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                 style="`+ (rules[i].type=='percent'?'display: none;':'') +` width: 86px; height:46px" />
+                                <input value="`+ (rules[i].type=='percent'?rules[i].value:'') +`" type="text" onkeyup="$(this).removeClass('warning-input')"
+                                 style="width: 86px; `+ (rules[i].type=='value'?'display: none;':'') +` height:46px" class="input-pad percent" maxlength="2"
                                     data-mask="0#" autocomplete="off">
 
                                 <svg  class="pointer float-right save-edit-rule" width="19" height="16" viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1825,16 +1868,22 @@ $(function () {
 
             if(!go('.qtde').val() || go('.qtde').val()==0){
                 go('.qtde').focus()
+                go('.qtde').addClass('warning-input')
+                alertCustom("error", 'Digite um valor acima de 0');
                 return false;
             }
             if(rules[editingRule1].type=='percent'){
                 if(!go('.percent').val() || go('.percent').val()==0){
                     go('.percent').focus()
+                    go('.percent').addClass('warning-input')
+                    alertCustom("error", 'Digite um valor acima de 0');
                     return false;
                 }
             }else{
                 if(!go('.value').val() || go('.value').val().replace(',','').replace('.','')==0){
                     go('.value').focus()
+                    go('.value').addClass('warning-input')
+                    alertCustom("error", 'Digite um valor acima de 0');
                     return false;
                 }
             }
@@ -2067,121 +2116,121 @@ $(function () {
     <div class="item_placeholder"></div> </div>`
 
     var search_holder
-    function run_search(search, now){
-        search_holder = search
-        var search2 = $('#search_input_description_value').val()
+    // function run_search(search, now){
+    //     search_holder = search
+    //     var search2 = $('#search_input_description_value').val()
         
 
-        var items_saved = mount_selected_items()
+    //     var items_saved = mount_selected_items()
 
-        var loading = $('.item_placeholder').is(':visible')
+    //     var loading = $('.item_placeholder').is(':visible')
 
-        if(loading && !now) return
+    //     if(loading && !now) return
 
-        if(search.length > 0 || now){
+    //     if(search.length > 0 || now){
 
-            $('#search_result, #search_result2').html(items_placeholder);
-            //animateItemsPlaceholder()
+    //         $('#search_result, #search_result2').html(items_placeholder);
+    //         //animateItemsPlaceholder()
 
-            $.ajax({
-                data: {
-                        most_sales: 1,
-                        list: 'plan',
-                        search: search,
-                        search2: search2,
-                        items_saved: items_selected,
-                        project_id: projectId,
-                        limit:30
-                        //page: params.page || 1
-                    }
-                ,
+    //         $.ajax({
+    //             data: {
+    //                     most_sales: 1,
+    //                     list: 'plan',
+    //                     search: search,
+    //                     search2: search2,
+    //                     items_saved: items_selected,
+    //                     project_id: projectId,
+    //                     limit:30
+    //                     //page: params.page || 1
+    //                 }
+    //             ,
 
-                method: "GET",
-                url: "/api/plans/user-plans",
+    //             method: "GET",
+    //             url: "/api/plans/user-plans",
 
-                dataType: "json",
-                headers: {
-                    'Authorization': $('meta[name="access-token"]').attr('content'),
-                    'Accept': 'application/json',
-                },
-                error: function error(response) {
-                    errorAjaxResponse(response);
+    //             dataType: "json",
+    //             headers: {
+    //                 'Authorization': $('meta[name="access-token"]').attr('content'),
+    //                 'Accept': 'application/json',
+    //             },
+    //             error: function error(response) {
+    //                 errorAjaxResponse(response);
 
-                }, success: function success(response) {
+    //             }, success: function success(response) {
 
-                    if(search_holder != search){
-                        run_search(search_holder, 1)
-                        return
-                    }
+    //                 if(search_holder != search){
+    //                     run_search(search_holder, 1)
+    //                     return
+    //                 }
 
-                    var data = response.data
-                    var items = ''
-                    for(plan in data){
+    //                 var data = response.data
+    //                 var items = ''
+    //                 for(plan in data){
 
-                        var skip = false
-                        for(i in items_selected){
-                            if(items_selected[i].id == data[plan].id)
-                                skip = true;
-                        }
-                        if(skip) continue;
+    //                     var skip = false
+    //                     for(i in items_selected){
+    //                         if(items_selected[i].id == data[plan].id)
+    //                             skip = true;
+    //                     }
+    //                     if(skip) continue;
 
-                        var toolTip
-                        if(data[plan].name.length > 18){
+    //                     var toolTip
+    //                     if(data[plan].name.length > 18){
 
-                            toolTip = 'aria-describedby="tt'+data[plan].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+data[plan].name+'"'
-                        }else{
-                            toolTip = ''
-                        }
+    //                         toolTip = 'aria-describedby="tt'+data[plan].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+data[plan].name+'"'
+    //                     }else{
+    //                         toolTip = ''
+    //                     }
 
-                        var item = `<div ${toolTip} class="item" data-id="`+data[plan].id+`" data-image="`+data[plan].photo+`" data-name="`+data[plan].name+`" data-description="`+data[plan].description+`" >
+    //                     var item = `<div ${toolTip} class="item" data-id="`+data[plan].id+`" data-image="`+data[plan].photo+`" data-name="`+data[plan].name+`" data-description="`+data[plan].description+`" >
 
-                                        <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
+    //                                     <span style="background-image: url('https://cloudfox-files.s3.amazonaws.com/produto.svg')" class="image">
 
-                                            <span style="background-image: url(`+(data[plan].photo?data[plan].photo:'https://cloudfox-files.s3.amazonaws.com/produto.svg')+`)" class="image2"></span>
-                                        </span>
+    //                                         <span style="background-image: url(`+(data[plan].photo?data[plan].photo:'https://cloudfox-files.s3.amazonaws.com/produto.svg')+`)" class="image2"></span>
+    //                                     </span>
 
-                                        <span class="title text-overflow-title">`+data[plan].name+`</span>
-                                        <span class="description text-overflow-description">`+data[plan].description+`</span>
-                                        <svg class="selected_check " style="display: none" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9.5" fill="#2E85EC"/>                            <path d="M13.5574 6.75215C13.7772 6.99573 13.7772 7.39066 13.5574 7.63424L8.49072 13.2479C8.27087 13.4915 7.91442 13.4915 7.69457 13.2479L5.44272 10.7529C5.22287 10.5093 5.22287 10.1144 5.44272 9.87083C5.66257 9.62725 6.01902 9.62725 6.23887 9.87083L8.09265 11.9247L12.7612 6.75215C12.9811 6.50856 13.3375 6.50856 13.5574 6.75215Z" fill="white"/>                            </svg>
-                                        <svg class="empty_check " width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9" stroke="#9B9B9B"/>                            </svg>
-                                    </div>`;
-                        items += item;
-                    }
+    //                                     <span class="title text-overflow-title">`+data[plan].name+`</span>
+    //                                     <span class="description text-overflow-description">`+data[plan].description+`</span>
+    //                                     <svg class="selected_check " style="display: none" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9.5" fill="#2E85EC"/>                            <path d="M13.5574 6.75215C13.7772 6.99573 13.7772 7.39066 13.5574 7.63424L8.49072 13.2479C8.27087 13.4915 7.91442 13.4915 7.69457 13.2479L5.44272 10.7529C5.22287 10.5093 5.22287 10.1144 5.44272 9.87083C5.66257 9.62725 6.01902 9.62725 6.23887 9.87083L8.09265 11.9247L12.7612 6.75215C12.9811 6.50856 13.3375 6.50856 13.5574 6.75215Z" fill="white"/>                            </svg>
+    //                                     <svg class="empty_check " width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">                            <circle cx="9.5" cy="10" r="9" stroke="#9B9B9B"/>                            </svg>
+    //                                 </div>`;
+    //                     items += item;
+    //                 }
 
-                    if(items.length > 0 || (!search & !search2)){
+    //                 if(items.length > 0 || (!search & !search2)){
 
-                        $('#search_result, #search_result2').html(items + items_saved);
-                        //$('#search_result, #search_result2').css('overflow-y', 'scroll')
+    //                     $('#search_result, #search_result2').html(items + items_saved);
+    //                     //$('#search_result, #search_result2').css('overflow-y', 'scroll')
     
-                        $('#search_result, #search_result2').mCustomScrollbar('destroy')
+    //                     $('#search_result, #search_result2').mCustomScrollbar('destroy')
 
-                        $('#search_result, #search_result2').mCustomScrollbar()
-                        // alert(0)
-                        set_item_click()
-                    }else{
-                        $('#search_result, #search_result2').mCustomScrollbar('destroy')
+    //                     $('#search_result, #search_result2').mCustomScrollbar()
+    //                     // alert(0)
+    //                     set_item_click()
+    //                 }else{
+    //                     $('#search_result, #search_result2').mCustomScrollbar('destroy')
                         
-                        //$('#search_result, #search_result2').css('overflow-y', 'hidden')
-                        $('#search_result, #search_result2').html(`
-                        <div class="not-found">
-                            <img src="/build/global/img/not-found.svg" >
-                            <div class="title">
-                            Nenhum resultado encontrado.</div>
-                            <div class="description">
-                            Por aqui, nenhum plano com esse nome.
-                            </div>
-                        </div>`);
+    //                     //$('#search_result, #search_result2').css('overflow-y', 'hidden')
+    //                     $('#search_result, #search_result2').html(`
+    //                     <div class="not-found">
+    //                         <img src="/build/global/img/not-found.svg" >
+    //                         <div class="title">
+    //                         Nenhum resultado encontrado.</div>
+    //                         <div class="description">
+    //                         Por aqui, nenhum plano com esse nome.
+    //                         </div>
+    //                     </div>`);
 
-                    }
+    //                 }
 
-                }
-            });
-        }else{
+    //             }
+    //         });
+    //     }else{
 
-            run_search('',1)
+    //         run_search('',1)
 
-        }
-    }
+    //     }
+    // }
 
     // Create new cupouns
     $('#discount_value').mask('#.###,#0', {reverse: true});
@@ -2505,6 +2554,8 @@ $(function () {
 
         // console.log('oi');
         // $('#search_result, #search_result2').html('');
+        $('#search_input2').val('') //limpar os campos
+        $('#search_input_description').val('')
 
 
         $('#c-edit_step0').hide()
@@ -2696,8 +2747,6 @@ $(function () {
         }else{
             // $('#c-edit_status_label').css('color', '#9B9B9B');
             $('#c-edit_status_label').html('Desativado');
-
-
         }
         $('#c-set_status').val(1)
 
