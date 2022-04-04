@@ -42,6 +42,7 @@ Route::group(
 
         // Reports - finances
         Route::get('/reports/finances/resume', 'ReportsApiController@getFinancesResume');
+        Route::get('/reports/finances/cashback', 'ReportsApiController@getFinancesCashbacks');
 
         // Reports - sales
 

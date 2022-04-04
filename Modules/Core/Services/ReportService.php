@@ -3425,36 +3425,84 @@ class ReportService
         }
     }
 
-    function getMarketingConversions(Request $request)
+    public function getFinancesCashbacks($filters)
     {
+        try {
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $userId = auth()->user()->account_owner_id;
 
+            $cachsbackModel = new Cashback();
+
+            $cashbacks = $cachsbackModel
+            ->where('user_id', $userId)
+            ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+
+            $cashbacksValue = $cashbacks->sum('value');
+            $cashbacksCount = $cashbacks->count();
+
+            return [
+                'value' => FoxUtils::formatMoney($cashbacksValue / 100),
+                'quantity' => $cashbacksCount
+            ];
+        } catch(Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
-    function getMarketingDevices(Request $request)
+    public function getFinancesWithdrawals($filters)
     {
+        try {
 
+
+            return [];
+        } catch(Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
-    function getMarketingCoupons(Request $request)
+    public function getFinancesDistributions($filters)
     {
+        try {
 
+
+            return [];
+        } catch(Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
-    function getMarketingSystems(Request $request)
+    public function getFinancesPendings($filters)
     {
+        try {
 
+
+            return [];
+        } catch(Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
-    function getMarketingOrigins(Request $request)
+    public function getFinancesBlockeds($filters)
     {
+        try {
 
+
+            return [];
+        } catch(Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ]);
+        }
     }
-
-    function getMarketingFrequents(Request $request)
-    {
-
-    }
-    // END Page finances
+    // End Pages finances
 
     public function getResumeMarketing($filters)
     {

@@ -957,6 +957,21 @@ class ReportsApiController extends Controller
         ]);
     }
 
+    function getFinancesCashbacks(Request $request)
+    {
+        $request->validate([ 'date_range' => 'required' ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $resume = $reportService->getFinancesCashbacks($data);
+
+        return response()->json([
+            'data' => $resume
+        ]);
+    }
+    // END Page finances
+
     function getResume(Request $request)
     {
         $request->validate([
