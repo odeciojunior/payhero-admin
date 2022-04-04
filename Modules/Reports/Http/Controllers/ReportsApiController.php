@@ -946,6 +946,7 @@ class ReportsApiController extends Controller
     function getFinancesResume(Request $request)
     {
         $request->validate([ 'date_range' => 'required' ]);
+    }
 
     function getResume(Request $request)
     {
