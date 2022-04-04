@@ -41,9 +41,11 @@ Route::group(
         Route::get('/reports/resume/origins', 'ReportsApiController@getResumeOrigins');
 
         // Reports - finances
+        Route::get('/reports/finances/resume', 'ReportsApiController@getFinancesResume');
 
         // Reports - sales
 
         // Reports - marketing
+
     }
 );

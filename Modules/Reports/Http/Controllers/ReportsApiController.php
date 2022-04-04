@@ -799,7 +799,9 @@ class ReportsApiController extends Controller
         }
     }
 
-    // FINANCES --------------------------------------------------------------------------
+    // Page resume
+
+    // Finances
     function getResumeCommissions(Request $request)
     {
         $request->validate([
@@ -842,7 +844,7 @@ class ReportsApiController extends Controller
         return response()->json(['data' => $comission]);
     }
 
-    // SALES --------------------------------------------------------------------------
+    // Sales
     function getResumeSales(Request $request)
     {
         $request->validate([
@@ -889,7 +891,7 @@ class ReportsApiController extends Controller
         ]);
     }
 
-    // MARKETING --------------------------------------------------------------------------
+    // Marketing
     function getResumeCoupons(Request $request)
     {
         $request->validate([
@@ -936,6 +938,22 @@ class ReportsApiController extends Controller
 
         return response()->json([
             'data' => $orders
+        ]);
+    }
+    // END Page Resume
+
+    // Page finances
+    function getFinancesResume(Request $request)
+    {
+        $request->validate([ 'date_range' => 'required' ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $resume = $reportService->getFinancesResume($data);
+
+        return response()->json([
+            'data' => $resume
         ]);
     }
 }

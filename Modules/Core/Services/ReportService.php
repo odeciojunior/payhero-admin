@@ -3378,4 +3378,81 @@ class ReportService
             return response()->json(['message' => $e->getMessage()], 400);
         }
     }
+
+    // Page finances
+    function getFinancesResume($filters)
+    {
+        try {
+            $transactions = $this->getSalesQueryBuilder($filters);
+
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+
+            $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
+            $statusDispute = Sale::STATUS_IN_DISPUTE;
+
+            $queryTransactions = $transactions
+            ->whereIn('status_enum', $transactionStatus)
+            ->where('sales.status', '<>', $statusDispute)
+            ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+            ->select(DB::raw('COUNT(*) as numTransactions, SUM(transactions.value) as valueTransactions'))
+            ->first();
+
+            $totalAverageTicket = ($queryTransactions->valueTransactions / $queryTransactions->numTransactions);
+
+            $queryComission = $transactions
+            ->whereIn('status_enum', $transactionStatus)
+            ->where('sales.status', '<>', $statusDispute)
+            ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+            ->sum('transactions.value');
+
+            $queryChargeback = $transactions
+            ->where('status_enum', Transaction::STATUS_CHARGEBACK)
+            ->where('sales.status', Sale::STATUS_CHARGEBACK)
+            ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+            ->sum('transactions.value');
+
+            return [
+                'transactions' => $queryTransactions->numTransactions,
+                'average_ticket' => FoxUtils::formatMoney($totalAverageTicket / 100),
+                'comission' => FoxUtils::formatMoney($queryComission / 100),
+                'chargeback' => FoxUtils::formatMoney($queryChargeback / 100)
+            ];
+        } catch(Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    function getMarketingConversions(Request $request)
+    {
+
+    }
+
+    function getMarketingDevices(Request $request)
+    {
+
+    }
+
+    function getMarketingCoupons(Request $request)
+    {
+
+    }
+
+    function getMarketingSystems(Request $request)
+    {
+
+    }
+
+    function getMarketingOrigins(Request $request)
+    {
+
+    }
+
+    function getMarketingFrequents(Request $request)
+    {
+
+    }
+    // END Page finances
 }
