@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Intervention\Image\Facades\Image;
-use Modules\Companies\Transformers\CompaniesSelectResource;
-use Modules\Companies\Transformers\CompanyResource;
+use Modules\Core\Transformers\CompaniesSelectResource;
+use Modules\Core\Transformers\CompanyResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
@@ -46,7 +46,6 @@ class ProjectsApiController extends Controller
         try {
 
             $user = auth()->user();
-
             $hasCompany = Company::where('user_id', $user->account_owner_id)->exists();
 
             if ($hasCompany) {
@@ -67,20 +66,17 @@ class ProjectsApiController extends Controller
                     )->log('Visualizou tela todos os projetos');
                 }
 
-                if (!empty($request->input('status')) && $request->input('status') == 'active') {
-                    $projectStatus = [$projectModel->present()->getStatus('active')];
-                } else {
-                    if ($user->deleted_project_filter) {
-                        $projectStatus = [
-                            $projectModel->present()->getStatus('active'),
-                            $projectModel->present()->getStatus('disabled'),
-                        ];
-                    } else {
-                        $projectStatus = [$projectModel->present()->getStatus('active')];
-                    }
-                }
+                $projectStatus = [$projectModel->present()->getStatus('active')];
 
+                if ($user->deleted_project_filter) {
+                    $projectStatus = [
+                        $projectModel->present()->getStatus('active'),
+                        $projectModel->present()->getStatus('disabled'),
+                    ];
+                }
+                
                 return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
+
             } else {
                 return response()->json([
                     'data' => [],
@@ -572,19 +568,21 @@ class ProjectsApiController extends Controller
         try {
             $data = $request->all();
             $user = auth()->user();
-            $updated = $user->update(
-                [
-                    'deleted_project_filter' => $data['deleted_project_filter'],
-                ]
-            );
+
+            // dd($data);
+
+            $updated = $user->update([
+                'deleted_project_filter' => $data['deleted_project_filter'],
+            ]);
+
             if ($updated) {
                 return response()->json(['message' => 'Configuração atualizada com sucesso'], 200);
             } else {
                 return response()->json(['message' => 'Erro ao atualizar configuração'], 400);
             }
+
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Erro ao atualizar configuração'], 400);
         }
     }

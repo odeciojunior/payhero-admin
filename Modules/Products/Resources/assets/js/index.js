@@ -2,7 +2,7 @@ $(document).ready(function () {
     let regexp = /http(s?):\/\/[\w.-]+\/products\/\w{15}\/edit/;
     let lastPage = document.referrer;
     if (!lastPage.match(regexp)) {
-        localStorage.clear();
+        localStorage.removeItem('filtersApplied')
     }
 
     var pageCurrent;

@@ -154,7 +154,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/companies",
+            url: "/api/core/companies",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

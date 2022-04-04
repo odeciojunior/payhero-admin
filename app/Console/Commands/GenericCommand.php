@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+
 class GenericCommand extends Command
 {
     protected $signature = 'generic';

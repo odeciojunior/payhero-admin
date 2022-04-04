@@ -2,14 +2,6 @@ $(document).ready(function () {
 
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
-
-    // var current_url = window.location.pathname;
-    // if (current_url.includes('reports')) {
-    //     $("#reports-link").addClass('menu-active');
-    // } else if (current_url.includes('sales') || current_url.includes('recovery') || current_url.includes('trackings')) {
-    //     $("#sales-link").addClass('menu-active');
-    // }
-
     $(".mm-panels").css('scrollbar-width', 'none');
 
     $('.redirect-to-accounts').click(function (e) {
@@ -34,23 +26,6 @@ $(document).ready(function () {
         });
     })
 
-    // $('#accounts-service').click(function (e) {
-    //     e.preventDefault()
-    //     $.ajax({
-    //         method: 'GET',
-    //         url: '/send-authenticated',
-    //         headers: {
-    //             'Authorization': $('meta[name="access-token"]').attr('content'),
-    //             'Accept': 'application/json',
-    //         },
-    //         error: response => {
-    //             errorAjaxResponse(response);
-    //         },
-    //         success: response => {
-    //             window.location.href = response.url
-    //         },
-    //     });
-    // })
 });
 
 function stringToMoney(string, currency = 'BRL') {
@@ -683,7 +658,7 @@ sessionStorage.removeItem('documentsPending');
 function ajaxVerifyDocumentPending() {
     $.ajax({
         method: 'GET',
-        url: '/api/profile/verifydocuments',
+        url: '/api/core/verifydocuments',
         headers: {
             'Authorization': $('meta[name="access-token"]').attr('content'),
             'Accept': 'application/json',
@@ -729,7 +704,7 @@ function verifyDocumentPending() {
         $('#document-pending').hide();
     }
 
-    if (!window.location.href.includes('/companies') && !window.location.href.includes('/profile')) {
+    if (!window.location.href.includes('/companies') && !window.location.href.includes('/core')) {
         let documentsPending = sessionStorage.getItem('documentsPending');
         if (documentsPending === null) {
             ajaxVerifyDocumentPending();
@@ -817,7 +792,15 @@ function renderSiriusSelect(target) {
     $options.html('');
     $target.children('option').each(function () {
         let option = $(this);
-        $options.append(`<div data-value="${option.val()}">${option.text()}</div>`);
+        let attributes = Object.values(this.attributes)
+            .reduce((text, attr) => {
+                if (!['id', 'value', 'data-value', 'selected', 'disabled'].includes(attr.name)) {
+                    if(attr.value) return text + ` ${attr.name}="${attr.value}"`;
+                    return text + ` ${attr.name}`;
+                }
+                return text;
+            }, '');
+        $options.append(`<div data-value="${option.val()}" ${attributes}>${option.text()}</div>`);
     });
     $text.text($target.children('option:selected').eq(0).text());
 }

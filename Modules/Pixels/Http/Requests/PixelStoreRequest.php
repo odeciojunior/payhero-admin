@@ -18,6 +18,7 @@ class PixelStoreRequest extends FormRequest
             'purchase-event-name' => 'nullable|max:255',
             'add_pixel_plans' => 'required|array',
             'checkout' => 'nullable',
+            'purchase_all' => 'nullable',
             'basic_data' => 'nullable',
             'delivery' => 'nullable',
             'coupon' => 'nullable',
