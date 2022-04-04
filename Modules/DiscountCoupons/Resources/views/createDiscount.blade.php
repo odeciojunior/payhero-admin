@@ -230,6 +230,7 @@
                         padding: 0 15px;
                         margin: 15px;
                         overflow-x: hidden;
+                        margin-right: 4px;
                     ">
                     {{-- <div class="rule_box p-10">
                         Teste
