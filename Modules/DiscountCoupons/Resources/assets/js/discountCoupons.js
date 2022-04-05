@@ -594,6 +594,11 @@ $(function () {
         $('#edit_step0').hide();
         $('#edit_step2').hide();
         $('#edit_step1').show();
+        $('.form-control').each(function(){
+            
+            $(this).val('');
+        })
+        
         $('#search_input2').focus();
 
         $('#edit-finish-btn').hide()
@@ -2554,7 +2559,12 @@ $(function () {
 
         // console.log('oi');
         // $('#search_result, #search_result2').html('');
-        $('#search_input2').val('') //limpar os campos
+
+        $('.form-control').each(function(){    
+            $(this).val('');
+        })
+
+        $('#search_input2').focus()
         $('#search_input_description').val('')
 
 
