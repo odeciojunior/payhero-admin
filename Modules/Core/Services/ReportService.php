@@ -18,7 +18,10 @@ use Modules\Core\Entities\Cashback;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\DiscountCoupon;
 use Modules\Core\Entities\Gateway;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Product;
+use Modules\Core\Entities\ProductPlanSale;
 use Modules\Reports\Transformers\SalesByOriginResource;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserProject;
@@ -3480,9 +3483,23 @@ class ReportService
     public function getFinancesPendings($filters)
     {
         try {
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $userId = auth()->user()->account_owner_id;
 
+            $saleModel = new Sale();
 
-            return [];
+            $sales = $saleModel
+            ->where('owner_id', $userId)
+            ->where('status', Sale::STATUS_PENDING)
+            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+
+            $salesValue = $sales->sum('original_total_paid_value');
+            $salesCount = $sales->count();
+
+            return [
+                'value' => FoxUtils::formatMoney($salesValue / 100),
+                'amount' => $salesCount
+            ];
         } catch(Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()
@@ -3493,9 +3510,22 @@ class ReportService
     public function getFinancesBlockeds($filters)
     {
         try {
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $userId = auth()->user()->account_owner_id;
 
+            $saleModel = new Sale();
 
-            return [];
+            $sales = $saleModel
+            ->where('owner_id', $userId)
+            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+
+            $salesValue = $sales->sum('original_total_paid_value');
+            $salesCount = $sales->count();
+
+            return [
+                'value' => FoxUtils::formatMoney($salesValue / 100),
+                'amount' => $salesCount
+            ];
         } catch(Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()
@@ -3568,6 +3598,81 @@ class ReportService
             $state['sales_amount'] = number_format($state['sales_amount'], 0, '.', '.');
             $state['value'] = foxutils()->formatMoney($state['value'] / 100);
         }
+
+        return $data;
+    }
+
+    public function getMostFrequentSales($filters)
+    {
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $data = ProductPlanSale::select(DB::raw('product.photo, product.name, product.description, count(*) as sales_amount, sum(ifnull(transaction.value, 0)) as value'))
+                        ->leftJoin('products as product', function ($join) {
+                            $join->on('products_plans_sales.product_id', '=', 'product.id');
+                        })
+                        ->leftJoin('sales as sale', function ($join) {
+                            $join->on('products_plans_sales.sale_id', '=', 'sale.id')
+                                    ->where('sale.status', Sale::STATUS_APPROVED);
+                        })
+                        ->leftJoin('transactions as transaction', function ($join) {
+                            $join->on('transaction.sale_id', '=', 'sale.id');
+                            $join->where('transaction.user_id', auth()->user()->account_owner_id);
+                        })
+                        ->whereBetween('products_plans_sales.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                        ->where('transaction.user_id', auth()->user()->account_owner_id)
+                        ->groupBy('product.id')
+                        ->orderBy('value', 'DESC')
+                        ->limit(10)
+                        ->get()
+                        ->toArray();
+
+        foreach($data as &$product) {
+            $product['sales_amount'] = number_format($product['sales_amount'], 0, '.', '.');
+            $product['value'] = foxutils()->formatMoney($product['value'] / 100);
+        }
+
+        return $data;
+    }
+
+    public function getDevices($filters)
+    {
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $data = Sale::selectRaw("COUNT(*) AS total,
+                        SUM(CASE WHEN checkout.is_mobile = 1 THEN 1 ELSE 0 END) AS count_mobile,
+                        SUM(CASE WHEN checkout.is_mobile = 0 THEN 1 ELSE 0 END) AS count_desktop,
+                        SUM(CASE WHEN checkout.is_mobile = 1 THEN transaction.value ELSE 0 END) AS value_mobile,
+                        SUM(CASE WHEN checkout.is_mobile = 0 THEN transaction.value ELSE 0 END) AS value_desktop
+                    ",)
+                    ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                    ->leftJoin('checkouts as checkout', function ($join) {
+                        $join->on('sales.checkout_id', '=', 'checkout.id');
+                    })
+                    ->leftJoin('transactions as transaction', function ($join) {
+                        $join->on('transaction.sale_id', '=', 'sales.id');
+                        $join->where('transaction.user_id', auth()->user()->account_owner_id);
+                    })
+                    ->where('owner_id', auth()->user()->account_owner_id)
+                    ->first()
+                    ->toArray();
+
+        if(empty($data['count_mobile'])){
+            $data['count_mobile'] = 0;
+            $data['percentage_mobile'] = '0%';
+        }
+        else {
+            $data['percentage_mobile'] = number_format(($data['count_mobile'] * 100) / $data['total'], 2, '.', ',') . '%';;
+        }
+        if(empty($data['count_desktop'])){
+            $data['count_desktop'] = 0;
+            $data['percentage_desktop'] = '0%';
+        }
+        else {
+            $data['percentage_desktop'] = number_format(($data['count_desktop'] * 100) / $data['total'], 2, '.', ',') . '%';;
+        }
+
+        $data['value_mobile'] = $data['value_mobile'] > 0 ? foxutils()->formatMoney($data['value_mobile'] / 100) : 'R$ 0,00';
+        $data['value_desktop'] = $data['value_desktop'] > 0 ? foxutils()->formatMoney($data['value_desktop'] / 100) : 'R$ 0,00';
 
         return $data;
     }

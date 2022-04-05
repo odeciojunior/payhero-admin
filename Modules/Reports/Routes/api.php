@@ -42,12 +42,15 @@ Route::group(
 
         // Reports - finances
         Route::get('/reports/finances/resume', 'ReportsApiController@getFinancesResume');
-        Route::get('/reports/finances/cashback', 'ReportsApiController@getFinancesCashbacks');
+        Route::get('/reports/finances/cashbacks', 'ReportsApiController@getFinancesCashbacks');
+        Route::get('/reports/finances/pendings', 'ReportsApiController@getFinancesPendings');
 
         // Reports - sales
 
         // Reports - marketing
         Route::get('/reports/marketing/resume', 'ReportsApiController@getResume');
         Route::get('/reports/marketing/sales-by-state', 'ReportsApiController@getSalesByState');
+        Route::get('/reports/marketing/most-frequent-sales', 'ReportsApiController@getMostFrequentSales');
+        Route::get('/reports/marketing/devices', 'ReportsApiController@getDevices');
     }
 );
