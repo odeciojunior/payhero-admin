@@ -973,7 +973,10 @@ class ReportsApiController extends Controller
 
     function getFinancesPendings(Request $request)
     {
-        $request->validate([ 'date_range' => 'required' ]);
+        $request->validate([
+            'date_range' => 'required',
+            'company' => 'required'
+        ]);
 
         $data = $request->all();
 
