@@ -9,27 +9,74 @@ $(function() {
     changeCalendar();
     
     let info = JSON.parse(sessionStorage.getItem('info'));
-    $('input[name=daterange]').val(info.calendar);
-    
-    
-    
+    $('input[name=daterange]').val(info.calendar); 
     
 });
 
 let resumeUrl = '/api/reports/resume';
+let financesResumeUrl = '/api/reports/finances';
 
-// function loadInfo() {
-//     let info = JSON.parse(sessionStorage.getItem('info'));
-//     $('input[name=daterange]').val(info.calendar);
-//     $('#select_projects').val(info.company);
-// }
+function onResume() {
+    let ticket, commission, chargebacks, transactions = '';   
+    $('.onPreLoad *').remove();
+    
+    $("#finance-commission,#finance-ticket,#finance-chargebacks,#finance-transactions").prepend(skeLoad);
 
+    return $.ajax({
+        method: "GET",
+        url: financesResumeUrl + "/resume?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            commission = `
+                <span class="title">Comissão total</span>
+                <div class="d-flex">
+                    <strong class="number">${response.data.comission}</strong>
+                </div>
+            `;
+            
+            transactions = `
+                <span class="title">N de transações</span>
+                <div class="d-flex">
+                    <strong class="number">
+                        <span>${response.data.transactions}</span>
+                    </strong>
+                </div>
+            `;
 
+            ticket = `
+                <span class="title">Ticket Médio</span>
+                <div class="d-flex">
+                    <strong class="number">${response.data.average_ticket}</strong>
+                </div>
+            `;
+
+            chargebacks = `
+                <span class="title">Total em Chargebacks</span>
+                <div class="d-flex">
+                    <strong class="number"><span class="bold">${response.data.chargeback}</span></strong>
+                </div>
+            `;
+            
+            $("#finance-commission").html(commission);
+            $("#finance-ticket").html(ticket);
+            $("#finance-chargebacks").html(chargebacks);
+            $("#finance-transactions").html(transactions);
+        }
+    });
+    
+}
 
 function onCommission() {
-    let data, infoComission = '';   
-    $('.onPreLoad *').remove();
-    $("#finance-commission, #info-commission").prepend(skeLoad);
+    let infoComission = '';   
+    $('#info-commission .onPreLoad *').remove();
+    $("#info-commission").prepend(skeLoad);
 
     return $.ajax({
         method: "GET",
@@ -43,13 +90,6 @@ function onCommission() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            data = `
-                <span class="title">Comissão total</span>
-                <div class="d-flex">
-                    <span class="detail">R$</span>
-                    <strong class="number">${response.data.total}</strong>
-                </div>
-            `;
             infoComission = `
                 <section class="container">
                     <header class="d-flex title-graph">
@@ -77,9 +117,7 @@ function onCommission() {
                     </div>
                 </section>
             `;           
-           
             $("#info-commission").html(infoComission);
-            $("#finance-commission").html(data);
 
             if( response.data.total !== '0,00' ) {
                 $('.new-finance-graph').html('<canvas id=comission-graph></canvas>');
@@ -87,10 +125,8 @@ function onCommission() {
                 let series = [...response.data.chart.values];
                 graphComission(series, labels);
             }
-
-        }
-    });    
-    
+        }    
+    });
 }
 
 function getPending() {
@@ -346,6 +382,7 @@ function updateReports() {
         },
         success: function success(response) {
             $('.onPreLoad *').remove();
+            onResume();
             onCommission();
             getPending();
             getCashback();
