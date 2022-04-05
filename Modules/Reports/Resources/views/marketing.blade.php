@@ -822,7 +822,7 @@
                                         </div>
                                     </div>
                                     <div class="inner-comission">
-                                        <div class="card inner pad-bottom-0">
+                                        <div class="card inner pad-bottom-0" id="card-coupon">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Cupons</strong>
@@ -832,68 +832,9 @@
                                                     <i class="o-arrow-right-1 redirect"></i>
                                                 </a>
                                             </header>
-                                            <div class="container d-flex justify-content-between box-donut">
-                                                <div class="new-graph-pie-mkt"></div>
-                                                <div class="data-pie">
-                                                    <ul>
-                                                        <li>
-                                                            <div class="donut-pie blue">
-                                                                <figure>
-                                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#2E85EC" stroke-width="3"/>
-                                                                    </svg>
-                                                                </figure>
-                                                                <div>Mariana20</div>
-                                                            </div>
-                                                            <div class="grey bold">18</div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="donut-pie pink">
-                                                                <figure>
-                                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#F43F5E" stroke-width="3"/>
-                                                                    </svg>
-                                                                </figure>
-                                                                <div>Cassio15</div>
-                                                            </div>
-                                                            <div class="grey bold">16</div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="donut-pie orange">
-                                                                <figure>
-                                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#FF7900" stroke-width="3"/>
-                                                                    </svg>																			
-                                                                </figure>
-                                                                <div>Agosto20</div>
-                                                            </div>
-                                                            <div class="grey bold">10</div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="donut-pie purple">
-                                                                <figure>
-                                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#665FE8" stroke-width="3"/>
-                                                                    </svg>																			
-                                                                </figure>
-                                                                <div>meular15</div>
-                                                            </div>
-                                                            <div class="grey bold">6</div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="donut-pie">
-                                                                <figure>
-                                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#9E9E9E" stroke-width="3"/>
-                                                                    </svg>																			
-                                                                </figure>
-                                                                <div>Outros</div>
-                                                            </div>
-                                                            <div class="grey bold">32</div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
+                                            <div class="onPreLoad" id="block-coupons"></div>
+
+                                           
                                         </div>
                                         <div class="card inner pad-bottom-0 ">
                                             <header class="d-flex title-graph">
@@ -1036,10 +977,10 @@
                                                         class="table-vendas table table-striped " 
                                                         style="width:100%;margin: auto; margin-top:15px;"
                                                     >
-                                                        <!-- <tbody id="origins-table">
+                                                        <tbody id="origins-table">
                                                             {{-- js carrega... --}}
-                                                        </tbody> -->
-                                                        <tbody>
+                                                        </tbody>
+                                                        <!-- <tbody>
                                                             <tr>
                                                                 <td>
                                                                     
@@ -1082,7 +1023,7 @@
                                                                     </p>
                                                                 </td>
                                                             </tr>
-                                                        </tbody>
+                                                        </tbody> -->
                                                     </table>
                                                 </div>
                                             </div>
@@ -1289,7 +1230,7 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=' . uniqid())}}'></script>
+    <!-- <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=' . uniqid())}}'></script> -->
     <script type='text/javascript' src='{{asset('modules/reports/js/reports-marketing.js?v=' . uniqid())}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/brazil-map.js?v=' . uniqid())}}'></script>
 @endpush

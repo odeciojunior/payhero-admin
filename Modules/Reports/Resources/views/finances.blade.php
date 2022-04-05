@@ -322,7 +322,7 @@
                                                 <i class="o-arrow-right-1 redirect"></i>
                                             </a>
                                         </header>
-                                        <div class="onPreLoad mini-block" id="block-pending"></div>
+                                        <div class="onPreLoad" id="block-pending"></div>
                                     </div>
                                     <div class="card inner">
                                         <header class="d-flex title-graph">

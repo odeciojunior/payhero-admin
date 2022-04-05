@@ -18,11 +18,11 @@ $(function() {
 
 let resumeUrl = '/api/reports/resume';
 
-function loadInfo() {
-    let info = JSON.parse(sessionStorage.getItem('info'));
-    $('input[name=daterange]').val(info.calendar);
-    $('#select_projects').val(info.company);
-}
+// function loadInfo() {
+//     let info = JSON.parse(sessionStorage.getItem('info'));
+//     $('input[name=daterange]').val(info.calendar);
+//     $('#select_projects').val(info.company);
+// }
 
 
 
