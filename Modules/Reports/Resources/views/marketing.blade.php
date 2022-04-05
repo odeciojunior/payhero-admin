@@ -102,32 +102,15 @@
 					<div class="col-12 box-items-finance mkt">
                         <div class="row mb-20">
                             <div class="fianance-items col-md-4 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border blue mb-10">
-                                    <span class="title">Acessos</span>
-                                    <div class="d-flex">
-                                        <strong class="number">74.860</strong>
-                                    </div>
-                                </div>
+                                <div class="finance-card border blue mb-10 onPreLoad" id="checkouts_count"></div>
                             </div>
 
                             <div class="fianance-items col-md-4 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border purple mb-10">
-                                    <span class="title">Vendas</span>
-                                    <div class="d-flex">
-                                        <strong class="number">1.440,20</strong>
-                                        <small class="percent">(52%)</small>
-                                    </div>
-                                </div>
+                                <div class="finance-card border purple mb-10 onPreLoad" id="sales_count"></div>
                             </div>
 
                             <div class="fianance-items col-md-4 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border green mb-10">
-                                    <span class="title">Receita</span>
-                                    <div class="d-flex">
-                                        <span class="detail">R$</span>
-                                        <strong class="number">1.457.080,55</strong>
-                                    </div>
-                                </div>
+                                <div class="finance-card border green mb-10" id="sales_value"></div>
                             </div>
                         </div>
 					</div>
@@ -833,8 +816,6 @@
                                                 </a>
                                             </header>
                                             <div class="onPreLoad" id="block-coupons"></div>
-
-                                           
                                         </div>
                                         <div class="card inner pad-bottom-0 ">
                                             <header class="d-flex title-graph">

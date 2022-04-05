@@ -13,9 +13,10 @@ $(function() {
 });
 
 let resumeUrl = '/api/reports/resume';
+let mktUrl = '/api/reports/marketing';
 
 function getCoupons() {
-    let couponsBlock = '';
+    let couponsBlock , listCoupons = '';
     $('#card-coupon .onPreLoad *' ).remove();
     $("#block-coupons").prepend(skeLoad);
 
@@ -31,88 +32,110 @@ function getCoupons() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            if(response.data[0].total != 0){
-                $('.box-donut').css('height','190px');
-                // $(".box-donut").next('.no-graph').remove();
-                //$('#card-coupons .value-price').addClass('invisible');
-                couponsBlock = `
-                    <div class="container d-flex justify-content-between box-donut">
-                        <div class="new-graph-pie-mkt"><div class=graph-pie></div></div>
-                        <div class="data-pie"><ul></ul></div>
-                `;
-                let arr = [];
-                let seriesArr = [];
-                
-                $.each(response.data, function (i, coupon) {
-                    arr.push(coupon);
-                });
-                
-
-                for(let i = 0; i < arr.length; i++) {
+            let arr = [];
+            let seriesArr = [];
+            
+            $.each(response.data, function (i, coupon) {
+                if(coupon != undefined) {
+                    arr.push(coupon);           
+                }
+                else {
+                    $('#card-coupon').height('232px');
+                    $('#block-coupons *').remove();
+                    $('#block-coupons').after('<div class=no-graph>Não há dados suficientes</div>');
+                }
+            });
+            console.log(arr);
+            for(let i = 0; i < arr.length; i++) {
+                if(arr[i].total == 0) {
+                    $('#card-coupon').height('232px');
+                    $('#block-coupons *').remove();
+                    $('#block-coupons').after('<div class=no-graph>Não há dados suficientes</div>');
+                } else {
                     if(arr[i].amount != undefined) {
                         seriesArr.push(arr[i].amount);
-
-                        $('.data-pie ul').html(
-                            `
-                                <li>
-                                    <div class="donut-pie ${arr[i].color}">
-                                        <figure>
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke-width="3"/>
-                                            </svg>
-                                        </figure>
-                                        <div>${arr[i].coupon}</div>
-                                    </div>
-                                    <div class="grey bold">${arr[i].amount}</div>
-                                </li>                                    
-                            `
-                        );
-                        
+                        listCoupons = `
+                            <li>
+                                <div class="donut-pie ${arr[i].color}">
+                                    <figure>
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke-width="3"/>
+                                        </svg>
+                                    </figure>
+                                    <div>${arr[i].coupon}</div>
+                                </div>
+                                <div class="grey bold">${arr[i].amount}</div>
+                            </li>
+                        `;
                     }
+                    couponsBlock = `
+                        <div class="container d-flex justify-content-between box-donut">
+                            <div class="new-graph-pie-mkt"><div class=graph-pie></div></div>
+                            <div class="data-pie"><ul>${listCoupons}</ul></div>
+                    `;
+                    $("#block-coupons").html(couponsBlock);
+                    $('#card-coupon').height('232px');
+                    new Chartist.Pie('.graph-pie', 
+                    { series: [1] }, 
+                    {
+                        donut: true,
+                        donutWidth: 20,
+                        donutSolid: true,
+                        startAngle: 270,
+                        showLabel: false,
+                        chartPadding: 0,
+                        labelOffset: 0,
+                    });
                 }
-                
-                
-
-                new Chartist.Pie('.graph-pie', 
-                { series: seriesArr }, 
-                {
-                    donut: true,
-                    donutWidth: 20,
-                    donutSolid: true,
-                    startAngle: 270,
-                    showLabel: false,
-                    chartPadding: 0,
-                    labelOffset: 0,
-                });
-                $("#block-coupons").html(couponsBlock);
-                $('#card-coupon').height('232px');
-            } else {
-                $('#card-coupon').height('232px');
-                $('#block-coupons *').remove();
-                $('#block-coupons').after('<div class=no-graph>Não há dados suficientes</div>');
-            }        
+            }
         }
     });
 }           
-                
 
-$('.box-export').on('click', function($q) {
+function resume() {
+    let checkouts, salesCount,salesValue = '';
+    $("#checkouts_count, #sales_count, #sales_value").prepend(skeLoad);
+    
 
-  $.ajax({
-      method: "GET",
-      url: "http://dev.sirius.com/api/reports/marketing/resume?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
-      dataType: "json",
-      headers: {
-          Authorization: $('meta[name="access-token"]').attr("content"),
-          Accept: "application/json",
-      },
-      error: function error(response) {
+    return $.ajax({
+        method: "GET",
+        url: mktUrl + "/resume?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            checkouts = `
+                <span class="title">Acessos</span>
+                <div class="d-flex">
+                    <strong class="number">${response.data.checkouts_count}</strong>
+                </div>
+            `;
+            salesCount = `
+                <span class="title">Vendas</span>
+                <div class="d-flex">
+                    <strong class="number">${response.data.sales_count}</strong>
+                    <small class="percent">(52%)</small>
+                </div>
+            `;
+            salesValue = `
+                <span class="title">Receita</span>
+                <div class="d-flex">
+                    <strong class="number">${response.data.sales_value}</strong>
+                </div>
+            `;
+            $("#checkouts_count").html(checkouts);
+            $("#sales_count").html(salesCount);
+            $("#sales_value").html(salesValue);
+        }
+    }); 
+}
 
-      },
-      success: function success(response) {
-
-      }
-  }); 
+$('.box-export').on('click', function($q) {  
 
   $.ajax({
       method: "GET",
@@ -178,6 +201,14 @@ function exportReports() {
         $('.line-reports').removeClass('d-flex');
     });
 
+}
+
+function updateStorage(value){
+    let prevData = JSON.parse(sessionStorage.getItem('info'));
+    Object.keys(value).forEach(function(val, key){
+         prevData[val] = value[val];
+    })
+    sessionStorage.setItem('info', JSON.stringify(prevData));
 }
 
 function changeCalendar() {
@@ -265,6 +296,7 @@ function changeCompany() {
 }
 
 function updateReports() {
+    $('.no-graph').remove();
     $('.onPreLoad *').remove();
     $('.onPreLoad').append(skeLoad);
 
@@ -330,6 +362,7 @@ function updateReports() {
         success: function success(response) {
             $('.onPreLoad *').remove();
             getCoupons();
+            resume();
         },
     });
 }

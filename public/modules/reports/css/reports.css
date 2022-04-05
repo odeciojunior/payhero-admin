@@ -575,8 +575,7 @@ h4.number{
 
 /* new graph pie */
 .box-donut { 
-    padding-left: 0; 
-    height: 0px;
+    padding-left: 0;
     align-items: center;
 }
 @media only screen and (min-width: 768px) and (max-width : 1219px){
@@ -599,11 +598,11 @@ h4.number{
 .new-graph-pie  .ct-series-d { fill: #FF7900; }
 
 
-.new-graph-pie-mkt  .ct-series-a { fill: #868686; }
-.new-graph-pie-mkt .ct-series-b { fill: #2E85EC; }
-.new-graph-pie-mkt  .ct-series-c { fill: #665FE8; }
+.new-graph-pie-mkt  .ct-series-a { fill:  #2E85EC; }
+.new-graph-pie-mkt .ct-series-b { fill: #665FE8; }
+.new-graph-pie-mkt  .ct-series-c { fill:  #F43F5E; }
 .new-graph-pie-mkt  .ct-series-d { fill: #FF7900; }
-.new-graph-pie-mkt  .ct-series-e { fill: #F43F5E; }
+.new-graph-pie-mkt  .ct-series-e { fill: #9E9E9E; }
 
 
 .data-pie { 
