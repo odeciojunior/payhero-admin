@@ -984,6 +984,23 @@ class ReportsApiController extends Controller
             'data' => $resume
         ]);
     }
+
+    function getFinancesBlockeds(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'company' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $resume = $reportService->getFinancesBlockeds($data);
+
+        return response()->json([
+            'data' => $resume
+        ]);
+    }
     // END Page finances
 
     function getResume(Request $request)

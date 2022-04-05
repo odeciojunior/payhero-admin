@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Checkout;
 use Illuminate\Support\Facades\Auth;
+use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Cashback;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\DiscountCoupon;
@@ -3484,21 +3485,42 @@ class ReportService
     {
         try {
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-            $userId = auth()->user()->account_owner_id;
+            $company = Hashids::decode($filters["company"]);
 
-            $saleModel = new Sale();
+            $gatewayIds = [
+                Gateway::SAFE2PAY_PRODUCTION_ID,
+                Gateway::SAFE2PAY_SANDBOX_ID,
+                Gateway::ASAAS_PRODUCTION_ID,
+                Gateway::ASAAS_SANDBOX_ID,
+                Gateway::GETNET_PRODUCTION_ID,
+                Gateway::GETNET_SANDBOX_ID,
+                Gateway::GERENCIANET_PRODUCTION_ID,
+                Gateway::GERENCIANET_SANDBOX_ID,
+                Gateway::CIELO_PRODUCTION_ID,
+                Gateway::CIELO_SANDBOX_ID ,
+                // extrato cielo engloba as vendas antigas zoop e pagarme
+                Gateway::PAGARME_PRODUCTION_ID,
+                Gateway::PAGARME_SANDBOX_ID,
+                Gateway::ZOOP_PRODUCTION_ID,
+                Gateway::ZOOP_SANDBOX_ID
+            ];
 
-            $sales = $saleModel
-            ->where('owner_id', $userId)
-            ->where('status', Sale::STATUS_PENDING)
-            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+            $transactionModel = new Transaction();
+            $transactions = $transactionModel
+            ->where('company_id', $company)
+            ->where('status_enum', Transaction::STATUS_PAID)
+            ->whereIn('gateway_id', $gatewayIds)
+            ->whereBetween('created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+            ->whereDoesntHave('blockReasonSale',function ($query) {
+                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
+            });
 
-            $salesValue = $sales->sum('original_total_paid_value');
-            $salesCount = $sales->count();
+            $transactionsValue = $transactions->sum('value');
+            $transactionsAmount = $transactions->count();
 
             return [
-                'value' => FoxUtils::formatMoney($salesValue / 100),
-                'amount' => $salesCount
+                'value' => FoxUtils::formatMoney($transactionsValue / 100),
+                'amount' => $transactionsAmount
             ];
         } catch(Exception $e) {
             return response()->json([
@@ -3511,20 +3533,41 @@ class ReportService
     {
         try {
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-            $userId = auth()->user()->account_owner_id;
+            $company = Hashids::decode($filters["company"]);
 
-            $saleModel = new Sale();
+            $gatewayIds = [
+                Gateway::SAFE2PAY_PRODUCTION_ID,
+                Gateway::SAFE2PAY_SANDBOX_ID,
+                Gateway::ASAAS_PRODUCTION_ID,
+                Gateway::ASAAS_SANDBOX_ID,
+                Gateway::GETNET_PRODUCTION_ID,
+                Gateway::GETNET_SANDBOX_ID,
+                Gateway::GERENCIANET_PRODUCTION_ID,
+                Gateway::GERENCIANET_SANDBOX_ID,
+                Gateway::CIELO_PRODUCTION_ID,
+                Gateway::CIELO_SANDBOX_ID ,
+                // extrato cielo engloba as vendas antigas zoop e pagarme
+                Gateway::PAGARME_PRODUCTION_ID,
+                Gateway::PAGARME_SANDBOX_ID,
+                Gateway::ZOOP_PRODUCTION_ID,
+                Gateway::ZOOP_SANDBOX_ID
+            ];
 
-            $sales = $saleModel
-            ->where('owner_id', $userId)
-            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+            $transactionModel = new Transaction();
+            $transactions = $transactionModel
+            ->where('company_id', $company)
+            ->whereIn('gateway_id', $gatewayIds)
+            ->whereBetween('transactions.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED);
 
-            $salesValue = $sales->sum('original_total_paid_value');
-            $salesCount = $sales->count();
+            $transactionsValue = $transactions->sum('value');
+            $transactionsAmount = $transactions->count();
 
             return [
-                'value' => FoxUtils::formatMoney($salesValue / 100),
-                'amount' => $salesCount
+                'value' => FoxUtils::formatMoney($transactionsValue / 100),
+                'amount' => $transactionsAmount
             ];
         } catch(Exception $e) {
             return response()->json([
