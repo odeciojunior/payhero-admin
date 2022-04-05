@@ -26,6 +26,11 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Reports\Transformers\SalesByOriginResource;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Services\Gateways\AsaasService;
+use Modules\Core\Services\Gateways\CieloService;
+use Modules\Core\Services\Gateways\GerencianetService;
+use Modules\Core\Services\Gateways\GetnetService;
+use Modules\Core\Services\Gateways\Safe2PayService;
 
 class ReportService
 {
@@ -3307,7 +3312,7 @@ class ReportService
 
             $userId = auth()->user()->account_owner_id;
             $status = [Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED];
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
 
             $query = $checkoutModel->select(
@@ -3350,7 +3355,7 @@ class ReportService
 
             $userId = auth()->user()->account_owner_id;
             $status = Sale::STATUS_APPROVED;
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
             $query = $saleModel->select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
             ->leftJoin('transactions as transaction', function ($join) use ($userId) {
@@ -3389,7 +3394,7 @@ class ReportService
         try {
             $transactions = $this->getSalesQueryBuilder($filters);
 
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
             $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
@@ -3418,9 +3423,9 @@ class ReportService
 
             return [
                 'transactions' => $queryTransactions->numTransactions,
-                'average_ticket' => FoxUtils::formatMoney($totalAverageTicket / 100),
-                'comission' => FoxUtils::formatMoney($queryComission / 100),
-                'chargeback' => FoxUtils::formatMoney($queryChargeback / 100)
+                'average_ticket' => foxutils()->formatMoney($totalAverageTicket / 100),
+                'comission' => foxutils()->formatMoney($queryComission / 100),
+                'chargeback' => foxutils()->formatMoney($queryChargeback / 100)
             ];
         } catch(Exception $e) {
             return response()->json([
@@ -3432,7 +3437,7 @@ class ReportService
     public function getFinancesCashbacks($filters)
     {
         try {
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $userId = auth()->user()->account_owner_id;
 
             $cachsbackModel = new Cashback();
@@ -3445,35 +3450,9 @@ class ReportService
             $cashbacksCount = $cashbacks->count();
 
             return [
-                'value' => FoxUtils::formatMoney($cashbacksValue / 100),
+                'value' => foxutils()->formatMoney($cashbacksValue / 100),
                 'quantity' => $cashbacksCount
             ];
-        } catch(Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
-
-    public function getFinancesWithdrawals($filters)
-    {
-        try {
-
-
-            return [];
-        } catch(Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
-
-    public function getFinancesDistributions($filters)
-    {
-        try {
-
-
-            return [];
         } catch(Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()
@@ -3484,7 +3463,7 @@ class ReportService
     public function getFinancesPendings($filters)
     {
         try {
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $company = Hashids::decode($filters["company"]);
 
             $gatewayIds = [
@@ -3519,7 +3498,7 @@ class ReportService
             $transactionsAmount = $transactions->count();
 
             return [
-                'value' => FoxUtils::formatMoney($transactionsValue / 100),
+                'value' => foxutils()->formatMoney($transactionsValue / 100),
                 'amount' => $transactionsAmount
             ];
         } catch(Exception $e) {
@@ -3532,7 +3511,7 @@ class ReportService
     public function getFinancesBlockeds($filters)
     {
         try {
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $company = Hashids::decode($filters["company"]);
 
             $gatewayIds = [
@@ -3557,7 +3536,7 @@ class ReportService
             $transactions = $transactionModel
             ->where('company_id', $company)
             ->whereIn('gateway_id', $gatewayIds)
-            ->whereBetween('transactions.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            ->whereBetween('transactions.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
             ->where('status_enum', Transaction::STATUS_TRANSFERRED)
             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED);
@@ -3566,8 +3545,69 @@ class ReportService
             $transactionsAmount = $transactions->count();
 
             return [
-                'value' => FoxUtils::formatMoney($transactionsValue / 100),
+                'value' => foxutils()->formatMoney($transactionsValue / 100),
                 'amount' => $transactionsAmount
+            ];
+        } catch(Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    function getFinancesDistribuitions($filters)
+    {
+        try {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $company = Hashids::decode($filters["company"])[0];
+
+            $company = Company::where('id', $company)->first();
+
+            $defaultGateways = [
+                Safe2PayService::class,
+                AsaasService::class,
+                GetnetService::class,
+                GerencianetService::class,
+                CieloService::class,
+            ];
+
+            $balancesAvailable = [];
+            $balancesPending = [];
+            $balancesBlocked = [];
+            $balancesBlockedPending = [];
+
+            foreach($defaultGateways as $gatewayClass) {
+                $gateway = app()->make($gatewayClass);
+                $gateway->setCompany($company);
+
+                $balancesAvailable[] = $gateway->getAvailableBalance();
+                $balancesPending[] = $gateway->getPendingBalance();
+                $balancesBlocked[] = $gateway->getBlockedBalance();
+                $balancesBlockedPending[] = $gateway->getBlockedBalancePending();
+            }
+
+            $availableBalance = array_sum($balancesAvailable);
+            $pendingBalance = array_sum($balancesPending);
+            $blockedBalance = array_sum($balancesBlocked);
+            $blockedBalancePending = array_sum($balancesBlockedPending);
+            $totalBalanceBlocked = $blockedBalance + $blockedBalancePending;
+
+            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance + $blockedBalancePending;
+
+            return [
+                'totalBalance'              => foxutils()->formatMoney($totalBalance / 100),
+                'availableBalance'          => [
+                    'value' => foxutils()->formatMoney($availableBalance / 100),
+                    'percentage' => round(($availableBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
+                ],
+                'pendingBalance'            => [
+                    'value' => foxutils()->formatMoney($pendingBalance / 100),
+                    'percentage' => round(($pendingBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
+                ],
+                'blocked'            => [
+                    'value' => foxutils()->formatMoney($totalBalanceBlocked / 100),
+                    'percentage' => round(($totalBalanceBlocked * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
+                ]
             ];
         } catch(Exception $e) {
             return response()->json([

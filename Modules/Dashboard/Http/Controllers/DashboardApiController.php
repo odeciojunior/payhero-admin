@@ -124,7 +124,7 @@ class DashboardApiController extends Controller
             $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
 
             $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE) ;
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance +$blockedBalancePending;
+            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance + $blockedBalancePending;
             $blockedBalanceTotal = $blockedBalance + $blockedBalancePending;
             $statusArray = [
                 $transactionModel->present()->getStatusEnum('paid'),
