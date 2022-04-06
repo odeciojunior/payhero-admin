@@ -20,6 +20,7 @@ use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
@@ -235,7 +236,7 @@ class Safe2PayService implements Statement
                     'status_enum' => Transaction::STATUS_TRANSFERRED,
                 ]);
             }
-            
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -418,6 +419,31 @@ class Safe2PayService implements Statement
 
     public function refundReceipt($hashSaleId, $transaction)
     {
-        return PDF::loadHtml('<h2>Não foi possivel gerar o comprovante de estorno!.</h2>');
+        $company = (object)$transaction->company->toArray();
+        $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
+        $sale = $transaction;
+        $sale->flag = strtoupper($transaction->sale->flag) ?? null;
+
+        $sale_info = DB::table('sale_informations')
+            ->select('customer_name', 'last_four_digits')
+            ->where('sale_id', '=', $sale->sale_id)
+            ->first();
+
+        $arr = explode(' ',trim($sale_info->customer_name));
+        $sale_info->firstname = $arr[0];
+
+        $checkout_configs = DB::table('checkout_configs')
+            ->select('checkout_logo')
+            ->where('checkout_logo_enabled', '=', '1')
+            ->where('project_id', '=', $sale->sale->project_id)
+            ->first();
+
+        $plans_sales = DB::table('plans_sales')
+            ->join('plans', 'plans_sales.plan_id','=','plans.id')
+            ->select('plans.name')
+            ->where('plans_sales.sale_id', '=', $sale->sale_id)
+            ->get();
+
+        return PDF::loadView('sales::refund_receipt_vega', compact('company', 'sale', 'sale_info', 'checkout_configs','plans_sales'));
     }
 }
