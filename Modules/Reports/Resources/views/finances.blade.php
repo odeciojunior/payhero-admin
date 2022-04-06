@@ -102,11 +102,11 @@
 					<div class="col-12 box-items-finance">
                         <div class="row mb-20">
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border blue mb-10 onPreload" id="finance-transactions"></div>
+                                <div class="finance-card border blue mb-10 onPreLoad" id="finance-transactions"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border orange mb-10 onPreload" id="finance-ticket"></div>
+                                <div class="finance-card border orange mb-10 onPreLoad" id="finance-ticket"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
@@ -114,7 +114,7 @@
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border pink mb-10 onPreload" id="finance-chargebacks"></div>
+                                <div class="finance-card border pink mb-10 onPreLoad" id="finance-chargebacks"></div>
                             </div>
                         </div>
 					</div>

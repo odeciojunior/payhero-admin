@@ -485,6 +485,8 @@ h4.number{
     height: 176px;
     align-items: center;
 }
+#type-payment.container-payment { height: 202px; }
+
 .container-payment.visible { display: flex; }
 
 .no-payment { display: none;  }
@@ -578,6 +580,7 @@ h4.number{
     padding-left: 0;
     align-items: center;
 }
+.box-donut.invis { display: none !important; }
 @media only screen and (min-width: 768px) and (max-width : 1219px){
     .box-donut {
         flex-direction: column;
@@ -1430,7 +1433,8 @@ h4.number{
 .list-products li {
     margin: 0 20px 0 0;
     padding-bottom: 10px;
-    border-right: 1px solid #F4F4F4; 
+    /* border-right: 1px solid #F4F4F4;  */
+    /* border: 1px solid red; */
 }
 
 .list-products li.line { 

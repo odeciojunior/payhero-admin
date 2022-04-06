@@ -1,6 +1,7 @@
 $(function() {
     loadingOnScreen();
     exportReports();
+    distributionGraph();
     
     barGraph();
     updateReports();    
@@ -34,33 +35,36 @@ function onResume() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            commission = `
-                <span class="title">Comissão total</span>
-                <div class="d-flex">
-                    <strong class="number">${response.data.comission}</strong>
-                </div>
-            `;
             
             transactions = `
                 <span class="title">N de transações</span>
                 <div class="d-flex">
                     <strong class="number">
-                        <span>${response.data.transactions}</span>
+                        <span>${response.data.transactions == undefined ? 0 : response.data.transactions}</span>
                     </strong>
                 </div>
             `;
-
+            
             ticket = `
                 <span class="title">Ticket Médio</span>
                 <div class="d-flex">
-                    <strong class="number">${response.data.average_ticket}</strong>
+                    <span class="detail">R$</span>
+                    <strong class="number">${response.data.average_ticket == undefined ? '0,00' : removeMoneyCurrency(response.data.average_ticket)}</strong>
+                </div>
+            `;
+            commission = `
+                <span class="title">Comissão total</span>
+                <div class="d-flex">
+                    <span class="detail">R$</span>
+                    <strong class="number">${response.data.comission == undefined ? '0,00' : removeMoneyCurrency(response.data.comission)}</strong>
                 </div>
             `;
 
             chargebacks = `
                 <span class="title">Total em Chargebacks</span>
                 <div class="d-flex">
-                    <strong class="number"><span class="bold">${response.data.chargeback}</span></strong>
+                    <span class="detail">R$</span>
+                    <strong class="number"><span class="bold">${response.data.chargeback == undefined ? '0,00' : removeMoneyCurrency(response.data.chargeback)}</span></strong>
                 </div>
             `;
             
@@ -308,9 +312,8 @@ function changeCalendar() {
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
-        
         $('.onPreLoad *').remove();
-        $('.onPreLoad').append(skeLoad);
+        $('.onPreLoad').html(skeLoad);
         updateStorage({company: $(this).val()})
         updateReports();
     });
@@ -319,7 +322,7 @@ function changeCompany() {
 
 function updateReports() {
     $('.onPreLoad *').remove();
-    $('.onPreLoad').append(skeLoad);
+    $('.onPreLoad').html(skeLoad);
 
     $.ajax({
         method: "GET",
@@ -663,6 +666,21 @@ function exportReports() {
         $('.line-reports').removeClass('d-flex');
     });
 
+}
+
+function distributionGraph() {
+    new Chartist.Pie('.distribution-graph', {
+        series: [30, 15, 80, 70]
+      }, {
+        donut: true,
+        donutWidth: 30,
+        donutSolid: true,
+        startAngle: 270,
+        showLabel: false,
+        chartPadding: 0,
+        labelOffset: 0,
+        height: 123
+      });
 }
 
 let skeLoad = `

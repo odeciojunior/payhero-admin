@@ -1,6 +1,6 @@
 $(function () {
     loadingOnScreen();
-    distributionGraph();
+    
     newSellGraph();
     distributionGraphSeller();
     getInfo();
@@ -1238,20 +1238,7 @@ $(function () {
     }   
     
 
-    function distributionGraph() {
-        new Chartist.Pie('.distribution-graph', {
-            series: [30, 15, 80, 70]
-          }, {
-            donut: true,
-            donutWidth: 30,
-            donutSolid: true,
-            startAngle: 270,
-            showLabel: false,
-            chartPadding: 0,
-            labelOffset: 0,
-            height: 123
-          });
-    }
+    
 
     function distributionGraphSeller() {
         new Chartist.Pie('.distribution-graph-seller', {

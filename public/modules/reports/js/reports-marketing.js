@@ -16,10 +16,10 @@ let resumeUrl = '/api/reports/resume';
 let mktUrl = '/api/reports/marketing';
 
 function getCoupons() {
-    let couponsBlock , listCoupons = '';
     $('#card-coupon .onPreLoad *' ).remove();
     $("#block-coupons").prepend(skeLoad);
-
+    let tt = '';
+    
     return $.ajax({
         method: "GET",
         url: resumeUrl + "/coupons?date_range=" + $("input[name='daterange']").val(),
@@ -34,10 +34,12 @@ function getCoupons() {
         success: function success(response) {
             let arr = [];
             let seriesArr = [];
+            $('.new-graph-pie-mkt').html('<div class=graph-pie></div>');
             
             $.each(response.data, function (i, coupon) {
                 if(coupon != undefined) {
-                    arr.push(coupon);           
+                    arr.push(coupon);
+                    $('.data-pie li.donut-pie').remove();
                 }
                 else {
                     $('#card-coupon').height('232px');
@@ -45,49 +47,52 @@ function getCoupons() {
                     $('#block-coupons').after('<div class=no-graph>Não há dados suficientes</div>');
                 }
             });
-            console.log(arr);
             for(let i = 0; i < arr.length; i++) {
                 if(arr[i].total == 0) {
                     $('#card-coupon').height('232px');
                     $('#block-coupons *').remove();
                     $('#block-coupons').after('<div class=no-graph>Não há dados suficientes</div>');
+                    $(".box-donut").addClass('invis');
+                    $(".data-pie ul").remove();
                 } else {
+                    $(".box-donut").removeClass('invis');
+                    if($('.data-pie *').length == 0) $('.data-pie').html('<ul></ul>');
+                    
                     if(arr[i].amount != undefined) {
                         seriesArr.push(arr[i].amount);
-                        listCoupons = `
-                            <li>
-                                <div class="donut-pie ${arr[i].color}">
-                                    <figure>
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke-width="3"/>
-                                        </svg>
-                                    </figure>
-                                    <div>${arr[i].coupon}</div>
-                                </div>
-                                <div class="grey bold">${arr[i].amount}</div>
-                            </li>
-                        `;
+                       tt = 
+                            `
+                                <li>
+                                    <div class="donut-pie ${arr[i].color}">
+                                        <figure>
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke-width="3"/>
+                                            </svg>
+                                        </figure>
+                                        <div>${arr[i].coupon}</div>
+                                    </div>
+                                    <div class="grey bold">${arr[i].amount}</div>
+                                </li>                                    
+                            `
+                        console.log(tt);
+                        
+                        $('.data-pie ul').append(tt)
                     }
-                    couponsBlock = `
-                        <div class="container d-flex justify-content-between box-donut">
-                            <div class="new-graph-pie-mkt"><div class=graph-pie></div></div>
-                            <div class="data-pie"><ul>${listCoupons}</ul></div>
-                    `;
-                    $("#block-coupons").html(couponsBlock);
-                    $('#card-coupon').height('232px');
-                    new Chartist.Pie('.graph-pie', 
-                    { series: [1] }, 
-                    {
-                        donut: true,
-                        donutWidth: 20,
-                        donutSolid: true,
-                        startAngle: 270,
-                        showLabel: false,
-                        chartPadding: 0,
-                        labelOffset: 0,
-                    });
                 }
-            }
+            }                        
+            new Chartist.Pie('.graph-pie', 
+            { series: seriesArr }, 
+            {
+                donut: true,
+                donutWidth: 20,
+                donutSolid: true,
+                startAngle: 270,
+                showLabel: false,
+                chartPadding: 0,
+                labelOffset: 0,
+            });
+            $('#card-coupon').height('232px');
+            $('#card-coupon .onPreLoad *' ).remove();
         }
     });
 }           
@@ -95,7 +100,6 @@ function getCoupons() {
 function resume() {
     let checkouts, salesCount,salesValue = '';
     $("#checkouts_count, #sales_count, #sales_value").prepend(skeLoad);
-    
 
     return $.ajax({
         method: "GET",
@@ -125,7 +129,8 @@ function resume() {
             salesValue = `
                 <span class="title">Receita</span>
                 <div class="d-flex">
-                    <strong class="number">${response.data.sales_value}</strong>
+                    <span class="detail">R$</span>
+                    <strong class="number">${removeMoneyCurrency(response.data.sales_value)}</strong>
                 </div>
             `;
             $("#checkouts_count").html(checkouts);
@@ -169,21 +174,7 @@ $('.box-export').on('click', function($q) {
       }
   }); 
 
-  $.ajax({
-      method: "GET",
-      url: "http://dev.sirius.com/api/reports/marketing/devices?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
-      dataType: "json",
-      headers: {
-          Authorization: $('meta[name="access-token"]').attr("content"),
-          Accept: "application/json",
-      },
-      error: function error(response) {
-
-      },
-      success: function success(response) {
-
-      }
-  }); 
+  
 
 });
 
@@ -288,6 +279,7 @@ function changeCalendar() {
 function changeCompany() {
     $("#select_projects").on("change", function () {
         
+        $(".data-pie ul").remove();
         $('.onPreLoad *').remove();
         $('.onPreLoad').append(skeLoad);
         updateStorage({company: $(this).val()})
@@ -296,6 +288,7 @@ function changeCompany() {
 }
 
 function updateReports() {
+    $(".box-donut").addClass('invis');
     $('.no-graph').remove();
     $('.onPreLoad *').remove();
     $('.onPreLoad').append(skeLoad);
@@ -363,8 +356,91 @@ function updateReports() {
             $('.onPreLoad *').remove();
             getCoupons();
             resume();
+            devices();
         },
     });
+}
+
+function devices() {
+    let deviceBlock = '';
+    $('#card-devices .onPreLoad *' ).remove();
+    $("#block-devices").prepend(skeLoad);
+
+    return $.ajax({
+        method: "GET",
+        url: mktUrl + "/devices?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            let {
+                total, 
+                percentage_desktop, 
+                percentage_mobile, 
+                count_desktop, 
+                count_mobile
+            } = response.data;
+            
+            deviceBlock = `
+                <div class="row container-devices">
+                    <div class="container">
+                        <div class="data-holder b-bottom">
+                            <div class="box-payment-option pad-0">
+                                <div class="col-payment grey box-image-payment">
+                                    <div class="box-ico">
+                                        <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 15.7143C4.08579 15.7143 3.75 16.0341 3.75 16.4286C3.75 16.8231 4.08579 17.1429 4.5 17.1429H7.5C7.91421 17.1429 8.25 16.8231 8.25 16.4286C8.25 16.0341 7.91421 15.7143 7.5 15.7143H4.5ZM2.625 0C1.17525 0 0 1.11929 0 2.5V17.5C0 18.8807 1.17525 20 2.625 20H9.375C10.8247 20 12 18.8807 12 17.5V2.5C12 1.11929 10.8247 0 9.375 0H2.625ZM1.5 2.5C1.5 1.90827 2.00368 1.42857 2.625 1.42857H9.375C9.99632 1.42857 10.5 1.90827 10.5 2.5V17.5C10.5 18.0917 9.99632 18.5714 9.375 18.5714H2.625C2.00368 18.5714 1.5 18.0917 1.5 17.5V2.5Z" fill="#636363"/></svg>
+                                    </div>Smartphones
+                                </div>
+                                
+                                <div class="box-payment-option option">
+                                    <div class="col-payment">
+                                        <div class="box-payment center">
+                                            <span class="silver">${percentage_mobile}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-payment">
+                                        <div class="box-payment right">
+                                            <strong class="grey font-size-14">R$ ${count_mobile}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="container">
+                        <div class="data-holder b-bottom">
+                            <div class="box-payment-option pad-0">
+                                <div class="col-payment grey box-image-payment">
+                                    <div class="box-ico">
+                                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 2.83333C0 1.26853 1.26853 0 2.83333 0H14.1667C15.7315 0 17 1.26853 17 2.83333V11.3333C17 12.8981 15.7315 14.1667 14.1667 14.1667H11.3333V14.875C11.3333 15.2662 11.6505 15.5833 12.0417 15.5833H12.75C13.1412 15.5833 13.4583 15.9005 13.4583 16.2917C13.4583 16.6829 13.1412 17 12.75 17H4.25C3.8588 17 3.54167 16.6829 3.54167 16.2917C3.54167 15.9005 3.8588 15.5833 4.25 15.5833H4.95833C5.34953 15.5833 5.66667 15.2662 5.66667 14.875V14.1667H2.83333C1.26853 14.1667 0 12.8981 0 11.3333V2.83333ZM10.0376 15.5833C9.95928 15.3618 9.91667 15.1234 9.91667 14.875V14.1667H7.08333V14.875C7.08333 15.1234 7.04072 15.3618 6.96242 15.5833H10.0376ZM14.1667 12.75C14.9491 12.75 15.5833 12.1157 15.5833 11.3333H1.41667C1.41667 12.1157 2.05093 12.75 2.83333 12.75H14.1667ZM15.5833 2.83333C15.5833 2.05093 14.9491 1.41667 14.1667 1.41667H2.83333C2.05093 1.41667 1.41667 2.05093 1.41667 2.83333V9.91667H15.5833V2.83333Z" fill="#636363"/></svg>
+                                    </div> Desktop
+                                </div>
+                                <div class="box-payment-option option">
+                                    <div class="col-payment">
+                                        <div class="box-payment center">
+                                            <span class="silver">${percentage_desktop}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-payment">
+                                        <div class="box-payment right">
+                                            <strong class="grey font-size-14">R$ ${count_desktop}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            $("#block-devices").html(deviceBlock);
+        }
+    }); 
 }
 
 let skeLoad = `
