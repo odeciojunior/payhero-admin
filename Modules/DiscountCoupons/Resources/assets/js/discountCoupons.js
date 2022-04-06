@@ -346,7 +346,7 @@ function run_search(search, now){
         //animateItemsPlaceholder()
         
         var items_saved = mount_selected_items(search, search2)
-
+        // console.log(items_saved);
         $.ajax({
             data: {
                     most_sales: 1,
@@ -412,7 +412,7 @@ function run_search(search, now){
                     items += item;
                 }
 
-                if(items.length > 0 || (!search & !search2)){
+                if(items.length > 0 || items_saved){
                     
                     $('#search_result, #search_result2').html(items_saved + items);
                     
@@ -1213,6 +1213,7 @@ $(function () {
                     response.rule_value = response.rule_value.replace(',','.')
                     response.value = response.value.replace(',','.')
                     $('#2minimum_value').val(response.rule_value);
+                    
 
                     if (response.type == 1) {
                         $('#2c_type_value').prop('checked',true).click();
@@ -1267,66 +1268,7 @@ $(function () {
 
     
 
-    function count_plans() { //thumbnails
-        
-        $('#show_plans').html('')
-
-        $.ajax({
-            data: {
-                    total: 1,
-                    list: 'plan',
-                    search: '',
-                    project_id: projectId,
-                    //page: params.page || 1
-                }
-            ,
-
-            method: "GET",
-            url: "/api/plans/user-plans",
-            
-            dataType: "json",
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-                
-            }, success: function success(response) {
-                
-                
-                var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
-
-                
-                var html_show_plans = ''
-                for(i in response.thumbnails){
-                    html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:43px; height:43px;
-                    background-repeat: no-repeat; background-position: center center; 
-                    background-size: cover !important; background: url('`+response.thumbnails[i].products[0].photo+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`
-                }
-
-                $('#show_plans').removeClass('mostrar_mais_detalhes')
-
-                $('#show_plans').html(html_show_plans)
-
-                $('[data-toggle="tooltip"]').tooltip('dispose')
     
-                $('[data-toggle="tooltip"]').tooltip({
-                    container: '.page'
-                });
-
-                if(response.total > 8){
-                    var rest = response.total - 8
-                    $('#show_plans').append('<div class="plans_rest">+'+rest+'</div>')
-
-                }
-
-
-                
-            }
-        });
-        
-    }
 
     function count_plans2() { //thumbnails on editing
         
@@ -1531,6 +1473,67 @@ $(function () {
 
 });
 
+function count_plans() { //thumbnails
+        
+    $('#show_plans').html('')
+
+    $.ajax({
+        data: {
+                total: 1,
+                list: 'plan',
+                search: '',
+                project_id: projectId,
+                //page: params.page || 1
+            }
+        ,
+
+        method: "GET",
+        url: "/api/plans/user-plans",
+        
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+            
+        }, success: function success(response) {
+            
+            
+            var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
+
+            
+            var html_show_plans = ''
+            for(i in response.thumbnails){
+                html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:43px; height:43px;
+                background-repeat: no-repeat; background-position: center center; 
+                background-size: cover !important; background: url('`+response.thumbnails[i].products[0].photo+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`
+            }
+
+            $('#show_plans').removeClass('mostrar_mais_detalhes')
+
+            $('#show_plans').html(html_show_plans)
+
+            $('[data-toggle="tooltip"]').tooltip('dispose')
+
+            $('[data-toggle="tooltip"]').tooltip({
+                container: '.page'
+            });
+
+            if(response.total > 8){
+                var rest = response.total - 8
+                $('#show_plans').append('<div class="plans_rest">+'+rest+'</div>')
+
+            }
+
+
+            
+        }
+    });
+    
+}
+
 var timer_desc
 function set_description_value(obj, obj2){
     $('#search_input_description_value').val($(obj).val())
@@ -1593,16 +1596,19 @@ function mount_selected_items(search, search2){
     }
 
     for(i in items_selected){
+        
         if(search){
             if(items_selected[i].name.toLowerCase().search(search.toLowerCase()) < 0){
-                continue;
+                continue
             }
         }
         if(search2){
             if(items_selected[i].description.toLowerCase().search(search2.toLowerCase()) < 0){
-                continue;
+                continue
             }
         }
+        
+
         var toolTip
         if(items_selected[i].name.length > 18){
 
@@ -2560,12 +2566,13 @@ $(function () {
         // console.log('oi');
         // $('#search_result, #search_result2').html('');
 
-        $('.form-control').each(function(){    
-            $(this).val('');
-        })
+        // $('.form-control').each(function(){    
+        //     $(this).val('');
+        // })
 
-        $('#search_input2').focus()
+        $('#search_input2').val('')
         $('#search_input_description').val('')
+        $('#search_input2').trigger('focus')
 
 
         $('#c-edit_step0').hide()

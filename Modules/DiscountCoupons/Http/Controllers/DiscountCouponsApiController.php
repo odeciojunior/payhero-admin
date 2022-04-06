@@ -17,7 +17,7 @@ use Modules\DiscountCoupons\Transformers\DiscountCouponsResource;
 use Spatie\Activitylog\Models\Activity;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Request;
-
+use Modules\Core\Entities\Plan;
 
 /**
  * Class DiscountCouponsApiController
@@ -355,7 +355,25 @@ class DiscountCouponsApiController extends Controller
                 if(empty($requestValidated['progressive_rules'])) unset($requestValidated['progressive_rules']);
                 if(empty($requestValidated['name'])) unset($requestValidated['name']);
 
-                //Log::debug($requestValidated);
+                if($requestValidated['plans']=='[]') //todos os planos
+                {
+                    
+                    // $allPlans = Plan::where('project_id',current(Hashids::decode($projectId)))->with('products')->get();
+                    // $json = [];
+                    // foreach($allPlans as $plan){
+                    //     $id = Hashids::encode($plan->id);
+                    //     $jsonPlan = [ "id"=>$id, 
+                    //         "name"=> $plan->name, 
+                    //         "image"=> $plan->products[0]->photo, 
+                    //         "description"=> $plan->description ];
+                    //     array_push($json, $jsonPlan);
+                    // }
+                    // $json = json_encode($json);
+                    // $requestValidated['plans'] = $json;
+                    //Log::debug(($json));
+
+                } 
+                
                 $coupon->update($requestValidated);
 
                 return response()->json(
