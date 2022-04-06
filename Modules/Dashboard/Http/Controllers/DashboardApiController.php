@@ -48,7 +48,8 @@ class DashboardApiController extends Controller
                 }
             )->log('Visualizou Dashboard');
 
-            $companies = (new Company())->where('user_id', auth()->user()->account_owner_id)
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)
+                    ->where('active_flag', true)
                     ->orderBy('order_priority')
                     ->get() ?? collect();
 
