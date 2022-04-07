@@ -3734,5 +3734,44 @@ class ReportService
 
         return $data;
     }
+
+    public function getOperationalSystems($filters)
+    {
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $data = Checkout::select(DB::raw('os_enum, count(*) as sales_amount'))
+                            ->leftJoin('sales as s', 's.checkout_id', '=', 'checkouts.id')
+                            ->where('s.status', Sale::STATUS_APPROVED)
+                            ->where('s.owner_id', auth()->user()->account_owner_id)
+                            ->whereBetween('s.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                            ->groupBy('os_enum')
+                            ->get()
+                            ->toArray();
+
+        $salesAmount = 0;
+
+        foreach($data as $key => &$operationalSystem) {
+            if(!in_array($operationalSystem['os_enum'], [
+                            Checkout::OPERATIONAL_SYSTEM_ANDROID,
+                            Checkout::OPERATIONAL_SYSTEM_IOS,
+                            Checkout::OPERATIONAL_SYSTEM_WINDOWS,
+                            Checkout::OPERATIONAL_SYSTEM_LINUX
+            ])){
+                unset($data[$key]);
+                continue;
+            }
+            $salesAmount += $operationalSystem['sales_amount'];
+        }
+
+        foreach($data as &$operationalSystem) {
+            $operationalSystem['description'] = (new Checkout)->present()->getOperationalSystemName($operationalSystem['os_enum']);
+            $operationalSystem['percentage'] = number_format(($operationalSystem['sales_amount'] * 100) / $salesAmount, 1, '.', ',') . '%';
+            unset($operationalSystem['id_code']);
+            unset($operationalSystem['os_enum']);
+            unset($operationalSystem['sales_amount']);
+        }
+
+        return $data;
+    }
 }
 
