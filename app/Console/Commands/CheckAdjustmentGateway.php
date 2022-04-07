@@ -53,8 +53,8 @@ class CheckAdjustmentGateway extends Command
                 ->whereHas('gatewayCompanyCredential')
                 //->onlyTrashed()
                 ->withTrashed()
-                ->where('id', '>=', 5364)
-                ->where('id', '<=', 5500)
+                ->where('id', '>=', 3000)
+                ->where('id', '<=',  5000)
             ;
 
             $total = $companies->count();
@@ -94,7 +94,7 @@ class CheckAdjustmentGateway extends Command
     public function checkGetnet(Company $company) {
 
         $getnetService = new GetnetBackOfficeService();
-        $data = Carbon::createFromFormat('d/m/Y', '01/09/2020');
+        $data = Carbon::createFromFormat('d/m/Y', '05/02/2022');
 //        $data = Carbon::createFromFormat('d/m/Y', '05/11/2021');
         $aux = 0;
 

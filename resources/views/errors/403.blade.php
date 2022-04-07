@@ -18,12 +18,12 @@
     <div class="page-holder">
 
         <div class="content-error d-flex text-center">
-            <img class="svgorange" src="{!! asset('modules/global/img/svg/dog_off.svg') !!}">
+            <img class="svgorange" src="{!! mix('build/global/img/svg/dog_off.svg') !!}">
             <h1 class="big"> Conteúdo indisponível</h1>
             <p>Você não tem permissão de acesso aqui! Solicite permissão ao<br/>
 titular para visualizar e gerenciar esse conteúdo. </p>
             <a href="javascript:history.back()" class="btn btn-info btn-lg">
-                <img class="svgorange" src="{!! asset('modules/global/img/svg/arrow_left.svg') !!}">&nbsp;&nbsp;Retornar para a página anterior
+                <img class="svgorange" src="{!! mix('build/global/img/svg/arrow_left.svg') !!}">&nbsp;&nbsp;Retornar para a página anterior
             </a>
         </div>
 
@@ -76,7 +76,7 @@ titular para visualizar e gerenciar esse conteúdo. </p>
     .btn-info, .btn-info:hover{
         background: #2E85EC;
     }
-    
+
 </style>
 
 </html>

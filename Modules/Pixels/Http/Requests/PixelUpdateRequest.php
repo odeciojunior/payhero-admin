@@ -19,6 +19,8 @@ class PixelUpdateRequest extends FormRequest
             'code' => 'required|string',
             'edit_pixel_plans' => 'required|array',
             'checkout' => 'nullable',
+            'send_value_checkout' => 'nullable',
+            'purchase_all' => 'nullable',
             'basic_data' => 'nullable',
             'delivery' => 'nullable',
             'coupon' => 'nullable',
@@ -35,7 +37,6 @@ class PixelUpdateRequest extends FormRequest
             'value_percentage_purchase_boleto' => 'nullable|integer|max:100|min:10',
             'url_facebook_domain_edit' => 'nullable|string|max:255',
             'event_select' => 'required_if:platform,google_adwords',
-            'send_value_checkout' => 'nullable',
         ];
     }
 

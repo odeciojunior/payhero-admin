@@ -18,7 +18,7 @@
 <div class="page-holder">
 
     <div class="content-error d-flex text-center">
-        <img src="{!! asset('modules/global/img/manutencao.svg') !!}" alt="CloudFox">
+        <img src="{!! mix('build/global/img/manutencao.svg') !!}" alt="CloudFox">
         <h1 class="big">Voltaremos em breve!</h1>
         <p style="font-size:12px; max-width: 400px;">Desculpe pelo transtorno, nós estamos realizando uma manutenção no momento e voltaremos em breve.</p>
     </div>

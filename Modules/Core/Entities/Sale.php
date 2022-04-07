@@ -349,6 +349,11 @@ class Sale extends Model
         return $this->hasMany(SaleGatewayRequest::class);
     }
 
+    public function saleWoocommerceRequests(): HasMany
+    {
+        return $this->hasMany(SaleWoocommerceRequests::class);
+    }
+
     public function contestations(): HasMany
     {
         return $this->hasMany(SaleContestation::class);

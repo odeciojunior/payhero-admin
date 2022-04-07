@@ -1,6 +1,6 @@
 <div id="no-integration-found" class='justify-content-center' style="display:none !important;
-                                                                height: 100%; 
-                                                                width: 100%; 
+                                                                height: 100%;
+                                                                width: 100%;
                                                                 position: absolute;
                                                                 display: -webkit-flex;
                                                                 display: flex;
@@ -8,9 +8,10 @@
                                                                 align-items: center;
                                                                 -webkit-justify-content: center;
                                                                 justify-content: center;
-                                                                padding-bottom:116px">
+                                                                padding-bottom:116px;
+                                                                top:220px">
     <div class="content-error text-center">
-        <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
+        <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
         <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
         <p class="desc gray">Integre suas lojas com WooCommerce de forma totalmente automatizada!</p>
     </div>

@@ -28,7 +28,7 @@ if (!function_exists('hashids_encode')) {
 }
 
 if (!function_exists('foxutils')) {
-    function foxutils()
+    function foxutils(): \Modules\Core\Services\FoxUtils
     {
         return new \Modules\Core\Services\FoxUtils();
     }

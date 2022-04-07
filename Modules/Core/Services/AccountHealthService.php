@@ -121,19 +121,29 @@ class AccountHealthService
 
     public function getChargebackScore(User $user): float
     {
-        $startDate = now()->startOfDay()->subDays(140);
+        $startDate = now()->startOfDay()->subDays(150);
         $endDate = now()->endOfDay()->subDays(20);
         $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);
-        $maxScore = 10;
+        $maxChargebackScore = 10;
         //each 0.3% of chargebacks rate means -1 point of score
         $chargebackScoreReference = 0.3;
 
-        $score = 0;
+        $chargebackScore = 0;
         if ($chargebackRate <= 3) {
-            $score = round(($maxScore - $chargebackRate / $chargebackScoreReference), 2);
+            $chargebackScore = round(($maxChargebackScore - $chargebackRate / $chargebackScoreReference), 2);
         }
 
-        return $score;
+        $contestationRate = $this->chargebackService->getContestationRateInPeriod($user, $startDate, now()->endOfDay());
+        $maxContestationScore = 10;
+        //each 0.5% of contestation rate means -1 point of score
+        $contestationScoreReference = 0.5;
+
+        $contestationScore = 0;
+        if ($contestationRate <= 5) {
+            $contestationScore = round(($maxContestationScore - $contestationRate / $contestationScoreReference), 2);
+        }
+
+        return round(($chargebackScore + $contestationScore) / 2, 2);
     }
 
     public function getTrackingScore(User $user): float
@@ -198,11 +208,10 @@ class AccountHealthService
     {
         try {
             if (!$this->userHasMinimumSalesAmount($user)) {
-                Log::info('Não existem transações suficientes até a data de ' . now()->format('d/m/Y') . ' para calcular o score do usuário ' . $user->name . '.');
                 return false;
             }
 
-            $startDate = now()->startOfDay()->subDays(140);
+            $startDate = now()->startOfDay()->subDays(150);
             $endDate = now()->endOfDay()->subDays(20);
 
             $chargebackRate = $this->chargebackService->getChargebackRateInPeriod($user, $startDate, $endDate);

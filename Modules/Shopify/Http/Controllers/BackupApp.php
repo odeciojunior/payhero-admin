@@ -20,7 +20,7 @@ use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Events\ShopifyIntegrationEvent;
 use Modules\Shopify\Transformers\ShopifyResource;
 use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Core\Transformers\CompaniesSelectResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**

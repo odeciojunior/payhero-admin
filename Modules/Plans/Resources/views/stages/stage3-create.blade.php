@@ -2,21 +2,21 @@
     <div class="box-breadcrumbs">
         <div class="d-flex align-items-center justify-content-between">
             <div class="box-stage products finalized d-flex align-items-center">
-                <div class="icon mr-15"><img src="/modules/global/img/icon-check.svg" alt="Icon Products"></div>
+                <div class="icon mr-15"><img src="/build/global/img/icon-check.svg" alt="Icon Products"></div>
                 <div class="title">Produtos</div>
             </div>
 
             <div class="line"><hr></div>
 
             <div class="box-stage details finalized d-flex align-items-center">
-                <div class="icon mr-15"><img src="/modules/global/img/icon-check.svg" alt="Icon Costs"></div>
+                <div class="icon mr-15"><img src="/build/global/img/icon-check.svg" alt="Icon Costs"></div>
                 <div class="title">Custos</div>
             </div>
 
             <div class="line"><hr></div>
 
             <div class="box-stage informations active d-flex align-items-center">
-                <div class="icon mr-15"><img src="/modules/global/img/icon-info-plans-c.svg" alt="Icon Informations"></div>
+                <div class="icon mr-15"><img src="/build/global/img/icon-info-plans-c.svg" alt="Icon Informations"></div>
                 <div class="title" style="color: #2E85EC;">Informações</div>
             </div>
         </div>

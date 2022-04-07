@@ -4,10 +4,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css?v=' . uniqid()) !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=' . uniqid()) !!}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/reports/index.min.css') }}">
     @endpush
 
     
@@ -975,13 +972,6 @@
 @endsection
 
 @push('scripts')
-    <!--script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script-->
-    <script type='text/javascript' src='{{asset('modules/reports/js/chart-js/Chartjs-3.7-min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/moment.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js?v=' . uniqid())}}'></script>
+    <script type='text/javascript' src='{{ mix('build/layouts/reports/index.min.js') }}'></script>
 @endpush
 

@@ -2,9 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=' . versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css?v=' . versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/invites/index.min.css') }}">
         <style>
             .badge {
                 color: white;
@@ -94,7 +92,7 @@
             </div>
         </div>
         <div id="content-error" class='content-error text-center' style="display:none !important;">
-                <img src="modules/global/img/convites.svg" width="156px"/>
+                <img src="build/global/img/convites.svg" width="156px"/>
                 <h4 class="big gray">Você ainda não enviou convites!</h4> <br>
                 <p class="desc gray">Envie convites, e
                     <strong>ganhe 1% de tudo que seu convidado vender durante 6 meses!</strong></p>
@@ -323,7 +321,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/invites/js/invites.js?v=' . versionsFile()) }}"></script>
+        <script src="{{ mix('build/layouts/invites/index.min.js') }}"></script>
     @endpush
 
 @endsection

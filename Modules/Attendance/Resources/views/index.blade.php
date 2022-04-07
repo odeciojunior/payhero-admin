@@ -3,10 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/global/select3/select3.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/attendance/css/index.css?v='. versionsFile()) }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/attendance/index.min.css') }}">
     @endpush
 
     <div class="page mb-0" id="project-not-empty" style="display: none !important;">
@@ -163,14 +160,18 @@
                                         <span class="material-icons ml-10">arrow_back_ios</span>
                                     </button>
                                     <div class="ticket-customer"></div>
-                                    <div class="ticket-status" style="display:none">
+                                    <div class="ticket-status d-none">
                                         <span class="ticket-status-icon small"></span>
                                         <span class="ticket-status-text"></span>
                                     </div>
-                                    <div class="ticket-category" style="display:none">
+                                    <div class="ticket-category d-none">
                                         <span class="ticket-category-text"></span> aberta em
                                         <span class="ticket-start-date"></span> para
                                         <span class="ticket-project"></span>
+                                    </div>
+                                    <div class="ticket-sale d-none">
+                                        <b>Venda: </b>
+                                        <span></span>
                                     </div>
                                 </div>
                                 <div class="messages-container">
@@ -216,11 +217,7 @@
     @include('projects::empty')
 
     @push('scripts')
-        <script src="{{asset('modules/global/select3/select3.js?v=' . versionsFile())}}"></script>
-        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js?v=' . versionsFile()) }}"></script>
-        <script src="{{asset('/modules/tickets/js/emoji-button.min.js')}}"></script>
-        <script src="{{asset('/modules/tickets/js/index.js?v=' . versionsFile())}}"></script>
+        <script src="{{ mix('build/layouts/attendance/index.min.js') }}"></script>
     @endpush
 
 @endsection

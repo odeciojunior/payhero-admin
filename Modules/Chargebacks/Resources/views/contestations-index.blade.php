@@ -3,14 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/table.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css?v=123') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=123') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=123') }}">
-        <link rel="stylesheet" href="{{ asset('modules/chargebacks/css/contestations-index.css?v='. versionsFile()) }}">
-        <link rel="stylesheet" href="{{ asset('/modules/global/jquery-daterangepicker/daterangepicker.min.css?v='. versionsFile()) }}">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="{{ mix('build/layouts/chargebacks/contestations-index.min.css') }}">
         <style>
             .select2-selection--single {
                 border: 1px solid #dddddd !important;
@@ -86,9 +79,9 @@
                                 <label for="is_expired">Expiração</label>
                                 <br>
                                 <select name='is_expired' id="is_expired" class="sirius-select">
-                                    <option value="0">Ambos</option>
+                                    <option value="0" selected>Ambos</option>
                                     <option value="1">Expirado</option>
-                                    <option value="2" selected>Não expirado</option>
+                                    <option value="2">Não expirado</option>
                                 </select>
                             </div>
 
@@ -143,15 +136,21 @@
                                     <input id="customer" name="customer" class="input-pad" placeholder="Nome do cliente">
                                 </div>
                             </div>
-                            <div class="row justify-content-end">
-                                <div class='col-sm-12 col-md-2 mt-10 px-0'>
-                                    <label for="sale_approve" class='pl-50 mb-10'>Vendas aprovadas</label>
-                                    <br>
-                                    <label class="switch mr-0" style="margin-left:140px">
+
+                            <div class="row no-gutters justify-content-between justify-content-sm-end mt-20">
+                                <div class="mr-10">
+                                    <label for="sale_approve" class=''>
+                                        Vendas aprovadas
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label class="switch m-0">
                                         <input type="checkbox" id='sale_approve' name="sale_approve" >
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
+
                             </div>
                         </div>
 
@@ -163,25 +162,27 @@
                                     data-target="#bt_collapse"
                                     aria-expanded="false"
                                     aria-controls="bt_collapse">
-                                    <img id="icon-filtro" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/filter-2-line.svg') }} "/>
+                                    <img id="icon-filtro" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/filter-2-line.svg') }} "/>
                                     <span id="text-filtro" class="text-break">Filtros avançados</span>
                                 </div>
                             </div>
                             <div class="col-6 col-xl-3 mt-20">
                                 <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center">
-                                    <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} "/>
+                                    <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/check-all.svg') }} "/>
                                     <span class="text-break">Aplicar filtros</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
+
                 <div class="fixhalf"></div>
 
-                <div class="row justify-content-center mt-10">
-                    <div class="col-md-3 px-0">
+                <div class="row no-gutters mt-10">
+
+                    <div class="col-md-3 pl-0 py-15 pr-15">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body p-15">
+                            <div class="card-body">
                                 <h5 class="font-size-16 text-muted">N° de contestações</h5>
                                 <h4 class="total-number">
                                     <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestation"></span>
@@ -191,9 +192,9 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3 pr-0">
+                    <div class="col-md-3 pl-0 py-15 pr-15">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body p-15">
+                            <div class="card-body">
                                 <h5 class="font-size-16 text-muted">Resultou em chargeback</h5>
                                 <h4 class="total-number">
                                     <span class="font-size-30 bold" style="color:#5A5A5A" id="total-chargeback-tax-val"></span>
@@ -203,9 +204,9 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-3 pl-0 py-15 pr-15">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body p-15">
+                            <div class="card-body">
                                 <h5 class="font-size-16 text-muted">Total</h5>
                                 <h4 class="total-number">
                                     <span class="text-muted">R$ </span>
@@ -220,7 +221,7 @@
                 </div>
 
                 <div class="alert alert-light alert-dismissible fade show text-primary border border-primary alert-contestation" role="alert" style="border-radius: 12px">
-                    <img src="{{ asset('modules/chargebacks/svg/info-contestation.svg') }}" alt="Informação sobre contestação">
+                    <img src="{{ mix('build/layouts/chargebacks/svg/info-contestation.svg') }}" alt="Informação sobre contestação">
                     <span class="alert-text">
                         <span class="bold">Contestações</span>
                         são ocorrências enviadas pelas operadoras de crédito após contestação de alguma compra pelo titular do cartão.
@@ -247,7 +248,7 @@
                                 <td class="table-title" style="min-width: 100px;"></td>
                             </tr>
                             </thead>
-                            <tbody id="chargebacks-table-data" img-empty="{!! asset('modules/global/img/contestacoes.svg')!!}">
+                            <tbody id="chargebacks-table-data" img-empty="{!! mix('build/global/img/contestacoes.svg')!!}">
                             {{-- js carrega... --}}
                             </tbody>
                         </table>
@@ -269,11 +270,7 @@
         </div>
 
         @push('scripts')
-            <script src="{{ asset('/modules/chargebacks/js/contestations-index.js?v='. random_int(100, 10000)) }}"></script>
-            <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-            <script src="{{ asset('modules/global/jquery-daterangepicker/daterangepicker.min.js?v=' . versionsFile()) }}"></script>
-            {{-- <script src="{{ asset('modules/global/js/daterangepicker.min.js') }}"></script> --}}
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+            <script src="{{ mix('build/layouts/chargebacks/contestations-index.min.js') }}"></script>
     @endpush
 
 @endsection

@@ -1,0 +1,19 @@
+.card-img-controll {
+    max-height: 250px;
+}
+
+.o-add-1 {
+    font-size: 32px
+}
+
+.o-checkmark-1 {
+    font-size: 22px;
+}
+
+.o-add-1:hover, .o-checkmark-1:hover {
+    color: #FFF;
+}
+
+.o-add-1, .o-checkmark-1 {
+    -webkit-text-stroke: 1px #FFF;
+}

@@ -48,7 +48,8 @@ class DashboardApiController extends Controller
                 }
             )->log('Visualizou Dashboard');
 
-            $companies = (new Company())->where('user_id', auth()->user()->account_owner_id)
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)
+                    ->where('active_flag', true)
                     ->orderBy('order_priority')
                     ->get() ?? collect();
 
@@ -396,7 +397,6 @@ class DashboardApiController extends Controller
 
     private function getDataAccountChargeback($companyHash): array
     {
-
         try {
             if (empty($companyHash)) {
                 return [];
@@ -411,14 +411,14 @@ class DashboardApiController extends Controller
                 return [];
             }
 
-            $startDate = now()->startOfDay()->subDays(140);
+            $startDate = now()->startOfDay()->subDays(150);
             $endDate = now()->endOfDay()->subDays(20);
 
             $chargebackService = new ChargebackService();
-            $totalChargeback = $chargebackService->getTotalChargebacksInPeriod($user, $startDate, $endDate)->count();
+            $totalChargeback = $chargebackService->getTotalChargebacksInPeriod($user, $startDate);
 
             $saleService = new SaleService();
-            $totalApprovedSales = $saleService->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate)->count();
+            $totalApprovedSales = $saleService->getCreditCardApprovedSalesInPeriod($user, $startDate, $endDate);
 
             return [
                 'chargeback_score'       => $user->chargeback_score > 1 ? round($user->chargeback_score, 1) : $user->chargeback_score,
