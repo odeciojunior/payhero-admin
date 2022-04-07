@@ -386,7 +386,7 @@ h4.number{
 
 .ico-finance { background: #fff url('/modules/global/img/reports/cash.png') no-repeat center; }
 .ico-sell { background: #fff url('/modules/global/img/reports/ico-sell.png') no-repeat center; }
-.ico-mkt { background: #fff url('/modules/global/img/reports/ico-mkt.png') no-repeat center; }
+.ico-mkt { background: #fff; }
 .ico-pending { background: #fff url('/modules/global/img/reports/pending.png') no-repeat center; }
 .ico-blocked { background: #fff url('/modules/global/img/reports/blokedbalance.png') no-repeat center; }
 .ico-cupons { background: #fff url('/modules/global/img/reports/ico-cupons.png') no-repeat center; }
@@ -1407,7 +1407,7 @@ h4.number{
 .ico-arrow-left {
     width: 9px;
     height: 15px;
-    background: url('/modules/global/img/reports/ico-arrow.png') no-repeat 0 50%;
+    background: url('./modules/global/img/reports/ico-arrow.png') no-repeat 0 50%;
     text-indent: -9000em;
     display: inline-block;
 }
