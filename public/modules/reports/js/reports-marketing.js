@@ -18,7 +18,7 @@ let mktUrl = '/api/reports/marketing';
 function getCoupons() {
     $('#card-coupon .onPreLoad *' ).remove();
     $("#block-coupons").prepend(skeLoad);
-    let tt = '';
+    let couponList = '';
     
     return $.ajax({
         method: "GET",
@@ -60,7 +60,7 @@ function getCoupons() {
                     
                     if(arr[i].amount != undefined) {
                         seriesArr.push(arr[i].amount);
-                       tt = 
+                        couponList = 
                             `
                                 <li>
                                     <div class="donut-pie ${arr[i].color}">
@@ -74,9 +74,8 @@ function getCoupons() {
                                     <div class="grey bold">${arr[i].amount}</div>
                                 </li>                                    
                             `
-                        console.log(tt);
                         
-                        $('.data-pie ul').append(tt)
+                        $('.data-pie ul').append(couponList)
                     }
                 }
             }                        
@@ -140,6 +139,30 @@ function resume() {
     }); 
 }
 
+function frequenteSales() {
+    let salesBlock = '';
+    $('#card-most-sales .onPreLoad *' ).remove();
+    $("#block-sales").prepend(skeLoad);
+
+    return $.ajax({
+        method: "GET",
+        url: mktUrl + "/most-frequent-sales?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            let {description, name, photo, sales_amount, value} = response.data;
+            console.log(response.data);
+        }
+    }); 
+  
+}
+
 $('.box-export').on('click', function($q) {  
 
   $.ajax({
@@ -157,24 +180,6 @@ $('.box-export').on('click', function($q) {
 
       }
   });
-
-  $.ajax({
-      method: "GET",
-      url: "http://dev.sirius.com/api/reports/marketing/most-frequent-sales?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
-      dataType: "json",
-      headers: {
-          Authorization: $('meta[name="access-token"]').attr("content"),
-          Accept: "application/json",
-      },
-      error: function error(response) {
-
-      },
-      success: function success(response) {
-
-      }
-  }); 
-
-  
 
 });
 
@@ -357,6 +362,7 @@ function updateReports() {
             getCoupons();
             resume();
             devices();
+            // frequenteSales();
         },
     });
 }

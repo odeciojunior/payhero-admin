@@ -1431,16 +1431,13 @@ h4.number{
 .list-products.visible { display: flex; }
 
 .list-products li {
-    margin: 0 20px 0 0;
+    /* margin: 0 20px 0 0; */
     padding-bottom: 10px;
-    /* border-right: 1px solid #F4F4F4;  */
-    /* border: 1px solid red; */
 }
 
 .list-products li.line { 
-    border: 0; 
-    margin: 0 0 10px 0;
-    padding: 0;
+    border-left: 1px solid #f4f4f4; 
+    padding-left: 20px;
 }
 
 .box-list-products {
@@ -1639,7 +1636,7 @@ h4.number{
 #graph-pending,
 #graph-sell,
 #graph-cashback { 
-    margin: 0px 0 -8px -8px; 
+    margin: 0px 0 -8px 0; 
     display: none;
 } 
 #comission-graph.invisible,

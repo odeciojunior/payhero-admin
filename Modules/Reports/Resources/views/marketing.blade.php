@@ -977,13 +977,13 @@
                             
                             <div class="">
                                 <div class="d-flex sub-distribution">
-                                    <div class="card inner">
+                                    <div class="card inner" id="card-most-sales">
                                         <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
                                                 <strong>Vendas mais frequentes</strong>
                                             </h5>
                                         </header>
-                                        <div id="" class="custom-table scrollbar pb-0 pt-0">
+                                        <div id="block-sales" class="custom-table scrollbar pb-0 pt-0">
                                             <div class="row">
                                                 <div class="container">
                                                     <div class="data-holder b-bottom scroll-212">
