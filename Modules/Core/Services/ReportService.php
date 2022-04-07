@@ -1207,9 +1207,6 @@ class ReportService
                 $transactions->where('sales.project_id', $projectId);
             }
 
-            $status = [1, 2, 4, 7, 8, 12, 20, 21, 22, 24];
-            $transactions->whereIn('sales.status', $status);
-
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $transactions->whereBetween('sales.start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
 
@@ -2647,6 +2644,9 @@ class ReportService
        try {
             $transactions = $this->getSalesQueryBuilder($filters);
 
+            $saleModel = new Sale();
+            $sales = $saleModel->where('project_id', current(Hashids::decode($filters['project_id'])));
+
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
@@ -2659,15 +2659,15 @@ class ReportService
                 $diffInDays = $endDate->diffInDays($startDate);
 
                 if ($diffInDays <= 20) {
-                    return $this->getResumeSalesByDays($transactions, $filters);
+                    return $this->getResumeSalesByDays($sales, $filters);
                 } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                    return $this->getResumeSalesByTwentyDays($transactions, $filters);
+                    return $this->getResumeSalesByTwentyDays($sales, $filters);
                 } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                    return $this->getResumeSalesByFortyDays($transactions, $filters);
+                    return $this->getResumeSalesByFortyDays($sales, $filters);
                 } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                    return $this->getResumeSalesByWeeks($transactions, $filters);
+                    return $this->getResumeSalesByWeeks($sales, $filters);
                 } elseif ($diffInDays > 140) {
-                    return $this->getResumeSalesByMonths($transactions, $filters);
+                    return $this->getResumeSalesByMonths($sales, $filters);
                 }
             }
         } catch(Exception $e) {
@@ -2701,7 +2701,7 @@ class ReportService
 
         $resume = $transactions
         ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
-        ->select(DB::raw('sales.id as sale, HOUR(sales.start_date) as hour'))
+        ->select(DB::raw('id as sale, HOUR(start_date) as hour'))
         ->get();
 
         $saleData = [];
@@ -2760,11 +2760,8 @@ class ReportService
             $dataFormated = $dataFormated->addDays(1);
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
-
         $resume = $transactions
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->whereBetween('start_date', [ $dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day')) ])
         ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
         ->get();
 
@@ -2817,7 +2814,7 @@ class ReportService
 
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-        $dataFormated = Carbon::parse($dateRange[0])->addDays(1);
+        $dataFormated = Carbon::parse($dateRange[0]);
         $endDate      = Carbon::parse($dateRange[1]);
 
         while ($dataFormated->lessThanOrEqualTo($endDate)) {
@@ -2831,13 +2828,9 @@ class ReportService
             }
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
-        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
-
         $resume = $transactions
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
-        ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
+        ->whereBetween('start_date', [ $dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day')) ])
+        ->select(DB::raw('id as sale, DATE(start_date) as date'))
         ->get();
 
         $saleData = [];
