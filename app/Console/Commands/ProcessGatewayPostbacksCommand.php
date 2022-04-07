@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+//use App\Jobs\ProcessPostbacks;
 use Exception;
 use Illuminate\Console\Command;
 use Modules\Core\Entities\GatewayPostback;
-use Illuminate\Support\Facades\Log;
 
 class ProcessGatewayPostbacksCommand extends Command
 {
@@ -23,7 +23,6 @@ class ProcessGatewayPostbacksCommand extends Command
      */
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -34,8 +33,6 @@ class ProcessGatewayPostbacksCommand extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
     }
 
@@ -102,6 +99,9 @@ class ProcessGatewayPostbacksCommand extends Command
 
             foreach ($postbacks as $postback)
             {
+                // ProcessPostbacks::dispatch($url, 'POST', ['postback_id' => hashids_encode($postback['id'])])
+                // ->onConnection('redis-horizon-long-running')
+                // ->onQueue('long');
                 $this->runCurl($url, 'POST', ['postback_id' => hashids_encode($postback['id'])]);
             }
 

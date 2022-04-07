@@ -132,6 +132,14 @@ class SalesApiController extends Controller
         try {
             $saleIdDecoded = hashids_decode($saleId, 'sale_id');
             $sale = Sale::find($saleIdDecoded);
+
+            if($sale->status != Sale::STATUS_APPROVED) {
+                return response()->json(
+                    ['status' => 'error', 'message' => 'Somente vendas aprovadas podem ser estornadas.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
             if (!in_array($sale->gateway_id, [
                 Gateway::GERENCIANET_PRODUCTION_ID,
                 Gateway::GERENCIANET_SANDBOX_ID,
@@ -152,14 +160,6 @@ class SalesApiController extends Controller
                     $activity->subject_id = $saleIdDecoded;
                 }
             )->log('Tentativa estorno transação: #' . $saleId);
-
-
-            if(in_array($sale->gateway_id, [Gateway::ASAAS_PRODUCTION_ID,Gateway::ASAAS_SANDBOX_ID]) && $sale->anticipation_status == 'PENDING'){
-                return response()->json(
-                    ['status' => 'error', 'message' => 'Venda em processo de antecipação, tente novamente mais tarde'],
-                    Response::HTTP_BAD_REQUEST
-                );
-            }
 
             $producerCompany = $sale->transactions()->where('user_id', auth()->user()->account_owner_id)->first()->company;
             $gatewayService = Gateway::getServiceById($sale->gateway_id);
@@ -270,7 +270,6 @@ class SalesApiController extends Controller
         }
     }
 
-
     public function newOrderWoocommerce(Request $request, $saleId)
     {
         
@@ -363,7 +362,7 @@ class SalesApiController extends Controller
             $saleModel = new Sale();
             $sale = explode(" ", $request->input('sale'));
             $saleId = current(Hashids::connection('sale_id')->decode($sale[0]));
-            $sale = $saleModel->with(['customer', 'project'])->find($saleId);
+            $sale = $saleModel->with(['customer', 'project.checkoutConfig'])->find($saleId);
             if (empty($sale)) {
                 return response()->json(['message' => 'Erro ao reenviar email.'], Response::HTTP_BAD_REQUEST);
             }
@@ -411,12 +410,16 @@ class SalesApiController extends Controller
             $data = $request->all();
             $planModel = new Plan();
             $userProjectModel = new UserProject();
+            
+            $projectIds = [current(Hashids::decode($data['project_id']))];
 
-            $projectIds = [];
-            foreach($data['project_id'] as $project){
-                array_push($projectIds, current(Hashids::decode($project)));
-            };
-
+            if(is_array($data['project_id'])){
+                $projectIds = [];
+                foreach($data['project_id'] as $project){
+                    array_push($projectIds, current(Hashids::decode($project)));
+                };
+            }
+                        
             if (current($projectIds)) {
 
                 $plans = null;

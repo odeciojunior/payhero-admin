@@ -2,10 +2,7 @@
 
 @section('content')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('/modules/sales-blacklist-antifraud/css/index.css') }}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
-        <link rel="stylesheet" href="{!! asset('modules/global/css/switch.css') !!}">
-        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css?v=4546') }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/salesblacklistantifraud/index.min.css') }}">
     @endpush
 
     <!-- Page -->
@@ -39,9 +36,9 @@
                     <div id="" class="card shadow p-20">
                         <div class="row align-items-baseline">
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
-                                <label for="projeto">Projeto</label>
+                                <label for="projeto">Lojas</label>
                                 <select name='select_project' id="projeto" class="form-control select-pad">
-                                    <option value="">Todos projetos</option>
+                                    <option value="">Todas lojas</option>
                                 </select>
                             </div>
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -60,7 +57,7 @@
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label></label>
                                 <button id="bt_filtro" class="btn btn-primary col-sm-12">
-                                    <img style="height: 12px; margin-right: 4px" src=" {{ asset('/modules/global/img/svg/check-all.svg') }} ">Aplicar
+                                    <img style="height: 12px; margin-right: 4px" src=" {{ mix('build/global/img/svg/check-all.svg') }} ">Aplicar
                                 </button>
                             </div>
                         </div>
@@ -73,7 +70,7 @@
                             <thead>
                                 <tr class='text-center'>
                                     <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
-                                    <td class="table-title">Projeto</td>
+                                    <td class="table-title">Loja</td>
                                     <td class="table-title">Descrição</td>
                                     <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
                                     {{--                                <td class="table-title blacklist" style='display:none'>Motivo</td>--}}
@@ -96,16 +93,13 @@
             </div>
         </div>
 
-        {{-- Quando não tem projeto cadastrado  --}}
+        {{-- Quando não tem loja cadastrado  --}}
             @include('projects::empty')
-        {{-- FIM projeto nao existem projetos--}}
+        {{-- FIM loja nao existem lojas--}}
     </div>
 
     @push('scripts')
-        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/index.js?v=' . random_int(100, 10000)) }}"></script>
-        <script src="{{ asset('/modules/sales-blacklist-antifraud/js/detail.js?v=' . uniqid()) }}"></script>
-        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
-        <script src='{{ asset('modules/global/js/daterangepicker.min.js') }}'></script>
+        <script src='{{ mix('build/layouts/salesblacklistantifraud/index.min.js') }}'></script>
     @endpush
 
 

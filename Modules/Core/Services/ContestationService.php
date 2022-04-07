@@ -2,41 +2,36 @@
 
 namespace Modules\Core\Services;
 
-
+use PDF;
 use Carbon\Carbon;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Entities\Affiliate;
-use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Entities\SaleContestationFile;
 use Modules\Sales\Http\Controllers\SalesController;
-use PDF;
-use Psy\Util\Str;
 use stringEncode\Exception;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ContestationService
 {
-
     public function getTotalValueContestations($filters)
     {
         $qrConstestations = $this->getQuery($filters);
-        $total = $qrConstestations->sum('sales.sub_total');//transactions.value -- sales.sub_total
+        $total = $qrConstestations->sum('transactions.value')/100;// sales.sub_total
         $shipmentValue = $qrConstestations->sum('sales.shipment_value');
         $shopifyDiscount = $qrConstestations->sum('sales.shopify_discount');
         $automaticDiscount = $qrConstestations->sum('sales.automatic_discount');
 
-        $total += $shipmentValue;
+        // $total += $shipmentValue;
 
-        if ($shopifyDiscount > 0) {
-            $total -= $shopifyDiscount;
-        }
+        // if ($shopifyDiscount > 0) {
+        //     $total -= $shopifyDiscount;
+        // }
 
-        $total -= $automaticDiscount/100;
+        // $total -= $automaticDiscount/100;
 
         return trim(str_replace("R$", "", FoxUtils::formatMoney($total)));// transactions.value/100
     }
@@ -52,12 +47,10 @@ class ContestationService
                   $query->on('sales.id', '=', 'transactions.sale_id')
                  ->where('transactions.type', '=', 2);
              })
-//                        ->join('companies', 'companies.id', '=', 'transactions.company_id')
             ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
             ->where('sales.owner_id', \Auth::user()->account_owner_id);
 
 
-        //Data da compra = transaction_date, Data do chargeback =  adjustment_date
         $contestations->when(request('date_type'), function ($query, $search) {
 
             $dateRange = FoxUtils::validateDateRange(request('date_range'));
@@ -108,7 +101,6 @@ class ContestationService
             if($val == 2){
                 return $query->where('sale_contestations.file_user_completed', 0);
             }
-
         });
 
         $contestations->when(request('is_expired'), function ($query, $val) {
@@ -140,19 +132,6 @@ class ContestationService
 
         });
 
-
-//        $contestations->when(request('fantasy_name'), function ($query, $search) {
-//            return $query->where(
-//                'companies.fantasy_name',
-//                'like',
-//                '%' . $search . '%'
-//            );
-//        });
-
-        $contestations->when(request('getnet_terminal_nsu'), function ($query, $search) {
-            return $query->where('data', 'like', "%" . $search . "%");
-        });
-
         $contestations->when(request('project'), function ($query, $search) {
             $projectId = current(Hashids::decode($search));
             return $query->where('sales.project_id', $projectId);
@@ -177,14 +156,12 @@ class ContestationService
         });
 
         return $contestations;
-
     }
 
     public function getTotalContestations($filters)
     {
-
-        $getnetChargebacks = $this->getQuery($filters);
-        return $getnetChargebacks->count();
+        $contestations = $this->getQuery($filters);
+        return $contestations->count();
     }
 
     public function getTotalWonContestations($filters)
@@ -205,40 +182,10 @@ class ContestationService
     public function getTotalApprovedSales($filters)
     {
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
-        
-        $gatewayIds = [Gateway::ASAAS_PRODUCTION_ID, Gateway::GETNET_PRODUCTION_ID];
-        if(!FoxUtils::isProduction()){
-            $gatewayIds = array_merge($gatewayIds, [Gateway::ASAAS_SANDBOX_ID, Gateway::GETNET_SANDBOX_ID]);
-        }
 
-        $totalSaleApproved = Sale::whereIn('gateway_id', $gatewayIds)
-            ->where('payment_method', 1)
+        $totalSaleApproved = Sale::where('payment_method', 1)
             ->whereIn('status', [1, 4, 7, 24])
             ->where('sales.owner_id', \Auth::user()->account_owner_id);
-
-//        if ($filters['date_type'] == 'transaction_date') {
-//            $totalSaleApproved->whereBetween(
-//                'sales.start_date',
-//                [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
-//            );
-//        }else if ($filters['date_type'] == 'expiration_date') {
-//
-//            $totalSaleApproved->whereHas('contestations', function ($query) use ($dateRange) {
-//                $query->whereBetween(
-//                    'sale_contestations.expiration_date',
-//                    [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
-//                );
-//            });
-//
-//        }else {
-//
-//            $totalSaleApproved->whereHas('contestations', function ($query) use ($dateRange) {
-//                $query->whereBetween(
-//                    'sale_contestations.request_date',
-//                    [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
-//                );
-//            });
-//        }
 
         $totalSaleApproved->whereBetween(
             'sales.start_date',
@@ -258,19 +205,6 @@ class ContestationService
             $totalSaleApproved->whereIn('id', $transactions);
         }
 
-//        if (!empty($filters['fantasy_name'])) {
-//            $totalSaleApproved->whereHas(
-//                'user.companies',
-//                function ($query) use ($filters) {
-//                    $query->where(
-//                        'fantasy_name',
-//                        'like',
-//                        '%' . $filters['fantasy_name'] . '%'
-//                    );
-//                }
-//            );
-//        }
-
         if (!empty($filters['project'])) {
             $projectId = current(Hashids::decode($filters['project']));
             $totalSaleApproved->where('project_id', $projectId);
@@ -283,7 +217,6 @@ class ContestationService
 
         if (!empty($filters['customer'])) {
             $totalSaleApproved->where('customer_id', $filters['customer']);
-
         }
 
         if (!empty($filters['customer_document'])) {
@@ -490,6 +423,5 @@ class ContestationService
         }
 
     }
-
 
 }

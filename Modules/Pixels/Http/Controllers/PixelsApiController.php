@@ -106,13 +106,6 @@ class PixelsApiController extends Controller
                 return response()->json(['message' => __('controller.pixel.permission.edit')], 403);
             }
 
-            activity()->on((new Pixel()))->tap(
-                function (Activity $activity) use ($pixel) {
-                    $activity->log_name = 'visualization';
-                    $activity->subject_id = $pixel->id;
-                }
-            )->log(__('controller.pixel.log.visualization.edit ') . $pixel->name);
-
             $applyPlanArray = [];
             $planModel = new Plan();
 
@@ -127,7 +120,9 @@ class PixelsApiController extends Controller
                 } else {
                     foreach ($applyPlanDecoded as $key => $value) {
                         $plan = $planModel->select(
-                            'plans.*',
+                            'plans.id',
+                            'plans.name',
+                            'plans.description',
                             DB::raw(
                                 '(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p where p.deleted_at is null) as variants'
                             )
@@ -139,6 +134,15 @@ class PixelsApiController extends Controller
                                 'description' => $plan->variants ? $plan->variants . ' variantes' : $plan->description,
                             ];
                         }
+                    }
+                }
+            }
+
+            $pixel->event_select = '';
+            if ($pixel->platform == 'google_adwords') {
+                foreach (PixelService::EVENTS as $EVENT) {
+                    if ($pixel->$EVENT == true) {
+                        $pixel->event_select = $EVENT;
                     }
                 }
             }

@@ -28,7 +28,7 @@ if (!function_exists('hashids_encode')) {
 }
 
 if (!function_exists('foxutils')) {
-    function foxutils()
+    function foxutils(): \Modules\Core\Services\FoxUtils
     {
         return new \Modules\Core\Services\FoxUtils();
     }
@@ -47,6 +47,6 @@ if (!function_exists('builder2sql')) {
 if (!function_exists('versionsFile')) {
     function versionsFile()
     {
-        return md5(32);
+        return md5(412);
     }
 }

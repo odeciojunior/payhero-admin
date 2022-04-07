@@ -11,7 +11,7 @@ class PlansDetailsResource extends JsonResource
     {
         $products = [];
         foreach ($this->productsPlans as $productsPlan) {
-            $photo = '/modules/global/img/produto.svg';
+            $photo = '/build/global/img/produto.svg';
             if (!empty($productsPlan->product->photo)) {
                 if (\foxutils()->remoteUrlExists($productsPlan->product->photo)) {
                     $photo = $productsPlan->product->photo;

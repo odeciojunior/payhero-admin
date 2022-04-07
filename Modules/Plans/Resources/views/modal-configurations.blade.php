@@ -38,7 +38,7 @@
                                 <div class="form-group col-sm-6 div-cost_currency">
                                     <label for="cost_currency_type" class="d-flex align-items-center">
                                         <div class="mr-10">Moeda padrão</div>
-                                        <span class="icon"><img src="/modules/global/img/icon-info.svg"></span>
+                                        <span class="icon"><img src="/build/global/img/icon-info.svg"></span>
                                     </label>
                                     <select name="cost_currency_type" class="sirius-select" id="cost_currency_type">
                                         <option value="BRL" selected>R$ - Real Brasileiro (BRL)</option>
@@ -49,7 +49,7 @@
                                 <div class="form-group col-sm-6 div-cost_shopify">
                                     <label for="update_cost_shopify" class="d-flex align-items-center label-text">
                                         <div class="mr-10">Atualizar de acordo com Shopify</div>
-                                        <span class="icon"><img src="/modules/global/img/icon-info.svg"></span>
+                                        <span class="icon"><img src="/build/global/img/icon-info.svg"></span>
                                     </label>
                                     <div class="switch-holder d-flex align-items-center" style="height: 3.2876666667rem !important;">
                                         <label class="switch">

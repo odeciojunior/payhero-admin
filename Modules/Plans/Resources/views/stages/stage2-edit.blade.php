@@ -2,7 +2,7 @@
     <div class="box-breadcrumbs">
         <div class="d-flex" style="justify-content: space-between !important;">
             <div class="d-flex align-items-center">
-                <div class="icon mr-15"><img src="/modules/global/img/icon-products-plans.svg" alt="Icon Products"></div>
+                <div class="icon mr-15"><img src="/build/global/img/icon-products-plans.svg" alt="Icon Products"></div>
                 <div class="title">Produtos no plano <span></span></div>
             </div>
         </div>
@@ -17,7 +17,7 @@
                 <input class="form-control" type="text" id="search-product-description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
                 <div class="input-group-append">
                     <span class="input-group-text">
-                        <img src="/modules/global/img/icon-search.svg" alt="Icon Search">
+                        <img src="/build/global/img/icon-search.svg" alt="Icon Search">
                     </span>
                 </div>
             </div>

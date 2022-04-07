@@ -3,14 +3,13 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-        <link rel="stylesheet" href="{{ asset('/modules/products/css/create.css?v=123') }}">
+        <link rel="stylesheet" href="{{ mix('build/layouts/products/create.min.css') }}">
     @endpush
 
     <!-- Page -->
-    <div class="page p-50" style="margin-bottom: 0 !important; display:none !important;">
+    <div class="page" style="margin-bottom: 0 !important; display:none !important;">
         <div class="page-header container">
-            <h1 class="page-title" style="color: #707070;">Novo produto digital</h1>
+            <h1 class="page-title my-10" style="min-height: 28px; color: #707070;">Novo produto digital</h1>
             <p class="desc mt-10 text-muted"> Preencha os dados sobre seu produto atentamente. </p>
         </div>
         <div class="page-content container pb-20">
@@ -37,7 +36,7 @@
                                     <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Descrição apresentada no checkout"></textarea>
                                 </div>
 
-                                <div class="form-group col-12 col-md-7 input-file-container">  
+                                <div class="form-group col-12 col-md-7 input-file-container">
                                     <label>Arquivo do produto</label>
                                     <input class="input-file" name="digital_product_url" id="digital_product_url" type="file">
                                     <div class="form-group d-flex pt-10">
@@ -59,22 +58,20 @@
 
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
 
                 <div class="row pr-15 form-buttons">
                     <a type="button" class="btn btn-cancelar" href="/products">Cancelar</a>
-                    <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="https://sirius.cloudfox.net/modules/global/img/svg/check-all.svg">Salvar</button>
+                    <button type="submit" class="btn btn-primary btn-lg ml-15"><img style="height: 12px; margin-right: 4px" src="{{ mix('build/global/img/svg/check-all.svg') }}">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
     @push('scripts')
-        <script src="{{ asset('modules/products/js/create-digital.js?v='.uniqid()) }}"></script>
-        <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
-        <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
+        <script src="{{ mix('build/layouts/products/create-digital.min.js') }}"></script>
     @endpush
 
 @endsection

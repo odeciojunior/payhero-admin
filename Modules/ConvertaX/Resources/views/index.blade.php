@@ -1,9 +1,7 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css?v=11') }}">
-    <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css?v=' .  versionsFile()) }}">
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+    <link rel="stylesheet" href="{!! mix('build/layouts/convertax/index.min.css') !!}">
     <style>
         .gray:hover{
             color:#a1a1a1 !important;
@@ -37,9 +35,9 @@
             </div>
             <div id="no-integration-found" class='row justify-content-center' style="display:none">
                 <div class="content-error text-center">
-                    <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
+                    <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
                     <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                    <p class="desc gray">Integre seus projetos com ConvertaX de forma totalmente automatizada!</p>
+                    <p class="desc gray">Integre suas lojas com ConvertaX de forma totalmente automatizada!</p>
                 </div>
             </div>
             {{-- Modal add-edit integration --}}
@@ -95,6 +93,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/convertax/js/index.js?v='.uniqid() )}}"></script>
+        <script src="{{ mix('build/layouts/convertax/index.min.js' )}}"></script>
     @endpush
 @endsection

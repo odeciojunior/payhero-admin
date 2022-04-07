@@ -1,6 +1,6 @@
 <div class="modal-header flex-wrap">
     <div id="title-news-onboarding">
-        <img src="{{asset('/modules/global/img/logos/2021/svg/icon-sirius.svg')}}" width="40"
+        <img src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}" width="40"
              alt="Image"> <span>Novidades</span>
     </div>
     <div class="pages">
@@ -48,7 +48,7 @@
 
         <div class="col-12 col-lg-5 order-lg-0 d-flex justify-content-center mt-lg-5 mt-0">
             <img class="img-fluid" alt="Image" id="img-onboarding" width="100"
-                 src="{{asset('modules/global/img/pix/pix-register-key.svg')}}">
+                 src="{{ mix('build/global/img/pix/pix-register-key.svg') }}">
         </div>
     </div>
 </div>

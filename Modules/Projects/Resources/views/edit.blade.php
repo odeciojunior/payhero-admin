@@ -1,1046 +1,405 @@
 @push('css')
-<link rel="stylesheet" href="{{ asset('/modules/projects/css/edit.css?v=123') }}">
+    <link rel="stylesheet" href="{{ mix('build/layouts/projects/edit.min.css') }}">
 @endpush
 
-<div class='card shadow p-30'>
-    <form id='update-project'>
-        @method('PUT')
-        @csrf
-        <div class='row justify-content-between align-items-baseline mt-15'>
-            <div class='col-lg-12'>
-                <h3>Configurações Básicas</h3>
-                <p>Preencha atentamente as informações</p>
-            </div>
-            <div class='col-lg-4'>
-                <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>
-                    <input name='photo' type='file' class='form-control' id='photoProject' style='display:none;' accept='image/*'>
-                    <label for='photo'>Selecione uma imagem capa do projeto</label>
-                    <div style="width:100%" class="text-center">
-                        <img id='previewimage' alt='Selecione a foto do projeto' src="{{asset('modules/global/img/projeto.svg')}}" style="min-width: 250px; max-width: 250px;margin: auto">
+<div class='row card no-gutters p-30 rounded-top'>
+
+    <div class="col-12 font-size-24 pl-0 mb-10">
+        Configurações
+    </div>
+
+    <div class="col-md-12">
+        <div class="badge badge-primary font-size-14 mr-10">
+            NOVO
+        </div>
+
+        <span class="font-size-16">Repaginamos nossa área de configurações de loja. Para encontrar configurações de checkout, use o nosso novo editor.</span>
+    </div>
+
+</div>
+
+<form id='update-project'>
+    @method('PUT')
+    @csrf
+
+    <!-- IDENTIFICACAO -->
+    <div class='card col-md-12'>
+
+        <div class="row">
+            <!-- TITULO CABECALHO -->
+            <div class="col-md p-0">
+                <div class="row no-gutters d-flex d-flex align-items-center pt-30 pb-20 pl-30">
+                    <div class="bg-afiliate-icon mr-15">
+                        <img src="{{ mix('build/global/img/projects/imgIcon.svg') }}" class="p-10">
                     </div>
-                    <input type='hidden' id='photo_x1' name='photo_x1'><input id='photo_y1' type='hidden' name='photo_y1'>
-                    <input type='hidden' id='photo_w' name='photo_w'><input id='photo_h' type='hidden' name='photo_h'>
-                    <p class='info pt-5' style='font-size: 10px;'>
-                        <i class='icon wb-info-circle' aria-hidden='true'></i> Usada apenas internamente no sistema
-                        <br>A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
-                        <br> Dimensões ideais: 300 x 300 pixels.
-                    </p>
-                </div>
-            </div>
-            <div class='col-lg-8'>
-                <div class='row'>
-                    <div class='form-group col-lg-12'>
-                        <label for='name'>Nome do projeto</label>
-                        <input name='name' value="" type='text' class='input-pad' id='name' placeholder='Nome do Projeto' maxlength='40' required>
-                        <span id='name-error' class='text-danger'></span>
-                        <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
-                        </p>
-                    </div>
-                    <div class='form-group col-lg-12'>
-                        <label for='description'>Descrição</label>
-                        <textarea style='height:100px;' name='description' type='text' class='input-pad' id='description' placeholder='Fale um pouco sobre seu Projeto' required='' maxlength='100'></textarea>
-                        <span id='description-error' class='text-danger'></span>
-                        <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
-                        </p>
-                    </div>
-                    <div class='form-group col-lg-4'>
-                        <label for='visibility'>Visibilidade</label>
-                        <select name='visibility' class='form-control select-pad' id='visibility' required>
-                            <option type='hidden' disabled value='public'>Projeto público</option>
-                            <option value='private'>Projeto privado</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-lg-8">
-                        <div class="d-flex align-items-baseline justify-content-start mt-35">
-                            <div class="info" style="font-size: 10px;">
-                                <p class="ml-5">
-                                    <b> Público: </b> visível na vitrine e disponível para afiliações (em breve). <br>
-                                    <b> Privado: </b> completamente invisivel para outros usuários, afiliações somente
-                                    por convite
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="mb-0">Identificação</h3>
                 </div>
             </div>
         </div>
-        <div class='row'>
-            <div class='col-md-4 col-lg-4 col-sm-12'>
-                <div class="text-center">
-                    <label for='name'>Imagem para página do checkout e para emails</label>
-                </div>
-                <div class='row'>
-                    <div class="col-12">
-                        <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>
-                            <input name='logo' type='file' class='form-control' id='photo-logo-email' style='display:none;'>
-                            <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{asset('modules/global/img/projeto.svg')}}' style='max-height:250px;max-width:250px;margin:auto'>
-                            <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
-                            <p class='info mt-5' style='font-size: 10px;'>
-                                <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no
-                                formato JPG, JPEG ou PNG.
-                                <br> Dimensões ideais: largura ou altura de no máximo 300 pixels. <br>
-                                <strong>Sem sobras em branco no topo ou na parte inferior.</strong>
-                            </p>
-                        </div>
-                    </div>
+
+        <div class="row no-gutters z-index-0">
+            <!-- FOTO -->
+            <div class="col-md-5 col-lg-4 col-xl-3 px-15 pl-xl-15 d-flex flex-column" id='div-img-project' style='position: relative;'>
+
+                <label for='project_photo' class="pl-0 pl-lg-10 pl-xl-0 mb-3 font-size-16">Capa da loja</label>
+
+                <div style="width:100%" class="text-center">
+                    <input type="file" id="project_photo" name="project_photo" data-height="651" data-max-width="651" data-max-file-size="10M" data-allowed-file-extensions="jpg jpeg png">
                 </div>
             </div>
-            <div class='row col-md-8 col-lg-8 col-sm-12'>
-                <div class="col-12 row">
-                    <div class="form-group col-12">
-                        <label for="url_page">URL da página principal</label>
-                        <input name="url_page" value="" type="text" class="input-pad" id="url-page" placeholder="URL da página" maxlength='60'>
-                        <span id='url-page-error' class='text-danger'></span>
-                        <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> URL da página principal da loja
-                        </p>
-                    </div>
-                    <div class="form-group col-12">
-                        <label for="contact">Email de Contato (checkout e email)</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="input_group_contact" id="addon-contact">
-                                </span>
-                            </div>
-                            <input name="contact" value="" type="text" class="input-pad form-control" id="contact" placeholder="Contato" maxlength='144' aria-describedby="addon-contact">
-                        </div>
-                        <span id='contact-error' class='text-danger'></span>
-                        <small id="message_not_verified_contact" style='color:red; display:none;'>Email não verificado,
-                            clique
-                            <a href='#' id='btn_verify_contact' onclick='event.preventDefault();' data-toggle='modal' data-target='#modal_verify_contact'>aqui</a>
-                            para verificá-lo!
-                        </small>
-                        <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Contato da loja informado no checkout
-                            e nos emails
-                        </p>
-                    </div>
-                    <div class="form-group col-12">
-                        <label for="contact">Telefone para suporte</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="input_group_support_phone" id="addon-support_phone">
-                                </span>
-                            </div>
-                            <input name="support_phone" value="" type="text" class="input-pad form-control" id="support_phone" placeholder="Telefone" data-mask="(00) 00000-0000" aria-describedby="addon-support_phone">
-                        </div>
-                        <span id='contact-error' class='text-danger'></span>
-                        <small id="message_not_verified_support_phone" style='color:red; display:none;'>Telefone não
-                            verificado, clique
-                            <a href='#' id='btn_verify_support_phone' onclick='event.preventDefault();' data-toggle='modal' data-target='#modal_verify_support_phone'>aqui</a>
-                            para verificá-lo!
-                        </small>
-                        <p class='info pt-5' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i> Telefone para suporte. Em compras por
-                            boleto na página de obrigado quando o cliente clicar em receber pelo whats a mensagem é
-                            encaminhada para esse número
-                        </p>
-                    </div>
+
+            <!-- NOME E DESCRICAO -->
+            <div class="col-md-7 col-lg-8 col-xl-9 pl-10 pr-sm-50">
+
+                <div class='form-group col-md-12'>
+                    <label for='name' class="font-size-16">Nome da loja</label>
+                    <input name='name' value="" type='text' class='input-pad font-size-16 name-project' id='name' placeholder='Nome da loja' maxlength='40'  style="outline: none;"/>
+                    <span id='name-error' class='text-danger'></span>
+                    <p class='info pt-5' style='font-size: 10px;'></p>
                 </div>
+
+                <div class='form-group col-lg-12'>
+                    <label for='description' class="font-size-16">Descrição</label>
+                    <textarea style='height:100px;' name='description' type='text' class='input-pad font-size-16' id='description' placeholder='Fale um pouco sobre sua loja' maxlength='100'></textarea>
+                    <span id='description-error' class='text-danger'></span>
+                    <p class="pt-25 mb-0 font-size-12">Recomendações: Imagem de 300x300px  |  Formatos: JPEG ou PNG</p>
+                </div>
+
             </div>
+
         </div>
-        {{--Configurações--}}
-        <div class="nav-tabs-horizontal mt-20" data-plugin="tabs">
-            <ul class="nav nav-tabs nav-tabs-reverse" role="tablist">
-                <li class="nav-item listAdvancedConfiguration" role="presentation">
-                    <a class="nav-link" data-toggle="tab" href="#tabAdvancedConfiguration" aria-controls="exampleTabsSolidOne" role="tab" aria-selected="false">
-                        <i class="icon wb-settings" aria-hidden="true" style='font-size:15px;'></i> Configurações
-                        avançadas
-                    </a>
-                </li>
-                <li class="nav-item listShopifyConfiguration" role="presentation" style='display:none;'>
-                    <a class="nav-link" data-toggle="tab" href="#tabShopifyConfiguration" aria-controls="exampleTabsSolidTwo" role="tab" aria-selected="true">
-                        <i class="icon ribbon-shopify-default" aria-hidden="true" style='font-size:15px;'></i>
-                        Configurações Shopify
-                    </a>
-                </li>
-                <li class="nav-item listWooCommerceConfiguration" role="presentation" style='display:none;'>
-                    <a class="nav-link" data-toggle="tab" href="#tabWooCommerceConfiguration" aria-controls="exampleTabsSolidTwo" role="tab" aria-selected="true">
-                        <i class="icon ribbon-woo" aria-hidden="true" style='font-size:15px;'></i>
-                        Configurações WooCommerce
-                    </a>
-                </li>
-                <li class="nav-item listAffiliateConfiguration" role="presentation">
-                    <a class="nav-link" data-toggle="tab" href="#tabAffiliateConfiguration" aria-controls="exampleTabsSolidTwo" role="tab" aria-selected="true">
-                        <i class="fa-handshake-o" style='font-size:15px;'></i> Configurações Afiliados
-                    </a>
-                </li>
-                <li class="dropdown nav-item" role="presentation" style="display: none;">
-                    <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#" aria-expanded="false">Dropdown</a>
-                    <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" data-toggle="tab" href="#tabAdvancedConfiguration" aria-controls="exampleTabsSolidOne" role="tab">Configurações avançadas</a>
-                        <a class="dropdown-item" data-toggle="tab" href="#tabShopifyConfiguration" aria-controls="exampleTabsSolidTwo" role="tab">Configurações Shopify</a>
-                        <a class="dropdown-item" data-toggle="tab" href="#tabAffiliateConfiguration" aria-controls="exampleTabsSolidTwo" role="tab">Configurações Afiliados</a>
+    </div>
+
+    <!-- CARD GERAL AFILIACOES-->
+    <div class="card mt-20" data-plugin="tabs">
+        <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
+
+            <!-- ON/OFF COLLAPSE-->
+            <div class='row no-gutters'>
+                <div class='col-md-12 d-flex pt-20 pl-25 pb-20'>
+
+                    <div class="col-md-6 p-0 d-flex align-items-center">
+                        <div class="bg-afiliate-icon affiliation p-10 mr-15">
+                            <img src="{{ mix('build/global/img/projects/afiliatesIcon.svg') }}" alt="icone afiliacao">
+                        </div>
+                        <label for='boleto_redirect' class="font-size-24 m-0" style="color: #37474f;">Afiliações</label>
                     </div>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane" id="tabAdvancedConfiguration" role="tabpanel">
-                    <div class='my-40 mx-30'>
-                        <div class='row'>
-                            <div class='form-group col-6 col-xs-12'>
-                                <label for='invoice-description'>Descrição da Fatura</label>
-                                {{-- <input name='invoice_description' value='{{$project->invoice_description}}' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura' maxlength='50'>--}}
-                                <input name='invoice_description' value='' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura' maxlength='50'>
-                                <span id='invoice-description-error' class='text-danger'></span>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Descrição apresentada na
-                                    fatura do cartão de crédito
-                                </p>
-                            </div>
-                            <div class='form-group col-6 col-xs-12'>
-                                <label for='company_id'>Empresa responsável</label>
-                                <select id='companies' name='company_id' class="form-control select-pad"> </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                    Empresa responsável pelo faturamento das vendas
-                                </p>
-                            </div>
-                        </div>
-                        <div class='row'>
-                            <div class='form-group col-md-4 col-sm-12'>
-                                <label for='quantity-installment_amount'>Quantidade de parcelas (cartão de
-                                    crédito)</label>
-                                <select class='installment_amount form-control select-pad' name='installments_amount' class='form-control select-pad'>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade máxima de parcelas
-                                    oferecidas no checkout
-                                </p>
-                            </div>
-                            <div class='form-group col-md-4 col-sm-12'>
-                                <label for='pre_selected_installment'>Parcela pré selecionada (cartão de
-                                    crédito)</label>
-                                <select id='pre_selected_installment' class='pre_selected_installment form-control select-pad' name='pre_selected_installment'>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Parcela pré selecionada no
-                                    checkout
-                                </p>
-                            </div>
-                            <div class='form-group col-md-4 col-sm-12'>
-                                <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
-                                <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade de parcelas
-                                    oferecidas sem juros (se oferecida mais de uma a taxa de juros é descontada do
-                                    produtor)
-                                </p>
-                                <span id='error-juros' class='text-danger' style='display: none'>A quantidade de parcelas sem juros deve ser menor ou igual que a quantidade de parcelas</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <label for="document_type_checkout">Aceitar compras de</label>
-                                <select name='document_type_checkout' class='form-control select-pad' id="document_type_checkout">
-                                    <option value='1'>CPF</option>
-                                    <option value='2'>CNPJ</option>
-                                    <option value='3'>CPF/CNPJ</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Opção de tipo de documento
-                                    aceito no checkout.
-                                </p>
-                            </div>
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <label for="parcelas_sem_juros">Dias para vencimento do boleto</label>
-                                <select class='form-control select-pad' id='boleto_due_days' name='boleto_due_days'>
-                                    @for($x = 1; $x <= 28; $x++) <option value='{{ $x }}'>{{ $x . ($x == 1 ? " dia" : " dias") }}</option>
-                                        @endfor
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Dias para vencimento do
-                                    boleto
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            {{-- <div class='form-group col-md-6 col-sm-12'>
-                                <label for="cost_currency_type">Moeda padrão de custo</label>
-                                <select name='cost_currency_type' class='form-control select-pad'
-                                        id="cost_currency_type">
-                                    <option value='BRL'>Real</option>
-                                    <option value='USD'>Dólar</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Definir uma moeda padrão para
-                                    a configuração dos seus planos. Configuração utilizada para emissão de notas
-                                    fiscais.
-                                </p>
-                            </div> --}}
-                            <div class='form-group col-md-4 col-sm-12'>
-                                <label for="parcelas_sem_juros">Boleto no checkout</label>
-                                <select name='boleto' class='form-control select-pad' id="boleto">
-                                    <option value='1'>Sim</option>
-                                    <option value='0'>Não</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento
-                                    com boleto no checkout
-                                </p>
-                            </div>
-                            <div class='form-group col-md-4 col-sm-12'>
-                                <label for="credit_card">Cartão de crédito no checkout</label>
-                                <select name='credit_card' class='form-control select-pad' id="credit_card">
-                                    <option value='1' class='credit_card_yes'>Sim</option>
-                                    <option value='0' class='credit_card_no'>Não</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento
-                                    com cartão de crédito no checkout
-                                </p>
-                            </div>
-                            <div class='form-group col-md-4 col-sm-12'>
-                                <label for="pix">Pix no checkout</label>
-                                <select name='pix' class='form-control select-pad' id="pix">
-                                    <option value='1'>Sim</option>
-                                    <option value='0'>Não</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento
-                                    com pix no checkout
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <label for="default_currency">Tipo de checkout</label>
-                                <select name='checkout_type' class='form-control select-pad' id="checkout_type">
-                                    <option value='1'>Checkout de 3 etapas</option>
-                                    <option value='2'>Checkout de 1 etapa</option>
-                                    <option value='' disabled>Checkout selecionado por IA - inteligência artificial (em
-                                        breve)
-                                    </option>
-                                </select>
-                            </div>
-                            <div class='col-md-6'>
-                                <label for="parcelas_sem_juros">Botão Whatsapp na página de obrigado</label>
-                                <select name='whatsapp_button' class='form-control select-pad' id="whatsapp_button">
-                                    <option value='1' class='whatsapp_button_yes'>Sim</option>
-                                    <option value='0' class='whatsapp_button_no'>Não</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Botão para receber boleto
-                                    pelo Whatsapp na página de obrigado do checkout
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
-                                <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
-                                <input id='card_redirect' name='card_redirect' value='' class='input-pad' type='text' placeholder='URL' maxlength='60'>
-                                <span id='input-pad-error' class='text-danger'></span>
-                            </div>
-                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
-                                <label for='boleto_redirect'>Boleto (Redirecionamento página obrigado)</label>
-                                <input id='boleto_redirect' name='boleto_redirect' value='' class='input-pad' type='text' placeholder='URL' maxlength='60'>
-                                <span id='boleto_redirect-error' class='text-danger'></span>
-                            </div>
-                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
-                                <label for='pix_redirect'>Pix (Redirecionamento página obrigado)</label>
-                                <input id='pix_redirect' name='pix_redirect' value='' class='input-pad' type='text' placeholder='URL' maxlength='60'>
-                                <span id='pix_redirect-error' class='text-danger'></span>
-                            </div>
-                            <p class="info mt-5 col-12" style="font-size: 10px;">
-                                <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o
-                                seu cliente para paginas de obrigado propias, informe a
-                                <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para
-                                a pagina de obrigado padrão do cloudfox.
-                            </p>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
-                                <label for="credit_card_discount">Desconto automático cartão de crédito (%)</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control input-pad" id="credit_card_discount" maxlength='3'>
-                                    <div class="input-group-append bg-light">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
-                                <label for="billet_discount">Desconto automático em boletos (%)</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control input-pad" id="billet_discount" maxlength='3'>
-                                    <div class="input-group-append bg-light">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-4 col-sm-12 col-xs-12">
-                                <label for="pix_discount">Desconto automático em pix (%)</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control input-pad" id="pix_discount" maxlength='3'>
-                                    <div class="input-group-append bg-light">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-5 mb-10">
-                            {{-- <div class='col-6'>--}}
-                            {{-- <div class="switch-holder">--}}
-                            {{-- <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Recobrança--}}
-                            {{-- com--}}
-                            {{-- desconto</label>--}}
-                            {{-- <label class="switch" style='top:3px'>--}}
-                            {{-- <input type="checkbox" id="discount_recovery_status"--}}
-                            {{-- name="discount_recovery_status" class='check discount-recovery'--}}
-                            {{-- value='0'>--}}
-                            {{-- <span class="slider round"></span>--}}
-                            {{-- </label>--}}
-                            {{-- <select id='discount_recovery_value' name='discount_recovery_value'--}}
-                            {{-- class='form-control select-pad' id="checkout_type">--}}
-                            {{-- <option value='10'>10%</option>--}}
-                            {{-- <option value='20'>20%</option>--}}
-                            {{-- <option value='30'>30%</option>--}}
-                            {{-- <option value='40'>40%</option>--}}
-                            {{-- <option value='50'>50%</option>--}}
-                            {{-- </select>--}}
-                            {{-- <span id='discount-recovery-error' class='text-danger'></span>--}}
-                            {{-- </div>--}}
-                            {{-- <p id='discount-recovery-alert' class="info mt-5" style="font-size: 10px; color:#d55b25;">--}}
-                            {{-- <i class="icon wb-info-circle" aria-hidden="true"></i> Leve em consideração o valor--}}
-                            {{-- de todos os seus planos, pois, esta recobrança será aplicada a todos os planos--}}
-                            {{-- pertencentes a este projeto.--}}
-                            {{-- </p>--}}
-                            {{-- <p class="info mt-5" style="font-size: 10px;">--}}
-                            {{-- <i class="icon wb-info-circle" aria-hidden="true"></i> Ao habilitar esta função,--}}
-                            {{-- tentaremos adicionar um desconto em compras no cartão de crédito caso o limite do--}}
-                            {{-- cliente não o permita efetuar a compra, esse desconto você deve selecionar o valor--}}
-                            {{-- máximo que poderá ser aplicado.--}}
-                            {{-- </p>--}}
-                            {{-- </div>--}}
-                            <div class='col'>
-                                <div class="switch-holder">
-                                    <label for='product_amount_selector' style='margin-right:15px;margin-bottom: 3px'>
-                                        Seletor de quantidade de produtos no carrinho</label>
-                                    <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="product_amount_selector" name="product_amount_selector" class='check' value='1'>
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
-                                <p class="info mt-5" style="font-size: 10px;">
-                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Se esta opção estiver habilitada,
-                                    a página de checkout permitirá que o usuário selecione a quantidade de produtos no
-                                    carrinho.
-                                    <b>Nota:</b> Esta opção não se aplica à planos que possuem mais de um produto.
-                                </p>
-                            </div>                            
-                        </div>
-                        <div class="row">
-                            <div class='col'>
-                                <div class="switch-holder">
-                                    <label for='custom_message_switch' style='margin-right:15px;margin-bottom: 3px'>
-                                        Mensagem personalizada na tela de obrigado</label>
-                                    <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="custom_message_switch" name="custom_message_switch" class='check' value='1'>
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
-                                <p class="info mt-5" style="font-size: 10px;">
-                                    <i class="icon wb-info-circle" aria-hidden="true"></i> Se esta opção estiver habilitada,
-                                    o checkout mostrará a mensagem configurada na tela de obrigado.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row custom_message_box">                            
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <label for="custom_message_title">Título da mensagem personalizada</label>
-                                <input type="text" name='custom_message_title' class='form-control input-pad' id="custom_message_title">                                
-                            </div>
-                            <div class='form-group col-sm-12'>
-                                <label for="custom_message_content">Mensagem personalizada</label>
-                                <input type="text" name='custom_message_content' class='form-control input-pad' id="custom_message_content">                                
-                            </div>
-                        </div>
-                        <div class='row'>
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <label for="required_email_checkout">Email obrigatório no checkout</label>
-                                <select name='required_email_checkout' class='form-control select-pad' id="required_email_checkout">
-                                    <option value='1'>Sim</option>
-                                    <option value='0'>Não</option>
-                                </select>
-                                <p class='info pt-5' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i> Cliente vai ser obrigado ou
-                                    não a informar email para finalizar a compra no checkout.
-                                </p>
-                            </div>
-                        </div>
-                        <div class='row'>
-                            <div class='col-12 col-6'>
-                                <div class="switch-holder mb-3">
-                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>
-                                        Mostrar contador regressivo no checkout
-                                    </label>
-                                    <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="countdown_timer_flag" name="countdown_timer_flag" class='check countdown-timer-flag'>
-                                        <span class="slider round"></span>
-                                    </label>
-                                    <p class='info pt-5' style='font-size: 10px;'>
-                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                        Ao habilitar esta função, será exibido um contador regressivo na página de
-                                        checkout.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class='col-12 countdown-config'>
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <label class="control-label">Cor de fundo</label>
-                                        <input type="hidden" name="countdown_timer_color" value="#f78d1e" />
 
-                                        <div class="color-options">
-                                            <div data-color="#f8e34a" style="background: #f8e34a;" title="Amarelo">
-                                                <i class="fa fa-check text-white"></i>
-                                            </div>
+                    <div class="col-md-6 d-flex justify-content-end align-items-center">
+                        <div id="affiliation-access" class="font-size-16 mr-10">Habilitadas</div>
+                        <label class="switch">
+                            <input type="checkbox" id="status-url-affiliates" name="status-url-affiliates" class="status-url-affiliates" data-toggle="collapse" data-target="#affiliation" aria-expanded="false" aria-controls="affiliation" value='0'>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
 
-                                            <div data-color="#f78d1e" style="background: #f78d1e;" title="Laranja">
-                                                <i class="fa fa-check text-white"></i>
-                                            </div>
+                </div>
+            </div>
 
-                                            <div data-color="#ff4c52" style="background: #ff4c52;" title="Vermelho">
-                                                <i class="fa fa-check text-white"></i>
-                                            </div>
+            <!-- CONTAINER COL 5 E COL 7 -->
+            <div class="collapse" id="affiliation">
 
-                                            <div data-color="#ff3366" style="background: #ff3366;" title="Rosa">
-                                                <i class="fa fa-check text-white"></i>
-                                            </div>
+                <div class="row no-gutters ml-5 ml-sm-10 ml-md-5 ml-lg-15">
 
-                                            <div data-color="#111111" style="background: #111111;" title="Preto">
-                                                <i class="fa fa-check text-white"></i>
-                                            </div>
-
-                                            <div data-color="#555555" style="background: #555555;" title="Cinza">
-                                                <i class="fa fa-check text-white"></i>
-                                            </div>
-
-                                            <div data-color="#aaaaaa" style="background: #aaaaaa;" title="Prata">
-                                                <i class="fa fa-check text-white"></i>
-                                            </div>
-
-                                            <div data-color="#d4af37" style="background: #d4af37;" title="Dourado">
-                                                <i class="fa fa-check text-white"></i>
-                                            </div>
-
-                                            <div data-color="#3e8ef7" style="background: #3e8ef7;" title="Azul Claro">
-                                                <i class="fa fa-check text-white"></i>
-                                            </div>
-
-                                            <div data-color="#0bb2d4" style="background: #0bb2d4;" title="Azul Escuro">
-                                                <i class="fa fa-check text-white"></i>
-                                            </div>
-
-                                            <div data-color="#11c26d" style="background: #11c26d;" title="Verde">
-                                                <i class="fa fa-check text-white"></i>
-                                            </div>
+                    <!-- COL - 5 URL, COOKI, PORCENTAGEM -->
+                    <div class="col-md-4 px-15 px-sm-10 px-lg-0 form-group">
+                        <!-- URL DA PAGINA -->
+                        <div class="row no-gutters">
+                            <div class="col-md-12">
+                                <div class="row no-gutters">
+                                    <div class="col-md-12 px-10 pr-sm-0 form-group">
+                                        <label for="url-affiliates" class="font-size-16">URL da página principal</label>
+                                        <div class="input-group">
+                                            <input name="url_page" value="" type="text" class="input-pad" id="url-page" placeholder="URL da página" maxlength="60" style="outline: none;">
                                         </div>
-
-                                        <p class='info pt-5' style='font-size: 10px;'>
-                                            <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                            Cor do plano de fundo do banner do contador regressivo.
-                                        </p>
-                                    </div>
-
-                                    <div class='col-md-6 col-sm-12 col-12'>
-                                        <label class="control-label"> Tempo (minutos) </label>
-                                        <input class="form-control" name="countdown_timer_time" data-mask="000" type='text' placeholder='0' maxlength='4' class="form-control">
-                                        <p class='info pt-5' style='font-size: 10px;'>
-                                            <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                            Informe o tempo (em minutos) que contador regressivo exibirá.
-                                        </p>
-                                    </div>
-
-                                    <div class='col-12 col-sm-6 mb-20 mt-2'>
-                                        <label for="link">Descrição</label>
-                                        <textarea type="text" class="form-control" name="countdown_timer_description" maxlength="255" placeholder="Informe a descrição"></textarea>
-                                        <p class='info pt-5' style='font-size: 10px;'>
-                                            <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                            É opcional informar uma descrição e somente será exibida em desktops.
-                                        </p>
-                                    </div>
-
-                                    <div class='col-12 col-sm-6 mb-20 mt-2'>
-                                        <label for="link">Mensagem ao encerrar contador regressivo</label>
-                                        <textarea type="text" class="form-control" name="countdown_timer_finished_message" maxlength="255" placeholder="Informe a mensagem"></textarea>
-                                        <p class='info pt-5' style='font-size: 10px;'>
-                                            <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                            Informe uma mensagem que será exibida após o contador regressivo finalizar
-                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class='col-12 '>
-                                <div class="switch-holder">
-                                    <label for='finalizing_purchase_config' style='margin-right:15px;margin-bottom: 3px'>Mostrar pessoas finalizando
-                                        compra no checkout</label>
-                                    <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="finalizing_purchase_config" name="finalizing_purchase_config_toogle" class='check' value='0'>
-                                        <span class="slider round"></span>
-                                    </label>
-                                    <p class='info pt-5' style='font-size: 10px;'>
-                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                        Ao habilitar esta função, será exibido um texto com a quantidade de pessoas que
-                                        estão finalizando uma compra na última hora.
-                                    </p>
+                        <!-- TEMPO DE COOKIE E PORCENTAGEM -->
+                        <div class="row no-gutters">
+                            <div class="col-md-12 d-flex">
 
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <label for='finalizing_purchase_config_text' class="finalizing_purchase_config d-none" style='margin-right:15px;margin-bottom: 3px'>Texto a ser exibido</label>
-
-                                <input name='finalizing_purchase_config_text' id="finalizing_purchase_config_text" class='form-control select-pad finalizing_purchase_config d-none '>
-
-                                <p class='info pt-5 finalizing_purchase_config d-none' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                    Mensagem que será exibida no checkout. Número de visitantes = {visitantes}.
-                                </p>
-
-                                <span id='finalizing_purchase_config_text_error' class='text-danger'></span>
-                            </div>
-                            <div class='col-6 finalizing_purchase_config d-none'>
-                                <div class="switch-holder">
-                                    <label for='finalizing_purchase_config_min_value' style='margin-right:15px;margin-bottom: 3px'>Valor mínimo de visitantes para
-                                        mensagem ser exibida</label>
-
-                                    <input class="form-control" id="finalizing_purchase_config_min_value" name="finalizing_purchase_config_min_value" data-mask="000" min='1' type='text' placeholder='1' maxlength='4' class="form-control">
-
-
-                                    <p class='info pt-5 finalizing_purchase_config d-none' style='font-size: 10px;'>
-                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                        A mensagem só será exibida se o número de visitantes for maior que o informado.
-                                    </p>
-
-                                    <span id='finalizing_purchase_config_min_value_error' class='text-danger'></span>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class='col-12 '>
-                                <div class="switch-holder">
-                                    <label for='checkout_notification_config' style='margin-right:15px;margin-bottom: 3px'>Mostrar notificação de
-                                        vendas</label>
-
-                                    <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="checkout_notification_config" name="checkout_notification_config_toogle" class='check' value='0'>
-                                        <span class="slider round"></span>
-                                    </label>
-
-                                    <p class='info pt-5' style='font-size: 10px;'>
-                                        <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                        Ao habilitar esta função, serão exibidas notificações no checkout para os clientes.
-                                    </p>
-
-                                </div>
-                            </div>
-
-                            <hr>
-                            <div class="col-6">
-                                <label for='checkout_notification_config_time' class="checkout_notification_config d-none" style='margin-right:15px;margin-bottom: 3px'>Período de tempo</label>
-
-                                <select name='checkout_notification_config_time' class='form-control select-pad checkout_notification_config d-none' id="checkout_notification_config_time">
-                                    <option value='30'>30 segundos</option>
-                                    <option value='60'>60 segundos</option>
-                                </select>
-
-                                <p class='info pt-5 checkout_notification_config d-none' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                    Intervalo de tempo em que as notificações serão exibidas.
-                                </p>
-
-                                <span id='checkout_notification_config_text_error' class='text-danger'></span>
-                            </div>
-
-
-                            <div class="col-6">
-                                <label for='checkout_notification_mobile' class="checkout_notification_config d-none" style='margin-right:15px;margin-bottom: 3px'>Habilitar no mobile (não
-                                    recomendado)</label>
-
-                                <select name='checkout_notification_mobile' class='form-control select-pad checkout_notification_config d-none' id="checkout_notification_mobile">
-                                    <option value='1'>Sim</option>
-                                    <option value='0'>Não</option>
-                                </select>
-
-                                <p class='info pt-5 checkout_notification_config d-none' style='font-size: 10px;'>
-                                    <i class='icon wb-info-circle' aria-hidden='true'></i>
-                                    Habilitar as notificações na versão mobile.
-                                </p>
-
-                                <span id='checkout_notification_config_text_error' class='text-danger'></span>
-                            </div>
-
-                            <div class='col-12 checkout_notification_config d-none'>
-                                <div class="switch-holder">
-                                    <label for='checkout_notification_config_messages' style='margin-right:15px;margin-bottom: 3px'>Notificações</label>
-
-
-                                    <table class="table ">
-                                        <thead>
-                                            <tr>
-                                                <th style="width:25px">
-                                                    Ativo?
-                                                </th>
-                                                <th>
-                                                    Mensagem
-                                                </th>
-                                                <th>
-                                                    Quantidade mínima para mostrar
-                                                </th>
-                                            </tr>
-
-                                        </thead>
-                                        <tbody id="table_checkout_notifications_table">
-
-
-
-
-
-                                            @foreach(config('arrays.checkout_notification_config_messages') as $key => $value)
-
-                                            <tr>
-                                                <td>
-                                                    <input id="" type="checkbox" name="checkout_notification_config_messages[{{$key}}]" class="check">
-                                                </td>
-
-                                                <td>
-                                                    {!! $value !!}
-                                                </td>
-                                                <td>
-                                                    <input class="form-control" name="checkout_notification_config_messages_min_value[{{$key}}]" data-mask="000" type='text' placeholder='0' value="1" maxlength='4' class="form-control">
-                                                </td>
-                                            </tr>
-                                            @endforeach
-
-                                        </tbody>
-                                    </table>
-
-                                    <span id='finalizing_purchase_config_min_value_error' class='text-danger'></span>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-                <div class="tab-pane" id="tabShopifyConfiguration" role="tabpanel">
-                    <div class='row justify-content-center mx-20 mt-30'>
-                        <div class="col-md-4 pt-20">
-                            <a id="bt-change-shopify-integration" role="button" integration-status="" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
-                                <i class="o-reload-1 font-size-16"></i>
-                                <span class="gray"></span>
-                            </a>
-                            <div id="shopify-integration-pending" style="display:none">
-                                <i class="icon wb-alert-circle  gray"> </i>
-                                <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
-                            </div>
-                        </div>
-                        <div class='col-md-4 pt-20'>
-                            <a id="bt-shopify-sincronization-product" role="button" integration-status="" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
-                                <span class="o-reload-1 font-size-16"></span>
-                                <span class="gray"> Sincronizar produtos com shopify </span>
-                            </a>
-                        </div>
-                        <div class='col-md-4 pt-20'>
-                            <a id="bt-shopify-sincronization-template" role="button" integration-status="" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
-                                <span class="o-reload-1 font-size-16"></span>
-                                <span class="gray"> Sincronizar template com shopify </span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class='row mt-30 mx-20 mb-30'>
-                        <div id='div-shopify-token' class='col-md-4' style='display:none;'>
-                            <label for="shopify-token" class="text-muted">Token (password) da integração</label>
-                            <div class="input-group">
-                                <input id='shopify-token' class="form-control px-2" name="token" type="text" disabled />
-                                <div class="input-group-append">
-                                    <button class="btn bg-grey-500 text-white btn-edit-token px-1" type="button">
-                                        Alterar
-                                    </button>
-                                </div>
-                            </div>
-                            <input id='shopify-token' class='form-control' style='display:none;'>
-                        </div>
-                        <div id='div-shopify-permissions' class='col-md-4 pt-20 d-flex align-items-center'>
-                            <a id="bt-shopify-verify-permissions" role="button" integration-status="" class="pointer align-items-center">
-                                <span class="o-reload-1 font-size-16"></span>
-                                <span class="gray"> Verificar permissões do Token</span>
-                            </a>
-                        </div>
-                        <div class='col-md-4 pt-20'>
-                            <div class="switch-holder">
-                                <div class="gray mb-5">Skip to cart</div>
-                                <label class="switch">
-                                    <input id="skiptocart-input" type="checkbox" value="0" class="check">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class='row mt-30 mx-20 mb-30'>
-                        <div id='div-sync-trackings' class='col-md-4 pt-20 d-flex align-items-center'>
-                            <a id="bt-shopify-sync-trackings" role="button" integration-status="" class="pointer align-items-center">
-                                <span class="o-reload-1 font-size-16"></span>
-                                <span class="gray"> Sincronizar códigos de rastreio</span>
-                            </a>
-                        </div>
-                    </div>
-                    <hr>
-                </div>
-
-                <div class="tab-pane" id="tabWooCommerceConfiguration" role="tabpanel">
-                    <div class='row justify-left mx-20 mt-30'>
-                        <div class='col-md-4 pt-20 mb-40'>
-                            <a id="product" role="button" integration-status="" class="pointer align-items-center" data-toggle="modal" data-target="#modal-woocom-integration">
-                                <span class="o-reload-1 font-size-16"></span>
-                                <span class="gray"> Sincronizar dados com WooCommerce </span>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <hr>
-                    
-                    <div class='row justify-left mx-20 mt-30'>
-
-                        <div class='col-md-4 pt-20 mb-40'>
-                        
-                            <a  role="button" integration-status="" class="pointer align-items-center" data-toggle="modal" data-target="#modal-woocom-integration-apikeys">
-                                <span class="fa fa-key font-size-16"></span>
-
-                                Chaves de acesso REST API
-                            </a>
-                        </div>
-
-                        
-                    </div>
-                    <hr>
-
-                </div>
-
-                <div class="tab-pane" id="tabAffiliateConfiguration" role="tabpanel">
-                    <div class='my-30 mx-30'>
-                        <div class='row'>
-                            <div class='form-group col-md-6 col-sm-12'>
-                                <div class="switch-holder">
-                                    <br>
-                                    <label for='boleto_redirect' style='margin-right:15px;margin-bottom: 3px'>Habilitar
-                                        link afiliação</label>
-                                    <label class="switch" style='top:3px'>
-                                        <input type="checkbox" id="status-url-affiliates" name="status-url-affiliates" class='check status-url-affiliates' value='0'>
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class='form-group col-md-6 col-sm-12 col-xs-12 div-url-affiliate'>
-                                <div class='form-group col-md-12 col-sm-12 col-xs-12'>
-                                    <label for='url-affiliates'>Link afiliação</label>
-                                    <div id="affiliate-link-select" class="input-group">
-                                        <input type="text" class="form-control" id="url-affiliates" value="" readonly="">
-                                        <span class="input-group-btn">
-                                            <button id="copy-link-affiliation" class="btn btn-default" type="button">Copiar</button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="div-url-affiliate">
-                            <div class='row'>
-                                <div class='form-group col-md-6 col-xs-12'>
-                                    <label for='terms-affiliates'>Termos de Afiliação</label>
-                                    <input type="hidden" name="terms_affiliates" id="terms_affiliates">
-                                    <textarea class='input-pad' id='termsaffiliates' placeholder='Termos'></textarea>
-                                    <span id='terms-affiliates-error' class='text-danger'></span>
-                                    <p class='info pt-5' style='font-size: 10px;'>
-                                        <i class='icon wb-info-circle' aria-hidden='true'></i> Termos exibidos na
-                                        Vitrine para afiliação
-                                    </p>
-                                </div>
-                                <div class='form-group col-md-6 col-xs-12'>
-                                    <div class='form-group col-md-12 col-sm-12 col-xs-12'>
-                                        <label for='automatic-affiliation'>Afiliação automática</label>
-                                        <select class='automatic-affiliation form-control select-pad' name='automatic_affiliation' class='form-control select-pad'>
-                                            <option value='0'>Não</option>
-                                            <option value='1'>Sim</option>
-                                        </select>
-                                        <p class='info pt-5' style='font-size: 10px;'>
-                                            <i class='icon wb-info-circle' aria-hidden='true'></i> Aprova
-                                            automaticamente as solicitações de afiliação
-                                        </p>
-                                    </div>
-                                    <div class='form-group col-md-12 col-sm-12'>
-                                        <label for="cookie-duration">Duração do cookie</label>
-                                        <select class='cookie-duration form-control select-pad' name='cookie_duration'>
-                                            <option value="0"> Eterno</option>
-                                            <option value="7"> 7 dias</option>
-                                            <option value="15"> 15 dias</option>
-                                            <option value="30"> 1 mês</option>
-                                            <option value="60"> 2 meses</option>
-                                            <option value="180"> 6 meses</option>
-                                            <option value="365"> 1 ano</option>
+                                <!-- COOKIE -->
+                                <div class="row no-gutters px-10 pr-sm-0">
+                                    <div class='form-group col-md-12 col-lg-7 mr-lg-10 pr-0'>
+                                        <label for="cookie-duration" class="font-size-16">Duração do cookie</label>
+                                        <select class='cookie-duration sirius-select' name='cookie_duration'>
+                                            <option value="0">Eterno</option>
+                                            <option value="7">7 dias</option>
+                                            <option value="15">15 dias</option>
+                                            <option value="30">1 mês</option>
+                                            <option value="60">2 meses</option>
+                                            <option value="180">6 meses</option>
+                                            <option value="365">1 ano</option>
                                         </select>
                                         <span id='error-cookie-duration' class='text-danger' style='display: none'></span>
                                     </div>
-                                    <div class='form-group col-md-12 col-sm-12 col-xs-12'>
-                                        <label for='percentage-affiliates'>Porcentagem</label>
-                                        <input id='percentage-affiliates' name='percentage_affiliates' value='' class='input-pad' type='text' min="0" max="100" maxlength="3">
-                                        <span id='input-pad-error' class='text-danger'></span>
+
+                                    <!-- PORCENTAGEM -->
+                                    <div class="col-md-12 col-lg pl-0 mb-5 mb-md-5 mb-lg-0">
+                                        <label for="percentage-affiliates" class="font-size-16">Porcentagem</label>
+
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12">
+                                                <div class="input-group mb-3 test">
+
+                                                    <input id='percentage-affiliates' class="form-control select-pad" name='percentage_affiliates' value='' type='text' min="0" max="100" maxlength="3" style="outline: none;">
+
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text select-pad percent-border">%</span>
+                                                        <span id='input-pad-error' class='text-danger'></span>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <div class='form-group col-md-12 col-sm-12'>
-                                        <label for='commission-type-enum'>Tipo comissão</label>
-                                        <select class='commission-type-enum form-control select-pad' name='commission_type_enum' class='form-control select-pad'>
-                                            <option value='1'>Primeiro clique</option>
-                                            <option value='2'>Último clique</option>
-                                        </select>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- TIPO DE COMISSAO -->
+                        <div class="row no-gutters pl-10">
+                            <div class="col-md-12">
+
+                                <!-- LABEL -->
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <label for="commission-type-enum" class="font-size-16">Tipo comissão</label>
                                     </div>
+                                </div>
+
+                                <!-- PRIMEIRO / ULTIMO CLICK -->
+                                <div class="row no-gutters pr-10 pr-xl-0">
+
+                                        <div class="col-md-12 justify-content-between px-0 commission-type-enum" id="commission_type_enum" name="commission_type_enum">
+                                            <div class="row no-gutters">
+                                                <!-- PRIMEIRO -->
+                                                <div class="col-md-12 col-xl-6 pl-0 mr-xl-10 mb-5 mb-md-5">
+                                                    <input type="radio" id="first-click" name="commission_type_enum" class="d-none" value="1">
+                                                    <label for="first-click" class="col-md-12 btn bg-gray font-size-16 font-weight-bold p-10 type-comission">Primeiro clique</label>
+                                                </div>
+
+                                                <!-- ULTIMO -->
+                                                <div class="col-md-12 col-xl pr-0">
+                                                    <input type="radio" id="last-click" name="commission_type_enum" class="d-none" value="2">
+                                                    <label for="last-click" class="col-md-12 btn bg-gray font-size-16 font-weight-bold p-10 type-comission">Último clique</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                </div>
-            </div>
-        </div>
-        {{--END Configurações--}}
-        <div class="mt-30">
-            <div class="row">
-                <div class="col-6">
-                    <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete-project" style="float: left;">
-                        <span class='orion-icon-lixo'></span>
-                        <span class="gray"> Deletar projeto</span>
-                    </a>
-                </div>
-                <div class="col-6">
-                    <button id="bt-update-project" type="button" class="btn btn-success" style="float: right;">
-                        Atualizar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </form>
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-project" aria-hidden="true" role="dialog" tabindex="-1">
-        <div class="modal-dialog  modal-dialog-centered  modal-simple">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
-                        <i class="material-icons md-16">close</i>
-                    </a>
-                </div>
-                <div id="modal_excluir_body" class="modal-body text-center p-20">
-                    <div class="d-flex justify-content-center">
-                        <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
+
+                    <!-- COL-7 TERMOS AFFILIACAO-->
+                    <div class="col-md-8 form-group pr-sm-40 px-md-20">
+                        <div class="row no-gutters px-10">
+                            <div class="col-md-12 form-group">
+
+
+                                <label for="terms-affiliates" class="font-size-16">Termos de Afiliação</label>
+                                <input type="hidden" name="terms_affiliates" id="terms_affiliates">
+
+                                <!-- TEXTAREA QUILL -->
+                                <div class="h-200" id='termsaffiliates' placeholder='Termos'></div>
+
+                                <span id='terms-affiliates-error' class='text-danger'></span>
+
+                            </div>
+                        </div>
                     </div>
-                    <h3 class="black"> Você tem certeza? </h3>
-                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
+
                 </div>
-                <div class="modal-footer d-flex align-items-center justify-content-center">
-                    <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
-                        <b>Cancelar</b>
-                    </button>
-                    <button type="button" class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
-                        <b class="mr-2">Excluir </b>
-                        <span class="o-bin-1"></span>
-                    </button>
+
+                <!-- RODA PE CARD 5 & 7 -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row no-gutters">
+
+                            <!-- AFILIACAO AUTOMATICA -->
+                            <div class="col-md-4 col-lg-3 col-lx-3 pl-5 pl-md-10 py-10 pl-lg-30 pr-20 d-flex align-items-center border-top border-right automatic-affiliation" name='automatic_affiliation'>
+                                <input type="checkbox" id="auto-afiliation" class="col-1 h-20 mr-10">
+                                <label for="auto-afiliation" class="font-size-16 m-0">Afiliação automática</label>
+                            </div>
+
+                            <!-- CONVITE AFILIADOS -->
+                            <div class="col-12 col-md-6 col-lg-7 col-xl-8 py-10 pl-0 pr-0 align-items-center border-top border-right">
+                                <div class="row no-gutters mt-3 d-flex justify-content-sm-start pl-0 pl-md-0 pl-lg-0">
+
+                                    <div class="col-sm-12 col-lg-3 col-xl-5 font-weight-bold pr-0 pl-5 d-flex justify-content-lg-end align-items-center">Convide afiliados:</div>
+
+                                    <div class="col-md-12 col-lg-9 col-xl-7">
+                                        <input type="text" class="text-lg-right text-xl-left pl-5 pl-sm-5 pr-10 pr-xl-40 border-0" id="url-affiliates" readonly>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- COPIAR LINK -->
+                            <div class="col-md-2 col-lg-2 col-xl-1 border-top d-flex align-items-center justify-content-center">
+                                <button id="copy-link-affiliation" class="mx-0 bg-white border-0 font-size-16" type="button">
+
+                                    <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1.5028 2.62704L1.5 4.75V15.2542C1.5 17.0491 2.95507 18.5042 4.75 18.5042L13.3663 18.5045C13.0573 19.3782 12.224 20.0042 11.2444 20.0042H4.75C2.12665 20.0042 0 17.8776 0 15.2542V4.75C0 3.76929 0.627445 2.93512 1.5028 2.62704ZM13.75 0C14.9926 0 16 1.00736 16 2.25V15.25C16 16.4926 14.9926 17.5 13.75 17.5H4.75C3.50736 17.5 2.5 16.4926 2.5 15.25V2.25C2.5 1.00736 3.50736 0 4.75 0H13.75ZM13.75 1.5H4.75C4.33579 1.5 4 1.83579 4 2.25V15.25C4 15.6642 4.33579 16 4.75 16H13.75C14.1642 16 14.5 15.6642 14.5 15.25V2.25C14.5 1.83579 14.1642 1.5 13.75 1.5Z" fill="#37474F"/>
+                                    </svg>
+                                    <b>Copiar</b>
+
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- DELETE PROJETO -->
+    <div id="trash" class="row no-gutters mt-60 mb-60 d-none">
+        <div class="col-md-12">
+            <div class="row no-gutters">
+                <div class="d-flex delete-project">
+                    <div>
+                        <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.13381 1.97674C8.27694 1.8279 8.46464 1.75 8.65385 1.75H13.3462C13.4405 1.75 13.5346 1.76928 13.6235 1.80755C13.7124 1.84586 13.7951 1.90284 13.8662 1.97674C13.9373 2.05071 13.9952 2.1401 14.0352 2.24052C14.0752 2.341 14.0962 2.44964 14.0962 2.56V3.45H7.90385V2.56C7.90385 2.33589 7.98973 2.12659 8.13381 1.97674ZM15.5962 2.56V3.45H18.878H18.8899H21C21.4142 3.45 21.75 3.78579 21.75 4.2C21.75 4.61421 21.4142 4.95 21 4.95H19.5915L18.5187 23.0705C18.5015 23.7661 18.2283 24.4339 17.747 24.9344C17.2611 25.4398 16.5999 25.7354 15.9001 25.7498L15.8846 25.75H6.11538L6.09994 25.7498C5.40013 25.7354 4.73892 25.4398 4.25302 24.9344C3.77172 24.4339 3.49849 23.7661 3.48126 23.0705L2.40847 4.95H1C0.585786 4.95 0.25 4.61421 0.25 4.2C0.25 3.78579 0.585786 3.45 1 3.45H3.11015H3.12201H6.40385V2.56C6.40385 1.95663 6.63404 1.37235 7.05256 0.937082C7.47205 0.500817 8.04741 0.25 8.65385 0.25H13.3462C13.6458 0.25 13.9418 0.311421 14.2169 0.429942C14.492 0.54843 14.7399 0.721264 14.9474 0.937082C15.1549 1.15284 15.318 1.4074 15.4287 1.6855C15.5395 1.96357 15.5962 2.26064 15.5962 2.56ZM3.9111 4.95H18.0889L17.0205 22.9957L17.0198 23.0113L17.0194 23.0257C17.013 23.3575 16.8833 23.6685 16.6657 23.8948C16.4506 24.1185 16.1672 24.2422 15.8759 24.25H6.12407C5.83275 24.2422 5.54936 24.1185 5.33427 23.8948C5.11666 23.6685 4.98695 23.3575 4.98063 23.0257C4.98044 23.0157 4.98005 23.0057 4.97946 22.9957L3.9111 4.95ZM9.02185 7.19157C9.00492 6.7777 8.65568 6.45592 8.24182 6.47285C7.82795 6.48978 7.50617 6.83901 7.5231 7.25288L8.06855 20.5862C8.08548 21.0001 8.43472 21.3219 8.84858 21.3049C9.26245 21.288 9.58423 20.9388 9.5673 20.5249L9.02185 7.19157ZM14.4764 7.25288C14.4933 6.83901 14.1715 6.48978 13.7577 6.47285C13.3438 6.45592 12.9946 6.7777 12.9776 7.19157L12.4322 20.5249C12.4153 20.9388 12.737 21.288 13.1509 21.3049C13.5648 21.3219 13.914 21.0001 13.9309 20.5862L14.4764 7.25288ZM11.7497 7.22223C11.7497 6.80801 11.414 6.47223 10.9997 6.47223C10.5855 6.47223 10.2497 6.80801 10.2497 7.22223V20.5556C10.2497 20.9698 10.5855 21.3056 10.9997 21.3056C11.414 21.3056 11.7497 20.9698 11.7497 20.5556V7.22223Z" fill="#838383"/>
+                        </svg>
+                    </div>
+
+                    <a id="bt-delete-project" role="button" class="pointer align-items-center mt-3 ml-10" data-toggle="modal" data-target="#modal-delete-project" style="float: left;">
+                        <span class="orion-icon-lixo"></span>
+                        <span class="font-size-16"><b>Excluir loja</b></span>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    {{--Modal Verificação Celular--}}
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_verify_support_phone" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-simple">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" style="width: 100%; text-align:center">Verificar telefone de suporte</h4>
+
+    <!-- CARD SALVAR OU CANCELAR ALTERACOES -->
+    <div id="confirm-changes" class="row">
+        <div class="container position-fixed pr-5 pr-sm-45 z-index" style="bottom: 0;">
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="row bg-primary no-gutters final-card padding-cards">
+
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="row no-gutters">
+                                <div class="col-md-12 pl-0">
+                                    <span class="padding-cards-l font-size-16">Você tem alterações que <b>não estão salvas</b> </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="options-buttons" class="buttons-container col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="row no-gutters">
+                                <div class="col-md-12 d-flex justify-content-end pr-0 padding-cards-r">
+                                    <button type="button" id="cancel-edit" class="font-size-16 btn btn-primary border border-white mr-10 px-15 px-sm-40">Cancelar</button>
+                                    <button type="submit" id="bt-update-project" class="font-size-16 btn btn-light text-primary mr-40 mr-sm-0 px-15 px-sm-40">Salvar alterações</button>
+                                </div>
+                            </div>
+                            <div class="loader"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body" style="margin-top: 10px">
-                    <span>Um código de verificação foi enviado para o seu celular, digite o código recebido no campo abaixo (pode demorar alguns instantes, aguarde até receber o sms)</span>
-                    <br>
-                    <form method="POST" enctype="multipart/form-data" id='match_support_phone_verifycode_form'>
-                        @csrf
-                        <label for="support_phone_verify_code" style="margin-top: 20px">Código de verificação</label>
-                        <input id="support_phone_verify_code" type="number" min='0' max='9999999' minlength='6' maxlength='7' class="form-control input-pad" placeholder="Insira o código aqui">
-                        <button type='submit' class='btn btn-success mt-20'>
-                            <i class='fas fa-check'></i> Verificar
-                        </button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- CARD ERROR  -->
+    <div id="data-error" class="row">
+        <div class="container position-fixed pr-5 pr-sm-45" style="bottom: 0;">
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="row no-gutters bg-danger text-white padding-cards error-card">
+
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="row no-gutters">
+                                <div class="col-md-12 pl-0">
+                                    <span class="padding-cards-l font-size-16"><strong>Ops!</strong> Seu arquivo é inválido.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="padding-cards-r">
+                                <img src="{{ mix('build/global/img/projects/errorIcon.svg') }}" alt="icone success">
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    {{--Modal Verificação Email--}}
-    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_verify_contact" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-simple">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" style="width: 100%; text-align:center">Verificar email de contato</h4>
+
+    <!-- CARD ALTERACEOS SALVAS COM SUCESSO -->
+    <div id="saved-alterations" class="row">
+        <div class="container position-fixed pr-5 pr-sm-45 z-index" style="bottom: 0;">
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <div class="row no-gutters success-card text-white padding-cards">
+
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="row no-gutters">
+                                <div class="col-md-12 pl-0">
+                                    <span class="padding-cards-l font-size-16">Alterações salvas com sucesso!</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="padding-cards-r">
+                                <img src="{{ mix('build/global/img/projects/successIcon.svg') }}" alt="icone success">
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-                <div class="modal-body" style="margin-top: 10px">
-                    <span>Um código de verificação foi enviado para o seu email, digite o código recebido no campo abaixo (pode demorar alguns instantes, aguarde até receber o email)</span>
-                    <br>
-                    <form method="POST" enctype="multipart/form-data" id='match_contact_verifycode_form'>
-                        @csrf
-                        <label for="contact_verify_code" style="margin-top: 20px">Código de verificação</label>
-                        <input id="contact_verify_code" type="number" min='0' max='9999999' minlength='6' maxlength='7' class="form-control input-pad" placeholder="Insira o código aqui">
-                        <button type='submit' class='btn btn-success mt-20'>
-                            <i class='fas fa-check'></i> Verificar
-                        </button>
-                    </form>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-project" aria-hidden="true" role="dialog" tabindex="-1">
+    <div class="modal-dialog  modal-dialog-centered  modal-simple">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <a class="pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                    <i class="material-icons md-16">close</i>
+                </a>
+            </div>
+            <div id="modal_excluir_body" class="modal-body text-center p-20">
+                <div class="d-flex justify-content-center">
+                    <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
-                </div>
+                <h3 class="black"> Você tem certeza? </h3>
+                <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
+            </div>
+            <div class="modal-footer d-flex align-items-center justify-content-center">
+                <button type="button" class="col-4 btn border-0 btn-gray btn-cancel-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b>Cancelar</b>
+                </button>
+                <button type="button" class="col-4 btn border-0 btn-outline btn-delete btn-delete-modal form-control d-flex justify-content-center align-items-center align-self-center flex-row" data-dismiss="modal" style="width: 20%;">
+                    <b class="mr-2">Excluir </b>
+                    <span class="o-bin-1"></span>
+                </button>
             </div>
         </div>
     </div>

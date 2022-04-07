@@ -7,7 +7,7 @@
                         <input type="text" class="form-control" id='plan-name' name="plan" placeholder="Pesquisa por nome">
                         <span class="input-group-append" id='btn-search-plan'>
                             <button type="submit" class="btn btn-primary btn-sm">
-                                <img src="/modules/global/img/icon-search_.svg">
+                                <img src="/build/global/img/icon-search_.svg">
                             </button>
                         </span>
                     </div>
@@ -17,13 +17,13 @@
                         <div id="config-cost-plan" class="btn-holder d-flex align-items-center pointer" style="padding-right: 10px; border-right: 1px solid #EDEDED; margin-top: -20px; margin-bottom: -20px; margin-right: 20px;">
                             <span class="link-button-dependent">Configurar custos </span>
                             <a class="rounded-add pointer bg-secondary">
-                                <img src="{{ asset('modules/global/img/svg/settings.svg') }}" height="22">
+                                <img src="{{ mix('build/global/img/svg/settings.svg') }}" height="22">
                             </a>
                         </div>
                         <div class="btn-holder add-plan d-flex align-items-center pointer">
                             <span class="link-button-dependent blue">Adicionar </span>
                             <a class="ml-10 rounded-add pointer" style="display: inline-flex;">
-                                <img src="/modules/global/img/icon-add.svg" style="width: 18px;">
+                                <img src="/build/global/img/icon-add.svg" style="width: 18px;">
                             </a>
                         </div>
                     </div>

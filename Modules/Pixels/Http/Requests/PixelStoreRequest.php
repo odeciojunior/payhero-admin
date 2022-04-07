@@ -18,13 +18,22 @@ class PixelStoreRequest extends FormRequest
             'purchase-event-name' => 'nullable|max:255',
             'add_pixel_plans' => 'required|array',
             'checkout' => 'nullable',
+            'purchase_all' => 'nullable',
+            'basic_data' => 'nullable',
+            'delivery' => 'nullable',
+            'coupon' => 'nullable',
+            'payment_info' => 'nullable',
             'purchase_card' => 'nullable',
             'purchase_boleto' => 'nullable',
             'purchase_pix' => 'nullable',
+            'upsell' => 'nullable',
+            'purchase_upsell' => 'nullable',
             'campaign' => 'nullable',
             'affiliate_id' => 'nullable',
             'value_percentage_purchase_boleto' => 'nullable|integer|max:100|min:10',
             'url_facebook_domain' => 'nullable|string|max:255',
+            'event_select' => 'required_if:platform,google_adwords',
+            'send_value_checkout' => 'nullable',
         ];
     }
 

@@ -4,12 +4,11 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Benefit;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Modules\Core\Events\NotifyUserLevelEvent;
 use Modules\Core\Services\BenefitsService;
-use Illuminate\Support\Facades\Log;
-
 class UpdateUserLevel extends Command
 {
     /**
@@ -44,8 +43,6 @@ class UpdateUserLevel extends Command
     public function handle()
     {
 
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
-
         try {
 
             $transactionModel = new Transaction;
@@ -70,7 +67,9 @@ class UpdateUserLevel extends Command
                     $level = 1;
                 }
 
-                $user = User::with('benefits')->find($transaction->user_id);
+                $user = User::with(['benefits' => function($query) {
+                    $query->where('benefit_id', '!=', 2); // r+r
+                }])->find($transaction->user_id);
 
                 if (!empty($user)) {
                     $this->line("Verficando o usuário: {$user->name} ({$user->id})...");
@@ -112,8 +111,6 @@ class UpdateUserLevel extends Command
         } catch (Exception $e) {
             report($e);
         }
-
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
 
         return 0;
     }

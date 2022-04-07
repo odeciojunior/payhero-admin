@@ -49,6 +49,7 @@
     "socialiteproviders/shopify": "^1.0",
     "spatie/laravel-activitylog": "^3.9",
     "spatie/laravel-permission": "4.0.1",
+    "spatie/laravel-schedule-monitor": "^2.4",
     "torann/geoip": "^1.0",
     "vinkla/hashids": "9.*"
   },
@@ -64,6 +65,7 @@
     "nunomaduro/collision": "^5.0",
     "phpunit/phpunit": "^9.0",
     "shuchkin/simplexlsx": "^0.8.13",
+    "supliu/laravel-query-monitor": "^1.0",
     "symfony/thanks": "^1.0"
   },
   "autoload": {
@@ -105,7 +107,10 @@
   "config": {
     "preferred-install": "dist",
     "sort-packages": true,
-    "optimize-autoloader": true
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "symfony/thanks": true
+    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

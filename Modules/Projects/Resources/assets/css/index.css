@@ -1,0 +1,62 @@
+.card{
+    border-radius: 8px;
+    min-height:403px;
+
+}
+.card-img-top {
+    border-radius: 8px 8px 0 0;
+    height: 300px;
+    object-fit: cover;
+}
+
+
+.name_project:hover{
+    transition: transform 1s;
+}
+.name_project:hover {
+    transform: scale(1.04);
+}
+
+
+.drag-drop-icon{
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 1s, background .5s;
+}
+.name_project:hover .drag-drop-icon{
+    opacity: 1;
+}
+
+.ui-sortable-helper .drag-drop-icon{
+    background: #F1F1F1;
+}
+
+
+.select2-dropdown.select2-dropdown--above{
+    border-color: #88BFFF;
+}
+
+.ui-tooltip, .arrow:after {
+    background: black;
+    border-style: none !important;
+    color: #FFFFFF;
+    opacity: 0.9;
+  }
+
+#data-table-projects {
+    position: absolute;
+    top: 100px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    overflow: hidden;
+    overflow-y: scroll;
+    margin-left: auto;
+    margin-right: auto;
+}
+#data-table-projects::-webkit-scrollbar{
+    width: 10px;
+}
+#data-table-projects{
+    scrollbar-width: none;
+}

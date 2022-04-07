@@ -5,12 +5,10 @@ namespace App\Console\Commands;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\CompanyAdjustments;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
-use Modules\Core\Entities\User;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\GetnetBackOfficeService;
 
@@ -48,7 +46,6 @@ class CheckAdjustmentGateway extends Command
      */
     public function handle()
     {
-        Log::debug('command . ' . __CLASS__ . ' . iniciando em ' . date("d-m-Y H:i:s"));
 
         try {
 
@@ -56,8 +53,8 @@ class CheckAdjustmentGateway extends Command
                 ->whereHas('gatewayCompanyCredential')
                 //->onlyTrashed()
                 ->withTrashed()
-                ->where('id', '>=', 3768)
-                ->where('id', '<=', 3800)
+                ->where('id', '>=', 3000)
+                ->where('id', '<=',  5000)
             ;
 
             $total = $companies->count();
@@ -92,13 +89,12 @@ class CheckAdjustmentGateway extends Command
             report($e);
         }
 
-        Log::debug('command . ' . __CLASS__ . ' . finalizando em ' . date("d-m-Y H:i:s"));
     }
 
     public function checkGetnet(Company $company) {
 
         $getnetService = new GetnetBackOfficeService();
-        $data = Carbon::createFromFormat('d/m/Y', '01/09/2020');
+        $data = Carbon::createFromFormat('d/m/Y', '05/02/2022');
 //        $data = Carbon::createFromFormat('d/m/Y', '05/11/2021');
         $aux = 0;
 

@@ -12,7 +12,7 @@
     <div class="row">
         <div class="form-group col-xl-6">
             <label for="type">Tipo</label>
-            <select name="type" class="sirius-select coupon-type" required>
+            <select name="type" class="sirius-select coupon-type" id="edit-coupon-type" required>
                 <option value="0">Porcentagem</option>
                 <option value="1">Valor</option>
             </select>
@@ -29,7 +29,7 @@
         </div>
         <div class="form-group col-xl-6">
             <label for="status">Status</label>
-            <select name="status" class="sirius-select coupon-status" required>
+            <select name="status" class="sirius-select coupon-status" id="edit-coupon-status" required>
                 <option value="1">Ativo</option>
                 <option value="0">Desativado</option>
             </select>

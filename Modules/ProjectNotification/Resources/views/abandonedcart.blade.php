@@ -26,7 +26,7 @@
         <div class="row">
             <div class="col-3">
                 <div align="center" class="px-0" style="">
-                    <img align="center" alt="Image" border="0" class="p_image_project" src="/modules/global/img/projeto.svg" style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: auto; width: 100%; max-width: 68px; display: block;" title="Image" width="68"/>
+                    <img align="center" alt="Image" border="0" class="p_image_project" src="/build/global/img/projeto.svg" style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: auto; width: 100%; max-width: 68px; display: block;" title="Image" width="68"/>
                 </div>
             </div>
             <div class="col-6">
@@ -41,7 +41,6 @@
 
     </div>
     <div class="mt-2 text-center" style="color: #757575; font-size: 10px;">
-         Esse é um e-mail automático. Não responda esse e-mail. Caso queira contatar nosso suporte, envie um e-mail para:
-         <strong style="color: black;" class="p_project_contact"><a href="">contao@projeto.com</a> </strong>
+         Esse é um e-mail automático. Não responda esse e-mail. Caso queira contatar nosso suporte clique <a href="">aqui</a>
     </div>
 </div>

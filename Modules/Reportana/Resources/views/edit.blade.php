@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-12">
                 <div class='form-group'>
-                    <label for="company">Selecione seu projeto</label>
+                    <label for="company">Selecione sua loja</label>
                     <select class="sirius-select" id="select_projects_edit" name="project_id" disabled>
                     </select>
                 </div>

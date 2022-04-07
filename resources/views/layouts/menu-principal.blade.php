@@ -1,106 +1,127 @@
+<!-- BARRA SUPERIOR DE NAVEGACAO -->
 <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation" style="background-color: white">
-    <div class="navbar-header">
-        <button type="button"
-                class="navbar-toggler hamburger hamburger-close hamburger-arrow-left navbar-toggler-left hided"
-                data-toggle="menubar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="hamburger-bar"></span>
-        </button>
-        <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-collapse"
-                data-toggle="collapse">
-            <i class="icon wb-more-horizontal" aria-hidden="true"></i>
-        </button>
-        <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
-            <img id="logoIconSirius" class="navbar-brand-logo" src="{{ asset('/modules/global/img/logos/2021/svg/icon-sirius.svg') }}">
-            <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ asset('/modules/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100">
-        <!-- <span class="navbar-brand-text hidden-xs-down" style="color: black"> <img id="logoSirius" class="navbar-brand-logo"  width="100" height="80" src="{{ asset('/modules/global/img/logos/2021/svg/sirius-logo.svg') }}"> </span> -->
-        </div>
-        {{--        <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">--}}
-        {{--            <span class="sr-only">Toggle Search</span>--}}
-        {{--            <i class="icon wb-search" aria-hidden="true"></i>--}}
-        {{--        </button>--}}
-    </div>
-    <div class="navbar-container container-fluid">
-        <input type='hidden' id='user' value='{{Vinkla\Hashids\Facades\Hashids::connection('pusher_connection')->encode(auth()->user()->id)}}'>
-        <!-- Navbar Collapse -->
-        <div class="collapse navbar-collapse navbar-collapse-toolbar" id="site-navbar-collapse">
-            <!-- Navbar Toolbar -->
-            <ul class="nav navbar-toolbar">
-                <li class="nav-item hidden-float" id="toggleMenubar">
-                    <a class="nav-link" data-toggle="menubar" href="#" role="button">
-                        <i class="icon hamburger hamburger-arrow-left">
-                            <span class="sr-only">Toggle menubar</span>
-                            <span class="hamburger-bar"></span>
-                        </i>
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-                @hasanyrole('account_owner|admin')
-                    <li id="notifications_button" class="nav-item dropdown" disabled='true'>
-                        <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
-                            <img class="svg-menu" src="{{ asset('modules/global/img/svg/notificacao.svg') }}" alt="Notificacao">
 
-                            @if( count(auth()->user()->unreadNotifications) > 0)
-                                <span class="badge badge-notification" id="notification-amount"></span>
-                            @else
-                                <span class="badge badge-notification-false" id="notification-amount"></span>
-                            @endif
-                        </span>
-                        <div id="notifications_card" class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
-                            <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! asset('modules/global/img/notificacoes.svg')!!}">
+    <!-- BOTAO DE HAMBURGUER NO MOBILE-->
+    <button type="button" class="navbar-toggler hamburger hamburger-close hamburger-arrow-left navbar-toggler-left hided" data-toggle="menubar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="hamburger-bar"></span>
+    </button>
+
+    <!-- SIRIUS LOGO -->
+    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
+        <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}">
+        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100">
+    </div>
+
+    <!-- BOTAO HAMBURGUER NO DESKTOP-->
+    <div>
+        <ul class="nav navbar-toolbar">
+            <li class="nav-item hidden-float" id="toggleMenubar">
+                <a class="nav-link" data-toggle="menubar" href="#" role="button">
+                    <i class="icon hamburger hamburger-arrow-left">
+                        <span class="sr-only">Toggle menubar</span>
+                        <span class="hamburger-bar"></span>
+                    </i>
+                </a>
+            </li>
+        </ul>
+    </div>
+        
+    <div class="row no-gutters ml-auto">
+
+        <!-- CONTAINER DOS ICONES/LINKS DO ANNOUNCEKIT, NOTIFICACOES E USUARIO -->
+        <div class="row no-gutters d-flex justify-content-end">
+
+            <!-- HASH USER -->
+            <input type='hidden' id='user' value='{{Vinkla\Hashids\Facades\Hashids::connection('pusher_connection')->encode(auth()->user()->id)}}'>
+            <input type='hidden' id='user_hash' value='{{Vinkla\Hashids\Facades\Hashids::encode(auth()->user()->id)}}'>
+            <input type='hidden' id='user_name' value='{{auth()->user()->name}}'>
+            <input type='hidden' id='user_email' value='{{auth()->user()->email}}'>
+    
+            <!-- NAVERBAR FILHA DA CONTAINER -->
+            <div class="row no-gutters d-flex" id="site-navbar-collapse">
+
+                <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
+                <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center"> 
+                    <b class="pr-5"> Novidades </b>
+                </div>
+
+                <!-- BOTOES DE NOTIFICAO E USUARIO -->
+                <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
+    
+                    <!-- BOTAO DE NOTIFICACAO -->
+                    @hasanyrole('account_owner|admin')
+    
+                        <li id="notifications_button" class="nav-item dropdown" disabled='true'>
+    
+                            <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
+                                <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Notificacao">
+    
+                                @if( count(auth()->user()->unreadNotifications) > 0)
+                                    <span class="badge badge-notification" id="notification-amount"></span>
+                                @else
+                                    <span class="badge badge-notification-false" id="notification-amount"></span>
+                                @endif
+                            </span>
+    
+                            <!-- MODAL DE NOTIFICACAO -->
+                            <div id="notifications_card" class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
+                                <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! mix('build/global/img/notificacoes.svg')!!}" style="scrollbar-width:thin;"></div>
                             </div>
-                        </div>
-                    </li>
-                @endhasanyrole
-                <li class="nav-item dropdown">
-                    <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
-                        <span class="avatar avatar-online">
-                            <img class='img-user-menu-principal' src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png' !!}" onerror="this.onerror=null; this.src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'" alt="">
-                            <i></i>
-                        </span>
-                    </a>
-                    <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
-                        @if(foxutils()->isHomolog())
-                            <div data-toggle="tooltip" data-placement="left" title="Desabilitado na versão de testes">
-                                <a class="dropdown-item disabled" disabled>
-                                    <img height="24" width="24" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
+    
+                        </li>
+                    @endhasanyrole
+    
+                    <!-- BOTAO DE USUARIO -->
+                    <li class="nav-item dropdown">
+
+                        <!-- FOTO DO USUARIO -->
+                        <a class="nav-link navbar-avatar pr-10 pr-sm-25" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
+                            <span class="avatar avatar-online">
+                                <img class='img-user-menu-principal' src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png' !!}" onerror="this.onerror=null; this.src='https://cloudfox-documents.s3.amazonaws.com/cloudfox/defaults/user-default.png'" alt="">
+                                <i></i>
+                            </span>
+                        </a>
+    
+                        <!-- BOTOES DE OPCAO DOS USUARIO -->
+                        <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
+    
+                            <!-- BOTAO DE CONFIGURACOES -->
+                            @if(foxutils()->isHomolog())
+                                <div data-toggle="tooltip" data-placement="left" title="Desabilitado na versão de testes">
+                                    <a class="dropdown-item disabled" disabled>
+                                        <img height="24" width="24" src="{{ mix('build/global/img/svg/settings.svg') }}"/>
+                                        Configurações
+                                    </a>
+                                </div>
+                            @else
+                                <a id="accounts-service" class="dropdown-item redirect-to-accounts" href="" data-url-value=""role="menuitem">
+                                    <img height="24" width="24" src="{{ mix('build/global/img/svg/settings.svg') }}"/>
                                     Configurações
                                 </a>
-                            </div>
-                        @else
-                            <a id="accounts-service" class="dropdown-item redirect-to-accounts" href="" data-url-value=""role="menuitem">
-                                <img height="24" width="24" src="{{ asset('modules/global/img/svg/settings.svg') }}"/>
-                                Configurações
+                            @endif
+    
+                            <!-- DIV DIVISORA DOS ELEMENTOS -->
+                            <div class="dropdown-divider" role="presentation"></div>
+    
+                            <!-- BOTAO DE LOGOUT (SAIR DO USUARIO)-->
+                            <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <img height="24" width="24" src="{{ mix('build/global/img/svg/power_settings_new.svg') }}"/>
+                                Logout
                             </a>
-                        @endif
-                        <div class="dropdown-divider" role="presentation"></div>
-                        <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <img height="24" width="24" src="{{ asset('modules/global/img/svg/power_settings_new.svg') }}"/>
-                            Logout
-                        </a>
-                        <form id="logout-form" action="/logout" method="POST" style="display: none;">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        </form>
-                    </div>
-                </li>
-            </ul>
+    
+                            <form id="logout-form" action="/logout" method="POST" style="display: none;">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            </form>
+                        </div>
+    
+                    </li>
+                </ul>
+            </div>
         </div>
-    {{--        <div class="collapse navbar-search-overlap" id="site-navbar-search">--}}
-    {{--            <form role="search">--}}
-    {{--                <div class="form-group">--}}
-    {{--                    <div class="input-search">--}}
-    {{--                        <i class="input-search-icon wb-search" aria-hidden="true"></i>--}}
-    {{--                        <input type="text" class="form-control" name="site-search" placeholder="Search">--}}
-    {{--                        <button type="button" class="input-search-close icon wb-close" data-target="#site-navbar-search"--}}
-    {{--                                data-toggle="collapse" aria-label="Close"></button>--}}
-    {{--                    </div>--}}
-    {{--                </div>--}}
-    {{--            </form>--}}
-    {{--        </div>--}}
-    <!-- End Site Navbar Seach -->
     </div>
 </nav>
+
 {{--SIDE BAR--}}
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">
@@ -109,30 +130,19 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('dashboard.index') }}">
                     <span class="bg-menu">
-                        <img class="svg-menu" src="{{ asset('modules/global/img/svg/dashboard.svg') }}" alt="Dashboard">
+                        <img class="svg-menu" src="{{ mix('build/global/img/svg/dashboard.svg') }}" alt="Dashboard">
                     </span>
                     <span class="site-menu-title ml-5">Dashboard</span>
                 </a>
             </li>
         @endcan
 
-{{--        @hasanyrole('account_owner|admin')--}}
-{{--            <li class="site-menu-item has-sub disabled">--}}
-{{--                <a class="disabled" href="/dashboard">--}}
-{{--                    <span class="bg-menu">--}}
-{{--                        <img src="{{ asset('modules/global/img/svg/vitrine.svg') }}" alt="Vitrine">--}}
-{{--                    </span>--}}
-{{--                    <span class="site-menu-title">Vitrine (em breve)</span>--}}
-{{--                </a>--}}
-{{--            </li>--}}
-{{--        @endhasanyrole--}}
-
         <!-- hasanyrole('account_owner|admin|attendance|finantial') -->
         @if(auth()->user()->hasAnyPermission(['sales','recovery','trackings','contestations']))
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="sales-link">
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/vendas.svg') }}" alt="Vendas">
+                        <img src="{{ mix('build/global/img/svg/vendas.svg') }}" alt="Vendas">
                     </span>
                     <span class="site-menu-title">Vendas</span>
                     <span class="site-menu-arrow"></span>
@@ -189,9 +199,9 @@
             <li class="site-menu-item has-sub">
                 <a href="/projects" id="projects-link">
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/projetos.svg') }}" alt="Projetos">
+                        <img src="{{ mix('build/global/img/svg/vitrine.svg') }}" alt="Lojas">
                     </span>
-                    <span class="site-menu-title">Projetos</span>
+                    <span class="site-menu-title">Lojas</span>
                 </a>
             </li>
         @endcan
@@ -200,7 +210,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('products.index') }}" id="products-link">
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/produtos.svg') }}" alt="Produtos">
+                        <img src="{{ mix('build/global/img/svg/produtos.svg') }}" alt="Produtos">
                     </span>
                     <span class="site-menu-title">Produtos</span>
                 </a>
@@ -211,7 +221,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('attendance.index') }}">
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/atendimento.svg') }}" alt="Atendimento">
+                        <img src="{{ mix('build/global/img/svg/atendimento.svg') }}" alt="Atendimento">
                     </span>
                     <span class="site-menu-title">Atendimento</span>
                 </a>
@@ -230,7 +240,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{!! route('finances') !!}" id="finances-link">
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/financas.svg') }}" alt="Finanças">
+                        <img src="{{ mix('build/global/img/svg/financas.svg') }}" alt="Finanças">
                     </span>
                     <span class="site-menu-title">Finanças</span>
                 </a>
@@ -243,7 +253,7 @@
             <li class="site-menu-item has-sub">
                 <a href="javascript:void(0)" id="reports-link">
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/relatorios.svg') }}" alt="Relatórios">
+                        <img src="{{ mix('build/global/img/svg/relatorios.svg') }}" alt="Relatórios">
                     </span>
                     <span class="site-menu-title">Relatórios</span>
                     <span class="site-menu-arrow"></span>
@@ -306,7 +316,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('projectaffiliates') }}" id="affiliates-link">
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/afiliados.svg') }}" alt="Afiliados">
+                        <img src="{{ mix('build/global/img/svg/afiliados.svg') }}" alt="Afiliados">
                     </span>
                     <span class="site-menu-title mb-5">Afiliados</span>
                 </a>
@@ -317,7 +327,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('apps') }}" id='apps-link'>
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/aplicativos.svg') }}" alt="Aplicativos">
+                        <img src="{{ mix('build/global/img/svg/aplicativos.svg') }}" alt="Aplicativos">
                     </span>
                     <span class="site-menu-title">Aplicativos</span>
                 </a>
@@ -327,7 +337,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('integrations.index') }}" id='api-sirius-link'>
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/api-sirius-menu.svg') }}" alt="API Sirius">
+                        <img src="{{ mix('build/global/img/svg/api-sirius-menu.svg') }}" alt="API Sirius">
                     </span>
                     <span class="site-menu-title">API Sirius</span>
                 </a>
@@ -338,7 +348,7 @@
             <li class="site-menu-item has-sub">
                 <a href="{{ route('invitations.index') }}">
                     <span class="bg-menu">
-                        <img src="{{ asset('modules/global/img/svg/convites.svg') }}" alt="Convites">
+                        <img src="{{ mix('build/global/img/svg/convites.svg') }}" alt="Convites">
                     </span>
                     <span class="site-menu-title">Convites</span>
                 </a>

@@ -1,15 +1,13 @@
 @extends("layouts.master")
 @push('css')
-
-    <link rel="stylesheet" href="{{ asset('modules/convertax/css/index.css?v=' .  versionsFile()) }}">
-    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+    <link rel="stylesheet" href="{!! mix('build/layouts/hotbillet/index.min.css') !!}">
     <style>
         .gray:hover{
             color:#a1a1a1 !important;
         }
     </style>
 
-     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css?v=03') !!}">
+     <link rel="stylesheet" href="{!! mix('build/layouts/hotbillet/index2.min.css') !!}">
      <style>
         .o-arrow-right-1 {
             font-size: 30px;
@@ -92,9 +90,9 @@
 
         <div id="no-integration-found" class='row justify-content-center' style="display:none !important;">
             <div class="content-error text-center">
-                <img src="{!! asset('modules/global/img/aplicativos.svg') !!}" width="250px">
+                <img src="{!! mix('build/global/img/aplicativos.svg') !!}" width="250px">
                 <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                <p class="desc gray">Integre seus projetos com HotBillet de forma totalmente automatizada!</p>
+                <p class="desc gray">Integre suas lojas com HotBillet de forma totalmente automatizada!</p>
             </div>
         </div>
     </div>
@@ -127,6 +125,6 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('modules/hotbillet/js/index.js?v=s0')}}"></script>
+        <script src="{{ mix('build/layouts/hotbillet/index.min.js') }}"></script>
     @endpush
 @endsection

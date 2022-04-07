@@ -8,6 +8,20 @@ use Modules\Core\Entities\Project;
 
 class PixelService
 {
+    public const EVENTS = [
+        'checkout',
+        'purchase_all',
+        'basic_data',
+        'delivery',
+        'coupon',
+        'payment_info',
+        'purchase_card',
+        'purchase_boleto',
+        'purchase_pix',
+        'upsell',
+        'purchase_upsell',
+    ];
+
     public function store($projectId, $dataValidated): array
     {
         if (!empty($dataValidated['affiliate_id'])) {
@@ -37,7 +51,7 @@ class PixelService
         $applyPlanEncoded = json_encode(foxutils()->getApplyPlans($dataValidated['add_pixel_plans']));
 
         if ($dataValidated['platform'] == 'google_adwords') {
-            $dataValidated['code'] = str_replace(['AW-'], '', $dataValidated['code']);
+            $this->dataGoogleAds($dataValidated);
         }
 
         if (in_array(
@@ -72,9 +86,17 @@ class PixelService
                 'platform' => $dataValidated['platform'],
                 'status' => (bool)$dataValidated['status'],
                 'checkout' => $dataValidated['checkout'] == 'true',
-                'purchase_boleto' => $dataValidated['purchase_boleto'] == 'true',
+                'send_value_checkout' => $dataValidated['send_value_checkout'] == 'true',
+                'purchase_all' => $dataValidated['purchase_all'] == 'true',
+                'basic_data' => $dataValidated['basic_data'] == 'true',
+                'delivery' => $dataValidated['delivery'] == 'true',
+                'coupon' => $dataValidated['coupon'] == 'true',
+                'payment_info' => $dataValidated['payment_info'] == 'true',
                 'purchase_card' => $dataValidated['purchase_card'] == 'true',
+                'purchase_boleto' => $dataValidated['purchase_boleto'] == 'true',
                 'purchase_pix' => $dataValidated['purchase_pix'] == 'true',
+                'upsell' => $dataValidated['upsell'] == 'true',
+                'purchase_upsell' => $dataValidated['purchase_upsell'] == 'true',
                 'affiliate_id' => $dataValidated['affiliate_id'],
                 'campaign_id' => null,
                 'apply_on_plans' => $applyPlanEncoded,
@@ -149,6 +171,10 @@ class PixelService
             $dataValidated['value_percentage_purchase_boleto'] = 100;
         }
 
+        if ($dataValidated['platform'] == 'google_adwords') {
+            $this->dataGoogleAds($dataValidated);
+        }
+
         $applyPlanEncoded = json_encode((new PlanService())->getPlansApplyDecoded($dataValidated['edit_pixel_plans']));
 
         $pixel->update(
@@ -159,9 +185,17 @@ class PixelService
                 'code' => $dataValidated['code'],
                 'apply_on_plans' => $applyPlanEncoded,
                 'checkout' => $dataValidated['checkout'] == 'true',
-                'purchase_boleto' => $dataValidated['purchase_boleto'] == 'true',
+                'send_value_checkout' => $dataValidated['send_value_checkout'] == 'true',
+                'purchase_all' => $dataValidated['purchase_all'] == 'true',
+                'basic_data' => $dataValidated['basic_data'] == 'true',
+                'delivery' => $dataValidated['delivery'] == 'true',
+                'coupon' => $dataValidated['coupon'] == 'true',
+                'payment_info' => $dataValidated['payment_info'] == 'true',
                 'purchase_card' => $dataValidated['purchase_card'] == 'true',
+                'purchase_boleto' => $dataValidated['purchase_boleto'] == 'true',
                 'purchase_pix' => $dataValidated['purchase_pix'] == 'true',
+                'upsell' => $dataValidated['upsell'] == 'true',
+                'purchase_upsell' => $dataValidated['purchase_upsell'] == 'true',
                 'purchase_event_name' => $dataValidated['purchase_event_name'] ?? null,
                 'facebook_token' => $dataValidated['facebook_token_api'],
                 'is_api' => $dataValidated['is_api'],
@@ -171,5 +205,16 @@ class PixelService
         );
 
         return ['message' => 'Sucesso', 'status' => 200];
+    }
+
+    private function dataGoogleAds(&$dataValidated)
+    {
+        $dataValidated['code'] = str_replace(['AW-'], '', $dataValidated['code']);
+
+        if (!empty($dataValidated['event_select'])){
+            foreach (self::EVENTS as $EVENT) {
+                $dataValidated[$EVENT] = $dataValidated['event_select'] == $EVENT;
+            }
+        }
     }
 }
