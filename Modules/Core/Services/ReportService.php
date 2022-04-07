@@ -1229,7 +1229,6 @@ class ReportService
     {
         try {
             $companyModel = new Company();
-            $affiliateModel = new Affiliate();
             $transactionModel = new Transaction();
 
             $userId = auth()->user()->account_owner_id;
@@ -1239,8 +1238,21 @@ class ReportService
             ->pluck('id')
             ->toArray();
 
+            $relationsArray = [
+                'sale',
+                'sale.project',
+                'sale.customer',
+                'sale.plansSales',
+                'sale.shipping',
+                'sale.checkout',
+                'sale.delivery',
+                'sale.affiliate.user',
+                'sale.saleRefundHistory',
+                'sale.cashback'
+            ];
+
             $transactions = $transactionModel
-            ->with('sale')
+            ->with($relationsArray)
             ->whereIn('company_id', $userCompanies)
             ->join('sales', 'sales.id', 'transactions.sale_id')
             ->whereNull('invitation_id');
@@ -1249,16 +1261,7 @@ class ReportService
                 $projectId = current(Hashids::decode($filters["project"]));
                 $transactions->where('project_id', $projectId);
 
-                $affiliate = $affiliateModel
-                ->where('user_id', $userId)
-                ->where('project_id', $projectId)
-                ->first();
-
-                if (!empty($affiliate)) {
-                    $transactions->where('sales.affiliate_id', $affiliate->id);
-                } else {
-                    $transactions->where('sales.owner_id', $userId);
-                }
+                $transactions->where('sales.owner_id', $userId);
             }
 
             $status = [
@@ -1408,7 +1411,7 @@ class ReportService
 
             foreach ($resume as $r) {
                 if (Carbon::parse($r->date)->format('d-m') == $label) {
-                    $comissionValue = intval(preg_replace("/[^0-9]/", "", $r->commission));
+                    $comissionValue += intval(preg_replace("/[^0-9]/", "", $r->commission));
                 }
             }
 
@@ -1734,31 +1737,27 @@ class ReportService
     public function getResumePendings($filters)
     {
         try {
-            $saleModel = new Sale();
-            $affiliateModel = new Affiliate();
+            $companyModel = new Company();
+            $transactionModel = new Transaction();
 
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $userId = auth()->user()->account_owner_id;
-            $status = Sale::STATUS_PENDING;
 
-            $sales = $saleModel
-            ->where('owner_id', $userId)
-            ->where('status', $status);
+            $userCompanies = $companyModel->where('user_id', $userId)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+            $transactions = $transactionModel
+            ->whereIn('company_id', $userCompanies)
+            ->where('status_enum', Transaction::STATUS_PAID)
+            ->whereDoesntHave('blockReasonSale',function ($query) {
+                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
+            })
+            ->join('sales', 'sales.id', 'transactions.sale_id');
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
-                $sales->where('project_id', $projectId);
-
-                $affiliate = $affiliateModel
-                ->where('user_id', $userId)
-                ->where('project_id', $projectId)
-                ->first();
-
-                if (!empty($affiliate)) {
-                    $sales->where('affiliate_id', $affiliate->id);
-                } else {
-                    $sales->where('owner_id', $userId);
-                }
+                $transactions->where('sales.project_id', $projectId);
             }
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
@@ -1766,22 +1765,22 @@ class ReportService
             $date['endDate'] = $dateRange[1];
 
             if ($date['startDate'] == $date['endDate']) {
-                return $this->getResumePendingsByHours($sales, $filters);
+                return $this->getResumePendingsByHours($transactions, $filters);
             } elseif ($date['startDate'] != $date['endDate']) {
                 $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
                 $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
                 $diffInDays = $endDate->diffInDays($startDate);
 
                 if ($diffInDays <= 20) {
-                    return $this->getResumePendingsByDays($sales, $filters);
+                    return $this->getResumePendingsByDays($transactions, $filters);
                 } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                    return $this->getResumePendingsByTwentyDays($sales, $filters);
+                    return $this->getResumePendingsByTwentyDays($transactions, $filters);
                 } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                    return $this->getResumePendingsByFortyDays($sales, $filters);
+                    return $this->getResumePendingsByFortyDays($transactions, $filters);
                 } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                    return $this->getResumePendingsByWeeks($sales, $filters);
+                    return $this->getResumePendingsByWeeks($transactions, $filters);
                 } elseif ($diffInDays > 140) {
-                    return $this->getResumePendingsByMonths($sales, $filters);
+                    return $this->getResumePendingsByMonths($transactions, $filters);
                 }
             }
         } catch (Exception $e) {
@@ -1789,7 +1788,7 @@ class ReportService
         }
     }
 
-    public function getResumePendingsByHours($sales, $filters)
+    public function getResumePendingsByHours($transactions, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -1810,9 +1809,9 @@ class ReportService
             ];
         }
 
-        $resume = $sales
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
-        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, HOUR(start_date) as hour'))
+        $resume = $transactions
+        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('transactions.value'))
         ->get();
 
         $saleData = [];
@@ -1822,12 +1821,7 @@ class ReportService
 
             foreach ($resume as $r) {
                 if ($r->hour == preg_replace("/[^0-9]/", "", $label)) {
-                    $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
-                    $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
-                    $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
-                    $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
-
-                    $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                    $saleDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
                 }
             }
 
@@ -1861,7 +1855,7 @@ class ReportService
         ];
     }
 
-    public function getResumePendingsByDays($sales, $filters)
+    public function getResumePendingsByDays($transactions, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -1876,9 +1870,9 @@ class ReportService
             $dataFormated = $dataFormated->addDays(1);
         }
 
-        $resume = $sales
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
-        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, DATE(start_date) as date'))
+        $resume = $transactions
+        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('transactions.value'))
         ->get();
 
         $saleData = [];
@@ -1888,12 +1882,7 @@ class ReportService
 
             foreach ($resume as $r) {
                 if (Carbon::parse($r->date)->format('d-m') == $label) {
-                    $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
-                    $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
-                    $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
-                    $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
-
-                    $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                    $saleDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
                 }
             }
 
@@ -1927,7 +1916,7 @@ class ReportService
         ];
     }
 
-    public function getResumePendingsByTwentyDays($sales, $filters)
+    public function getResumePendingsByTwentyDays($transactions, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -1951,9 +1940,9 @@ class ReportService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $sales
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
-        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, DATE(start_date) as date'))
+        $resume = $transactions
+        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('DATE(start_date) as date, transactions.value'))
         ->get();
 
         $saleData = [];
@@ -1963,12 +1952,7 @@ class ReportService
 
             foreach ($resume as $r) {
                 if ((Carbon::parse($r->date)->subDays(1)->format('d/m') == $label) || (Carbon::parse($r->date)->format('d/m') == $label)) {
-                    $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
-                    $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
-                    $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
-                    $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
-
-                    $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                    $saleDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
                 }
             }
 
@@ -2002,7 +1986,7 @@ class ReportService
         ];
     }
 
-    public function getResumePendingsByFortyDays($sales, $filters)
+    public function getResumePendingsByFortyDays($transactions, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -2024,9 +2008,9 @@ class ReportService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $sales
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
-        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, DATE(start_date) as date'))
+        $resume = $transactions
+        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('DATE(start_date) as date, transactions.value'))
         ->get();
 
         $saleData = [];
@@ -2037,12 +2021,7 @@ class ReportService
             foreach ($resume as $r) {
                 for ($x = 1; $x <= 3; $x++) {
                     if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
-                        $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
-                        $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
-                        $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
-                        $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
-
-                        $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                        $saleDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
                     }
                 }
             }
@@ -2077,7 +2056,7 @@ class ReportService
         ];
     }
 
-    public function getResumePendingsByWeeks($sales, $filters)
+    public function getResumePendingsByWeeks($transactions, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -2099,9 +2078,9 @@ class ReportService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $sales
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
-        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, DATE(start_date) as date'))
+        $resume = $transactions
+        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('DATE(start_date) as date, transactions.value'))
         ->get();
 
         $saleData = [];
@@ -2112,12 +2091,7 @@ class ReportService
             foreach ($resume as $r) {
                 for ($x = 1; $x <= 6; $x++) {
                     if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
-                        $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
-                        $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
-                        $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
-                        $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
-
-                        $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                        $saleDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
                     }
                 }
             }
@@ -2152,7 +2126,7 @@ class ReportService
         ];
     }
 
-    public function getResumePendingsByMonths($sales, $filters)
+    public function getResumePendingsByMonths($transactions, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -2168,9 +2142,9 @@ class ReportService
 
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
-        $resume = $sales
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
-        ->select(DB::raw('sub_total, shipment_value, shopify_discount, automatic_discount, DATE(start_date) as date'))
+        $resume = $transactions
+        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        ->select(DB::raw('DATE(start_date) as date, transactions.value'))
         ->get();
 
         $saleData = [];
@@ -2180,12 +2154,7 @@ class ReportService
 
             foreach ($resume as $r) {
                 if (Carbon::parse($r->date)->format('m/y') == $label) {
-                    $sub_total = intval(preg_replace("/[^0-9]/", "", $r->sub_total));
-                    $shipment_value = intval(preg_replace("/[^0-9]/", "", $r->shipment_value));
-                    $shopify_discount = intval(preg_replace("/[^0-9]/", "", $r->shopify_discount));
-                    $automatic_discount = intval(preg_replace("/[^0-9]/", "", $r->automatic_discount));
-
-                    $saleDataValue += ($sub_total + $shipment_value) - ($shopify_discount + $automatic_discount);
+                    $saleDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
                 }
             }
 
@@ -2731,8 +2700,6 @@ class ReportService
         $statusDispute = Sale::STATUS_IN_DISPUTE;
 
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
         ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('sales.id as sale, HOUR(sales.start_date) as hour'))
         ->get();
@@ -2797,8 +2764,6 @@ class ReportService
         $statusDispute = Sale::STATUS_IN_DISPUTE;
 
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
         ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
         ->get();
@@ -2871,8 +2836,6 @@ class ReportService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
         ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
         ->get();
@@ -2943,8 +2906,6 @@ class ReportService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
         ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
         ->get();
@@ -3017,8 +2978,6 @@ class ReportService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
         ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
         ->get();
@@ -3085,8 +3044,6 @@ class ReportService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
         ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
         ->get();
@@ -3145,7 +3102,7 @@ class ReportService
             $query = $saleModel
             ->where('owner_id', $userId)
             ->where('status', $status)
-            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[0].' 23:59:59' ])
+            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
             ->selectRaw('SUM((sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100) as total')
             ->selectRaw('SUM(IF(payment_method = 1, (sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100, 0)) as total_credit_card')
             ->selectRaw('SUM(IF(payment_method = 2, (sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100, 0)) as total_boleto')
@@ -3187,18 +3144,18 @@ class ReportService
     public function getResumeProducts($filters)
     {
         try {
-            $productModel = new Product();
-
             $userId = auth()->user()->account_owner_id;
             $status = Sale::STATUS_APPROVED;
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
+            $productModel = new Product();
+
             $query = $productModel
             ->join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
-            ->join('sales', 'products_plans_sales.id', 'sales.id')
+            ->join('sales', 'products_plans_sales.sale_id', 'sales.id')
             ->where('sales.owner_id', $userId)
             ->where('sales.status', $status)
-            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[0].' 23:59:59' ])
+            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
             ->select(DB::raw('products.name, products.photo as image, COUNT(*) as amount'))
             ->groupBy('products.id')
             ->orderByDesc('amount')
@@ -3208,7 +3165,7 @@ class ReportService
             if (!empty($filters["project"])) {
                 $projectId = Hashids::decode($filters["project"]);
 
-                $query->where('project_id', $projectId);
+                $query->where('sales.project_id', $projectId);
             }
 
             $total = 0;
@@ -3559,7 +3516,7 @@ class ReportService
     {
         try {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $company = Hashids::decode($filters["company"])[0];
+            $company = current(Hashids::decode($filters["company"]));
 
             $company = Company::where('id', $company)->first();
 
@@ -3608,6 +3565,24 @@ class ReportService
                     'value' => foxutils()->formatMoney($totalBalanceBlocked / 100),
                     'percentage' => round(($totalBalanceBlocked * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
                 ]
+            ];
+        } catch(Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getFinancesWithdrawals($filters)
+    {
+        try {
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $company = current(Hashids::decode($filters["company"]));
+
+
+
+            return [
+
             ];
         } catch(Exception $e) {
             return response()->json([

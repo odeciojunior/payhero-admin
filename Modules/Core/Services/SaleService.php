@@ -62,7 +62,6 @@ class SaleService
                 foreach($companies as $company){
                     array_push($userCompanies, current(Hashids::decode($company)));
                 }
-
             }
 
             $relationsArray = [

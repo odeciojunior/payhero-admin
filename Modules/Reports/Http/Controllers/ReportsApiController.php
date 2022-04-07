@@ -1021,6 +1021,22 @@ class ReportsApiController extends Controller
             'data' => $resume
         ]);
     }
+    function getFinancesWithdrawals(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'company' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $resume = $reportService->getFinancesWithdrawals($data);
+
+        return response()->json([
+            'data' => $resume
+        ]);
+    }
     // END Page finances
 
     function getResume(Request $request)

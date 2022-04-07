@@ -166,6 +166,7 @@ class ProductsApiController extends Controller
                     report($e);
                 }
             }
+
             if (!empty($data['digital_product_url'])) {
                 try {
                     $this->getAmazonFileService()->changeDisk('s3_digital_product');
