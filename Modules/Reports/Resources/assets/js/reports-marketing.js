@@ -195,6 +195,22 @@ $('.box-export').on('click', function($q) {
         }
     });
 
+    $.ajax({
+        method: "GET",
+        url: "http://dev.sirius.com/api/reports/marketing/state-details?state=MG&company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+
+        },
+        success: function success(response) {
+
+        }
+    });
+
 });
 
 function exportReports() {

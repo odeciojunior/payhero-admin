@@ -1119,5 +1119,22 @@ class ReportsApiController extends Controller
         ]);
     }
 
+    public function getStateDetail(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'state' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $devices = $reportService->getStateDetail($data);
+
+        return response()->json([
+            'data' => $devices
+        ]);
+    }
+
 }
 

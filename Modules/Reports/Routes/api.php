@@ -56,5 +56,6 @@ Route::group(
         Route::get('/reports/marketing/most-frequent-sales', 'ReportsApiController@getMostFrequentSales');
         Route::get('/reports/marketing/devices', 'ReportsApiController@getDevices');
         Route::get('/reports/marketing/operational-systems', 'ReportsApiController@getOperationalSystems');
+        Route::get('/reports/marketing/state-details', 'ReportsApiController@getStateDetail');
     }
 );

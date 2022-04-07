@@ -3773,5 +3773,43 @@ class ReportService
 
         return $data;
     }
+
+    public function getStateDetail($filters)
+    {
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+        $totalValue = Sale::leftJoin('transactions as transaction', function ($join) {
+                                $join->on('transaction.sale_id', '=', 'sales.id');
+                                $join->where('transaction.user_id', auth()->user()->account_owner_id);
+                            })
+                            ->leftJoin('deliveries as delivery', function ($join) use ($filters) {
+                                $join->on('delivery.id', '=', 'sales.delivery_id')
+                                    ->where('delivery.state', $filters['state']);
+                            })
+                            ->where('sales.status', Sale::STATUS_APPROVED)
+                            ->where('owner_id', auth()->user()->account_owner_id)
+                            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                            ->sum('transaction.value');
+
+        $totalSales = Sale::leftJoin('deliveries as delivery', function ($join) use ($filters) {
+                            $join->on('delivery.id', '=', 'sales.delivery_id')
+                                ->where('delivery.state', $filters['state']);
+                        })
+                        ->where('sales.status', Sale::STATUS_APPROVED)
+                        ->where('owner_id', auth()->user()->account_owner_id)
+                        ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                        ->count();
+
+        $accesses = Checkout::where('project_id', $filters['project_id'] ?? hashids_decode('2RmA83Ek7pGPVpY'))
+                            ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                            ->count();
+
+        return [
+            'total_value' => foxutils()->formatMoney($totalValue / 100),
+            'total_sales' => number_format($totalSales, 0, '.', '.'),
+            'accesses' => number_format($accesses, 0, '.', '.'),
+            'conversion' => number_format(($totalSales * 100) / $accesses, 1, '.', ',') . '%'
+        ];
+    }
 }
 
