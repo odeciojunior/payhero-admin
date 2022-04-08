@@ -26,6 +26,7 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Reports\Transformers\SalesByOriginResource;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
@@ -1342,7 +1343,7 @@ class ReportService
 
             foreach ($resume as $r) {
                 if ($r->hour == preg_replace("/[^0-9]/", "", $label)) {
-                    $comissionValue = intval(preg_replace("/[^0-9]/", "", $r->commission));
+                    $comissionValue += intval(preg_replace("/[^0-9]/", "", $r->commission));
                 }
             }
 
@@ -2696,9 +2697,6 @@ class ReportService
             ];
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
-
         $resume = $transactions
         ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('id as sale, HOUR(start_date) as hour'))
@@ -2894,8 +2892,6 @@ class ReportService
             }
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
@@ -2966,8 +2962,6 @@ class ReportService
             }
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
@@ -3032,8 +3026,6 @@ class ReportService
             $dataFormated = $dataFormated->addMonths(1);
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
@@ -3570,18 +3562,134 @@ class ReportService
     {
         try {
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $company = current(Hashids::decode($filters["company"]));
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
 
+            $dateEnd = date('Y-m-d');
+            $dateStart = date('Y-m-d', strtotime($dateEnd . ' -5 month'));
 
+            $withdrawalModel = new Withdrawal();
+            $withdrawals = $withdrawalModel
+            ->whereIn('company_id', $companies)
+            ->whereBetween('release_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ]);
 
-            return [
-
-            ];
+            return $this->getFinancesWithdrawalsByMonths($withdrawals, $dateStart, $dateEnd);
         } catch(Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    public function getFinancesWithdrawalsByHours($withdrawals, $dateRange)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        if (Carbon::parse($dateRange[0])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
+            $labelList   = [];
+            $currentHour = date('H');
+            $startHour   = 0;
+
+            while ($startHour <= $currentHour) {
+                array_push($labelList, $startHour . 'h');
+                $startHour++;
+            }
+        } else {
+            $labelList = [
+                '0h', '1h', '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', '10h', '11h',
+                '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h',
+            ];
+        }
+
+        $resume = $withdrawals
+        ->select(DB::raw('value, HOUR(release_date) as hour'))
+        ->get();
+
+        $withdrawalData = [];
+
+        foreach ($labelList as $label) {
+            $withdrawalDataValue = 0;
+
+            foreach ($resume as $r) {
+                if ($r->hour == preg_replace("/[^0-9]/", "", $label)) {
+                    $withdrawalDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
+                }
+            }
+
+            array_push($withdrawalData, $withdrawalDataValue);
+        }
+
+        $total = array_sum($withdrawalData);
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $withdrawalData
+            ],
+            'total' => $total
+        ];
+    }
+
+    public function getFinancesWithdrawalsByDays($withdrawals)
+    {
+
+    }
+
+    public function getFinancesWithdrawalsByTwentyDays($withdrawals)
+    {
+
+    }
+
+    public function getFinancesWithdrawalsByFortyDays($withdrawals)
+    {
+
+    }
+
+    public function getFinancesWithdrawalsByWeeks($withdrawals)
+    {
+
+    }
+
+    public function getFinancesWithdrawalsByMonths($withdrawals, $dateStart, $dateEnd)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $dateStart = Carbon::parse($dateStart);
+        $dateEnd = Carbon::parse($dateEnd);
+
+        $labelList = [];
+        while ($dateStart->lessThanOrEqualTo($dateEnd)) {
+            array_push($labelList, $dateStart->format('M'));
+            $dateStart = $dateStart->addMonths(1);
+        }
+
+        $resume = $withdrawals
+        ->select(DB::raw('value, DATE(release_date) as date'))
+        ->get();
+
+        $withdrawalData = [];
+
+        $labelList = array_reverse($labelList);
+        foreach ($labelList as $label) {
+            $withdrawalDataValue = 0;
+
+            foreach ($resume as $r) {
+                if (Carbon::parse($r->date)->format('M') == $label) {
+                    $withdrawalDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
+                }
+            }
+
+            array_push($withdrawalData, $withdrawalDataValue);
+        }
+
+        $total = array_sum($withdrawalData);
+
+        return [
+            'chart' => [
+                'labels' => $labelList,
+                'values' => $withdrawalData
+            ],
+            'total' => foxutils()->formatMoney($total / 100)
+        ];
     }
     // End Pages finances
 

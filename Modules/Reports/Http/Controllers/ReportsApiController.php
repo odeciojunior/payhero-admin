@@ -1025,8 +1025,7 @@ class ReportsApiController extends Controller
     function getFinancesWithdrawals(Request $request)
     {
         $request->validate([
-            'date_range' => 'required',
-            'company' => 'required'
+            'date_range' => 'required'
         ]);
 
         $data = $request->all();
