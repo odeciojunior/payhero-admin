@@ -313,12 +313,12 @@ h4.number{
     overflow: hidden;
 }
 
-.ico-finance { background: #fff url('/modules/global/img/reports/cash.png') no-repeat center; }
-.ico-sell { background: #fff url('/modules/global/img/reports/ico-sell.png') no-repeat center; }
-.ico-mkt { background: #fff; }
-.ico-pending { background: #fff url('/modules/global/img/reports/pending.png') no-repeat center; }
-.ico-blocked { background: #fff url('/modules/global/img/reports/blokedbalance.png') no-repeat center; }
-.ico-cupons { background: #fff url('/modules/global/img/reports/ico-cupons.png') no-repeat center; }
+.ico-finance { background: #fff url('/build/global/img/reports/cash.png') no-repeat center; }
+.ico-sell { background: #fff url('/build/global/img/reports/ico-sell.png') no-repeat center; }
+.ico-mkt { background: #fff url('/build/global/img/reports/ico-mkt.png') no-repeat center; }
+.ico-pending { background: #fff url('/build/global/img/reports/pending.png') no-repeat center; }
+.ico-blocked { background: #fff url('/build/global/img/reports/blokedbalance.png') no-repeat center; }
+.ico-cupons { background: #fff url('/build/global/img/reports/ico-cupons.png') no-repeat center; }
 
 .box-title img {
     width: 23px;
@@ -570,7 +570,7 @@ h4.number{
     font-weight: bold;
     text-align: center;
     width: 100%;
-    background: url('/modules/global/img/reports/bg-no-graph.png') no-repeat bottom center;
+    background: url('/build/global/img/reports/bg-no-graph.png') no-repeat bottom center;
     height: 46%;
     display: flex;
     align-items: center;
@@ -943,10 +943,10 @@ h4.number{
     vertical-align: middle;
     margin-right: 10px;
 }
-.distribution-area .green { background: rgba(27, 228, 168, .1) url('/modules/global/img/reports/ico-oval-green.png') no-repeat center; }
-.distribution-area .yellow { background: rgba(255, 180, 67, .1) url('/modules/global/img/reports/ico-oval-yellow.png') no-repeat center; }
-.distribution-area .red { background: rgba(255, 0, 0, 0.08) url('/modules/global/img/reports/ico-oval-red.png') no-repeat center; }
-.distribution-area .strong { background: rgba(183, 0, 0, 0.08) url('/modules/global/img/reports/ico-oval-strong.png') no-repeat center; }
+.distribution-area .green { background: rgba(27, 228, 168, .1) url('/build/global/img/reports/ico-oval-green.png') no-repeat center; }
+.distribution-area .yellow { background: rgba(255, 180, 67, .1) url('/build/global/img/reports/ico-oval-yellow.png') no-repeat center; }
+.distribution-area .red { background: rgba(255, 0, 0, 0.08) url('/build/global/img/reports/ico-oval-red.png') no-repeat center; }
+.distribution-area .strong { background: rgba(183, 0, 0, 0.08) url('/build/global/img/reports/ico-oval-strong.png') no-repeat center; }
 
 .footer-distribution { padding: 5px 0 20px 0; }
 

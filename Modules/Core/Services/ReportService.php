@@ -26,6 +26,7 @@ use Modules\Core\Entities\ProductPlanSale;
 use Modules\Reports\Transformers\SalesByOriginResource;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\Gateways\AsaasService;
 use Modules\Core\Services\Gateways\CieloService;
 use Modules\Core\Services\Gateways\GerencianetService;
@@ -1342,7 +1343,7 @@ class ReportService
 
             foreach ($resume as $r) {
                 if ($r->hour == preg_replace("/[^0-9]/", "", $label)) {
-                    $comissionValue = intval(preg_replace("/[^0-9]/", "", $r->commission));
+                    $comissionValue += intval(preg_replace("/[^0-9]/", "", $r->commission));
                 }
             }
 
@@ -2199,10 +2200,13 @@ class ReportService
             ->pluck('id')
             ->toArray();
 
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
             $cashbacks = $cashbackModel
             ->with('sale')
             ->whereIn('company_id', $userCompanies)
-            ->join('sales', 'sales.id', 'cashbacks.sale_id');
+            ->join('sales', 'sales.id', 'cashbacks.sale_id')
+            ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ]);
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
@@ -2210,27 +2214,28 @@ class ReportService
                 $cashbacks->where('sales.project_id', $projectId);
             }
 
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
 
+            $countCashbacks = $cashbacks->count();
+
             if ($date['startDate'] == $date['endDate']) {
-                return $this->getResumeCashbacksByHours($cashbacks, $filters);
+                return $this->getResumeCashbacksByHours($cashbacks, $countCashbacks, $filters);
             } elseif ($date['startDate'] != $date['endDate']) {
                 $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
                 $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
                 $diffInDays = $endDate->diffInDays($startDate);
 
                 if ($diffInDays <= 20) {
-                    return $this->getResumeCashbacksByDays($cashbacks, $filters);
+                    return $this->getResumeCashbacksByDays($cashbacks, $countCashbacks, $filters);
                 } elseif ($diffInDays > 20 && $diffInDays <= 40) {
-                    return $this->getResumeCashbacksByTwentyDays($cashbacks, $filters);
+                    return $this->getResumeCashbacksByTwentyDays($cashbacks, $countCashbacks, $filters);
                 } elseif ($diffInDays > 40 && $diffInDays <= 60) {
-                    return $this->getResumeCashbacksByFortyDays($cashbacks, $filters);
+                    return $this->getResumeCashbacksByFortyDays($cashbacks, $countCashbacks, $filters);
                 } elseif ($diffInDays > 60 && $diffInDays <= 140) {
-                    return $this->getResumeCashbacksByWeeks($cashbacks, $filters);
+                    return $this->getResumeCashbacksByWeeks($cashbacks, $countCashbacks, $filters);
                 } elseif ($diffInDays > 140) {
-                    return $this->getResumeCashbacksByMonths($cashbacks, $filters);
+                    return $this->getResumeCashbacksByMonths($cashbacks, $countCashbacks, $filters);
                 }
             }
         } catch(Exception $e) {
@@ -2238,7 +2243,7 @@ class ReportService
         }
     }
 
-    public function getResumeCashbacksByHours($cashbacks, $filters)
+    public function getResumeCashbacksByHours($cashbacks, $countCashbacks, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -2260,11 +2265,8 @@ class ReportService
         }
 
         $resume = $cashbacks
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('cashbacks.value as cashback, HOUR(sales.start_date) as hour'))
         ->get();
-
-        $cashbackData = [];
 
         foreach ($labelList as $label) {
             $cashbackDataValue = 0;
@@ -2298,6 +2300,7 @@ class ReportService
                 'values' => $cashbackData
             ],
             'total' => $total,
+            'count' => $countCashbacks,
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -2305,7 +2308,7 @@ class ReportService
         ];
     }
 
-    public function getResumeCashbacksByDays($cashbacks, $filters)
+    public function getResumeCashbacksByDays($cashbacks, $countCashbacks, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -2321,7 +2324,6 @@ class ReportService
         }
 
         $resume = $cashbacks
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
         ->get();
 
@@ -2359,6 +2361,7 @@ class ReportService
                 'values' => $cashbackData
             ],
             'total' => $total,
+            'count' => $countCashbacks,
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -2366,7 +2369,7 @@ class ReportService
         ];
     }
 
-    public function getResumeCashbacksByTwentyDays($cashbacks, $filters)
+    public function getResumeCashbacksByTwentyDays($cashbacks, $countCashbacks, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -2391,7 +2394,6 @@ class ReportService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $cashbacks
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
         ->get();
 
@@ -2429,6 +2431,7 @@ class ReportService
                 'values' => $cashbackData
             ],
             'total' => $total,
+            'count' => $countCashbacks,
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -2436,7 +2439,7 @@ class ReportService
         ];
     }
 
-    public function getResumeCashbacksByFortyDays($cashbacks, $filters)
+    public function getResumeCashbacksByFortyDays($cashbacks, $countCashbacks, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -2459,7 +2462,6 @@ class ReportService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $cashbacks
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
         ->get();
 
@@ -2499,6 +2501,7 @@ class ReportService
                 'values' => $cashbackData
             ],
             'total' => $total,
+            'count' => $countCashbacks,
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -2506,7 +2509,7 @@ class ReportService
         ];
     }
 
-    public function getResumeCashbacksByWeeks($cashbacks, $filters)
+    public function getResumeCashbacksByWeeks($cashbacks, $countCashbacks, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -2529,7 +2532,6 @@ class ReportService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $cashbacks
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
         ->get();
 
@@ -2569,6 +2571,7 @@ class ReportService
                 'values' => $cashbackData
             ],
             'total' => $total,
+            'count' => $countCashbacks,
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -2576,7 +2579,7 @@ class ReportService
         ];
     }
 
-    public function getResumeCashbacksByMonths($cashbacks, $filters)
+    public function getResumeCashbacksByMonths($cashbacks, $countCashbacks, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -2593,7 +2596,6 @@ class ReportService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $cashbacks
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('cashbacks.value as cashback, DATE(sales.start_date) as date'))
         ->get();
 
@@ -2631,6 +2633,7 @@ class ReportService
                 'values' => $cashbackData
             ],
             'total' => $total,
+            'count' => $countCashbacks,
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -2645,7 +2648,14 @@ class ReportService
             $transactions = $this->getSalesQueryBuilder($filters);
 
             $saleModel = new Sale();
-            $sales = $saleModel->where('project_id', current(Hashids::decode($filters['project_id'])));
+            $sales = $saleModel;
+            if (!empty($filters['project_id'])) {
+                $sales->where('project_id', current(Hashids::decode($filters['project_id'])));
+            } else {
+                $userProjects = UserProject::where('user_id', auth()->user()->account_owner_id)->pluck('project_id')->toArray();
+
+                $sales->whereIn('project_id', $userProjects);
+            }
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $date['startDate'] = $dateRange[0];
@@ -2695,9 +2705,6 @@ class ReportService
                 '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h',
             ];
         }
-
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
 
         $resume = $transactions
         ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
@@ -2894,8 +2901,6 @@ class ReportService
             }
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
@@ -2966,8 +2971,6 @@ class ReportService
             }
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
@@ -3032,8 +3035,6 @@ class ReportService
             $dataFormated = $dataFormated->addMonths(1);
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
@@ -3390,11 +3391,7 @@ class ReportService
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $userId = auth()->user()->account_owner_id;
 
-            $cachsbackModel = new Cashback();
-
-            $cashbacks = $cachsbackModel
-            ->where('user_id', $userId)
-            ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
+            $cashbacks = Cashback::where('user_id', $userId)->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59']);
 
             $cashbacksValue = $cashbacks->sum('value');
             $cashbacksCount = $cashbacks->count();
@@ -3508,11 +3505,6 @@ class ReportService
     function getFinancesDistribuitions($filters)
     {
         try {
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $company = current(Hashids::decode($filters["company"]));
-
-            $company = Company::where('id', $company)->first();
-
             $defaultGateways = [
                 Safe2PayService::class,
                 AsaasService::class,
@@ -3526,38 +3518,40 @@ class ReportService
             $balancesBlocked = [];
             $balancesBlockedPending = [];
 
-            foreach($defaultGateways as $gatewayClass) {
-                $gateway = app()->make($gatewayClass);
-                $gateway->setCompany($company);
+            $companies = Company::where('user_id', auth()->user()->id)->get();
+            foreach($companies as $company) {
+                foreach($defaultGateways as $gatewayClass) {
+                    $gateway = app()->make($gatewayClass);
+                    $gateway->setCompany($company);
 
-                $balancesAvailable[] = $gateway->getAvailableBalance();
-                $balancesPending[] = $gateway->getPendingBalance();
-                $balancesBlocked[] = $gateway->getBlockedBalance();
-                $balancesBlockedPending[] = $gateway->getBlockedBalancePending();
+                    $balancesAvailable[] = $gateway->getAvailableBalance();
+                    $balancesPending[] = $gateway->getPendingBalance();
+                    $balancesBlocked[] = $gateway->getBlockedBalance();
+                    $balancesBlockedPending[] = $gateway->getBlockedBalancePending();
+                }
             }
 
             $availableBalance = array_sum($balancesAvailable);
             $pendingBalance = array_sum($balancesPending);
             $blockedBalance = array_sum($balancesBlocked);
             $blockedBalancePending = array_sum($balancesBlockedPending);
-            $totalBalanceBlocked = $blockedBalance + $blockedBalancePending;
 
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance + $blockedBalancePending;
+            $totalBalance = ($availableBalance + $pendingBalance + $blockedBalance + $blockedBalancePending);
 
             return [
-                'totalBalance'              => foxutils()->formatMoney($totalBalance / 100),
-                'availableBalance'          => [
+                'available' => [
                     'value' => foxutils()->formatMoney($availableBalance / 100),
                     'percentage' => round(($availableBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
                 ],
-                'pendingBalance'            => [
+                'pending' => [
                     'value' => foxutils()->formatMoney($pendingBalance / 100),
                     'percentage' => round(($pendingBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
                 ],
-                'blocked'            => [
-                    'value' => foxutils()->formatMoney($totalBalanceBlocked / 100),
-                    'percentage' => round(($totalBalanceBlocked * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
-                ]
+                'blocked' => [
+                    'value' => foxutils()->formatMoney(($blockedBalance + $blockedBalancePending) / 100),
+                    'percentage' => round((($blockedBalance + $blockedBalancePending) * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
+                ],
+                'total' => foxutils()->formatMoney($totalBalance / 100),
             ];
         } catch(Exception $e) {
             return response()->json([
@@ -3566,16 +3560,83 @@ class ReportService
         }
     }
 
-    public function getFinancesWithdrawals($filters)
+    public function getFinancesWithdrawals()
     {
         try {
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $company = current(Hashids::decode($filters["company"]));
+            date_default_timezone_set('America/Sao_Paulo');
 
+            $dateEnd = date('Y-m-d');
+            $dateStart = date('Y-m-d', strtotime($dateEnd . ' -5 month'));
 
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get()->pluck('id')->toArray();
+
+            $withdrawals = Withdrawal::whereIn('company_id', $companies)->whereBetween('release_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ]);
+
+            $transactions = Transaction::whereIn('transactions.company_id', $companies)
+            ->join('sales', 'transactions.sale_id', 'sales.id')
+            ->whereNotIn('sales.status', [
+                Sale::STATUS_CANCELED_ANTIFRAUD,
+                Sale::STATUS_REFUSED,
+                Sale::STATUS_SYSTEM_ERROR
+            ])
+            ->whereBetween('sales.start_date', [ $dateStart.' 00:00:00', $dateEnd.' 23:59:59' ]);
+
+            $dateStart = Carbon::parse($dateStart);
+            $dateEnd = Carbon::parse($dateEnd);
+
+            $labelList = [];
+            while ($dateStart->lessThanOrEqualTo($dateEnd)) {
+                array_push($labelList, $dateStart->format('M'));
+                $dateStart = $dateStart->addMonths(1);
+            }
+
+            $resumeWithdrawals = $withdrawals
+            ->select(DB::raw('value, DATE(release_date) as date'))
+            ->get();
+
+            $resumeTransactions = $transactions
+            ->select(DB::raw('sales.original_total_paid_value, DATE(sales.start_date) as date'))
+            ->get();
+
+            $withdrawalData = [];
+            $transactionData = [];
+
+            $labelList = array_reverse($labelList);
+            foreach ($labelList as $label) {
+                $withdrawalDataValue = 0;
+                $transactionDataValue = 0;
+
+                foreach ($resumeWithdrawals as $r) {
+                    if (Carbon::parse($r->date)->format('M') == $label) {
+                        $withdrawalDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
+                    }
+                }
+
+                foreach ($resumeTransactions as $r) {
+                    if (Carbon::parse($r->date)->format('M') == $label) {
+                        $transactionDataValue += intval(preg_replace("/[^0-9]/", "", $r->original_total_paid_value));
+                    }
+                }
+
+                array_push($withdrawalData, $withdrawalDataValue);
+                array_push($transactionData, $transactionDataValue);
+            }
+
+            $totalWithdrawal = array_sum($withdrawalData);
+            $totalTransactions = array_sum($transactionData);
 
             return [
-
+                'chart' => [
+                    'labels' => $labelList,
+                    'withdrawal' => [
+                        'values' => $withdrawalData,
+                        'total' => foxutils()->formatMoney($totalWithdrawal / 100)
+                    ],
+                    'income' => [
+                        'values' => $transactionData,
+                        'total' => foxutils()->formatMoney($totalTransactions / 100)
+                    ]
+                ]
             ];
         } catch(Exception $e) {
             return response()->json([

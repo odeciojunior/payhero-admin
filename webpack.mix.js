@@ -806,6 +806,7 @@ mix.babel([
     'Modules/Reports/Resources/assets/js/report-pending.js',
     'resources/modules/global/js-extra/moment.min.js',
     'resources/modules/global/js/daterangepicker.min.js',
+    'Modules/Reports/Resources/assets/js/reports.js',
 ], 'public/build/layouts/reports/pending.min.js');
 
 /**
@@ -1125,6 +1126,9 @@ mix.copy(
  mix.copy(
      'resources/modules/global/img/projects',
 'public/build/global/img/projects');
+mix.copy(
+    'resources/modules/global/img/reports',
+'public/build/global/img/reports');
  mix.copy(
      'resources/modules/global/img/svg',
 'public/build/global/img/svg');
