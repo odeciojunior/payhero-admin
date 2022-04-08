@@ -975,7 +975,6 @@ class ReportsApiController extends Controller
     {
         $request->validate([
             'date_range' => 'required',
-            'company' => 'required'
         ]);
 
         $data = $request->all();
@@ -992,7 +991,6 @@ class ReportsApiController extends Controller
     {
         $request->validate([
             'date_range' => 'required',
-            'company' => 'required'
         ]);
 
         $data = $request->all();
@@ -1008,8 +1006,7 @@ class ReportsApiController extends Controller
     public function getFinancesDistribuitions(Request $request)
     {
         $request->validate([
-            'date_range' => 'required',
-            'company' => 'required'
+            'date_range' => 'required'
         ]);
 
         $data = $request->all();

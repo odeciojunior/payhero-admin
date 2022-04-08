@@ -64,14 +64,13 @@ class AsaasService implements Statement
     public function getPendingBalance(): int
     {
         return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
-            $join->on('brs.sale_id', '=', 'transactions.sale_id')
-                ->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
+            $join->on('brs.sale_id', '=', 'transactions.sale_id')->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
         })->whereNull('brs.id')
-            ->where('transactions.company_id', $this->company->id)
-            ->where('transactions.status_enum', Transaction::STATUS_PAID)
-            ->whereIn('transactions.gateway_id', $this->gatewayIds)
-            ->where('transactions.created_at', '>', '2021-09-20')
-            ->sum('transactions.value');
+        ->where('transactions.company_id', $this->company->id)
+        ->where('transactions.status_enum', Transaction::STATUS_PAID)
+        ->whereIn('transactions.gateway_id', $this->gatewayIds)
+        ->where('transactions.created_at', '>', '2021-09-20')
+        ->sum('transactions.value');
     }
 
     public function getBlockedBalance(): int
