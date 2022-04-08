@@ -849,7 +849,6 @@ class ReportsApiController extends Controller
     {
         $request->validate([
             'date_range' => 'required',
-            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -1024,14 +1023,8 @@ class ReportsApiController extends Controller
     }
     public function getFinancesWithdrawals(Request $request)
     {
-        $request->validate([
-            'date_range' => 'required'
-        ]);
-
-        $data = $request->all();
-
         $reportService = new ReportService();
-        $resume = $reportService->getFinancesWithdrawals($data);
+        $resume = $reportService->getFinancesWithdrawals();
 
         return response()->json([
             'data' => $resume
