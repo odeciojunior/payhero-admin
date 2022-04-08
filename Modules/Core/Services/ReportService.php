@@ -3630,23 +3630,46 @@ class ReportService
                         })
                         ->where('sales.status', Sale::STATUS_APPROVED)
                         ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                        ->where('value', '>', 0)
                         ->groupBy('delivery.state')
-                        ->orderBy('sales_amount', 'DESC')
+                        ->orderBy('value', 'DESC')
                         ->get()
                         ->toArray();
 
+        $totalValue = 0;
         $totalSales = 0;
         foreach($data as $state) {
+            $totalValue += $state['value'];
             $totalSales += $state['sales_amount'];
         }
 
-        foreach($data as &$state) {
-            $state['percentage'] = number_format(($state['sales_amount'] * 100) / $totalSales, 2, '.', ',') . '%';
-            $state['sales_amount'] = number_format($state['sales_amount'], 0, '.', '.');
+        foreach($data as $key => &$state) {
+            if(empty(BrazilStatesService::getStatePopulation($state['state']))){
+                unset($data[$key]);
+                continue;
+            };
+
+            if($filters['map_filter'] == 'density'){
+                $salesPercentage = ($state['sales_amount'] / BrazilStatesService::getStatePopulation($state['state'])) * 100.000;
+                $state['percentage'] = number_format($salesPercentage, 0, '.', '.');
+            }
+            else {
+                $state['percentage'] = number_format(($state['value'] * 100) / $totalValue, 2, '.', ',') . '%';
+            }
             $state['value'] = foxutils()->formatMoney($state['value'] / 100);
         }
 
+        if($filters['map_filter'] == 'density'){
+            $percentage = array_column($data, 'percentage');
+            array_multisort($percentage, SORT_DESC, $data);
+        }
+
         return $data;
+    }
+
+    public function getStateSalesByMillionPeoplePercentage($state, $stateSalesAmount)
+    {
+        return $stateSalesAmount / 10 * 100.000;
     }
 
     public function getMostFrequentSales($filters)
@@ -3797,7 +3820,7 @@ class ReportService
             'total_value' => foxutils()->formatMoney($totalValue / 100),
             'total_sales' => number_format($totalSales, 0, '.', '.'),
             'accesses' => number_format($accesses, 0, '.', '.'),
-            'conversion' => number_format(($totalSales * 100) / $accesses, 1, '.', ',') . '%'
+            'conversion' => $accesses > 0 ? number_format(($totalSales * 100) / $accesses, 1, '.', ',') . '%' : '0%'
         ];
     }
 }
