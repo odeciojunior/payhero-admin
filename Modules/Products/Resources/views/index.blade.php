@@ -28,7 +28,7 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="mb-10">
                             <label for="type-products">Tipo</label>
-                            <select class="sirius-selectz" id='type-products'>
+                            <select class="sirius-select" id='type-products'>
                                 <option value="0">Meus Produtos</option>
                                 {{-- <option value="1">Produtos Shopify</option> --}}
                             </select>
