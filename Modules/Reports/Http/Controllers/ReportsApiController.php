@@ -1005,10 +1005,6 @@ class ReportsApiController extends Controller
 
     public function getFinancesDistribuitions(Request $request)
     {
-        $request->validate([
-            'date_range' => 'required'
-        ]);
-
         $data = $request->all();
 
         $reportService = new ReportService();

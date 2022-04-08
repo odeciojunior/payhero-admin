@@ -3505,11 +3505,6 @@ class ReportService
     function getFinancesDistribuitions($filters)
     {
         try {
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $company = current(Hashids::decode($filters["company"]));
-
-            $company = Company::where('id', $company)->first();
-
             $defaultGateways = [
                 Safe2PayService::class,
                 AsaasService::class,
@@ -3523,38 +3518,40 @@ class ReportService
             $balancesBlocked = [];
             $balancesBlockedPending = [];
 
-            foreach($defaultGateways as $gatewayClass) {
-                $gateway = app()->make($gatewayClass);
-                $gateway->setCompany($company);
+            $companies = Company::where('user_id', auth()->user()->id)->get();
+            foreach($companies as $company) {
+                foreach($defaultGateways as $gatewayClass) {
+                    $gateway = app()->make($gatewayClass);
+                    $gateway->setCompany($company);
 
-                $balancesAvailable[] = $gateway->getAvailableBalance($dateRange);
-                $balancesPending[] = $gateway->getPendingBalance($dateRange);
-                $balancesBlocked[] = $gateway->getBlockedBalance($dateRange);
-                $balancesBlockedPending[] = $gateway->getBlockedBalancePending($dateRange);
+                    $balancesAvailable[] = $gateway->getAvailableBalance();
+                    $balancesPending[] = $gateway->getPendingBalance();
+                    $balancesBlocked[] = $gateway->getBlockedBalance();
+                    $balancesBlockedPending[] = $gateway->getBlockedBalancePending();
+                }
             }
 
             $availableBalance = array_sum($balancesAvailable);
             $pendingBalance = array_sum($balancesPending);
             $blockedBalance = array_sum($balancesBlocked);
             $blockedBalancePending = array_sum($balancesBlockedPending);
-            $totalBalanceBlocked = $blockedBalance + $blockedBalancePending;
 
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance + $blockedBalancePending;
+            $totalBalance = ($availableBalance + $pendingBalance + $blockedBalance + $blockedBalancePending);
 
             return [
-                'totalBalance'              => foxutils()->formatMoney($totalBalance / 100),
-                'availableBalance'          => [
+                'available' => [
                     'value' => foxutils()->formatMoney($availableBalance / 100),
                     'percentage' => round(($availableBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
                 ],
-                'pendingBalance'            => [
+                'pending' => [
                     'value' => foxutils()->formatMoney($pendingBalance / 100),
                     'percentage' => round(($pendingBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
                 ],
-                'blocked'            => [
-                    'value' => foxutils()->formatMoney($totalBalanceBlocked / 100),
-                    'percentage' => round(($totalBalanceBlocked * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
-                ]
+                'blocked' => [
+                    'value' => foxutils()->formatMoney(($blockedBalance + $blockedBalancePending) / 100),
+                    'percentage' => round((($blockedBalance + $blockedBalancePending) * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
+                ],
+                'total' => foxutils()->formatMoney($totalBalance / 100),
             ];
         } catch(Exception $e) {
             return response()->json([
