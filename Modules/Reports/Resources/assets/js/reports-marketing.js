@@ -154,8 +154,28 @@ function frequenteSales() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let {description, name, photo, sales_amount, value} = response.data;
-            console.log(response.data);
+            $.each(response.data, function (i, item) {
+                salesBlock = `
+                    <div class="box-payment-option pad-0">
+                        <div class="d-flex align-items list-sales">
+                            <div class="d-flex align-items">
+                                <div>
+                                    <figure class="box-ico">
+                                        <img width="34px" height="34px" src="${item.photo}" alt="${item.description}">
+                                    </figure>
+                                </div>
+                                <div>
+                                    <span>${item.name}</span>
+                                </div>
+                            </div>
+                            <div class="grey font-size-14">${item.sales_amount}</div>
+                            <div class="grey font-size-14"><strong>${item.value}</strong></div>
+                        </div>
+                    </div>
+                `;
+                $("#block-sales").append(salesBlock);
+            });
+            $('#block-sales .ske-load' ).remove();
         }
     }); 
   
@@ -178,6 +198,38 @@ $('.box-export').on('click', function($q) {
 
       }
   });
+
+  $.ajax({
+        method: "GET",
+        url: "http://dev.sirius.com/api/reports/marketing/operational-systems?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+
+        },
+        success: function success(response) {
+
+        }
+    });
+
+    $.ajax({
+        method: "GET",
+        url: "http://dev.sirius.com/api/reports/marketing/state-details?state=MG&company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+
+        },
+        success: function success(response) {
+
+        }
+    });
 
 });
 
@@ -360,7 +412,7 @@ function updateReports() {
             getCoupons();
             resume();
             devices();
-            // frequenteSales();
+            frequenteSales();
         },
     });
 }

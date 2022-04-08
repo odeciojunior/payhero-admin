@@ -802,7 +802,7 @@ class ReportsApiController extends Controller
     // Page resume
 
     // Finances
-    function getResumeCommissions(Request $request)
+    public function getResumeCommissions(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -816,7 +816,7 @@ class ReportsApiController extends Controller
         return response()->json(['data' => $comission]);
     }
 
-    function getResumePendings(Request $request)
+    public function getResumePendings(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -830,7 +830,7 @@ class ReportsApiController extends Controller
         return response()->json(['data' => $pending]);
     }
 
-    function getResumeCashbacks(Request $request)
+    public function getResumeCashbacks(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -845,7 +845,7 @@ class ReportsApiController extends Controller
     }
 
     // Sales
-    function getResumeSales(Request $request)
+    public function getResumeSales(Request $request)
     {
         $request->validate([
             'date_range' => 'required',
@@ -860,7 +860,7 @@ class ReportsApiController extends Controller
         return response()->json(['data' => $sales]);
     }
 
-    function getResumeTypePayments(Request $request)
+    public function getResumeTypePayments(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -876,7 +876,7 @@ class ReportsApiController extends Controller
         ]);
     }
 
-    function getResumeProducts(Request $request)
+    public function getResumeProducts(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -893,7 +893,7 @@ class ReportsApiController extends Controller
     }
 
     // Marketing
-    function getResumeCoupons(Request $request)
+    public function getResumeCoupons(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -909,7 +909,7 @@ class ReportsApiController extends Controller
         ]);
     }
 
-    function getResumeRegions(Request $request)
+    public function getResumeRegions(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -925,7 +925,7 @@ class ReportsApiController extends Controller
         ]);
     }
 
-    function getResumeOrigins(Request $request)
+    public function getResumeOrigins(Request $request)
     {
         $request->validate([
             'date_range' => 'required',
@@ -944,7 +944,7 @@ class ReportsApiController extends Controller
     // END Page Resume
 
     // Page finances
-    function getFinancesResume(Request $request)
+    public function getFinancesResume(Request $request)
     {
         $request->validate([ 'date_range' => 'required' ]);
 
@@ -958,7 +958,7 @@ class ReportsApiController extends Controller
         ]);
     }
 
-    function getFinancesCashbacks(Request $request)
+    public function getFinancesCashbacks(Request $request)
     {
         $request->validate([ 'date_range' => 'required' ]);
 
@@ -972,7 +972,7 @@ class ReportsApiController extends Controller
         ]);
     }
 
-    function getFinancesPendings(Request $request)
+    public function getFinancesPendings(Request $request)
     {
         $request->validate([
             'date_range' => 'required',
@@ -989,7 +989,7 @@ class ReportsApiController extends Controller
         ]);
     }
 
-    function getFinancesBlockeds(Request $request)
+    public function getFinancesBlockeds(Request $request)
     {
         $request->validate([
             'date_range' => 'required',
@@ -1006,7 +1006,7 @@ class ReportsApiController extends Controller
         ]);
     }
 
-    function getFinancesDistribuitions(Request $request)
+    public function getFinancesDistribuitions(Request $request)
     {
         $request->validate([
             'date_range' => 'required',
@@ -1022,7 +1022,7 @@ class ReportsApiController extends Controller
             'data' => $resume
         ]);
     }
-    function getFinancesWithdrawals(Request $request)
+    public function getFinancesWithdrawals(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -1039,7 +1039,7 @@ class ReportsApiController extends Controller
     }
     // END Page finances
 
-    function getResume(Request $request)
+    public function getResume(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -1055,7 +1055,7 @@ class ReportsApiController extends Controller
         ]);
     }
 
-    function getSalesByState(Request $request)
+    public function getSalesByState(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -1071,7 +1071,7 @@ class ReportsApiController extends Controller
         ]);
     }
 
-    function getMostFrequentSales(Request $request)
+    public function getMostFrequentSales(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -1087,7 +1087,7 @@ class ReportsApiController extends Controller
         ]);
     }
 
-    function getDevices(Request $request)
+    public function getDevices(Request $request)
     {
         $request->validate([
             'date_range' => 'required'
@@ -1102,5 +1102,39 @@ class ReportsApiController extends Controller
             'data' => $devices
         ]);
     }
+
+    public function getOperationalSystems(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $devices = $reportService->getOperationalSystems($data);
+
+        return response()->json([
+            'data' => $devices
+        ]);
+    }
+
+    public function getStateDetail(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'state' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $devices = $reportService->getStateDetail($data);
+
+        return response()->json([
+            'data' => $devices
+        ]);
+    }
+
 }
 
