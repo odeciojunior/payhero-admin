@@ -9,6 +9,9 @@ $(function() {
     changeCompany();
     changeCalendar();
     
+    if(!sessionStorage.info) {
+        return;
+    }
     let info = JSON.parse(sessionStorage.getItem('info'));
     $('input[name=daterange]').val(info.calendar); 
     
@@ -16,6 +19,24 @@ $(function() {
 
 let resumeUrl = '/api/reports/resume';
 let financesResumeUrl = '/api/reports/finances';
+
+// function blockeds() {
+//     return $.ajax({
+//         method: "GET",
+//         url: financesResumeUrl + "/blockeds?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+//         dataType: "json",
+//         headers: {
+//             Authorization: $('meta[name="access-token"]').attr("content"),
+//             Accept: "application/json",
+//         },
+//         error: function error(response) {
+//             errorAjaxResponse(response);
+//         },
+//         success: function success(response) {
+//             console.log(response.data);
+//         }
+//     });
+// }
 
 function onResume() {
     let ticket, commission, chargebacks, transactions = '';   
@@ -208,7 +229,7 @@ function getCashback() {
                     </div>
                     <div class="balance col-6">
                         <h6 class="grey font-size-14 qtd">Quantidade</h6>
-                        <strong class="total grey">240 vendas</strong>
+                        <strong class="total grey">${response.data.count} vendas</strong>
                     </div>
                 `;
                 
@@ -352,6 +373,9 @@ function updateReports() {
                         })
                     );
                 });
+                if(!sessionStorage.info) {
+                    return;
+                }                
                 $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
             } else {
                 $("#export-excel").hide();
@@ -385,6 +409,7 @@ function updateReports() {
         },
         success: function success(response) {
             $('.onPreLoad *').remove();
+            // blockeds();
             onResume();
             onCommission();
             getPending();
