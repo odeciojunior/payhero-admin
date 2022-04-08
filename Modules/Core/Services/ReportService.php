@@ -1230,53 +1230,23 @@ class ReportService
             $transactionModel = new Transaction();
 
             $userId = auth()->user()->account_owner_id;
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $userCompanies = $companyModel->where('user_id', $userId)
-            ->get()
-            ->pluck('id')
-            ->toArray();
-
-            $relationsArray = [
-                'sale',
-                'sale.project',
-                'sale.customer',
-                'sale.plansSales',
-                'sale.shipping',
-                'sale.checkout',
-                'sale.delivery',
-                'sale.affiliate.user',
-                'sale.saleRefundHistory',
-                'sale.cashback'
-            ];
+            $userCompanies = $companyModel->where('user_id', $userId)->get()->pluck('id')->toArray();
 
             $transactions = $transactionModel
-            ->with($relationsArray)
             ->whereIn('company_id', $userCompanies)
             ->join('sales', 'sales.id', 'transactions.sale_id')
-            ->whereNull('invitation_id');
+            ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+            ->whereNull('invitation_id')
+            ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
+            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ]);
 
             if (!empty($filters["project"])) {
                 $projectId = current(Hashids::decode($filters["project"]));
                 $transactions->where('project_id', $projectId);
-
-                $transactions->where('sales.owner_id', $userId);
             }
 
-            $status = [
-                Sale::STATUS_APPROVED,
-                Sale::STATUS_PENDING,
-                Sale::STATUS_CHARGEBACK,
-                Sale::STATUS_REFUNDED,
-                Sale::STATUS_PARTIAL_REFUNDED,
-                Sale::STATUS_IN_REVIEW,
-                Sale::STATUS_CANCELED_ANTIFRAUD,
-                Sale::STATUS_BILLET_REFUNDED,
-                Sale::STATUS_IN_DISPUTE
-            ];
-
-            $transactions->whereIn('sales.status', $status);
-
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
 
@@ -1326,13 +1296,7 @@ class ReportService
             ];
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
-
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
-        ->whereDate('start_date', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59'])
         ->select(DB::raw('transactions.value as commission, HOUR(sales.start_date) as hour'))
         ->get();
 
@@ -1350,7 +1314,7 @@ class ReportService
             array_push($comissionData, $comissionValue);
         }
 
-        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
+        $total = array_sum($comissionData);
 
         $variation = 0;
         if ($comissionData[0] > 0) {
@@ -1369,7 +1333,7 @@ class ReportService
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
-            'total' => $total,
+            'total' => foxutils()->formatMoney($total / 100),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -1392,13 +1356,7 @@ class ReportService
             $dataFormated = $dataFormated->addDays(1);
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
-
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
         ->get();
 
@@ -1416,7 +1374,7 @@ class ReportService
             array_push($comissionData, $comissionValue);
         }
 
-        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
+        $total = array_sum($comissionData);
 
         $variation = 0;
         if ($comissionData[0] > 0) {
@@ -1435,7 +1393,7 @@ class ReportService
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
-            'total' => $total,
+            'total' => foxutils()->formatMoney($total / 100),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -1465,14 +1423,7 @@ class ReportService
             }
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
-        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
-
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
         ->get();
 
@@ -1490,7 +1441,7 @@ class ReportService
             array_push($comissionData, $comissionDataValue);
         }
 
-        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
+        $total = array_sum($comissionData);
 
         $variation = 0;
         if ($comissionData[0] > 0) {
@@ -1509,7 +1460,7 @@ class ReportService
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
-            'total' => $total,
+            'total' => foxutils()->formatMoney($total / 100),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -1537,14 +1488,7 @@ class ReportService
             }
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
-        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
-
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
         ->get();
 
@@ -1564,7 +1508,7 @@ class ReportService
             array_push($comissionData, $comissionDataValue);
         }
 
-        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
+        $total = array_sum($comissionData);
 
         $variation = 0;
         if ($comissionData[0] > 0) {
@@ -1583,7 +1527,7 @@ class ReportService
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
-            'total' => $total,
+            'total' => foxutils()->formatMoney($total / 100),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -1611,14 +1555,7 @@ class ReportService
             }
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
-        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
-
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
         ->get();
 
@@ -1638,7 +1575,7 @@ class ReportService
             array_push($comissionData, $comissionDataValue);
         }
 
-        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
+        $total = array_sum($comissionData);
 
         $variation = 0;
         if ($comissionData[0] > 0) {
@@ -1657,7 +1594,7 @@ class ReportService
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
-            'total' => $total,
+            'total' => foxutils()->formatMoney($total / 100),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -1679,14 +1616,7 @@ class ReportService
             $dataFormated = $dataFormated->addMonths(1);
         }
 
-        $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-        $statusDispute = Sale::STATUS_IN_DISPUTE;
-        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
-
         $resume = $transactions
-        ->whereIn('status_enum', $transactionStatus)
-        ->where('sales.status', '<>', $statusDispute)
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('transactions.value as commission, DATE(sales.start_date) as date'))
         ->get();
 
@@ -1704,7 +1634,7 @@ class ReportService
             array_push($comissionData, $comissionDataValue);
         }
 
-        $total = number_format(array_sum($comissionData) / 100, 2, ',', '.');
+        $total = array_sum($comissionData);
 
         $variation = 0;
         if ($comissionData[0] > 0) {
@@ -1723,7 +1653,7 @@ class ReportService
                 'labels' => $labelList,
                 'values' => $comissionData
             ],
-            'total' => $total,
+            'total' => foxutils()->formatMoney($total / 100),
             'variation' => [
                 'value' => $variation.'%',
                 'color' => $color
@@ -3343,38 +3273,43 @@ class ReportService
     function getFinancesResume($filters)
     {
         try {
-            $transactions = $this->getSalesQueryBuilder($filters);
+            $transactionModel = new Transaction();
+            $companyModel = new Company();
 
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
+            $userId = auth()->user()->account_owner_id;
+            $userCompanies = $companyModel->where('user_id', $userId)->get()->pluck('id')->toArray();
 
-            $transactionStatus = [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ];
-            $statusDispute = Sale::STATUS_IN_DISPUTE;
+            $transactions = $transactionModel
+            ->whereIn('company_id', $userCompanies)
+            ->join('sales', 'sales.id', 'transactions.sale_id')
+            ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+            ->whereNull('invitation_id');
 
-            $queryTransactions = $transactions
-            ->whereIn('status_enum', $transactionStatus)
-            ->where('sales.status', '<>', $statusDispute)
-            ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
-            ->select(DB::raw('COUNT(*) as numTransactions, SUM(transactions.value) as valueTransactions'))
-            ->first();
+            if (!empty($filters["project"])) {
+                $projectId = current(Hashids::decode($filters["project"]));
+                $transactions->where('project_id', $projectId);
+            }
 
-            $totalAverageTicket = ($queryTransactions->valueTransactions / $queryTransactions->numTransactions);
+            $queryCount = $transactions
+            ->count();
+
+            $queryAverageTicket = $transactions
+            ->avg('transactions.value');
 
             $queryComission = $transactions
-            ->whereIn('status_enum', $transactionStatus)
-            ->where('sales.status', '<>', $statusDispute)
-            ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
+            ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
             ->sum('transactions.value');
 
             $queryChargeback = $transactions
             ->where('status_enum', Transaction::STATUS_CHARGEBACK)
             ->where('sales.status', Sale::STATUS_CHARGEBACK)
-            ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
             ->sum('transactions.value');
 
             return [
-                'transactions' => $queryTransactions->numTransactions,
-                'average_ticket' => foxutils()->formatMoney($totalAverageTicket / 100),
+                'transactions' => $queryCount,
+                'average_ticket' => foxutils()->formatMoney($queryAverageTicket / 100),
                 'comission' => foxutils()->formatMoney($queryComission / 100),
                 'chargeback' => foxutils()->formatMoney($queryChargeback / 100)
             ];
