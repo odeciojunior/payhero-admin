@@ -74,7 +74,7 @@ class ProjectsApiController extends Controller
                         $projectModel->present()->getStatus('disabled'),
                     ];
                 }
-                
+
                 return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
 
             } else {
@@ -102,7 +102,7 @@ class ProjectsApiController extends Controller
             )->log('Visualizou tela criar projeto');
 
             $user = auth()->user();
-            $companies = Company::where('user_id',$user->account_owner_id)->get();
+            $companies = Company::where('user_id',$user->account_owner_id)->where('active_flag', true)->get();
 
             return response()->json(CompaniesSelectResource::collection($companies));
         } catch (Exception $e) {
