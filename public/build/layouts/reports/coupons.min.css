@@ -1567,7 +1567,7 @@ h4.number{
 }
 
 @media only screen and (min-width: 1600px){
-    .footer-withdrawals { flex-direction: row; }
+    .footer-withdrawals { flex-direction: row; width: 100%; }
     .data-withdrawals { text-align: left; }
 }
 
@@ -1743,6 +1743,26 @@ h4.number{
 #card-regions .ske-load,
 #card-origin .ske-load,
 #card-coupons .ske-load { top: 55%; }
+
+#block-draw {
+    min-height: 273px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#card-withdraw {
+    min-height: 273px;
+}
+#card-withdraw  .ske-load {
+    position: absolute;
+    transform: translate(0, -50%);
+}
+
+.no-draws {
+    height: 273px;
+    justify-content: center;
+    display: flex;
+}
 .page-holder {
     font-family: 'Muli', sans-serif;
     color: black;

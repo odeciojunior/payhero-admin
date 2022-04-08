@@ -154,65 +154,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="inner-comission">
-                                        <div class="card inner relative">
+                                    <div class="inner-comission" id="card-draw">
+                                        <div class="card inner relative" id="card-withdraw">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Saques</strong>
                                                 </h5>
                                             </header>
-                                            <canvas id="financesChart" height="285"></canvas>
+                                            <div class="graph">
+                                                <div class="onPreLoad" id="draw"></div>
+                                            </div>
                                         </div>
-                                        <!-- <div class="card inner relative">
-                                            <header class="d-flex title-graph no-withdrawals">
-                                                <h5 class="grey font-size-16">
-                                                    <strong>Saques</strong>
-                                                </h5>
-                                                <small>Últimos 6 meses</small>
-                                            </header>
-                                            <footer class="d-flex footer-withdrawals">
-                                                <div>
-                                                    <svg width="122" height="151" viewBox="0 0 122 151" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M60.994 144.494C94.68 144.494 121.988 117.186 121.988 83.5C121.988 49.8139 94.68 22.506 60.994 22.506C27.3079 22.506 0 49.8139 0 83.5C0 117.186 27.3079 144.494 60.994 144.494Z" fill="url(#paint0_linear_1185_948)"/>
-                                                        <path d="M95.9638 57.4758H26.024C23.7783 57.4758 21.9578 59.2964 21.9578 61.5421V146.934C21.9578 149.179 23.7783 151 26.024 151H95.9638C98.2095 151 100.03 149.179 100.03 146.934V61.5421C100.03 59.2964 98.2095 57.4758 95.9638 57.4758Z" fill="white"/>
-                                                        <path d="M52.8614 69.6746H31.7169C30.3694 69.6746 29.2771 70.7669 29.2771 72.1143C29.2771 73.4618 30.3694 74.5541 31.7169 74.5541H52.8614C54.2089 74.5541 55.3012 73.4618 55.3012 72.1143C55.3012 70.7669 54.2089 69.6746 52.8614 69.6746Z" fill="#B4DAFF"/>
-                                                        <path d="M67.5 80.2467H31.7169C30.3694 80.2467 29.2771 81.339 29.2771 82.6865C29.2771 84.0339 30.3694 85.1262 31.7169 85.1262H67.5C68.8474 85.1262 69.9398 84.0339 69.9398 82.6865C69.9398 81.339 68.8474 80.2467 67.5 80.2467Z" fill="#DFEAFB"/>
-                                                        <path d="M52.8614 91.6324H31.7169C30.3694 91.6324 29.2771 92.7248 29.2771 94.0722C29.2771 95.4196 30.3694 96.512 31.7169 96.512H52.8614C54.2089 96.512 55.3012 95.4196 55.3012 94.0722C55.3012 92.7248 54.2089 91.6324 52.8614 91.6324Z" fill="#B4DAFF"/>
-                                                        <path d="M67.5 102.205H31.7169C30.3694 102.205 29.2771 103.297 29.2771 104.644C29.2771 105.992 30.3694 107.084 31.7169 107.084H67.5C68.8474 107.084 69.9398 105.992 69.9398 104.644C69.9398 103.297 68.8474 102.205 67.5 102.205Z" fill="#DFEAFB"/>
-                                                        <path d="M52.8614 113.59H31.7169C30.3694 113.59 29.2771 114.683 29.2771 116.03C29.2771 117.378 30.3694 118.47 31.7169 118.47H52.8614C54.2089 118.47 55.3012 117.378 55.3012 116.03C55.3012 114.683 54.2089 113.59 52.8614 113.59Z" fill="#B4DAFF"/>
-                                                        <path d="M67.5 124.163H31.7169C30.3694 124.163 29.2771 125.255 29.2771 126.602C29.2771 127.95 30.3694 129.042 31.7169 129.042H67.5C68.8474 129.042 69.9398 127.95 69.9398 126.602C69.9398 125.255 68.8474 124.163 67.5 124.163Z" fill="#DFEAFB"/>
-                                                        <g filter="url(#filter0_d_1185_948)">
-                                                            <path d="M95.9638 16H26.024C23.7783 16 21.9578 17.8205 21.9578 20.0663V44.4639C21.9578 46.7096 23.7783 48.5301 26.024 48.5301H95.9638C98.2095 48.5301 100.03 46.7096 100.03 44.4639V20.0663C100.03 17.8205 98.2095 16 95.9638 16Z" fill="#1485FD"/>
-                                                        </g>
-                                                        <path d="M52.8614 24.9458H31.7169C30.3694 24.9458 29.2771 26.0381 29.2771 27.3856C29.2771 28.733 30.3694 29.8253 31.7169 29.8253H52.8614C54.2089 29.8253 55.3012 28.733 55.3012 27.3856C55.3012 26.0381 54.2089 24.9458 52.8614 24.9458Z" fill="#B4DAFF"/>
-                                                        <path d="M67.5 35.5181H31.7169C30.3694 35.5181 29.2771 36.6104 29.2771 37.9578C29.2771 39.3053 30.3694 40.3976 31.7169 40.3976H67.5C68.8474 40.3976 69.9398 39.3053 69.9398 37.9578C69.9398 36.6104 68.8474 35.5181 67.5 35.5181Z" fill="white"/>
-                                                        <defs>
-                                                            <filter id="filter0_d_1185_948" x="1.95776" y="0" width="118.072" height="72.5302" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                                            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                                                            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                                                            <feOffset dy="4"/>
-                                                            <feGaussianBlur stdDeviation="10"/>
-                                                            <feComposite in2="hardAlpha" operator="out"/>
-                                                            <feColorMatrix type="matrix" values="0 0 0 0 0.180392 0 0 0 0 0.521569 0 0 0 0 0.92549 0 0 0 0.17 0"/>
-                                                            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1185_948"/>
-                                                            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1185_948" result="shape"/>
-                                                            </filter>
-                                                            <linearGradient id="paint0_linear_1185_948" x1="60.994" y1="22.506" x2="60.994" y2="144.494" gradientUnits="userSpaceOnUse">
-                                                                <stop stop-color="#E3ECFA"/>
-                                                                <stop offset="1" stop-color="#DAE7FF"/>
-                                                            </linearGradient>
-                                                        </defs>
-                                                    </svg>
-                                                </div>
-
-                                                <div class="data-withdrawals">
-                                                    <h6>Sem dados, por enquanto...</h6>
-                                                    <p>
-                                                    Ainda faltam dados suficientes para a comparação, continue rodando!
-                                                    </p>
-                                                </div>
-                                            </footer>
-                                        </div> -->
+                                        
                                     </div>
                                 </div>
                             </div>
