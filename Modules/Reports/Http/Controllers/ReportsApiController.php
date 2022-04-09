@@ -973,14 +973,8 @@ class ReportsApiController extends Controller
 
     public function getFinancesPendings(Request $request)
     {
-        $request->validate([
-            'date_range' => 'required',
-        ]);
-
-        $data = $request->all();
-
         $reportService = new ReportService();
-        $resume = $reportService->getFinancesPendings($data);
+        $resume = $reportService->getFinancesPendings();
 
         return response()->json([
             'data' => $resume
@@ -989,14 +983,8 @@ class ReportsApiController extends Controller
 
     public function getFinancesBlockeds(Request $request)
     {
-        $request->validate([
-            'date_range' => 'required',
-        ]);
-
-        $data = $request->all();
-
         $reportService = new ReportService();
-        $resume = $reportService->getFinancesBlockeds($data);
+        $resume = $reportService->getFinancesBlockeds();
 
         return response()->json([
             'data' => $resume
@@ -1005,10 +993,8 @@ class ReportsApiController extends Controller
 
     public function getFinancesDistribuitions(Request $request)
     {
-        $data = $request->all();
-
         $reportService = new ReportService();
-        $resume = $reportService->getFinancesDistribuitions($data);
+        $resume = $reportService->getFinancesDistribuitions();
 
         return response()->json([
             'data' => $resume

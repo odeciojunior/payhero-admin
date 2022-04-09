@@ -68,6 +68,18 @@ class Safe2PayService implements Statement
             ->sum('transactions.value');
     }
 
+    public function getPendingBalanceCount(): int
+    {
+        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
+            $join->on('brs.sale_id', '=', 'transactions.sale_id')->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
+        })
+        ->whereNull('brs.id')
+        ->where('transactions.company_id', $this->company->id)
+        ->where('transactions.status_enum', Transaction::STATUS_PAID)
+        ->whereIn('transactions.gateway_id', $this->gatewayIds)
+        ->count();
+    }
+
     public function getBlockedBalance(): int
     {
         return Transaction::where('company_id', $this->company->id)
@@ -86,6 +98,26 @@ class Safe2PayService implements Statement
             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
             ->sum('value');
+    }
+
+    public function getBlockedBalanceCount(): int
+    {
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->count();
+    }
+
+    public function getBlockedBalancePendingCount(): int
+    {
+        return Transaction::where('company_id', $this->company->id)
+        ->whereIn('gateway_id', $this->gatewayIds)
+        ->where('status_enum', Transaction::STATUS_PAID)
+        ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+        ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+        ->count();
     }
 
     public function getPendingDebtBalance(): int
@@ -235,7 +267,7 @@ class Safe2PayService implements Statement
                     'status_enum' => Transaction::STATUS_TRANSFERRED,
                 ]);
             }
-            
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

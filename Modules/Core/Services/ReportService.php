@@ -3342,46 +3342,37 @@ class ReportService
         }
     }
 
-    public function getFinancesPendings($filters)
+    public function getFinancesPendings()
     {
         try {
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $company = Hashids::decode($filters["company"]);
-
-            $gatewayIds = [
-                Gateway::SAFE2PAY_PRODUCTION_ID,
-                Gateway::SAFE2PAY_SANDBOX_ID,
-                Gateway::ASAAS_PRODUCTION_ID,
-                Gateway::ASAAS_SANDBOX_ID,
-                Gateway::GETNET_PRODUCTION_ID,
-                Gateway::GETNET_SANDBOX_ID,
-                Gateway::GERENCIANET_PRODUCTION_ID,
-                Gateway::GERENCIANET_SANDBOX_ID,
-                Gateway::CIELO_PRODUCTION_ID,
-                Gateway::CIELO_SANDBOX_ID ,
-                // extrato cielo engloba as vendas antigas zoop e pagarme
-                Gateway::PAGARME_PRODUCTION_ID,
-                Gateway::PAGARME_SANDBOX_ID,
-                Gateway::ZOOP_PRODUCTION_ID,
-                Gateway::ZOOP_SANDBOX_ID
+            $defaultGateways = [
+                Safe2PayService::class,
+                AsaasService::class,
+                GetnetService::class,
+                GerencianetService::class,
+                CieloService::class,
             ];
 
-            $transactionModel = new Transaction();
-            $transactions = $transactionModel
-            ->where('company_id', $company)
-            ->where('status_enum', Transaction::STATUS_PAID)
-            ->whereIn('gateway_id', $gatewayIds)
-            ->whereBetween('created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-            ->whereDoesntHave('blockReasonSale',function ($query) {
-                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-            });
+            $balancesPendingValue = [];
+            $balancesPendingCount = [];
 
-            $transactionsValue = $transactions->sum('value');
-            $transactionsAmount = $transactions->count();
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
+            foreach($companies as $company) {
+                foreach($defaultGateways as $gatewayClass) {
+                    $gateway = app()->make($gatewayClass);
+                    $gateway->setCompany($company);
+
+                    $balancesPendingValue[] = $gateway->getPendingBalance();
+                    $balancesPendingCount[] = $gateway->getPendingBalanceCount();
+                }
+            }
+
+            $totalPendingValue = array_sum($balancesPendingValue);
+            $totalPendingCount = array_sum($balancesPendingCount);
 
             return [
-                'value' => foxutils()->formatMoney($transactionsValue / 100),
-                'amount' => $transactionsAmount
+                'value' => foxutils()->formatMoney($totalPendingValue / 100),
+                'amount' => $totalPendingCount
             ];
         } catch(Exception $e) {
             return response()->json([
@@ -3390,45 +3381,43 @@ class ReportService
         }
     }
 
-    public function getFinancesBlockeds($filters)
+    public function getFinancesBlockeds()
     {
         try {
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
-            $company = Hashids::decode($filters["company"]);
-
-            $gatewayIds = [
-                Gateway::SAFE2PAY_PRODUCTION_ID,
-                Gateway::SAFE2PAY_SANDBOX_ID,
-                Gateway::ASAAS_PRODUCTION_ID,
-                Gateway::ASAAS_SANDBOX_ID,
-                Gateway::GETNET_PRODUCTION_ID,
-                Gateway::GETNET_SANDBOX_ID,
-                Gateway::GERENCIANET_PRODUCTION_ID,
-                Gateway::GERENCIANET_SANDBOX_ID,
-                Gateway::CIELO_PRODUCTION_ID,
-                Gateway::CIELO_SANDBOX_ID ,
-                // extrato cielo engloba as vendas antigas zoop e pagarme
-                Gateway::PAGARME_PRODUCTION_ID,
-                Gateway::PAGARME_SANDBOX_ID,
-                Gateway::ZOOP_PRODUCTION_ID,
-                Gateway::ZOOP_SANDBOX_ID
+            $defaultGateways = [
+                Safe2PayService::class,
+                AsaasService::class,
+                GetnetService::class,
+                GerencianetService::class,
+                CieloService::class,
             ];
 
-            $transactionModel = new Transaction();
-            $transactions = $transactionModel
-            ->where('company_id', $company)
-            ->whereIn('gateway_id', $gatewayIds)
-            ->whereBetween('transactions.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED);
+            $balancesBlockedValue = [];
+            $balancesBlockedCount = [];
 
-            $transactionsValue = $transactions->sum('value');
-            $transactionsAmount = $transactions->count();
+            $balancesBlockedPendingValue = [];
+            $balancesBlockedPendinCount = [];
+
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
+            foreach($companies as $company) {
+                foreach($defaultGateways as $gatewayClass) {
+                    $gateway = app()->make($gatewayClass);
+                    $gateway->setCompany($company);
+
+                    $balancesBlockedValue[] = $gateway->getBlockedBalance();
+                    $balancesBlockedCount[] = $gateway->getBlockedBalanceCount();
+
+                    $balancesBlockedPendingValue[] = $gateway->getBlockedBalancePending();
+                    $balancesBlockedPendinCount[] = $gateway->getBlockedBalancePendingCount();
+                }
+            }
+
+            $totalBlockedValue = array_sum($balancesBlockedValue) + array_sum($balancesBlockedPendingValue);
+            $totalBlockedCount = array_sum($balancesBlockedCount) + array_sum($balancesBlockedPendinCount);
 
             return [
-                'value' => foxutils()->formatMoney($transactionsValue / 100),
-                'amount' => $transactionsAmount
+                'value' => foxutils()->formatMoney($totalBlockedValue / 100),
+                'amount' => $totalBlockedCount
             ];
         } catch(Exception $e) {
             return response()->json([
@@ -3437,7 +3426,7 @@ class ReportService
         }
     }
 
-    function getFinancesDistribuitions($filters)
+    function getFinancesDistribuitions()
     {
         try {
             $defaultGateways = [
@@ -3453,7 +3442,11 @@ class ReportService
             $balancesBlocked = [];
             $balancesBlockedPending = [];
 
-            $companies = Company::where('user_id', auth()->user()->id)->get();
+            //$balancesPendingCount = [];
+            //$balancesBlockedCount = [];
+            //$balancesBlockedPendingCount = [];
+
+            $companies = Company::where('user_id', auth()->user()->account_owner_id)->get();
             foreach($companies as $company) {
                 foreach($defaultGateways as $gatewayClass) {
                     $gateway = app()->make($gatewayClass);
@@ -3463,6 +3456,10 @@ class ReportService
                     $balancesPending[] = $gateway->getPendingBalance();
                     $balancesBlocked[] = $gateway->getBlockedBalance();
                     $balancesBlockedPending[] = $gateway->getBlockedBalancePending();
+
+                    //$balancesPendingCount[] = $gateway->getPendingBalanceCount();
+                    //$balancesBlockedCount[] = $gateway->getBlockedBalanceCount();
+                    //$balancesBlockedPendingCount[] = $gateway->getBlockedBalancePendingCount();
                 }
             }
 
@@ -3470,6 +3467,10 @@ class ReportService
             $pendingBalance = array_sum($balancesPending);
             $blockedBalance = array_sum($balancesBlocked);
             $blockedBalancePending = array_sum($balancesBlockedPending);
+
+            //$pendingBalanceCount = array_sum($balancesPendingCount);
+            //$blockedBalanceCount = array_sum($balancesBlockedCount);
+            //$blockedBalancePendingCount = array_sum($balancesBlockedPendingCount);
 
             $totalBalance = ($availableBalance + $pendingBalance + $blockedBalance + $blockedBalancePending);
 
@@ -3480,10 +3481,12 @@ class ReportService
                 ],
                 'pending' => [
                     'value' => foxutils()->formatMoney($pendingBalance / 100),
+                    //'amount' => $pendingBalanceCount,
                     'percentage' => round(($pendingBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
                 ],
                 'blocked' => [
                     'value' => foxutils()->formatMoney(($blockedBalance + $blockedBalancePending) / 100),
+                    //'amount' => ($blockedBalanceCount + $blockedBalancePendingCount),
                     'percentage' => round((($blockedBalance + $blockedBalancePending) * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
                 ],
                 'total' => foxutils()->formatMoney($totalBalance / 100),
