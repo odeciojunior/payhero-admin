@@ -74,8 +74,10 @@ $(document).ready(function(){
                 $('.page-content').show();
                 $('.content-error').hide();
 
-                $(response.data).each(function (index, value) {
-                    let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
+                $(response.data).each(function (index, company) {
+                    const document = (company.document.replace(/\D/g, '').length > 11 ? 'CNPJ: ' : 'CPF: ') + company.document;
+                    let data = `<option country="${company.country}" value="${company.id}"
+                                        data-toggle="tooltip" title="${document}">${company.name}</option>`;
                     $("#transfers_company_select").append(data);
                     $("#extract_company_select").append(data);
                     $("#statement_company_select").append(data);
