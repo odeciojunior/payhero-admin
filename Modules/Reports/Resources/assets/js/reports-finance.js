@@ -1,7 +1,6 @@
 $(function() {
     loadingOnScreen();
     exportReports();
-    distributionGraph();
     
     updateReports();    
     
@@ -18,6 +17,83 @@ $(function() {
 
 let resumeUrl = '/api/reports/resume';
 let financesResumeUrl = '/api/reports/finances';
+
+function distribution() {
+    let distributionHtml = '';   
+    $('#card-distribution .onPreLoad *').remove();
+    $("#block-distribution").prepend(skeLoad);
+
+    return $.ajax({
+        method: "GET",
+        url: financesResumeUrl + "/distribuitions?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+             let { available, blocked, pending, total } = response.data;
+             let series = [available.percentage, pending.percentage, blocked.percentage];
+             
+             console.log(series);
+
+             distributionHtml = `
+                <div class="d-flex box-graph-dist">
+                    <div class="info-graph">
+                        <h6 class="font-size-14 grey">Saldo Total</h6>
+                        <em>
+                            <small class="font-size-14">R$</small>
+                            <strong class="grey">${removeMoneyCurrency(total)}</strong>
+                        </em>
+                    </div>
+                </div>
+                <div class="d-flex box-distribution">
+                    <div class="distribution-area">
+                        <header class="grey font-size-14">
+                            <span class="${available.color} cube"></span>
+                            Disponível
+                        </header>
+                        <footer class="footer-distribution">
+                            <small>R$</small>
+                            <strong>${removeMoneyCurrency(available.value)}</strong>
+                        </footer>
+                    </div>
+                    <div class="distribution-area">
+                        <header class="grey font-size-14">
+                            <span class="cube ${pending.color}">
+                                <i></i>
+                            </span>
+                            Pendente
+                        </header>
+                        <footer class="footer-distribution">
+                            <small>R$</small>
+                            <strong class="value-pending">${removeMoneyCurrency(pending.value)}</strong>
+                        </footer>
+                    </div>
+                    <div class="distribution-area">
+                        <header class="grey font-size-14">
+                            <span class="cube ${blocked.color}">
+                                <i></i>
+                            </span>
+                            Bloqueado
+                        </header>
+                        <footer class="footer-distribution">
+                            <small>R$</small>
+                            <strong>${removeMoneyCurrency(blocked.value)}</strong>
+                        </footer>
+                    </div>
+                </div>
+             `;
+             $("#block-distribution").html(distributionHtml);
+             $(".box-graph-dist").prepend('<div class="distribution-graph"></div>')
+             distributionGraph(series);
+        }
+    });
+    
+}
 
 function withdrawals() {
 
@@ -86,11 +162,7 @@ function withdrawals() {
                 
             `;
 
-            graphDraw = `
-                
-                <div id="block-withdraw"></div>
-                
-            `;
+            graphDraw = `<div id="block-withdraw"></div>`;
 
 
             if(response.data.chart) {
@@ -109,44 +181,47 @@ function withdrawals() {
     });
 }
 
-// function blockeds() {
-//     return $.ajax({
-//         method: "GET",
-//         url: financesResumeUrl + "/blockeds?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
-//         dataType: "json",
-//         headers: {
-//             Authorization: $('meta[name="access-token"]').attr("content"),
-//             Accept: "application/json",
-//         },
-//         error: function error(response) {
-//             errorAjaxResponse(response);
-//         },
-//         success: function success(response) {
-//             console.log(response.data);
-//         }
-//     });
-// }
-// function blockeds() {
-//     return $.ajax({
-//         method: "GET",
-//         url: financesResumeUrl + "/blockeds?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
-//         dataType: "json",
-//         headers: {
-//             Authorization: $('meta[name="access-token"]').attr("content"),
-//             Accept: "application/json",
-//         },
-//         error: function error(response) {
-//             errorAjaxResponse(response);
-//         },
-//         success: function success(response) {
-//             console.log(response.data);
-//         }
-//     });
-// }
+function blockeds() {
+    let blockedsHtml = '';
+    $('#card-blockeds .onPreLoad *' ).remove();
+    $("#block-blockeds").prepend(skeLoad);
+
+    return $.ajax({
+        method: "GET",
+        url: financesResumeUrl + "/blockeds?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+             let {amount, value} = response.data;
+
+             blockedsHtml = `
+                <div class="d-flex">
+                    <div class="balance col-3">
+                        <h6 class="grey font-size-14">Total</h6>
+                        <strong class="grey total">${kFormatter(amount)}</strong>
+                    </div>
+                    <div class="balance col-9">
+                        <h6 class="font-size-14">Saldo</h6>
+                        <small>R$</small>
+                        <strong class="total red ">${removeMoneyCurrency(value)}</strong>
+                    </div>
+                </div>
+             `;
+             $("#block-blockeds").html(blockedsHtml);
+        }
+    });
+}
+
 
 function onResume() {
     let ticket, commission, chargebacks, transactions = '';   
-    $('.onPreLoad *').remove();
+    $('#finance-card .onPreLoad *').remove();
     
     $("#finance-commission,#finance-ticket,#finance-chargebacks,#finance-transactions").prepend(skeLoad);
 
@@ -232,7 +307,7 @@ function onCommission() {
                     <div class="d-flex justify-content-between box-finances-values">
                         <div class="finances-values">
                             <span>R$</span>
-                            <strong>${response.data.total}</strong>
+                            <strong>${removeMoneyCurrency(response.data.total)}</strong>
                         </div>
                         <div class="finances-values">
                             <svg class="${response.data.variation.color}" width="18" height="14" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -244,13 +319,13 @@ function onCommission() {
                 </section>
                 <section class="container">
                     <div class="graph-reports">
-                        <div class="${response.data.total !== '0,00' ?'new-finance-graph' : ''  }"></div>
+                        <div class="${response.data.total !== 'R$ 0,00' ?'new-finance-graph' : ''  }"></div>
                     </div>
                 </section>
             `;           
             $("#info-commission").html(infoComission);
 
-            if( response.data.total !== '0,00' ) {
+            if( response.data.total !== 'R$ 0,00' ) {
                 $('.new-finance-graph').html('<canvas id=comission-graph></canvas>');
                 let labels = [...response.data.chart.labels];
                 let series = [...response.data.chart.values];
@@ -267,7 +342,7 @@ function getPending() {
 
     return $.ajax({
         method: "GET",
-        url: resumeUrl+ "/pendings?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: financesResumeUrl + "/pendings?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -277,20 +352,20 @@ function getPending() {
             errorAjaxResponse(response);
             
         },
-        success: function success(response, status) {
-            $(".value-pending").text(response.data.total);
+        success: function success(response) {
+            let { amount, value } = response.data;
 
             pendingBlock = `
             <footer class="">
                 <div class="d-flex">
                     <div class="balance col-3">
                         <h6 class="grey font-size-14">Total</h6>
-                        <strong class="grey total">1.2K</strong>
+                        <strong class="grey total">${kFormatter(amount)}</strong>
                     </div>
                     <div class="balance col-9">
                         <h6 class="font-size-14">Saldo</h6>
                         <small>R$</small>
-                        <strong class="total orange">${response.data.total}</strong>
+                        <strong class="total orange">${removeMoneyCurrency(value)}</strong>
                     </div>
                 </div>
             </footer>
@@ -307,7 +382,7 @@ function getCashback() {
 
     return $.ajax({
         method: "GET",
-        url: resumeUrl + "/cashbacks?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: financesResumeUrl + "/cashbacks?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -317,47 +392,67 @@ function getCashback() {
         error: function error(response) {
             errorAjaxResponse(response);
         },
-        success: function success(response, status) {
-            if(response.data.total !== '0,00') {
-                cashBlock = `
-                    <div class="balance col-6">
-                        <h6 class="grey font-size-14">
-                            <span class="ico-coin">
-                                <svg width="17" height="17" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 17.5C14.366 17.5 17.5 14.366 17.5 10.5C17.5 6.63401 14.366 3.5 10.5 3.5C6.63401 3.5 3.5 6.63401 3.5 10.5C3.5 14.366 6.63401 17.5 10.5 17.5ZM10.5 19.25C15.3325 19.25 19.25 15.3325 19.25 10.5C19.25 5.66751 15.3325 1.75 10.5 1.75C5.66751 1.75 1.75 5.66751 1.75 10.5C1.75 15.3325 5.66751 19.25 10.5 19.25Z" fill="#1BE4A8"/>
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.625 6.125C9.625 5.64175 10.0168 5.25 10.5 5.25C10.9832 5.25 11.375 5.64175 11.375 6.125C12.8247 6.125 14 7.30025 14 8.75C14 9.23325 13.6082 9.625 13.125 9.625C12.6418 9.625 12.25 9.23325 12.25 8.75C12.25 8.26675 11.8582 7.875 11.375 7.875H10.5H9.40049C9.04123 7.875 8.75 8.16623 8.75 8.52549C8.75 8.80548 8.92916 9.05406 9.19479 9.1426L12.3586 10.1972C13.3388 10.5239 14 11.4413 14 12.4745C14 13.8003 12.9253 14.875 11.5995 14.875H11.375C11.375 15.3582 10.9832 15.75 10.5 15.75C10.0168 15.75 9.625 15.3582 9.625 14.875C8.17525 14.875 7 13.6997 7 12.25C7 11.7668 7.39175 11.375 7.875 11.375C8.35825 11.375 8.75 11.7668 8.75 12.25C8.75 12.7332 9.14175 13.125 9.625 13.125H10.5H11.5995C11.9588 13.125 12.25 12.8338 12.25 12.4745C12.25 12.1945 12.0708 11.9459 11.8052 11.8574L8.64139 10.8028C7.66117 10.4761 7 9.55873 7 8.52549C7 7.19974 8.07474 6.125 9.40049 6.125L9.625 6.125Z" fill="#1BE4A8"/>
-                                </svg>
-                            </span>
-                            Recebido
-                        </h6>
-                        <small>R$</small>
-                        <strong class="total grey">${response.data.total}</strong>
-                    </div>
-                    <div class="balance col-6">
-                        <h6 class="grey font-size-14 qtd">Quantidade</h6>
-                        <strong class="total grey">${response.data.count} vendas</strong>
-                    </div>
-                `;
-                
+        success: function success(response) {
+            let { quantity, value } = response.data;
+            if(response.data !== undefined) {
+                if(removeMoneyCurrency(value) !== '0,00') {
+                    cashBlock = `
+                        <div class="balance col-6">
+                            <h6 class="grey font-size-14">
+                                <span class="ico-coin">
+                                    <svg width="17" height="17" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 17.5C14.366 17.5 17.5 14.366 17.5 10.5C17.5 6.63401 14.366 3.5 10.5 3.5C6.63401 3.5 3.5 6.63401 3.5 10.5C3.5 14.366 6.63401 17.5 10.5 17.5ZM10.5 19.25C15.3325 19.25 19.25 15.3325 19.25 10.5C19.25 5.66751 15.3325 1.75 10.5 1.75C5.66751 1.75 1.75 5.66751 1.75 10.5C1.75 15.3325 5.66751 19.25 10.5 19.25Z" fill="#1BE4A8"/>
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.625 6.125C9.625 5.64175 10.0168 5.25 10.5 5.25C10.9832 5.25 11.375 5.64175 11.375 6.125C12.8247 6.125 14 7.30025 14 8.75C14 9.23325 13.6082 9.625 13.125 9.625C12.6418 9.625 12.25 9.23325 12.25 8.75C12.25 8.26675 11.8582 7.875 11.375 7.875H10.5H9.40049C9.04123 7.875 8.75 8.16623 8.75 8.52549C8.75 8.80548 8.92916 9.05406 9.19479 9.1426L12.3586 10.1972C13.3388 10.5239 14 11.4413 14 12.4745C14 13.8003 12.9253 14.875 11.5995 14.875H11.375C11.375 15.3582 10.9832 15.75 10.5 15.75C10.0168 15.75 9.625 15.3582 9.625 14.875C8.17525 14.875 7 13.6997 7 12.25C7 11.7668 7.39175 11.375 7.875 11.375C8.35825 11.375 8.75 11.7668 8.75 12.25C8.75 12.7332 9.14175 13.125 9.625 13.125H10.5H11.5995C11.9588 13.125 12.25 12.8338 12.25 12.4745C12.25 12.1945 12.0708 11.9459 11.8052 11.8574L8.64139 10.8028C7.66117 10.4761 7 9.55873 7 8.52549C7 7.19974 8.07474 6.125 9.40049 6.125L9.625 6.125Z" fill="#1BE4A8"/>
+                                    </svg>
+                                </span>
+                                Recebido
+                            </h6>
+                            <small>R$</small>
+                            <strong class="total grey">${removeMoneyCurrency(value)}</strong>
+                        </div>
+                        <div class="balance col-6">
+                            <h6 class="grey font-size-14 qtd">Quantidade</h6>
+                            <strong class="total grey">${quantity} vendas</strong>
+                        </div>
+                    `;
+                    
+                } else {
+                    cashBlock = `                
+                        <div class="balance col-4">
+                            <div class="box-ico-cash">
+                                <span class="ico-cash">
+                                    <svg width="47" height="47" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 17.5C14.366 17.5 17.5 14.366 17.5 10.5C17.5 6.63401 14.366 3.5 10.5 3.5C6.63401 3.5 3.5 6.63401 3.5 10.5C3.5 14.366 6.63401 17.5 10.5 17.5ZM10.5 19.25C15.3325 19.25 19.25 15.3325 19.25 10.5C19.25 5.66751 15.3325 1.75 10.5 1.75C5.66751 1.75 1.75 5.66751 1.75 10.5C1.75 15.3325 5.66751 19.25 10.5 19.25Z" fill="#1BE4A8"/>
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.625 6.125C9.625 5.64175 10.0168 5.25 10.5 5.25C10.9832 5.25 11.375 5.64175 11.375 6.125C12.8247 6.125 14 7.30025 14 8.75C14 9.23325 13.6082 9.625 13.125 9.625C12.6418 9.625 12.25 9.23325 12.25 8.75C12.25 8.26675 11.8582 7.875 11.375 7.875H10.5H9.40049C9.04123 7.875 8.75 8.16623 8.75 8.52549C8.75 8.80548 8.92916 9.05406 9.19479 9.1426L12.3586 10.1972C13.3388 10.5239 14 11.4413 14 12.4745C14 13.8003 12.9253 14.875 11.5995 14.875H11.375C11.375 15.3582 10.9832 15.75 10.5 15.75C10.0168 15.75 9.625 15.3582 9.625 14.875C8.17525 14.875 7 13.6997 7 12.25C7 11.7668 7.39175 11.375 7.875 11.375C8.35825 11.375 8.75 11.7668 8.75 12.25C8.75 12.7332 9.14175 13.125 9.625 13.125H10.5H11.5995C11.9588 13.125 12.25 12.8338 12.25 12.4745C12.25 12.1945 12.0708 11.9459 11.8052 11.8574L8.64139 10.8028C7.66117 10.4761 7 9.55873 7 8.52549C7 7.19974 8.07474 6.125 9.40049 6.125L9.625 6.125Z" fill="#1BE4A8"/>
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="balance col-8">
+                            <h6 class="no-cashback">Ainda sem cashback :(</h6>
+                            <p class="txt-no-cashback">Suba de nível e mantenha a saúde da conta boa para receber cashback</p>
+                        </div>
+                    `;
+                }    
+               
             } else {
                 cashBlock = `                
-                    <div class="balance col-4">
-                        <div class="box-ico-cash">
-                            <span class="ico-cash">
-                                <svg width="47" height="47" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 17.5C14.366 17.5 17.5 14.366 17.5 10.5C17.5 6.63401 14.366 3.5 10.5 3.5C6.63401 3.5 3.5 6.63401 3.5 10.5C3.5 14.366 6.63401 17.5 10.5 17.5ZM10.5 19.25C15.3325 19.25 19.25 15.3325 19.25 10.5C19.25 5.66751 15.3325 1.75 10.5 1.75C5.66751 1.75 1.75 5.66751 1.75 10.5C1.75 15.3325 5.66751 19.25 10.5 19.25Z" fill="#1BE4A8"/>
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.625 6.125C9.625 5.64175 10.0168 5.25 10.5 5.25C10.9832 5.25 11.375 5.64175 11.375 6.125C12.8247 6.125 14 7.30025 14 8.75C14 9.23325 13.6082 9.625 13.125 9.625C12.6418 9.625 12.25 9.23325 12.25 8.75C12.25 8.26675 11.8582 7.875 11.375 7.875H10.5H9.40049C9.04123 7.875 8.75 8.16623 8.75 8.52549C8.75 8.80548 8.92916 9.05406 9.19479 9.1426L12.3586 10.1972C13.3388 10.5239 14 11.4413 14 12.4745C14 13.8003 12.9253 14.875 11.5995 14.875H11.375C11.375 15.3582 10.9832 15.75 10.5 15.75C10.0168 15.75 9.625 15.3582 9.625 14.875C8.17525 14.875 7 13.6997 7 12.25C7 11.7668 7.39175 11.375 7.875 11.375C8.35825 11.375 8.75 11.7668 8.75 12.25C8.75 12.7332 9.14175 13.125 9.625 13.125H10.5H11.5995C11.9588 13.125 12.25 12.8338 12.25 12.4745C12.25 12.1945 12.0708 11.9459 11.8052 11.8574L8.64139 10.8028C7.66117 10.4761 7 9.55873 7 8.52549C7 7.19974 8.07474 6.125 9.40049 6.125L9.625 6.125Z" fill="#1BE4A8"/>
-                                </svg>
-                            </span>
+                        <div class="balance col-4">
+                            <div class="box-ico-cash">
+                                <span class="ico-cash">
+                                    <svg width="47" height="47" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 17.5C14.366 17.5 17.5 14.366 17.5 10.5C17.5 6.63401 14.366 3.5 10.5 3.5C6.63401 3.5 3.5 6.63401 3.5 10.5C3.5 14.366 6.63401 17.5 10.5 17.5ZM10.5 19.25C15.3325 19.25 19.25 15.3325 19.25 10.5C19.25 5.66751 15.3325 1.75 10.5 1.75C5.66751 1.75 1.75 5.66751 1.75 10.5C1.75 15.3325 5.66751 19.25 10.5 19.25Z" fill="#1BE4A8"/>
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.625 6.125C9.625 5.64175 10.0168 5.25 10.5 5.25C10.9832 5.25 11.375 5.64175 11.375 6.125C12.8247 6.125 14 7.30025 14 8.75C14 9.23325 13.6082 9.625 13.125 9.625C12.6418 9.625 12.25 9.23325 12.25 8.75C12.25 8.26675 11.8582 7.875 11.375 7.875H10.5H9.40049C9.04123 7.875 8.75 8.16623 8.75 8.52549C8.75 8.80548 8.92916 9.05406 9.19479 9.1426L12.3586 10.1972C13.3388 10.5239 14 11.4413 14 12.4745C14 13.8003 12.9253 14.875 11.5995 14.875H11.375C11.375 15.3582 10.9832 15.75 10.5 15.75C10.0168 15.75 9.625 15.3582 9.625 14.875C8.17525 14.875 7 13.6997 7 12.25C7 11.7668 7.39175 11.375 7.875 11.375C8.35825 11.375 8.75 11.7668 8.75 12.25C8.75 12.7332 9.14175 13.125 9.625 13.125H10.5H11.5995C11.9588 13.125 12.25 12.8338 12.25 12.4745C12.25 12.1945 12.0708 11.9459 11.8052 11.8574L8.64139 10.8028C7.66117 10.4761 7 9.55873 7 8.52549C7 7.19974 8.07474 6.125 9.40049 6.125L9.625 6.125Z" fill="#1BE4A8"/>
+                                    </svg>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="balance col-8">
-                        <h6 class="no-cashback">Ainda sem cashback :(</h6>
-                        <p class="txt-no-cashback">Suba de nível e mantenha a saúde da conta boa para receber cashback</p>
-                    </div>
-                `;
+                        <div class="balance col-8">
+                            <h6 class="no-cashback">Ainda sem cashback :(</h6>
+                            <p class="txt-no-cashback">Suba de nível e mantenha a saúde da conta boa para receber cashback</p>
+                        </div>
+                    `;
             }
-
             $("#block-cash").html(cashBlock);
         }
     });
@@ -425,7 +520,7 @@ function changeCalendar() {
             
             
             $('.onPreLoad *').remove();
-            $('.onPreLoad').append(skeLoad);
+            $('.onPreLoad').html(skeLoad);
             
             updateReports();
         }
@@ -515,12 +610,13 @@ function updateReports() {
         },
         success: function success(response) {
             $('.onPreLoad *').remove();
-            // blockeds();
+            blockeds();
             onResume();
             onCommission();
             getPending();
             getCashback();
             withdrawals();
+            distribution();
         },
     });
 }
@@ -799,9 +895,9 @@ function exportReports() {
 
 }
 
-function distributionGraph() {
+function distributionGraph(series) {
     new Chartist.Pie('.distribution-graph', {
-        series: [30, 15, 80, 70]
+        series
       }, {
         donut: true,
         donutWidth: 30,
@@ -812,6 +908,10 @@ function distributionGraph() {
         labelOffset: 0,
         height: 123
       });
+}
+
+function kFormatter(num) {
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num);
 }
 
 let skeLoad = `

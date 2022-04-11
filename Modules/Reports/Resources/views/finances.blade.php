@@ -96,7 +96,7 @@
 
             <section class="container box-reports" id="reports-content">
 				<div class="row">
-					<div class="col-12 box-items-finance">
+					<div class="col-12 box-items-finance" id="finance-card">
                         <div class="row mb-20">
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
                                 <div class="finance-card border blue mb-10 onPreLoad" id="finance-transactions"></div>
@@ -174,71 +174,14 @@
                         
                         <!-- distribtion -->
                         <div class="distribution">
-                            <div class="card inner">
+                            <div class="card inner" id="card-distribution">
                                 <header class="d-flex title-graph">
                                     <h5 class="grey font-size-16">
                                         <strong>Distribuição</strong>
                                     </h5>
                                     <h6 class="font-size-14">Atual</h6>
                                 </header>
-                                <div class="d-flex box-graph-dist">
-                                    <div class="distribution-graph"></div>
-                                    <div class="info-graph">
-                                        <h6 class="font-size-14 grey">Saldo Total</h6>
-                                        <em>
-                                            <small class="font-size-14">R$</small>
-                                            <strong class="grey">2.654.202,00</strong>
-                                        </em>
-                                    </div>
-                                </div>
-                                <div class="d-flex box-distribution">
-                                    <div class="distribution-area">
-                                        <header class="grey font-size-14">
-                                            <span class="green cube"></span>
-                                            Disponível
-                                        </header>
-                                        <footer class="footer-distribution">
-                                            <small>R$</small>
-                                            <strong>1.655.200,00</strong>
-                                        </footer>
-                                    </div>
-                                    <div class="distribution-area">
-                                        <header class="grey font-size-14">
-                                            <span class="cube yellow">
-                                                <i></i>
-                                            </span>
-                                            Pendente
-                                        </header>
-                                        <footer class="footer-distribution">
-                                            <small>R$</small>
-                                            <strong class="value-pending"></strong>
-                                        </footer>
-                                    </div>
-                                    <div class="distribution-area">
-                                        <header class="grey font-size-14">
-                                            <span class="cube red">
-                                                <i></i>
-                                            </span>
-                                            Bloqueado
-                                        </header>
-                                        <footer class="footer-distribution">
-                                            <small>R$</small>
-                                            <strong>26.540,22</strong>
-                                        </footer>
-                                    </div>
-                                    <div class="distribution-area">
-                                        <header class="grey font-size-14">
-                                            <span class="cube strong">
-                                                <i></i>
-                                            </span>
-                                            Débitos
-                                        </header>
-                                        <footer class="footer-distribution">
-                                            <small>R$</small>
-                                            <strong>8.654,20</strong>
-                                        </footer>
-                                    </div>
-                                </div>
+                                <div class="onPreLoad" id="block-distribution"></div>
                             </div>
                             <div class="">
                                 <div class="d-flex sub-distribution">
@@ -254,7 +197,7 @@
                                         </header>
                                         <div class="onPreLoad" id="block-pending"></div>
                                     </div>
-                                    <div class="card inner">
+                                    <div class="card inner" id="card-blockeds">
                                         <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
                                                 <strong>Bloqueado</strong>
@@ -264,19 +207,7 @@
                                                 <i class="o-arrow-right-1 redirect"></i>
                                             </a>
                                         </header>
-                                        <footer class="">
-                                            <div class="d-flex">
-                                                <div class="balance col-3">
-                                                    <h6 class="grey font-size-14">Total</h6>
-                                                    <strong class="grey total">748</strong>
-                                                </div>
-                                                <div class="balance col-9">
-                                                    <h6 class="font-size-14">Saldo</h6>
-                                                    <small>R$</small>
-                                                    <strong class="total red ">4.588,52</strong>
-                                                </div>
-                                            </div>
-                                        </footer>
+                                        <footer class="onPreLoad" id="block-blockeds"></footer>
                                     </div>
                                 </div>
                             </div>

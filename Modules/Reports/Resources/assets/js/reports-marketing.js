@@ -155,6 +155,8 @@ function frequenteSales() {
         },
         success: function success(response) {
             $.each(response.data, function (i, item) {
+                let value = removeMoneyCurrency(item.value);
+                let newV = value.replace(/[\D]+/g,'');
                 salesBlock = `
                     <div class="box-payment-option pad-0">
                         <div class="d-flex align-items list-sales">
@@ -169,7 +171,7 @@ function frequenteSales() {
                                 </div>
                             </div>
                             <div class="grey font-size-14">${item.sales_amount}</div>
-                            <div class="grey font-size-14"><strong>${item.value}</strong></div>
+                            <div class="grey font-size-14 value"><strong>${kFormatter(newV)}</strong></div>
                         </div>
                     </div>
                 `;
@@ -451,7 +453,7 @@ function devices() {
 
 function operationalSystems() {
 
-      $.ajax({
+    $.ajax({
         method: "GET",
         url: "http://dev.sirius.com/api/reports/marketing/operational-systems?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
@@ -533,6 +535,10 @@ function operationalSystems() {
             }
         }
     });
+}
+
+function kFormatter(num) {
+    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num);
 }
 
 let skeLoad = `
