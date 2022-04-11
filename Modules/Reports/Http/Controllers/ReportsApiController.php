@@ -1014,7 +1014,8 @@ class ReportsApiController extends Controller
     public function getResume(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -1030,7 +1031,8 @@ class ReportsApiController extends Controller
     public function getSalesByState(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -1101,10 +1103,10 @@ class ReportsApiController extends Controller
         $data = $request->all();
 
         $reportService = new ReportService();
-        $devices = $reportService->getStateDetail($data);
+        $stateDetail = $reportService->getStateDetail($data);
 
         return response()->json([
-            'data' => $devices
+            'data' => $stateDetail
         ]);
     }
 
