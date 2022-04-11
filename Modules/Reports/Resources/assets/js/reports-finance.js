@@ -305,7 +305,7 @@ function onCommission() {
                     </header>
 
                     <div class="d-flex justify-content-between box-finances-values">
-                        <div class="finances-values aaa">
+                        <div class="finances-values">
                             <span>R$</span>
                             <strong>${removeMoneyCurrency(response.data.total)}</strong>
                         </div>
