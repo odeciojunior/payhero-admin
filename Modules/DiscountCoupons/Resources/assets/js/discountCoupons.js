@@ -617,7 +617,7 @@ $(function () {
                 items_thumbs +=  `
                 <span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
                 background-repeat: no-repeat; background-position: center center; 
-                background-size: cover !important; background: url('`+items_selected[i].image+`'), url('/build/global/img/produto.png')"></span>`
+                background-size: cover !important; background: url('`+items_selected[i].image+`'), url('/build/global/img/produto.svg')"></span>`
                 
             }
             
@@ -1557,6 +1557,15 @@ function toggleSelect(obj){
 function set_item_click(){
 
     $('.item').on('click', function () {
+        
+        var iqde = 100 //limite máximo de planos em um desconto.
+        
+        if(items_selected.length >= iqde && !$('.selected_check', this).is(':visible')){
+            $('.next-btn, .coupon-next, .c-edit-plans-save').prop('disabled',false)
+            alertCustom("error", 'É possível selecionar no máximo '+iqde+' planos.');
+            return false
+        }
+
         if(toggleSelect($(this))){
 
             items_selected.push({
@@ -1573,11 +1582,13 @@ function set_item_click(){
                 }
             }
         }
-        if(items_selected.length > 0){
+
+        if(items_selected.length > 0 && items_selected.length <= iqde){
             $('.next-btn, .coupon-next, .c-edit-plans-save').prop('disabled',false)
         }else{
             $('.next-btn, .coupon-next, .c-edit-plans-save').prop('disabled',true)
         };
+
     })
 
 
@@ -2592,7 +2603,7 @@ $(function () {
                 items_thumbs +=  `
                 <span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
                 background-repeat: no-repeat; background-position: center center; 
-                background-size: cover !important; background: url('`+items_selected[i].image+`'), url('/build/global/img/produto.png')"></span>`
+                background-size: cover !important; background: url('`+items_selected[i].image+`'), url('/build/global/img/produto.svg')"></span>`
                 
             }
             
