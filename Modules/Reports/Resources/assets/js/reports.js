@@ -131,9 +131,9 @@ $(function () {
             },
             success: function success(response) {
                 
-                $("#comission").html("<span class='currency'>R$ </span>" + response.data.total).addClass('visible');
+                $("#comission").html("<span class='currency'>R$ </span>" + removeMoneyCurrency(response.data.total)).addClass('visible');
                 
-                if(response.data.total !== '0,00') {
+                if(response.data.total !== 'R$ 0,00') {
                     $('.new-graph').html('<canvas id=comission-graph></canvas>').addClass('visible');
                     $(".new-graph").next('.no-graph').remove();
                     
