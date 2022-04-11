@@ -100,7 +100,7 @@ function resume() {
 
     return $.ajax({
         method: "GET",
-        url: mktUrl + "/resume?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: mktUrl + "/resume?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -144,7 +144,7 @@ function frequenteSales() {
 
     return $.ajax({
         method: "GET",
-        url: mktUrl + "/most-frequent-sales?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: mktUrl + "/most-frequent-sales?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -185,23 +185,7 @@ function frequenteSales() {
 
 //   $.ajax({
 //         method: "GET",
-//         url: "http://dev.sirius.com/api/reports/marketing/operational-systems?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
-//         dataType: "json",
-//         headers: {
-//             Authorization: $('meta[name="access-token"]').attr("content"),
-//             Accept: "application/json",
-//         },
-//         error: function error(response) {
-
-//         },
-//         success: function success(response) {
-
-//         }
-//     });
-
-//     $.ajax({
-//         method: "GET",
-//         url: "http://dev.sirius.com/api/reports/marketing/state-details?state=MG&company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+//         url: "http://dev.sirius.com/api/reports/marketing/operational-systems?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
 //         dataType: "json",
 //         headers: {
 //             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -408,7 +392,7 @@ function devices() {
 
     return $.ajax({
         method: "GET",
-        url: mktUrl + "/devices?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: mktUrl + "/devices?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),

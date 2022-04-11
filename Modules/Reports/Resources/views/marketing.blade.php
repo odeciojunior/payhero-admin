@@ -142,7 +142,7 @@
                                                     <!-- js load -->
                                                 </ul>
 
-                                                <div class="inside-state">
+                                                <div id="inside-state">
                                                     <header class="header-state container">
                                                         <h4>
                                                             <a href="" class="back-list" title="Voltar">
@@ -150,8 +150,8 @@
                                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M2.93274 6.86079L0.129037 3.83608C-0.0430126 3.65047 -0.0430126 3.34953 0.129037 3.16392L2.93274 0.139208C3.10479 -0.0464029 3.38374 -0.0464029 3.55578 0.139208C3.72783 0.32482 3.72783 0.625756 3.55578 0.811367L1.50416 3.02471L8.55944 3.02471C8.80275 3.02471 9 3.23751 9 3.5C9 3.76249 8.80275 3.97529 8.55944 3.97529L1.50416 3.97529L3.55578 6.18863C3.72783 6.37424 3.72783 6.67518 3.55578 6.86079C3.38374 7.0464 3.10479 7.0464 2.93274 6.86079Z" fill="#636363"/>
                                                                 </svg>
                                                             </a>                                                            
-                                                            <strong>2°</strong>
-                                                            <em class="name-state">Rio Grande do Sul</em>
+                                                            <strong id="state-position"></strong>
+                                                            <em class="name-state"></em>
                                                         </h4>
                                                     </header>
                                                     <footer class="">
@@ -166,7 +166,7 @@
                                                                     </span>
                                                                     <h6>
                                                                         <small>Total em R$</small>
-                                                                        <strong>R$97.5K</strong>
+                                                                        <strong id="state-total-value"></strong>
                                                                     </h6>
                                                                 </header>
                                                             </div>
@@ -179,8 +179,8 @@
                                                                         </svg>
                                                                     </span>
                                                                     <h6>
-                                                                        <small>Ticket médio</small>
-                                                                        <strong>R$208,00</strong>
+                                                                        <small>Vendas</small>
+                                                                        <strong id="state-sales-amount"></strong>
                                                                     </h6>
                                                                 </header>
                                                             </div>
@@ -193,7 +193,7 @@
                                                                     </span>
                                                                     <h6>
                                                                         <small>Acessos</small>
-                                                                        <strong>12.5K</strong>
+                                                                        <strong id="state-accesses"></strong>
                                                                     </h6>
                                                                 </header>
                                                             </div>
@@ -206,34 +206,9 @@
                                                                     </span>
                                                                     <h6>
                                                                         <small>Conversão</small>
-                                                                        <strong>46%</strong>
+                                                                        <strong id="state-conversion"></strong>
                                                                     </h6>
                                                                 </header>                                                        
-                                                            </div>
-                                                            <div class="balance col-6">
-                                                                <header class="grey font-size-14 header-resume">
-                                                                    
-                                                                    <span class="ico-coin">
-                                                                        <svg width="22" height="22" viewBox="0 0 17 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path d="M8.5 0C8.91421 0 9.25 0.335786 9.25 0.75V2.0033H11.25C12.2165 2.0033 13 2.7868 13 3.7533V9.0033H15.25C16.2165 9.0033 17 9.7868 17 10.7533V18.2533C17 19.2198 16.2165 20.0033 15.25 20.0033H6.25452L6.25 20.0033H1.75C0.783502 20.0033 0 19.2198 0 18.2533V9.82392C0 9.20503 0.326894 8.63216 0.859717 8.3173L4 6.46166V3.7533C4 2.7868 4.7835 2.0033 5.75 2.0033H7.75V0.75C7.75 0.335786 8.08579 0 8.5 0ZM5.5 6.02174C6.3097 6.14174 7 6.82833 7 7.75572V18.5033H10V10.7533C10 9.87168 10.6519 9.14233 11.5 9.02102V3.7533C11.5 3.61522 11.3881 3.5033 11.25 3.5033H8.50942L8.5 3.50335L8.49058 3.5033H5.75C5.61193 3.5033 5.5 3.61522 5.5 3.7533V6.02174ZM11.75 10.5033C11.6119 10.5033 11.5 10.6152 11.5 10.7533V18.5033H15.25C15.3881 18.5033 15.5 18.3914 15.5 18.2533V10.7533C15.5 10.6152 15.3881 10.5033 15.25 10.5033H11.75ZM5.12282 7.54049L1.62282 9.60869C1.5467 9.65367 1.5 9.73551 1.5 9.82392V18.2533C1.5 18.3914 1.61193 18.5033 1.75 18.5033H5.5V7.75572C5.5 7.56214 5.28947 7.44201 5.12282 7.54049Z" fill="#2E85EC"/>
-                                                                        </svg>
-                                                                    </span>
-                                                                    <h6>
-                                                                        <small>Mais vendas em</small>
-                                                                        <strong>Santa Maria</strong>
-                                                                    </h6>
-                                                                </header>                                                        
-                                                            </div>
-                                                            <div class="balance col-6">
-                                                                <header class="grey font-size-14 header-resume">
-                                                                    <span class="ico-coin">
-                                                                        <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
-                                                                    </span>
-                                                                    <h6>
-                                                                        <small>Produto + vendido</small>
-                                                                        <strong>856 vendas</strong>
-                                                                    </h6>
-                                                                </header>
                                                             </div>
                                                         </div>
                                                     </footer>
@@ -246,13 +221,13 @@
                                                 <div>
                                                     <svg version="1.1" id="svg-map" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 450 460" enable-background="new 0 0 450 460" xml:space="preserve">
                                                         <g>
-                                                        <a xlink:href="#tocantins" class="estado" name="tocantins" rel="Tocantins" code="17" id="state-TO">
+                                                        <a xlink:href="#tocantins" class="state" name="tocantins" rel="Tocantins" code="17" id="state-TO">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M289.558,235.641
                                                             c16.104,0.575,44.973-31.647,44.835-45.259c-0.136-13.612-17.227-58.446-22.349-66.088c-5.122-7.628-37.905,2.506-37.905,2.506
                                                             S234.852,233.695,289.558,235.641z"></path>
-                                                            <text transform="matrix(1 0 0 1 287.0137 188.3208)" fill="#FFFFFF">TO</text>
+                                                            <text transform="matrix(1 0 0 1 287.0137 188.3208)" fill="#6C757D">TO</text>
                                                         </a>
-                                                        <a xlink:href="#bahia" class="estado" name="bahia" rel="Bahia" code="29" id="state-BA">
+                                                        <a xlink:href="#bahia" class="state" name="bahia" rel="Bahia" code="29" id="state-BA">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M313.276,197.775
                                                             c2.084-2.739,3.506-7.012,6.464-8.764c1.641-0.973,3.232-4.684,4.271-5.163c2.304-1.014,12.161-25.143,20.706-22.513
                                                             c1.095,0.342,29.881,3.478,32.153,7.532c2.246-0.506,17.582-8.804,25.829-4.999c9.172,4.246,11.225,20.679,11.2,20.843
@@ -261,18 +236,18 @@
                                                             c1.148,4.959-0.821,8.6-1.808,13.42c-0.822,4.162-0.219,8.299-0.987,12.297c-0.271,1.286-4.407,5.723-5.559,7.148
                                                             c-1.616-1.426-63.952-37.248-73.1-36.265c1.149-3.738,2.438-9.559-0.741-12.723c-8.625-8.572-0.135-19.335-0.162-19.432
                                                             c-0.546-1.725-5.396-6.079-0.026-7.175c-3.175,0.959-1.944-4.027,0.875-3.012C316.726,200.733,314.044,200.527,313.276,197.775z"></path>
-                                                            <text transform="matrix(1 0 0 1 359.7324 210.1221)" fill="#FFFFFF">BA</text>
+                                                            <text transform="matrix(1 0 0 1 359.7324 210.1221)" fill="#6C757D">BA</text>
                                                         </a>
-                                                        <a xlink:href="#sergipe" class="estado" name="sergipe" rel="Sergipe" code="28" id="state-SE">
+                                                        <a xlink:href="#sergipe" class="state" name="sergipe" rel="Sergipe" code="28" id="state-SE">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M408.561,191.735
                                                             c0.521-1.505,2.465-0.725,3.533-0.794c2.273-0.164,0.494-2.738,1.095-3.778c2.026-3.793-2.738-5.999-1.998-10.408
                                                             c4.024,1.931,9.448,3.397,12.408,6.89c1.343,1.533,5.504,2.656,5.832,4.847c-6.822,0.384-6.901,8.819-11.942,11.572
                                                             C413.545,202.212,407.055,193.721,408.561,191.735z"></path>
                                                             <path class="circle" d="M417.324,182.854c6.214,0,11.266,5.035,11.266,11.262c0,6.208-5.052,11.261-11.266,11.261
                                                             c-6.238,0-11.258-5.053-11.258-11.261C406.063,187.89,411.084,182.854,417.324,182.854z"></path>
-                                                            <text transform="matrix(1 0 0 1 408.9121 198.6689)" fill="#FFFFFF">SE</text>
+                                                            <text transform="matrix(1 0 0 1 408.9121 198.6689)" fill="#6C757D">SE</text>
                                                         </a>
-                                                        <a xlink:href="#pernambuco" class="estado" name="pernambuco" rel="Pernambuco" code="26" id="state-PE">
+                                                        <a xlink:href="#pernambuco" class="state" name="pernambuco" rel="Pernambuco" code="26" id="state-PE">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M373.011,167.238
                                                             c2.709-0.795,6.218-14.106,8.325-15.106c4.136-1.986,17.255-1.437,17.8,4.903c-0.437-0.068,8.189-2.273,7.479-1.466
                                                             c1.7-0.711,10.518-4.723,12.599-4.82c0.274-0.013,4.603,0.905,3.068,2.315c-0.464,0.439,4.219,3.698,10.789,3.45
@@ -280,27 +255,27 @@
                                                             c-1.533,3.792-9.804,9.791-13.39,12.119c-7.287,4.778-21.802-4.067-22.762-5.67c-0.602-0.985-2.55-5.121-3.178-5.107
                                                             c-0.629,0.356-1.04,0.861-1.287,1.519c-0.904-0.013-7.256-3.533-7.502-4.655c-4.769-1.151-5.425,6.108-8.957,6.19
                                                             c0.219,0.108-8.244,6.681-7.506,3.314C383.556,170.4,374.241,168.566,373.011,167.238z"></path>
-                                                            <text transform="matrix(1 0 0 1 401.3984 165.8003)" fill="#FFFFFF">PE</text>
+                                                            <text transform="matrix(1 0 0 1 401.3984 165.8003)" fill="#6C757D">PE</text>
                                                         </a>
-                                                        <a xlink:href="#alagoas" class="estado" name="alagoas" rel="Alagoas" code="27" id="state-AL">
+                                                        <a xlink:href="#alagoas" class="state" name="alagoas" rel="Alagoas" code="27" id="state-AL">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M413.953,169.018
                                                             c3.78,3.313,9.424,5.505,12.547,5.491c3.229-0.013,5.009-3.328,7.421-4.794c1.177-0.712,10.297-1.93,9.174,1.042
                                                             c-1.807,4.848-7.122,8.585-10.024,12.789c-2.792,2-3.423,7.093-6.354,1.864c-3.259,0.424-3.722-4.424-6.957-4.477
                                                             c-3.668-2.261-7.998-3.769-11.201-6.342C410.615,172.646,412.751,171.359,413.953,169.018z"></path>
                                                             <path class="circle" d="M436.423,168.763c6.236,0,11.258,5.054,11.258,11.278c0,6.207-5.02,11.259-11.258,11.259
                                                             c-6.241,0-11.263-5.052-11.263-11.259C425.16,173.816,430.182,168.763,436.423,168.763z"></path>
-                                                            <text transform="matrix(1 0 0 1 429.7891 183.895)" fill="#FFFFFF">AL</text>
+                                                            <text transform="matrix(1 0 0 1 429.7891 183.895)" fill="#6C757D">AL</text>
                                                         </a>
-                                                        <a xlink:href="#riograndedonorte" class="estado" name="riograndedonorte" rel="Rio Grande do Norte" code="24" id="state-RN">
+                                                        <a xlink:href="#riograndedonorte" class="state" name="riograndedonorte" rel="Rio Grande do Norte" code="24" id="state-RN">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M404.698,138.795
                                                             c2.383-4.027,6.574-6.123,8.49-11.149c1.973-5.107,3.834-5.818,8.764-4.642c5.041,1.207,9.339,0.837,14.57,1.671
                                                             c7.534,1.193,6.848,10.968,9.206,16.516c-1.919,1.096-13.972,0.521-15.064-1.657c-1.041-2.067-2.904,7.107-5.094,7.3
                                                             c1.532-5.847-12.654,1.78-5.424-8.683c2.545-3.67-6.302-0.808-6.711,0.725C410.121,144.013,407.217,139.151,404.698,138.795z"></path>
                                                             <path class="circle" d="M430.827,107.798c6.241,0,11.261,5.039,11.261,11.261c0,6.224-5.02,11.261-11.261,11.261
                                                             c-6.209,0-11.26-5.037-11.26-11.261C419.567,112.837,424.618,107.798,430.827,107.798z"></path>
-                                                            <text transform="matrix(1 0 0 1 422.541 123.9009)" fill="#FFFFFF">RN</text>
+                                                            <text transform="matrix(1 0 0 1 422.541 123.9009)" fill="#6C757D">RN</text>
                                                         </a>
-                                                        <a xlink:href="#ceara" class="estado" name="ceara" rel="Ceará" code="23" id="state-CE">
+                                                        <a xlink:href="#ceara" class="state" name="ceara" rel="Ceará" code="23" id="state-CE">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M372.379,104.409
                                                             c0.437-1.368,2.961-3.627,1.043-5.025c12.106-1.328,17.581-0.849,27.66,6.723c4.026,3.054,6.822,5.574,10.571,9.147
                                                             c1.317,1.273,7.614,4.313,7.914,6.164c-0.054-0.316-5.396,3.696-5.997,5.217c-1.066,2.684-2.659,6.093-4.3,8.298
@@ -308,9 +283,9 @@
                                                             c-2.244-1.999-3.998-5.711-7.779-5.094c-1.998,0.329-5.476,2.189-7.612,0.479c-2.52-2.054,3.669-5.162-0.545-7.354
                                                             c-6.987-3.615-1.264-15.393-6.684-20.239c-3.504-3.136,1.753-7.313,0.109-10.749C374.952,111.68,373.694,105.244,372.379,104.409
                                                             C373.035,102.314,374.815,105.971,372.379,104.409z"></path>
-                                                            <text transform="matrix(1 0 0 1 386.8379 129.0347)" fill="#FFFFFF">CE</text>
+                                                            <text transform="matrix(1 0 0 1 386.8379 129.0347)" fill="#6C757D">CE</text>
                                                         </a>
-                                                        <a xlink:href="#piaui" class="estado" name="piaui" rel="Piauí" code="22" id="state-PI">
+                                                        <a xlink:href="#piaui" class="state" name="piaui" rel="Piauí" code="22" id="state-PI">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M320.781,185.478
                                                             c2.465-5.149-7.505-20.801-7.505-20.801s47.354-65.868,54.285-66.841c0.299-0.042,6.243,1.768,6.463,2.219
                                                             c0.438,0.863-0.821,5.244-0.685,6.587c0.275,2.629,2.879,6.587,2.328,8.684c-1.15,4.736-1.863,6.134,1.369,9.901
@@ -318,9 +293,9 @@
                                                             c0.274,4.642-4.685,4.983-6.79,7.818c-2.631,2.835-5.535,5.013-7.999,7.888c-0.55,0.671-8.821,4.096-9.998,4.082
                                                             c0.302-0.301-17.665-6.449-11.967,2.354c2.463,3.808-1.505,5.56-3.177,8.778c-0.633,2.164-5.836,0.958-7.836,3.205
                                                             C328.176,198.748,327.409,180.727,320.781,185.478z"></path>
-                                                            <text transform="matrix(1 0 0 1 355.127 158.1045)" fill="#FFFFFF">PI</text>
+                                                            <text transform="matrix(1 0 0 1 355.127 158.1045)" fill="#6C757D">PI</text>
                                                         </a>
-                                                        <a xlink:href="#maranhao" class="estado" name="maranhao" rel="Maranhão" code="21" id="state-MA">
+                                                        <a xlink:href="#maranhao" class="state" name="maranhao" rel="Maranhão" code="21" id="state-MA">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M288.845,127.827
                                                             c4.108-2.726,31.195-48.985,31.386-50.395c1.235,0.397,6.084,7.435,7.562,5.025c0.493,0.013-0.328,2.15-0.547,2.396
                                                             c-0.054-0.135,2.189-2.286,2.52-2.436c0.521-0.233,1.948,1.903,3.451-0.726c5.642,1.575,1.314,14.31,9.121,11.694
@@ -333,17 +308,17 @@
                                                             c-3.505,1.726-4.709-2.794-6.958-5.287c0.548,0.59-3.064-4.696-3.146-3.697c0.19-1.89,2.876-5.833,3.341-8.448
                                                             c0.575-3.259,0.52-6.764-0.521-10.105c-0.63-2.068-4.656-4.521-6.518-4.437c-1.289,0.287-2.443,0-3.427-0.878
                                                             C290.983,125.675,290.983,128.044,288.845,127.827z"></path>
-                                                            <text transform="matrix(1 0 0 1 318.2754 126.7036)" fill="#FFFFFF">MA</text>
+                                                            <text transform="matrix(1 0 0 1 318.2754 126.7036)" fill="#6C757D">MA</text>
                                                         </a>
-                                                        <a xlink:href="#amapa" class="estado" name="amapa" rel="Amapá" code="16" id="state-AP">
+                                                        <a xlink:href="#amapa" class="state" name="amapa" rel="Amapá" code="16" id="state-AP">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M225.198,39.089
                                                             c3.274,1.165,3.985-1.315,6.572-1.74c3.616-0.603,5.683,2.725,9.037,2.067c4.055-0.78,7.093-8.025,7.314-11.598
                                                             c4.492-3.534,5.503-11.258,9.42-14.68c6.055,4.258,6.11,15.788,7.589,22.485c-0.164,0.083,6.57,7.998,7.944,8.682
                                                             c3.396,1.657,3.366,6.203,0.078,9.34c-3.777,3.587-7.449,34.275-7.449,34.275h-46.489c0,0,0.932-50.366,0-51.449
                                                             C221.814,36.458,223.334,38.417,225.198,39.089z"></path>
-                                                            <text transform="matrix(1 0 0 1 245.9023 52.6099)" fill="#FFFFFF">AP</text>
+                                                            <text transform="matrix(1 0 0 1 245.9023 52.6099)" fill="#6C757D">AP</text>
                                                         </a>
-                                                        <a xlink:href="#para" class="estado" name="para" rel="Pará" code="15" id="state-PA">
+                                                        <a xlink:href="#para" class="state" name="para" rel="Pará" code="15" id="state-PA">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M173.378,50.619
                                                             c2.259,2.63,5.629-4.478,7.901-3.82c3.19,0.918,1.478-1.108,5.026-1.752c1.931,0.806,3.096,0.273,3.519-1.631
                                                             c0.535-1.26,1.453-1.726,2.725-1.384c1.768-1.684,13.558,3.603,14.68,0.384c0.629-1.821-4.287-5.709-0.302-6.997
@@ -358,9 +333,9 @@
                                                             c-3.041,5.245-9.009,9.818-10.079,16.27c-3.261,3.408-87.066-1.22-87.464-2.644c-1.423-5.012,1.508-24.006-2.808-27.88
                                                             c-0.19-2.082-29.893-6.299-30.714-8.081C150.016,140.479,173.173,58.561,173.378,50.619z M319.139,77.664
                                                             C319.302,76.912,319.74,78.76,319.139,77.664z"></path>
-                                                            <text transform="matrix(1 0 0 1 232.7725 122.5137)" fill="#FFFFFF">PA</text>
+                                                            <text transform="matrix(1 0 0 1 232.7725 122.5137)" fill="#6C757D">PA</text>
                                                         </a>
-                                                        <a xlink:href="#roraima" class="estado" name="roraima" rel="Roraima" code="14" id="state-RR">
+                                                        <a xlink:href="#roraima" class="state" name="roraima" rel="Roraima" code="14" id="state-RR">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M113.18,24.107
                                                             c-0.972-2.753-7.861-5.889-6.999-8.984c0.068-0.232,13.229,6.053,12.79,2.808c0.398,1.329,1.219,1.889,2.439,1.685
                                                             c1.889-1.301,7.148,4.204,8.216,1.889c0.438-0.959-1.657-3.753,0.74-3.848c1.026,0.438,1.534,0.164,1.52-0.822
@@ -369,9 +344,9 @@
                                                             c-0.452,1.686-2.479,2.724-3.423,3.971c-1.179,1.546-1.836,9.243-1.356,11.53c1.041,4.889,3.231,8.695,6.134,12.16
                                                             c1.712,2.027,5.614,2.261,5.724,4.369c0.164,2.945,1.165,6.177,0.329,9.092c-1.547,5.424-36.618,30.471-36.618,30.471
                                                             s-12.517-52.736-20.335-54.063C115.261,36.417,111.523,25.682,113.18,24.107z"></path>
-                                                            <text transform="matrix(1 0 0 1 136.2939 42.3862)" fill="#FFFFFF">RR</text>
+                                                            <text transform="matrix(1 0 0 1 136.2939 42.3862)" fill="#6C757D">RR</text>
                                                         </a>
-                                                        <a xlink:href="#amazonas" class="estado" name="amazonas" rel="Amazonas" code="13" id="state-AM">
+                                                        <a xlink:href="#amazonas" class="state" name="amazonas" rel="Amazonas" code="13" id="state-AM">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M10.078,136.412
                                                             c1.15-4.972,4.258-10.394,8.215-13.105c4.41-3.027,7.656-5.71,13.105-6.082c2.165-0.149,10.216-5.75,11.983-2.984
                                                             c3.711,5.765,4.998-3.739,5.574-7.025c1.726-9.667,3.697-19.322,4.86-29.086c-0.342-1.356-2.013-6.231-2.833-7.163
@@ -389,18 +364,18 @@
                                                             c-3.149,6.862-6.15,13.776-9.204,20.678c-2.437,5.505-14.843,23.471-11.105,28.442c4.806,6.395,9.339,30.183,11.324,29.934
                                                             c-6.162-0.26-48.079-10.625-51.652-8.105c-1.453,1.013-53.626,10.503-55.9,10.819c-6.369,0.875-18.09-7.272-23.719-10.136
                                                             c-8.601-4.381-16.61-8.981-26.088-11.05c-10.282-2.259-20.635-4.793-29.878-10.011C4.121,145.766,12.433,144.779,10.078,136.412z"></path>
-                                                            <text transform="matrix(1 0 0 1 98.1406 119.0591)" fill="#FFFFFF">AM</text>
+                                                            <text transform="matrix(1 0 0 1 98.1406 119.0591)" fill="#6C757D">AM</text>
                                                         </a>
-                                                        <a xlink:href="#acre" class="estado" name="acre" rel="Acre" code="12" id="state-AC">
+                                                        <a xlink:href="#acre" class="state" name="acre" rel="Acre" code="12" id="state-AC">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M3.656,148.545
                                                             c12.557,7.544,27.524,8.367,41.082,13.2c12.802,8.065,27.278,12.845,40.616,19.872c-2.834,1.205-7.587,4.382-9.983,6.395
                                                             c-2.93,2.45-1.3,2.04-4.628,1.957c-2.93-0.069-3.957,4.615-7.203,5.259c-2.999,0.603-7.161-1.958-10.995-1.697
                                                             c-1.905,0.136-11.969-0.056-12.64,0.603c0.313-3.642-0.385-7.299-0.165-10.941c0.096-1.439,1.998-6.533,1.245-7.451
                                                             c-6.82,3.149-8.339,7.19-16.733,7.013c-2.136-0.042-2.562-2.492-3.081-4.001c-1.247-3.572-7.218-3.422-10.559-3.778
                                                             c6.299-3.41-3.107-11.9-5.216-15.679c-0.52-0.918-3.588-4.655-3.629-5.957C1.642,150.174,6.612,151.968,3.656,148.545z"></path>
-                                                            <text transform="matrix(1 0 0 1 47.7017 184.9355)" fill="#FFFFFF">AC</text>
+                                                            <text transform="matrix(1 0 0 1 47.7017 184.9355)" fill="#6C757D">AC</text>
                                                         </a>
-                                                        <a xlink:href="#rondonia" class="estado" name="rondonia" rel="Rondônia" code="11" id="state-RO">
+                                                        <a xlink:href="#rondonia" class="state" name="rondonia" rel="Rondônia" code="11" id="state-RO">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M83.34,180.232
                                                             c0.931-1.574,5.341-4.668,6.312-4.656c1.355-0.067,2.671,0.138,3.958,0.603c3.012,1.44,2.039-1.135,5.341-0.123
                                                             c-1.274-2.287,3.793-2.943,2.86-0.315c3.068,0.247,2.725-4.683,6.668-5.12c4.438-0.508,5.054-0.646,7.122-4.534
@@ -410,9 +385,9 @@
                                                             c-3.055-0.78-5.423-1.795-7.654-3.93c-4.041-3.876-8.983-2.645-14.475-3.808c-1.835-0.083-6.053-6.779-7.874-5.327
                                                             c-1.821-0.438-5.381-9.094-3.397-11.204c0.124-1.67-0.26-3.204-1.163-4.627c-0.986-2.644,1.041-5.026,0.863-7.806
                                                             c-0.384-6.081-1.028-1.986-3.382-1.903C94.336,180.686,85.957,181.671,83.34,180.232z"></path>
-                                                            <text transform="matrix(1 0 0 1 118.1299 195.3193)" fill="#FFFFFF">RO</text>
+                                                            <text transform="matrix(1 0 0 1 118.1299 195.3193)" fill="#6C757D">RO</text>
                                                         </a>
-                                                        <a xlink:href="#matogrosso" class="estado" name="matogrosso" rel="Mato Grosso" code="51" id="state-MT">
+                                                        <a xlink:href="#matogrosso" class="state" name="matogrosso" rel="Mato Grosso" code="51" id="state-MT">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M142.237,173.962
                                                             c4-0.316-1.888-6.452,5-5.738c7.914,0.808,16.295,0.328,24.279,0.218c1.629-0.013,8.902,1.288,7.395-1.833
                                                             c-1.192-2.453,1.821-6.425,0.425-9.725c2.027-0.864,1.289-3.807,2.629-5.107c1.151-1.123,4.176,7.244,4.436,7.819
@@ -425,9 +400,9 @@
                                                             c1.219-1.999-1.781-3.643-1.465-5.56c-3.902-3.588,0.506-4.643,0.369-7.984c-0.151-3.627-9.654-3.944-12.256-3.751
                                                             c-1.821,0.137-4.109,0.562-5.888-0.094c0.493-3.521-0.521-6.054-0.535-9.217c-0.014-2.286,1.288-5.177,0.835-7.45
                                                             C143.581,176.618,141.937,174.714,142.237,173.962z"></path>
-                                                            <text transform="matrix(1 0 0 1 200.0244 218.4175)" fill="#FFFFFF">MT</text>
+                                                            <text transform="matrix(1 0 0 1 200.0244 218.4175)" fill="#6C757D">MT</text>
                                                         </a>
-                                                        <a xlink:href="#mattogrossodosul" class="estado" name="matogrossodosul" rel="Mato Grosso do Sul" code="50" id="state-MS">
+                                                        <a xlink:href="#mattogrossodosul" class="state" name="matogrossodosul" rel="Mato Grosso do Sul" code="50" id="state-MS">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M183.198,294.536
                                                             c2.136-4.464,3.177-9.394,5.312-13.61c1.712-3.344-4.067-7.587-2.423-9.807c0.027-0.026,2.738,3.641,3.917,3.725
                                                             c3.204-1.534,4.807-2.272,6.984-5.228c2.615-3.59,10.832-3.014,14.051-0.305c1.259,1.041,3.068,2.107,4.668,2.574
@@ -437,9 +412,9 @@
                                                             c-2.028,0.329-6.012,1.205-5.177-2.409c-2.013-4.354-0.111-14.625-4.849-17.088c-1.206-0.659-7.092-2.36-7.504-1.945
                                                             c-1.699,1.777-3.739,1.562-6.121,1.121c-2.904,0.027-5.629-1.614-8.243-1.203c-4.178,0.656-0.603-2.986-1.645-3.535
                                                             c0.932-2.847,1.411-9.912,0.453-11.856c-0.165-0.331-3.52-7.232-2.547-8.108C186.306,297.688,182.334,299.415,183.198,294.536z"></path>
-                                                            <text transform="matrix(1 0 0 1 213.2939 306.7236)" fill="#FFFFFF">MS</text>
+                                                            <text transform="matrix(1 0 0 1 213.2939 306.7236)" fill="#6C757D">MS</text>
                                                         </a>
-                                                        <a xlink:href="#goias" class="estado" name="goias" rel="Goias" code="52" id="state-GO">
+                                                        <a xlink:href="#goias" class="state" name="goias" rel="Goias" code="52" id="state-GO">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M237.768,270.519
                                                             c0.628-2.904,1.835-7.396,4.709-8.766c1.015-1.644,1.754-5.147,2.275-5.586c2.408-2.247,3.889-3.783,6.63-4.656
                                                             c3.723-1.205,3.338-5.342,4.846-8.165c1.504-2.845,4.736-1.15,5.942-3.382c1.479-2.834,0.741-6.161,2.189-8.874
@@ -453,25 +428,25 @@
                                                             c-0.028-4.573-12.054-3.643-10.218,0.521c-4.901,6.355,12.05-0.326,9.668,6.355c-1.313,3.752,15.83,28.211,10.406,25.416
                                                             c-1.944-0.986-50.804,10.271-49.982,12.105c-5.012-2.136-11.804-7.941-17.391-8.162c-0.438-2.189-3.618-1.284-5.095-1.533
                                                             c-3.724-0.604,1.04-3.231,0.22-4.109c-1.89-1.916-4.382,1.756-3.588-3.012C239.602,274.627,237.055,273.038,237.768,270.519z"></path>
-                                                            <text transform="matrix(1 0 0 1 266.9111 254.2139)" fill="#FFFFFF">GO</text>
+                                                            <text transform="matrix(1 0 0 1 266.9111 254.2139)" fill="#6C757D">GO</text>
                                                         </a>
-                                                        <a xlink:href="#parana" class="estado" name="parana" rel="Paraná" code="41" id="state-PR">
+                                                        <a xlink:href="#parana" class="state" name="parana" rel="Paraná" code="41" id="state-PR">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M222.225,363.694
                                                             c1.807-2.138,1.889-4.881,2.424-7.479c0.301-1.453,0.465-7.86,1.369-8.736c2.3-0.684,2.3-3.315,2.726-5.204
                                                             c0.616-2.738,2.821-2.958,3.984-5.616c4.369-9.91,38.947-9.529,46.476-9.227c4.658,0.193,15.775,34.563,17.916,33.794
                                                             c-1.728,2.19-5.754,8.929-8.41,8.984c-4.054,0.057-14.215,14.68-14.215,14.68s-37.329-12.05-40.287-11.285
                                                             c-3.875-1.449-2.698-6.491-6.054-8.216C226.663,364.623,222.498,367.8,222.225,363.694z"></path>
-                                                            <text transform="matrix(1 0 0 1 248.4453 356.1045)" fill="#FFFFFF">PR</text>
+                                                            <text transform="matrix(1 0 0 1 248.4453 356.1045)" fill="#6C757D">PR</text>
                                                         </a>
-                                                        <a xlink:href="#santacatarina" class="estado" name="santacatarina" rel="Santa Catarina" code="42" id="state-SC">
+                                                        <a xlink:href="#santacatarina" class="state" name="santacatarina" rel="Santa Catarina" code="42" id="state-SC">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M231.029,383.959
                                                             c1.669-3.338-0.284-10.516,4.573-10.569c6.631-0.109,13.639,3.559,20.402,3.888c1.317,0.055,5.231,2.163,4.357-1.15
                                                             c-1.095-4.164,3.945-1.863,5.67-3.179c2.274-1.724,8.187-4.106,11.311-1.367c1.423,1.809,20.05-5.395,13.284,3.946
                                                             c-1.368,1.395,0.713,10.789,0.466,10.734c-3.449,4.438,1.726,11.666-5.096,15.334c-2.901,1.536-7.284,7.779-9.64,9.995
                                                             C276.085,411.866,233.534,382.918,231.029,383.959z"></path>
-                                                            <text transform="matrix(1 0 0 1 266.9111 387.7646)" fill="#FFFFFF">SC</text>
+                                                            <text transform="matrix(1 0 0 1 266.9111 387.7646)" fill="#6C757D">SC</text>
                                                         </a>
-                                                        <a xlink:href="#riograndedosul" class="estado" name="riograndedosul" rel="Rio Grande do Sul" code="43" id="state-RS">
+                                                        <a xlink:href="#riograndedosul" class="state" name="riograndedosul" rel="Rio Grande do Sul" code="43" id="state-RS">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M191.236,416.881
                                                             c0.52-2.684,7.38-8.409,9.477-10.351c0.37-0.359,8.599-10.08,9.174-8.329c-1.301-3.89,2.781-1.589,3.917-4.819
                                                             c0.26-0.521,7.04-4.821,7.109-4.795c1.436-0.191,6.721-3.695,7.421-3.257c1.204-2.028,8.927-1.479,8.653-0.824
@@ -480,9 +455,9 @@
                                                             c-3.696,7.614-8.872,12.765-15.886,17.42c-7.394,4.902-7.339,11.941-13.257,17.693c-8.091,7.942-10.159-0.574-4.08-5.752
                                                             c3.806-3.231-22.527-19.746-25.578-22.732c-1.918-1.862-2.384,0.274-4.219,1.15c-2.547,1.205-1.917-2.822-3.588-4.273
                                                             c-2.3-1.999-4.793-5.479-7.737-6.68c-3.478-1.367-5.615,5.145-9.052,0.821C189.168,418.854,190.332,418.032,191.236,416.881z"></path>
-                                                            <text transform="matrix(1 0 0 1 231.0313 414.4658)" fill="#FFFFFF">RS</text>
+                                                            <text transform="matrix(1 0 0 1 231.0313 414.4658)" fill="#6C757D">RS</text>
                                                         </a>
-                                                        <a xlink:href="#saopaulo" class="estado" name="saopaulo" rel="São Paulo" code="35" id="state-SP">
+                                                        <a xlink:href="#saopaulo" class="state" name="saopaulo" rel="São Paulo" code="35" id="state-SP">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M239.3,330.554
                                                             c3.26-4.356,9.56-5.039,11.531-10.792c1.369-3.942,3.889-8.818,6.135-13.036c1.561-2.957,7.749-7.121,10.517-8.65
                                                             c0.383-0.196,32.974-6.138,42.234-1.701c20.265,9.724,26.017,33.879,27.854,33.304c4.408-1.425,5.34,3.778,2.106,4.49
@@ -492,9 +467,9 @@
                                                             c-2.903-0.547,0.108-2.41-0.439-3.862c-1.067-2.986-3.013-4.931-3.751-7.779c-0.52-1.945,0.165-7.531-3.615-7.395
                                                             c-0.848-2.956-6.628-1.451-9.066-1.862c-0.162,0.163-8.846-2.684-10.079-2.684c-1.616-0.029-6.791-3.396-7.121-0.274
                                                             C247.982,330.386,239.876,331.21,239.3,330.554z"></path>
-                                                            <text transform="matrix(1 0 0 1 280.6816 327.3193)" fill="#FFFFFF">SP</text>
+                                                            <text transform="matrix(1 0 0 1 280.6816 327.3193)" fill="#6C757D">SP</text>
                                                         </a>
-                                                        <a xlink:href="#minasgerais" class="estado" name="minasgerais" rel="Minas Gerais" code="31" id="state-MG">
+                                                        <a xlink:href="#minasgerais" class="state" name="minasgerais" rel="Minas Gerais" code="31" id="state-MG">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M262.881,297.305
                                                             c-1.696-5.094,15.531-19.882,18.844-13.421c5.531-7.367,15.886,1.588,19.773-3.944c0.988-1.367,3.015-1.453,3.725-2.957
                                                             c0.326-0.711-0.493-2.793-0.056-3.888c1.369-3.398-4.873-2.355-0.109-6.603c4.547-4.053-1.917-4.739-1.204-8.186
@@ -511,9 +486,9 @@
                                                             c-1.479,0.138-4.055,3.668-5.506,0.629c0.878,2.108-4.188,0.769-5.094,1.56c-2.354-1.202-1.779,2.028-2.384,3.069
                                                             c-0.137,0.22-1.014-2.904-1.065-2.961c-1.149-1.175-2.767,4.165-3.505-0.055c0.766-4.105-4.657-2.709-7.67-2.93
                                                             c-4.708-0.353-5.53-1.613-9.858,0.631C262.993,300.562,262.336,299.274,262.881,297.305z"></path>
-                                                            <text transform="matrix(1 0 0 1 328.4063 286.4561)" fill="#FFFFFF">MG</text>
+                                                            <text transform="matrix(1 0 0 1 328.4063 286.4561)" fill="#6C757D">MG</text>
                                                         </a>
-                                                        <a xlink:href="#riodejaneiro" class="estado" name="riodejaneiro" rel="Rio de Janeiro" code="33" id="state-RJ">
+                                                        <a xlink:href="#riodejaneiro" class="state" name="riodejaneiro" rel="Rio de Janeiro" code="33" id="state-RJ">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M332.886,337.429
                                                             c-1.26-2.768,8.409-4.795,7.89-6.71c-3.177-1.864-4.602,1.148-6.63-2.959c4.274-0.686,9.533-4.49,13.831-3.562
                                                             c0.548-0.219,4.902-1.753,4.96,0.167c2.546-1.566,5.479-2.412,8.105-3.837c2.246-1.206,0.932-8.218,3.725-9.643
@@ -524,9 +499,9 @@
                                                             C336.717,337.908,333.927,342.41,332.886,337.429z"></path>
                                                             <path class="circle" d="M355.094,318.613c6.209,0,11.263,5.021,11.263,11.259c0,6.208-5.056,11.264-11.263,11.264
                                                             c-6.211,0-11.263-5.054-11.263-11.264C343.831,323.634,348.883,318.613,355.094,318.613z"></path>
-                                                            <text transform="matrix(1 0 0 1 347.4648 334.6807)" fill="#FFFFFF">RJ</text>
+                                                            <text transform="matrix(1 0 0 1 347.4648 334.6807)" fill="#6C757D">RJ</text>
                                                         </a>
-                                                        <a xlink:href="#espiritosanto" class="estado" name="espiritosanto" rel="Espírito Santo" code="32" id="state-ES">
+                                                        <a xlink:href="#espiritosanto" class="state" name="espiritosanto" rel="Espírito Santo" code="32" id="state-ES">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M367.119,308.834
                                                             c1.044-1.999-0.298-5.451,1.841-6.326c3.697-1.453,3.858-0.467,5.941-4.49c0.767-1.563,3.999-5.807,2.848-7.835
                                                             c-0.439-0.765-3.204-3.613-3.286-4.05c1.04-0.249,2.079-0.219,3.123,0.054c1.366-0.654-6.465-10.519,2.137-8.054
@@ -535,17 +510,17 @@
                                                             c-1.64-0.274-3.202-0.768-4.736-1.451C368.819,311.297,369.424,309.055,367.119,308.834z"></path>
                                                             <path class="circle" d="M381.917,284.723c6.21,0,11.261,5.055,11.261,11.262c0,6.212-5.051,11.261-11.261,11.261
                                                             c-6.212,0-11.263-5.049-11.263-11.261C370.654,289.777,375.705,284.723,381.917,284.723z"></path>
-                                                            <text transform="matrix(1 0 0 1 373.3047 300.4971)" fill="#FFFFFF">ES</text>
+                                                            <text transform="matrix(1 0 0 1 373.3047 300.4971)" fill="#6C757D">ES</text>
                                                         </a>
-                                                        <a xlink:href="#distritofederal" class="estado" name="distritofederal" rel="Distrito Federal" code="53" id="state-DF">
+                                                        <a xlink:href="#distritofederal" class="state" name="distritofederal" rel="Distrito Federal" code="53" id="state-DF">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M292.461,246.197
                                                             c0,0,12.929-2.903,14.188,0c1.233,2.903,0.659,10.683-1.424,11.504c-2.08,0.849-14.296-1.806-14.023-3.313
                                                             C291.503,252.853,292.461,246.197,292.461,246.197z"></path>
                                                             <path class="circle" d="M300.735,238.34c6.212,0,11.26,5.035,11.26,11.258c0,6.21-5.048,11.263-11.26,11.263
                                                             c-6.209,0-11.261-5.053-11.261-11.263C289.475,243.377,294.523,238.34,300.735,238.34z"></path>
-                                                            <text transform="matrix(1 0 0 1 292.4141 254.2139)" fill="#FFFFFF">DF</text>
+                                                            <text transform="matrix(1 0 0 1 292.4141 254.2139)" fill="#6C757D">DF</text>
                                                         </a>
-                                                        <a xlink:href="#paraiba" class="estado" name="paraiba" rel="Paraíba" code="25" id="state-PB">
+                                                        <a xlink:href="#paraiba" class="state" name="paraiba" rel="Paraíba" code="25" id="state-PB">
                                                             <path stroke="#FFFFFF" stroke-width="1.0404" stroke-linecap="round" stroke-linejoin="round" d="M401.575,141.096
                                                             c2.081-3.081,16.791-6.82,19.117-4.616c0,1.918,7.259,1.686,10.133,2.712c-0.492,3.038,12.652,1.533,14.408,2.259
                                                             c1.421,0.589,3.833,11.983,1.421,12.202c-0.874-1.124-2.083-1.739-3.586-1.835c-2.957-0.027-2.546,1.863-4.383,3.108
@@ -554,7 +529,7 @@
                                                             C405.574,150.776,400.398,142.889,401.575,141.096z"></path>
                                                             <path class="circle" d="M433.797,133.597c6.237,0,11.26,5.051,11.26,11.261c0,6.226-5.022,11.262-11.26,11.262
                                                             c-6.208,0-11.257-5.036-11.257-11.262C422.54,138.647,427.589,133.597,433.797,133.597z"></path>
-                                                            <text transform="matrix(1 0 0 1 425.2129 148.9893)" fill="#FFFFFF">PB</text>
+                                                            <text transform="matrix(1 0 0 1 425.2129 148.9893)" fill="#6C757D">PB</text>
                                                         </a>
                                                         </g>
                                                     </svg>
@@ -563,8 +538,6 @@
                                             <!-- /mapa do brasil -->
                                         </div>
                                     </div>
-
-
                                 </section>
                             </div>
 

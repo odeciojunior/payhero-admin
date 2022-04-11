@@ -1252,7 +1252,7 @@ h4.number{
 }
   
 #svg-map text {
-    fill: #636363;
+    /* fill: #636363; */
     font-size: 12px;
     cursor: pointer;
 }
@@ -1309,7 +1309,7 @@ h4.number{
     cursor: pointer;
 }
 
-.inside-state { display: none; }
+#inside-state { display: none; }
 
 .header-state {
     display: flex;
