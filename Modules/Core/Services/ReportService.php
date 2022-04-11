@@ -3724,15 +3724,16 @@ class ReportService
                         SUM(CASE WHEN checkout.is_mobile = 0 THEN transaction.value ELSE 0 END) AS value_desktop
                     ",)
                     ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                    ->leftJoin('checkouts as checkout', function ($join) {
+                    ->join('checkouts as checkout', function ($join) {
                         $join->on('sales.checkout_id', '=', 'checkout.id');
                     })
-                    ->leftJoin('transactions as transaction', function ($join) {
+                    ->join('transactions as transaction', function ($join) {
                         $join->on('transaction.sale_id', '=', 'sales.id');
                         $join->where('transaction.user_id', auth()->user()->account_owner_id);
                     })
                     ->where('owner_id', auth()->user()->account_owner_id)
                     ->where('sales.project_id', $projectId)
+                    ->where('sales.status', Sale::STATUS_APPROVED)
                     ->first()
                     ->toArray();
 
@@ -3760,14 +3761,16 @@ class ReportService
     public function getOperationalSystems($filters)
     {
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $projectId = hashids_decode($filters['project_id']);
 
         $data = Checkout::select(DB::raw('os_enum, count(*) as sales_amount'))
                             ->leftJoin('sales as s', 's.checkout_id', '=', 'checkouts.id')
                             ->where('s.status', Sale::STATUS_APPROVED)
                             ->where('s.owner_id', auth()->user()->account_owner_id)
                             ->whereBetween('s.start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-                            ->where('project_id', $projectId)
+                            ->where('checkouts.project_id', $projectId)
                             ->groupBy('os_enum')
+                            ->orderBy('sales_amount', 'desc')
                             ->get()
                             ->toArray();
 
