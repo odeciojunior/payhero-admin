@@ -3291,16 +3291,27 @@ class ReportService
                 $transactions->where('project_id', $projectId);
             }
 
-            $queryCount = $transactions
-            ->count();
+            $queryCount = $transactions->count();
 
-            $queryAverageTicket = $transactions
-            ->avg('transactions.value');
+            $queryAverageTicket = $transactions->avg('transactions.value');
 
             $queryComission = $transactions
             ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
             ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
             ->sum('transactions.value');
+
+            $transactions = $transactionModel
+            ->whereIn('company_id', $userCompanies)
+            ->join('sales', 'sales.id', 'transactions.sale_id')
+            ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+            ->whereNull('invitation_id')
+            ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
+            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ]);
+
+            if (!empty($filters["project"])) {
+                $projectId = current(Hashids::decode($filters["project"]));
+                $transactions->where('project_id', $projectId);
+            }
 
             $queryChargeback = $transactions
             ->where('status_enum', Transaction::STATUS_CHARGEBACK)
@@ -3477,17 +3488,18 @@ class ReportService
             return [
                 'available' => [
                     'value' => foxutils()->formatMoney($availableBalance / 100),
-                    'percentage' => round(($availableBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
+                    'percentage' => round(($availableBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
+                    'color' => 'green'
                 ],
                 'pending' => [
                     'value' => foxutils()->formatMoney($pendingBalance / 100),
-                    //'amount' => $pendingBalanceCount,
-                    'percentage' => round(($pendingBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
+                    'percentage' => round(($pendingBalance * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
+                    'color' => 'yellow'
                 ],
                 'blocked' => [
                     'value' => foxutils()->formatMoney(($blockedBalance + $blockedBalancePending) / 100),
-                    //'amount' => ($blockedBalanceCount + $blockedBalancePendingCount),
-                    'percentage' => round((($blockedBalance + $blockedBalancePending) * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP)
+                    'percentage' => round((($blockedBalance + $blockedBalancePending) * 100) / $totalBalance, 1, PHP_ROUND_HALF_UP),
+                    'color' => 'red'
                 ],
                 'total' => foxutils()->formatMoney($totalBalance / 100),
             ];
