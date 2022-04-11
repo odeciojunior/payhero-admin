@@ -227,7 +227,7 @@
                                                             <div class="balance col-6">
                                                                 <header class="grey font-size-14 header-resume">
                                                                     <span class="ico-coin">
-                                                                        <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                        <img width="34px" height="34px" src="{!! asset('/build/global/img/reports/img-casaco.png') !!}" alt="">
                                                                     </span>
                                                                     <h6>
                                                                         <small>Produto + vendido</small>
