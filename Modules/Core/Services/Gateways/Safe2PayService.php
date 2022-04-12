@@ -19,6 +19,7 @@ use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
@@ -235,7 +236,7 @@ class Safe2PayService implements Statement
                     'status_enum' => Transaction::STATUS_TRANSFERRED,
                 ]);
             }
-            
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -418,6 +419,10 @@ class Safe2PayService implements Statement
 
     public function refundReceipt($hashSaleId, $transaction)
     {
-        return PDF::loadHtml('<h2>Não foi possivel gerar o comprovante de estorno!.</h2>');
+        $company = (object)$transaction->company->toArray();
+        $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
+        $sale = $transaction;
+        $sale->flag = strtoupper($transaction->sale->flag) ?? null;
+        return PDF::loadView('sales::refund_receipt_vega', compact('company', 'sale'));
     }
 }
