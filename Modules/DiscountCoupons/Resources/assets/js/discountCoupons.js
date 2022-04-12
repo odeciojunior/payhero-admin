@@ -411,8 +411,8 @@ function run_search(search, now){
                                 </div>`;
                     items += item;
                 }
-
-                if(items.length > 0 || items_saved){
+                //console.log(items.length , items_saved);
+                if(items || items_saved.length){
                     
                     $('#search_result, #search_result2').html(items_saved + items);
                     
