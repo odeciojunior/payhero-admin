@@ -4,6 +4,7 @@ $(function () {
     newSellGraph();
     distributionGraphSeller();
     getInfo();
+    
     sessionStorage.removeItem('info');
 
     let resumeUrl = '/api/reports/resume';
@@ -11,7 +12,7 @@ $(function () {
     function getCashback() {
         return $.ajax({
             method: "GET",
-            url: resumeUrl + "/cashbacks?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/cashbacks?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -73,7 +74,7 @@ $(function () {
     function getPending() {
         return $.ajax({
             method: "GET",
-            url: resumeUrl+ "/pendings?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl+ "/pendings?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -115,7 +116,7 @@ $(function () {
 
         return $.ajax({
             method: "GET",
-            url: resumeUrl + "/commissions?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/commissions?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -486,7 +487,8 @@ $(function () {
                     );
                 });
 
-                updateReports();
+                // updateReports();
+                resume();
             } else {
                 $("#export-excel").hide();
                 $("#project-not-empty").hide();
@@ -498,7 +500,8 @@ $(function () {
     });
 
     $("#select_projects").on("change", function () {
-        updateReports();
+        // updateReports();
+        resume();
         $(".data-pie ul li").remove();
     });
 
@@ -519,6 +522,7 @@ $(function () {
         getProducts()
         getCoupons()
         getRegions()
+        updateSalesByOrigin()
     }
 
     var current_currency = "";
@@ -657,7 +661,6 @@ $(function () {
                 //     $('#scoreLineToWeek').hide();
                 //     $('#scoreLineToMonth').hide();
                 // }
-                updateSalesByOrigin();
                 resume();
                 
             },
@@ -672,7 +675,7 @@ $(function () {
 
         // loadOnTable("#origins-table", ".table-vendas");
 
-        link = `${resumeUrl}/origins?date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}`;
+        link = `${resumeUrl}/origins?date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
 
         // if (link == null) {
         //     link =
@@ -926,69 +929,92 @@ $(function () {
         });
     }
 
-    var startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
-    var endDate = moment().format("YYYY-MM-DD");
-    $('input[name="daterange"]').daterangepicker(
-        {
-            startDate: moment().subtract(30, "days"),
-            endDate: moment(),
-            opens: "left",
-            maxDate: moment().endOf("day"),
-            alwaysShowCalendar: true,
-            showCustomRangeLabel: "Customizado",
-            autoUpdateInput: true,
-            locale: {
-                locale: "pt-br",
-                format: "DD/MM/YYYY",
-                applyLabel: "Aplicar",
-                cancelLabel: "Limpar",
-                fromLabel: "De",
-                toLabel: "Até",
-                customRangeLabel: "Customizado",
-                weekLabel: "W",
-                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
-                monthNames: [
-                    "Janeiro",
-                    "Fevereiro",
-                    "Março",
-                    "Abril",
-                    "Maio",
-                    "Junho",
-                    "Julho",
-                    "Agosto",
-                    "Setembro",
-                    "Outubro",
-                    "Novembro",
-                    "Dezembro",
-                ],
-                firstDay: 0,
-            },
-            ranges: {
-                Hoje: [moment(), moment()],
-                Ontem: [
-                    moment().subtract(1, "days"),
-                    moment().subtract(1, "days"),
-                ],
-                "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
-                "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
-                "Este mês": [
-                    moment().startOf("month"),
-                    moment().endOf("month"),
-                ],
-                "Mês passado": [
-                    moment().subtract(1, "month").startOf("month"),
-                    moment().subtract(1, "month").endOf("month"),
-                ],
-            },
-        },
-        function (start, end) {
-            startDate = start.format("YYYY-MM-DD");
-            endDate = end.format("YYYY-MM-DD");
-            $(".data-pie ul li").remove();
-            updateReports();
+    var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
+    var endDate = moment().format("DD/MM/YYYY");
+    // $('input[name="daterange"]').dateRangePicker(
+    //     {
+    //         startDate: moment().subtract(30, "days"),
+    //         endDate: moment(),
+    //         opens: "left",
+    //         maxDate: moment().endOf("day"),
+    //         alwaysShowCalendar: true,
+    //         showCustomRangeLabel: "Customizado",
+    //         autoUpdateInput: true,
+    //         locale: {
+    //             locale: "pt-br",
+    //             format: "DD/MM/YYYY",
+    //             applyLabel: "Aplicar",
+    //             cancelLabel: "Limpar",
+    //             fromLabel: "De",
+    //             toLabel: "Até",
+    //             customRangeLabel: "Customizado",
+    //             weekLabel: "W",
+    //             daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+    //             monthNames: [
+    //                 "Janeiro",
+    //                 "Fevereiro",
+    //                 "Março",
+    //                 "Abril",
+    //                 "Maio",
+    //                 "Junho",
+    //                 "Julho",
+    //                 "Agosto",
+    //                 "Setembro",
+    //                 "Outubro",
+    //                 "Novembro",
+    //                 "Dezembro",
+    //             ],
+    //             firstDay: 0,
+    //         },
+    //         ranges: {
+    //             Hoje: [moment(), moment()],
+    //             Ontem: [
+    //                 moment().subtract(1, "days"),
+    //                 moment().subtract(1, "days"),
+    //             ],
+    //             "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
+    //             "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
+    //             "Este mês": [
+    //                 moment().startOf("month"),
+    //                 moment().endOf("month"),
+    //             ],
+    //             "Mês passado": [
+    //                 moment().subtract(1, "month").startOf("month"),
+    //                 moment().subtract(1, "month").endOf("month"),
+    //             ],
+    //         },
+    //     },
+    //     function (start, end) {
+    //         startDate = start.format("YYYY-MM-DD");
+    //         endDate = end.format("YYYY-MM-DD");
+    //         $(".data-pie ul li").remove();
+    //         updateReports();
+    //     }
+    // );
+    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+    $('input[name="daterange"]').dateRangePicker({
+        setValue: function (s) {
+            if (s) {
+                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                $(this).html(s).data('value', normalize);
+                $('input[name="daterange"]').attr('value', normalize);
+            } else {
+                $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+            }
         }
-    );
-
+    })
+    .on('datepicker-change', function () {
+        updateReports();
+    })
+    .on('datepicker-open', function () {
+        $('.filter-badge-input').removeClass('show');
+    })
+    .on('datepicker-close', function () {
+        $(this).removeClass('focused');
+        if ($(this).data('value')) {
+            $(this).addClass('active');
+        }
+    });
     
     
     function newGraphSell(series, labels) {

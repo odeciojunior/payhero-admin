@@ -52,6 +52,12 @@ Route::group(
         Route::get('/reports/sales/resume', 'ReportsSaleApiController@getSalesResume');
         Route::get('/reports/sales/distribuitions', 'ReportsSaleApiController@getSalesDistribuitions');
 
+        Route::get('/reports/sales/abandoned-carts', 'ReportsApiController@getAbandonedCarts');
+        Route::get('/reports/sales/orderbump', 'ReportsApiController@getOrderBump');
+        Route::get('/reports/sales/upsell', 'ReportsApiController@getUpsell');
+        Route::get('/reports/sales/conversion', 'ReportsApiController@getConversion');
+        Route::get('/reports/sales/recurrence', 'ReportsApiController@getRecurrence');
+
         // Reports - marketing
         Route::get('/reports/marketing/resume', 'ReportsMarketingApiController@getResume');
         Route::get('/reports/marketing/sales-by-state', 'ReportsMarketingApiController@getSalesByState');

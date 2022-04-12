@@ -257,11 +257,11 @@ class ReportsApiController extends Controller
                 ])->first();
 
                 $orders = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$request->origin.' as origin'))
-                    ->leftJoin('transactions as transaction', function ($join) use ($userId) {
+                    ->join('transactions as transaction', function ($join) use ($userId) {
                         $join->on('transaction.sale_id', '=', 'sales.id');
                         $join->where('transaction.user_id', $userId);
                     })
-                    ->leftJoin('checkouts as checkout', function ($join) {
+                    ->join('checkouts as checkout', function ($join) {
                         $join->on('checkout.id', '=', 'sales.checkout_id');
                     })
                     ->where('sales.project_id', hashids_decode($request->project_id))
@@ -805,7 +805,8 @@ class ReportsApiController extends Controller
     public function getResumeCommissions(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -819,7 +820,8 @@ class ReportsApiController extends Controller
     public function getResumePendings(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -833,7 +835,8 @@ class ReportsApiController extends Controller
     public function getResumeCashbacks(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -891,6 +894,86 @@ class ReportsApiController extends Controller
         ]);
     }
 
+    public function getAbandonedCarts(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $products = $reportService->getAbandonedCarts($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getOrderBump(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $products = $reportService->getOrderBump($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getUpsell(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $products = $reportService->getUpsell($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getConversion(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $products = $reportService->getConversion($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getRecurrence(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $products = $reportService->getRecurrence($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
     // Marketing
     public function getResumeCoupons(Request $request)
     {
@@ -928,7 +1011,8 @@ class ReportsApiController extends Controller
     {
         $request->validate([
             'date_range' => 'required',
-            'origin' => 'required'
+            'origin' => 'required',
+            'project_id' => 'required',
         ]);
 
         $data = $request->all();
@@ -936,11 +1020,8 @@ class ReportsApiController extends Controller
         $reportService = new ReportService();
         $orders = $reportService->getResumeOrigins($data);
 
-        return response()->json([
-            'data' => $orders
-        ]);
+        return SalesByOriginResource::collection($orders->paginate(6));
     }
     // END Page Resume
-
 }
 
