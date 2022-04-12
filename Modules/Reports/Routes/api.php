@@ -49,6 +49,7 @@ Route::group(
         Route::get('/reports/finances/withdrawals', 'ReportsApiController@getFinancesWithdrawals');
 
         // Reports - sales
+        Route::get('/reports/sales/distribuitions', 'ReportsApiController@getSalesDistribuitions');
 
         // Reports - marketing
         Route::get('/reports/marketing/resume', 'ReportsApiController@getResume');

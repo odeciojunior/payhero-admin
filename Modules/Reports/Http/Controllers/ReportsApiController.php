@@ -257,11 +257,11 @@ class ReportsApiController extends Controller
                 ])->first();
 
                 $orders = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$request->origin.' as origin'))
-                    ->leftJoin('transactions as transaction', function ($join) use ($userId) {
+                    ->join('transactions as transaction', function ($join) use ($userId) {
                         $join->on('transaction.sale_id', '=', 'sales.id');
                         $join->where('transaction.user_id', $userId);
                     })
-                    ->leftJoin('checkouts as checkout', function ($join) {
+                    ->join('checkouts as checkout', function ($join) {
                         $join->on('checkout.id', '=', 'sales.checkout_id');
                     })
                     ->where('sales.project_id', hashids_decode($request->project_id))
@@ -928,7 +928,8 @@ class ReportsApiController extends Controller
     {
         $request->validate([
             'date_range' => 'required',
-            'origin' => 'required'
+            'origin' => 'required',
+            'project_id' => 'required',
         ]);
 
         $data = $request->all();
@@ -936,9 +937,7 @@ class ReportsApiController extends Controller
         $reportService = new ReportService();
         $orders = $reportService->getResumeOrigins($data);
 
-        return response()->json([
-            'data' => $orders
-        ]);
+        return SalesByOriginResource::collection($orders->paginate(6));
     }
     // END Page Resume
 
@@ -1010,6 +1009,25 @@ class ReportsApiController extends Controller
         ]);
     }
     // END Page finances
+
+    // Page sales
+    public function getSalesDistribuitions(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'project_id' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $resume = $reportService->getSalesDistribuitions($data);
+
+        return response()->json([
+            'data' => $resume
+        ]);
+    }
+    // END Page sales
 
     public function getResume(Request $request)
     {

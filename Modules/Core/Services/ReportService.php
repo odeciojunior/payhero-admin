@@ -3234,11 +3234,13 @@ class ReportService
         try {
             $saleModel = new Sale();
 
+            $projectId = hashids_decode($filters['project_id']);
+
             $userId = auth()->user()->account_owner_id;
             $status = Sale::STATUS_APPROVED;
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-            $query = $saleModel->select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
+            $originsData = $saleModel->select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
             ->leftJoin('transactions as transaction', function ($join) use ($userId) {
                 $join->on('transaction.sale_id', '=', 'sales.id');
                 $join->where('transaction.user_id', $userId);
@@ -3247,23 +3249,14 @@ class ReportService
                 $join->on('checkout.id', '=', 'sales.checkout_id');
             })
             ->where('sales.status', $status)
+            ->where('sales.project_id', $projectId)
             ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
             ->whereNotIn('checkout.'.$filters['origin'], ['', 'null'])
             ->whereNotNull('checkout.'.$filters['origin'])
             ->groupBy('checkout.'.$filters['origin'])
             ->orderBy('sales_amount', 'DESC');
 
-            if (!empty($filters['project_id'])) {
-                $projectId = current(Hashids::decode($filters['project_id']));
-
-                $query->where('sales.project_id', $projectId);
-            } else {
-                $query->where('sales.owner_id', $userId);
-            }
-
-            $orders = $query->get();
-
-            return $orders;
+            return $originsData;
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -3596,6 +3589,96 @@ class ReportService
     }
     // End Pages finances
 
+    // Pages sales
+    public function getSalesDistribuitions($filters)
+    {
+        try {
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);
+
+            $salesApprovedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            ->where('project_id', $projectId)
+            ->where('status', Sale::STATUS_APPROVED)
+            ->sum('original_total_paid_value');
+
+            $salesPendingSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            ->where('project_id', $projectId)
+            ->where('status', Sale::STATUS_PENDING)
+            ->sum('original_total_paid_value');
+
+            $salesCanceledSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            ->where('project_id', $projectId)
+            ->where('status', Sale::STATUS_CANCELED)
+            ->sum('original_total_paid_value');
+
+            $salesRefusedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            ->where('project_id', $projectId)
+            ->where('status', Sale::STATUS_REFUSED)
+            ->sum('original_total_paid_value');
+
+            $salesRefundedSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            ->where('project_id', $projectId)
+            ->where('status', Sale::STATUS_REFUNDED)
+            ->sum('original_total_paid_value');
+
+            $salesChargebackSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            ->where('project_id', $projectId)
+            ->where('status', Sale::STATUS_CHARGEBACK)
+            ->sum('original_total_paid_value');
+
+            $salesOtherSum = Sale::whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            ->where('project_id', $projectId)
+            ->whereNotIn('status', [
+                Sale::STATUS_APPROVED,
+                Sale::STATUS_PENDING,
+                Sale::STATUS_CANCELED,
+                Sale::STATUS_REFUSED,
+                Sale::STATUS_REFUNDED,
+                Sale::STATUS_CHARGEBACK
+            ])
+            ->sum('original_total_paid_value');
+
+            $total = ($salesApprovedSum + $salesPendingSum + $salesCanceledSum + $salesRefusedSum + $salesRefundedSum + $salesChargebackSum + $salesOtherSum);
+
+            return [
+                'total' => foxutils()->formatMoney($total / 100),
+                'approved' => [
+                    'value' => foxutils()->formatMoney($salesApprovedSum / 100),
+                    'percentage' => round(number_format(($salesApprovedSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                ],
+                'pending' => [
+                    'value' => foxutils()->formatMoney($salesPendingSum / 100),
+                    'percentage' => round(number_format(($salesPendingSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                ],
+                'canceled' => [
+                    'value' => foxutils()->formatMoney($salesCanceledSum / 100),
+                    'percentage' => round(number_format(($salesCanceledSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                ],
+                'refused' => [
+                    'value' => foxutils()->formatMoney($salesRefusedSum / 100),
+                    'percentage' => round(number_format(($salesRefusedSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                ],
+                'refunded' => [
+                    'value' => foxutils()->formatMoney($salesRefundedSum / 100),
+                    'percentage' => round(number_format(($salesRefundedSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                ],
+                'chargeback' => [
+                    'value' => foxutils()->formatMoney($salesChargebackSum / 100),
+                    'percentage' => round(number_format(($salesChargebackSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                ],
+                'other' => [
+                    'value' => foxutils()->formatMoney($salesOtherSum / 100),
+                    'percentage' => round(number_format(($salesOtherSum * 100) / $total, 2, '.', ','), 0, PHP_ROUND_HALF_UP)
+                ]
+            ];
+        } catch(Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    // End Pages sales
+
     public function getResumeMarketing($filters)
     {
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
@@ -3620,7 +3703,8 @@ class ReportService
         return [
             'checkouts_count' => number_format($checkoutsCount, 0, '.', '.'),
             'sales_count' => number_format($salesCount, 0, '.', '.'),
-            'sales_value' => foxutils()->formatMoney($salesValue / 100)
+            'sales_value' => foxutils()->formatMoney($salesValue / 100),
+            'conversion' => $checkoutsCount > 0 ? number_format(($salesCount * 100) / $checkoutsCount, 1, '.', ',') . '%' : '0%'
         ];
     }
 

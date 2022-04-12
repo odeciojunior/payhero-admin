@@ -1,23 +1,154 @@
 $(function() {
     loadingOnScreen();
     exportReports();
-    updateReports();    
-    
-    changeCompany();
     changeCalendar();
     
-    let info = JSON.parse(sessionStorage.getItem('info'));
-    $('input[name=daterange]').val(info.calendar);
+    loadStores();
+
+    $("#select_projects").on("change", function () {
+        
+        $(".data-pie ul").remove();
+        $('.onPreLoad *').remove();
+        $('.onPreLoad').append(skeLoad);
+        updateStorage({company: $(this).val()})
+        reload();
+    });
+
+    $("#map-filter").on("change", function(){
+        $('.back-list').trigger('click');
+        loadBrazilMap();
+    });
+
+    loadingOnScreenRemove();
 });
 
 let resumeUrl = '/api/reports/resume';
 let mktUrl = '/api/reports/marketing';
 
-function getCoupons() {
+function reload() {
+
+    loadResume();
+    loadCoupons();
+    loadDevices();
+    loadOperationalSystems();
+    loadFrequenteSales();
+    loadBrazilMap();
+    loadOrigins();
+}
+
+function loadOrigins(link = null) {
+
+    $("#origin").off('change');
+    $("#origin").on('change', function(){
+        loadOrigins();
+    });
+
+    let url = '';
+    if(link == null) {
+        url = `${resumeUrl}/origins?date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
+    }
+    else {
+        url = `${resumeUrl}/origins${link}&date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
+    }
+
+    return $.ajax({
+        method: "GET",
+        url: url,
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            let td = `
+                <td>
+                    <img src=${$("#origins-table").attr("img-empty")}></td>
+                <td>
+                    <p class='no-data-origin'>
+                        <strong>Sem dados, por enquanto...</strong>
+                        Ainda faltam dados suficientes a comparação, continue rodando!
+                    </p>
+                </td>`;
+
+            if (response.data == '') {
+                $("#origins-table").html(td);
+                $("#pagination").html("");
+                $("#pagination-origins").hide();
+            } else {
+                var table_data = "";
+
+                $.each(response.data, function (index, data) {
+                    table_data += "<tr>";
+                    table_data += "<td>" + data.origin + "</td>";
+                    table_data += "<td>" + data.sales_amount + "</td>";
+                    table_data += "<td>" + data.value + "</td>";
+                    table_data += "</tr>";
+                });
+
+                $("#origins-table").html("");
+                $("#origins-table").append(table_data);
+                $(".table-vendas").addClass("table-striped");
+
+                $("#pagination-origins").show();
+                pagination(response, "origins", loadOrigins);
+            }
+            $("#card-origin .ske-load").hide();
+            $(".origin-report").show();
+        },
+    }); 
+}
+
+function loadResume() {
+    let checkouts, salesCount,salesValue = '';
+    $("#checkouts_count, #sales_count, #sales_value").prepend(skeLoad);
+
+    return $.ajax({
+        method: "GET",
+        url: mktUrl + "/resume?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            checkouts = `
+                <span class="title">Acessos</span>
+                <div class="d-flex">
+                    <strong class="number">${response.data.checkouts_count}</strong>
+                </div>
+            `;
+            salesCount = `
+                <span class="title">Vendas</span>
+                <div class="d-flex">
+                    <strong class="number">${response.data.sales_count}</strong>
+                    <small class="percent">(${response.data.conversion})</small>
+                </div>
+            `;
+            salesValue = `
+                <span class="title">Receita</span>
+                <div class="d-flex">
+                    <span class="detail">R$</span>
+                    <strong class="number">${removeMoneyCurrency(response.data.sales_value)}</strong>
+                </div>
+            `;
+            $("#checkouts_count").html(checkouts);
+            $("#sales_count").html(salesCount);
+            $("#sales_value").html(salesValue);
+        }
+    }); 
+}
+
+function loadCoupons() {
     $('#card-coupon .onPreLoad *' ).remove();
     $("#block-coupons").prepend(skeLoad);
     let couponList = '';
-    
+
     return $.ajax({
         method: "GET",
         url: resumeUrl + "/coupons?date_range=" + $("input[name='daterange']").val(),
@@ -94,50 +225,7 @@ function getCoupons() {
     });
 }           
 
-function resume() {
-    let checkouts, salesCount,salesValue = '';
-    $("#checkouts_count, #sales_count, #sales_value").prepend(skeLoad);
-
-    return $.ajax({
-        method: "GET",
-        url: mktUrl + "/resume?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
-        dataType: "json",
-        headers: {
-            Authorization: $('meta[name="access-token"]').attr("content"),
-            Accept: "application/json",
-        },
-        error: function error(response) {
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
-            checkouts = `
-                <span class="title">Acessos</span>
-                <div class="d-flex">
-                    <strong class="number">${response.data.checkouts_count}</strong>
-                </div>
-            `;
-            salesCount = `
-                <span class="title">Vendas</span>
-                <div class="d-flex">
-                    <strong class="number">${response.data.sales_count}</strong>
-                    <small class="percent">(52%)</small>
-                </div>
-            `;
-            salesValue = `
-                <span class="title">Receita</span>
-                <div class="d-flex">
-                    <span class="detail">R$</span>
-                    <strong class="number">${removeMoneyCurrency(response.data.sales_value)}</strong>
-                </div>
-            `;
-            $("#checkouts_count").html(checkouts);
-            $("#sales_count").html(salesCount);
-            $("#sales_value").html(salesValue);
-        }
-    }); 
-}
-
-function frequenteSales() {
+function loadFrequenteSales() {
     let salesBlock = '';
     $('#card-most-sales .onPreLoad *' ).remove();
     $("#block-sales").prepend(skeLoad);
@@ -182,116 +270,7 @@ function frequenteSales() {
     });   
 }
 
-function exportReports() {
-    // show/hide modal de exportar relatórios
-    $(".lk-export").on('click', function(e) {
-        e.preventDefault();
-        $('.inner-reports').addClass('focus');
-        $('.line-reports').addClass('d-flex');
-    });
-
-    $('.reports-remove').on('click', function (e) {
-        e.preventDefault();
-        $('.inner-reports').removeClass('focus');
-        $('.line-reports').removeClass('d-flex');
-    });
-
-}
-
-function updateStorage(value){
-    let prevData = JSON.parse(sessionStorage.getItem('info'));
-    Object.keys(value).forEach(function(val, key){
-         prevData[val] = value[val];
-    })
-    sessionStorage.setItem('info', JSON.stringify(prevData));
-}
-
-function changeCalendar() {
-    $('.onPreLoad *').remove();
-    
-    $('input[name="daterange"]').daterangepicker(
-        {
-            startDate: moment().subtract(30, "days"),
-            endDate: moment(),
-            opens: "left",
-            maxDate: moment().endOf("day"),
-            alwaysShowCalendar: true,
-            showCustomRangeLabel: "Customizado",
-            autoUpdateInput: true,
-            locale: {
-                locale: "pt-br",
-                format: "DD/MM/YYYY",
-                applyLabel: "Aplicar",
-                cancelLabel: "Limpar",
-                fromLabel: "De",
-                toLabel: "Até",
-                customRangeLabel: "Customizado",
-                weekLabel: "W",
-                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
-                monthNames: [
-                    "Janeiro",
-                    "Fevereiro",
-                    "Março",
-                    "Abril",
-                    "Maio",
-                    "Junho",
-                    "Julho",
-                    "Agosto",
-                    "Setembro",
-                    "Outubro",
-                    "Novembro",
-                    "Dezembro",
-                ],
-                firstDay: 0,
-            },
-            ranges: {
-                Hoje: [moment(), moment()],
-                Ontem: [
-                    moment().subtract(1, "days"),
-                    moment().subtract(1, "days"),
-                ],
-                "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
-                "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
-                "Este mês": [
-                    moment().startOf("month"),
-                    moment().endOf("month"),
-                ],
-                "Mês passado": [
-                    moment().subtract(1, "month").startOf("month"),
-                    moment().subtract(1, "month").endOf("month"),
-                ],
-            },
-        },
-        function (start, end) {
-            startDate = start.format("YYYY-MM-DD");
-            endDate = end.format("YYYY-MM-DD");
-            
-            
-            $('.onPreLoad *').remove();
-            $('.onPreLoad').append(skeLoad);
-            
-            updateReports();
-        }
-    );
-    
-    $('input[name="daterange"]').change(function() {
-        updateStorage({calendar: $(this).val()});
-    })
-    
-}
-
-function changeCompany() {
-    $("#select_projects").on("change", function () {
-        
-        $(".data-pie ul").remove();
-        $('.onPreLoad *').remove();
-        $('.onPreLoad').append(skeLoad);
-        updateStorage({company: $(this).val()})
-        updateReports();
-    });
-}
-
-function updateReports() {
+function loadStores() {
     $(".box-donut").addClass('invis');
     $('.no-graph').remove();
     $('.onPreLoad *').remove();
@@ -306,7 +285,6 @@ function updateReports() {
             Accept: "application/json",
         },
         error: function error(response) {
-            loadingOnScreenRemove();
             $("#modal-content").hide();
             errorAjaxResponse(response);
         },
@@ -325,49 +303,24 @@ function updateReports() {
                         })
                     );
                 });
-                $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+
+                let info = JSON.parse(sessionStorage.getItem('info'));
+                if(!isEmpty(info)) {
+                    $("#select_projects").val(info.company);
+                }
+
             } else {
                 $("#export-excel").hide();
                 $("#project-not-empty").hide();
                 $("#project-empty").show();
             }
 
-            loadingOnScreenRemove();
-        },
-    });
-
-    var date_range = $("#date_range_requests").val();
-    var startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
-    var endDate = moment().format("YYYY-MM-DD");
-    
-    $.ajax({
-        url: "/api/reports",
-        type: "GET",
-        data: {
-            project: $("#select_projects").val(),
-            endDate: endDate,
-            startDate: startDate,
-        },
-        dataType: "json",
-        headers: {
-            Authorization: $('meta[name="access-token"]').attr("content"),
-            Accept: "application/json",
-        },
-        error: function error(response) {
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
-            $('.onPreLoad *').remove();
-            getCoupons();
-            resume();
-            devices();
-            operationalSystems();
-            frequenteSales();
-        },
+            reload();
+        }
     });
 }
 
-function devices() {
+function loadDevices() {
     let deviceBlock = '';
     $('#card-devices .onPreLoad *' ).remove();
     $("#block-devices").prepend(skeLoad);
@@ -451,7 +404,7 @@ function devices() {
     }); 
 }
 
-function operationalSystems() {
+function loadOperationalSystems() {
 
     $.ajax({
         method: "GET",
@@ -466,7 +419,7 @@ function operationalSystems() {
         },
         success: function success(response) {
 
-            $('.container-devices').html('');
+            $('#container-operational-systems').html('');
 
             $.each(response.data, function(i, data){
 
@@ -474,7 +427,7 @@ function operationalSystems() {
                     return true;
                 }
 
-                $('.container-devices').append(`
+                $('#container-operational-systems').append(`
                     <div class="container">
                         <div class="data-holder b-bottom">
                             <div class="box-payment-option pad-0">
@@ -537,8 +490,272 @@ function operationalSystems() {
     });
 }
 
+function exportReports() {
+    // show/hide modal de exportar relatórios
+    $(".lk-export").on('click', function(e) {
+        e.preventDefault();
+        $('.inner-reports').addClass('focus');
+        $('.line-reports').addClass('d-flex');
+    });
+
+    $('.reports-remove').on('click', function (e) {
+        e.preventDefault();
+        $('.inner-reports').removeClass('focus');
+        $('.line-reports').removeClass('d-flex');
+    });
+
+}
+
+function updateStorage(value){
+
+    let prevData = JSON.parse(sessionStorage.getItem('info'));
+    if(!isEmpty(prevData)){
+        Object.keys(value).forEach(function(val, key){
+            prevData[val] = value[val];
+       })
+       sessionStorage.setItem('info', JSON.stringify(prevData));
+    }
+}
+
+function changeCalendar() {
+    $('.onPreLoad *').remove();
+    
+    $('input[name="daterange"]').daterangepicker(
+        {
+            startDate: moment().subtract(30, "days"),
+            endDate: moment(),
+            opens: "left",
+            maxDate: moment().endOf("day"),
+            alwaysShowCalendar: true,
+            showCustomRangeLabel: "Customizado",
+            autoUpdateInput: true,
+            locale: {
+                locale: "pt-br",
+                format: "DD/MM/YYYY",
+                applyLabel: "Aplicar",
+                cancelLabel: "Limpar",
+                fromLabel: "De",
+                toLabel: "Até",
+                customRangeLabel: "Customizado",
+                weekLabel: "W",
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro",
+                ],
+                firstDay: 0,
+            },
+            ranges: {
+                Hoje: [moment(), moment()],
+                Ontem: [
+                    moment().subtract(1, "days"),
+                    moment().subtract(1, "days"),
+                ],
+                "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
+                "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
+                "Este mês": [
+                    moment().startOf("month"),
+                    moment().endOf("month"),
+                ],
+                "Mês passado": [
+                    moment().subtract(1, "month").startOf("month"),
+                    moment().subtract(1, "month").endOf("month"),
+                ],
+            },
+        },
+        function (start, end) {
+            startDate = start.format("YYYY-MM-DD");
+            endDate = end.format("YYYY-MM-DD");
+            $('.onPreLoad *').remove();
+            $('.onPreLoad').append(skeLoad);
+            reload();
+        }
+    );
+    
+    $('input[name="daterange"]').change(function() {
+        updateStorage({calendar: $(this).val()});
+    })
+
+    let info = JSON.parse(sessionStorage.getItem('info'));
+
+    if(!isEmpty(info)) {
+        $('input[name=daterange]').val(info.calendar);
+    }
+}
+
 function kFormatter(num) {
     return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num);
+}
+
+$('.state').on('click', function(e){
+
+    e.preventDefault();
+
+    if(!$($('#' + $(this).attr('id') + '-position')).length) {
+        return;
+    }
+
+    $('a').removeClass('state-choose');
+    $(this).addClass('state-choose');
+    $('#list-states').hide();
+    $('#inside-state').show();
+    $('.name-state').text($(this).attr('rel'));
+    $('#state-position').text($('#' + $(this).attr('id') + '-position').text());
+
+    $.ajax({
+        method: "GET",
+        url: "http://dev.sirius.com/api/reports/marketing/state-details?state=" + $(this).children('text').text() + "&project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+
+        },
+        success: function success(response) {
+            $('#state-total-value').html(response.data.total_value);
+            $('#state-sales-amount').html(response.data.total_sales);
+            $('#state-accesses').html(response.data.accesses);
+            $('#state-conversion').html(response.data.conversion);
+        }
+    });
+});
+
+$('.back-list').on('click', function(e){
+    e.preventDefault();
+    $('#list-states').show();
+    $('#inside-state').hide();
+    $('a').removeClass('state-choose');
+});
+
+function loadBrazilMap() {  
+
+    $.ajax({
+        method: "GET",
+        url: "http://dev.sirius.com/api/reports/marketing/sales-by-state?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val() + "&map_filter="+ $("#map-filter").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+
+        },
+        success: function success(response) {
+
+            $('.state path').css({ fill: '#FFFFFF' });
+            $('.state text').css({ fill: '#6C757D' });
+
+            $("#list-states").html('');
+
+            let maxValue = null;
+            $.each(response.data, function(i, data){
+                if(maxValue == null) {
+                    if($("#map-filter").val() == 'density'){
+                        maxValue = data.percentage;
+                    }
+                    else{
+                        maxValue = onlyNumbers(data.value);
+                    }
+                }
+
+                if($("#map-filter").val() == 'density'){
+                    setCustomMapCss('#state-' + data.state, maxValue, data.percentage);
+                }
+                else {
+                    setCustomMapCss('#state-' + data.state, maxValue, onlyNumbers(data.value));
+                }
+                appendStateDataToStateList(data, i + 1);
+
+            });
+        }
+    });
+}
+
+function setCustomMapCss(selector, maxValue, value) {
+
+    if(maxValue == value) {
+        $(selector + ' path').css({ fill: '#15034C' });
+        $(selector + ' text').css({ fill: '#FFFFFF' });
+        return;
+    }
+
+    let percentage = (100 * value) / maxValue;
+
+    if(percentage > 0 && percentage <= 12){
+        $(selector + ' path').css({ fill: '#F2F8FF' });
+        $(selector + ' text').css({ fill: '#3089F2' });
+        return;
+    }
+    else if(percentage > 12 && percentage <= 25) {
+        $(selector + ' path').css({ fill: '#BFDCFF' });
+        $(selector + ' text').css({ fill: '#3089F2' });
+        return;
+    }
+    else if(percentage > 25 && percentage <= 37) {
+        $(selector + ' path').css({ fill: '#A6CFFF' });
+        $(selector + ' text').css({ fill: '##1F5DA7' });
+        return;
+    }
+    else if(percentage > 37 && percentage <= 50) {
+        $(selector + ' path').css({ fill: '#73B2FF' });
+        $(selector + ' text').css({ fill: '#FFFFFF' });
+        return;
+    }
+    else if(percentage > 50 && percentage <= 62) {
+        $(selector + ' path').css({ fill: '#59A5FF' });
+        $(selector + ' text').css({ fill: '#FFFFFF' });
+        return;
+    }
+    else if(percentage > 62 && percentage <= 75) {
+        $(selector + ' path').css({ fill: '#3089F2' });
+        $(selector + ' text').css({ fill: '#FFFFFF' });
+        return;
+    }
+    else if(percentage > 75 && percentage <= 99) {
+        $(selector + ' path').css({ fill: '#1F5DA7' });
+        $(selector + ' text').css({ fill: '#FFFFFF' });
+        return;
+    }
+
+    $(selector + ' text').css({ fill: '#6C757D' });
+}
+
+function appendStateDataToStateList(data, index) {
+
+    let stateData = `
+                    <li class="states-list">
+                        <div class="d-flex container">
+                            <ul>
+                                <li class="item-state">
+                                    <dl class="d-flex">
+                                        <dd id="state-${data.state}-position">${index}°</dd>
+                                        <dd class="dd-state">${data.state}</dd>
+                                    </dl>
+                                </li>
+                                <li class="item-state">
+                                    <dl class="d-flex justify-content-between">
+                                        <dd><span>${data.percentage}</span></dd>
+                                        <dd><strong>${data.value}</strong></dd>
+                                    </dl>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                `;
+
+    $("#list-states").append(stateData);
 }
 
 let skeLoad = `
