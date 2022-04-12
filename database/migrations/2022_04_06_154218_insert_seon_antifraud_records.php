@@ -21,7 +21,7 @@ class InsertSeonAntifraudRecords extends Migration
                 "environment"        => "production",
                 "client_id"          => env('SEON_PRODUCTION_PUBLIC_KEY'),
                 "client_secret"      => env('SEON_PRODUCTION_LICENSE_KEY'),
-                "merchant_id"        => null,
+                "merchant_id"        => 'Cloudfox',
                 "available_flag"     => 1
             ]
         );
@@ -31,10 +31,10 @@ class InsertSeonAntifraudRecords extends Migration
                 "name"               => "Seon Production",
                 "api"                => "seon",
                 "antifraud_api_enum" => 4,
-                "environment"        => "production",
-                "client_id"          => env('SEON_PRODUCTION_PUBLIC_KEY'),
-                "client_secret"      => env('SEON_PRODUCTION_LICENSE_KEY'),
-                "merchant_id"        => null,
+                "environment"        => "sandbox",
+                "client_id"          => env('SEON_SANDBOX_PUBLIC_KEY'),
+                "client_secret"      => env('SEON_SANDBOX_LICENSE_KEY'),
+                "merchant_id"        => 'Cloudfox',
                 "available_flag"     => 1
             ]
         );
