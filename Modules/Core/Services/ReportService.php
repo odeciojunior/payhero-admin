@@ -1226,26 +1226,15 @@ class ReportService
     public function getResumeCommissions($filters)
     {
         try {
-            $companyModel = new Company();
-            $transactionModel = new Transaction();
-
-            $userId = auth()->user()->account_owner_id;
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);
 
-            $userCompanies = $companyModel->where('user_id', $userId)->get()->pluck('id')->toArray();
-
-            $transactions = $transactionModel
-            ->whereIn('company_id', $userCompanies)
-            ->join('sales', 'sales.id', 'transactions.sale_id')
-            ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-            ->whereNull('invitation_id')
-            ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
-            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ]);
-
-            if (!empty($filters["project"])) {
-                $projectId = current(Hashids::decode($filters["project"]));
-                $transactions->where('project_id', $projectId);
-            }
+            $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
+                                        ->where('project_id', $projectId)
+                                        ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                                        ->whereNull('invitation_id')
+                                        ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
+                                        ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ]);
 
             $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
@@ -1277,7 +1266,6 @@ class ReportService
     public function getResumeCommissionsByHours($transactions, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
-
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
         if (Carbon::parse($dateRange[0])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
@@ -1665,32 +1653,17 @@ class ReportService
     public function getResumePendings($filters)
     {
         try {
-            $companyModel = new Company();
-            $transactionModel = new Transaction();
-
-            $userId = auth()->user()->account_owner_id;
-
-            $userCompanies = $companyModel->where('user_id', $userId)
-            ->get()
-            ->pluck('id')
-            ->toArray();
-
-            $transactions = $transactionModel
-            ->whereIn('company_id', $userCompanies)
-            ->where('status_enum', Transaction::STATUS_PAID)
-            ->whereDoesntHave('blockReasonSale',function ($query) {
-                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-            })
-            ->join('sales', 'sales.id', 'transactions.sale_id');
-
-            if (!empty($filters["project"])) {
-                $projectId = current(Hashids::decode($filters["project"]));
-                $transactions->where('sales.project_id', $projectId);
-            }
-
+            $projectId = hashids_decode($filters['project_id']);
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
+
+            $transactions = Transaction::where('status_enum', Transaction::STATUS_PAID)
+                                        ->whereDoesntHave('blockReasonSale',function ($query) {
+                                            $query->where('status', BlockReasonSale::STATUS_BLOCKED);
+                                        })
+                                        ->join('sales', 'sales.id', 'transactions.sale_id')
+                                        ->where('sales.project_id', $projectId);
 
             if ($date['startDate'] == $date['endDate']) {
                 return $this->getResumePendingsByHours($transactions, $filters);
@@ -2120,29 +2093,13 @@ class ReportService
     public function getResumeCashbacks($filters)
     {
         try {
-            $cashbackModel = new Cashback();
-            $companyModel = new Company();
-
-            $userId = auth()->user()->account_owner_id;
-
-            $userCompanies = $companyModel->where('user_id', $userId)
-            ->get()
-            ->pluck('id')
-            ->toArray();
-
+            $projectId = hashids_decode($filters['project_id']);
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $cashbacks = $cashbackModel
-            ->with('sale')
-            ->whereIn('company_id', $userCompanies)
-            ->join('sales', 'sales.id', 'cashbacks.sale_id')
-            ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ]);
-
-            if (!empty($filters["project"])) {
-                $projectId = current(Hashids::decode($filters["project"]));
-
-                $cashbacks->where('sales.project_id', $projectId);
-            }
+            $cashbacks = Cashback::with('sale')
+                                    ->join('sales', 'sales.id', 'cashbacks.sale_id')
+                                    ->whereBetween('start_date', [ $dateRange[0], $dateRange[1] ])
+                                    ->where('sales.project_id', $projectId);
 
             $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];

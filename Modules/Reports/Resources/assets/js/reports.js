@@ -11,7 +11,7 @@ $(function () {
     function getCashback() {
         return $.ajax({
             method: "GET",
-            url: resumeUrl + "/cashbacks?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/cashbacks?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -73,7 +73,7 @@ $(function () {
     function getPending() {
         return $.ajax({
             method: "GET",
-            url: resumeUrl+ "/pendings?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl+ "/pendings?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -115,7 +115,7 @@ $(function () {
 
         return $.ajax({
             method: "GET",
-            url: resumeUrl + "/commissions?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/commissions?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -486,7 +486,8 @@ $(function () {
                     );
                 });
 
-                updateReports();
+                // updateReports();
+                resume();
             } else {
                 $("#export-excel").hide();
                 $("#project-not-empty").hide();
@@ -498,7 +499,8 @@ $(function () {
     });
 
     $("#select_projects").on("change", function () {
-        updateReports();
+        // updateReports();
+        resume();
         $(".data-pie ul li").remove();
     });
 
@@ -519,6 +521,7 @@ $(function () {
         getProducts()
         getCoupons()
         getRegions()
+        updateSalesByOrigin()
     }
 
     var current_currency = "";
@@ -657,7 +660,6 @@ $(function () {
                 //     $('#scoreLineToWeek').hide();
                 //     $('#scoreLineToMonth').hide();
                 // }
-                updateSalesByOrigin();
                 resume();
                 
             },
@@ -672,7 +674,7 @@ $(function () {
 
         // loadOnTable("#origins-table", ".table-vendas");
 
-        link = `${resumeUrl}/origins?date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}`;
+        link = `${resumeUrl}/origins?date_range=${$("input[name='daterange']").val()}&origin=${$("#origin").val()}&project_id=${$("#select_projects option:selected").val()}`;
 
         // if (link == null) {
         //     link =
@@ -985,11 +987,10 @@ $(function () {
             startDate = start.format("YYYY-MM-DD");
             endDate = end.format("YYYY-MM-DD");
             $(".data-pie ul li").remove();
-            updateReports();
+            // updateReports();
+            resume();
         }
     );
-
-    
     
     function newGraphSell(series, labels) {
         const titleTooltip = (tooltipItems) => {

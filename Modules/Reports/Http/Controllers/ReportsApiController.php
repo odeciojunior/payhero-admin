@@ -805,7 +805,8 @@ class ReportsApiController extends Controller
     public function getResumeCommissions(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -819,7 +820,8 @@ class ReportsApiController extends Controller
     public function getResumePendings(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -833,7 +835,8 @@ class ReportsApiController extends Controller
     public function getResumeCashbacks(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -1009,25 +1012,6 @@ class ReportsApiController extends Controller
         ]);
     }
     // END Page finances
-
-    // Page sales
-    public function getSalesDistribuitions(Request $request)
-    {
-        $request->validate([
-            'date_range' => 'required',
-            'project_id' => 'required'
-        ]);
-
-        $data = $request->all();
-
-        $reportService = new ReportService();
-        $resume = $reportService->getSalesDistribuitions($data);
-
-        return response()->json([
-            'data' => $resume
-        ]);
-    }
-    // END Page sales
 
     public function getResume(Request $request)
     {
