@@ -3234,11 +3234,13 @@ class ReportService
         try {
             $saleModel = new Sale();
 
+            $projectId = hashids_decode($filters['project_id']);
+
             $userId = auth()->user()->account_owner_id;
             $status = Sale::STATUS_APPROVED;
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-            $query = $saleModel->select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
+            $originsData = $saleModel->select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
             ->leftJoin('transactions as transaction', function ($join) use ($userId) {
                 $join->on('transaction.sale_id', '=', 'sales.id');
                 $join->where('transaction.user_id', $userId);
@@ -3247,23 +3249,14 @@ class ReportService
                 $join->on('checkout.id', '=', 'sales.checkout_id');
             })
             ->where('sales.status', $status)
+            ->where('sales.project_id', $projectId)
             ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
             ->whereNotIn('checkout.'.$filters['origin'], ['', 'null'])
             ->whereNotNull('checkout.'.$filters['origin'])
             ->groupBy('checkout.'.$filters['origin'])
             ->orderBy('sales_amount', 'DESC');
 
-            if (!empty($filters['project_id'])) {
-                $projectId = current(Hashids::decode($filters['project_id']));
-
-                $query->where('sales.project_id', $projectId);
-            } else {
-                $query->where('sales.owner_id', $userId);
-            }
-
-            $orders = $query->get();
-
-            return $orders;
+            return $originsData;
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -3620,7 +3613,8 @@ class ReportService
         return [
             'checkouts_count' => number_format($checkoutsCount, 0, '.', '.'),
             'sales_count' => number_format($salesCount, 0, '.', '.'),
-            'sales_value' => foxutils()->formatMoney($salesValue / 100)
+            'sales_value' => foxutils()->formatMoney($salesValue / 100),
+            'conversion' => $checkoutsCount > 0 ? number_format(($salesCount * 100) / $checkoutsCount, 1, '.', ',') . '%' : '0%'
         ];
     }
 

@@ -788,8 +788,7 @@ mix.babel([
     'Modules/Reports/Resources/assets/js/chartist.min.js',
     'Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js',
     'Modules/Reports/Resources/assets/js/chartist-plugin-legend.min.js',
-    'Modules/Reports/Resources/assets/js/reports-marketing.js',
-    'Modules/Reports/Resources/assets/js/brazil-map.js'
+    'Modules/Reports/Resources/assets/js/reports-marketing.js'
 ], 'public/build/layouts/reports/marketing.min.js');
 
 /**
