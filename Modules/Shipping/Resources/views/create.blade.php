@@ -24,13 +24,66 @@
             <span id='shipping-information-error' class='text-danger'></span>
         </div>
     </div>
-    <div class='row value-shipping-row'>
-        <div class='form-group col-12 mb-0'>
+    
+    <div class='row value-shipping-row' >
+        <div class='form-group col-6 mb-0' id="shipping-single-value">
             <label for='value'>Valor do Frete</label>
             <input name='value' type='text' class='input-pad shipping-value' value='' placeholder='0' maxlength='7'>
             <span id='shipping-value-error' class='text-danger'></span>
         </div>
+        <div class='form-group col-6 mb-0' id="shipping-multiple-value" style="display: none">
+            <div class="row">
+                <div class='form-group col-12 mb-4' id="shipping-region-">
+                    <label for='value'>Valor do frete para o Norte</label>
+                    <input name='value1' type='text' class='input-pad shipping-value1' value='' placeholder='0' maxlength='7'>
+                    <span id='shipping-value-error' class='text-danger'></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class='form-group col-12 mb-4' id="shipping-region-">
+                    <label for='value'>Valor do frete para o Nordeste</label>
+                    <input name='value2' type='text' class='input-pad shipping-value2' value='' placeholder='0' maxlength='7'>
+                    <span id='shipping-value-error' class='text-danger'></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class='form-group col-12 mb-4' id="shipping-region-">
+                    <label for='value3'>Valor do frete para o Centro-Oeste</label>
+                    <input name='value' type='text' class='input-pad shipping-value3' value='' placeholder='0' maxlength='7'>
+                    <span id='shipping-value-error' class='text-danger'></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class='form-group col-12 mb-4' id="shipping-region-">
+                    <label for='value'>Valor do frete para o Sudeste</label>
+                    <input name='value4' type='text' class='input-pad shipping-value4' value='' placeholder='0' maxlength='7'>
+                    <span id='shipping-value-error' class='text-danger'></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class='form-group col-12 mb-0' id="shipping-region-">
+                    <label for='value5'>Valor do frete para o Sul</label>
+                    <input name='value' type='text' class='input-pad shipping-value5' value='' placeholder='0' maxlength='7'>
+                    <span id='shipping-value-error' class='text-danger'></span>
+                </div>
+            </div>
+            <input type="hidden" id="regions_value" name="regions_value" >
+        </div>
+
+        <div class="col-6">
+            <div class="switch-holder">
+                <label for="own_hand" class='mb-10'>Mesmo valor em todas as regiões:
+                    
+                </label>
+                <br>
+                <label class="switch">
+                    <input type="checkbox" checked name="" class='check shipping-regions' value='0'>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
     </div>
+
     <div class='row zip-code-origin-shipping-row' style='display:none'>
         <div class='form-group col-12 mb-0'>
             <label for='zip-code-origin'>CEP de origem</label>

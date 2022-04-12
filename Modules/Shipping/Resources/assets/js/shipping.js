@@ -45,15 +45,33 @@ $(document).ready(function () {
         atualizarFrete();
     });
 
+    function setRegionValuesOptions() {
+        // $('#shipping-region-off').hide()
+        // $('#shipping-region-on').show()
+        // shipping-regions
+    }
+
+    $(document).on('click', '.shipping-regions', function () {
+        if($(this).is(':checked')){
+            $('#shipping-multiple-value').hide()
+            $('#shipping-single-value').show() 
+        }else{
+            $('#shipping-multiple-value').show()
+            $('#shipping-single-value').hide()
+        }
+    })
+    
     $(document).on('change', '#shipping-type', function () {
         // altera campo value dependendo do tipo do frete
         let selected = $(this).val();
+        
         if (selected === 'static') {
             $('.information-shipping-row').show();
             $('.value-shipping-row').show();
             $('.zip-code-origin-shipping-row').hide();
             $('.options-shipping-row').hide();
             $('.shipping-description').attr('placeholder', 'Frete grátis');
+            
         } else if (selected === 'pac') {
             $('.information-shipping-row').show();
             $('.value-shipping-row').hide();
@@ -76,6 +94,11 @@ $(document).ready(function () {
     });
 
     $('.shipping-value').mask('#.##0,00', {reverse: true});
+    $('.shipping-value1').mask('#.##0,00', {reverse: true});
+    $('.shipping-value2').mask('#.##0,00', {reverse: true});
+    $('.shipping-value3').mask('#.##0,00', {reverse: true});
+    $('.shipping-value4').mask('#.##0,00', {reverse: true});
+    $('.shipping-value5').mask('#.##0,00', {reverse: true});
     $('.rule-shipping-value').mask('#.##0,00', {reverse: true});
 
     $('.rule-shipping-value').on('blur', function () {
@@ -285,6 +308,12 @@ $(document).ready(function () {
 
     //cria novo frete
     $("#modal-create-shipping .btn-save").click(function () {
+        if(!$('.shipping-regions').is(':checked')){
+            alert('get')
+        }
+
+        
+
         let formData = new FormData(document.getElementById('form-add-shipping'));
 
         $.ajax({
