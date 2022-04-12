@@ -458,6 +458,3 @@
         </div>
     </div>
 </div>
-@push('scripts')
-    <script src="{{ mix('build/layouts/sales/details.min.js') }}"></script>
-@endpush

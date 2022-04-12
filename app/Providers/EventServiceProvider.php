@@ -94,6 +94,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         BilletExpiredEvent::class => [
             BilletExpiredWhatsapp2Listener::class,
+            IntegrationOrderCancelListener::class,
         ],
         SaleRefundedEvent::class => [
             SaleRefundedWhatsapp2Listener::class,

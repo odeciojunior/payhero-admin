@@ -21,6 +21,7 @@ class CheckoutConfigResource extends JsonResource
             'bank_document_status',
             'contract_document_status'
         ])->where('user_id', auth()->user()->account_owner_id)
+            ->where('active_flag', true)
             ->get()
             ->map(function ($company) {
                 if($company->type === Company::PHYSICAL_PERSON) {

@@ -38,7 +38,7 @@ class SendEmailListener implements ShouldQueue
         $data      = $event->request;
         $emailReturn = $this->emailService->sendEmail('help@' . $data['domainName'], $data['projectName'], $data['clientEmail'], $data['clientName'], $data['templateId'], $data['bodyEmail']);
         if ($emailReturn) {
-            Checkout::where('id', $data['checkout_id'])->increment('sms_sent_amount');
+            Checkout::where('id', $data['checkout_id'])->increment('email_sent_amount');
         }
     }
 
