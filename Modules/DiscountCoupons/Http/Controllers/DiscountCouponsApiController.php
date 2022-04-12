@@ -355,8 +355,8 @@ class DiscountCouponsApiController extends Controller
                 if(empty($requestValidated['progressive_rules'])) unset($requestValidated['progressive_rules']);
                 if(empty($requestValidated['name'])) unset($requestValidated['name']);
 
-                if($requestValidated['plans']=='[]') //todos os planos
-                {
+                // if($requestValidated['plans']=='[]') //todos os planos
+                // {
                     
                     // $allPlans = Plan::where('project_id',current(Hashids::decode($projectId)))->with('products')->get();
                     // $json = [];
@@ -372,7 +372,7 @@ class DiscountCouponsApiController extends Controller
                     // $requestValidated['plans'] = $json;
                     //Log::debug(($json));
 
-                } 
+                // } 
                 
                 $coupon->update($requestValidated);
 
