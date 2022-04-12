@@ -1,0 +1,110 @@
+<?php
+
+namespace Modules\Reports\Http\Controllers;
+
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Modules\Core\Services\ReportMarketingService;
+
+class ReportsMarketingApiController extends Controller
+{
+    public function getResume(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'project_id' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportMarketingService();
+        $resume = $reportService->getResumeMarketing($data);
+
+        return response()->json([
+            'data' => $resume
+        ]);
+    }
+
+    public function getSalesByState(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'project_id' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportMarketingService();
+        $resume = $reportService->getSalesByState($data);
+
+        return response()->json([
+            'data' => $resume
+        ]);
+    }
+
+    public function getMostFrequentSales(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportMarketingService();
+        $mostFrequentSales = $reportService->getMostFrequentSales($data);
+
+        return response()->json([
+            'data' => $mostFrequentSales
+        ]);
+    }
+
+    public function getDevices(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportMarketingService();
+        $devices = $reportService->getDevices($data);
+
+        return response()->json([
+            'data' => $devices
+        ]);
+    }
+
+    public function getOperationalSystems(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportMarketingService();
+        $devices = $reportService->getOperationalSystems($data);
+
+        return response()->json([
+            'data' => $devices
+        ]);
+    }
+
+    public function getStateDetail(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'state' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportMarketingService();
+        $stateDetail = $reportService->getStateDetail($data);
+
+        return response()->json([
+            'data' => $stateDetail
+        ]);
+    }
+}

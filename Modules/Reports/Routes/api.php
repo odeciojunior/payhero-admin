@@ -41,22 +41,23 @@ Route::group(
         Route::get('/reports/resume/origins', 'ReportsApiController@getResumeOrigins');
 
         // Reports - finances
-        Route::get('/reports/finances/resume', 'ReportsApiController@getFinancesResume');
-        Route::get('/reports/finances/cashbacks', 'ReportsApiController@getFinancesCashbacks');
-        Route::get('/reports/finances/pendings', 'ReportsApiController@getFinancesPendings');
-        Route::get('/reports/finances/blockeds', 'ReportsApiController@getFinancesBlockeds');
-        Route::get('/reports/finances/distribuitions', 'ReportsApiController@getFinancesDistribuitions');
-        Route::get('/reports/finances/withdrawals', 'ReportsApiController@getFinancesWithdrawals');
+        Route::get('/reports/finances/resume', 'ReportsFinanceApiController@getFinancesResume');
+        Route::get('/reports/finances/cashbacks', 'ReportsFinanceApiController@getFinancesCashbacks');
+        Route::get('/reports/finances/pendings', 'ReportsFinanceApiController@getFinancesPendings');
+        Route::get('/reports/finances/blockeds', 'ReportsFinanceApiController@getFinancesBlockeds');
+        Route::get('/reports/finances/distribuitions', 'ReportsFinanceApiController@getFinancesDistribuitions');
+        Route::get('/reports/finances/withdrawals', 'ReportsFinanceApiController@getFinancesWithdrawals');
 
         // Reports - sales
-        Route::get('/reports/sales/distribuitions', 'ReportsApiController@getSalesDistribuitions');
+        Route::get('/reports/sales/resume', 'ReportsSaleApiController@getSalesResume');
+        Route::get('/reports/sales/distribuitions', 'ReportsSaleApiController@getSalesDistribuitions');
 
         // Reports - marketing
-        Route::get('/reports/marketing/resume', 'ReportsApiController@getResume');
-        Route::get('/reports/marketing/sales-by-state', 'ReportsApiController@getSalesByState');
-        Route::get('/reports/marketing/most-frequent-sales', 'ReportsApiController@getMostFrequentSales');
-        Route::get('/reports/marketing/devices', 'ReportsApiController@getDevices');
-        Route::get('/reports/marketing/operational-systems', 'ReportsApiController@getOperationalSystems');
-        Route::get('/reports/marketing/state-details', 'ReportsApiController@getStateDetail');
+        Route::get('/reports/marketing/resume', 'ReportsMarketingApiController@getResume');
+        Route::get('/reports/marketing/sales-by-state', 'ReportsMarketingApiController@getSalesByState');
+        Route::get('/reports/marketing/most-frequent-sales', 'ReportsMarketingApiController@getMostFrequentSales');
+        Route::get('/reports/marketing/devices', 'ReportsMarketingApiController@getDevices');
+        Route::get('/reports/marketing/operational-systems', 'ReportsMarketingApiController@getOperationalSystems');
+        Route::get('/reports/marketing/state-details', 'ReportsMarketingApiController@getStateDetail');
     }
 );

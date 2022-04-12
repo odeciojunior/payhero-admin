@@ -99,7 +99,7 @@
 					<div class="col-12 box-items-finance">
                         <div class="row mb-20">
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border blue mb-10">
+                                <div class="finance-card border blue mb-10 onPreLoad" id="sales-transactions">
                                     <span class="title">N de transações</span>
                                     <div class="d-flex">
                                         <strong class="number">74.860</strong>
@@ -108,7 +108,7 @@
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border orange mb-10">
+                                <div class="finance-card border orange mb-10 onPreLoad" id="sales-average_ticket">
                                     <span class="title">Ticket Médio</span>
                                     <div class="d-flex">
                                         <span class="detail">R$</span>
@@ -118,7 +118,7 @@
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border green mb-10">
+                                <div class="finance-card border green mb-10 onPreLoad" id="sales-comission">
                                     <span class="title">Comissão total</span>
                                     <div class="d-flex">
                                         <span class="detail">R$</span>
@@ -128,7 +128,7 @@
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border pink mb-10">
+                                <div class="finance-card border pink mb-10 onPreLoad" id="sales-number-chargeback">
                                     <span class="title">Total em Chargebacks</span>
                                     <div class="d-flex">
                                         <span class="detail">R$</span>
@@ -582,9 +582,9 @@
                                                         <strong class="total grey">56 vendas</strong>
                                                     </div> -->
 
-                                                    <div class="balance col-4">    
+                                                    <div class="balance col-4">
                                                         <div class="box-ico-cash">
-                                                            <span class="ico-cash">                                                    
+                                                            <span class="ico-cash">
                                                                 <svg width="55" height="55" viewBox="0 0 55 55" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                     <path d="M28.4968 19.0015L36.0525 19.0029L36.1734 19.0168L36.2611 19.0364L36.365 19.0708L36.4541 19.1112L36.5179 19.1468L36.5805 19.1883L36.6445 19.2382L36.7076 19.2965L36.802 19.4062L36.8736 19.5174L36.9271 19.6302L36.9624 19.7355L36.9781 19.8007L36.9873 19.853L36.9983 20.0015V27.5054C36.9983 28.0576 36.5506 28.5054 35.9983 28.5054C35.4854 28.5054 35.0628 28.1193 35.005 27.622L34.9983 27.5054L34.998 22.4155L20.7061 36.7071C20.3456 37.0676 19.7784 37.0953 19.3861 36.7903L19.2919 36.7071C18.9314 36.3466 18.9037 35.7794 19.2087 35.3871L19.2919 35.2929L33.583 21.0015H28.4968C27.9839 21.0015 27.5612 20.6154 27.5035 20.1181L27.4968 20.0015C27.4968 19.4492 27.9445 19.0015 28.4968 19.0015Z" fill="#2E85EC"/>
                                                                     <circle cx="27.5" cy="27.5" r="26.5" stroke="#2E85EC" stroke-width="2"/>
@@ -626,9 +626,9 @@
                                                         <strong class="total grey">23 vendas</strong>
                                                     </div>
 
-                                                    <!-- <div class="balance col-4">    
+                                                    <!-- <div class="balance col-4">
                                                         <div class="box-ico-cash">
-                                                            <span class="ico-cash">                                                    
+                                                            <span class="ico-cash">
                                                                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="55px" height="55px" viewBox="0 0 55 55" enable-background="new 0 0 55 55" xml:space="preserve">  <image id="image0" width="55" height="55" x="0" y="0"
                                                                     href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAA3CAYAAACo29JGAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
                                                                 AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAA
