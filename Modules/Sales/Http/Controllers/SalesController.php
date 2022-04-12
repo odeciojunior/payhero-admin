@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\GetnetBackOfficeService;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Vinkla\Hashids\Facades\Hashids;
@@ -71,6 +72,7 @@ class SalesController extends Controller
 
             $service = Gateway::getServiceById($transaction->gateway_id);
             $pdf = $service->refundReceipt($hashid,$transaction);
+
             return $pdf->stream('comprovante.pdf');
 
         } catch (\Exception $e) {
