@@ -738,12 +738,14 @@ mix.babel([
     'Modules/Reports/Resources/assets/css/chartist.min.css',
     'Modules/Reports/Resources/assets/css/chartist-plugin-tooltip.min.css',
     'Modules/Reports/Resources/assets/css/reports.css',
-    'resources/modules/global/css/empty.css'
+    'resources/modules/global/css/empty.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
 ], 'public/build/layouts/reports/index.min.css');
 mix.babel([
     'Modules/Reports/Resources/assets/js/chart-js/Chartjs-3.7-min.js',
     'Modules/Reports/Resources/assets/js/moment.min.js',
-    'resources/modules/global/js/daterangepicker.min.js',
+    // 'resources/modules/global/js/daterangepicker.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
     'Modules/Reports/Resources/assets/js/chartist.min.js',
     'Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js',
     'Modules/Reports/Resources/assets/js/chartist-plugin-legend.min.js',
