@@ -894,6 +894,86 @@ class ReportsApiController extends Controller
         ]);
     }
 
+    public function getAbandonedCarts(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $products = $reportService->getAbandonedCarts($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getOrderBump(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $products = $reportService->getOrderBump($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getUpsell(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $products = $reportService->getUpsell($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getConversion(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $products = $reportService->getConversion($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getRecurrence(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportService();
+        $products = $reportService->getRecurrence($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
     // Marketing
     public function getResumeCoupons(Request $request)
     {

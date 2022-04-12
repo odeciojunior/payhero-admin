@@ -2970,6 +2970,70 @@ class ReportService
         ];
     }
 
+    public function getAbandonedCarts($filters)
+    {
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $projectId = hashids_decode($filters['project_id']);
+
+        $checkoutsData = Checkout::select([
+            DB::raw('SUM(CASE WHEN checkouts.status_enum = 2 THEN 1 ELSE 0 END) AS abandoned'),
+            DB::raw('SUM(CASE WHEN checkouts.status_enum = 3 THEN 1 ELSE 0 END) AS recovered'),
+        ])
+        ->whereBetween('created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+        ->where('project_id', $projectId)
+        ->first();
+
+        $recoveredValue = Sale::join('checkouts as checkout', function ($join) {
+                                    $join->on('sales.checkout_id', '=', 'checkout.id');
+                                    $join->where('checkout.status_enum', Checkout::STATUS_RECOVERED);
+                                }) 
+                                ->join('transactions as transaction', function ($join) {
+                                    $join->on('sales.id', '=', 'transactions.sale_id');
+                                    $join->where('checkout.status_enum', Checkout::STATUS_RECOVERED);
+                                })
+                                ->sum('transactions.value');
+
+        return [
+            'percentage_recovered' => $checkoutsData->abandoned > 0 ? number_format(($checkoutsData->recovered * 100) / $checkoutsData->abandoned, 1, '.', ',') . '%' : '0%',
+            'recovered_value' => foxutils()->formatMoney($recoveredValue / 100)
+        ];
+    }
+
+    public function getOrderBump($filters)
+    {
+        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $projectId = hashids_decode($filters['project_id']);
+
+        $data = Transaction::select(DB::raw('count(*) as amount, sum(value) as value'))
+                            ->join('sales', function($join) use($projectId){
+                                $join->on('transactions.sale_id', 'sales.id');
+                            })
+                            ->whereBetween('transactions.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+                            ->where('sales.has_order_bump', true)
+                            ->where('sales.project_id', $projectId)
+                            ->first();
+
+        return [
+            'value' => $data->value,
+            'amount' => $data->amount
+        ];
+    }
+
+    public function getUpsell($filters)
+    {
+        
+    }
+
+    public function getConversion($filters)
+    {
+        
+    }
+
+    public function getRecurrence($filters)
+    {
+        
+    }
+// 
     // --------------------------------------------
     public function getResumeTypePayments($filters)
     {
