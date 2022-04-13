@@ -712,7 +712,6 @@ $(function () {
 
     $('#value-edit').mask('#.##0,00', {reverse: true});
 
-
     //var rules = edit_rules
     
     $("#add_rule-edit").on('click', function () {
@@ -821,15 +820,15 @@ $(function () {
             $(this).siriusSelect()
         })
         
-        $('.value').mask('#.###,#0', {reverse: true});
+        $('.value').mask('#.##0,00', { reverse: true });
 
-        $('.value_edit').on('change', function () {
-            if($(this).val().length<3){
-                $(this).val($(this).val().padStart(2, '0'))
-                $(this).val(','+$(this).val())
-                $(this).val($(this).val().padStart(4, '0'))
-            }
-        })
+        // $('.value_edit').on('change', function () {
+        //     if($(this).val().length<3){
+        //         $(this).val($(this).val().padStart(2, '0'))
+        //         $(this).val(','+$(this).val())
+        //         $(this).val($(this).val().padStart(4, '0'))
+        //     }
+        // })
 
 
         set_rules_events()
@@ -1670,7 +1669,7 @@ $(function () {
 
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
-    $('#value').mask('#.###,#0', {reverse: true});
+    $('#value').mask('#.##0,00', {reverse: true});
 
 
 
@@ -1783,15 +1782,15 @@ $(function () {
 
 
 
-        $('.value').mask('#.###,#0', {reverse: true});
+        $('.value').mask('#.##0,00', {reverse: true});
 
-        $('.value_edit').on('change', function () {
-            if($(this).val().length<3){
-                $(this).val($(this).val().padStart(2, '0'))
-                $(this).val(','+$(this).val())
-                $(this).val($(this).val().padStart(4, '0'))
-            }
-        })
+        // $('.value_edit').on('change', function () {
+        //     if($(this).val().length<3){
+        //         $(this).val($(this).val().padStart(2, '0'))
+        //         $(this).val(','+$(this).val())
+        //         $(this).val($(this).val().padStart(4, '0'))
+        //     }
+        // })
 
         set_rules_events()
         if(!edit){
@@ -2263,11 +2262,11 @@ $(function () {
     // }
 
     // Create new cupouns
-    $('#discount_value').mask('#.###,#0', {reverse: true});
-    $('#minimum_value').mask('#.###,#0', {reverse: true});
-    $('#2discount_value').mask('#.###,#0', {reverse: true});
-    $('#2minimum_value').mask('#.###,#0', {reverse: true});
-
+    $('#discount_value').mask('#.##0,00', { reverse: true });
+    $('#minimum_value').mask('#.##0,00', { reverse: true });
+    $('#2discount_value').mask('#.##0,00', { reverse: true });
+    $('#2minimum_value').mask('#.##0,00', { reverse: true });
+    
 
     $('.coupon-next').click(function () {
         $('.step1').hide()
@@ -2330,13 +2329,13 @@ $(function () {
 
     }
 
-    $('#value-edit, #value, #discount_value, #minimum_value, #2discount_value, #2minimum_value').on('change', function () {
-        if($(this).val().length<3){
-            $(this).val($(this).val().padStart(2, '0'))
-            $(this).val(','+$(this).val())
-            $(this).val($(this).val().padStart(4, '0'))
-        }
-    })
+    // $('#value-edit, #value, #discount_value, #minimum_value, #2discount_value, #2minimum_value').on('change', function () {
+    //     if($(this).val().length<3){
+    //         $(this).val($(this).val().padStart(2, '0'))
+    //         $(this).val(','+$(this).val())
+    //         $(this).val($(this).val().padStart(4, '0'))
+    //     }
+    // })
 
     $(".add-coupon").on('click', function () {
         if(!$('#c_name').val()){
