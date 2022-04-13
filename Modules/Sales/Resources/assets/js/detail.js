@@ -521,7 +521,7 @@ $(() => {
             $("#partial-refund-value").hide();
         }
 
-        if (sale.progressive_discount) {
+        if (sale.progressive_discount ) {
             $("#discount-prog-title").show();
             $("#discount-prog-data span").html(sale.progressive_discount);
             $("#discount-prog-data").show();
