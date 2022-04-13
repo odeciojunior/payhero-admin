@@ -25,6 +25,7 @@ use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Transfers\Services\GetNetStatementService;
+use PDF;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -668,7 +669,7 @@ class SaleService
                 ]);
                 continue;
             }
-            
+
             $safe2payBalance = $transaction->company->safe2pay_balance;
 
             if($transaction->status_enum == Transaction::STATUS_PAID) {
@@ -1230,5 +1231,35 @@ class SaleService
                 ];
         }
         return [];
+    }
+
+    public static function refundReceipt($hashSaleId, $transaction)
+    {
+        $company = (object)$transaction->company->toArray();
+        $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
+        $sale = $transaction;
+        $sale->flag = strtoupper($transaction->sale->flag) ?? null;
+
+        $sale_info = DB::table('sale_informations')
+            ->select('customer_name', 'last_four_digits')
+            ->where('sale_id', '=', $sale->sale_id)
+            ->first();
+
+        $arr = explode(' ',trim($sale_info->customer_name));
+        $sale_info->firstname = $arr[0];
+
+        $checkout_configs = DB::table('checkout_configs')
+            ->select('checkout_logo')
+            ->where('checkout_logo_enabled', '=', '1')
+            ->where('project_id', '=', $sale->sale->project_id)
+            ->first();
+
+        $plans_sales = DB::table('plans_sales')
+            ->join('plans', 'plans_sales.plan_id','=','plans.id')
+            ->select('plans.name','plans_sales.amount')
+            ->where('plans_sales.sale_id', '=', $sale->sale_id)
+            ->get();
+
+        return PDF::loadView('sales::refund_receipt', compact('company', 'sale', 'sale_info', 'checkout_configs','plans_sales'));
     }
 }

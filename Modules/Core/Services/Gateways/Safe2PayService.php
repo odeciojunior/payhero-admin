@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\TaskService;
-use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
@@ -417,33 +416,4 @@ class Safe2PayService implements Statement
         }
     }
 
-    public function refundReceipt($hashSaleId, $transaction)
-    {
-        $company = (object)$transaction->company->toArray();
-        $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
-        $sale = $transaction;
-        $sale->flag = strtoupper($transaction->sale->flag) ?? null;
-
-        $sale_info = DB::table('sale_informations')
-            ->select('customer_name', 'last_four_digits')
-            ->where('sale_id', '=', $sale->sale_id)
-            ->first();
-
-        $arr = explode(' ',trim($sale_info->customer_name));
-        $sale_info->firstname = $arr[0];
-
-        $checkout_configs = DB::table('checkout_configs')
-            ->select('checkout_logo')
-            ->where('checkout_logo_enabled', '=', '1')
-            ->where('project_id', '=', $sale->sale->project_id)
-            ->first();
-
-        $plans_sales = DB::table('plans_sales')
-            ->join('plans', 'plans_sales.plan_id','=','plans.id')
-            ->select('plans.name')
-            ->where('plans_sales.sale_id', '=', $sale->sale_id)
-            ->get();
-
-        return PDF::loadView('sales::refund_receipt_vega', compact('company', 'sale', 'sale_info', 'checkout_configs','plans_sales'));
-    }
 }
