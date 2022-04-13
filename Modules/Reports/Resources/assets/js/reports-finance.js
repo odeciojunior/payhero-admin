@@ -534,11 +534,9 @@ function changeCalendar() {
                 $(this).html(s).data('value', normalize);
                 $('input[name="daterange"]').attr('value', normalize);
                 $('input[name="daterange"]').val(normalize);
-                console.log('a', normalize);
             } else {
                 $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
                 $('input[name="daterange"]').val(`${startDate}-${endDate}`);
-                console.log('b');
             }
         }
     })

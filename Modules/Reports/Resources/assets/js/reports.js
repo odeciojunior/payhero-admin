@@ -998,10 +998,8 @@ $(function () {
                 let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
                 $(this).html(s).data('value', normalize);
                 $('input[name="daterange"]').attr('value', normalize);
-                console.log('a');
             } else {
                 $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
-                console.log('b');
             }
         }
     })
