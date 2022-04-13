@@ -23,12 +23,14 @@
         .content{font-size: 13px; font-weight: 400; letter-spacing: 0em; text-align: left; color: #3D4456; margin:0; padding: 0}
         .content .bold{font-weight: 700}
 
-        .bg-azul{background-color: #F4F6FB; height: 400px;}
+        .bg-azul{background-color: #F4F6FB; height: 400px; border-radius: 8px; padding: 32px;}
         .bg-azul div{margin: 20px 0}
+        .bg-azul a{color:#2E85EC}
         #linha1{margin-top: 80px; margin-bottom:20px}
         #linha2{margin-bottom:20px; color: #0050AF; font-weight: 700}
         #linha2 span{color:#000}
-        #linha3 {margin-bottom:20px}
+        #linha3 { color:#0050AF; margin-bottom:20px;}
+        #linha4 { color:#0050AF}
         .icon{padding:0; margin:0; width: 32px}
         .gateway-logo{ vertical-align: text-bottom; max-height: 20px }
     </style>
@@ -95,8 +97,8 @@
                 <span class="bold">
                     Produto(s):
                 </span>
-                @foreach ($plans_sales as $plan)
-                    <br>- {{\Illuminate\Support\Str::limit($plan->name, 40)}} ({{$plan->amount}}x)
+                @foreach ($products_plans_sales as $item)
+                    <br>- {{\Illuminate\Support\Str::limit($item->name, 40)}} ({{$item->amount}}x)
                 @endforeach
             </div>
 
@@ -139,12 +141,12 @@
 
             </td>
         </td>
-        <td>
-            <div class="box bg-azul">
+        <td style="vertical-align: top">
+            <div class="bg-azul">
                 <div id="linha1"><img src="build/global/img/estorno-shape.svg" alt="icon estorno"></div>
                 <div id="linha2" class="head">Sua compra foi estornada, <span>{{ $sale_info->firstname }}</span></div>
                 <div id="linha3" class="head">Esperamos que seu problema tenha sido solucionado e pedimos desculpas por qualquer transtorno.</div>
-                <div class="head">Lembrando que você sempre pode voltar a conversar conosco através do <a href="https://sac.cloudfox.net/login">https://sac.cloudfox.net</a></div>
+                <div id="linha4" class="head">Lembrando que você sempre pode voltar a conversar conosco através do <a href="https://sac.cloudfox.net/login">https://sac.cloudfox.net</a></div>
             </div>
         </td>
     </tr>

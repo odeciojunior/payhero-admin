@@ -1254,12 +1254,11 @@ class SaleService
             ->where('project_id', '=', $sale->sale->project_id)
             ->first();
 
-        $plans_sales = DB::table('plans_sales')
-            ->join('plans', 'plans_sales.plan_id','=','plans.id')
-            ->select('plans.name','plans_sales.amount')
-            ->where('plans_sales.sale_id', '=', $sale->sale_id)
+        $products_plans_sales = DB::table('products_plans_sales')
+            ->select('amount', 'name')
+            ->where('sale_id', '=', $sale->sale_id)
             ->get();
 
-        return PDF::loadView('sales::refund_receipt', compact('company', 'sale', 'sale_info', 'checkout_configs','plans_sales'));
+        return PDF::loadView('sales::refund_receipt', compact('company', 'sale', 'sale_info', 'checkout_configs','products_plans_sales'));
     }
 }
