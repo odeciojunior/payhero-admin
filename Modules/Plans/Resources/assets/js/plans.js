@@ -1475,18 +1475,32 @@ $(function () {
         if (checkbox_value == 0) {
             $(this).val(1);
 
-            var first_value = $('.box-products').find('.product').first().find('.form-control[name="value"]').val();
-            $('.box-products .form-control[name="value"]').val(first_value);
+            var first_qtd = $('.box-products').find('.product').first().find('.form-control[name="amount"]').val();
+            var first_cost = $('.box-products').find('.product').first().find('.form-control[name="value"]').val();
+            var first_currency = $('.box-products').find('.product').first().find('select[name="currency_type_enum"]').val();
+
+            $('.box-products .form-control[name="amount"]').val(first_qtd);
+            $('.box-products .form-control[name="value"]').val(first_cost);
+            $('.box-products select[name="currency_type_enum"]').val(first_currency);
+            $('.box-products select[name="currency_type_enum"]').change();
         } else if (checkbox_value == 1) {
             $(this).val(0);
         }
     });
 
     // Change values products
-    $('body').on('keyup', '.form-control[name="value"]', function(e) {
+    $('body').on('keyup', '.form-control[name="value"]', function() {
         var same_cost = $('#check-values').val();
         if (same_cost == 1) {
             $('.box-products .form-control[name="value"]').val($(this).val());
+        }
+    });
+
+    $('body').on('click', '.sirius-select-options div', function() {
+        var same_cost = $('#check-values').val();
+        if (same_cost == 1) {
+            $('.box-products select[name="currency_type_enum"]').val($(this).data('value'));
+            $('.box-products select[name="currency_type_enum"]').change();
         }
     });
 
@@ -2667,11 +2681,24 @@ $(function () {
 
     $('body').on('click', '.input-number button', function () {
         var input = $(this).parent().find('input');
+        var same_cost = $('#check-values').val();
 
         if ($(this).hasClass('btn-add')) {
-            input[0].stepUp();
+            if (same_cost == 1) {
+                $('.input-number').find('input').each(function() {
+                    $(this)[0].stepUp();
+                });
+            } else {
+                input[0].stepUp();
+            }
         } else if ($(this).hasClass('btn-sub')) {
-            input[0].stepDown();
+            if (same_cost == 1) {
+                $('.input-number').find('input').each(function() {
+                    $(this)[0].stepDown();
+                });
+            } else {
+                input[0].stepDown();
+            }
         }
 
         changeProductAmount(input);

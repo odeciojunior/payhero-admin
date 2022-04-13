@@ -428,12 +428,12 @@ class PlansApiController extends Controller
     public function updateProducts(PlanUpdateProductsRequest $request, $id)
     {
         try {
-            $planModel    = new Plan();
-            $productPlanModel  = new ProductPlan();
+            $planModel = new Plan();
+            $productPlanModel = new ProductPlan();
 
             $requestData = $request->validated();
 
-            $planId   = current(Hashids::decode($id));
+            $planId = current(Hashids::decode($id));
             $plan = $planModel->with(['productsPlans'])->where('id', $planId)->first();
             if (!empty($plan)) {
                 $productsIds = array_map(function($p) {
@@ -453,6 +453,13 @@ class PlansApiController extends Controller
                         $productPlanModel->create([
                             'product_id'         => current(Hashids::decode($product['id'])),
                             'plan_id'            => $plan->id,
+                            'amount'             => $product['amount'] ?? 1,
+                            'cost'               => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
+                            'currency_type_enum' => $productPlanModel->present()->getCurrency($product['currency_type_enum']),
+                        ]);
+                    } else {
+                        $productPlanModel->where('product_id', current(Hashids::decode($product['id'])))
+                        ->update([
                             'amount'             => $product['amount'] ?? 1,
                             'cost'               => $product['value'] ? preg_replace("/[^0-9]/", "", $product['value']) : 0,
                             'currency_type_enum' => $productPlanModel->present()->getCurrency($product['currency_type_enum']),
