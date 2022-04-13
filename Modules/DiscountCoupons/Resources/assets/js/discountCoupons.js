@@ -355,13 +355,18 @@ function run_search(search, now){
         
         var items_saved = mount_selected_items(search, search2)
         // console.log(items_saved);
+        var items_saved_array = []
+        for(i in items_selected){
+            items_saved_array.push({'id':items_selected[i].id})
+        }
+        console.log(items_saved_array);
         $.ajax({
             data: {
                     most_sales: 1,
                     list: 'plan',
                     search: search,
                     search2: search2,
-                    items_saved: items_selected,
+                    items_saved: items_saved_array,
                     project_id: projectId,
                     limit:30
                     //page: params.page || 1
