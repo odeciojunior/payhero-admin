@@ -99,42 +99,19 @@
 					<div class="col-12 box-items-finance">
                         <div class="row mb-20">
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border blue mb-10 onPreLoad" id="sales-transactions">
-                                    <span class="title">N de transações</span>
-                                    <div class="d-flex">
-                                        <strong class="number">74.860</strong>
-                                    </div>
-                                </div>
+                                <div class="finance-card border blue mb-10 onPreLoad" id="sales-transactions"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border orange mb-10 onPreLoad" id="sales-average_ticket">
-                                    <span class="title">Ticket Médio</span>
-                                    <div class="d-flex">
-                                        <span class="detail">R$</span>
-                                        <strong class="number">1.440,20</strong>
-                                    </div>
-                                </div>
+                                <div class="finance-card border orange mb-10 onPreLoad" id="sales-average-ticket"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border green mb-10 onPreLoad" id="sales-comission">
-                                    <span class="title">Comissão total</span>
-                                    <div class="d-flex">
-                                        <span class="detail">R$</span>
-                                        <strong class="number">1.457.080,55</strong>
-                                    </div>
-                                </div>
+                                <div class="finance-card border green mb-10 onPreLoad" id="sales-comission"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border pink mb-10 onPreLoad" id="sales-number-chargeback">
-                                    <span class="title">Total em Chargebacks</span>
-                                    <div class="d-flex">
-                                        <span class="detail">R$</span>
-                                        <strong class="number">24.120,50</strong>
-                                    </div>
-                                </div>
+                                <div class="finance-card border pink mb-10 onPreLoad" id="sales-number-chargeback"></div>
                             </div>
                         </div>
 					</div>
@@ -716,141 +693,14 @@
 
                         <!-- distribtion -->
                         <div class="distribution">
-                            <div class="card inner">
+                            <div class="card inner" id="card-distribution">
                                 <header class="d-flex title-graph">
                                     <h5 class="grey font-size-16">
                                         <strong>Distribuição</strong>
                                     </h5>
                                     <h6 class="font-size-14">Hoje</h6>
                                 </header>
-                                <div class="d-flex box-graph-dist">
-                                    <div class="distribution-graph-seller"></div>
-                                    <div class="info-graph">
-                                        <h6 class="font-size-14 grey">Saldo Total</h6>
-                                        <em>
-                                            <small class="font-size-14">R$</small>
-                                            <strong class="grey">2.654.202,00</strong>
-                                        </em>
-                                    </div>
-                                </div>
-                                <div class="d-flex box-distribution secondary">
-                                    <div class="distribution-area">
-                                        <div class="item">
-                                            <span>
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#1BE4A8" stroke-width="3"/>
-                                                </svg>
-                                            </span>
-                                            <small class="font-size-14">Aprovadas</small>
-                                        </div>
-                                        <div class="item right">
-                                            <strong class="grey font-size-14">R$162.445,22</strong>
-                                        </div>
-                                        <div class="item right"><small class="grey font-size-14">46%</small></div>
-                                    </div>
-
-                                    <div class="distribution-area">
-                                        <div class="item">
-                                            <span>
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#FFBA06" stroke-width="3"/>
-                                                </svg>
-                                            </span>
-                                            <small class="font-size-14">Pendentes</small>
-                                        </div>
-                                        <div class="item right">
-                                            <strong class="grey font-size-14">R$148.254,63</strong>
-                                        </div>
-                                        <div class="item right">
-                                            <small class="grey font-size-14">24%</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="distribution-area">
-                                        <div class="item">
-                                            <span>
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#665FE8" stroke-width="3"/>
-                                                </svg>
-                                            </span>
-                                            <small class="font-size-14">Canceladas</small>
-                                        </div>
-                                        <div class="item right">
-                                            <strong class="grey font-size-14">R$8.648,75</strong>
-                                        </div>
-                                        <div class="item right">
-                                            <small class="grey font-size-14">12%</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="distribution-area">
-                                        <div class="item">
-                                            <span>
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#FF2F2F" stroke-width="3"/>
-                                                </svg>
-                                            </span>
-                                            <small class="font-size-14">Recusadas</small>
-                                        </div>
-                                        <div class="item right">
-                                            <strong class="grey font-size-14">R$8.648,75</strong>
-                                        </div>
-                                        <div class="item right">
-                                            <small class="grey font-size-14">4%</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="distribution-area">
-                                        <div class="item">
-                                            <span>
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#00C2FF" stroke-width="3"/>
-                                                </svg>
-                                            </span>
-                                            <small class="font-size-14">Reembolsos</small>
-                                        </div>
-                                        <div class="item right">
-                                            <strong class="grey font-size-14">R$8.648,75</strong>
-                                        </div>
-                                        <div class="item right">
-                                            <small class="grey font-size-14">3.5%</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="distribution-area">
-                                        <div class="item">
-                                            <span>
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#D10000" stroke-width="3"/>
-                                                </svg>
-                                            </span>
-                                            <small class="font-size-14">Chargebacks</small>
-                                        </div>
-                                        <div class="item right">
-                                            <strong class="grey font-size-14">R$8.648,75</strong>
-                                        </div>
-                                        <div class="item right">
-                                            <small class="grey font-size-14">1.2%</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="distribution-area">
-                                        <div class="item">
-                                            <span>
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke="#767676" stroke-width="3"/>
-                                                </svg>
-                                            </span>
-                                            <small class="font-size-14">Outros</small>
-                                        </div>
-                                        <div class="item right">
-                                            <strong class="grey font-size-14">R$8.648,75</strong>
-                                        </div>
-                                        <div class="item right">
-                                            <small class="grey font-size-14">1.2%</small>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="onPreLoad" id="block-distribution"></div>
                             </div>
                             <div class="">
                                 <div class="d-flex sub-distribution">
@@ -869,7 +719,7 @@
                                                                 <div class="d-flex align-items">
                                                                     <div>
                                                                         <figure class="box-ico">
-                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                            <img width="34px" height="34px" src="{!! asset('/build/global/img/reports/img-casaco.png') !!}" alt="">
                                                                         </figure>
                                                                     </div>
                                                                     <div>
@@ -886,7 +736,7 @@
                                                                 <div class="d-flex align-items">
                                                                     <div>
                                                                         <figure class="box-ico">
-                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                            <img width="34px" height="34px" src="{!! asset('/build/global/img/reports/img-casaco.png') !!}" alt="">
                                                                         </figure>
                                                                     </div>
                                                                     <div>
@@ -903,7 +753,7 @@
                                                                 <div class="d-flex align-items">
                                                                     <div>
                                                                         <figure class="box-ico">
-                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                            <img width="34px" height="34px" src="{!! asset('/build/global/img/reports/img-casaco.png') !!}" alt="">
                                                                         </figure>
                                                                     </div>
                                                                     <div>
@@ -920,7 +770,7 @@
                                                                 <div class="d-flex align-items">
                                                                     <div>
                                                                         <figure class="box-ico">
-                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                            <img width="34px" height="34px" src="{!! asset('/build/global/img/reports/img-casaco.png') !!}" alt="">
                                                                         </figure>
                                                                     </div>
                                                                     <div>
@@ -937,7 +787,7 @@
                                                                 <div class="d-flex align-items">
                                                                     <div>
                                                                         <figure class="box-ico">
-                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                            <img width="34px" height="34px" src="{!! asset('/build/global/img/reports/img-casaco.png') !!}" alt="">
                                                                         </figure>
                                                                     </div>
                                                                     <div>
@@ -954,7 +804,7 @@
                                                                 <div class="d-flex align-items">
                                                                     <div>
                                                                         <figure class="box-ico">
-                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                            <img width="34px" height="34px" src="{!! asset('/build/global/img/reports/img-casaco.png') !!}" alt="">
                                                                         </figure>
                                                                     </div>
                                                                     <div>
@@ -971,7 +821,7 @@
                                                                 <div class="d-flex align-items">
                                                                     <div>
                                                                         <figure class="box-ico">
-                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                            <img width="34px" height="34px" src="{!! asset('/build/global/img/reports/img-casaco.png') !!}" alt="">
                                                                         </figure>
                                                                     </div>
                                                                     <div>
@@ -988,7 +838,7 @@
                                                                 <div class="d-flex align-items">
                                                                     <div>
                                                                         <figure class="box-ico">
-                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                            <img width="34px" height="34px" src="{!! asset('/build/global/img/reports/img-casaco.png') !!}" alt="">
                                                                         </figure>
                                                                     </div>
                                                                     <div>
@@ -1005,7 +855,7 @@
                                                                 <div class="d-flex align-items">
                                                                     <div>
                                                                         <figure class="box-ico">
-                                                                            <img width="34px" height="34px" src="{!! asset('modules/global/img/reports/img-casaco.png') !!}" alt="">
+                                                                            <img width="34px" height="34px" src="{!! asset('/build/global/img/reports/img-casaco.png') !!}" alt="">
                                                                         </figure>
                                                                     </div>
                                                                     <div>

@@ -7,11 +7,10 @@ $(function() {
     changeCompany();
     changeCalendar();
     
-    if(!sessionStorage.info) {
-        return;
+    if(sessionStorage.info) {
+        let info = JSON.parse(sessionStorage.getItem('info'));
+        $('input[name=daterange]').val(info.calendar); 
     }
-    let info = JSON.parse(sessionStorage.getItem('info'));
-    $('input[name=daterange]').val(info.calendar); 
     
 });
 
@@ -25,7 +24,7 @@ function distribution() {
 
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/distribuitions?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: financesResumeUrl + "/distribuitions?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -86,7 +85,7 @@ function distribution() {
                 </div>
              `;
              $("#block-distribution").html(distributionHtml);
-             $(".box-graph-dist").prepend('<div class="distribution-graph"></div>')
+             $(".box-graph-dist").prepend('<div class="distribution-graph"></div>');
              distributionGraph(series);
         }
     });
@@ -101,7 +100,7 @@ function withdrawals() {
     
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/withdrawals?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: financesResumeUrl + "/withdrawals?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -186,7 +185,7 @@ function blockeds() {
 
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/blockeds?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: financesResumeUrl + "/blockeds?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -221,11 +220,11 @@ function onResume() {
     let ticket, commission, chargebacks, transactions = '';   
     $('#finance-card .onPreLoad *').remove();
     
-    $("#finance-commission,#finance-ticket,#finance-chargebacks,#finance-transactions").prepend(skeLoad);
+    $("#finance-commission,#finance-ticket,#finance-chargebacks,#finance-transactions").html(skeLoad);
 
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/resume?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: financesResumeUrl + "/resume?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -284,7 +283,7 @@ function onCommission() {
 
     return $.ajax({
         method: "GET",
-        url: resumeUrl + "/commissions?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: resumeUrl + "/commissions?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -340,7 +339,7 @@ function getPending() {
 
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/pendings?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: financesResumeUrl + "/pendings?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -380,7 +379,7 @@ function getCashback() {
 
     return $.ajax({
         method: "GET",
-        url: financesResumeUrl + "/cashbacks?company_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+        url: financesResumeUrl + "/cashbacks?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -458,70 +457,6 @@ function getCashback() {
 
 function changeCalendar() {
     $('.onPreLoad *').remove();
-    // $('input[name="daterange"]').daterangepicker(
-    //     {
-    //         startDate: moment().subtract(30, "days"),
-    //         endDate: moment(),
-    //         opens: "left",
-    //         maxDate: moment().endOf("day"),
-    //         alwaysShowCalendar: true,
-    //         showCustomRangeLabel: "Customizado",
-    //         autoUpdateInput: true,
-    //         locale: {
-    //             locale: "pt-br",
-    //             format: "DD/MM/YYYY",
-    //             applyLabel: "Aplicar",
-    //             cancelLabel: "Limpar",
-    //             fromLabel: "De",
-    //             toLabel: "Até",
-    //             customRangeLabel: "Customizado",
-    //             weekLabel: "W",
-    //             daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
-    //             monthNames: [
-    //                 "Janeiro",
-    //                 "Fevereiro",
-    //                 "Março",
-    //                 "Abril",
-    //                 "Maio",
-    //                 "Junho",
-    //                 "Julho",
-    //                 "Agosto",
-    //                 "Setembro",
-    //                 "Outubro",
-    //                 "Novembro",
-    //                 "Dezembro",
-    //             ],
-    //             firstDay: 0,
-    //         },
-    //         ranges: {
-    //             Hoje: [moment(), moment()],
-    //             Ontem: [
-    //                 moment().subtract(1, "days"),
-    //                 moment().subtract(1, "days"),
-    //             ],
-    //             "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
-    //             "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
-    //             "Este mês": [
-    //                 moment().startOf("month"),
-    //                 moment().endOf("month"),
-    //             ],
-    //             "Mês passado": [
-    //                 moment().subtract(1, "month").startOf("month"),
-    //                 moment().subtract(1, "month").endOf("month"),
-    //             ],
-    //         },
-    //     },
-    //     function (start, end) {
-    //         startDate = start.format("YYYY-MM-DD");
-    //         endDate = end.format("YYYY-MM-DD");
-            
-            
-    //         $('.onPreLoad *').remove();
-    //         $('.onPreLoad').html(skeLoad);
-            
-    //         updateReports();
-    //     }
-    // );
     
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
@@ -601,10 +536,9 @@ function updateReports() {
                         })
                     );
                 });
-                if(!sessionStorage.info) {
-                    return;
-                }                
-                $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                if(sessionStorage.info) {
+                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                } 
             } else {
                 $("#export-excel").hide();
                 $("#project-not-empty").hide();
@@ -650,7 +584,8 @@ function updateReports() {
 
 
 function updateStorage(value){
-    let prevData = JSON.parse(sessionStorage.getItem('info'));
+    let prevData;
+    if(sessionStorage.info) JSON.parse(sessionStorage.getItem('info'));
     Object.keys(value).forEach(function(val, key){
          prevData[val] = value[val];
     })

@@ -996,12 +996,13 @@ h4.number{
 .distribution-graph  .ct-series-c { fill: #B70000; }
 .distribution-graph  .ct-series-d { fill: #B70000; }
 
-.distribution-graph-seller  .ct-series-a { fill: #00C2FF; }
+.distribution-graph-seller  .ct-series-a { fill: #1BE4A8; }
 .distribution-graph-seller  .ct-series-b { fill: #FFBA06; }
-.distribution-graph-seller  .ct-series-c { fill: #767676; }
-.distribution-graph-seller  .ct-series-d { fill: #665FE8; }
-.distribution-graph-seller  .ct-series-e { fill: #1BE4A8; }
-.distribution-graph-seller  .ct-series-f { fill: #ff0000; }
+.distribution-graph-seller  .ct-series-c { fill: #665FE8; } 
+.distribution-graph-seller  .ct-series-d { fill: #ff0000; }
+.distribution-graph-seller  .ct-series-e { fill: #00C2FF; }
+.distribution-graph-seller  .ct-series-f { fill: #B70000; }
+.distribution-graph-seller  .ct-series-g { fill: #767676; }
 
 .box-distribution { flex-flow: wrap; }
 .box-distribution .distribution-area { width: 50%; }
@@ -1224,7 +1225,7 @@ h4.number{
     width: 148px;
     border-radius: 4px;
     margin-top: -8px;
-    background: url('/modules/global/img/reports/ico-select.png') 123px center no-repeat !important;
+    background: url('/build/global/img/reports/ico-select.png') 123px center no-repeat !important;
 }
 
 .tt-data {
