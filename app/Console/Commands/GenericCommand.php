@@ -63,13 +63,6 @@ class GenericCommand extends Command
                 6064,
                 6069,
                 6140,
-                6174,
-                6186,
-                6192,
-                6239,
-                6266,
-                6290,
-                6301,
             ])
             ->get();
 
@@ -83,7 +76,7 @@ class GenericCommand extends Command
             }
             $user = $project->users->first();
 
-            ImportShopifyProductsStore::dispatch($integration, $user->id);
+            ImportShopifyProductsStore::dispatchNow($integration, $user->id);
 
             $bar->advance();
         }
