@@ -98,7 +98,7 @@
                     Produto(s):
                 </span>
                 @foreach ($products_plans_sales as $item)
-                    <br>- {{\Illuminate\Support\Str::limit($item->name, 40)}} ({{$item->amount}}x)
+                    <br>{{\Illuminate\Support\Str::limit($item->name, 40)}} ({{$item->amount}}x)
                 @endforeach
             </div>
 
