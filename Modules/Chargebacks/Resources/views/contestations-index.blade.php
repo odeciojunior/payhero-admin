@@ -237,23 +237,22 @@
                         <table id="chargebacks-table" class="table-vendas table table-striped unify"
                                style="width:100%;">
                             <thead>
-                            <tr class="">
-                                <td class="table-title">Transação</td>
-                                <td class="table-title" style="min-width: 200px; text-align:left">Empresa</td>
-                                <td class="table-title">Compra</td>
-                                <td class="table-title text-center" style="min-width: 100px;">Status</td>
-                                {{--<td class="table-title">Situação</td>--}}
-                                <td class="table-title">Motivo</td>
-                                {{--                            <td class="table-title">Valor</td>--}}
-                                <td class="table-title" style="min-width: 100px;"></td>
-                            </tr>
+                                <tr class="">
+                                    <td class="table-title">Transação</td>
+                                    <td class="table-title" style="min-width: 200px; text-align:left">Empresa</td>
+                                    <td class="table-title">Compra</td>
+                                    <td class="table-title text-center" style="min-width: 100px;">Status</td>
+                                    {{--<td class="table-title">Situação</td>--}}
+                                    <td class="table-title">Motivo</td>
+                                    {{--                            <td class="table-title">Valor</td>--}}
+                                    <td class="table-title" style="min-width: 100px;"></td>
+                                </tr>
                             </thead>
                             <tbody id="chargebacks-table-data" img-empty="{!! mix('build/global/img/contestacoes.svg')!!}">
-                            {{-- js carrega... --}}
+                                {{-- js carrega... --}}
                             </tbody>
                         </table>
                     </div>
-
                 </div>
                 <div class="row justify-content-center justify-content-md-end pb-60">
                     <ul id="pagination" class="pl-5 pr-md-15 mb-10">
@@ -264,13 +263,19 @@
                 @include('sales::details')
 
             </div>
-            {{-- Quando não tem loja cadastrado  --}}
-            @include('projects::empty')
-            {{-- FIM loja nao existem lojas--}}
+        {{-- Quando não tem loja cadastrado  --}}
+        @include('projects::empty')
+        {{-- FIM loja nao existem lojas--}}
         </div>
+    </div>
 
-        @push('scripts')
-            <script src="{{ mix('build/layouts/chargebacks/contestations-index.min.js') }}"></script>
+    <!-- @push('scripts')
+        <script src="{{ mix('build/layouts/chargebacks/contestations-index.min.js') }}"></script>
+        <script src="{{ mix('build/layouts/sales/details.min.js') }}"></script>
+    @endpush -->
+
+    @push('scriptsView')
+        <script src="{{ mix('build/layouts/chargebacks/contestations-index.min.js') }}"></script>
     @endpush
 
 @endsection

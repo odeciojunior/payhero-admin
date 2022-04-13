@@ -452,3 +452,7 @@
         </div>
     </div>
 </div>
+
+@push('scriptsModal')
+    <script src="{{ mix('build/layouts/sales/details.min.js') }}"></script>
+@endpush
