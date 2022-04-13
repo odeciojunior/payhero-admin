@@ -46,7 +46,7 @@ function count_plans_coupons(qtde) { //thumbnails
             var html_show_plans = ''
             for(i in response.thumbnails){
 
-                
+
                 var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
 
 
@@ -143,7 +143,7 @@ function coupon_rules(data) {
         html += '<strong>dinheiro</strong>'
         value = 'R$'+data.value
     }
-    var expires = data.expires?data.expires:'Não vence';
+    var expires = data.nao_vence?'Não vence':'';
     if(data.expires_days < 0){
         expires = '<span id="c-expire-label" style="color:">Vencido</span>'
     }
@@ -275,15 +275,16 @@ function atualizarCoupon() {
         success: function success(response) {
             $("#data-table-coupon").html('');
             
-            if (response.data == '') {
+            if (response.data == '' && !$('#search-name').val()) {
                 $("#data-table-coupon").html(noDiscountsFound);
                 $('.add-desconto').on('click',function(){
                     $('#add-coupon').trigger('click')
                 })
                 $('#tabela-coupon thead').hide()
                 $('#coupon-panel').hide()
-                //console.log(99);
+                
             } else {
+                
                 $('#tabela-coupon thead').show()
                 $('#coupon-panel').show()
 
@@ -312,6 +313,13 @@ function atualizarCoupon() {
 
                     $("#data-table-coupon").append(data);
                 });
+                if(response.data == ''){
+                    $("#data-table-coupon").html(`<tr class="text-center">
+                    <td colspan="11" style="height: 70px; vertical-align: middle;">
+                        Nenhum dado encontrado
+                    </td>
+                    </tr>`)
+                }
                 // response.meta.current_page = 2
                 pagination(response, 'coupons', atualizarCoupon);
             }
@@ -1300,12 +1308,12 @@ $(function () {
                 
                 
                 
-                var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
-
-
-
+                
+                
+                
                 var html_show_plans = ''
                 for(i in response.thumbnails){
+                    var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
                     html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
                     background-repeat: no-repeat; background-position: center center; 
                     background-size: cover !important; background: url('`+response.thumbnails[i].products[0].photo+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');)"></span>`
@@ -1501,11 +1509,11 @@ function count_plans() { //thumbnails
         }, success: function success(response) {
             
             
-            var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
-
+            
             
             var html_show_plans = ''
             for(i in response.thumbnails){
+                var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
                 html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:43px; height:43px;
                 background-repeat: no-repeat; background-position: center center; 
                 background-size: cover !important; background: url('`+response.thumbnails[i].products[0].photo+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');"></span>`
@@ -1996,7 +2004,7 @@ $(function () {
     })
 
     $('input').on('change', function () {
-        $(this).val($(this).val().replace( /[^a-zA-Z0-9/,/. ]/gm, ''))
+        $(this).val($(this).val().replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, ''))
 
     })
 
@@ -2537,14 +2545,10 @@ $(function () {
                 
             }, success: function success(response) {
                 
-                
-                
-                var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
-
-
-
                 var html_show_plans = ''
+                
                 for(i in response.thumbnails){
+                    var toolTip = 'aria-describedby="tt'+response.thumbnails[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+response.thumbnails[i].name+'"'
                     html_show_plans += `<span ${toolTip} class="plan_thumbnail" style="width:56px; height:56px;
                     background-repeat: no-repeat; background-position: center center; 
                     background-size: cover !important; background: url('`+response.thumbnails[i].products[0].photo+`'), url('https://cloudfox-files.s3.amazonaws.com/produto.svg');)"></span>`
@@ -2590,7 +2594,7 @@ $(function () {
         $('#c-edit_step1').show()
 
 
-
+        
         if(items_selected.length>0){
             var items_thumbs = ''
             for(i in items_selected){
@@ -2598,6 +2602,7 @@ $(function () {
                 // if(i>7) break;
                 
                 var toolTip = 'aria-describedby="tt'+items_selected[i].id+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+items_selected[i].name+'"'
+                
                 
 
                 items_thumbs +=  `
@@ -2754,7 +2759,7 @@ $(function () {
         }
 
         cupom_data.code = $('#d-code').html()
-        if($('#nao_vence2').prop('checked')) cupom_data.expires = 0
+        if($('#nao_vence2').prop('checked')) cupom_data.nao_vence = 1
         
         
         coupon_rules(cupom_data)
