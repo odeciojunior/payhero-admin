@@ -23,10 +23,10 @@
         .content{font-size: 13px; font-weight: 400; letter-spacing: 0em; text-align: left; color: #3D4456; margin:0; padding: 0}
         .content .bold{font-weight: 700}
 
-        .bg-azul{background-color: #F4F6FB; height: 400px; border-radius: 8px; padding: 32px;}
+        .bg-azul{background-color: #F4F6FB; min-height: 300px; border-radius: 8px; padding: 32px;}
         .bg-azul div{margin: 20px 0}
         .bg-azul a{color:#2E85EC}
-        #linha1{margin-top: 80px; margin-bottom:20px}
+        #linha1{margin-top: 20px; margin-bottom:20px}
         #linha2{margin-bottom:20px; color: #0050AF; font-weight: 700}
         #linha2 span{color:#000}
         #linha3 { color:#0050AF; margin-bottom:20px;}
@@ -43,7 +43,7 @@
         </td>
         <td style="width: 50%; text-align: right">
             @if(!empty($checkout_configs->checkout_logo))
-            <img src="{{$checkout_configs->checkout_logo}}" style="max-width: 160px">
+            <img src="{{$checkout_configs->checkout_logo}}" style="max-width: 160px; max-height: 100px">
             @endif
         </td>
     </tr>
@@ -117,7 +117,7 @@
             </div>
 
             <div class="head head-top">
-                Recebimento
+                Forma de pagamento
             </div>
             <div class="content">
                 <span class="bold">
@@ -146,7 +146,7 @@
                 <div id="linha1"><img src="build/global/img/estorno-shape.svg" alt="icon estorno"></div>
                 <div id="linha2" class="head">Sua compra foi estornada, <span>{{ $sale_info->firstname }}</span></div>
                 <div id="linha3" class="head">Esperamos que seu problema tenha sido solucionado e pedimos desculpas por qualquer transtorno.</div>
-                <div id="linha4" class="head">Lembrando que você sempre pode voltar a conversar conosco através do <a href="https://sac.cloudfox.net/login">https://sac.cloudfox.net</a></div>
+                <div id="linha4" class="head">Lembrando que você sempre pode voltar a conversar conosco através do <a href="mailto:help@cloudfox.net">help@cloudfox.net</a></div>
             </div>
         </td>
     </tr>

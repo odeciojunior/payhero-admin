@@ -807,7 +807,7 @@ $(() => {
             $("#div_refund_transaction").html("");
         }
 
-        if (sale.status == 7) {
+        if (sale.status == 7 || sale.status == 22) {
             $("#div_refund_receipt").html(
                 '<a href="/sales/'+sale.id+'/refundreceipt" class="btn btn-sm btn-primary" target="_blank" style="color:white">Comprovante de estorno</a>'
             );
