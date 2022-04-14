@@ -42,4 +42,84 @@ class ReportsSaleApiController extends Controller
             'data' => $resume
         ]);
     }
+
+    public function getAbandonedCarts(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportSaleService();
+        $products = $reportService->getAbandonedCarts($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getOrderBump(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportSaleService();
+        $products = $reportService->getOrderBump($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getUpsell(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportSaleService();
+        $products = $reportService->getUpsell($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getConversion(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportSaleService();
+        $products = $reportService->getConversion($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
+
+    public function getRecurrence(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportSaleService();
+        $products = $reportService->getRecurrence($data);
+
+        return response()->json([
+            'data' => $products
+        ]);
+    }
 }

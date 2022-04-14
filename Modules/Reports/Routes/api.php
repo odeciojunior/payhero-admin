@@ -52,11 +52,11 @@ Route::group(
         Route::get('/reports/sales/resume', 'ReportsSaleApiController@getSalesResume');
         Route::get('/reports/sales/distribuitions', 'ReportsSaleApiController@getSalesDistribuitions');
 
-        Route::get('/reports/sales/abandoned-carts', 'ReportsApiController@getAbandonedCarts');
-        Route::get('/reports/sales/orderbump', 'ReportsApiController@getOrderBump');
-        Route::get('/reports/sales/upsell', 'ReportsApiController@getUpsell');
-        Route::get('/reports/sales/conversion', 'ReportsApiController@getConversion');
-        Route::get('/reports/sales/recurrence', 'ReportsApiController@getRecurrence');
+        Route::get('/reports/sales/abandoned-carts', 'ReportsSaleApiController@getAbandonedCarts');
+        Route::get('/reports/sales/orderbump', 'ReportsSaleApiController@getOrderBump');
+        Route::get('/reports/sales/upsell', 'ReportsSaleApiController@getUpsell');
+        Route::get('/reports/sales/conversion', 'ReportsSaleApiController@getConversion');
+        Route::get('/reports/sales/recurrence', 'ReportsSaleApiController@getRecurrence');
 
         // Reports - marketing
         Route::get('/reports/marketing/resume', 'ReportsMarketingApiController@getResume');

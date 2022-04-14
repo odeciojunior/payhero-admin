@@ -2,13 +2,31 @@
 
 namespace Modules\Core\Services;
 
+use Exception;
 use Modules\Core\Entities\Sale;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\ProductPlanSale;
+use Modules\Core\Entities\UserProject;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ReportMarketingService
 {
+    public function getColors($index = null, $hex = false)
+    {
+        $colors = [ 'blue', 'purple', 'pink', 'orange', 'yellow', 'light-blue', 'light-green', 'grey' ];
+
+        if ($hex == true) {
+            $colors = [ '#2E85EC', '#FF7900', '#665FE8', '#F43F5E' ];
+        }
+
+        if (!empty($index) || $index >= 0) {
+            return $colors[$index];
+        }
+
+        return $colors;
+    }
+
     public function getResumeMarketing($filters)
     {
         $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
@@ -252,5 +270,139 @@ class ReportMarketingService
             'accesses' => number_format($accesses, 0, '.', '.'),
             'conversion' => $accesses > 0 ? number_format(($totalSales * 100) / $accesses, 1, '.', ',') . '%' : '0%'
         ];
+    }
+
+    public function getResumeCoupons($filters)
+    {
+        try {
+            $userId = auth()->user()->account_owner_id;
+            $status = [1, 2, 4, 6, 7, 8, 12, 20, 22];
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+
+            $query = Sale::select(DB::raw('sales.cupom_code as coupon, COUNT(*) as amount'))
+            ->where('sales.owner_id', $userId)
+            ->whereIn('status', $status)
+            ->where('sales.cupom_code', '<>', '')
+            ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
+
+            if (!empty($filters["project"])) {
+                $projectId = Hashids::decode($filters["project"]);
+
+                $query->where('project_id', $projectId);
+            }
+
+            $coupons = $query
+            ->groupBy('sales.cupom_code')
+            ->orderByDesc('amount')
+            ->limit(4)
+            ->get();
+
+            $total = 0;
+            foreach($coupons as $coupon)
+            {
+                $total += $coupon->amount;
+            }
+
+            $index = 0;
+            foreach($coupons as $coupon)
+            {
+                $coupon->percentage = round(number_format(($coupon->amount * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP).'%';
+                $coupon->color = $this->getColors($index);
+                $coupon->hexadecimal = $this->getColors($index, true);
+
+                $index++;
+            }
+
+            $couponsArray = $coupons->toArray();
+
+            foreach($couponsArray as $key => $coupon)
+            {
+                unset($couponsArray[$key]['id_code']);
+            }
+
+            array_push($couponsArray, [
+                'total' => $total
+            ]);
+
+            return $couponsArray;
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function getResumeRegions($filters)
+    {
+        try {
+            $checkoutModel = new Checkout();
+
+            $userId = auth()->user()->account_owner_id;
+            $status = [Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED];
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+
+
+            $query = $checkoutModel->select(
+                DB::raw('ip, COUNT(DISTINCT CASE WHEN status_enum = 1 then id end) as acessed, COUNT(DISTINCT CASE WHEN status_enum = 4 then id end) as finalized')
+            )
+            ->whereIn('checkouts.status_enum', $status)
+            ->whereBetween('checkouts.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            ->groupBy('checkouts.ip');
+
+            if (!empty($filters['project_id'])) {
+                $query->where('checkouts.project_id', current(Hashids::decode($filters['project_id'])));
+            } else {
+                $user_projects = UserProject::where('user_id', $userId)->get()->pluck('id');
+
+                $query->whereIn('checkouts.project_id', $user_projects);
+            }
+
+            $regions = $query->get();
+            foreach($regions as $region)
+            {
+                $region->state = json_decode(getRegionByIp($region->ip))->state;
+            }
+
+            $regionsArray = $regions->toArray();
+            foreach($regionsArray as $key => $region)
+            {
+                unset($regionsArray[$key]['id_code']);
+            }
+
+            return $regionsArray;
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function getResumeOrigins($filters)
+    {
+        try {
+            $saleModel = new Sale();
+
+            $projectId = hashids_decode($filters['project_id']);
+
+            $userId = auth()->user()->account_owner_id;
+            $status = Sale::STATUS_APPROVED;
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+
+            $originsData = $saleModel->select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
+            ->leftJoin('transactions as transaction', function ($join) use ($userId) {
+                $join->on('transaction.sale_id', '=', 'sales.id');
+                $join->where('transaction.user_id', $userId);
+            })
+            ->leftJoin('checkouts as checkout', function ($join) {
+                $join->on('checkout.id', '=', 'sales.checkout_id');
+            })
+            ->where('sales.status', $status)
+            ->where('sales.project_id', $projectId)
+            ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
+            ->whereNotIn('checkout.'.$filters['origin'], ['', 'null'])
+            ->whereNotNull('checkout.'.$filters['origin'])
+            ->groupBy('checkout.'.$filters['origin'])
+            ->orderBy('sales_amount', 'DESC');
+
+            return $originsData;
+        } catch(Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 }
