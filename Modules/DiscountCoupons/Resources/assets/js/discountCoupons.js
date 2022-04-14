@@ -894,7 +894,7 @@ $(function () {
             
 
             
-            // $('.btn-save-edit-rules').prop('disabled', true);
+            $('.btn-save-edit-rules').prop('disabled', true);
 
 
         })
@@ -937,7 +937,8 @@ $(function () {
                 
                 
                 
-        
+                $('.btn-save-edit-rules').prop('disabled', false);
+                
                 $(this).parents('.rule_holder').find('.rule_box_edit').hide()
                 $(this).parents('.rule_holder').find('.rule_box').show()
     
