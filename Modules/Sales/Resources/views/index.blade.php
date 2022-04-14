@@ -517,7 +517,6 @@
     <!-- End Modal -->
     @push('scripts')
         <script src="{{ mix('build/layouts/sales/index.min.js') }}"></script>
-        <script src="{{ mix('build/layouts/sales/details.min.js') }}"></script>
     @endpush
 @endsection
 
