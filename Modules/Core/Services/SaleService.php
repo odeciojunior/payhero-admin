@@ -388,10 +388,13 @@ class SaleService
         }
 
         $total -= $sale->automatic_discount;
-
+        
         //valor do produtor
         $value = $userTransaction->value??0;
         $cashbackValue = $sale->cashback->value ?? 0;
+        $progressiveDiscount = $sale->progressive_discount ?? 0;
+        $total -= $progressiveDiscount;
+        
         $comission = 'R$ ' . number_format($value/100, 2, ',', '.');
 
         //valor do afiliado
