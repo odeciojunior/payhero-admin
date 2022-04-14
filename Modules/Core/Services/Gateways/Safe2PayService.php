@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\TaskService;
-use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
@@ -19,8 +18,8 @@ use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
-use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
@@ -417,12 +416,4 @@ class Safe2PayService implements Statement
         }
     }
 
-    public function refundReceipt($hashSaleId, $transaction)
-    {
-        $company = (object)$transaction->company->toArray();
-        $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
-        $sale = $transaction;
-        $sale->flag = strtoupper($transaction->sale->flag) ?? null;
-        return PDF::loadView('sales::refund_receipt_vega', compact('company', 'sale'));
-    }
 }
