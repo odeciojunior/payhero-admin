@@ -449,6 +449,12 @@ h4.number{
     .cards-reports { flex-direction: row; }
 }
 
+.sales-card .ske-load {
+    position: absolute;
+    transform: translate(6%, -35%);
+    width: 89.5%;
+}
+
 .cards-reports .card-body { 
     padding: 0; 
     padding-top: 1.429rem;
@@ -590,6 +596,14 @@ h4.number{
 .box-ico i { font-size: 20px; }
 
 .sel-origin {margin-top: 5px;}
+
+.desc-product {
+    width: 138px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+}
 
 /* payment options */
 .col-payment {
