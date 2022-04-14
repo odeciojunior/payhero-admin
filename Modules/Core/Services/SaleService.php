@@ -1240,28 +1240,29 @@ class SaleService
     {
         $company = (object)$transaction->company->toArray();
         $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
-        $sale = $transaction;
-        $sale->flag = strtoupper($transaction->sale->flag) ?? null;
+        $transaction->flag = strtoupper($transaction->sale->flag) ?? null;
 
-        $sale_info = DB::table('sale_informations')
+        $saleInfo = DB::table('sale_informations')
             ->select('customer_name', 'last_four_digits')
-            ->where('sale_id', '=', $sale->sale_id)
+            ->where('sale_id', '=', $transaction->sale_id)
             ->first();
 
-        $arr = explode(' ',trim($sale_info->customer_name));
-        $sale_info->firstname = $arr[0];
+        $arr = explode(' ',trim($saleInfo->customer_name));
+        $saleInfo->firstname = $arr[0];
 
-        $checkout_configs = DB::table('checkout_configs')
+        $checkoutConfigs = DB::table('checkout_configs')
             ->select('checkout_logo')
             ->where('checkout_logo_enabled', '=', '1')
-            ->where('project_id', '=', $sale->sale->project_id)
+            ->where('project_id', '=', $transaction->sale->project_id)
             ->first();
 
-        $products_plans_sales = DB::table('products_plans_sales')
+        $productsPlansSales = DB::table('products_plans_sales')
             ->select('amount', 'name')
-            ->where('sale_id', '=', $sale->sale_id)
+            ->where('sale_id', '=', $transaction->sale_id)
             ->get();
 
-        return PDF::loadView('sales::refund_receipt', compact('company', 'sale', 'sale_info', 'checkout_configs','products_plans_sales'));
+        $refundDate = $transaction->sale->saleLogs()->whereIn('status_enum', [Sale::STATUS_REFUNDED, Sale::STATUS_BILLET_REFUNDED])->first()->created_at;
+
+        return PDF::loadView('sales::refund_receipt', compact('company', 'transaction', 'saleInfo', 'checkoutConfigs','productsPlansSales', 'refundDate'));
     }
 }
