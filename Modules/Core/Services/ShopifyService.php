@@ -994,8 +994,13 @@ class ShopifyService
                 $productIds = $products->pluck('id');
 
                 $plans = Plan::select(DB::raw('plans.*'))
-                    ->with(['productsPlans', 'plansSales', 'affiliateLinks'])
-                    ->join('products_plans', 'products_plans.plan_id', '=', 'plans.id')
+                    ->with([
+                        'plansSales',
+                        'affiliateLinks',
+                        'productsPlans' => function ($query) use ($productIds) {
+                            $query->whereIn('product_id', $productIds);
+                        }
+                    ])->join('products_plans', 'products_plans.plan_id', '=', 'plans.id')
                     ->whereIn('products_plans.product_id', $productIds)
                     ->get();
 

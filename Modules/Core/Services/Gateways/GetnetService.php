@@ -514,7 +514,7 @@ class GetnetService implements Statement
         }
     }
 
-    public function refundReceipt($hashSaleId, $transaction)
+    public function refundReceiptOLD($hashSaleId, $transaction)
     {
         $company = (object)$transaction->company->toArray();
         $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
