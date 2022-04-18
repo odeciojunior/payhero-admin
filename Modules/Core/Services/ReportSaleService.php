@@ -5,6 +5,7 @@ namespace Modules\Core\Services;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
 
@@ -211,11 +212,73 @@ class ReportSaleService
 
     public function getConversion($filters)
     {
+        try {
+            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);
 
+            $query = Sale::where('project_id', $projectId)
+                            ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 1 THEN 1 ELSE 0 END) AS total_credit_card'))
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 1 and status = 1 THEN 1 ELSE 0 END) AS total_credit_card_approved'))
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 2 THEN 1 ELSE 0 END) AS total_boleto'))
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 2 and status = 1 THEN 1 ELSE 0 END) AS total_boleto_approved'))
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 4 THEN 1 ELSE 0 END) AS total_pix'))
+                            ->selectRaw(DB::raw('SUM(CASE WHEN payment_method = 4 and status = 1 THEN 1 ELSE 0 END) AS total_pix_approved'))
+                            ->first();
+
+            $totalCreditCard = $query->total_credit_card;
+            $totalCreditCardApproved = $query->total_credit_card_approved;
+            $percentageCreditCard = $totalCreditCard > 0 ? number_format(($totalCreditCardApproved * 100) / $totalCreditCard, 2, '.', ',') : 0;
+
+            $totalBoleto = $query->total_boleto;
+            $totalBoletoApproved = $query->total_boleto_approved;
+            $percentageBoleto = $totalBoleto > 0 ? number_format(($totalBoletoApproved * 100) / $totalBoleto, 2, '.', ',') : 0;
+
+            $totalPix = $query->total_pix;
+            $totalPixApproved = $query->total_pix_approved;
+            $percentagePix = $totalPix > 0 ? number_format(($totalPixApproved * 100) / $totalPix, 2, '.', ',') : 0;
+
+            return [
+                'credit_card' => [
+                    'total' => number_format($totalCreditCard, 0, '.', '.'),
+                    'approved' => number_format($totalCreditCardApproved, 0, '.', '.'),
+                    'percentage' => round($percentageCreditCard, 1, PHP_ROUND_HALF_UP).'%'
+                ],
+                'boleto' => [
+                    'total' => number_format($totalBoleto, 0, '.', '.'),
+                    'approved' => number_format($totalBoletoApproved, 0, '.', '.'),
+                    'percentage' => round($percentageBoleto, 1, PHP_ROUND_HALF_UP).'%'
+                ],
+                'pix' => [
+                    'total' => number_format($totalPix, 0, '.', '.'),
+                    'approved' => number_format($totalPixApproved, 0, '.', '.'),
+                    'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
+                ]
+            ];
+
+        } catch(Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao carregar dados.'], 400);
+        }
     }
 
     public function getRecurrence($filters)
     {
+        return [];
+
+        $projectId = hashids_decode($filters['project_id']);
+
+        $sales = Customer::select(DB::raw("MONTH(customers.created_at) as month, count(*) as amount"))
+        ->withCount(['sales' => function ($query) use($projectId) {
+            $query->where('sales.start_date', '>', now()->subMonths(6)->startOfMonth())
+                    ->where('sales.project_id', $projectId);
+        }])
+        ->having('sales_count', '>', 1)
+        ->groupBy('month')
+        ->get()
+        ->toArray();
+
+        return $sales;
 
     }
 }

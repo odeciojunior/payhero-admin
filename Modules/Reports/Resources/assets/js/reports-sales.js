@@ -12,6 +12,38 @@ $(function() {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar); 
     }
+
+    $('.box-export').on('click', function() { 
+            $.ajax({
+                method: "GET",
+                url: salesUrl + "/recurrence?project_id=" + $("#select_projects option:selected").val(),
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
+                },
+                error: function error(response) {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                }
+            });
+
+            $.ajax({
+                method: "GET",
+                url: salesUrl + "/conversion?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
+                dataType: "json",
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
+                },
+                error: function error(response) {
+                    errorAjaxResponse(response);
+                },
+                success: function success(response) {
+                }
+            });
+    });
 });
 
 let salesUrl = '/api/reports/sales';
