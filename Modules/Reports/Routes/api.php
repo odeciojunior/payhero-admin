@@ -36,9 +36,9 @@ Route::group(
         Route::get('/reports/resume/type-payments', 'ReportsApiController@getResumeTypePayments');
         Route::get('/reports/resume/products', 'ReportsApiController@getResumeProducts');
 
-        Route::get('/reports/resume/coupons', 'ReportsApiController@getResumeCoupons');
-        Route::get('/reports/resume/regions', 'ReportsApiController@getResumeRegions');
-        Route::get('/reports/resume/origins', 'ReportsApiController@getResumeOrigins');
+        Route::get('/reports/resume/coupons', 'ReportsMarketingApiController@getResumeCoupons');
+        Route::get('/reports/resume/regions', 'ReportsMarketingApiController@getResumeRegions');
+        Route::get('/reports/resume/origins', 'ReportsMarketingApiController@getResumeOrigins');
 
         // Reports - finances
         Route::get('/reports/finances/resume', 'ReportsFinanceApiController@getFinancesResume');
@@ -65,5 +65,8 @@ Route::group(
         Route::get('/reports/marketing/devices', 'ReportsMarketingApiController@getDevices');
         Route::get('/reports/marketing/operational-systems', 'ReportsMarketingApiController@getOperationalSystems');
         Route::get('/reports/marketing/state-details', 'ReportsMarketingApiController@getStateDetail');
+        Route::get('/reports/marketing/coupons', 'ReportsMarketingApiController@getResumeCoupons');
+        Route::get('/reports/marketing/regions', 'ReportsMarketingApiController@getResumeRegions');
+        Route::get('/reports/marketing/origins', 'ReportsMarketingApiController@getResumeOrigins');
     }
 );
