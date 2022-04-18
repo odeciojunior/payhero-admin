@@ -42,8 +42,8 @@
             <div class="title">Confirmação de estorno</div>
         </td>
         <td style="width: 50%; text-align: right">
-            @if(!empty($checkout_configs->checkout_logo))
-            <img src="{{$checkout_configs->checkout_logo}}" style="max-width: 160px; max-height: 100px">
+            @if(!empty($checkoutConfigs->checkout_logo))
+            <img src="{{$checkoutConfigs->checkout_logo}}" style="max-width: 160px; max-height: 100px">
             @endif
         </td>
     </tr>
@@ -57,7 +57,7 @@
                         </td>
                         <td>
                             <div class="tit">Valor estornado</div>
-                            <div class="val">{{\Modules\Core\Services\FoxUtils::formatMoney($sale->sale->original_total_paid_value/100)}}</div>
+                            <div class="val">{{\Modules\Core\Services\FoxUtils::formatMoney($transaction->sale->original_total_paid_value/100)}}</div>
                         </td>
                     </tr>
                 </table>
@@ -72,7 +72,7 @@
                         </td>
                         <td>
                             <div class="tit">Realizado em</div>
-                            <div class="val">{{\Illuminate\Support\Carbon::parse($sale->sale->date_refunded)->format('d/m/Y')}} às {{\Illuminate\Support\Carbon::parse($sale->sale->date_refunded)->format('H:i')}}</div>
+                            <div class="val">{{\Illuminate\Support\Carbon::parse($refundDate)->format('d/m/Y')}} às {{\Illuminate\Support\Carbon::parse($refundDate)->format('H:i')}}</div>
                         </td>
                     </tr>
                 </table>
@@ -93,11 +93,11 @@
                 Sua compra
             </div>
             <div class="content">
-                Código: #{{hashids_encode($sale->sale_id, 'sale_id')}}<br>
+                Código: #{{hashids_encode($transaction->sale_id, 'sale_id')}}<br>
                 <span class="bold">
                     Produto(s):
                 </span>
-                @foreach ($products_plans_sales as $item)
+                @foreach ($productsPlansSales as $item)
                     <br>{{\Illuminate\Support\Str::limit($item->name, 40)}} ({{$item->amount}}x)
                 @endforeach
             </div>
@@ -106,7 +106,7 @@
                 Cliente
             </div>
             <div class="content">
-                {{$sale_info->customer_name}}
+                {{$saleInfo->customer_name}}
             </div>
 
             <div class="head head-top">
@@ -121,21 +121,21 @@
             </div>
             <div class="content">
                 <span class="bold">
-                    @if ($sale->sale->payment_method == 1)
+                    @if ($transaction->sale->payment_method == 1)
                     Cartão de crédito
-                    @elseif ($sale->sale->payment_method == 2)
+                    @elseif ($transaction->sale->payment_method == 2)
                     Boleto
-                    @elseif ($sale->sale->payment_method == 4)
+                    @elseif ($transaction->sale->payment_method == 4)
                     PIX
                     @endif
 
-                    @if ($sale->sale->payment_method == 1 && $sale->flag)
-                        {{$sale->flag}}
+                    @if ($transaction->sale->payment_method == 1 && $transaction->flag)
+                        {{$transaction->flag}}
                     @endif
                 </span>
                 <br />
-                @if ($sale->sale->payment_method == 1 && $sale_info->last_four_digits)
-                    Final {{$sale_info->last_four_digits}}
+                @if ($transaction->sale->payment_method == 1 && $saleInfo->last_four_digits)
+                    Final {{$saleInfo->last_four_digits}}
                 @endif
             </div>
 
@@ -144,7 +144,7 @@
         <td style="vertical-align: top">
             <div class="bg-azul">
                 <div id="linha1"><img src="build/global/img/estorno-shape.svg" alt="icon estorno"></div>
-                <div id="linha2" class="head">Sua compra foi estornada, <span>{{ $sale_info->firstname }}</span></div>
+                <div id="linha2" class="head">Sua compra foi estornada, <span>{{ $saleInfo->firstname }}</span></div>
                 <div id="linha3" class="head">Esperamos que seu problema tenha sido solucionado e pedimos desculpas por qualquer transtorno.</div>
                 <div id="linha4" class="head">Lembrando que você sempre pode voltar a conversar conosco através do <a href="mailto:help@cloudfox.net">help@cloudfox.net</a></div>
             </div>
@@ -154,15 +154,15 @@
         <td colspan="2" style="text-align: right">
             <br>
             <div style="font-size: 14px;">Com a tecnologia &nbsp; &nbsp;
-                @if ($sale->gateway_id == 8 || $sale->gateway_id == 20)
+                @if ($transaction->gateway_id == 8 || $transaction->gateway_id == 20)
                     <img src="build/global/img/adquirintes/asaas.svg" alt="Asaas Logo" class="gateway-logo">
-                @elseif($sale->gateway_id == 18 || $sale->gateway_id == 19)
+                @elseif($transaction->gateway_id == 18 || $transaction->gateway_id == 19)
                     <img src="build/global/img/adquirintes/gerencianet.svg" alt="Gerencianet Logo" class="gateway-logo">
-                @elseif($sale->gateway_id == 15 || $sale->gateway_id == 14)
+                @elseif($transaction->gateway_id == 15 || $transaction->gateway_id == 14)
                     <img src="build/global/img/getnet-logo.png" alt="Getnet Logo" class="gateway-logo">
-                @elseif($sale->gateway_id == 5 || $sale->gateway_id == 6)
+                @elseif($transaction->gateway_id == 5 || $transaction->gateway_id == 6)
                     <img src="build/global/img/adquirintes/cielo.svg" alt="Cielo Logo" class="gateway-logo">
-                @elseif($sale->gateway_id == 21 || $sale->gateway_id == 22)
+                @elseif($transaction->gateway_id == 21 || $transaction->gateway_id == 22)
                     <img src="build/global/img/vega-logo.png" alt="Vega Logo" class="gateway-logo">
                 @endif
             </div>
