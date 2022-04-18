@@ -1778,6 +1778,23 @@ h4.number{
     justify-content: center;
     display: flex;
 }
+
+#card-most-sales .scrollbar { height: 216px; }
+
+.no-sell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.no-sell h4 {
+    color: #2E85EC;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+}
+.no-sell p { padding: 0 63px; }
 .page-holder {
     font-family: 'Muli', sans-serif;
     color: black;
