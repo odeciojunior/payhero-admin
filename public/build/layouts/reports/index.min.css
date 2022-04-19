@@ -406,6 +406,12 @@ h4.number{
     .cards-reports { flex-direction: row; }
 }
 
+.sales-card .ske-load {
+    position: absolute;
+    transform: translate(6%, -35%);
+    width: 89.5%;
+}
+
 .cards-reports .card-body { 
     padding: 0; 
     padding-top: 1.429rem;
@@ -547,6 +553,14 @@ h4.number{
 .box-ico i { font-size: 20px; }
 
 .sel-origin {margin-top: 5px;}
+
+.desc-product {
+    width: 138px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+}
 
 /* payment options */
 .col-payment {
@@ -1786,6 +1800,28 @@ h4.number{
     height: 273px;
     justify-content: center;
     display: flex;
+}
+
+#card-most-sales .scrollbar { height: 216px; }
+
+.no-sell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.no-sell h4 {
+    color: #2E85EC;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+}
+.no-sell p { padding: 0 63px; }
+
+#card-conversion .ske-load {
+    position: absolute;
+    transform: translate(0, -40%);
 }
 .page-holder {
     font-family: 'Muli', sans-serif;

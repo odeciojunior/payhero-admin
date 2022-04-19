@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Core\Services\ReportMarketingService;
+use Modules\Reports\Transformers\SalesByOriginResource;
 
 class ReportsMarketingApiController extends Controller
 {
@@ -106,5 +107,53 @@ class ReportsMarketingApiController extends Controller
         return response()->json([
             'data' => $stateDetail
         ]);
+    }
+
+    public function getResumeCoupons(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportMarketingService();
+        $coupons = $reportService->getResumeCoupons($data);
+
+        return response()->json([
+            'data' => $coupons
+        ]);
+    }
+
+    public function getResumeRegions(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportMarketingService();
+        $regions = $reportService->getResumeRegions($data);
+
+        return response()->json([
+            'data' => $regions
+        ]);
+    }
+
+    public function getResumeOrigins(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'origin' => 'required',
+            'project_id' => 'required',
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportMarketingService();
+        $orders = $reportService->getResumeOrigins($data);
+
+        return SalesByOriginResource::collection($orders->paginate(6));
     }
 }
