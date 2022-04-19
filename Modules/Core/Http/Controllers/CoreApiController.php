@@ -80,7 +80,7 @@ class CoreApiController extends Controller
                 }
             }
 
-            if (env('ACCOUNT_FRONT_URL')) {
+            if (env('ACCOUNT_FRONT_URL') && empty($link)) {
                 $link = env('ACCOUNT_FRONT_URL') . $link;
             }
 
