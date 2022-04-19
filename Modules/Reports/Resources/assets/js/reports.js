@@ -1058,6 +1058,7 @@ $(function () {
                     ]
                 },
                 options: {
+                    tension: 0.5,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {display: false},
@@ -1140,6 +1141,7 @@ $(function () {
                     ]
                 },
                 options: {
+                    tension: 0.5,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {display: false},
@@ -1221,6 +1223,7 @@ $(function () {
                     ]
                 },
                 options: {
+                    tension: 0.5,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {display: false},
@@ -1262,9 +1265,6 @@ $(function () {
             });
           
     }   
-    
-
-    
 
     function distributionGraphSeller() {
         new Chartist.Pie('.distribution-graph-seller', {
@@ -1359,6 +1359,7 @@ $(function () {
                     ]
                 },
                 options: {
+                    tension: 0.5,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {display: false},

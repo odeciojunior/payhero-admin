@@ -1722,3 +1722,8 @@ h4.number{
     line-height: 20px;
 }
 .no-sell p { padding: 0 63px; }
+
+#card-conversion .ske-load {
+    position: absolute;
+    transform: translate(0, -40%);
+}
