@@ -276,27 +276,18 @@ class ReportMarketingService
     public function getResumeCoupons($filters)
     {
         try {
-            $userId = auth()->user()->account_owner_id;
-            $status = [1, 2, 4, 6, 7, 8, 12, 20, 22];
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);
 
-            $query = Sale::select(DB::raw('sales.cupom_code as coupon, COUNT(*) as amount'))
-            ->where('sales.owner_id', $userId)
-            ->whereIn('status', $status)
-            ->where('sales.cupom_code', '<>', '')
-            ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
-
-            if (!empty($filters["project"])) {
-                $projectId = Hashids::decode($filters["project"]);
-
-                $query->where('project_id', $projectId);
-            }
-
-            $coupons = $query
-            ->groupBy('sales.cupom_code')
-            ->orderByDesc('amount')
-            ->limit(4)
-            ->get();
+            $coupons = Sale::select(DB::raw('sales.cupom_code as coupon, COUNT(*) as amount'))
+                            ->where('status', Sale::STATUS_APPROVED)
+                            ->where('project_id', $projectId)
+                            ->where('sales.cupom_code', '<>', '')
+                            ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+                            ->groupBy('sales.cupom_code')
+                            ->orderByDesc('amount')
+                            ->limit(4)
+                            ->get();
 
             $total = 0;
             foreach($coupons as $coupon)
@@ -329,14 +320,11 @@ class ReportMarketingService
     public function getResumeRegions($filters)
     {
         try {
-            $checkoutModel = new Checkout();
-
             $userId = auth()->user()->account_owner_id;
             $status = [Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED];
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-
-            $query = $checkoutModel->select(
+            $query = Checkout::select(
                 DB::raw('ip, COUNT(DISTINCT CASE WHEN status_enum = 1 then id end) as acessed, COUNT(DISTINCT CASE WHEN status_enum = 4 then id end) as finalized')
             )
             ->whereIn('checkouts.status_enum', $status)
@@ -372,15 +360,13 @@ class ReportMarketingService
     public function getResumeOrigins($filters)
     {
         try {
-            $saleModel = new Sale();
-
             $projectId = hashids_decode($filters['project_id']);
 
             $userId = auth()->user()->account_owner_id;
             $status = Sale::STATUS_APPROVED;
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-            $originsData = $saleModel->select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
+            $originsData = Sale::select(DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$filters['origin'].' as origin'))
             ->leftJoin('transactions as transaction', function ($join) use ($userId) {
                 $join->on('transaction.sale_id', '=', 'sales.id');
                 $join->where('transaction.user_id', $userId);
