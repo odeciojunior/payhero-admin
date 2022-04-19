@@ -315,11 +315,6 @@ class ReportMarketingService
 
             $couponsArray = $coupons->toArray();
 
-            foreach($couponsArray as $key => $coupon)
-            {
-                unset($couponsArray[$key]['id_code']);
-            }
-
             array_push($couponsArray, [
                 'total' => $total
             ]);

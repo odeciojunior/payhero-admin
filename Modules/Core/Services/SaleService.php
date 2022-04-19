@@ -328,7 +328,7 @@ class SaleService
             ->toArray();
 
         $resume['commission'] = number_format($resume['commission'], 2, ',', '.');
-        $resume['total'] = $resume['total'];
+        $resume['total'] = number_format($resume['total'], 2, ',', '.');
 
         return $resume;
     }
@@ -667,7 +667,7 @@ class SaleService
                 ]);
                 continue;
             }
-            
+
             $safe2payBalance = $transaction->company->safe2pay_balance;
 
             if($transaction->status_enum == Transaction::STATUS_PAID) {

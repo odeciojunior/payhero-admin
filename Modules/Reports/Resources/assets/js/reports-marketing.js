@@ -2,11 +2,11 @@ $(function() {
     loadingOnScreen();
     exportReports();
     changeCalendar();
-    
+
     loadStores();
 
     $("#select_projects").on("change", function () {
-        
+
         $(".data-pie ul").remove();
         $('.onPreLoad *').remove();
         $('.onPreLoad').append(skeLoad);
@@ -98,13 +98,13 @@ function loadOrigins(link = null) {
             $("#card-origin .ske-load").hide();
             $(".origin-report").show();
         },
-    }); 
+    });
 }
 
 function loadResume() {
     let checkouts, salesCount,salesValue = '';
     // $("#checkouts_count, #sales_count, #sales_value").prepend(skeLoad2);
-    
+
     return $.ajax({
         method: "GET",
         url: mktUrl + "/resume?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -141,7 +141,7 @@ function loadResume() {
             $("#sales_count").html(salesCount);
             $("#sales_value").html(salesValue);
         }
-    }); 
+    });
 }
 
 function loadCoupons() {
@@ -151,7 +151,7 @@ function loadCoupons() {
 
     return $.ajax({
         method: "GET",
-        url: resumeUrl + "/coupons?date_range=" + $("input[name='daterange']").val(),
+        url: resumeUrl + "/coupons?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -164,7 +164,7 @@ function loadCoupons() {
             let arr = [];
             let seriesArr = [];
             $('.new-graph-pie-mkt').html('<div class=graph-pie></div>');
-            
+
             $.each(response.data, function (i, coupon) {
                 if(coupon != undefined) {
                     arr.push(coupon);
@@ -186,10 +186,10 @@ function loadCoupons() {
                 } else {
                     $(".box-donut").removeClass('invis');
                     if($('.data-pie *').length == 0) $('.data-pie').html('<ul></ul>');
-                    
+
                     if(arr[i].amount != undefined) {
                         seriesArr.push(arr[i].amount);
-                        couponList = 
+                        couponList =
                             `
                                 <li>
                                     <div class="donut-pie ${arr[i].color}">
@@ -201,15 +201,15 @@ function loadCoupons() {
                                         <div>${arr[i].coupon}</div>
                                     </div>
                                     <div class="grey bold">${arr[i].amount}</div>
-                                </li>                                    
+                                </li>
                             `
-                        
+
                         $('.data-pie ul').append(couponList)
                     }
                 }
-            }                        
-            new Chartist.Pie('.graph-pie', 
-            { series: seriesArr }, 
+            }
+            new Chartist.Pie('.graph-pie',
+            { series: seriesArr },
             {
                 donut: true,
                 donutWidth: 20,
@@ -223,7 +223,7 @@ function loadCoupons() {
             $('#card-coupon .onPreLoad *' ).remove();
         }
     });
-}           
+}
 
 function loadFrequenteSales() {
     let salesBlock = '';
@@ -267,7 +267,7 @@ function loadFrequenteSales() {
             });
             $('#block-sales .ske-load' ).remove();
         }
-    });   
+    });
 }
 
 function loadStores() {
@@ -338,15 +338,15 @@ function loadDevices() {
         },
         success: function success(response) {
             let {
-                total, 
-                percentage_desktop, 
-                percentage_mobile, 
-                count_desktop, 
+                total,
+                percentage_desktop,
+                percentage_mobile,
+                count_desktop,
                 count_mobile,
                 value_desktop,
                 value_mobile
             } = response.data;
-            
+
             deviceBlock = `
                 <div class="row container-devices">
                     <div class="container">
@@ -357,7 +357,7 @@ function loadDevices() {
                                         <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 15.7143C4.08579 15.7143 3.75 16.0341 3.75 16.4286C3.75 16.8231 4.08579 17.1429 4.5 17.1429H7.5C7.91421 17.1429 8.25 16.8231 8.25 16.4286C8.25 16.0341 7.91421 15.7143 7.5 15.7143H4.5ZM2.625 0C1.17525 0 0 1.11929 0 2.5V17.5C0 18.8807 1.17525 20 2.625 20H9.375C10.8247 20 12 18.8807 12 17.5V2.5C12 1.11929 10.8247 0 9.375 0H2.625ZM1.5 2.5C1.5 1.90827 2.00368 1.42857 2.625 1.42857H9.375C9.99632 1.42857 10.5 1.90827 10.5 2.5V17.5C10.5 18.0917 9.99632 18.5714 9.375 18.5714H2.625C2.00368 18.5714 1.5 18.0917 1.5 17.5V2.5Z" fill="#636363"/></svg>
                                     </div>Smartphones
                                 </div>
-                                
+
                                 <div class="box-payment-option option">
                                     <div class="col-payment">
                                         <div class="box-payment center">
@@ -373,7 +373,7 @@ function loadDevices() {
                             </div>
                         </div>
                     </div>
-                
+
                     <div class="container">
                         <div class="data-holder b-bottom">
                             <div class="box-payment-option pad-0">
@@ -401,7 +401,7 @@ function loadDevices() {
             `;
             $("#block-devices").html(deviceBlock);
         }
-    }); 
+    });
 }
 
 function loadOperationalSystems() {
@@ -448,7 +448,7 @@ function loadOperationalSystems() {
                                 </div>
                             </div>
                         </div>
-                    </div>                
+                    </div>
                 `);
             });
 
@@ -519,7 +519,7 @@ function updateStorage(value){
 
 function changeCalendar() {
     $('.onPreLoad *').remove();
-    
+
     $('input[name="daterange"]').daterangepicker(
         {
             startDate: moment().subtract(30, "days"),
@@ -581,7 +581,7 @@ function changeCalendar() {
             reload();
         }
     );
-    
+
     $('input[name="daterange"]').change(function() {
         updateStorage({calendar: $(this).val()});
     })
@@ -639,7 +639,7 @@ $('.back-list').on('click', function(e){
     $('a').removeClass('state-choose');
 });
 
-function loadBrazilMap() {  
+function loadBrazilMap() {
 
     $.ajax({
         method: "GET",
