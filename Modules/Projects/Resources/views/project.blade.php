@@ -211,7 +211,7 @@
                             <li class="nav-item tab_coupons" role="presentation">
                                 <span class="category-tabs">&nbsp;</span>
                                 <a id='tab_coupons' class="nav-link" data-toggle="tab" href="#tab_coupons-panel"
-                                   aria-controls="tab_coupons" role="tab">Cupons <span id="count-coupons" class=" d-none tab-counter"> 0 </span>
+                                   aria-controls="tab_coupons" role="tab">Descontos <span id="count-coupons" class=" d-none tab-counter"> 0 </span>
                                 </a>
                             </li>
                             <li class="nav-item tab_reviews" role="presentation">

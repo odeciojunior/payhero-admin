@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\TaskService;
-use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
@@ -20,6 +19,7 @@ use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
@@ -235,7 +235,7 @@ class Safe2PayService implements Statement
                     'status_enum' => Transaction::STATUS_TRANSFERRED,
                 ]);
             }
-            
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -416,8 +416,4 @@ class Safe2PayService implements Statement
         }
     }
 
-    public function refundReceipt($hashSaleId, $transaction)
-    {
-        return PDF::loadHtml('<h2>Não foi possivel gerar o comprovante de estorno!.</h2>');
-    }
 }

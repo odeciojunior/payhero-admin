@@ -13,25 +13,29 @@ class DiscountCouponsStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'       => 'required|string|max:100',
-            'type'       => 'required',
-            'value'      => 'required|string|max:30',
-            'code'       => 'required|string|max:30',
-            'status'     => 'nullable',
-            'rule_value' => 'nullable',
+            'name'              => 'required|string|max:100',
+            'type'              => 'required',
+            'value'             => 'required|string|max:30',
+            'code'              => 'nullable',
+            'status'            => 'nullable',
+            'rule_value'        => 'nullable',
+            'discount'          => 'nullable',
+            'plans'             => 'nullable',
+            'progressive_rules' => 'nullable',
+            'expires'          => 'nullable',
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required'  => 'O campo Descrição é obrigatório',
-            'name.max'       => 'O campo Descrição permite apenas 100 caracteres',
+            'name.required'  => 'O campo nome é obrigatório',
+            'name.max'       => 'O campo nome permite apenas 100 caracteres',
             'type.required'  => 'O campo Tipo é obrigatório',
             'value.required' => 'O campo Valor é obrigatório',
             'value.max'      => 'O campo Valor permite apenas 100 caracteres',
-            'code.required'  => 'O campo Código é obrigatório',
-            'code.max'       => 'O campo Código permite apenas 30 caracteres',
+            //'code.required'  => 'O campo Código é obrigatório',
+            //'code.max'       => 'O campo Código permite apenas 30 caracteres',
         ];
     }
 
