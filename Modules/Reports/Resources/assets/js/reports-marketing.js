@@ -14,7 +14,7 @@ $(function() {
         reload();
     });
 
-    $("#map-filter").on("change", function(){
+    $("#brazil-map-filter").on("change", function(){
         $('.back-list').trigger('click');
         loadBrazilMap();
     });
@@ -103,8 +103,8 @@ function loadOrigins(link = null) {
 
 function loadResume() {
     let checkouts, salesCount,salesValue = '';
-    $("#checkouts_count, #sales_count, #sales_value").prepend(skeLoad);
-
+    // $("#checkouts_count, #sales_count, #sales_value").prepend(skeLoad2);
+    
     return $.ajax({
         method: "GET",
         url: mktUrl + "/resume?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -172,14 +172,14 @@ function loadCoupons() {
                 }
                 else {
                     $('#card-coupon').height('232px');
-                    $('#block-coupons *').remove();
+                    $('#block-coupons').nextAll('div').remove();
                     $('#block-coupons').after('<div class=no-graph>Não há dados suficientes</div>');
                 }
             });
             for(let i = 0; i < arr.length; i++) {
                 if(arr[i].total == 0) {
                     $('#card-coupon').height('232px');
-                    $('#block-coupons *').remove();
+                    $('#block-coupons').nextAll('div').remove();
                     $('#block-coupons').after('<div class=no-graph>Não há dados suficientes</div>');
                     $(".box-donut").addClass('invis');
                     $(".data-pie ul").remove();
@@ -643,7 +643,7 @@ function loadBrazilMap() {
 
     $.ajax({
         method: "GET",
-        url: "http://dev.sirius.com/api/reports/marketing/sales-by-state?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val() + "&map_filter="+ $("#map-filter").val(),
+        url: "http://dev.sirius.com/api/reports/marketing/sales-by-state?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val() + "&map_filter="+ $("#brazil_map_filter").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -760,10 +760,7 @@ function appendStateDataToStateList(data, index) {
 
 let skeLoad = `
     <div class="ske-load">
-        <div class="px-20 py-0">
-            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
-        </div>
-        <div class="px-20 py-0">
+        <div class="py-0">
             <div class="row align-items-center mx-0 py-10">
                 <div class="skeleton skeleton-circle"></div>
                 <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>

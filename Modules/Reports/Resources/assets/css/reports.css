@@ -60,6 +60,20 @@
     -moz-box-shadow: none;
     box-shadow: none;
 }*/
+
+.lk-export {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 0;
+}
+
+@media only screen and (max-width: 1220px){
+    .filter-container {
+        margin-right: 10px;
+    }
+}
+
 @media only screen and (min-width: 768px){
     .col-md-3.card {
         margin-right: 10px;
@@ -208,6 +222,7 @@ h4.number{
 .box-select input {
     margin-left: 0! important;
     width: 100% !important;
+    height: 49px;
 }
 
 @media only screen and (min-width: 480px) {
@@ -216,11 +231,23 @@ h4.number{
     }
     
     .box-select input {
-        margin-left: 5px! important;
-        width: 92% !important;
-        padding: 9px 8px;
+        /* margin-left: 5px! important; */
+        /* width: 92% !important; */
+        /* padding: 9px 8px; */
     } 
 }
+
+@media only screen and (max-width: 480px) {
+    .select-projects,
+    .date-report {
+        padding-right: 0 !important;
+    }
+
+    .date-report input{
+        text-align: center;
+    }
+}
+
 @media only screen and (min-width: 1024px) {
     .new-title {
         padding-bottom: 0;
@@ -229,12 +256,13 @@ h4.number{
 
 .inner-reports {
     background: #fff;
-    width: 208px;
-    height: 43px;
+    width: 100%;
+    min-width: 200px;
+    height: 49px;
     border-radius: 8px;
     border: 1px solid #E0E7EE;
     display: flex;
-    margin: 10px 0;
+    /* margin: 10px 0; */
 }
 @media only screen and (min-width: 992px) {
     .inner-reports { margin: 0; }
@@ -244,7 +272,7 @@ h4.number{
     font-size: 15px;
     line-height: 39px;
     font-weight: bold;
-    display: block;
+    /* display: block; */
     margin: 0 auto;
 }
 .inner-reports.focus {
@@ -256,9 +284,9 @@ h4.number{
 }
 @media only screen and (min-width: 1225px) {
     .box-export { 
-        padding: 0;
+        /* padding: 0;
         display: flex;
-        justify-content: end;
+        justify-content: end; */
     }
     .lk-export { margin: 0 auto; }
 }
@@ -823,8 +851,8 @@ h4.number{
 
 .box-chart-primary .title-graph {
     justify-content: space-between;
-    padding: 15px 0;
-    padding-top: 25px;
+    align-items: center;
+    height: 50px;
 }
 .box-chart-primary .title-graph.recurrence { padding-bottom: 5px; }
 
@@ -1197,8 +1225,67 @@ h4.number{
 .box-states, .brazil-map { flex:1; }
 
 .brazil-map { 
-    padding: 20px; 
+    padding: 15px 20px 20px 20px; 
     text-align: center;
+    position: relative;
+}
+
+.filter-brazil-map {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+
+    /* top: 10px;
+    right: 10px; */
+}
+
+
+.custom-radio-report[type="radio"] {
+    position: absolute;
+    left: -9999px;
+}
+
+.custom-radio-report[type="radio"] + label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3px 5px 3px 5px !important;
+    width: 95px;
+    height: 27px;
+    min-width: fit-content;
+    cursor: pointer;
+    font-size: 12px;
+    background-color: #FFF;
+    border: 1px solid #E0E7EE;
+    color: #8e8e8e;
+    margin: 0 !important;
+    transition: 0.5s;
+    padding: 2px 15px;
+    font-weight: bold;
+    line-height: 100%;
+}
+
+.custom-radio-report[type="radio"] + .left-label {
+    border-radius: 4px 0 0 4px;
+    border-right: none;
+}
+
+.custom-radio-report[type="radio"] + .right-label {
+    border-radius: 0 4px 4px 0;
+    border-left: none;
+}
+
+.custom-radio-report[type="radio"]:checked + label {
+    background-color: #2e85ec;
+    color: #fff;
+}
+
+.custom-radio-report[type="radio"] + label:hover {
+    opacity: 0.8;
+}
+
+.radio-group {
+    display: flex;
 }
 
 @media only screen and (min-width: 1920px){
@@ -1208,7 +1295,13 @@ h4.number{
 
 .box-states { border-right: 1px solid #F2F2F2; }
 
-.box-states .title-graph { padding: 25px 15px; }
+.box-states .title-graph { 
+    padding: 25px 15px; 
+}
+
+.title-graph {
+    margin: 15px 10px 25px 5px;
+}
 
 .box-states ul { 
     padding: 0; 
@@ -1620,7 +1713,8 @@ h4.number{
     background: linear-gradient(#000 0 0) top/100% 70%,linear-gradient(#000 0 0) bottom right/70% 20%, radial-gradient(circle closest-side,#000 90%,#0000) bottom left/25% 25%;
     /* -webkit-mask-repeat:no-repeat; */
     background:linear-gradient(90deg,#ECECEC 40%,#FFFA ,#ECECEC 60%) right/300% 100% ;
-    animation: m 1s linear infinite;
+    opacity: 0;
+    animation: m 0.5s linear infinite;
 }
 .skeleton-circle{
     height: 10px;
@@ -1641,10 +1735,10 @@ h4.number{
 /* .finance-card.commission .ske-load { margin: 20px auto 0; } */
 
 @-webkit-keyframes m {
-    to {background-position:left;}
+    to {background-position:left;opacity: 1;}
 }
 @keyframes m {
-    to {background-position:left;}
+    to {background-position:left;opacity: 1;}
 }
 
 #comission-graph,
@@ -1722,3 +1816,8 @@ h4.number{
     line-height: 20px;
 }
 .no-sell p { padding: 0 63px; }
+
+#card-conversion .ske-load {
+    position: absolute;
+    transform: translate(0, -40%);
+}
