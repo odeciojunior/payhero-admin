@@ -80,6 +80,9 @@ class ShippingApiController extends Controller
 
             $shippingValidated = $request->validated();
 
+            if($shippingValidated['regions_values']){
+                $shippingValidated['regions_values'] = json_encode($shippingValidated['regions_values']);
+            }
             if ($shippingValidated) {
                 $shippingValidated['project_id'] = current(Hashids::decode($projectId));
 
@@ -264,7 +267,9 @@ class ShippingApiController extends Controller
                 $project = $projectModel->find(current(Hashids::decode($projectId)));
 
                 if (Gate::allows('edit', [$project])) {
-
+                    // if($requestValidated['regions_values']){
+                    //     Log::debug($requestValidated['regions_values']);
+                    // }
                     if ($requestValidated['value'] == null || preg_replace("/[^0-9]/", "",
                             $requestValidated['value']) == 0) {
                         $requestValidated['value'] = '0,00';

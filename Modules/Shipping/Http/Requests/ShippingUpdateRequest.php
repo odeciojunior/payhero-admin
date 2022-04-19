@@ -27,6 +27,7 @@ class ShippingUpdateRequest extends FormRequest
             'receipt'            => 'nullable',
             'own_hand'           => 'nullable',
             "rule_value"         => "nullable",
+            "regions_values"     => "nullable",
             "apply_on_plans"     => "required|array",
             "not_apply_on_plans" => "sometimes|required|array"
         ];

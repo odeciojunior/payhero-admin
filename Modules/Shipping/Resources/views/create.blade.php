@@ -31,6 +31,7 @@
             <input name='value' type='text' class='input-pad shipping-value' value='' placeholder='0' maxlength='7'>
             <span id='shipping-value-error' class='text-danger'></span>
         </div>
+        
         <div class='form-group col-6 mb-0' id="shipping-multiple-value" style="display: none">
             <div class="row">
                 <div class='form-group col-12 mb-4' id="shipping-region-">
@@ -49,7 +50,7 @@
             <div class="row">
                 <div class='form-group col-12 mb-4' id="shipping-region-">
                     <label for='value3'>Valor do frete para o Centro-Oeste</label>
-                    <input name='value' type='text' class='input-pad shipping-value3' value='' placeholder='0' maxlength='7'>
+                    <input name='value3' type='text' class='input-pad shipping-value3' value='' placeholder='0' maxlength='7'>
                     <span id='shipping-value-error' class='text-danger'></span>
                 </div>
             </div>
@@ -63,11 +64,12 @@
             <div class="row">
                 <div class='form-group col-12 mb-0' id="shipping-region-">
                     <label for='value5'>Valor do frete para o Sul</label>
-                    <input name='value' type='text' class='input-pad shipping-value5' value='' placeholder='0' maxlength='7'>
+                    <input name='value5' type='text' class='input-pad shipping-value5' value='' placeholder='0' maxlength='7'>
                     <span id='shipping-value-error' class='text-danger'></span>
                 </div>
             </div>
-            <input type="hidden" id="regions_value" name="regions_value" >
+            
+            <input name='regions_values' id='regions_values' type='hidden' >
         </div>
 
         <div class="col-6">
