@@ -247,7 +247,7 @@ class SaleService
                 $status = [1, 2, 4, 7, 8, 12, 20, 21, 22, 24];
             } else {
                 $status = explode(',', $filters['status']);
-                //$status = in_array(7, $status) ? [7, 22] : $status; //REMOVER ESTA LINHA PARA APARECER TODOS OS STATUS
+                $status = in_array(7, $status) ? array_merge($status, [22]) : $status;
             }
 
             if(!empty($status)) {
@@ -388,13 +388,13 @@ class SaleService
         }
 
         $total -= $sale->automatic_discount;
-        
+
         //valor do produtor
         $value = $userTransaction->value??0;
         $cashbackValue = $sale->cashback->value ?? 0;
         $progressiveDiscount = $sale->progressive_discount ?? 0;
         $total -= $progressiveDiscount;
-        
+
         $comission = 'R$ ' . number_format($value/100, 2, ',', '.');
 
         //valor do afiliado
