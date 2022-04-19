@@ -47,7 +47,8 @@ class ReportsMarketingApiController extends Controller
     public function getMostFrequentSales(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -63,7 +64,8 @@ class ReportsMarketingApiController extends Controller
     public function getDevices(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -79,7 +81,8 @@ class ReportsMarketingApiController extends Controller
     public function getOperationalSystems(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -112,7 +115,8 @@ class ReportsMarketingApiController extends Controller
     public function getResumeCoupons(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -128,7 +132,8 @@ class ReportsMarketingApiController extends Controller
     public function getResumeRegions(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();

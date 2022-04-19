@@ -1230,11 +1230,11 @@ class ReportService
             $projectId = hashids_decode($filters['project_id']);
 
             $transactions = Transaction::join('sales', 'sales.id', 'transactions.sale_id')
-                                        ->where('project_id', $projectId)
-                                        ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-                                        ->whereNull('invitation_id')
+                                        ->where('sales.project_id', $projectId)
+                                        ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                                        ->whereNull('transactions.invitation_id')
                                         ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
-                                        ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ]);
+                                        ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ]);
 
             $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
@@ -2151,6 +2151,8 @@ class ReportService
             ];
         }
 
+        $cashbackData = [];
+
         $resume = $cashbacks
         ->select(DB::raw('cashbacks.value as cashback, HOUR(sales.start_date) as hour'))
         ->get();
@@ -2532,24 +2534,17 @@ class ReportService
     public function getResumeSales($filters)
     {
        try {
-            $transactions = $this->getSalesQueryBuilder($filters);
-
             $saleModel = new Sale();
-            $sales = $saleModel;
-            if (!empty($filters['project_id'])) {
-                $sales->where('project_id', current(Hashids::decode($filters['project_id'])));
-            } else {
-                $userProjects = UserProject::where('user_id', auth()->user()->account_owner_id)->pluck('project_id')->toArray();
-
-                $sales->whereIn('project_id', $userProjects);
-            }
+            $sales = $saleModel
+            ->where('status', Sale::STATUS_APPROVED)
+            ->where('project_id', current(Hashids::decode($filters['project_id'])));
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $date['startDate'] = $dateRange[0];
             $date['endDate'] = $dateRange[1];
 
             if ($date['startDate'] == $date['endDate']) {
-                return $this->getResumeSalesByHours($transactions, $filters);
+                return $this->getResumeSalesByHours($sales, $filters);
             } elseif ($date['startDate'] != $date['endDate']) {
                 $startDate  = Carbon::createFromFormat('Y-m-d', $date['startDate'], 'America/Sao_Paulo');
                 $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
@@ -2974,20 +2969,19 @@ class ReportService
     public function getResumeTypePayments($filters)
     {
         try {
-            $saleModel = new Sale();
-
-            $userId = auth()->user()->account_owner_id;
-            $status = Sale::STATUS_APPROVED;
+            $projectId = hashids_decode($filters['project_id']);
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
+            $saleModel = new Sale();
+
             $query = $saleModel
-            ->where('owner_id', $userId)
-            ->where('status', $status)
+            ->where('project_id', $projectId)
+            ->where('status', Sale::STATUS_APPROVED)
             ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-            ->selectRaw('SUM((sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100) as total')
-            ->selectRaw('SUM(IF(payment_method = 1, (sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100, 0)) as total_credit_card')
-            ->selectRaw('SUM(IF(payment_method = 2, (sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100, 0)) as total_boleto')
-            ->selectRaw('SUM(IF(payment_method = 4, (sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100, 0)) as total_pix')
+            ->selectRaw('SUM(original_total_paid_value / 100) as total')
+            ->selectRaw('SUM(IF(payment_method = 1, original_total_paid_value / 100, 0)) as total_credit_card')
+            ->selectRaw('SUM(IF(payment_method = 2, original_total_paid_value / 100, 0)) as total_boleto')
+            ->selectRaw('SUM(IF(payment_method = 4, original_total_paid_value / 100, 0)) as total_pix')
             ->first();
 
             $total = $query->total;
@@ -3026,7 +3020,6 @@ class ReportService
     {
         try {
             $userId = auth()->user()->account_owner_id;
-            $status = Sale::STATUS_APPROVED;
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
             $productModel = new Product();
@@ -3035,7 +3028,7 @@ class ReportService
             ->join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
             ->join('sales', 'products_plans_sales.sale_id', 'sales.id')
             ->where('sales.owner_id', $userId)
-            ->where('sales.status', $status)
+            ->where('sales.status', Sale::STATUS_APPROVED)
             ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
             ->select(DB::raw('products.name, products.photo as image, COUNT(*) as amount'))
             ->groupBy('products.id')
@@ -3068,11 +3061,6 @@ class ReportService
             }
 
             $productsArray = $query->toArray();
-
-            foreach($productsArray as $key => $product)
-            {
-                unset($productsArray[$key]['id_code']);
-            }
 
             array_push($productsArray, (object) [
                 'total' => $total

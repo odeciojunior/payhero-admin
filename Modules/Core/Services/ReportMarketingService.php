@@ -51,7 +51,8 @@ class ReportMarketingService
         return [
             'checkouts_count' => number_format($checkoutsCount, 0, '.', '.'),
             'sales_count' => number_format($salesCount, 0, '.', '.'),
-            'sales_value' => foxutils()->formatMoney($salesValue / 100)
+            'sales_value' => foxutils()->formatMoney($salesValue / 100),
+            'conversion' => !empty($checkoutsCount) ? number_format(($salesCount * 100) / $checkoutsCount, 1, '.', '.') . '%' : '0%'
         ];
     }
 
@@ -173,7 +174,7 @@ class ReportMarketingService
             $data['percentage_mobile'] = '0%';
         }
         else {
-            $data['percentage_mobile'] = number_format(($data['count_mobile'] * 100) / $data['total'], 2, '.', ',') . '%';;
+            $data['percentage_mobile'] = number_format(($data['count_mobile'] * 100) / $data['total'], 2, '.', ',') . '%';
         }
         if(empty($data['count_desktop'])){
             $data['count_desktop'] = 0;
@@ -314,11 +315,6 @@ class ReportMarketingService
             }
 
             $couponsArray = $coupons->toArray();
-
-            foreach($couponsArray as $key => $coupon)
-            {
-                unset($couponsArray[$key]['id_code']);
-            }
 
             array_push($couponsArray, [
                 'total' => $total

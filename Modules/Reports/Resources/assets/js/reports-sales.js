@@ -7,14 +7,13 @@ $(function() {
 
     changeCompany();
     changeCalendar();
-    
+
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
         $('input[name=daterange]').val(info.calendar);
-        $('#select_projects').val(JSON.parse(sessionStorage.info).company);
     }
 
-    $('.box-export').on('click', function() { 
+    $('.box-export').on('click', function() {
             $.ajax({
                 method: "GET",
                 url: salesUrl + "/recurrence?project_id=" + $("#select_projects option:selected").val(),
@@ -159,9 +158,9 @@ function barGraph() {
 
 function salesResume() {
     let salesTransactions, salesAverageTicket, salesComission, salesNumberChargeback = '';
-    
+
     var project_id = $("#select_projects option:selected").val();
-    var date_range = $("input[name='daterange']").val();    
+    var date_range = $("input[name='daterange']").val();
 
     $('#reports-content .onPreLoad *').remove();
     $("#sales-transactions,#sales-average-ticket,#sales-comission,#sales-number-chargeback").html(skeLoad);
@@ -186,7 +185,7 @@ function salesResume() {
                     <strong class="number">${transactions == undefined ? 0: transactions}</strong>
                 </div>
             `;
-            
+
             salesAverageTicket = `
                 <span class="title">Ticket Médio</span>
                 <div class="d-flex">
@@ -209,7 +208,7 @@ function salesResume() {
                     <span class="detail">R$</span>
                     <strong class="number">${chargeback == undefined ? '0,00': removeMoneyCurrency(chargeback)}</strong>
                 </div>
-            `;            
+            `;
 
             $("#sales-number-chargeback").html(salesNumberChargeback);
             $("#sales-comission").html(salesComission);
@@ -220,7 +219,7 @@ function salesResume() {
 }
 
 function distribution() {
-    let distributionHtml = '';   
+    let distributionHtml = '';
     $('#card-distribution .onPreLoad *').remove();
     $("#block-distribution").prepend(skeLoad);
 
@@ -241,14 +240,14 @@ function distribution() {
                 let series = [
                     approved.percentage,
                     pending.percentage,
-                    canceled.percentage, 
+                    canceled.percentage,
                     refused.percentage,
                     refunded.percentage,
                     chargeback.percentage,
                     other.percentage,
                 ];
-                
-                distributionHtml = `     
+
+                distributionHtml = `
                 <div class="d-flex box-graph-dist">
                     <div class="info-graph">
                         <h6 class="font-size-14 grey">Saldo Total</h6>
@@ -377,7 +376,7 @@ function distribution() {
                     </div>
                 </div>
                 `;
-                    
+
                 $("#block-distribution").html(distributionHtml);
                 $(".box-graph-dist").prepend('<div class="distribution-graph-seller"></div>');
                 distributionGraph(series);
@@ -400,7 +399,7 @@ function distribution() {
                                 <p>
                                     Não há dados suficientes
                                     para gerar este relatório.
-                                </p>   
+                                </p>
                             </footer>
                         </div>
                     </div>
@@ -408,10 +407,10 @@ function distribution() {
                 `;
                 $("#block-distribution").html(distributionHtml);
             }
-            
+
         }
     });
-    
+
 }
 
 function distributionGraph(series) {
@@ -447,15 +446,15 @@ function loadDevices() {
         },
         success: function success(response) {
             let {
-                total, 
-                percentage_desktop, 
-                percentage_mobile, 
-                count_desktop, 
+                total,
+                percentage_desktop,
+                percentage_mobile,
+                count_desktop,
                 count_mobile,
                 value_desktop,
                 value_mobile
             } = response.data;
-            
+
             deviceBlock = `
                  <div class="row container-payment">
                     <div class="container">
@@ -509,16 +508,16 @@ function loadDevices() {
                         </div>
                     </div>
 
-                    
+
                  </div>
             `;
             $("#block-devices").html(deviceBlock);
         }
-    }); 
+    });
 }
 
 function typePayments() {
-    let url = "/api/reports/resume/type-payments?date_range=" + $("input[name='daterange']").val();
+    let url = "/api/reports/resume/type-payments?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val();
     let paymentsHtml = '';
 
     $('#card-payments .onPreLoad *' ).remove();
@@ -712,7 +711,7 @@ function loadFrequenteSales() {
                                         <p>
                                             Não há dados suficientes
                                             para gerar este relatório.
-                                        </p>   
+                                        </p>
                                     </footer>
                                 </div>
                             </div>
@@ -724,7 +723,7 @@ function loadFrequenteSales() {
                 $("#block-sales").html(salesBlock);
             }
         }
-    });   
+    });
 }
 
 function abandonedCarts() {
@@ -841,7 +840,7 @@ function orderbump() {
                    </div>
                 `;
             }
-            
+
             $("#block-orderbump").html(orderbumpBlock);
         }
     });
@@ -865,7 +864,7 @@ function upsell() {
         },
         success: function success(response) {
             let { value, amount } = response.data;
-            
+
             if( value !== null ) {
                 upsellBlock = `
                     <div class="d-flex align-items">
@@ -1121,7 +1120,7 @@ function kFormatter(num) {
 
 function changeCalendar() {
     $('.onPreLoad *').remove();
-    
+
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
 
@@ -1212,7 +1211,7 @@ function updateReports() {
     var date_range = $("#date_range_requests").val();
     var startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
     var endDate = moment().format("YYYY-MM-DD");
-    
+
     $.ajax({
         url: "/api/reports",
         type: "GET",
@@ -1254,7 +1253,7 @@ function convertToReal(tooltipItem) {
         if (tooltipValue.length > 6) {
             tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
         }
-        
+
         return 'R$ ' + tooltipValue;
 }
 
