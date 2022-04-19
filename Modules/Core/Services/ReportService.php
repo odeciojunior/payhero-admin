@@ -2151,6 +2151,8 @@ class ReportService
             ];
         }
 
+        $cashbackData = [];
+
         $resume = $cashbacks
         ->select(DB::raw('cashbacks.value as cashback, HOUR(sales.start_date) as hour'))
         ->get();
@@ -2532,8 +2534,6 @@ class ReportService
     public function getResumeSales($filters)
     {
        try {
-            $transactions = $this->getSalesQueryBuilder($filters);
-
             $saleModel = new Sale();
             $sales = $saleModel
             ->where('status', Sale::STATUS_APPROVED)
@@ -2969,20 +2969,19 @@ class ReportService
     public function getResumeTypePayments($filters)
     {
         try {
-            $saleModel = new Sale();
-
-            $userId = auth()->user()->account_owner_id;
-            $status = Sale::STATUS_APPROVED;
+            $projectId = hashids_decode($filters['project_id']);
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
+            $saleModel = new Sale();
+
             $query = $saleModel
-            ->where('owner_id', $userId)
-            ->where('status', $status)
+            ->where('project_id', $projectId)
+            ->where('status', Sale::STATUS_APPROVED)
             ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
-            ->selectRaw('SUM((sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100) as total')
-            ->selectRaw('SUM(IF(payment_method = 1, (sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100, 0)) as total_credit_card')
-            ->selectRaw('SUM(IF(payment_method = 2, (sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100, 0)) as total_boleto')
-            ->selectRaw('SUM(IF(payment_method = 4, (sub_total + shipment_value) - (IFNULL(shopify_discount, 0) + automatic_discount) / 100, 0)) as total_pix')
+            ->selectRaw('SUM(original_total_paid_value / 100) as total')
+            ->selectRaw('SUM(IF(payment_method = 1, original_total_paid_value / 100, 0)) as total_credit_card')
+            ->selectRaw('SUM(IF(payment_method = 2, original_total_paid_value / 100, 0)) as total_boleto')
+            ->selectRaw('SUM(IF(payment_method = 4, original_total_paid_value / 100, 0)) as total_pix')
             ->first();
 
             $total = $query->total;
