@@ -4,7 +4,7 @@ $(document).ready(function () {
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
 
-    $('.redirect-to-accounts').click(function (e) {
+    $('.c').click(function (e) {
         e.preventDefault()
         let url_data = $(this).attr('data-url-value')
         $.ajax({
@@ -686,7 +686,7 @@ function ajaxVerifyDocumentPending() {
                     $('.top-alert-message').addClass('top-alert-danger');
                     $('.top-alert-message').html('Um de seus documentos foi recusado');
                     $('#document-pending').show();
-                    $('#document-pending .top-alert-action').attr('data-value-url', response.link);
+                    $('#document-pending .top-alert-action').attr('data-url-value', response.link);
                 } else if (response.accountStatus == 'account frozen') {
                     $('.top-alert-img').attr('src', '/build/global/img/svg/alerta-amar.svg');
                     $('.top-alert-message').html('Seu acesso é <strong>restrito</strong>, sua conta está <strong>congelada</strong>');
