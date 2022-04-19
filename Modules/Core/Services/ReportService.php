@@ -1233,7 +1233,6 @@ class ReportService
                                         ->where('sales.project_id', $projectId)
                                         ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
                                         ->whereNull('transactions.invitation_id')
-                                        ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
                                         ->whereIn('transactions.status_enum', [ Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID ]);
 
             $date['startDate'] = $dateRange[0];
@@ -1355,7 +1354,7 @@ class ReportService
 
             foreach ($resume as $r) {
                 if (Carbon::parse($r->date)->format('d-m') == $label) {
-                    $comissionValue += intval(preg_replace("/[^0-9]/", "", $r->commission));
+                    $comissionValue += foxutils()->onlyNumbers($r->commission);
                 }
             }
 
@@ -1659,9 +1658,6 @@ class ReportService
             $date['endDate'] = $dateRange[1];
 
             $transactions = Transaction::where('status_enum', Transaction::STATUS_PAID)
-                                        ->whereDoesntHave('blockReasonSale',function ($query) {
-                                            $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                                        })
                                         ->join('sales', 'sales.id', 'transactions.sale_id')
                                         ->where('sales.project_id', $projectId);
 
@@ -2534,10 +2530,8 @@ class ReportService
     public function getResumeSales($filters)
     {
        try {
-            $saleModel = new Sale();
-            $sales = $saleModel
-            ->where('status', Sale::STATUS_APPROVED)
-            ->where('project_id', current(Hashids::decode($filters['project_id'])));
+            $sales = Sale::where('status', Sale::STATUS_APPROVED)
+                            ->where('project_id', current(Hashids::decode($filters['project_id'])));
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
             $date['startDate'] = $dateRange[0];
@@ -3019,28 +3013,19 @@ class ReportService
     public function getResumeProducts($filters)
     {
         try {
-            $userId = auth()->user()->account_owner_id;
+            $projectId = hashids_decode($filters['project_id']);
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
-            $productModel = new Product();
-
-            $query = $productModel
-            ->join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
+            $query = Product::join('products_plans_sales', 'products.id', 'products_plans_sales.product_id')
             ->join('sales', 'products_plans_sales.sale_id', 'sales.id')
-            ->where('sales.owner_id', $userId)
             ->where('sales.status', Sale::STATUS_APPROVED)
+            ->where('sales.project_id', $projectId)
             ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
             ->select(DB::raw('products.name, products.photo as image, COUNT(*) as amount'))
             ->groupBy('products.id')
             ->orderByDesc('amount')
             ->limit(8)
             ->get();
-
-            if (!empty($filters["project"])) {
-                $projectId = Hashids::decode($filters["project"]);
-
-                $query->where('sales.project_id', $projectId);
-            }
 
             $total = 0;
             foreach($query as $r)

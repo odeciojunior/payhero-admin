@@ -22,23 +22,16 @@ class ReportFinanceService
     function getFinancesResume($filters)
     {
         try {
-            $transactionModel = new Transaction();
-            $companyModel = new Company();
-
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $projectId = hashids_decode($filters['project_id']);
+
             $userId = auth()->user()->account_owner_id;
-            $userCompanies = $companyModel->where('user_id', $userId)->get()->pluck('id')->toArray();
 
-            $transactions = $transactionModel
-            ->whereIn('company_id', $userCompanies)
-            ->join('sales', 'sales.id', 'transactions.sale_id')
-            ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-            ->whereNull('invitation_id');
-
-            if (!empty($filters["project"])) {
-                $projectId = current(Hashids::decode($filters["project"]));
-                $transactions->where('project_id', $projectId);
-            }
+            $transactions = Transaction::where('user_id', $userId)
+                                        ->join('sales', 'sales.id', 'transactions.sale_id')
+                                        ->where('sales.project_id', $projectId)
+                                        ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+                                        ->whereNull('invitation_id');
 
             $queryCount = $transactions->count();
 
@@ -46,25 +39,17 @@ class ReportFinanceService
 
             $queryComission = $transactions
             ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ])
-            ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
+            ->where('sales.project_id', $projectId)
+            ->where('sales.status', Sale::STATUS_APPROVED)
             ->sum('transactions.value');
 
-            $transactions = $transactionModel
-            ->whereIn('company_id', $userCompanies)
+            $queryChargeback = Transaction::where('user_id', $userId)
             ->join('sales', 'sales.id', 'transactions.sale_id')
-            ->whereBetween('start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
-            ->whereNull('invitation_id')
-            ->whereIn('sales.status', [ 1, 2, 4, 7, 8, 12, 20, 21, 22 ])
-            ->whereIn('status_enum', [ Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED ]);
-
-            if (!empty($filters["project"])) {
-                $projectId = current(Hashids::decode($filters["project"]));
-                $transactions->where('project_id', $projectId);
-            }
-
-            $queryChargeback = $transactions
-            ->where('status_enum', Transaction::STATUS_CHARGEBACK)
+            ->where('sales.project_id', $projectId)
             ->where('sales.status', Sale::STATUS_CHARGEBACK)
+            ->whereBetween('sales.start_date', [ $dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59' ])
+            ->whereNull('invitation_id')
+            ->where('status_enum', Transaction::STATUS_CHARGEBACK)
             ->sum('transactions.value');
 
             return [
@@ -294,7 +279,7 @@ class ReportFinanceService
             ->get();
 
             $resumeTransactions = $transactions
-            ->select(DB::raw('sales.original_total_paid_value, DATE(sales.start_date) as date'))
+            ->select(DB::raw('transactions.value, DATE(sales.start_date) as date'))
             ->get();
 
             $withdrawalData = [];
@@ -313,7 +298,7 @@ class ReportFinanceService
 
                 foreach ($resumeTransactions as $r) {
                     if (Carbon::parse($r->date)->format('M') == $label) {
-                        $transactionDataValue += intval(preg_replace("/[^0-9]/", "", $r->original_total_paid_value));
+                        $transactionDataValue += intval(preg_replace("/[^0-9]/", "", $r->value));
                     }
                 }
 
