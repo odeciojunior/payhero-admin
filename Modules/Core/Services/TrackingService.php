@@ -224,8 +224,6 @@ class TrackingService
                     //verifica se existem duplicatas do antigo código
                     $duplicates = Tracking::select('product_plan_sale_id as id')
                         ->where('tracking_code', $oldTrackingCode)
-                        ->orderByDesc('id')
-                        ->limit(30)
                         ->get();
                     //caso existam recria/revalida os códigos
                     if ($duplicates->isNotEmpty()) {
