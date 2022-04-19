@@ -36,7 +36,7 @@ class RevalidateTrackingDuplicateJob implements ShouldQueue
     public function handle()
     {
         foreach ($this->productPlanSales as $productPlanSale) {
-            $this->trackingService->createOrUpdateTracking($this->trackingCode, $productPlanSale['id'], false, false);
+            $this->trackingService->createOrUpdateTracking($this->trackingCode, $productPlanSale['id'], false, false, false);
         }
     }
 }

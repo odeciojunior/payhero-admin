@@ -166,7 +166,7 @@ class TrackingService
         return $systemStatusEnum;
     }
 
-    public function createOrUpdateTracking(string $trackingCode, int $productPlanSaleId, bool $logging = false, bool $notify = true): ?Tracking
+    public function createOrUpdateTracking(string $trackingCode, int $productPlanSaleId, bool $logging = false, bool $notify = true, bool $checkDuplicates = true): ?Tracking
     {
         try {
             $logging ? activity()->enableLogging() : activity()->disableLogging();
@@ -220,10 +220,12 @@ class TrackingService
                     event(new CheckSaleHasValidTrackingEvent($productPlanSale->sale_id));
                 }
 
-                if (strtoupper($oldTrackingCode) != strtoupper($trackingCode)) {
+                if (strtoupper($oldTrackingCode) != strtoupper($trackingCode) && $checkDuplicates) {
                     //verifica se existem duplicatas do antigo código
                     $duplicates = Tracking::select('product_plan_sale_id as id')
                         ->where('tracking_code', $oldTrackingCode)
+                        ->orderByDesc('id')
+                        ->limit(30)
                         ->get();
                     //caso existam recria/revalida os códigos
                     if ($duplicates->isNotEmpty()) {
