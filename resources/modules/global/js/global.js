@@ -4,7 +4,7 @@ $(document).ready(function () {
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
 
-    $('.c').click(function (e) {
+    $('.redirect-to-accounts').click(function (e) {
         e.preventDefault()
         let url_data = $(this).attr('data-url-value')
         $.ajax({
