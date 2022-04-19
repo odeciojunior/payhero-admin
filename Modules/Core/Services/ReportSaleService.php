@@ -264,21 +264,36 @@ class ReportSaleService
 
     public function getRecurrence($filters)
     {
-        return [];
-
         $projectId = hashids_decode($filters['project_id']);
 
-        $sales = Customer::select(DB::raw("MONTH(customers.created_at) as month, count(*) as amount"))
-        ->withCount(['sales' => function ($query) use($projectId) {
-            $query->where('sales.start_date', '>', now()->subMonths(6)->startOfMonth())
-                    ->where('sales.project_id', $projectId);
-        }])
-        ->having('sales_count', '>', 1)
-        ->groupBy('month')
-        ->get()
-        ->toArray();
+        config()->set('database.connections.mysql.strict', false);
+        DB::reconnect();
+
+        // $sales = Customer::select(DB::raw("MONTH(customers.created_at) as month, count(*) as amount"))
+        // ->withCount(['sales' => function ($query) use($projectId) {
+        //     $query->where('sales.start_date', '>', now()->subMonths(6)->startOfMonth())
+        //             ->where('sales.project_id', $projectId);
+        // }])
+        // ->having('sales_count', '>', 1)
+        // ->groupBy('month', 'customers.id')
+        // ->get()
+        // ->toArray();
+
+        $sales = Sale::select([
+            DB::raw('YEAR(sales.start_date) as year'),
+            DB::raw('MONTH(sales.start_date) as month'),
+            DB::raw('count(*) as amount'),
+            DB::raw('(select count(*) from sales as s where s.customer_id = sales.customer_id limit 1) as sales_count')
+        ])->where('sales.start_date', '>', now()->subMonths(6)->startOfMonth())
+            ->where('sales.project_id', $projectId)
+            ->having('sales_count', '>', 1)
+            ->groupBy('year', 'month')
+            ->get()
+            ->toArray();
+
+        config()->set('database.connections.mysql.strict', true);
+        DB::reconnect();
 
         return $sales;
-
     }
 }
