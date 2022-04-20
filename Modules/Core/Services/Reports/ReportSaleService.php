@@ -793,6 +793,7 @@ class ReportSaleService
     {
         $projectId = hashids_decode($filters['project_id']);
 
+        date_default_timezone_set('America/Sao_Paulo');
         config()->set('database.connections.mysql.strict', false);
         DB::reconnect();
 
@@ -805,13 +806,28 @@ class ReportSaleService
             ->where('sales.project_id', $projectId)
             ->having('sales_count', '>', 1)
             ->groupBy('year', 'month')
-            ->get()
-            ->toArray();
+            ->get();
 
         config()->set('database.connections.mysql.strict', true);
         DB::reconnect();
 
-        return $sales;
+        $labels = [];
+        $values = [];
+
+        foreach($sales as $sale) {
+            array_push($labels, date('M', mktime(0, 0, 0, $sale->month, 0, 0)));
+            array_push($values, $sale->sales_count);
+        }
+
+        $total = array_sum($values);
+
+        return [
+            'chart' => [
+                'labels' => $labels,
+                'values' => $values
+            ],
+            'total' => $total
+        ];
     }
 
     public function getColors($index = null, $hex = false)
