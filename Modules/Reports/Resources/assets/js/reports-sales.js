@@ -794,9 +794,9 @@ function orderbump() {
         },
         success: function success(response) {
             let { amount, value } = response.data;
-            value = value.toLocaleString('pt-br', {minimumFractionDigits: 2});
-
+            
             if(value !== null) {
+                value = value.toLocaleString('pt-br', {minimumFractionDigits: 2});
                 orderbumpBlock = `
                    <div class="d-flex align-items">
                        <div class="balance col-6">
@@ -862,9 +862,9 @@ function upsell() {
         },
         success: function success(response) {
             let { value, amount } = response.data;
-            value = value.toLocaleString('pt-br', {minimumFractionDigits: 2});
-
+            
             if( value !== null ) {
+                value = value.toLocaleString('pt-br', {minimumFractionDigits: 2});
                 upsellBlock = `
                     <div class="d-flex align-items">
                         <div class="balance col-6">
