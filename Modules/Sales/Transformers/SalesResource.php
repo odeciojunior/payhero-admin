@@ -46,7 +46,10 @@ class SalesResource extends JsonResource
         if ($this->payment_method == 4 && $this->status <> Sale::STATUS_APPROVED) {
             $thankLabelText = 'Link página de Qrcode:';
         }
-
+        // if($this->progressive_discount){
+        //     $total = (FoxUtils::formatMoney( (FoxUtils::onlyNumbers($this->details->total) - $this->progressive_discount) / 100) );
+        //     $this->details->total = $total;
+        // }
         $data = [
             'id' => hashids_encode($this->id, 'sale_id'),
             'upsell' => hashids_encode($this->upsell_id, 'sale_id'),
@@ -76,6 +79,7 @@ class SalesResource extends JsonResource
             //extra info
             'total' => $this->details->total ?? null,
             'subTotal' => $this->details->subTotal ?? null,
+            'progressive_discount' => FoxUtils::formatMoney($this->progressive_discount / 100,) ?? null,
             'discount' => $this->details->discount ?? null,
             'comission' => $this->details->comission ?? 0 + ($this->cashback->value ?? 0),
             'convertax_value' => $this->details->convertax_value ?? null,
