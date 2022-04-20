@@ -233,12 +233,25 @@ $(document).ready(function () {
             }, success: function success(response) {
 
                 $('#modal-edit-shipping .shipping-id').val(response.id_code).change();
-                console.log(response);
+                
+                
+                $('.shipping-regions-edit').prop('checked', true);
+                $('#shipping-multiple-value-edit').hide();
+                $('#shipping-single-value-edit').show();
+                
                 switch (response.type) {
                     case 'static':
                         $('#modal-edit-shipping #shipping-type').prop("selectedIndex", 0).change();
                         if(response.regions_values){
-                            alert('has reg');
+                            $('.shipping-regions-edit').prop('checked', false);
+                            $('#shipping-single-value-edit').hide();
+                            $('#shipping-multiple-value-edit').show();
+                            $('.regions_values').val(response.regions_values);
+                            var regions_values = JSON.parse(response.regions_values);
+                            for(i in regions_values){
+                                ii = i; ii++
+                                $('.shipping-value'+ii+'-edit').val(regions_values[i].value);
+                            }
                         }
                         break;
                     case 'pac':
@@ -318,28 +331,34 @@ $(document).ready(function () {
     //cria novo frete
     $("#modal-create-shipping .btn-save").click(function () {
         if($('.shipping-regions').is(':visible')==true && $('.shipping-regions').is(':checked')==false){
-            function get_test(k, f){
-                if($('.'+f).val() > 0){
-                    return '{"'+k+'":"'+$('.'+f).val()+'"},'
-                }else{
-                    alertCustom("error", "Preencha um valor para a regição "+k+"");
+            
+            var regions_values = []
+            var regions = ['NORTE', 'NORDESTE', 'CENTRO-OESTE', 'SUDESTE', 'SUL']
+            for(i in regions){
+                var ii = i
+                ii++
+                regions_values.push( { name: regions[i], value:$('.shipping-value'+ii).val() } );
+            }   
+            
+            for(i=1;i<=5;i++){
+                if(isNaN(parseInt($('.shipping-value'+i).val()))) $('.shipping-value'+i).val(0);
+                if(parseInt($('.shipping-value'+i).val())<=0){
+                    var ii = i
+                    ii--
+                    alertCustom("error", "Preencha um valor para a regição "+regions[ii]+"");
                     return false
                 }
             }
-            var regions_values = '[';
-            regions_values += get_test('NORTE','shipping-value1');
-            regions_values += get_test('NORDEST','shipping-value2');
-            regions_values += get_test('COESTE','shipping-value3');
-            regions_values += get_test('SUDESTE','shipping-value4');
-            regions_values += get_test('SUL','shipping-value5');
-            if(!get_test('NORTE','shipping-value1')) return false;
-            if(!get_test('NORDESTE','shipping-value2')) return false;
-            if(!get_test('COESTE','shipping-value3')) return false;
-            if(!get_test('SUDESTE','shipping-value4')) return false;
-            if(!get_test('SUL','shipping-value5')) return false;
+            $('#regions_values').val(JSON.stringify(regions_values))
+        }
+        if($('.shipping-regions').is(':visible')==true && $('.shipping-regions').is(':checked')==true){
+            if(isNaN(parseInt($('#shipping-single-value > input').val()))) $('#shipping-single-value > input').val(0);
+            if(parseInt($('#shipping-single-value > input').val())<=0){
+                alertCustom("error", "Preencha um valor para o frete fixo");
+                return false
+            }
+            $('#regions_values').val('')
 
-            $('#regions_values').val(regions_values+']')
-            
         }
 
         
@@ -371,6 +390,37 @@ $(document).ready(function () {
 
     //atualizar frete
     $("#modal-edit-shipping .btn-update").on('click', function () {
+        
+        if($('.shipping-regions-edit').is(':visible')==true && $('.shipping-regions-edit').is(':checked')==false){
+            var regions_values = []
+            var regions = ['NORTE', 'NORDESTE', 'CENTRO-OESTE', 'SUDESTE', 'SUL']
+            for(i in regions){
+                var ii = i
+                ii++
+                regions_values.push( { name: regions[i], value:$('.shipping-value'+ii+'-edit').val() } );
+            }   
+            
+            for(i=1;i<=5;i++){
+                if(isNaN(parseInt($('.shipping-value'+i+'-edit').val()))) $('.shipping-value'+i+'-edit').val(0);
+                if(parseInt($('.shipping-value'+i+'-edit').val())<=0){
+                    var ii = i
+                    ii--
+                    alertCustom("error", "Preencha um valor para a regição "+regions[ii]+"");
+                    return false
+                }
+            }
+            $('.regions_values').val(JSON.stringify(regions_values))
+
+        }
+        if($('.shipping-regions-edit').is(':visible')==true && $('.shipping-regions-edit').is(':checked')==true){
+            if(isNaN(parseInt($('#shipping-single-value-edit > input').val()))) $('#shipping-single-value-edit > input').val(0);
+            if(parseInt($('#shipping-single-value-edit > input').val())<=0){
+                alertCustom("error", "Preencha um valor para o frete fixo");
+                return false
+            }
+            $('.regions_values').val('')
+        }
+
         let formData = new FormData(document.querySelector('#modal-edit-shipping #form-update-shipping'));
         formData.set('status', $('#modal-edit-shipping .shipping-status').is(':checked') ? 1 : 0);
         formData.set('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').is(':checked') ? 1 : 0);
@@ -378,29 +428,7 @@ $(document).ready(function () {
         formData.set('own_hand', $('#modal-edit-shipping .shipping-ownhand').is(':checked') ? 1 : 0);
         let frete = $('#modal-edit-shipping .shipping-id').val();
 
-        if($('.shipping-regions-edit').is(':visible')==true && $('.shipping-regions-edit').is(':checked')==false){
-            function get_test(k, f){
-                if($('.'+f).val() > 0){
-                    return '{"'+k+'":"'+$('.'+f).val()+'"},'
-                }else{
-                    alertCustom("error", "Preencha um valor para a regição "+k+"");
-                    return false
-                }
-            }
-            var regions_values = '[';
-            regions_values += get_test('NORTE','shipping-value1-edit');
-            regions_values += get_test('NORDEST','shipping-value2-edit');
-            regions_values += get_test('COESTE','shipping-value3-edit');
-            regions_values += get_test('SUDESTE','shipping-value4-edit');
-            regions_values += get_test('SUL','shipping-value5-edit');
-            if(!get_test('NORTE','shipping-value1-edit')) return false;
-            if(!get_test('NORDESTE','shipping-value2-edit')) return false;
-            if(!get_test('COESTE','shipping-value3-edit')) return false;
-            if(!get_test('SUDESTE','shipping-value4-edit')) return false;
-            if(!get_test('SUL','shipping-value5-edit')) return false;
-
-            $('.regions_values').val(regions_values+']')
-        }
+        
 
         $.ajax({
             method: "POST",

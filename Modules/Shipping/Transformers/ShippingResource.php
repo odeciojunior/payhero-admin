@@ -59,6 +59,9 @@ class ShippingResource extends JsonResource
                 }
             }
         }
+        if($this->regions_values){
+            $this->value = 'Por regiões';
+        }
 
         return [
             'id_code' => Hashids::encode($this->id),

@@ -80,9 +80,7 @@ class ShippingApiController extends Controller
 
             $shippingValidated = $request->validated();
 
-            if($shippingValidated['regions_values']){
-                $shippingValidated['regions_values'] = json_encode($shippingValidated['regions_values']);
-            }
+            
             if ($shippingValidated) {
                 $shippingValidated['project_id'] = current(Hashids::decode($projectId));
 
