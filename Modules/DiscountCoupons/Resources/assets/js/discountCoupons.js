@@ -359,7 +359,7 @@ function run_search(search, now){
         for(i in items_selected){
             items_saved_array.push({'id':items_selected[i].id})
         }
-        console.log(items_saved_array);
+        
         $.ajax({
             data: {
                     most_sales: 1,
@@ -1567,7 +1567,10 @@ function toggleSelect(obj){
     }
 }
 
+
 function set_item_click(){
+    
+    var item_click_count = 0;
 
     $('.item').on('click', function () {
         
@@ -1587,6 +1590,7 @@ function set_item_click(){
                 description:$(this).attr('data-description'),
                 image:$(this).attr('data-image')
             })
+            item_click_count++
         }else{
             for(i in items_selected){
                 if(items_selected[i].id == $(this).attr('data-id')){
@@ -1601,7 +1605,12 @@ function set_item_click(){
         }else{
             $('.next-btn, .coupon-next, .c-edit-plans-save').prop('disabled',true)
         };
-
+        
+        if(item_click_count == 16){
+                
+                $(this).parents('.step1, #step1, #c-edit_step1, #edit_step1').find('input').first().trigger('keyup')
+            
+        }
     })
 
 
