@@ -504,8 +504,6 @@ function loadDevices() {
                             </div>
                         </div>
                     </div>
-
-
                  </div>
             `;
             $("#block-devices").html(deviceBlock);
@@ -533,7 +531,7 @@ function typePayments() {
         },
         success: function success(response) {
             let { credit_card, pix, boleto } = response.data;
-
+            
             paymentsHtml = `
                 <div class="row container-payment">
                     <div class="container">
@@ -994,7 +992,7 @@ function conversion() {
         },
         success: function success(response) {
             let { credit_card, pix, boleto } = response.data;
-
+            
             conversionBlock = `
                 <div class="row container-payment">
                     <div class="container">
@@ -1113,6 +1111,38 @@ function conversion() {
     });
 }
 
+function infoCard() {
+    let cardHtml = '';
+    $("#card-info .onPreLoad *" ).remove();
+    $("#block-info-card").prepend(skeLoad);
+
+    Promise.all([typePayments(),conversion()])
+    .then(result => {
+        let { credit_card } = result[0].data;
+        let conversionCard = result[1].data;
+
+        if(credit_card !== null) {
+            cardHtml = `
+                <div>
+                    <span class="ico-coin seller">
+                        <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.7647 0.164368C15.6137 0.164368 14.6814 1.09666 14.6814 2.2477V14.7477C14.6814 15.8987 15.6137 16.831 16.7647 16.831H18.848C19.9991 16.831 20.9314 15.8987 20.9314 14.7477V2.2477C20.9314 1.09666 19.9991 0.164368 18.848 0.164368H16.7647ZM16.7647 2.2477H18.848V14.7477H16.7647V2.2477ZM9.47303 4.33103C8.32199 4.33103 7.38969 5.26333 7.38969 6.41437V14.7477C7.38969 15.8987 8.32199 16.831 9.47303 16.831H11.5564C12.7074 16.831 13.6397 15.8987 13.6397 14.7477V6.41437C13.6397 5.26333 12.7074 4.33103 11.5564 4.33103H9.47303ZM9.47303 6.41437H11.5564V14.7477H9.47303V6.41437ZM2.18136 8.4977C1.03031 8.4977 0.0980225 9.42999 0.0980225 10.581V14.7477C0.0980225 15.8987 1.03031 16.831 2.18136 16.831H4.26469C5.41573 16.831 6.34803 15.8987 6.34803 14.7477V10.581C6.34803 9.42999 5.41573 8.4977 4.26469 8.4977H2.18136ZM2.18136 10.581H4.26469V14.7477H2.18136V10.581Z" fill="#2E85EC"/>
+                        </svg>
+                    </span>
+                </div>
+                <div>
+                    <span class="font-size-12">
+                    Cartão representa <strong class="card-represent">${credit_card.percentage}</strong> das vendas
+                    aprovadas e tem um indíce de conversão de <strong class="conversion-card">${conversionCard.credit_card.percentage}</strong>
+                    </span>
+                </div>
+            `;
+            $("#block-info-card").html(cardHtml);
+        }
+    })
+    .catch(e => console.log('error =>' + e)); 
+}    
+        
 function kFormatter(num) {
     return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num);
 }
@@ -1208,12 +1238,12 @@ function updateReports() {
             salesResume();
             distribution();
             loadDevices();
-            typePayments();
             loadFrequenteSales();
             abandonedCarts();
             orderbump();
             upsell();
-            conversion();
+            
+            infoCard();
         }
     });
 }

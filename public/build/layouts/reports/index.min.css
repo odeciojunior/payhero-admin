@@ -1066,7 +1066,12 @@ h4.number{
     height: 73px;
     padding: 45px 20px;
 }
-.cash-box.seller { padding: 0 24px; }
+.cash-box.seller { 
+    padding: 0 24px; 
+    height: 100%;
+    min-height: 73px;
+}
+.cash-box.seller .ske-load { margin-top: 15px; }
 
 .inner.relative { 
     position: relative; 
