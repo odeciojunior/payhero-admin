@@ -794,6 +794,7 @@ function orderbump() {
         },
         success: function success(response) {
             let { amount, value } = response.data;
+            value = value.toLocaleString('pt-br', {minimumFractionDigits: 2});
 
             if(value !== null) {
                 orderbumpBlock = `
@@ -809,7 +810,7 @@ function orderbump() {
                                Ganhos
                            </h6>
                            <small>R$</small>
-                           <strong class="total grey">${removeMoneyCurrency(value)}</strong>
+                           <strong class="total grey">${value}</strong>
                        </div>
                        <div class="balance col-6">
                            <h6 class="grey font-size-14 qtd">Conversões</h6>
@@ -861,6 +862,7 @@ function upsell() {
         },
         success: function success(response) {
             let { value, amount } = response.data;
+            value = value.toLocaleString('pt-br', {minimumFractionDigits: 2});
 
             if( value !== null ) {
                 upsellBlock = `
@@ -876,7 +878,7 @@ function upsell() {
                                 Ganhos
                             </h6>
                             <small>R$</small>
-                            <strong class="total grey">${removeMoneyCurrency(value)}</strong>
+                            <strong class="total grey">${value}</strong>
                         </div>
                         <div class="balance col-6">
                             <h6 class="grey font-size-14 qtd">Conversões</h6>
@@ -1209,8 +1211,8 @@ function updateReports() {
             typePayments();
             loadFrequenteSales();
             abandonedCarts();
-            //orderbump();
-            //upsell();
+            orderbump();
+            upsell();
             conversion();
         }
     });
