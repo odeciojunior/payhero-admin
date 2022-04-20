@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Services;
+namespace Modules\Core\Services\Reports;
 
 use Exception;
 use Modules\Core\Entities\Sale;
@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\ProductPlanSale;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Services\BrazilStatesService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ReportMarketingService
@@ -29,7 +30,7 @@ class ReportMarketingService
 
     public function getResumeMarketing($filters)
     {
-        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dateRange = foxutils()->validateDateRange($filters["date_range"]);
         $projectId = hashids_decode($filters['project_id']);
 
         $checkoutsCount = Checkout::where('project_id', $projectId)
@@ -58,7 +59,7 @@ class ReportMarketingService
 
     public function getSalesByState($filters)
     {
-        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dateRange = foxutils()->validateDateRange($filters["date_range"]);
         $projectId = hashids_decode($filters['project_id']);
 
         $data = Sale::select(DB::raw('delivery.state, count(*) as sales_amount, SUM(transaction.value) as value'))
@@ -112,7 +113,7 @@ class ReportMarketingService
 
     public function getMostFrequentSales($filters)
     {
-        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dateRange = foxutils()->validateDateRange($filters["date_range"]);
         $projectId = hashids_decode($filters['project_id']);
 
         $data = ProductPlanSale::select(DB::raw('product.photo, product.name, product.description, count(*) as sales_amount, sum(ifnull(transaction.value, 0)) as value'))
@@ -146,7 +147,7 @@ class ReportMarketingService
 
     public function getDevices($filters)
     {
-        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dateRange = foxutils()->validateDateRange($filters["date_range"]);
         $projectId = hashids_decode($filters['project_id']);
 
         $data = Sale::selectRaw("COUNT(*) AS total,
@@ -192,7 +193,7 @@ class ReportMarketingService
 
     public function getOperationalSystems($filters)
     {
-        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dateRange = foxutils()->validateDateRange($filters["date_range"]);
         $projectId = hashids_decode($filters['project_id']);
 
         $data = Checkout::select(DB::raw('os_enum, count(*) as sales_amount'))
@@ -234,7 +235,7 @@ class ReportMarketingService
 
     public function getStateDetail($filters)
     {
-        $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+        $dateRange = foxutils()->validateDateRange($filters["date_range"]);
         $projectId = hashids_decode($filters['project_id']);
 
         $totalValue = Sale::join('transactions as transaction', function ($join) {
@@ -276,7 +277,7 @@ class ReportMarketingService
     public function getResumeCoupons($filters)
     {
         try {
-            $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
             $projectId = hashids_decode($filters['project_id']);
 
             $coupons = Sale::select(DB::raw('sales.cupom_code as coupon, COUNT(*) as amount'))

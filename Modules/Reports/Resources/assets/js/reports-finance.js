@@ -1,24 +1,24 @@
 $(function() {
     loadingOnScreen();
     exportReports();
-    
-    updateReports();    
-    
+
+    updateReports();
+
     changeCompany();
     changeCalendar();
-    
+
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
-        $('input[name=daterange]').val(info.calendar); 
+        $('input[name=daterange]').val(info.calendar);
     }
-    
+
 });
 
 let resumeUrl = '/api/reports/resume';
 let financesResumeUrl = '/api/reports/finances';
 
 function distribution() {
-    let distributionHtml = '';   
+    let distributionHtml = '';
     $('#card-distribution .onPreLoad *').remove();
     $("#block-distribution").prepend(skeLoad);
 
@@ -36,7 +36,7 @@ function distribution() {
         success: function success(response) {
              let { available, blocked, pending, total } = response.data;
              let series = [available.percentage, pending.percentage, blocked.percentage];
-             
+
              distributionHtml = `
                 <div class="d-flex box-graph-dist">
                     <div class="info-graph">
@@ -89,15 +89,15 @@ function distribution() {
              distributionGraph(series);
         }
     });
-    
+
 }
 
 function withdrawals() {
 
-    let infoWithdraw, graphDraw = '';   
+    let infoWithdraw, graphDraw = '';
     $('#card-draw .onPreLoad *').remove();
     $("#draw").prepend(skeLoad);
-    
+
     return $.ajax({
         method: "GET",
         url: financesResumeUrl + "/withdrawals?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -156,7 +156,7 @@ function withdrawals() {
                         </div>
                     </footer>
                 </div>
-                
+
             `;
 
             graphDraw = `<div id="block-withdraw"></div>`;
@@ -217,9 +217,9 @@ function blockeds() {
 
 
 function onResume() {
-    let ticket, commission, chargebacks, transactions = '';   
+    let ticket, commission, chargebacks, transactions = '';
     $('#finance-card .onPreLoad *').remove();
-    
+
     $("#finance-commission,#finance-ticket,#finance-chargebacks,#finance-transactions").html(skeLoad);
 
     return $.ajax({
@@ -234,7 +234,7 @@ function onResume() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            
+
             transactions = `
                 <span class="title">N de transações</span>
                 <div class="d-flex">
@@ -243,7 +243,7 @@ function onResume() {
                     </strong>
                 </div>
             `;
-            
+
             ticket = `
                 <span class="title">Ticket Médio</span>
                 <div class="d-flex">
@@ -266,18 +266,18 @@ function onResume() {
                     <strong class="number"><span class="bold">${response.data.chargeback == undefined ? '0,00' : removeMoneyCurrency(response.data.chargeback)}</span></strong>
                 </div>
             `;
-            
+
             $("#finance-commission").html(commission);
             $("#finance-ticket").html(ticket);
             $("#finance-chargebacks").html(chargebacks);
             $("#finance-transactions").html(transactions);
         }
     });
-    
+
 }
 
 function onCommission() {
-    let infoComission = '';   
+    let infoComission = '';
     $('#info-commission .onPreLoad *').remove();
     $("#info-commission").prepend(skeLoad);
 
@@ -319,7 +319,7 @@ function onCommission() {
                         <div class="${response.data.total !== 'R$ 0,00' ?'new-finance-graph' : ''  }"></div>
                     </div>
                 </section>
-            `;           
+            `;
             $("#info-commission").html(infoComission);
 
             if( response.data.total !== 'R$ 0,00' ) {
@@ -328,7 +328,7 @@ function onCommission() {
                 let series = [...response.data.chart.values];
                 graphComission(series, labels);
             }
-        }    
+        }
     });
 }
 
@@ -347,7 +347,7 @@ function getPending() {
         },
         error: function error(response) {
             errorAjaxResponse(response);
-            
+
         },
         success: function success(response) {
             let { amount, value } = response.data;
@@ -385,7 +385,7 @@ function getCashback() {
             Authorization: $('meta[name="access-token"]').attr("content"),
             Accept: "application/json",
         },
-        
+
         error: function error(response) {
             errorAjaxResponse(response);
         },
@@ -412,9 +412,9 @@ function getCashback() {
                             <strong class="total grey">${quantity} vendas</strong>
                         </div>
                     `;
-                    
+
                 } else {
-                    cashBlock = `                
+                    cashBlock = `
                         <div class="balance col-4">
                             <div class="box-ico-cash">
                                 <span class="ico-cash">
@@ -430,10 +430,10 @@ function getCashback() {
                             <p class="txt-no-cashback">Suba de nível e mantenha a saúde da conta boa para receber cashback</p>
                         </div>
                     `;
-                }    
-               
+                }
+
             } else {
-                cashBlock = `                
+                cashBlock = `
                         <div class="balance col-4">
                             <div class="box-ico-cash">
                                 <span class="ico-cash">
@@ -457,7 +457,7 @@ function getCashback() {
 
 function changeCalendar() {
     $('.onPreLoad *').remove();
-    
+
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
 
@@ -491,7 +491,7 @@ function changeCalendar() {
     $('input[name="daterange"]').change(function() {
         updateStorage({calendar: $(this).val()})
     })
-    
+
 }
 
 function changeCompany() {
@@ -538,7 +538,7 @@ function updateReports() {
                 });
                 if(sessionStorage.info) {
                     $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-                } 
+                }
             } else {
                 $("#export-excel").hide();
                 $("#project-not-empty").hide();
@@ -549,37 +549,14 @@ function updateReports() {
         },
     });
 
-    var date_range = $("#date_range_requests").val();
-    var startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
-    var endDate = moment().format("YYYY-MM-DD");
-    
-    $.ajax({
-        url: "/api/reports",
-        type: "GET",
-        data: {
-            project: $("#select_projects").val(),
-            endDate: endDate,
-            startDate: startDate,
-        },
-        dataType: "json",
-        headers: {
-            Authorization: $('meta[name="access-token"]').attr("content"),
-            Accept: "application/json",
-        },
-        error: function error(response) {
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
-            $('.onPreLoad *').remove();
-            blockeds();
-            onResume();
-            onCommission();
-            getPending();
-            getCashback();
-            withdrawals();
-            distribution();
-        },
-    });
+    $('.onPreLoad *').remove();
+    blockeds();
+    onResume();
+    onCommission();
+    getPending();
+    getCashback();
+    withdrawals();
+    distribution();
 }
 
 
@@ -597,7 +574,7 @@ function graphComission(series, labels) {
          id: 'legendMargin',
          beforeInit(chart, legend, options) {
              const fitValue = chart.legend.fit;
-             chart.legend.fit = function () {  
+             chart.legend.fit = function () {
                  fitValue.bind(chart.legend)();
                  return this.height += 20;
              }
@@ -607,7 +584,7 @@ function graphComission(series, labels) {
     var gradient = ctx.createLinearGradient(0, 0, 0, 450);
     gradient.addColorStop(0, 'rgba(54,216,119, 0.23)');
     gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    
+
     const myChart = new Chart(ctx, {
         plugins: [legendMargin],
         type: 'line',
@@ -652,7 +629,7 @@ function graphComission(series, labels) {
                         color: '#ECE9F1',
                         drawBorder: false
                     },
-                    
+
                     ticks: {
                         padding: 15,
                         font: {
@@ -664,7 +641,7 @@ function graphComission(series, labels) {
                             return (value / 100000) + 'K '
                         }
                     }
-                    
+
                 },
             },
             pointBackgroundColor:"#1BE4A8",
@@ -697,13 +674,13 @@ function graphComission(series, labels) {
 function barGraph(series, labels, withdraw) {
     const titleTooltip = (tooltipItems) => {
         return '';
-    }   
+    }
 
     const legendMargin = {
         id: 'legendMargin',
         beforeInit(chart, legend, options) {
             const fitValue = chart.legend.fit;
-            chart.legend.fit = function () {  
+            chart.legend.fit = function () {
                 fitValue.bind(chart.legend)();
                 return this.height += 20;
             }
@@ -724,7 +701,7 @@ function barGraph(series, labels, withdraw) {
                         backgroundColor: "rgba(69, 208, 126, 1)",
                         borderRadius: 4,
                         barThickness: 30,
-                    }, 
+                    },
                     {
                         label: 'Saques',
                         data: withdraw,
@@ -762,7 +739,7 @@ function barGraph(series, labels, withdraw) {
                         }
                     },
                 },
-                
+
                 responsive: true,
                 scales: {
                     x: {
@@ -837,7 +814,7 @@ function barGraph(series, labels, withdraw) {
         if (tooltipValue.length > 6) {
             tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
         }
-        
+
         return 'R$ ' + tooltipValue;
 }
 

@@ -524,11 +524,7 @@ $(function () {
         updateSalesByOrigin()
     }
 
-    var current_currency = "";
-
     function updateReports() {
-        var date_range = $("#date_range_requests").val();
-
         $('#payment-type-items .bar').css('width','100%');
         $('#payment-type-items .bar').removeClass('blue');
         $('#payment-type-items .bar').removeClass('pink');
@@ -548,122 +544,7 @@ $(function () {
             $(".origin-report").hide();
         }
 
-        $.ajax({
-            url: "/api/reports",
-            type: "GET",
-            data: {
-                project: $("#select_projects").val(),
-                endDate: endDate,
-                startDate: startDate,
-            },
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                current_currency = response.currency;
-
-                // if(response.totalPaidValueAproved='R$ 0,00' || response.totalPaidValueAproved ==false || !response.totalPaidValueAproved){
-                //     response.totalPaidValueAproved='R$ <span class="grey font-size-24 bold">0,00</span>'
-                // }else{
-                //     let split=response.totalPaidValueAproved.split(/\s/g);
-                //     response.totalPaidValueAproved=split[0]+' <span class="font-size-30 bold">'+split[1]+'</span>';
-                // }
-
-                // $("#revenue-generated").html(response.totalPaidValueAproved);
-                // $("#qtd-aproved").html(response.contAproved);
-                // $("#qtd-boletos").html(response.contBoleto);
-                // $("#qtd-pix").html(response.contPix);
-                // $("#qtd-recusadas").html(response.contRecused);
-                // // $("#qtd-reembolso").html(response.contRefunded);
-                // $("#qtd-chargeback").html(response.contChargeBack);
-                // // $("#qtd-dispute").html(response.contInDispute);
-                // $("#qtd-pending").html(response.contPending);
-                // $("#qtd-canceled").html(response.contCanceled);
-
-                // $("#percent-boleto-convert").html(`
-                //     <span class="money-td"> ${parseFloat(response.convercaoBoleto).toFixed(1)} % </span>
-                // `);
-                // $("#percent-credit-card-convert").html(`
-                //     <span class="money-td"> ${parseFloat(response.convercaoCreditCard).toFixed(1)} % </span>
-                // `);
-                // $("#percent-pix-convert").html(`
-                //     <span class="money-td"> ${parseFloat(response.convercaoPix).toFixed(1)} % </span>
-                // `);
-                // $("#percent-desktop").html(`
-                //     ${parseFloat(response.conversaoDesktop).toFixed(1)} %
-                // `);
-                // $("#percent-mobile").html(`
-                //     ${parseFloat(response.conversaoMobile).toFixed(1)} %
-                // `);
-                // $("#qtd-cartao-convert").html(response.cartaoConvert);
-                // $("#qtd-boleto-convert").html(response.boletoConvert);
-                // $("#qtd-pix-convert").html(response.pixConvert);
-                // $("#ticket-medio").html(
-                //     response.currency + " " + response.ticketMedio
-                // );
-
-                // $('#conversion-items').asScrollable();
-                // $('#payment-type-items').asScrollable();
-
-                // var table_data_itens = "";
-                // if (!isEmpty(response.plans)) {
-                //     $.each(response.plans, function (index, data) {
-                //         table_data_itens += "<tr>";
-                //         table_data_itens +=
-                //             "<td><img src=" +
-                //             data.photo +
-                //             ' width="50px;" style="border-radius:6px;"></td>';
-                //         table_data_itens += "<td>" + data.name + "</td>";
-                //         table_data_itens +=
-                //             "<td> x " + data.quantidade + "</td>";
-                //         table_data_itens += "</tr>";
-                //     });
-                // } else {
-                //     table_data_itens +=
-                //         "<tr class='text-center'><td colspan='3' style='vertical-align: middle'><img style='height:90px' src='" +
-                //         $("#origins-table-itens").attr("img-empty") +
-                //         "'>Nenhuma venda encontrada</td></tr>";
-                // }
-
-                // $("#origins-table-itens").html("");
-                // $("#origins-table-itens").append(table_data_itens);
-                // var flag = false;
-                // $.each(response.chartData.boleto_data,function(index,value){
-                //     if (value!=false) {
-                //         flag=true;
-                //     }
-                // });
-                // $.each(response.chartData.credit_card_data,function(index,value){
-                //     if (value!=false) {
-                //         flag=true;
-                //     }
-                // });
-                // $.each(response.chartData.pix_data,function(index,value){
-                //     if (value!=false) {
-                //         flag=true;
-                //     }
-                // });
-                // if (flag==true) {
-                //     $('#empty-graph>').hide();
-                //     $('#scoreLineToDay').show();
-                //     $('#scoreLineToWeek').show();
-                //     $('#scoreLineToMonth').show();
-                //     updateGraph(response.chartData);
-                // }else{
-                //     $('#empty-graph>').show();
-                //     $('#scoreLineToDay').hide();
-                //     $('#scoreLineToWeek').hide();
-                //     $('#scoreLineToMonth').hide();
-                // }
-                resume();
-
-            },
-        });
+        resume();
     }
 
     function updateSalesByOrigin() {
@@ -737,11 +618,7 @@ $(function () {
                         table_data += "<td>" + data.origin + "</td>";
                         table_data += "<td>" + data.sales_amount + "</td>";
                         table_data +=
-                            "<td>" +
-                            current_currency +
-                            " " +
-                            data.balance +
-                            "</td>";
+                            "<td>" + data.balance + "</td>";
                         table_data += "</tr>";
                     });
 

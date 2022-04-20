@@ -2,10 +2,9 @@
 
 namespace Modules\Reports\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Core\Services\ReportMarketingService;
+use Modules\Core\Services\Reports\ReportMarketingService;
 use Modules\Reports\Transformers\SalesByOriginResource;
 
 class ReportsMarketingApiController extends Controller

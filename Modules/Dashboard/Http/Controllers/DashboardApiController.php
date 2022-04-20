@@ -27,7 +27,7 @@ use Modules\Core\Services\BenefitsService;
 use Modules\Core\Services\ChargebackService;
 use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\ReportService;
+use Modules\Core\Services\Reports\ReportService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
 use Modules\Core\Services\TrackingService;

@@ -1211,39 +1211,16 @@ function updateReports() {
         },
     });
 
-    var date_range = $("#date_range_requests").val();
-    var startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
-    var endDate = moment().format("YYYY-MM-DD");
-
-    $.ajax({
-        url: "/api/reports",
-        type: "GET",
-        data: {
-            project: $("#select_projects").val(),
-            endDate: endDate,
-            startDate: startDate,
-        },
-        dataType: "json",
-        headers: {
-            Authorization: $('meta[name="access-token"]').attr("content"),
-            Accept: "application/json",
-        },
-        error: function error(response) {
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
-            $('.onPreLoad *').remove();
-            salesResume();
-            distribution();
-            loadDevices();
-            typePayments();
-            loadFrequenteSales();
-            abandonedCarts();
-            orderbump();
-            upsell();
-            conversion();
-        },
-    });
+    $('.onPreLoad *').remove();
+    salesResume();
+    distribution();
+    loadDevices();
+    typePayments();
+    loadFrequenteSales();
+    abandonedCarts();
+    orderbump();
+    upsell();
+    conversion();
 }
 
 function convertToReal(tooltipItem) {
