@@ -17,7 +17,7 @@ class CopyBankAccountDataToTableCompanyBankAccount extends Migration
      */
     public function up()
     {
-        $companies = DB::table('companies')->where('document','<>','')->where('bank_document_status',true)
+        $companies = DB::table('companies')->where('document','<>','')->where('bank_document_status',Company::STATUS_APPROVED)
         ->whereNotNull('agency')->whereNotNull('bank')->whereNotNull('account')->whereNotNull('account_digit')->get();
 
         $output = new ConsoleOutput();

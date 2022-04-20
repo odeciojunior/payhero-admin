@@ -43,7 +43,7 @@ class WithdrawalResource extends JsonResource
 
     private function accountInformation(): string
     {
-        $bankAccount =  $this->getDefaultBankAccount();
+        $bankAccount =  $this->company->getDefaultBankAccount();
         if(!empty($bankAccount)){
             switch($bankAccount->transfer_type){
                 case 'PIX':
