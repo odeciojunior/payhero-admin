@@ -159,15 +159,12 @@ function barGraph() {
 function salesResume() {
     let salesTransactions, salesAverageTicket, salesComission, salesNumberChargeback = '';
 
-    var project_id = $("#select_projects option:selected").val();
-    var date_range = $("input[name='daterange']").val();
-
     $('#reports-content .onPreLoad *').remove();
     $("#sales-transactions,#sales-average-ticket,#sales-comission,#sales-number-chargeback").html(skeLoad);
 
     $.ajax({
         method: "GET",
-        url: salesUrl + "/resume?project_id=" + project_id + "&date_range=" + date_range,
+        url: salesUrl + "/resume?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -1205,19 +1202,18 @@ function updateReports() {
             }
 
             loadingOnScreenRemove();
-        },
+            $('.onPreLoad *').remove();
+            salesResume();
+            distribution();
+            loadDevices();
+            typePayments();
+            loadFrequenteSales();
+            abandonedCarts();
+            //orderbump();
+            //upsell();
+            conversion();
+        }
     });
-
-    $('.onPreLoad *').remove();
-    salesResume();
-    distribution();
-    loadDevices();
-    typePayments();
-    loadFrequenteSales();
-    abandonedCarts();
-    //orderbump();
-    //upsell();
-    conversion();
 }
 
 function convertToReal(tooltipItem) {

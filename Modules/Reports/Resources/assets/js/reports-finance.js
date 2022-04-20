@@ -546,17 +546,16 @@ function updateReports() {
             }
 
             loadingOnScreenRemove();
+            $('.onPreLoad *').remove();
+            blockeds();
+            onResume();
+            onCommission();
+            getPending();
+            getCashback();
+            withdrawals();
+            distribution();
         },
     });
-
-    $('.onPreLoad *').remove();
-    blockeds();
-    onResume();
-    onCommission();
-    getPending();
-    getCashback();
-    withdrawals();
-    distribution();
 }
 
 
