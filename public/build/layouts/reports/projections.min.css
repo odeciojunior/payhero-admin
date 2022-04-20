@@ -232,11 +232,11 @@ h4.number{
         margin: 0 -1.0715rem;
     }
     
-    .box-select input {
-        /* margin-left: 5px! important; */
-        /* width: 92% !important; */
-        /* padding: 9px 8px; */
-    } 
+    /* .box-select input {
+        margin-left: 5px! important;
+        width: 92% !important;
+        padding: 9px 8px;
+    }  */
 }
 
 @media only screen and (max-width: 480px) {
@@ -285,11 +285,11 @@ h4.number{
     float: left; 
 }
 @media only screen and (min-width: 1225px) {
-    .box-export { 
-        /* padding: 0;
+    /* .box-export { 
+        padding: 0;
         display: flex;
-        justify-content: end; */
-    }
+        justify-content: end;
+    } */
     .lk-export { margin: 0 auto; }
 }
 
