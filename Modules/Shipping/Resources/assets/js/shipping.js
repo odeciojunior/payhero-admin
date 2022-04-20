@@ -105,6 +105,11 @@ $(document).ready(function () {
     $('.shipping-value3').mask('#.##0,00', {reverse: true});
     $('.shipping-value4').mask('#.##0,00', {reverse: true});
     $('.shipping-value5').mask('#.##0,00', {reverse: true});
+    $('.shipping-value1-edit').mask('#.##0,00', {reverse: true});
+    $('.shipping-value2-edit').mask('#.##0,00', {reverse: true});
+    $('.shipping-value3-edit').mask('#.##0,00', {reverse: true});
+    $('.shipping-value4-edit').mask('#.##0,00', {reverse: true});
+    $('.shipping-value5-edit').mask('#.##0,00', {reverse: true});
     $('.rule-shipping-value').mask('#.##0,00', {reverse: true});
 
     $('.rule-shipping-value').on('blur', function () {
@@ -353,10 +358,10 @@ $(document).ready(function () {
         }
         if($('.shipping-regions').is(':visible')==true && $('.shipping-regions').is(':checked')==true){
             if(isNaN(parseInt($('#shipping-single-value > input').val()))) $('#shipping-single-value > input').val(0);
-            if(parseInt($('#shipping-single-value > input').val())<=0){
-                alertCustom("error", "Preencha um valor para o frete fixo");
-                return false
-            }
+            // if(parseInt($('#shipping-single-value > input').val())<=0){
+            //     alertCustom("error", "Preencha um valor para o frete fixo");
+            //     return false
+            // }
             $('#regions_values').val('')
 
         }
@@ -414,10 +419,10 @@ $(document).ready(function () {
         }
         if($('.shipping-regions-edit').is(':visible')==true && $('.shipping-regions-edit').is(':checked')==true){
             if(isNaN(parseInt($('#shipping-single-value-edit > input').val()))) $('#shipping-single-value-edit > input').val(0);
-            if(parseInt($('#shipping-single-value-edit > input').val())<=0){
-                alertCustom("error", "Preencha um valor para o frete fixo");
-                return false
-            }
+            // if(parseInt($('#shipping-single-value-edit > input').val())<=0){
+            //     alertCustom("error", "Preencha um valor para o frete fixo");
+            //     return false
+            // }
             $('.regions_values').val('')
         }
 
