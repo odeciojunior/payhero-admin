@@ -152,8 +152,10 @@ class ReportMarketingService
 
         $data = Sale::selectRaw("COUNT(*) AS total,
                         SUM(CASE WHEN checkout.is_mobile = 1 THEN 1 ELSE 0 END) AS count_mobile,
-                        SUM(CASE WHEN checkout.is_mobile = 0 THEN 1 ELSE 0 END) AS count_desktop,
+                        SUM(CASE WHEN checkout.is_mobile = 1 and sales.status = 1 THEN 1 ELSE 0 END) AS count_mobile_approved,
                         SUM(CASE WHEN checkout.is_mobile = 1 THEN transaction.value ELSE 0 END) AS value_mobile,
+                        SUM(CASE WHEN checkout.is_mobile = 0 THEN 1 ELSE 0 END) AS count_desktop,
+                        SUM(CASE WHEN checkout.is_mobile = 0 and sales.status = 1 THEN 1 ELSE 0 END) AS count_desktop_approved,
                         SUM(CASE WHEN checkout.is_mobile = 0 THEN transaction.value ELSE 0 END) AS value_desktop
                     ",)
                     ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
@@ -166,29 +168,42 @@ class ReportMarketingService
                     })
                     ->where('owner_id', auth()->user()->account_owner_id)
                     ->where('sales.project_id', $projectId)
-                    ->where('sales.status', Sale::STATUS_APPROVED)
                     ->first()
                     ->toArray();
 
         if(empty($data['count_mobile'])){
             $data['count_mobile'] = 0;
+            $data['count_mobile_approved'] = 0;
             $data['percentage_mobile'] = '0%';
-        }
-        else {
+        } else {
             $data['percentage_mobile'] = number_format(($data['count_mobile'] * 100) / $data['total'], 2, '.', ',') . '%';
         }
+
         if(empty($data['count_desktop'])){
             $data['count_desktop'] = 0;
+            $data['count_desktop_approved'] = 0;
             $data['percentage_desktop'] = '0%';
-        }
-        else {
+        } else {
             $data['percentage_desktop'] = number_format(($data['count_desktop'] * 100) / $data['total'], 2, '.', ',') . '%';;
         }
 
         $data['value_mobile'] = $data['value_mobile'] > 0 ? foxutils()->formatMoney($data['value_mobile'] / 100) : 'R$ 0,00';
         $data['value_desktop'] = $data['value_desktop'] > 0 ? foxutils()->formatMoney($data['value_desktop'] / 100) : 'R$ 0,00';
 
-        return $data;
+        return [
+            'mobile' => [
+                'total' => $data['count_mobile'],
+                'approved' => $data['count_mobile_approved'],
+                'value' => $data['value_mobile'],
+                'percentage' => $data['percentage_mobile']
+            ],
+            'desktop' => [
+                'total' => $data['count_desktop'],
+                'approved' => $data['count_desktop_approved'],
+                'value' => $data['value_desktop'],
+                'percentage' => $data['percentage_desktop']
+            ]
+        ];
     }
 
     public function getOperationalSystems($filters)

@@ -782,7 +782,6 @@ class ReportSaleService
                     'percentage' => round($percentagePix, 1, PHP_ROUND_HALF_UP).'%'
                 ]
             ];
-
         } catch(Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao carregar dados.'], 400);
