@@ -101,9 +101,9 @@ function getFilters(urlParams = false) {
     let data = {
         'company': $("#company").val(),
         'project': $("#project").val(),
-        'client': $("#comprador").val(),
+        'client': $("#client").val(),
         'customer_document': $("#customer_document").val(),
-        'payment_method': $("#forma").val(),
+        'payment_method': $("#payment_method").val(),
         'sale_code': $("#sale_code").val().replace('#', ''),
         'date_type': $("#date_type").val(),
         'date_range': $("#date_range").val(),
