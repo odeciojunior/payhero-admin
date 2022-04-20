@@ -1139,6 +1139,7 @@ function changeCalendar() {
         }
     })
     .on('datepicker-change', function () {
+        updateStorage({calendar: $(this).val()});
         updateReports();
     })
     .on('datepicker-open', function () {
@@ -1150,17 +1151,13 @@ function changeCalendar() {
             $(this).addClass('active');
         }
     });
-
-    $('input[name="daterange"]').change(function() {
-        updateStorage({calendar: $(this).val()})
-    })
-
 }
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
         $('.onPreLoad *').remove();
         $('.onPreLoad').html(skeLoad);
+
         updateStorage({company: $(this).val()});
         updateReports();
     });
@@ -1218,8 +1215,8 @@ function updateReports() {
     typePayments();
     loadFrequenteSales();
     abandonedCarts();
-    orderbump();
-    upsell();
+    //orderbump();
+    //upsell();
     conversion();
 }
 
@@ -1237,14 +1234,13 @@ function convertToReal(tooltipItem) {
         return 'R$ ' + tooltipValue;
 }
 
-function updateStorage(value){
-    let prevData;
-    if(sessionStorage.info) JSON.parse(sessionStorage.getItem('info'));
-
-    Object.keys(value).forEach(function(val, key){
-         prevData[val] = value[val];
-    })
-    sessionStorage.setItem('info', JSON.stringify(prevData));
+function updateStorage(v){
+    var existing = sessionStorage.getItem('info');
+    existing = existing ? JSON.parse(existing) : {};
+    Object.keys(v).forEach(function(val, key){
+        existing[val] = v[val];
+   })
+    sessionStorage.setItem('info', JSON.stringify(existing));
 }
 
 function exportReports() {
