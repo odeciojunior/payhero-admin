@@ -157,7 +157,7 @@ class ReportMarketingService
                         SUM(CASE WHEN checkout.is_mobile = 0 THEN 1 ELSE 0 END) AS count_desktop,
                         SUM(CASE WHEN checkout.is_mobile = 0 and sales.status = 1 THEN 1 ELSE 0 END) AS count_desktop_approved,
                         SUM(CASE WHEN checkout.is_mobile = 0 THEN transaction.value ELSE 0 END) AS value_desktop
-                    ",)
+                    ")
                     ->whereBetween('start_date', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
                     ->join('checkouts as checkout', function ($join) {
                         $join->on('sales.checkout_id', '=', 'checkout.id');
@@ -336,38 +336,36 @@ class ReportMarketingService
     public function getResumeRegions($filters)
     {
         try {
-            $userId = auth()->user()->account_owner_id;
-            $status = [Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED];
             $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $projectId = current(Hashids::decode($filters['project_id']));
 
-            $query = Checkout::select(
-                DB::raw('ip, COUNT(DISTINCT CASE WHEN status_enum = 1 then id end) as acessed, COUNT(DISTINCT CASE WHEN status_enum = 4 then id end) as finalized')
+            $regions = Checkout::select(
+                DB::raw('
+                    ip_state as region,
+                    COUNT(DISTINCT CASE WHEN status_enum = 1 then id end) as access,
+                    COUNT(DISTINCT CASE WHEN status_enum = 4 then id end) as conversion
+                ')
             )
-            ->whereIn('checkouts.status_enum', $status)
-            ->whereBetween('checkouts.created_at', [$dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59'])
-            ->groupBy('checkouts.ip');
+            ->whereIn('checkouts.status_enum', [ Checkout::STATUS_ACCESSED, Checkout::STATUS_SALE_FINALIZED ])
+            ->whereBetween('checkouts.created_at', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ])
+            ->where('checkouts.project_id', $projectId)
+            ->groupBy('region')
+            ->get()
+            ->toArray();
 
-            if (!empty($filters['project_id'])) {
-                $query->where('checkouts.project_id', current(Hashids::decode($filters['project_id'])));
-            } else {
-                $user_projects = UserProject::where('user_id', $userId)->get()->pluck('id');
-
-                $query->whereIn('checkouts.project_id', $user_projects);
-            }
-
-            $regions = $query->get();
+            $total = 0;
             foreach($regions as $region)
             {
-                $region->state = json_decode(getRegionByIp($region->ip))->state;
+                $total += $region['access'] + $region['conversion'];
             }
 
-            $regionsArray = $regions->toArray();
-            foreach($regionsArray as $key => $region)
+            foreach($regions as $region)
             {
-                unset($regionsArray[$key]['id_code']);
+                $region['percentage_access'] = round(number_format(($region['access'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
+                $region['percentage_conversion'] = round(number_format(($region['conversion'] * 100) / $total, 2, '.', ','), 1, PHP_ROUND_HALF_UP);
             }
 
-            return $regionsArray;
+            return $regions;
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
