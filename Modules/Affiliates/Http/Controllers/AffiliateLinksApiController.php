@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Affiliates\Transformers\AffiliateLinkCollection;
 use Modules\Affiliates\Transformers\AffiliateLinkResource;
 use Modules\Core\Entities\Affiliate;
 use Modules\Core\Entities\AffiliateLink;
@@ -42,7 +43,7 @@ class AffiliateLinksApiController extends Controller
                 $query->where('status', 3);
             });
 
-            return AffiliateLinkResource::collection($links->paginate(5));
+            return new AffiliateLinkCollection($links->simplePaginate(5));
 
         } catch (Exception $e) {
             return response()->json(['message' => 'Ocorreu um erro'], 400);
