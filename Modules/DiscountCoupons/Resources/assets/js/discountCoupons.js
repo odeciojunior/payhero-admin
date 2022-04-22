@@ -9,6 +9,15 @@ var cancel_edit_rules = []
 
 let projectId = $(window.location.pathname.split('/')).get(-1);
 
+function formatMoney(input) {
+    $(input).on('blur', function() {
+        if($(this).val().length > 2) return;
+        $(this).val( new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format($(this).val() ) );
+        // input = this
+        // if($(input).val().length > 2) return;
+        // $(input).val( new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format($(input).val() ) );
+    });    
+}
 
 function count_plans_coupons(qtde) { //thumbnails
     
@@ -153,7 +162,7 @@ function coupon_rules(data) {
     if(data.expires_days == 0){
         expires = '<span style="color:">Vence hoje</span>'
     }
-    if(data.expires_days >= 0){
+    if(data.expires_days >= 0 || data.nao_vence){
         $('#c-edit_status_label').html('Desconto ativo');
         $('#c-edit_status').prop('checked', true);
     }else{
@@ -716,7 +725,7 @@ $(function () {
     })
 
     $('#value-edit').mask('#.##0,00', {reverse: true});
-
+    formatMoney('#value-edit')
     //var rules = edit_rules
     
     $("#add_rule-edit").on('click', function () {
@@ -827,13 +836,8 @@ $(function () {
         
         $('.value').mask('#.##0,00', { reverse: true });
 
-        // $('.value_edit').on('change', function () {
-        //     if($(this).val().length<3){
-        //         $(this).val($(this).val().padStart(2, '0'))
-        //         $(this).val(','+$(this).val())
-        //         $(this).val($(this).val().padStart(4, '0'))
-        //     }
-        // })
+        formatMoney('.value_edit')
+        
 
 
         set_rules_events()
@@ -1223,8 +1227,8 @@ $(function () {
                     
                     
                     
-                    response.rule_value = response.rule_value.replace(',','.')
-                    response.value = response.value.replace(',','.')
+                    // response.rule_value = response.rule_value.replace(',','.')
+                    // response.value = response.value.replace(',','.')
                     $('#2minimum_value').val(response.rule_value);
                     
 
@@ -1252,7 +1256,7 @@ $(function () {
 
                         
                     }
-                    
+                    // console.log(response.status);
                     if(response.status==1){
                         // $('#c-edit_status_label').css('color', '#41DC8F');
                         $('#c-edit_status_label').html('Desconto ativo');
@@ -1685,6 +1689,7 @@ $(function () {
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
     $('#value').mask('#.##0,00', {reverse: true});
+    formatMoney('#value')
 
 
 
@@ -1799,13 +1804,8 @@ $(function () {
 
         $('.value').mask('#.##0,00', {reverse: true});
 
-        // $('.value_edit').on('change', function () {
-        //     if($(this).val().length<3){
-        //         $(this).val($(this).val().padStart(2, '0'))
-        //         $(this).val(','+$(this).val())
-        //         $(this).val($(this).val().padStart(4, '0'))
-        //     }
-        // })
+        formatMoney('.value')
+        
 
         set_rules_events()
         if(!edit){
@@ -2282,6 +2282,12 @@ $(function () {
     $('#2discount_value').mask('#.##0,00', { reverse: true });
     $('#2minimum_value').mask('#.##0,00', { reverse: true });
     
+    
+    formatMoney('#discount_value')
+    formatMoney('#minimum_value')
+    formatMoney('#2discount_value')
+    formatMoney('#2minimum_value')
+
 
     $('.coupon-next').click(function () {
         $('.step1').hide()
