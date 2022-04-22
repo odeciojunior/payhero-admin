@@ -43,7 +43,7 @@ class AffiliateLinksApiController extends Controller
                 $query->where('status', 3);
             });
 
-            return new AffiliateLinkCollection($links->simplePaginate(5));
+            return new AffiliateLinkCollection($links->paginate(5));
 
         } catch (Exception $e) {
             return response()->json(['message' => 'Ocorreu um erro'], 400);
