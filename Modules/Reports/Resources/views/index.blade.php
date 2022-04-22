@@ -246,13 +246,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card inner">
+                                    <div class="card inner" id="card-recurrence">
                                         <header class="d-flex title-graph recurrence">
                                             <h5 class="grey font-size-16">
                                                 <strong>Recorrência</strong>
                                             </h5>
                                         </header>
-                                        <canvas id="salesChart"></canvas>
+                                        <div class="onPreLoad" id="block-recurrence">
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
