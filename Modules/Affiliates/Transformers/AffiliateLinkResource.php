@@ -46,7 +46,7 @@ class AffiliateLinkResource extends JsonResource
         return [
             'id'                => Hashids::encode($this->id),
             'plan_name'         => $this->plan->name ?? '',
-            'plan_name_short'   => Str::limit($this->plan->name ?? '', 24),
+            'plan_name_short'   => Str::limit($this->plan->name ?? 'Loja', 24),
             'description'       => $this->plan->description ?? '',
             'description_short' => Str::limit($this->plan->description ?? '', 24),
             'link'              => $this->link ?? null,
@@ -57,8 +57,8 @@ class AffiliateLinkResource extends JsonResource
             'link_affiliate'    => $linkAffiliate,
             'status_affiliate'  => $this->affiliate->status_enum ?? '',
             'domain'            => $this->affiliate->project->domains[0]->name ?? '',
-            'price'             => $this->plan ? 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->plan->price ?? 0)) / 100, 2, ',', '.') : '',
-            'commission'        => $this->plan ? 'R$ ' . number_format((preg_replace("/[^0-9]/", "", $this->plan->price) / 100) * $this->affiliate->percentage / 100, 2, ',', '.') : '',
+            'price'             => $this->plan ? 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->plan->price ?? 0)) / 100, 2, ',', '.') : '-',
+            'commission'        => $this->plan ? 'R$ ' . number_format((preg_replace("/[^0-9]/", "", $this->plan->price) / 100) * $this->affiliate->percentage / 100, 2, ',', '.') : '-',
             'document_status'   => ($companyDocumentValidated && $userDocumentValidated) ? 'approved' : 'pending',
             'status'            => $this->affiliate->project->domains[0]->status ?? 0,
         ];
