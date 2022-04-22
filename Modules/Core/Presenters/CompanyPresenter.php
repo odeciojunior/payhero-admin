@@ -61,20 +61,21 @@ class CompanyPresenter extends Presenter
             }
 
             return '';
-        } else {
-            switch ($status) {
-                case 'pending':
-                    return 1;
-                case 'analyzing':
-                    return 2;
-                case 'approved':
-                    return 3;
-                case 'refused':
-                    return 4;
-            }
-
-            return '';
         }
+
+        switch ($status) {
+            case 'pending':
+                return 1;
+            case 'analyzing':
+                return 2;
+            case 'approved':
+                return 3;
+            case 'refused':
+                return 4;
+        }
+
+        return '';
+        
     }
 
     public function getContractDocumentStatus($contractDocumentStatus = null)
@@ -93,20 +94,20 @@ class CompanyPresenter extends Presenter
             }
 
             return '';
-        } else {
-            switch ($status) {
-                case 'pending':
-                    return 1;
-                case 'analyzing':
-                    return 2;
-                case 'approved':
-                    return 3;
-                case 'refused':
-                    return 4;
-            }
-
-            return '';
         }
+
+        switch ($status) {
+            case 'pending':
+                return 1;
+            case 'analyzing':
+                return 2;
+            case 'approved':
+                return 3;
+            case 'refused':
+                return 4;
+        }
+
+        return '';        
     }
 
     public function getDocumentType($type)
@@ -122,18 +123,19 @@ class CompanyPresenter extends Presenter
             }
 
             return '';
-        } else {
-            switch ($type) {
-                case 'bank_document_status':
-                    return 1;
-                case 'address_document_status':
-                    return 2;
-                case 'contract_document_status':
-                    return 3;
-            }
-
-            return '';
+        } 
+        
+        switch ($type) {
+            case 'bank_document_status':
+                return 1;
+            case 'address_document_status':
+                return 2;
+            case 'contract_document_status':
+                return 3;
         }
+
+        return '';
+        
     }
 
     public function getStatus($status)
@@ -151,20 +153,20 @@ class CompanyPresenter extends Presenter
             }
 
             return '';
-        } else {
-            switch ($status) {
-                case 'pending':
-                    return 1;
-                case 'analyzing':
-                    return 2;
-                case 'approved':
-                    return 3;
-                case 'refused':
-                    return 4;
-            }
-
-            return '';
         }
+
+        switch ($status) {
+            case 'pending':
+                return 1;
+            case 'analyzing':
+                return 2;
+            case 'approved':
+                return 3;
+            case 'refused':
+                return 4;
+        }
+
+        return '';        
     }
 
     public function getCompanyType($status)
@@ -178,16 +180,17 @@ class CompanyPresenter extends Presenter
             }
 
             return '';
-        } else {
-            switch ($status) {
-                case 'physical person':
-                    return 1;
-                case 'juridical person':
-                    return 2;
-            }
-
-            return '';
         }
+
+        switch ($status) {
+            case 'physical person':
+                return 1;
+            case 'juridical person':
+                return 2;
+        }
+
+        return '';
+        
     }
 
     public function allStatusPending()
@@ -210,16 +213,16 @@ class CompanyPresenter extends Presenter
             }
 
             return '';
-        } else {
-            switch ($status) {
-                case 'C':
-                    return 1;
-                case 'P':
-                    return 2;
-            }
+        } 
 
-            return '';
+        switch ($status) {
+            case 'C':
+                return 1;
+            case 'P':
+                return 2;
         }
+
+        return '';        
     }
 
     public function getStatusGetnet($status = null)
@@ -243,24 +246,25 @@ class CompanyPresenter extends Presenter
             }
 
             return '';
-        } else {
-            switch ($status) {
-                case 'approved':
-                    return 1;
-                case 'review':
-                    return 2;
-                case 'reproved':
-                    return 3;
-                case 'approved_getnet' :
-                    return 4;
-                case 'error' :
-                    return 5;
-                case 'pending' :
-                    return 6;
-            }
-
-            return '';
         }
+        
+        switch ($status) {
+            case 'approved':
+                return 1;
+            case 'review':
+                return 2;
+            case 'reproved':
+                return 3;
+            case 'approved_getnet' :
+                return 4;
+            case 'error' :
+                return 5;
+            case 'pending' :
+                return 6;
+        }
+
+        return '';
+        
     }
 
 }
