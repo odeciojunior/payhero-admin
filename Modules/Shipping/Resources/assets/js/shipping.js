@@ -272,7 +272,7 @@ $(document).ready(function () {
                 }
                 $('#modal-edit-shipping .shipping-description').val(response.name);
                 $('#modal-edit-shipping .shipping-info').val(response.information);
-                $('#modal-edit-shipping .shipping-value').val(response.value);
+                $('#modal-edit-shipping .shipping-value').val(!isNaN(response.value)?response.value:'0,00');
                 $('#modal-edit-shipping .rule-shipping-value').val(response.rule_value).trigger('input');
                 $('#modal-edit-shipping .shipping-zipcode').val(response.zip_code_origin);
                 $('#modal-edit-shipping .shipping-status').prop('checked', !!response.status).change();
