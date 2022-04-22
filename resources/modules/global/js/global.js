@@ -800,7 +800,8 @@ function renderSiriusSelect(target) {
                 }
                 return text;
             }, '');
-        $options.append(`<div data-value="${option.val()}" ${attributes}>${option.text()}</div>`);
+        let disabled = option.is(':disabled') ? `class="disabled"` : '';
+        $options.append(`<div data-value="${option.val()}" ${attributes} ${disabled}>${option.text()}</div>`);
     });
     $text.text($target.children('option:selected').eq(0).text());
 }
@@ -894,14 +895,16 @@ $(document).ready(function () {
 
     $(document).on('click', '.sirius-select-options div', function () {
         let $target = $(this);
-        let $wrapper = $target.parents('.sirius-select-container');
-        $wrapper.find('select')
-            .val($target.data('value'))
-            .trigger('change');
-        $wrapper.find('.sirius-select-text')
-            .removeClass('active')
-            .text($target.text());
-        $target.parent().fadeOut();
+        if(!$target.hasClass('disabled')) {
+            let $wrapper = $target.parents('.sirius-select-container');
+            $wrapper.find('select')
+                .val($target.data('value'))
+                .trigger('change');
+            $wrapper.find('.sirius-select-text')
+                .removeClass('active')
+                .text($target.text());
+            $target.parent().fadeOut();
+        }
     });
 
     $(document).on('click', function (e) {
