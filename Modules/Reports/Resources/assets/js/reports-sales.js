@@ -1,8 +1,6 @@
 $(function() {
     loadingOnScreen();
     exportReports();
-    barGraph();
-
     updateReports();
 
     changeCompany();
@@ -14,20 +12,7 @@ $(function() {
     }
 
     $('.box-export').on('click', function() {
-            $.ajax({
-                method: "GET",
-                url: salesUrl + "/recurrence?project_id=" + $("#select_projects option:selected").val(),
-                dataType: "json",
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
-                    Accept: "application/json",
-                },
-                error: function error(response) {
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                }
-            });
+            
     });
 });
 
@@ -35,7 +20,7 @@ let salesUrl = '/api/reports/sales';
 let mktUrl = '/api/reports/marketing';
 
 
-function barGraph() {
+function barGraph(data, labels, total) {
     const titleTooltip = (tooltipItems) => {
         return '';
     }
@@ -57,12 +42,12 @@ function barGraph() {
         plugins: [legendMargin],
         type: 'bar',
         data: {
-            labels: ['','','','', '', ''],
+            labels,
             datasets: [
                 {
                     axis: 'x',
                     label: '',
-                    data: [12, 15,20, 25,30,40],
+                    data,
                     color:'#2E85EC',
                     backgroundColor: ['rgba(46, 133, 236, 1)'],
                     borderRadius: 4,
@@ -83,7 +68,7 @@ function barGraph() {
                 subtitle: {
                     display: true,
                     align: 'start',
-                    text: '32 clientes recorrentes',
+                    text: `${total} cliente(s) recorrente(s)`,
                     color: '#2E85EC',
                     font: {
                         size: '14',
@@ -118,7 +103,7 @@ function barGraph() {
                         color: '#ECE9F1',
                         drawBorder: true
                     },
-                    min: 10,
+                    min: 0,
                     max: 40,
                     ticks: {
                         padding: 0,
@@ -141,7 +126,7 @@ function barGraph() {
                 callbacks: {
                     title: titleTooltip,
                     label: function (tooltipItem) {
-                        return Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(tooltipItem.raw);
+                        return tooltipItem.raw + ' recorrência(s)'
                     },
                     labelPointStyle: function (context) {
                         return {
@@ -442,15 +427,7 @@ function loadDevices() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let {
-                total,
-                percentage_desktop,
-                percentage_mobile,
-                count_desktop,
-                count_mobile,
-                value_desktop,
-                value_mobile
-            } = response.data;
+            let { desktop, mobile } = response.data;
 
             deviceBlock = `
                  <div class="row container-payment">
@@ -466,13 +443,13 @@ function loadDevices() {
                                 <div class="box-payment-option option">
                                     <div class="col-payment">
                                         <div class="box-payment center">
-                                            <span>379</span>
-                                            /<small>436</small>
+                                            <span>${mobile.approved}</span>
+                                            /<small>${mobile.total}</small>
                                         </div>
                                     </div>
                                     <div class="col-payment">
                                         <div class="box-payment right">
-                                            <strong class="grey font-size-16">${percentage_mobile}</strong>
+                                            <strong class="grey font-size-16">${mobile.percentage}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -491,13 +468,13 @@ function loadDevices() {
                                 <div class="box-payment-option option">
                                     <div class="col-payment">
                                         <div class="box-payment center">
-                                            <span>105</span>
-                                            /<small>211</small>
+                                            <span>${desktop.approved}</span>
+                                            /<small>${desktop.total}</small>
                                         </div>
                                     </div>
                                     <div class="col-payment">
                                         <div class="box-payment right">
-                                            <strong class="grey font-size-16">${percentage_desktop}</strong>
+                                            <strong class="grey font-size-16">${desktop.percentage}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -1141,7 +1118,61 @@ function infoCard() {
         }
     })
     .catch(e => console.log('error =>' + e)); 
-}    
+}
+
+function recurrence() {
+    let recurrenceHtml = '';
+    $("#card-recurrence .onPreLoad *" ).remove();
+    $("#block-recurrence").prepend(skeLoad);
+
+    return $.ajax({
+        method: "GET",
+        url: salesUrl + "/recurrence?project_id=" + $("#select_projects option:selected").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            let { chart, total } = response.data;
+            
+            if(chart) {
+                $('#block-recurrence').html('<canvas id="salesChart"></canvas>');
+                let labels = [...chart.labels];
+                let series = [...chart.values];
+                barGraph(series, labels, total);
+            } else {
+                recurrenceHtml = `
+                    <div class="d-flex box-graph-dist">
+                        <div class="info-graph">
+                            <div class="no-sell">
+                                <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
+                                    <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
+                                    <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
+                                    <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
+                                    <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
+                                    <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
+                                </svg>
+                                <footer>
+                                    <h4>Nada por aqui...</h4>
+                                    <p>
+                                        Não há dados suficientes
+                                        para gerar este relatório.
+                                    </p>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('#block-recurrence').html(recurrenceHtml);
+            }
+        }
+    });
+}
         
 function kFormatter(num) {
     return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num);
@@ -1242,8 +1273,8 @@ function updateReports() {
             abandonedCarts();
             orderbump();
             upsell();
-            
             infoCard();
+            recurrence();
         }
     });
 }
