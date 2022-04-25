@@ -132,11 +132,23 @@ class GetnetService implements Statement
     {
         try {
 
+            //verifica se existe uma conta bancaria aprovada 
+            $bankAccount =  $this->company->getBankAccountTED();
+            if(empty($bankAccount)){
+                return false;
+            }
+
             if ($this->company->asaas_balance < 0 && $value - $this->company->asaas_balance < 0) {
                 throw new Exception('Saque negado devido ao saldo negativo no Asaas');
             }
 
             if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID)) {
+                return false;
+            }
+
+            //verifica se existe uma conta bancaria aprovada 
+            $bankAccount =  $this->company->getBankAccountTED();
+            if(empty($bankAccount)){
                 return false;
             }
 
@@ -153,11 +165,12 @@ class GetnetService implements Statement
                 [
                     'value' => $value,
                     'company_id' => $this->company->id,
-                    'bank' => $this->company->bank,
-                    'agency' => $this->company->agency,
-                    'agency_digit' => $this->company->agency_digit,
-                    'account' => $this->company->account,
-                    'account_digit' => $this->company->account_digit,
+                    'transfer_type'=>'TED',
+                    'bank' => $bankAccount->bank,
+                    'agency' => $bankAccount->agency,
+                    'agency_digit' => $bankAccount->agency_digit,
+                    'account' => $bankAccount->account,
+                    'account_digit' => $bankAccount->account_digit,
                     'status' => Withdrawal::STATUS_PROCESSING,
                     'tax' => 0,
                     'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
