@@ -1,10 +1,10 @@
 $(function () {
     loadingOnScreen();
-    
+
     newSellGraph();
     distributionGraphSeller();
     getInfo();
-    
+
     sessionStorage.removeItem('info');
 
     let resumeUrl = '/api/reports/resume';
@@ -18,7 +18,7 @@ $(function () {
                 Authorization: $('meta[name="access-token"]').attr("content"),
                 Accept: "application/json",
             },
-            
+
             error: function error(response) {
                 errorAjaxResponse(response);
                 $('#card-cashback .ske-load').hide();
@@ -33,7 +33,7 @@ $(function () {
                     if(response.data != ''){
                         let value = response.data.total;
                         $("#cashback").html("<span class='currency'>R$ </span>" + value).addClass('visible');
-    
+
                         if(response.data.total !== '0,00') {
                             $('.new-graph-cashback').html('<canvas id=graph-cashback></canvas>').addClass('visible');
                             $(".new-graph-cashback").next('.no-graph').remove();
@@ -46,18 +46,18 @@ $(function () {
                                     ${response.data.variation.value}
                                 </em>`;
                             $("#cashback").after(variation);
-                            
+
                             let labels = [...response.data.chart.labels];
                             let series = [...response.data.chart.values];
                             newGraphCashback(series, labels);
-                            
+
                         } else {
                             $('#graph-cashback').addClass('invisible');
                             $(".new-graph-cashback").next('.no-graph').remove();
                             $('.new-graph-cashback').removeClass('visible');
                             $('.new-graph-cashback').after('<div class=no-graph>Não há dados suficientes</div>');
                             $("#cashback").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
-                        }                    
+                        }
                     } else {
                         $('.graph-cashback').remove();
                         $("#cashback").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
@@ -91,13 +91,13 @@ $(function () {
             },
             success: function success(response, status) {
                 $("#pending").html("<span class='currency'>R$ </span>" + response.data.total).addClass('visible');
-                
+
                 if(response.data.total !== '0,00') {
                     $('.new-graph-pending').html('<canvas id=graph-pending></canvas>').addClass('visible');
                     $(".new-graph-pending").next('.no-graph').remove();
-                    
+
                     let labels = [...response.data.chart.labels];
-                    let series = [...response.data.chart.values]; 
+                    let series = [...response.data.chart.values];
                     newGraphPending(series,labels);
 
                 } else {
@@ -111,8 +111,8 @@ $(function () {
             }
         });
     }
-                
-    function getCommission() {               
+
+    function getCommission() {
 
         return $.ajax({
             method: "GET",
@@ -131,13 +131,13 @@ $(function () {
                 $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
             },
             success: function success(response) {
-                
+
                 $("#comission").html("<span class='currency'>R$ </span>" + removeMoneyCurrency(response.data.total)).addClass('visible');
-                
+
                 if(response.data.total !== 'R$ 0,00') {
                     $('.new-graph').html('<canvas id=comission-graph></canvas>').addClass('visible');
                     $(".new-graph").next('.no-graph').remove();
-                    
+
                     let variation = `
                     <em class="${response.data.variation.color} visible">
                         <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -151,7 +151,7 @@ $(function () {
                     let labels = [...response.data.chart.labels];
                     let series = [...response.data.chart.values];
                     graphComission(series, labels);
-                    
+
                 } else {
                     $('#comission-graph').addClass('invisible');
                     $('.new-graph').removeClass('visible');
@@ -162,14 +162,13 @@ $(function () {
                 $('#card-comission .ske-load').hide();
             }
         });
-        
+
     }
 
     function getSales() {
-        
         return $.ajax({
             method: "GET",
-            url: resumeUrl + "/sales?date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/sales?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -177,12 +176,12 @@ $(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-                
+
             },
             success: function success(response) {
                 $("#sales").addClass('visible');
                 $("#sales").html(response.data.total);
-                
+
                 if(response.data.total !== 0){
                     $('.new-graph-sell').html('<canvas id=graph-sell></canvas>').addClass('visible');
                     $(".new-graph-sell").next('.no-graph').remove();
@@ -200,7 +199,7 @@ $(function () {
                     let labels = [...response.data.chart.labels];
                     let series = [...response.data.chart.values];
                     newGraphSell(series, labels);
-                    
+
                 } else {
                     $('#graph-sell').remove();
                     $("#sales").html('0');
@@ -211,13 +210,13 @@ $(function () {
                 $('#card-sales .ske-load').hide();
             }
         });
-                
+
     }
 
     function getProducts() {
         return $.ajax({
             method: "GET",
-            url: resumeUrl+ "/products?date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl+ "/products?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -270,7 +269,7 @@ $(function () {
     function getCoupons() {
         return $.ajax({
             method: "GET",
-            url: resumeUrl + "/coupons?date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/coupons?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -288,14 +287,14 @@ $(function () {
                         $('#card-coupons .value-price').addClass('invisible');
                         $('.new-graph-pie').html('<div class=graph-pie></div>');
                         $(".new-graph-pie").next('.no-graph').remove();
-                        
+
                         let arr = [];
                         let seriesArr = [];
-                        
+
                         $.each(response.data, function (i, coupon) {
                             arr.push(coupon);
                         });
-                        
+
 
                         for(let i = 0; i < arr.length; i++) {
                             if(arr[i].amount != undefined) {
@@ -313,14 +312,14 @@ $(function () {
                                                 <div>${arr[i].coupon}</div>
                                             </div>
                                             <div class="grey bold">${arr[i].amount}</div>
-                                        </li>                                    
+                                        </li>
                                     `
                                 );
-                                
+
                             }
-                        }                        
-                        new Chartist.Pie('.graph-pie', 
-                        { series: seriesArr }, 
+                        }
+                        new Chartist.Pie('.graph-pie',
+                        { series: seriesArr },
                         {
                             donut: true,
                             donutWidth: 20,
@@ -354,7 +353,7 @@ $(function () {
     function getTypePayments() {
         return $.ajax({
             method: "GET",
-            url: resumeUrl + "/type-payments?date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/type-payments?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -363,7 +362,7 @@ $(function () {
             error: function error(response) {
                 errorAjaxResponse(response);
                 $('#card-typepayments .ske-load').hide();
-                
+
             },
             success: function success(response) {
                 $('#payment-type-items .bar').addClass('visible');
@@ -395,7 +394,7 @@ $(function () {
                         $("#percent-values-pix").next('.col-payment').find('.bar').addClass('purple');
                     }
                     $('.bar').removeClass('visible');
-                   
+
                 } else {
                     $('#percent-credit-card, #percent-values-boleto, #percent-values-pix ').html('0%');
                     $('#credit-card-value, #boleto-value, #pix-value').html('R$ 0,00');
@@ -408,10 +407,10 @@ $(function () {
     }
 
     function getRegions() {
-        
+
         return $.ajax({
             method: "GET",
-            url: resumeUrl + "/regions?date_range=" + $("input[name='daterange']").val(),
+            url: resumeUrl + "/regions?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -430,8 +429,8 @@ $(function () {
                     let legend = `<li class='conversion'><span></span>Conversões</li>`;
                     $('.conversion-colors').append(percentage);
                     $('.regions-legend').append(legend);
-                                                           
-                    
+
+
                 } else {
                     $('.info-regions li').remove();
                     $('#regionsChart').remove();
@@ -508,7 +507,7 @@ $(function () {
     $("#origin").on("change", function () {
         $("#card-origin .ske-load").show();
         $('.origin-report').hide();
-        
+
         $("#origin").val($(this).val());
         updateSalesByOrigin();
     });
@@ -525,11 +524,7 @@ $(function () {
         updateSalesByOrigin()
     }
 
-    var current_currency = "";
-
     function updateReports() {
-        var date_range = $("#date_range_requests").val();
-        
         $('#payment-type-items .bar').css('width','100%');
         $('#payment-type-items .bar').removeClass('blue');
         $('#payment-type-items .bar').removeClass('pink');
@@ -549,122 +544,7 @@ $(function () {
             $(".origin-report").hide();
         }
 
-        $.ajax({
-            url: "/api/reports",
-            type: "GET",
-            data: {
-                project: $("#select_projects").val(),
-                endDate: endDate,
-                startDate: startDate,
-            },
-            dataType: "json",
-            headers: {
-                Authorization: $('meta[name="access-token"]').attr("content"),
-                Accept: "application/json",
-            },
-            error: function error(response) {
-                errorAjaxResponse(response);
-            },
-            success: function success(response) {
-                current_currency = response.currency;
-
-                // if(response.totalPaidValueAproved='R$ 0,00' || response.totalPaidValueAproved ==false || !response.totalPaidValueAproved){
-                //     response.totalPaidValueAproved='R$ <span class="grey font-size-24 bold">0,00</span>'
-                // }else{
-                //     let split=response.totalPaidValueAproved.split(/\s/g);
-                //     response.totalPaidValueAproved=split[0]+' <span class="font-size-30 bold">'+split[1]+'</span>';
-                // }
-
-                // $("#revenue-generated").html(response.totalPaidValueAproved);
-                // $("#qtd-aproved").html(response.contAproved);
-                // $("#qtd-boletos").html(response.contBoleto);
-                // $("#qtd-pix").html(response.contPix);
-                // $("#qtd-recusadas").html(response.contRecused);
-                // // $("#qtd-reembolso").html(response.contRefunded);
-                // $("#qtd-chargeback").html(response.contChargeBack);
-                // // $("#qtd-dispute").html(response.contInDispute);
-                // $("#qtd-pending").html(response.contPending);
-                // $("#qtd-canceled").html(response.contCanceled);
-                
-                // $("#percent-boleto-convert").html(`
-                //     <span class="money-td"> ${parseFloat(response.convercaoBoleto).toFixed(1)} % </span>
-                // `);
-                // $("#percent-credit-card-convert").html(`
-                //     <span class="money-td"> ${parseFloat(response.convercaoCreditCard).toFixed(1)} % </span>
-                // `);
-                // $("#percent-pix-convert").html(`
-                //     <span class="money-td"> ${parseFloat(response.convercaoPix).toFixed(1)} % </span>
-                // `);
-                // $("#percent-desktop").html(`
-                //     ${parseFloat(response.conversaoDesktop).toFixed(1)} %
-                // `);
-                // $("#percent-mobile").html(`
-                //     ${parseFloat(response.conversaoMobile).toFixed(1)} %
-                // `);
-                // $("#qtd-cartao-convert").html(response.cartaoConvert);
-                // $("#qtd-boleto-convert").html(response.boletoConvert);
-                // $("#qtd-pix-convert").html(response.pixConvert);
-                // $("#ticket-medio").html(
-                //     response.currency + " " + response.ticketMedio
-                // );
-
-                // $('#conversion-items').asScrollable();
-                // $('#payment-type-items').asScrollable();
-
-                // var table_data_itens = "";
-                // if (!isEmpty(response.plans)) {
-                //     $.each(response.plans, function (index, data) {
-                //         table_data_itens += "<tr>";
-                //         table_data_itens +=
-                //             "<td><img src=" +
-                //             data.photo +
-                //             ' width="50px;" style="border-radius:6px;"></td>';
-                //         table_data_itens += "<td>" + data.name + "</td>";
-                //         table_data_itens +=
-                //             "<td> x " + data.quantidade + "</td>";
-                //         table_data_itens += "</tr>";
-                //     });
-                // } else {
-                //     table_data_itens +=
-                //         "<tr class='text-center'><td colspan='3' style='vertical-align: middle'><img style='height:90px' src='" +
-                //         $("#origins-table-itens").attr("img-empty") +
-                //         "'>Nenhuma venda encontrada</td></tr>";
-                // }
-
-                // $("#origins-table-itens").html("");
-                // $("#origins-table-itens").append(table_data_itens);
-                // var flag = false;
-                // $.each(response.chartData.boleto_data,function(index,value){
-                //     if (value!=false) {
-                //         flag=true;
-                //     }
-                // });
-                // $.each(response.chartData.credit_card_data,function(index,value){
-                //     if (value!=false) {
-                //         flag=true;
-                //     }
-                // });
-                // $.each(response.chartData.pix_data,function(index,value){
-                //     if (value!=false) {
-                //         flag=true;
-                //     }
-                // });
-                // if (flag==true) {
-                //     $('#empty-graph>').hide();
-                //     $('#scoreLineToDay').show();
-                //     $('#scoreLineToWeek').show();
-                //     $('#scoreLineToMonth').show();
-                //     updateGraph(response.chartData);
-                // }else{
-                //     $('#empty-graph>').show();
-                //     $('#scoreLineToDay').hide();
-                //     $('#scoreLineToWeek').hide();
-                //     $('#scoreLineToMonth').hide();
-                // }
-                resume();
-                
-            },
-        });
+        resume();
     }
 
     function updateSalesByOrigin() {
@@ -688,7 +568,7 @@ $(function () {
         //         endDate +
         //         "&origin=" +
         //         $("#origin").val();
-                
+
         // } else {
         //     link =
         //         "/api/reports/getsalesbyorigin" +
@@ -724,7 +604,7 @@ $(function () {
                             Ainda faltam dados suficientes a comparação, continue rodando!
                         </p>
                     </td>`;
-                
+
 
                 if (response.data == '') {
                     $("#origins-table").html(td);
@@ -738,11 +618,7 @@ $(function () {
                         table_data += "<td>" + data.origin + "</td>";
                         table_data += "<td>" + data.sales_amount + "</td>";
                         table_data +=
-                            "<td>" +
-                            current_currency +
-                            " " +
-                            data.balance +
-                            "</td>";
+                            "<td>" + data.balance + "</td>";
                         table_data += "</tr>";
                     });
 
@@ -1015,24 +891,24 @@ $(function () {
             $(this).addClass('active');
         }
     });
-    
-    
+
+
     function newGraphSell(series, labels) {
         const titleTooltip = (tooltipItems) => {
             return '';
-        }   
-    
+        }
+
         const legendMargin = {
             id: 'legendMargin',
             beforeInit(chart, legend, options) {
                 const fitValue = chart.legend.fit;
-                chart.legend.fit = function () {  
+                chart.legend.fit = function () {
                     fitValue.bind(chart.legend)();
                     return this.height += 20;
                 }
             }
         };
-    
+
         const ctx = document.getElementById('graph-sell').getContext('2d');
         var gradient = ctx.createLinearGradient(0, 0, 0, 450);
         gradient.addColorStop(0, 'rgba(76, 152,242, 0.23)');
@@ -1103,19 +979,19 @@ $(function () {
     function newGraphCashback(series, labels) {
         const titleTooltip = (tooltipItems) => {
             return '';
-        }   
-    
+        }
+
         const legendMargin = {
             id: 'legendMargin',
             beforeInit(chart, legend, options) {
                 const fitValue = chart.legend.fit;
-                chart.legend.fit = function () {  
+                chart.legend.fit = function () {
                     fitValue.bind(chart.legend)();
                     return this.height += 20;
                 }
             }
         };
-    
+
         const ctx = document.getElementById('graph-cashback').getContext('2d');
         var gradient = ctx.createLinearGradient(0, 0, 0, 450);
         gradient.addColorStop(0, 'rgba(54,216,119, 0.23)');
@@ -1185,19 +1061,19 @@ $(function () {
     function newGraphPending(series, labels) {
         const titleTooltip = (tooltipItems) => {
             return '';
-        }   
-    
+        }
+
         const legendMargin = {
             id: 'legendMargin',
             beforeInit(chart, legend, options) {
                 const fitValue = chart.legend.fit;
-                chart.legend.fit = function () {  
+                chart.legend.fit = function () {
                     fitValue.bind(chart.legend)();
                     return this.height += 20;
                 }
             }
         };
-    
+
         const ctx = document.getElementById('graph-pending').getContext('2d');
         var gradient = ctx.createLinearGradient(0, 0, 0, 450);
         gradient.addColorStop(0, 'rgba(255,121,0, 0.23)');
@@ -1263,8 +1139,8 @@ $(function () {
                       }
                   },
             });
-          
-    }   
+
+    }
 
     function distributionGraphSeller() {
         new Chartist.Pie('.distribution-graph-seller', {
@@ -1321,19 +1197,19 @@ $(function () {
     function graphComission(series, labels) {
        const titleTooltip = (tooltipItems) => {
             return '';
-        }   
-    
+        }
+
         const legendMargin = {
             id: 'legendMargin',
             beforeInit(chart, legend, options) {
                 const fitValue = chart.legend.fit;
-                chart.legend.fit = function () {  
+                chart.legend.fit = function () {
                     fitValue.bind(chart.legend)();
                     return this.height += 20;
                 }
             }
         };
-    
+
         const ctx = document.getElementById('comission-graph').getContext('2d');
         var gradient = ctx.createLinearGradient(0, 0, 0, 450);
         gradient.addColorStop(0, 'rgba(76, 152,242, 0.23)');
@@ -1401,9 +1277,9 @@ $(function () {
             });
     }
 
-   
+
     function graphRegions() {
-        
+
         const ctx = document.getElementById('regionsChart').getContext('2d');
             const myChart = new Chart(ctx, {
                 type: 'bar',
@@ -1422,7 +1298,7 @@ $(function () {
                             ],
                             borderRadius: 4,
                             barThickness: 30,
-                        }, 
+                        },
                         {
                             label: '',
                             data: [100,42,58,45],
@@ -1445,7 +1321,7 @@ $(function () {
                         legend: {display: false},
                         title: {display: false},
                     },
-                    
+
                     responsive: true,
                     scales: {
                         x: {
@@ -1477,7 +1353,7 @@ $(function () {
                     },
                 }
             });
-    
+
     }
 
     function convertToReal(tooltipItem) {
@@ -1486,14 +1362,14 @@ $(function () {
             tooltipValue = parseInt(tooltipValue.replace(/[\D]+/g, ''));
             tooltipValue = tooltipValue + '';
             tooltipValue = tooltipValue.replace(/([0-9]{2})$/g, ",$1");
-    
+
             if (tooltipValue.length > 6) {
                 tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
             }
-            
+
             return 'R$ ' + tooltipValue;
     }
-    
+
     function getInfo() {
         $('.box-link').on('click', function(e) {
             let calendar = $('input[name=daterange]').val();

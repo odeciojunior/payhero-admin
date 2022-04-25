@@ -12,6 +12,8 @@ Route::group(
         Route::get('/project/{projectId}/couponsdiscounts/{id}/edit', 'DiscountCouponsApiController@edit');
 
         Route::apiResource('/project/{projectId}/couponsdiscounts', 'DiscountCouponsApiController')
-            ->only('store', 'update', 'destroy')->middleware('permission:projects_manage');
+            ->only('index', 'store', 'update', 'destroy', 'show', 'edit');
+        
+        Route::put('/project/{projectId}/discounts/{id}', 'DiscountCouponsApiController@update');
     }
 );

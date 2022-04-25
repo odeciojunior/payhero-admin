@@ -2,10 +2,9 @@
 
 namespace Modules\Reports\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Core\Services\ReportMarketingService;
+use Modules\Core\Services\Reports\ReportMarketingService;
 use Modules\Reports\Transformers\SalesByOriginResource;
 
 class ReportsMarketingApiController extends Controller
@@ -47,7 +46,8 @@ class ReportsMarketingApiController extends Controller
     public function getMostFrequentSales(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -63,7 +63,8 @@ class ReportsMarketingApiController extends Controller
     public function getDevices(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -79,7 +80,8 @@ class ReportsMarketingApiController extends Controller
     public function getOperationalSystems(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -112,7 +114,8 @@ class ReportsMarketingApiController extends Controller
     public function getResumeCoupons(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();
@@ -128,7 +131,8 @@ class ReportsMarketingApiController extends Controller
     public function getResumeRegions(Request $request)
     {
         $request->validate([
-            'date_range' => 'required'
+            'date_range' => 'required',
+            'project_id' => 'required'
         ]);
 
         $data = $request->all();

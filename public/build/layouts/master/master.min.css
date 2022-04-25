@@ -9486,6 +9486,12 @@ tbody td{
 .sirius-select-container .sirius-select-options div:hover {
     background: #F6F7F9;
 }
+
+.sirius-select-container .sirius-select-options div.disabled {
+    opacity: 0.5;
+    background: #F6F7F9;
+    cursor: none !important;
+}
 /* END sirius select */
 
 /* vertical scroll */

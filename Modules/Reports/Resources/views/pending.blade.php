@@ -101,8 +101,8 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-8 col-md-6 col-xl-3">
-                                        <label for="comprador">Nome do cliente</label>
-                                        <input name='client' id="comprador" class="input-pad" placeholder="cliente">
+                                        <label for="client">Nome do cliente</label>
+                                        <input name='client' id="client" class="input-pad" placeholder="cliente">
                                     </div>
                                     <div class="col-sm-8 col-md-6 col-xl-3">
                                         <label for="customer_document">CPF do cliente</label>
@@ -112,8 +112,8 @@
                                 <div class="collapse pt-20" id="bt_collapse">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-3">
-                                            <label for="forma">Forma de pagamento</label>
-                                            <select name='select_payment_method' id="forma" class="sirius-select">
+                                            <label for="payment_method">Forma de pagamento</label>
+                                            <select name='select_payment_method' id="payment_method" class="sirius-select">
                                                 <option value="">Boleto e cartão de crédito</option>
                                                 <option value="1">Cartão de crédito</option>
                                                 <option value="2">Boleto</option>

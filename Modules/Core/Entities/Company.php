@@ -249,6 +249,11 @@ class Company extends Model
         return $this->hasMany('Modules\Core\Entities\Withdrawal');
     }
 
+    public function companyBankAccounts(): HasMany
+    {
+        return $this->hasMany('Modules\Core\Entities\CompanyBankAccount');
+    }
+
     public function gatewayCompanyCredential(): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\GatewaysCompaniesCredential');
@@ -273,5 +278,13 @@ class Company extends Model
     public function gatewayBackofficeRequests (): HasMany
     {
         return $this->hasMany('Modules\Core\Entities\GatewaysBackofficeRequests');
+    }
+
+    public function getDefaultBankAccount(){
+        return $this->companyBankAccounts->where('is_default',true)->where('status','VERIFIED')->first()??null;    
+    }
+
+    public function getBankAccountTED(){
+        return $this->companyBankAccounts->where('transfer_type','TED')->where('status','VERIFIED')->first()??null;    
     }
 }

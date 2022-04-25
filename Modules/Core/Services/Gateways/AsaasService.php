@@ -167,6 +167,12 @@ class AsaasService implements Statement
         try {
             DB::beginTransaction();
 
+            //verifica se existe uma conta bancaria aprovada 
+            $bankAccount =  $this->company->getBankAccountTED();
+            if(empty($bankAccount)){
+                return false;
+            }
+
             $this->company->update([
                 'asaas_balance' => $this->company->asaas_balance -= $value
             ]);
@@ -188,16 +194,17 @@ class AsaasService implements Statement
                         Task::find(Task::TASK_FIRST_WITHDRAWAL)
                     );
                 }
-
+              
                 $withdrawal = Withdrawal::create(
                     [
                         'value' => $value,
                         'company_id' => $this->company->id,
-                        'bank' => $this->company->bank,
-                        'agency' => $this->company->agency,
-                        'agency_digit' => $this->company->agency_digit,
-                        'account' => $this->company->account,
-                        'account_digit' => $this->company->account_digit,
+                        'transfer_type'=>'TED',
+                        'bank' => $bankAccount->bank,
+                        'agency' => $bankAccount->agency,
+                        'agency_digit' => $bankAccount->agency_digit,
+                        'account' => $bankAccount->account,
+                        'account_digit' => $bankAccount->account_digit,
                         'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
                         'tax' => 0,
                         'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,

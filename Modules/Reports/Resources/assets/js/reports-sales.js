@@ -1,33 +1,18 @@
 $(function() {
     loadingOnScreen();
     exportReports();
-    barGraph();
-
     updateReports();
 
     changeCompany();
     changeCalendar();
-    
+
     if(sessionStorage.info) {
         let info = JSON.parse(sessionStorage.getItem('info'));
-        $('input[name=daterange]').val(info.calendar); 
+        $('input[name=daterange]').val(info.calendar);
     }
 
-    $('.box-export').on('click', function() { 
-            $.ajax({
-                method: "GET",
-                url: salesUrl + "/recurrence?project_id=" + $("#select_projects option:selected").val(),
-                dataType: "json",
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
-                    Accept: "application/json",
-                },
-                error: function error(response) {
-                    errorAjaxResponse(response);
-                },
-                success: function success(response) {
-                }
-            });
+    $('.box-export').on('click', function() {
+            
     });
 });
 
@@ -35,7 +20,7 @@ let salesUrl = '/api/reports/sales';
 let mktUrl = '/api/reports/marketing';
 
 
-function barGraph() {
+function barGraph(data, labels, total) {
     const titleTooltip = (tooltipItems) => {
         return '';
     }
@@ -57,12 +42,12 @@ function barGraph() {
         plugins: [legendMargin],
         type: 'bar',
         data: {
-            labels: ['','','','', '', ''],
+            labels,
             datasets: [
                 {
                     axis: 'x',
                     label: '',
-                    data: [12, 15,20, 25,30,40],
+                    data,
                     color:'#2E85EC',
                     backgroundColor: ['rgba(46, 133, 236, 1)'],
                     borderRadius: 4,
@@ -83,7 +68,7 @@ function barGraph() {
                 subtitle: {
                     display: true,
                     align: 'start',
-                    text: '32 clientes recorrentes',
+                    text: `${total} cliente(s) recorrente(s)`,
                     color: '#2E85EC',
                     font: {
                         size: '14',
@@ -118,7 +103,7 @@ function barGraph() {
                         color: '#ECE9F1',
                         drawBorder: true
                     },
-                    min: 10,
+                    min: 0,
                     max: 40,
                     ticks: {
                         padding: 0,
@@ -141,7 +126,7 @@ function barGraph() {
                 callbacks: {
                     title: titleTooltip,
                     label: function (tooltipItem) {
-                        return Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(tooltipItem.raw);
+                        return tooltipItem.raw + ' recorrência(s)'
                     },
                     labelPointStyle: function (context) {
                         return {
@@ -158,16 +143,13 @@ function barGraph() {
 
 function salesResume() {
     let salesTransactions, salesAverageTicket, salesComission, salesNumberChargeback = '';
-    
-    var project_id = $("#select_projects option:selected").val();
-    var date_range = $("input[name='daterange']").val();    
 
     $('#reports-content .onPreLoad *').remove();
     $("#sales-transactions,#sales-average-ticket,#sales-comission,#sales-number-chargeback").html(skeLoad);
 
     $.ajax({
         method: "GET",
-        url: salesUrl + "/resume?project_id=" + project_id + "&date_range=" + date_range,
+        url: salesUrl + "/resume?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -185,7 +167,7 @@ function salesResume() {
                     <strong class="number">${transactions == undefined ? 0: transactions}</strong>
                 </div>
             `;
-            
+
             salesAverageTicket = `
                 <span class="title">Ticket Médio</span>
                 <div class="d-flex">
@@ -208,7 +190,7 @@ function salesResume() {
                     <span class="detail">R$</span>
                     <strong class="number">${chargeback == undefined ? '0,00': removeMoneyCurrency(chargeback)}</strong>
                 </div>
-            `;            
+            `;
 
             $("#sales-number-chargeback").html(salesNumberChargeback);
             $("#sales-comission").html(salesComission);
@@ -219,7 +201,7 @@ function salesResume() {
 }
 
 function distribution() {
-    let distributionHtml = '';   
+    let distributionHtml = '';
     $('#card-distribution .onPreLoad *').remove();
     $("#block-distribution").prepend(skeLoad);
 
@@ -240,14 +222,14 @@ function distribution() {
                 let series = [
                     approved.percentage,
                     pending.percentage,
-                    canceled.percentage, 
+                    canceled.percentage,
                     refused.percentage,
                     refunded.percentage,
                     chargeback.percentage,
                     other.percentage,
                 ];
-                
-                distributionHtml = `     
+
+                distributionHtml = `
                 <div class="d-flex box-graph-dist">
                     <div class="info-graph">
                         <h6 class="font-size-14 grey">Saldo Total</h6>
@@ -376,7 +358,7 @@ function distribution() {
                     </div>
                 </div>
                 `;
-                    
+
                 $("#block-distribution").html(distributionHtml);
                 $(".box-graph-dist").prepend('<div class="distribution-graph-seller"></div>');
                 distributionGraph(series);
@@ -399,7 +381,7 @@ function distribution() {
                                 <p>
                                     Não há dados suficientes
                                     para gerar este relatório.
-                                </p>   
+                                </p>
                             </footer>
                         </div>
                     </div>
@@ -407,10 +389,10 @@ function distribution() {
                 `;
                 $("#block-distribution").html(distributionHtml);
             }
-            
+
         }
     });
-    
+
 }
 
 function distributionGraph(series) {
@@ -445,16 +427,8 @@ function loadDevices() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let {
-                total, 
-                percentage_desktop, 
-                percentage_mobile, 
-                count_desktop, 
-                count_mobile,
-                value_desktop,
-                value_mobile
-            } = response.data;
-            
+            let { desktop, mobile } = response.data;
+
             deviceBlock = `
                  <div class="row container-payment">
                     <div class="container">
@@ -469,13 +443,13 @@ function loadDevices() {
                                 <div class="box-payment-option option">
                                     <div class="col-payment">
                                         <div class="box-payment center">
-                                            <span>379</span>
-                                            /<small>436</small>
+                                            <span>${mobile.approved}</span>
+                                            /<small>${mobile.total}</small>
                                         </div>
                                     </div>
                                     <div class="col-payment">
                                         <div class="box-payment right">
-                                            <strong class="grey font-size-16">${percentage_mobile}</strong>
+                                            <strong class="grey font-size-16">${mobile.percentage}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -494,30 +468,28 @@ function loadDevices() {
                                 <div class="box-payment-option option">
                                     <div class="col-payment">
                                         <div class="box-payment center">
-                                            <span>105</span>
-                                            /<small>211</small>
+                                            <span>${desktop.approved}</span>
+                                            /<small>${desktop.total}</small>
                                         </div>
                                     </div>
                                     <div class="col-payment">
                                         <div class="box-payment right">
-                                            <strong class="grey font-size-16">${percentage_desktop}</strong>
+                                            <strong class="grey font-size-16">${desktop.percentage}</strong>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    
                  </div>
             `;
             $("#block-devices").html(deviceBlock);
         }
-    }); 
+    });
 }
 
 function typePayments() {
-    let url = "/api/reports/resume/type-payments?date_range=" + $("input[name='daterange']").val();
+    let url = "/api/reports/resume/type-payments?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val();
     let paymentsHtml = '';
 
     $('#card-payments .onPreLoad *' ).remove();
@@ -536,7 +508,7 @@ function typePayments() {
         },
         success: function success(response) {
             let { credit_card, pix, boleto } = response.data;
-
+            
             paymentsHtml = `
                 <div class="row container-payment">
                     <div class="container">
@@ -681,7 +653,7 @@ function loadFrequenteSales() {
                                     </div>
                                 </div>
                                 <div class="grey font-size-14">${item.sales_amount}</div>
-                                <div class="grey font-size-14 value"><strong>${kFormatter(newV)}</strong></div>
+                                <div class="grey font-size-14 value"><strong>${formatCash(newV)}</strong></div>
                             </div>
                         </div>
                     `;
@@ -711,7 +683,7 @@ function loadFrequenteSales() {
                                         <p>
                                             Não há dados suficientes
                                             para gerar este relatório.
-                                        </p>   
+                                        </p>
                                     </footer>
                                 </div>
                             </div>
@@ -723,7 +695,7 @@ function loadFrequenteSales() {
                 $("#block-sales").html(salesBlock);
             }
         }
-    });   
+    });
 }
 
 function abandonedCarts() {
@@ -797,8 +769,9 @@ function orderbump() {
         },
         success: function success(response) {
             let { amount, value } = response.data;
-
+            
             if(value !== null) {
+                value = value.toLocaleString('pt-br', {minimumFractionDigits: 2});
                 orderbumpBlock = `
                    <div class="d-flex align-items">
                        <div class="balance col-6">
@@ -812,7 +785,7 @@ function orderbump() {
                                Ganhos
                            </h6>
                            <small>R$</small>
-                           <strong class="total grey">${removeMoneyCurrency(value)}</strong>
+                           <strong class="total grey">${value}</strong>
                        </div>
                        <div class="balance col-6">
                            <h6 class="grey font-size-14 qtd">Conversões</h6>
@@ -840,7 +813,7 @@ function orderbump() {
                    </div>
                 `;
             }
-            
+
             $("#block-orderbump").html(orderbumpBlock);
         }
     });
@@ -866,6 +839,7 @@ function upsell() {
             let { value, amount } = response.data;
             
             if( value !== null ) {
+                value = value.toLocaleString('pt-br', {minimumFractionDigits: 2});
                 upsellBlock = `
                     <div class="d-flex align-items">
                         <div class="balance col-6">
@@ -879,7 +853,7 @@ function upsell() {
                                 Ganhos
                             </h6>
                             <small>R$</small>
-                            <strong class="total grey">${removeMoneyCurrency(value)}</strong>
+                            <strong class="total grey">${value}</strong>
                         </div>
                         <div class="balance col-6">
                             <h6 class="grey font-size-14 qtd">Conversões</h6>
@@ -995,7 +969,7 @@ function conversion() {
         },
         success: function success(response) {
             let { credit_card, pix, boleto } = response.data;
-
+            
             conversionBlock = `
                 <div class="row container-payment">
                     <div class="container">
@@ -1114,13 +1088,104 @@ function conversion() {
     });
 }
 
-function kFormatter(num) {
-    return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num);
+function infoCard() {
+    let cardHtml = '';
+    $("#card-info .onPreLoad *" ).remove();
+    $("#block-info-card").prepend(skeLoad);
+
+    Promise.all([typePayments(),conversion()])
+    .then(result => {
+        let { credit_card } = result[0].data;
+        let conversionCard = result[1].data;
+
+        if(credit_card !== null) {
+            cardHtml = `
+                <div>
+                    <span class="ico-coin seller">
+                        <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.7647 0.164368C15.6137 0.164368 14.6814 1.09666 14.6814 2.2477V14.7477C14.6814 15.8987 15.6137 16.831 16.7647 16.831H18.848C19.9991 16.831 20.9314 15.8987 20.9314 14.7477V2.2477C20.9314 1.09666 19.9991 0.164368 18.848 0.164368H16.7647ZM16.7647 2.2477H18.848V14.7477H16.7647V2.2477ZM9.47303 4.33103C8.32199 4.33103 7.38969 5.26333 7.38969 6.41437V14.7477C7.38969 15.8987 8.32199 16.831 9.47303 16.831H11.5564C12.7074 16.831 13.6397 15.8987 13.6397 14.7477V6.41437C13.6397 5.26333 12.7074 4.33103 11.5564 4.33103H9.47303ZM9.47303 6.41437H11.5564V14.7477H9.47303V6.41437ZM2.18136 8.4977C1.03031 8.4977 0.0980225 9.42999 0.0980225 10.581V14.7477C0.0980225 15.8987 1.03031 16.831 2.18136 16.831H4.26469C5.41573 16.831 6.34803 15.8987 6.34803 14.7477V10.581C6.34803 9.42999 5.41573 8.4977 4.26469 8.4977H2.18136ZM2.18136 10.581H4.26469V14.7477H2.18136V10.581Z" fill="#2E85EC"/>
+                        </svg>
+                    </span>
+                </div>
+                <div>
+                    <span class="font-size-12">
+                    Cartão representa <strong class="card-represent">${credit_card.percentage}</strong> das vendas
+                    aprovadas e tem um indíce de conversão de <strong class="conversion-card">${conversionCard.credit_card.percentage}</strong>
+                    </span>
+                </div>
+            `;
+            $("#block-info-card").html(cardHtml);
+        }
+    })
+    .catch(e => console.log('error =>' + e)); 
 }
+
+function recurrence() {
+    let recurrenceHtml = '';
+    $("#card-recurrence .onPreLoad *" ).remove();
+    $("#block-recurrence").prepend(skeLoad);
+
+    return $.ajax({
+        method: "GET",
+        url: salesUrl + "/recurrence?project_id=" + $("#select_projects option:selected").val(),
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            let { chart, total } = response.data;
+            
+            if(chart) {
+                $('#block-recurrence').html('<canvas id="salesChart"></canvas>');
+                let labels = [...chart.labels];
+                let series = [...chart.values];
+                barGraph(series, labels, total);
+            } else {
+                recurrenceHtml = `
+                    <div class="d-flex box-graph-dist">
+                        <div class="info-graph">
+                            <div class="no-sell">
+                                <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
+                                    <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
+                                    <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
+                                    <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
+                                    <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
+                                    <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
+                                </svg>
+                                <footer>
+                                    <h4>Nada por aqui...</h4>
+                                    <p>
+                                        Não há dados suficientes
+                                        para gerar este relatório.
+                                    </p>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('#block-recurrence').html(recurrenceHtml);
+            }
+        }
+    });
+}
+        
+const formatCash = n => {
+    if (n < 1e3) return n;
+    if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K";
+    if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "M";
+    if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "B";
+    if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T";
+};
+
 
 function changeCalendar() {
     $('.onPreLoad *').remove();
-    
+
     var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
     var endDate = moment().format("DD/MM/YYYY");
 
@@ -1139,6 +1204,7 @@ function changeCalendar() {
         }
     })
     .on('datepicker-change', function () {
+        updateStorage({calendar: $(this).val()});
         updateReports();
     })
     .on('datepicker-open', function () {
@@ -1150,17 +1216,13 @@ function changeCalendar() {
             $(this).addClass('active');
         }
     });
-
-    $('input[name="daterange"]').change(function() {
-        updateStorage({calendar: $(this).val()})
-    })
-    
 }
 
 function changeCompany() {
     $("#select_projects").on("change", function () {
         $('.onPreLoad *').remove();
         $('.onPreLoad').html(skeLoad);
+
         updateStorage({company: $(this).val()});
         updateReports();
     });
@@ -1200,7 +1262,7 @@ function updateReports() {
                 });
                 if(sessionStorage.info) {
                     $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
-                }                
+                }
             } else {
                 $("#export-excel").hide();
                 $("#project-not-empty").hide();
@@ -1208,41 +1270,17 @@ function updateReports() {
             }
 
             loadingOnScreenRemove();
-        },
-    });
-
-    var date_range = $("#date_range_requests").val();
-    var startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
-    var endDate = moment().format("YYYY-MM-DD");
-    
-    $.ajax({
-        url: "/api/reports",
-        type: "GET",
-        data: {
-            project: $("#select_projects").val(),
-            endDate: endDate,
-            startDate: startDate,
-        },
-        dataType: "json",
-        headers: {
-            Authorization: $('meta[name="access-token"]').attr("content"),
-            Accept: "application/json",
-        },
-        error: function error(response) {
-            errorAjaxResponse(response);
-        },
-        success: function success(response) {
             $('.onPreLoad *').remove();
             salesResume();
             distribution();
             loadDevices();
-            typePayments();
             loadFrequenteSales();
             abandonedCarts();
             orderbump();
             upsell();
-            conversion();
-        },
+            infoCard();
+            recurrence();
+        }
     });
 }
 
@@ -1256,18 +1294,17 @@ function convertToReal(tooltipItem) {
         if (tooltipValue.length > 6) {
             tooltipValue = tooltipValue.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
         }
-        
+
         return 'R$ ' + tooltipValue;
 }
 
-function updateStorage(value){
-    let prevData;
-    if(sessionStorage.info) JSON.parse(sessionStorage.getItem('info'));
-
-    Object.keys(value).forEach(function(val, key){
-         prevData[val] = value[val];
-    })
-    sessionStorage.setItem('info', JSON.stringify(prevData));
+function updateStorage(v){
+    var existing = sessionStorage.getItem('info');
+    existing = existing ? JSON.parse(existing) : {};
+    Object.keys(v).forEach(function(val, key){
+        existing[val] = v[val];
+   })
+    sessionStorage.setItem('info', JSON.stringify(existing));
 }
 
 function exportReports() {

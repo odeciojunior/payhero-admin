@@ -2,13 +2,57 @@
 
 namespace Modules\Reports\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Core\Services\ReportFinanceService;
+use Modules\Core\Services\Reports\ReportFinanceService;
 
 class ReportsFinanceApiController extends Controller
 {
+    public function getResumeCommissions(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'project_id' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportFinanceService();
+        $comission = $reportService->getResumeCommissions($data);
+
+        return response()->json(['data' => $comission]);
+    }
+
+    public function getResumePendings(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'project_id' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportFinanceService();
+        $pending = $reportService->getResumePendings($data);
+
+        return response()->json(['data' => $pending]);
+    }
+
+    public function getResumeCashbacks(Request $request)
+    {
+        $request->validate([
+            'date_range' => 'required',
+            'project_id' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        $reportService = new ReportFinanceService();
+        $comission = $reportService->getResumeCashbacks($data);
+
+        return response()->json(['data' => $comission]);
+    }
+
     public function getFinancesResume(Request $request)
     {
         $request->validate([ 'date_range' => 'required' ]);
