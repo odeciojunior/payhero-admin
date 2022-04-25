@@ -16,9 +16,13 @@ class ReportSaleService
     public function getResumeSales($filters)
     {
        try {
-            $sales = Sale::where('status', Sale::STATUS_APPROVED)->where('project_id', current(Hashids::decode($filters['project_id'])));
+        $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $sales = Sale::where('status', Sale::STATUS_APPROVED)
+                        ->where('project_id', current(Hashids::decode($filters['project_id'])))
+                        ->where('owner_id', auth()->user()->id)
+                        ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
+
             if ($dateRange['0'] == $dateRange['1']) {
                 return $this->getResumeSalesByHours($sales, $filters);
             } elseif ($dateRange['0'] != $dateRange['1']) {
@@ -43,7 +47,7 @@ class ReportSaleService
         }
     }
 
-    public function getResumeSalesByHours($transactions, $filters)
+    public function getResumeSalesByHours($sales, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -64,16 +68,13 @@ class ReportSaleService
             ];
         }
 
-        $resume = $transactions
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        $resume = $sales
         ->select(DB::raw('id as sale, HOUR(start_date) as hour'))
         ->get();
 
         $saleData = [];
-
         foreach ($labelList as $label) {
             $saleDataValue = 0;
-
             foreach ($resume as $r) {
                 if ($r->hour == preg_replace("/[^0-9]/", "", $label)) {
                     $saleDataValue += 1;
@@ -110,7 +111,7 @@ class ReportSaleService
         ];
     }
 
-    public function getResumeSalesByDays($transactions, $filters)
+    public function getResumeSalesByDays($sales, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -125,16 +126,13 @@ class ReportSaleService
             $dataFormated = $dataFormated->addDays(1);
         }
 
-        $resume = $transactions
-        ->whereBetween('start_date', [ $dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day')) ])
+        $resume = $sales
         ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
         ->get();
 
         $saleData = [];
-
         foreach ($labelList as $label) {
             $saleDataValue = 0;
-
             foreach ($resume as $r) {
                 if (Carbon::parse($r->date)->format('d-m') == $label) {
                     $saleDataValue += 1;
@@ -171,16 +169,15 @@ class ReportSaleService
         ];
     }
 
-    public function getResumeSalesByTwentyDays($transactions, $filters)
+    public function getResumeSalesByTwentyDays($sales, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
-        $labelList    = [];
-
+        $labelList = [];
         $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
         $dataFormated = Carbon::parse($dateRange[0]);
-        $endDate      = Carbon::parse($dateRange[1]);
+        $endDate = Carbon::parse($dateRange[1]);
 
         while ($dataFormated->lessThanOrEqualTo($endDate)) {
             array_push($labelList, $dataFormated->format('d/m'));
@@ -193,18 +190,15 @@ class ReportSaleService
             }
         }
 
-        $resume = $transactions
-        ->whereBetween('start_date', [ $dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day')) ])
+        $resume = $sales
         ->select(DB::raw('id as sale, DATE(start_date) as date'))
         ->get();
 
         $saleData = [];
-
         foreach ($labelList as $label) {
             $saleDataValue = 0;
-
             foreach ($resume as $r) {
-                if ((Carbon::parse($r->date)->subDays(1)->format('d/m') == $label) || (Carbon::parse($r->date)->format('d/m') == $label)) {
+                if ((Carbon::parse($r->date)->format('d/m') == $label) || (Carbon::parse($r->date)->format('d/m') == $label)) {
                     $saleDataValue += 1;
                 }
             }
@@ -239,7 +233,7 @@ class ReportSaleService
         ];
     }
 
-    public function getResumeSalesByFortyDays($transactions, $filters)
+    public function getResumeSalesByFortyDays($sales, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -259,18 +253,13 @@ class ReportSaleService
             }
         }
 
-        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
-
-        $resume = $transactions
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        $resume = $sales
         ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
         ->get();
 
         $saleData = [];
-
         foreach ($labelList as $label) {
             $saleDataValue = 0;
-
             foreach ($resume as $r) {
                 for ($x = 1; $x <= 3; $x++) {
                     if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
@@ -309,7 +298,7 @@ class ReportSaleService
         ];
     }
 
-    public function getResumeSalesByWeeks($transactions, $filters)
+    public function getResumeSalesByWeeks($sales, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -329,18 +318,13 @@ class ReportSaleService
             }
         }
 
-        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
-
-        $resume = $transactions
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        $resume = $sales
         ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
         ->get();
 
         $saleData = [];
-
         foreach ($labelList as $label) {
             $saleDataValue = 0;
-
             foreach ($resume as $r) {
                 for ($x = 1; $x <= 6; $x++) {
                     if ((Carbon::parse($r->date)->addDays($x)->format('d/m') == $label)) {
@@ -379,7 +363,7 @@ class ReportSaleService
         ];
     }
 
-    public function getResumeSalesByMonths($transactions, $filters)
+    public function getResumeSalesByMonths($sales, $filters)
     {
         date_default_timezone_set('America/Sao_Paulo');
 
@@ -393,18 +377,13 @@ class ReportSaleService
             $dataFormated = $dataFormated->addMonths(1);
         }
 
-        $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
-
-        $resume = $transactions
-        ->whereBetween('start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
+        $resume = $sales
         ->select(DB::raw('sales.id as sale, DATE(sales.start_date) as date'))
         ->get();
 
         $saleData = [];
-
         foreach ($labelList as $label) {
             $saleDataValue = 0;
-
             foreach ($resume as $r) {
                 if (Carbon::parse($r->date)->format('m/y') == $label) {
                     $saleDataValue += 1;
