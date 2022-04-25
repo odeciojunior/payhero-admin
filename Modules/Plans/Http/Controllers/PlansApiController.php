@@ -556,9 +556,48 @@ class PlansApiController extends Controller
                 $plans->whereIn('project_id', $projects);
             }
 
+            if(!empty($data['total'])){
+                $result = DB::select("SELECT count(*) as total FROM plans where deleted_at is null and project_id = $projectId and status = 1");
+                //$thumbnails = DB::select("SELECT photo FROM products where project_id = $projectId and deleted_at is null limit 8");
+                $thumbnails = Plan::where('project_id', $projectId)->with('products')->limit(8)->get();
+                
+                $return['thumbnails'] = $thumbnails;
+                $return['total'] = $result[0]->total;
+                return $return;
+            }
+
+            
+            
+            
+            
+
             if (!empty($data['search'])) {
                 $plans->where('name', 'like', '%' . $data['search'] . '%');
             }
+            if (!empty($data['search2'])) {
+                $plans->where('description', 'like', '%' . $data['search2'] . '%');
+            }
+            $itemsNotIn = [];
+            if(!empty($data['items_saved']) && is_array($data['items_saved'])){
+                foreach($data['items_saved'] as $items){
+                    $itemsNotIn[] = current(Hashids::decode($items['id']));
+                }
+            }
+            
+            //if(empty($data['search']) && empty($data['search2'])) $itemsNotIn = [];
+
+            if(!empty($data['most_sales'])){
+                
+                $plans->select('id', 'name', 'description',
+                                DB::raw("id as i"),
+                                DB::raw("(select count(plan_id) from plans_sales where plan_id = i) as sales"))
+                                ->whereNotIn('id', $itemsNotIn);
+                $plans = $plans->orderBy('sales', 'desc')->paginate(16);
+                
+                return PlansSelectResource::collection($plans);
+
+            }
+
 
             $groupByVariants = boolval($data['variants'] ?? 1);
 

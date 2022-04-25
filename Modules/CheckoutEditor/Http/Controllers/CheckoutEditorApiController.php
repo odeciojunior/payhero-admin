@@ -81,8 +81,8 @@ class CheckoutEditorApiController extends Controller
             }
 
             if ($data['company_id'] !== $config->company_id) {
-                $company = Company::find($data['company_id']);
-                $data['pix_enabled'] = $company->has_pix_key && $company->pix_key_situation === 'VERIFIED' && $data['pix_enabled'];
+                $bankAccount = Company::find($data['company_id'])->getDefaultBankAccount();                                
+                $data['pix_enabled'] = !empty($bankAccount) && $bankAccount->transfer_type=='PIX' && $data['pix_enabled'];
             }
 
             if(empty($data['support_phone'])){

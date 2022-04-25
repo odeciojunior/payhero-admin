@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\AsaasAnticipationRequests;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
@@ -33,6 +34,7 @@ use function Clue\StreamFilter\fun;
 class AsaasService implements Statement
 {
     public Company $company;
+    public CompanyBankAccount $companyBankAccount;
     public $gatewayIds = [];
     public $apiKey;
     public $companyId;
@@ -49,6 +51,10 @@ class AsaasService implements Statement
     {
         $this->company = $company;
         return $this;
+    }
+
+    public function setBankAccount(CompanyBankAccount $companyBankAccount){
+        $this->companyBankAccount = $companyBankAccount;
     }
 
     public function getAvailableBalanceWithoutBlocking(): int
@@ -130,10 +136,16 @@ class AsaasService implements Statement
         return true;
     }
 
+    public function existsBankAccountApproved(){
+        //verifica se existe uma chave pix aprovada        
+        $this->companyBankAccount =  $this->company->getBankAccountTED();
+        return !empty($this->companyBankAccount);
+    }
+
     public function createWithdrawal($value)
     {
         try {
-            DB::beginTransaction();
+            DB::beginTransaction();            
 
             $this->company->update([
                 'asaas_balance' => $this->company->asaas_balance -= $value
@@ -156,16 +168,17 @@ class AsaasService implements Statement
                         Task::find(Task::TASK_FIRST_WITHDRAWAL)
                     );
                 }
-
+              
                 $withdrawal = Withdrawal::create(
                     [
                         'value' => $value,
                         'company_id' => $this->company->id,
-                        'bank' => $this->company->bank,
-                        'agency' => $this->company->agency,
-                        'agency_digit' => $this->company->agency_digit,
-                        'account' => $this->company->account,
-                        'account_digit' => $this->company->account_digit,
+                        'transfer_type'=>'TED',
+                        'bank' => $this->companyBankAccount->bank,
+                        'agency' => $this->companyBankAccount->agency,
+                        'agency_digit' => $this->companyBankAccount->agency_digit,
+                        'account' => $this->companyBankAccount->account,
+                        'account_digit' => $this->companyBankAccount->account_digit,
                         'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
                         'tax' => 0,
                         'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,

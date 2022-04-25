@@ -22,13 +22,10 @@ class UserService
         }
 
         $userPresenter = $userModel->present();
-        if (!empty($user)) {
-            if ($user->address_document_status == $userPresenter->getAddressDocumentStatus('approved') &&
-                $user->personal_document_status == $userPresenter->getPersonalDocumentStatus('approved')) {
-                return true;
-            } else {
-                return false;
-            }
+        if (!empty($user))
+        {
+            return  $user->address_document_status == User::DOCUMENT_STATUS_APPROVED &&
+                    $user->personal_document_status == User::DOCUMENT_STATUS_APPROVED;
         }
 
         return false;

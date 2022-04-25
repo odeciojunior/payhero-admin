@@ -10,6 +10,9 @@ class CheckoutConfigResource extends JsonResource
 {
     public function toArray($request)
     {
+        /**  
+         *  nova regra de negocio: bank_document_status, não é mais necessario estar aprovado para vender
+        */
         $companies = Company::select([
             'id',
             'fantasy_name as name',
@@ -25,11 +28,13 @@ class CheckoutConfigResource extends JsonResource
             ->get()
             ->map(function ($company) {
                 if($company->type === Company::PHYSICAL_PERSON) {
-                    $status = $company->bank_document_status === 3
-                        ? 'approved'
-                        : 'pending';
+                    $status = 'approved';
+                    // $company->bank_document_status === 3
+                    //     ? 'approved'
+                    //     : 'pending';
                 } else {
-                    $status = $company->bank_document_status === 3 && $company->address_document_status === 3 && $company->contract_document_status === 3
+                    //$company->bank_document_status === 3 && 
+                    $status = $company->address_document_status === 3 && $company->contract_document_status === 3
                         ? 'approved'
                         : 'pending';
                 }

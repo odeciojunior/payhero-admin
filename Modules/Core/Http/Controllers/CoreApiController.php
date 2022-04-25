@@ -53,7 +53,7 @@ class CoreApiController extends Controller
 
             if ($userDocumentRefused) {
                 $refused = true;
-                $link = '/personal-info#documents';
+                $link = '/personal-info';
             } else {
                 $companyDocumentRefused = $companyService->companyDocumentRefused();
                 $companyDocumentApproved = $companyService->companyDocumentApproved();
@@ -64,9 +64,9 @@ class CoreApiController extends Controller
                             'physical person'
                         )
                     ) {
-                        $link = "/personal-info#documents";
+                        $link = "/personal-info";
                     } else {
-                        $link = "/companies/company-detail/${companyCode}#documents";
+                        $link = "/companies/company-detail/${companyCode}";
                     }
                 } else {
                     $userValid = $userService->isDocumentValidated();
@@ -80,7 +80,7 @@ class CoreApiController extends Controller
                 }
             }
 
-            if (env('ACCOUNT_FRONT_URL')) {
+            if (env('ACCOUNT_FRONT_URL') && empty($link)) {
                 $link = env('ACCOUNT_FRONT_URL') . $link;
             }
 
