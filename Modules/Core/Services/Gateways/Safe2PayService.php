@@ -10,6 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
@@ -28,6 +29,7 @@ use Modules\Withdrawals\Transformers\WithdrawalResource;
 class Safe2PayService implements Statement
 {
     public Company $company;
+    public CompanyBankAccount $companyBankAccount;
     public $gatewayIds = [];
     public $apiKey;
     public $companyId;
@@ -44,6 +46,10 @@ class Safe2PayService implements Statement
     {
         $this->company = $company;
         return $this;
+    }
+
+    public function setBankAccount(CompanyBankAccount $companyBankAccount){
+        $this->companyBankAccount = $companyBankAccount;
     }
 
     public function getAvailableBalanceWithoutBlocking(): int
@@ -128,16 +134,16 @@ class Safe2PayService implements Statement
         return true;
     }
 
+    public function existsBankAccountApproved(){        
+        //verifica se existe uma conta bancaria aprovada 
+        $this->companyBankAccount =  $this->company->getDefaultBankAccount();
+        return !empty($this->companyBankAccount);        
+    }
+
     public function createWithdrawal($value)
     {
         try {
             DB::beginTransaction();
-
-            //verifica se existe uma chave pix aprovada 
-            $bankAccount =  $this->company->getDefaultBankAccount();
-            if(empty($bankAccount)){
-                return false;
-            }            
 
             $this->company->update([
                 'safe2pay_balance' => $this->company->safe2pay_balance - $value
@@ -170,7 +176,7 @@ class Safe2PayService implements Statement
                     'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
                 ];
 
-                $data = array_merge($data,$this->setBankAccountArray($bankAccount));
+                $data = array_merge($data,$this->setBankAccountArray($this->companyBankAccount));
 
                 $withdrawal = Withdrawal::create($data);
 
@@ -181,8 +187,8 @@ class Safe2PayService implements Statement
                     'value' => $withdrawalValueSum
                 ];
 
-                if($withdrawal->transfer_type <> $bankAccount->transfer_type){
-                    $data = array_merge($data,$this->setBankAccountArray($bankAccount));
+                if($withdrawal->transfer_type <> $this->companyBankAccount->transfer_type){
+                    $data = array_merge($data,$this->setBankAccountArray($this->companyBankAccount));
                 }
 
                 $withdrawal->update($data);
