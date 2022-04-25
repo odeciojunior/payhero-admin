@@ -23,7 +23,20 @@ class ReportSaleService
                         ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
 
             if (!empty($filters['status'])) {
-                $sales->where('status', $filters['status']);
+                $salesModel = new Sale();
+                if ($filters['status'] === 'others') {
+                    $statusNotIn = [
+                        Sale::STATUS_APPROVED,
+                        Sale::STATUS_PENDING,
+                        Sale::STATUS_CANCELED,
+                        Sale::STATUS_REFUSED,
+                        Sale::STATUS_REFUNDED,
+                        Sale::STATUS_CHARGEBACK
+                    ];
+                    $sales->whereNotIn('status', $statusNotIn);
+                } else {
+                    $sales->where('status', $salesModel->present()->getStatus($filters['status']));
+                }
             }
 
             if ($dateRange['0'] == $dateRange['1']) {
