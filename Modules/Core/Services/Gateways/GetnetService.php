@@ -12,6 +12,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\PendingDebtWithdrawal;
@@ -33,6 +34,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class GetnetService implements Statement
 {
     public Company $company;
+    public CompanyBankAccount $companyBankAccount;
     public $gatewayIds = [];
 
     public function __construct()
@@ -47,6 +49,10 @@ class GetnetService implements Statement
     {
         $this->company = $company;
         return $this;
+    }
+
+    public function setBankAccount(CompanyBankAccount $companyBankAccount){
+        $this->companyBankAccount = $companyBankAccount;
     }
 
     public function getAvailableBalanceWithoutBlocking(): int
@@ -128,27 +134,21 @@ class GetnetService implements Statement
         return true;
     }
 
+    public function existsBankAccountApproved(){        
+        //verifica se existe uma conta bancaria aprovada 
+        $this->companyBankAccount =  $this->company->getBankAccountTED();
+        return !empty($this->companyBankAccount);
+    }
+
     public function createWithdrawal($value)
     {
-        try {
-
-            //verifica se existe uma conta bancaria aprovada 
-            $bankAccount =  $this->company->getBankAccountTED();
-            if(empty($bankAccount)){
-                throw new Exception('Cadastre um meio de recebimento para solicitar saques!');
-            }
+        try {            
 
             if ($this->company->asaas_balance < 0 && $value - $this->company->asaas_balance < 0) {
                 throw new Exception('Saque negado devido ao saldo negativo no Asaas');
             }
 
             if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID)) {
-                return false;
-            }
-
-            //verifica se existe uma conta bancaria aprovada 
-            $bankAccount =  $this->company->getBankAccountTED();
-            if(empty($bankAccount)){
                 return false;
             }
 
@@ -166,11 +166,11 @@ class GetnetService implements Statement
                     'value' => $value,
                     'company_id' => $this->company->id,
                     'transfer_type'=>'TED',
-                    'bank' => $bankAccount->bank,
-                    'agency' => $bankAccount->agency,
-                    'agency_digit' => $bankAccount->agency_digit,
-                    'account' => $bankAccount->account,
-                    'account_digit' => $bankAccount->account_digit,
+                    'bank' => $this->companyBankAccount->bank,
+                    'agency' => $this->companyBankAccount->agency,
+                    'agency_digit' => $this->companyBankAccount->agency_digit,
+                    'account' => $this->companyBankAccount->account,
+                    'account_digit' => $this->companyBankAccount->account_digit,
                     'status' => Withdrawal::STATUS_PROCESSING,
                     'tax' => 0,
                     'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
