@@ -1001,6 +1001,7 @@ class ShopifyService
                             $query->whereIn('product_id', $productIds);
                         }
                     ])->join('products_plans', 'products_plans.plan_id', '=', 'plans.id')
+                    ->whereNull('products_plans.deleted_at')
                     ->whereIn('products_plans.product_id', $productIds)
                     ->get();
 
@@ -1025,6 +1026,7 @@ class ShopifyService
                 }
                 Product::whereIn('products.id', collect($arrayDelete))
                     ->leftJoin('products_plans as pp', 'pp.product_id', '=', 'products.id')
+                    ->whereNull('products_plans.deleted_at')
                     ->whereNull('pp.id')
                     ->delete();
             }
