@@ -930,6 +930,7 @@ h4.number{
 .box-chart-primary .title-graph.recurrence { 
     padding-bottom: 5px; 
     margin-bottom: 0; 
+    margin-left: 0;
 }
 
 .box-chart-primary .title-graph h5 { margin: 0; }
