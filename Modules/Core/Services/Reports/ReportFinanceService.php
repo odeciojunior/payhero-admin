@@ -454,6 +454,7 @@ class ReportFinanceService
 
             $transactions = Transaction::where('status_enum', Transaction::STATUS_PAID)
                                         ->join('sales', 'sales.id', 'transactions.sale_id')
+                                        ->whereBetween('sales.start_date', [ $dateRange[0].' 00:00:00', $dateRange[1]. ' 23:59:59' ])
                                         ->where('sales.project_id', $projectId);
 
             if ($date['startDate'] == $date['endDate']) {
@@ -502,7 +503,6 @@ class ReportFinanceService
         }
 
         $resume = $transactions
-        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('transactions.value'))
         ->get();
 
@@ -563,7 +563,6 @@ class ReportFinanceService
         }
 
         $resume = $transactions
-        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('transactions.value'))
         ->get();
 
@@ -633,7 +632,6 @@ class ReportFinanceService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
-        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('DATE(start_date) as date, transactions.value'))
         ->get();
 
@@ -701,7 +699,6 @@ class ReportFinanceService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
-        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('DATE(start_date) as date, transactions.value'))
         ->get();
 
@@ -771,7 +768,6 @@ class ReportFinanceService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
-        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('DATE(start_date) as date, transactions.value'))
         ->get();
 
@@ -835,7 +831,6 @@ class ReportFinanceService
         $dateRange[1] = date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'));
 
         $resume = $transactions
-        ->whereBetween('sales.start_date', [$dateRange[0], date('Y-m-d', strtotime($dateRange[1] . ' + 1 day'))])
         ->select(DB::raw('DATE(start_date) as date, transactions.value'))
         ->get();
 
