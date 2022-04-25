@@ -15,7 +15,7 @@ class PopulateIpLocalizationInCheckout extends Command
      *
      * @var string
      */
-    protected $signature = 'command:populate-iplocalization';
+    protected $signature = 'checkout:populate-iplocalization';
 
     /**
      * The console command description.
