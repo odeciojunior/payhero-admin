@@ -138,7 +138,7 @@ class AsaasService implements Statement
             //verifica se existe uma conta bancaria aprovada 
             $bankAccount =  $this->company->getBankAccountTED();
             if(empty($bankAccount)){
-                return false;
+                throw new Exception('Cadastre um meio de recebimento para solicitar saques!');
             }
 
             $this->company->update([

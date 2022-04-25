@@ -125,8 +125,8 @@ class GerencianetService implements Statement
 
             //verifica se existe uma chave pix aprovada 
             $bankAccount =  $this->company->getDefaultBankAccount();
-            if(empty($bankAccount) || $bankAccount->transfer_type=='TED'){
-                return false;
+            if(empty($bankAccount) || (!empty($bankAccount) && $bankAccount->transfer_type=='TED')){
+                throw new Exception('Cadastre um meio de recebimento para solicitar saques');
             }
 
             if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID : Gateway::GERENCIANET_SANDBOX_ID)) {

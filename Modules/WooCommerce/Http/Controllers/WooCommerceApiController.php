@@ -171,7 +171,7 @@ class WooCommerceApiController extends Controller
             $checkoutConfig = CheckoutConfig::create([
                 'company_id' => $company->id,
                 'project_id' => $projectCreated->id,
-                'pix_enabled' => !!$company->has_pix_key,
+                'pix_enabled' => !!$company->getDefaultBankAccount()->transfer_type=='PIX',
             ]);
 
             if (empty($checkoutConfig)) {

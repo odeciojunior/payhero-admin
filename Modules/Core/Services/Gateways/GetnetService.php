@@ -135,7 +135,7 @@ class GetnetService implements Statement
             //verifica se existe uma conta bancaria aprovada 
             $bankAccount =  $this->company->getBankAccountTED();
             if(empty($bankAccount)){
-                return false;
+                throw new Exception('Cadastre um meio de recebimento para solicitar saques!');
             }
 
             if ($this->company->asaas_balance < 0 && $value - $this->company->asaas_balance < 0) {

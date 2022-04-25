@@ -136,7 +136,7 @@ class Safe2PayService implements Statement
             //verifica se existe uma chave pix aprovada 
             $bankAccount =  $this->company->getDefaultBankAccount();
             if(empty($bankAccount)){
-                return false;
+                throw new Exception('Cadastre um meio de recebimento para solicitar saques!');
             }            
 
             $this->company->update([

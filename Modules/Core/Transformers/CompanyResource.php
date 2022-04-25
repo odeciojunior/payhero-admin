@@ -60,7 +60,9 @@ class CompanyResource extends JsonResource
             $companyIsApproved = true;
         }
 
-        return [
+       
+
+        $data = [
             'id_code' => Hashids::encode($this->resource->id),
             'user_code' => Hashids::encode($this->resource->user_id),
             'support_email' => $this->resource->support_email ?? '',
@@ -82,11 +84,11 @@ class CompanyResource extends JsonResource
             'complement' => $this->resource->complement ?? '',
             'neighborhood' => $this->resource->neighborhood ?? '',
             'number' => $this->resource->number ?? '',
-            'bank' => $this->resource->bank ?? '',
-            'agency' => $this->resource->agency ?? '',
-            'agency_digit' => $this->resource->agency_digit ?? '',
-            'account' => $this->resource->account ?? '',
-            'account_digit' => $this->resource->account_digit ?? '',
+            'bank' => '',
+            'agency' => '',
+            'agency_digit' => '',
+            'account' => '',
+            'account_digit' => '',
             'document_status' => $documentStatus,
             'bank_document_status' => $presenter->getBankDocumentStatus($this->resource->bank_document_status),
             'address_document_status' => $presenter->getAddressDocumentStatus($this->resource->address_document_status),
@@ -113,5 +115,16 @@ class CompanyResource extends JsonResource
             'currency_quotation' => $lastUsdQuotation->value,
             'company_is_approved' => $companyIsApproved
         ];
+
+        $bankAccount = $this->resource->getBankAccountTED();
+        if(!empty($bankAccount)){
+            $data['bank'] = $bankAccount->bank ?? '';
+            $data['agency'] = $bankAccount->agency ?? '';
+            $data['agency_digit'] = $bankAccount->agency_digit ?? '';
+            $data['account'] = $bankAccount->account ?? '';
+            $data['account_digit'] = $bankAccount->account_digit ?? '';
+        }
+
+        return $data;
     }
 }
