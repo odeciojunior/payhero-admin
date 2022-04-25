@@ -528,6 +528,10 @@
     "/build/global/img/reports/ico-linux.svg": "/build/global/img/reports/ico-linux.svg",
     "/build/global/img/reports/ico-mkt.png": "/build/global/img/reports/ico-mkt.png",
     "/build/global/img/reports/ico-mkt.svg": "/build/global/img/reports/ico-mkt.svg",
+<<<<<<< HEAD
+=======
+    "/build/global/img/reports/ico-mkt.svg:Zone.Identifier": "/build/global/img/reports/ico-mkt.svg:Zone.Identifier",
+>>>>>>> 24a1347baa838acc4bf90f51039c7ad35441abf2
     "/build/global/img/reports/ico-no-withdrawals.svg": "/build/global/img/reports/ico-no-withdrawals.svg",
     "/build/global/img/reports/ico-orderbump.svg": "/build/global/img/reports/ico-orderbump.svg",
     "/build/global/img/reports/ico-oval-green.png": "/build/global/img/reports/ico-oval-green.png",
