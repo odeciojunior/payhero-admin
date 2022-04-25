@@ -25,6 +25,7 @@ use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Transfers\Services\GetNetStatementService;
+use PDF;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -671,7 +672,7 @@ class SaleService
                 ]);
                 continue;
             }
-            
+
             $safe2payBalance = $transaction->company->safe2pay_balance;
 
             if($transaction->status_enum == Transaction::STATUS_PAID) {
@@ -1233,5 +1234,35 @@ class SaleService
                 ];
         }
         return [];
+    }
+
+    public static function refundReceipt($hashSaleId, $transaction)
+    {
+        $company = (object)$transaction->company->toArray();
+        $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
+        $transaction->flag = strtoupper($transaction->sale->flag) ?? null;
+
+        $saleInfo = DB::table('sale_informations')
+            ->select('customer_name', 'last_four_digits')
+            ->where('sale_id', '=', $transaction->sale_id)
+            ->first();
+
+        $arr = explode(' ',trim($saleInfo->customer_name));
+        $saleInfo->firstname = $arr[0];
+
+        $checkoutConfigs = DB::table('checkout_configs')
+            ->select('checkout_logo')
+            ->where('checkout_logo_enabled', '=', '1')
+            ->where('project_id', '=', $transaction->sale->project_id)
+            ->first();
+
+        $productsPlansSales = DB::table('products_plans_sales')
+            ->select('amount', 'name')
+            ->where('sale_id', '=', $transaction->sale_id)
+            ->get();
+
+        $refundDate = $transaction->sale->saleLogs()->whereIn('status_enum', [Sale::STATUS_REFUNDED, Sale::STATUS_BILLET_REFUNDED])->first()->created_at;
+
+        return PDF::loadView('sales::refund_receipt', compact('company', 'transaction', 'saleInfo', 'checkoutConfigs','productsPlansSales', 'refundDate'));
     }
 }
