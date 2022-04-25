@@ -228,7 +228,7 @@
                         <!-- distribtion -->
                         <div class="distribution">
                             <div class="card inner" id="card-distribution">
-                                <header class="d-flex title-graph">
+                                <header class="d-flex title-graph title-distribution">
                                     <h5 class="grey font-size-16">
                                         <strong>Distribuição</strong>
                                     </h5>
