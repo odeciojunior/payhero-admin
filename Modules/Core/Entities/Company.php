@@ -135,8 +135,8 @@ class Company extends Model
         'complement',
         'neighborhood',        
         'number',        
-        'support_email',
-        'support_telephone',
+        'support_email',//
+        'support_telephone',//
         'cielo_balance',
         'asaas_balance',
         'safe2pay_balance',
@@ -145,11 +145,11 @@ class Company extends Model
         'contract_document_status',
         'company_type',        
         'order_priority',
-        'account_type',
-        'extra_document',
-        'document_issue_date',
-        'document_issuer',
-        'document_issuer_state',
+        'account_type',//
+        'extra_document',//*
+        'document_issue_date',//
+        'document_issuer',//
+        'document_issuer_state',//
         'active_flag',
         'gateway_tax',
         'installment_tax',
