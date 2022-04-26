@@ -193,7 +193,7 @@
             
             
             <div id="edit_step1" style="display: none">
-                <div style='min-height: 100px; position: relative;' class="pt-25 pr-30 pl-30 ">
+                <div style='min-height: 100px; position: relative;' class="pt-25 pr-30 pl-25 ">
                 
                     <p>
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -229,9 +229,9 @@
                             </svg>
                     </div> --}}
 
-                    <div class="d-flex modal-new-layout box-description">
+                    <div class="d-flex modal-new-layout box-description" style="width: 594px">
                         <input class="form-control form-control-lg search_input_create_coupon search_coupon" type="text" id="search_input2" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
-                        <div class="input-group input-group-lg" style="width: 660px;">
+                        <div class="input-group input-group-lg" style="width: 644px;">
                             <input onkeyup="set_description_value(this, $('.search_input_create_coupon'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
                             <div class="input-group-append">
                                 <span class="input-group-text">
@@ -241,7 +241,7 @@
                         </div>
                     </div>
                         
-                    <div id="search_result2" class="mt-30  " style="height: 312px; width:596px; overflow: hidden">
+                    <div id="search_result2" class="mt-20  " style="height: 322px; width:621px; overflow: hidden">
 
                         {{-- <div class="item item_selected" >
                             <span style="background-image: url(http://dev.woo.com/wp-content/uploads/2021/07/sunglasses-2.jpg)" class="image"></span>

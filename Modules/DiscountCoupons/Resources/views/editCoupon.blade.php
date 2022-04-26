@@ -246,7 +246,7 @@
             </div>
 
             <div id="c-edit_step1" style="display: none">
-                <div style='min-height: 100px; position: relative; padding:25px 25px 30px 30px' class=" ">
+                <div style='min-height: 100px; position: relative; padding:25px 25px 30px 25px' class=" ">
 
                     <div class="mb-20">
 
@@ -298,9 +298,9 @@
                         </svg>
                     </div> --}}
 
-                    <div class="d-flex modal-new-layout box-description">
+                    <div class="d-flex modal-new-layout box-description" style="width: 594px">
                         <input class="form-control form-control-lg search_input_create_coupon search_coupon search_input_create_coupon_id" type="text" id="search_input2" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
-                        <div class="input-group input-group-lg" style="width: 678px;">
+                        <div class="input-group input-group-lg" style="width: 644px;">
                             <input onkeyup="set_description_value(this, $('.search_input_create_coupon_id'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
                             <div class="input-group-append">
                                 <span class="input-group-text">
@@ -311,7 +311,7 @@
                     </div>
 
                     <div id="search_result2" class="mt-20  "
-                        style=" height: 312px; width:598px; overflow: hidden">
+                        style=" height: 312px; width:621px; overflow: hidden">
 
                         {{-- <div class="item item_selected" >
                                 <span style="background-image: url(http://dev.woo.com/wp-content/uploads/2021/07/sunglasses-2.jpg)" class="image"></span>

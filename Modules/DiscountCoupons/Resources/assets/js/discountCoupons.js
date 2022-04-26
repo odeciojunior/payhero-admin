@@ -2293,6 +2293,8 @@ $(function () {
         $('.step1').hide()
         $('.step2').show()
         $('#c_name').focus()
+        $('#nao_vence').prop('checked', false)
+        $('#date_range').prop('disabled', false)
 
     })
 
@@ -2808,10 +2810,7 @@ $(function () {
 
     $('#all-plans').click(function () {
         items_selected = []
-        // $('.coupon-next').click()
-        $('.step1').hide()
-        $('.step2').show()
-        $('#c_name').focus()
+        $('.coupon-next').click()
 
         return false
     })
