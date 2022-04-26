@@ -70,7 +70,7 @@ function distribution() {
                             <strong class="value-pending">${removeMoneyCurrency(pending.value)}</strong>
                         </footer>
                     </div>
-                    <div class="distribution-area">
+                    <div class="distribution-area" style="${removeMoneyCurrency(blocked.value) == "0,00" ? 'display: none': ''}">
                         <header class="grey font-size-14">
                             <span class="cube ${blocked.color}">
                                 <i></i>
@@ -295,7 +295,7 @@ function onCommission() {
         success: function success(response) {
             infoComission = `
                 <section class="container">
-                    <header class="d-flex title-graph">
+                    <header class="d-flex title-graph mb-0">
                         <h5 class="grey font-size-16">
                             <strong>Comissão</strong>
                         </h5>
@@ -476,6 +476,7 @@ function changeCalendar() {
         }
     })
     .on('datepicker-change', function () {
+        updateStorage({calendar: $(this).val()});
         updateReports();
     })
     .on('datepicker-open', function () {
@@ -487,11 +488,6 @@ function changeCalendar() {
             $(this).addClass('active');
         }
     });
-
-    $('input[name="daterange"]').change(function() {
-        updateStorage({calendar: $(this).val()})
-    })
-
 }
 
 function changeCompany() {
@@ -559,13 +555,13 @@ function updateReports() {
 }
 
 
-function updateStorage(value){
-    let prevData;
-    if(sessionStorage.info) JSON.parse(sessionStorage.getItem('info'));
-    Object.keys(value).forEach(function(val, key){
-         prevData[val] = value[val];
-    })
-    sessionStorage.setItem('info', JSON.stringify(prevData));
+function updateStorage(v){
+    var existing = sessionStorage.getItem('info');
+    existing = existing ? JSON.parse(existing) : {};
+    Object.keys(v).forEach(function(val, key){
+        existing[val] = v[val];
+   })
+    sessionStorage.setItem('info', JSON.stringify(existing));
 }
 
 function graphComission(series, labels) {

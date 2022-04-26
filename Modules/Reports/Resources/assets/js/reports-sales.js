@@ -1229,7 +1229,6 @@ function changeCompany() {
     $("#select_projects").on("change", function () {
         $('.onPreLoad *').remove();
         $('.onPreLoad').html(skeLoad);
-
         updateStorage({company: $(this).val()});
         updateReports();
     });
