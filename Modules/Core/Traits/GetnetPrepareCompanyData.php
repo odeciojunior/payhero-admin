@@ -168,9 +168,9 @@ trait GetnetPrepareCompanyData
             'identification_document' => [
                 'document_type' => 'nire',
                 'document_number' => '',
-                'document_issue_date' => $company->document_issue_date,
-                'document_issuer' => $company->document_issuer,
-                'document_issuer_state' => $company->document_issuer_state
+                'document_issue_date' => '',//$company->document_issue_date,
+                'document_issuer' => '',//$company->document_issuer,
+                'document_issuer_state' => ''//$company->document_issuer_state
             ],
             'federal_registration_status_date' => null,
             'social_value' => null,

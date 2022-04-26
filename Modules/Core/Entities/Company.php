@@ -133,30 +133,23 @@ class Company extends Model
         'city',
         'street',
         'complement',
-        'neighborhood',
-        'agency',
-        'bank',
-        'number',
-        'agency_digit',
-        'account',
-        'account_digit',
-        'support_email',
-        'support_telephone',
+        'neighborhood',        
+        'number',        
+        'support_email',//
+        'support_telephone',//
         'cielo_balance',
         'asaas_balance',
         'safe2pay_balance',
         'bank_document_status',
         'address_document_status',
         'contract_document_status',
-        'company_type',
-        'pix_key_situation',
-        'has_pix_key',
+        'company_type',        
         'order_priority',
-        'account_type',
-        'extra_document',
-        'document_issue_date',
-        'document_issuer',
-        'document_issuer_state',
+        'account_type',//
+        'extra_document',//*
+        'document_issue_date',//
+        'document_issuer',//
+        'document_issuer_state',//
         'active_flag',
         'gateway_tax',
         'installment_tax',
