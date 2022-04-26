@@ -909,7 +909,7 @@ h4.number{
 #info-commission .ske-load { margin: 20px auto 0; }
 .new-finance-graph {
     height: 359px;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
 }
 
 @media only screen and (min-width: 1220px) {
@@ -957,7 +957,7 @@ h4.number{
     padding-right: 20px; 
     padding-top: 0;
 }
-#sales-graph { height: 265px; }
+#sales-graph { height: 359px; }
 
 .finances-values span {
     color: #9E9E9E;
@@ -1938,6 +1938,8 @@ h4.number{
     top: 44px;
     width: 175px;
  }
+
+ .new-sell-graph { padding-bottom: 20px; }
 .page-holder {
     font-family: 'Muli', sans-serif;
     color: black;

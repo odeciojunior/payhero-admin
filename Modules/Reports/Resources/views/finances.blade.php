@@ -129,7 +129,16 @@
                     <div class="container d-flex box-chart-primary">
                         <!-- comission -->    
                         <div class="commission">
-                            <div class="card onPreLoad" id="info-commission"></div>
+                            <div class="card" id="card-commission">
+                                <section class="container">
+                                    <header class="d-flex title-graph mb-0">
+                                        <h5 class="grey font-size-16">
+                                            <strong>Comissão</strong>
+                                        </h5>
+                                    </header>
+                                    <div class="onPreLoad" id="block-commission"></div>
+                                </section>
+                            </div>
 
                             <div class="">
                                 <div class="d-flex justify-content-between sub-comission">
