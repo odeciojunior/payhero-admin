@@ -501,7 +501,8 @@ $(function () {
     $(document).on('change', '#edit-coupon-type', function (event) {
         if ($(this).val() == 1) {
             cuponType = 1;
-            $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
+            $(".coupon-value").maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+
         } else {
             cuponType = 0;
             $('.coupon-value').mask('00%', {reverse: true});
@@ -510,14 +511,14 @@ $(function () {
     $(document).on('change', '#create-coupon-type', function (event) {
         if ($(this).val() == 1) {
             cuponType = 1;            
-            $(".coupon-value").mask('#.##0,00', {reverse: true});          
+            $(".coupon-value").maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});          
               
         } else {
             cuponType = 0;
             $('.coupon-value').mask('00%', {reverse: true});
         }
     });
-    $(".rule-value").mask('#.##0,00', {reverse: true});
+    $(".rule-value").maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
 
     $('.rule-value').on('blur', function () {
         applyMaskManually(this);
@@ -724,7 +725,7 @@ $(function () {
         $("#percent-edit").hide()
     })
 
-    $('#value-edit').mask('#.##0,00', {reverse: true});
+    $('#value-edit').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
     formatMoney('#value-edit')
     //var rules = edit_rules
     
@@ -834,7 +835,7 @@ $(function () {
             $(this).siriusSelect()
         })
         
-        $('.value').mask('#.##0,00', { reverse: true });
+        $('.value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
 
         formatMoney('.value_edit')
         
@@ -1688,7 +1689,7 @@ $(function () {
 
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
-    $('#value').mask('#.##0,00', {reverse: true});
+    $('#value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
     formatMoney('#value')
 
 
@@ -1802,7 +1803,7 @@ $(function () {
 
 
 
-        $('.value').mask('#.##0,00', {reverse: true});
+        $('.value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
 
         formatMoney('.value')
         
@@ -2277,10 +2278,10 @@ $(function () {
     // }
 
     // Create new cupouns
-    $('#discount_value').mask('#.##0,00', { reverse: true });
-    $('#minimum_value').mask('#.##0,00', { reverse: true });
-    $('#2discount_value').mask('#.##0,00', { reverse: true });
-    $('#2minimum_value').mask('#.##0,00', { reverse: true });
+    $('#discount_value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+    $('#minimum_value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+    $('#2discount_value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+    $('#2minimum_value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
     
     
     formatMoney('#discount_value')
