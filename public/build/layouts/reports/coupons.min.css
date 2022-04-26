@@ -957,6 +957,7 @@ h4.number{
     padding-right: 20px; 
     padding-top: 0;
 }
+#sales-graph { height: 265px; }
 
 .finances-values span {
     color: #9E9E9E;
