@@ -200,6 +200,7 @@ class CompanyPresenter extends Presenter
             $this->entity->contract_document_status == 3;
     }
 
+    /*
     public function getAccountType($type = null)
     {
         $company = $this->entity;
@@ -223,7 +224,7 @@ class CompanyPresenter extends Presenter
         }
 
         return '';        
-    }
+    }*/
 
     public function getStatusGetnet($status = null)
     {
