@@ -1012,6 +1012,7 @@ $(function () {
     $("#save_name_edit").on('click', function () {
         let formData = new FormData(document.getElementById('form-update-discount'));
         let id = $('#discount-id').val();
+        $('#edit-name-box').animate({height:44})
 
         $.ajax({
             method: "POST",
