@@ -214,9 +214,8 @@ function blockeds() {
     });
 }
 
-
 function onResume() {
-    let ticket, commission, chargebacks, transactions = '';
+    let ticket, commission, chargebacks, trans = '';
     $('#finance-card .onPreLoad *').remove();
 
     $("#finance-commission,#finance-ticket,#finance-chargebacks,#finance-transactions").html(skeLoad);
@@ -233,12 +232,13 @@ function onResume() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
+            let { transactions, average_ticket, comission, chargeback } = response.data;
 
-            transactions = `
+            trans = `
                 <span class="title">N de transações</span>
                 <div class="d-flex">
                     <strong class="number">
-                        <span>${response.data.transactions == undefined ? 0 : response.data.transactions}</span>
+                        <span>${transactions == undefined ? 0 : transactions}</span>
                     </strong>
                 </div>
             `;
@@ -247,14 +247,14 @@ function onResume() {
                 <span class="title">Ticket Médio</span>
                 <div class="d-flex">
                     <span class="detail">R$</span>
-                    <strong class="number">${response.data.average_ticket == undefined ? '0,00' : removeMoneyCurrency(response.data.average_ticket)}</strong>
+                    <strong class="number">${average_ticket == undefined ? '0,00' : removeMoneyCurrency(average_ticket)}</strong>
                 </div>
             `;
             commission = `
                 <span class="title">Comissão total</span>
                 <div class="d-flex">
                     <span class="detail">R$</span>
-                    <strong class="number">${response.data.comission == undefined ? '0,00' : removeMoneyCurrency(response.data.comission)}</strong>
+                    <strong class="number">${comission == undefined ? '0,00' : removeMoneyCurrency(comission)}</strong>
                 </div>
             `;
 
@@ -262,14 +262,14 @@ function onResume() {
                 <span class="title">Total em Chargebacks</span>
                 <div class="d-flex">
                     <span class="detail">R$</span>
-                    <strong class="number"><span class="bold">${response.data.chargeback == undefined ? '0,00' : removeMoneyCurrency(response.data.chargeback)}</span></strong>
+                    <strong class="number"><span class="bold">${chargeback == undefined ? '0,00' : removeMoneyCurrency(chargeback)}</span></strong>
                 </div>
             `;
 
             $("#finance-commission").html(commission);
             $("#finance-ticket").html(ticket);
             $("#finance-chargebacks").html(chargebacks);
-            $("#finance-transactions").html(transactions);
+            $("#finance-transactions").html(trans);
         }
     });
 
