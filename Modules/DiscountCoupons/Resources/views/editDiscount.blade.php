@@ -241,7 +241,7 @@
                         </div>
                     </div>
                         
-                    <div id="search_result2" class="mt-20  " style="height: 322px; width:621px; overflow: hidden">
+                    <div id="search_result2" class="mt-20  search_result2" style="height: 322px; width:621px; overflow: hidden">
 
                         {{-- <div class="item item_selected" >
                             <span style="background-image: url(http://dev.woo.com/wp-content/uploads/2021/07/sunglasses-2.jpg)" class="image"></span>

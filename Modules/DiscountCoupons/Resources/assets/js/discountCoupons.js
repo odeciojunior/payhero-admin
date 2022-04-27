@@ -649,6 +649,7 @@ $(function () {
             if(items_selected.length > 9){
 
                 $('.edit-disc-plans-thumbs-scroll').css('margin-bottom', 16)
+                $('.search_result2').css('height', 317)
                 $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar('destroy')
                 $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar({
                     axis: 'x',
@@ -659,6 +660,7 @@ $(function () {
             }else{
                 $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar('destroy')
                 $('.edit-disc-plans-thumbs-scroll').css('margin-bottom', 0)
+                $('.search_result2').css('height', 334)
 
             }
 
@@ -2638,18 +2640,20 @@ $(function () {
             $('.edit-plans-thumbs').html(items_thumbs)
 
             if(items_selected.length > 9){
-
+                
                 $('.edit-plans-thumbs-scroll').css('margin-bottom', 16)
+                $('#search_result2').css('height', 312)
                 $('.edit-plans-thumbs-scroll').mCustomScrollbar('destroy')
                 $('.edit-plans-thumbs-scroll').mCustomScrollbar({
                     axis: 'x',
                     advanced: {
-                      autoExpandHorizontalScroll: true
+                        autoExpandHorizontalScroll: true
                     }
-                  })
+                })
             }else{
                 $('.edit-plans-thumbs-scroll').mCustomScrollbar('destroy')
                 $('.edit-plans-thumbs-scroll').css('margin-bottom', 0)
+                $('#search_result2').css('height', 328)
 
             }
 
