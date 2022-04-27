@@ -4,7 +4,7 @@
 
     <div style="display: none" id="edit-discount">
         
-        <div class="modal-content s-border-radius" style="width:646px; height:706px; position: relative;">
+        <div class="modal-content s-border-radius" style="width:646px; min-height:624px; position: relative;">
             
             <div class="mdtpad simple-border-bottom ">
                 <span class="  " id="modal-title"
@@ -22,7 +22,8 @@
                 </a>
             </div>
 
-            <div id="edit_step0" style="height: 553px; overflow: hidden;">
+            {{-- <div id="edit_step0" style="height: 553px; overflow: hidden;"> --}}
+            <div id="edit_step0" style="min-height: 471px; max-height: 520px; overflow: hidden;">
 
                 <div style='min-height: 100px; position: relative;' class="pt-25 pb-30 pr-30 pl-30 simple-border-bottom">
 
@@ -464,7 +465,7 @@
             </div>
 
 
-            <div class="modal-footer footer-padding" style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; position: absolute; bottom:0px; width:646px; border-top: 1px solid #EBEBEB; background-color: #fff">
+            <div class="modal-footer footer-padding" style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; bottom:0px; width:646px; border-top: 1px solid #EBEBEB; background-color: #fff">
                 <div class="d-flex mt-10" style="width: 610px">
                     
 
