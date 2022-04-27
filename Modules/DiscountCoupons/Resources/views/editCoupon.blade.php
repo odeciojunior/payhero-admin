@@ -5,7 +5,7 @@
     <div style="display: none" id="edit-coupon">
 
 
-        <div class="modal-content s-border-radius" style="width:646px; height:706px">
+        <div class="modal-content s-border-radius" style="width:646px; height:auto">
 
             <div class="mdtpad simple-border-bottom">
                 <span class="" id="modal-title"
@@ -24,7 +24,7 @@
             </div>
 
             <div id="c-edit_step0" >
-                <div id="coupon_edit_step0" style="height: 553px; overflow:hidden">
+                <div id="coupon_edit_step0" style="max-height: 553px; min-height:480px; overflow:hidden">
 
                     <div style=' position: relative; padding: 25px 30px 20px' class=" simple-border-bottom">
     
@@ -246,7 +246,7 @@
             </div>
 
             <div id="c-edit_step1" style="display: none">
-                <div style='min-height: 100px; position: relative; padding:25px 25px 30px 25px' class=" ">
+                <div style='min-height: 100px; position: relative; padding:25px 25px 0px 25px' class=" ">
 
                     <div class="mb-20">
 
@@ -342,7 +342,7 @@
 
                 </div>
 
-                <div class="modal-footer" style="position: absolute;
+                <div class="modal-footer" style="
                     bottom: 0px;
                     text-align: center;
                     width:646px;
@@ -504,7 +504,7 @@
 
                 <input type="hidden" name="value" id="2c_value">
 
-                <div class="modal-footer" style="position: absolute;
+                <div class="modal-footer" style="
                     bottom: 0;
                     width: 646px;
                     border-top: 1px solid #EBEBEB;
