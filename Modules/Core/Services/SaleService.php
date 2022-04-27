@@ -821,6 +821,7 @@ class SaleService
                 ]
             )
                 ->where('user_id', auth()->user()->account_owner_id)
+                ->whereIn('status_enum',[Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereHas(
                     'blockReasonSale',
