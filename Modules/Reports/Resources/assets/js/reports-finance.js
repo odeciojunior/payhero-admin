@@ -745,7 +745,7 @@ function barGraph(series, labels, withdraw) {
                         text: 'Últimos 6 meses',
                         align: 'end',
                         color: '#9E9E9E',
-                        fullSize: false,
+                        fullSize: false,                        
                         padding: {
                             top: 0,
                             bottom: -23,
@@ -775,9 +775,6 @@ function barGraph(series, labels, withdraw) {
                             color: '#ECE9F1',
                             drawBorder: false
                         },
-                        // beginAtZero: true,
-                        // min: 0,
-                        // max: 100000,
                         ticks: {
                             padding: 0,
                             font: {
@@ -865,6 +862,14 @@ function distributionGraph(series) {
 function kFormatter(num) {
     return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num);
 }
+
+const formatCash = n => {
+    if (n < 1e3) return n;
+    if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K";
+    if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "M";
+    if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "B";
+    if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T";
+};
 
 let skeLoad = `
     <div class="ske-load">

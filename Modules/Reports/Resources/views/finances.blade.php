@@ -168,7 +168,7 @@
                                     </div>
                                     <div class="inner-comission" id="card-draw">
                                         <div class="card inner relative" id="card-withdraw">
-                                            <header class="d-flex title-graph">
+                                            <header class="d-flex title-graph title-withdraw">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Saques</strong>
                                                 </h5>

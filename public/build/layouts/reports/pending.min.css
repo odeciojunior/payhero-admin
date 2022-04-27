@@ -945,6 +945,9 @@ h4.number{
         max-width: 50%;
         padding: 0 1.0715rem 0 0;
     }
+    .inner-comission + .inner-comission { padding: 0 0 0 0.0715rem; }
+}
+@media only screen and (min-width: 1600px) {
     .inner-comission + .inner-comission { padding: 0 0 0 1.0715rem; }
 }
 
@@ -1094,6 +1097,8 @@ h4.number{
 }
 
 .inner.relative .title-graph { position: absolute; }
+
+.inner.relative .title-graph.title-withdraw { height: 38px; }
 
 .inner.relative .title-graph.no-withdrawals { position: relative; }
 
