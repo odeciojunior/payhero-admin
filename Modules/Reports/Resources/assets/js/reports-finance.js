@@ -110,7 +110,7 @@ function withdrawals() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-
+            let { chart } = response.data;
             infoWithdraw = `
                 <div class="no-draws">
                     <footer class="d-flex footer-withdrawals">
@@ -162,18 +162,17 @@ function withdrawals() {
             graphDraw = `<div id="block-withdraw"></div>`;
 
 
-            if(response.data.chart) {
+            if(chart) {
                 $("#draw").html(graphDraw);
                 $('#block-withdraw').html('<canvas id="financesChart" height="285"></canvas>');
-                let labels = [...response.data.chart.labels];
-                let withdraw = [...response.data.chart.withdrawal.values];
-                let series = [...response.data.chart.income.values];
+                let labels = [...chart.labels];
+                let withdraw = [...chart.withdrawal.values];
+                let series = [...chart.income.values];
                 barGraph(series, labels, withdraw);
             } else {
                 $('#card-draw .onPreLoad *').remove();
                 $("#card-draw").find('.graph').after(infoWithdraw);
             }
-
         }
     });
 }
@@ -714,7 +713,7 @@ function barGraph(series, labels, withdraw) {
                         color:'#636363',
                         backgroundColor: "rgba(69, 208, 126, 1)",
                         borderRadius: 4,
-                        barThickness: 30,
+                        barPercentage: 0.72
                     },
                     {
                         label: 'Saques',
@@ -722,7 +721,7 @@ function barGraph(series, labels, withdraw) {
                         color:'#636363',
                         backgroundColor: "rgba(216, 245, 228, 1)",
                         borderRadius: 4,
-                        barThickness: 30,
+                        barPercentage: 1
                     }
                 ]
             },
