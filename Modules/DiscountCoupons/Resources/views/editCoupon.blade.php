@@ -216,7 +216,7 @@
                     </div>
                 </div>
 
-                <div class="modal-footer " style="position: absolute;
+                <div class="modal-footer " style="
                     bottom: 0;
                     width: 646px;
                     border-top: 1px solid #EBEBEB;

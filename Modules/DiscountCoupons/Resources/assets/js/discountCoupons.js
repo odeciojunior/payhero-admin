@@ -19,6 +19,17 @@ function formatMoney(input) {
     });    
 }
 
+
+function setBodyHight(n1, n2){
+    
+    // $('#coupon_edit_step0').css('height', n1);
+    // $('#coupon_edit_step0').css('min-height',468);
+    // $('#edit-coupon .modal-content').css('height', n2);
+}
+// $('.back-btn').on('click',()=>{
+//     setBodyHight('auto', 'auto');
+// })
+
 function count_plans_coupons(qtde) { //thumbnails
     
     
@@ -1057,7 +1068,7 @@ $(function () {
             $('#date_range').val('')
         }else{
             $('#date_range').prop('disabled', false)
-            $('#date_range').focus()
+            //$('#date_range').focus()
 
         }
     })
@@ -1068,7 +1079,7 @@ $(function () {
             $('#date_range2').val('')
         }else{
             $('#date_range2').prop('disabled', false)
-            $('#date_range2').focus()
+            //$('#date_range2').trigger('click')
         }
     })
 
@@ -1114,10 +1125,12 @@ $(function () {
     $('#edit-name').on('click', edit_name);
     $('#edit-plans').on('click',edit_plans);
     // carregar modal de edicao
+
     $(document).on('click', '.edit-coupon', function () {
         let coupon = $(this).attr('coupon');
         var discount = $(this).attr('discount');
         
+        setBodyHight('auto','auto');
         
 
         $.ajax({
@@ -2721,6 +2734,9 @@ $(function () {
     }
 
     $('#c-edit-rules').click(function () {
+
+        setBodyHight('auto', 698);
+
         $('#c-edit_step0').hide()
         $('#c-edit_step2').show()
         if($('#nao_vence2').prop('checked')){
