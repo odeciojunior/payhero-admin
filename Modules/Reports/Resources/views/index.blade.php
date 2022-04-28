@@ -128,7 +128,7 @@
                         <!-- comission -->
                         <div class="commission">
                             <div class="card" id="card-status">
-                                <section class="container">
+                                <section class="container pb-20">
                                     <header class="d-flex title-graph title-graph-sales">
                                         <h5 class="grey font-size-16">
                                             <strong>Quantidade</strong>
