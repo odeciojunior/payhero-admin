@@ -36,7 +36,7 @@ trait GetnetPrepareCompanyData
             );
         }
 
-        return [
+        $returnData = [
             'merchant_id' => $this->getMerchantId(),
             'legal_document_number' => FoxUtils::onlyNumbers($company->document),
             'legal_name' => FoxUtils::removeSpecialChars(FoxUtils::removeAccents($user->name)),
@@ -63,17 +63,7 @@ trait GetnetPrepareCompanyData
                 'phone_number' => $telephone['number'],
             ],
             'email' => $user->email,
-            'acquirer_merchant_category_code' => '2119',
-            'bank_accounts' => [
-                'type_accounts' => 'unique',
-                'unique_account' => [
-                    'bank' => $company->bank,
-                    'agency' => $company->agency,
-                    'account' => $company->account,
-                    'account_type' => $company->present()->getAccountType(),
-                    'account_digit' => $company->account_digit,
-                ]
-            ],
+            'acquirer_merchant_category_code' => '2119',            
             'list_commissions' => $this->getListCommissions($company),
             'url_callback' => $this->urlCallback,
             'accepted_contract' => 'S',
@@ -81,6 +71,36 @@ trait GetnetPrepareCompanyData
             'marketplace_store' => 'S',
             'payment_plan' => 3
         ];
+
+        $bankAccount  = $company->getBankAccountTED();
+        if(!empty($bankAccount))
+        {
+            $returnData['bank_accounts'] = [
+                'type_accounts' => 'unique',
+                'unique_account' => [
+                    'bank' => $bankAccount->bank,
+                    'agency' => $bankAccount->agency,
+                    'agency_digit' => $bankAccount->agency_digit,
+                    'account' => $bankAccount->account,
+                    'account_type' => "C", // Conta Corrente
+                    'account_digit' => $bankAccount->account_digit,
+                ]
+            ];
+        }else{
+            $returnData['bank_accounts'] = [
+                'type_accounts' => 'unique',
+                'unique_account' => [
+                    'bank' => '001',
+                    'agency' => '1111',
+                    'agency_digit' => '',
+                    'account' => ($company->company_type == 1 ? '1':'3').'11111111',
+                    'account_type' => "C", // Conta Corrente
+                    'account_digit' => '1',
+                ]
+            ];
+        }
+
+        return $returnData;
     }
 
     public function getPrepareDataComplementPfCompany(Company $company)
@@ -112,7 +132,7 @@ trait GetnetPrepareCompanyData
             $trade_name = FoxUtils::removeAccents($idWall['cnpj']['nome_fantasia']);
         }
 
-        return [
+        $returnData = [
             'merchant_id' => $this->getMerchantId(),
             'legal_document_number' => FoxUtils::onlyNumbers($company->document),
             'legal_name' => $legal_name ?? FoxUtils::removeAccents(FoxUtils::removeSpecialChars($company->fantasy_name)),
@@ -131,17 +151,7 @@ trait GetnetPrepareCompanyData
                 'state' => FoxUtils::getFormatState($company->state),
                 'postal_code' => FoxUtils::onlyNumbers($company->zip_code),
                 'country' => 'BR'
-            ],
-            'bank_accounts' => [
-                'type_accounts' => 'unique',
-                'unique_account' => [
-                    'bank' => $company->bank,
-                    'agency' => $company->agency,
-                    'account' => $company->account,
-                    'account_type' => $company->present()->getAccountType(),
-                    'account_digit' => $company->account_digit == 'X' || $company->account_digit == 'x' ? 0 : $company->account_digit,
-                ]
-            ],
+            ],            
             'url_callback' => $this->urlCallback,
             "accepted_contract" => "S",
             "liability_chargeback" => "S",
@@ -151,6 +161,36 @@ trait GetnetPrepareCompanyData
             'federal_registration_status' => 'active',
             'founding_date' => $founding_date ?? null,
         ];
+
+        $bankAccount  = $company->getBankAccountTED();
+        if(!empty($bankAccount))
+        {
+            $returnData['bank_accounts'] = [
+                'type_accounts' => 'unique',
+                'unique_account' => [
+                    'bank' => $bankAccount->bank,
+                    'agency' => $bankAccount->agency,
+                    'agency_digit' => $bankAccount->agency_digit,
+                    'account' => $bankAccount->account,
+                    'account_type' => "C", // Conta Corrente
+                    'account_digit' => $bankAccount->account_digit == 'X' || $bankAccount->account_digit == 'x' ? 0 : $bankAccount->account_digit,
+                ]
+            ];
+        }else{
+            $returnData['bank_accounts'] = [
+                'type_accounts' => 'unique',
+                'unique_account' => [
+                    'bank' => '001',
+                    'agency' => '1111',
+                    'agency_digit' => '',
+                    'account' => ($company->company_type == 1 ? '1':'3').'11111111',
+                    'account_type' => "C", // Conta Corrente
+                    'account_digit' => '1',
+                ]
+            ];
+        }
+
+        return $returnData;
     }
 
     private function getPrepareDataComplementPjCompany(Company $company)
@@ -170,7 +210,7 @@ trait GetnetPrepareCompanyData
                 'document_number' => '',
                 'document_issue_date' => '',//$company->document_issue_date,
                 'document_issuer' => '',//$company->document_issuer,
-                'document_issuer_state' => ''//$company->document_issuer_state
+                'document_issuer_state' => '',//$company->document_issuer_state
             ],
             'federal_registration_status_date' => null,
             'social_value' => null,

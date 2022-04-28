@@ -5,8 +5,10 @@ namespace App\Console\Commands;
 use App\Jobs\ImportShopifyProductsStore;
 use Exception;
 use Illuminate\Console\Command;
+use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Project;
+use Modules\Core\Services\Gateways\GetnetService;
 use Modules\Core\Services\ShopifyService;
 
 class GenericCommand extends Command
@@ -17,13 +19,10 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $project = Project::with(['shopifyIntegrations', 'users'])
-            ->whereIn('id', [6349])
-            ->first();
+        $getnet = new GetnetService();
+        $company = Company::find(4933);
+        $getnet->setCompany($company);
+        dd($getnet->getBlockedBalance(),$getnet->getBlockedBalancePending());
 
-        $integration = $project->shopifyIntegrations->first();
-        $user = $project->users->first();
-
-        ImportShopifyProductsStore::dispatchNow($integration, $user->id);
     }
 }

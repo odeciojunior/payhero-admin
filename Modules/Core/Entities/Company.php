@@ -73,11 +73,11 @@ use Spatie\Activitylog\Models\Activity;
  * @property int|null $has_pix_key
  * @property string $pix_key_situation
  * @property string|null $installment_tax
- * @property string|null $extra_document
+ //* @property string|null $extra_document
  * @property string|null $id_wall_date_update
  * @property string|null $transaction_rate
  * @property int $block_checkout
- * @property int|null $annual_income
+ //* @property int|null $annual_income
  * @property-read Collection|Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read int|null $affiliates_count
@@ -135,21 +135,21 @@ class Company extends Model
         'complement',
         'neighborhood',        
         'number',        
-        'support_email',//
-        'support_telephone',//
+        //'support_email',
+        //'support_telephone',
         'cielo_balance',
         'asaas_balance',
         'safe2pay_balance',
-        'bank_document_status',
+        //'bank_document_status',
         'address_document_status',
         'contract_document_status',
         'company_type',        
         'order_priority',
-        'account_type',//
-        'extra_document',//*
-        'document_issue_date',//
-        'document_issuer',//
-        'document_issuer_state',//
+        //'account_type',
+        //'extra_document',
+        //'document_issue_date',
+        //'document_issuer',
+        //'document_issuer_state',
         'active_flag',
         'gateway_tax',
         'installment_tax',
@@ -160,6 +160,7 @@ class Company extends Model
         'updated_at',
         'id_wall_result',
         'block_checkout',
+        //'annual_income'
 ];
     /**
      * @var bool

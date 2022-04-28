@@ -47,7 +47,7 @@
 </div>
 
 <!-- Details -->
-<div id="modal-detail-shipping" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+<div id="modal-detail-shipping" class="modal fade example-modal-lg modal-slide-bottom" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
@@ -64,7 +64,7 @@
 </div>
 
 <!-- Create -->
-<div id="modal-create-shipping" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+<div id="modal-create-shipping" class="modal fade example-modal-lg modal-slide-bottom" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
@@ -89,7 +89,7 @@
 </div>
 
 <!-- Edit -->
-<div id="modal-edit-shipping" class="modal fade example-modal-lg modal-3d-flip-vertical" role="dialog" tabindex="-1">
+<div id="modal-edit-shipping" class="modal fade example-modal-lg modal-slide-bottom" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-simple">
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
@@ -114,7 +114,7 @@
 </div>
 
 <!-- Delete -->
-<div id="modal-delete-shipping" class="modal fade example-modal-lg modal-3d-flip-vertical" aria-hidden="true" role="dialog" tabindex="-1">
+<div id="modal-delete-shipping" class="modal fade example-modal-lg modal-slide-bottom" aria-hidden="true" role="dialog" tabindex="-1">
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
         <div class="modal-content">
             <div class="modal-header text-center">
@@ -143,7 +143,7 @@
 </div>
 
 <!-- Modal -->
-{{--<div class='modal fade modal-3d-flip-vertical example-modal-lg' id='modal-content-shipping' tabindex='-1' role='dialog' aria-labelledby='TituloModal' aria-hidden='true'>--}}
+{{--<div class='modal fade modal-slide-bottom example-modal-lg' id='modal-content-shipping' tabindex='-1' role='dialog' aria-labelledby='TituloModal' aria-hidden='true'>--}}
 {{--    <div class='modal-dialog modal-simple'>--}}
 {{--        <div class='modal-content'>--}}
 {{--            <div class='modal-header'>--}}
