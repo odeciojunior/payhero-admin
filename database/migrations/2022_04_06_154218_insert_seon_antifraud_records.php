@@ -15,12 +15,13 @@ class InsertSeonAntifraudRecords extends Migration
     {
         Antifraud::create(
             [
-                "name"               => "Seon Production",
+                "id"                 => 6,
+                "name"               => "Seon Sandbox",
                 "api"                => "seon",
                 "antifraud_api_enum" => 4,
-                "environment"        => "production",
-                "client_id"          => env('SEON_PRODUCTION_PUBLIC_KEY'),
-                "client_secret"      => env('SEON_PRODUCTION_LICENSE_KEY'),
+                "environment"        => "sandbox",
+                "client_id"          => env('SEON_SANDBOX_PUBLIC_KEY'),
+                "client_secret"      => env('SEON_SANDBOX_LICENSE_KEY'),
                 "merchant_id"        => 'Cloudfox',
                 "available_flag"     => 1
             ]
@@ -28,12 +29,13 @@ class InsertSeonAntifraudRecords extends Migration
 
         Antifraud::create(
             [
+                "id"                 => 7,
                 "name"               => "Seon Production",
                 "api"                => "seon",
                 "antifraud_api_enum" => 4,
-                "environment"        => "sandbox",
-                "client_id"          => env('SEON_SANDBOX_PUBLIC_KEY'),
-                "client_secret"      => env('SEON_SANDBOX_LICENSE_KEY'),
+                "environment"        => "production",
+                "client_id"          => env('SEON_PRODUCTION_PUBLIC_KEY'),
+                "client_secret"      => env('SEON_PRODUCTION_LICENSE_KEY'),
                 "merchant_id"        => 'Cloudfox',
                 "available_flag"     => 1
             ]
