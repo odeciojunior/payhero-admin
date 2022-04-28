@@ -16,12 +16,28 @@ class ReportSaleService
     public function getResumeSales($filters)
     {
        try {
-        $dateRange = foxutils()->validateDateRange($filters["date_range"]);
+            $dateRange = foxutils()->validateDateRange($filters["date_range"]);
 
-            $sales = Sale::where('status', Sale::STATUS_APPROVED)
-                        ->where('project_id', current(Hashids::decode($filters['project_id'])))
+            $sales = Sale::where('project_id', current(Hashids::decode($filters['project_id'])))
                         ->where('owner_id', auth()->user()->id)
                         ->whereBetween('start_date', [ $dateRange[0].' 00:00:00', $dateRange[1].' 23:59:59' ]);
+
+            if (!empty($filters['status'])) {
+                $salesModel = new Sale();
+                if ($filters['status'] === 'others') {
+                    $statusNotIn = [
+                        Sale::STATUS_APPROVED,
+                        Sale::STATUS_PENDING,
+                        Sale::STATUS_CANCELED,
+                        Sale::STATUS_REFUSED,
+                        Sale::STATUS_REFUNDED,
+                        Sale::STATUS_CHARGEBACK
+                    ];
+                    $sales->whereNotIn('status', $statusNotIn);
+                } else {
+                    $sales->where('status', $salesModel->present()->getStatus($filters['status']));
+                }
+            }
 
             if ($dateRange['0'] == $dateRange['1']) {
                 return $this->getResumeSalesByHours($sales, $filters);

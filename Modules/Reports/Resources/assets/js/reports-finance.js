@@ -70,7 +70,7 @@ function distribution() {
                             <strong class="value-pending">${removeMoneyCurrency(pending.value)}</strong>
                         </footer>
                     </div>
-                    <div class="distribution-area">
+                    <div class="distribution-area" style="${removeMoneyCurrency(blocked.value) == "0,00" ? 'display: none': ''}">
                         <header class="grey font-size-14">
                             <span class="cube ${blocked.color}">
                                 <i></i>
@@ -110,7 +110,7 @@ function withdrawals() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-
+            let { chart } = response.data;
             infoWithdraw = `
                 <div class="no-draws">
                     <footer class="d-flex footer-withdrawals">
@@ -162,18 +162,17 @@ function withdrawals() {
             graphDraw = `<div id="block-withdraw"></div>`;
 
 
-            if(response.data.chart) {
+            if(chart) {
                 $("#draw").html(graphDraw);
                 $('#block-withdraw').html('<canvas id="financesChart" height="285"></canvas>');
-                let labels = [...response.data.chart.labels];
-                let withdraw = [...response.data.chart.withdrawal.values];
-                let series = [...response.data.chart.income.values];
+                let labels = [...chart.labels];
+                let withdraw = [...chart.withdrawal.values];
+                let series = [...chart.income.values];
                 barGraph(series, labels, withdraw);
             } else {
                 $('#card-draw .onPreLoad *').remove();
                 $("#card-draw").find('.graph').after(infoWithdraw);
             }
-
         }
     });
 }
@@ -215,9 +214,8 @@ function blockeds() {
     });
 }
 
-
 function onResume() {
-    let ticket, commission, chargebacks, transactions = '';
+    let ticket, commission, chargebacks, trans = '';
     $('#finance-card .onPreLoad *').remove();
 
     $("#finance-commission,#finance-ticket,#finance-chargebacks,#finance-transactions").html(skeLoad);
@@ -234,12 +232,13 @@ function onResume() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
+            let { transactions, average_ticket, comission, chargeback } = response.data;
 
-            transactions = `
+            trans = `
                 <span class="title">N de transações</span>
                 <div class="d-flex">
                     <strong class="number">
-                        <span>${response.data.transactions == undefined ? 0 : response.data.transactions}</span>
+                        <span>${transactions == undefined ? 0 : transactions}</span>
                     </strong>
                 </div>
             `;
@@ -248,14 +247,14 @@ function onResume() {
                 <span class="title">Ticket Médio</span>
                 <div class="d-flex">
                     <span class="detail">R$</span>
-                    <strong class="number">${response.data.average_ticket == undefined ? '0,00' : removeMoneyCurrency(response.data.average_ticket)}</strong>
+                    <strong class="number">${average_ticket == undefined ? '0,00' : removeMoneyCurrency(average_ticket)}</strong>
                 </div>
             `;
             commission = `
                 <span class="title">Comissão total</span>
                 <div class="d-flex">
                     <span class="detail">R$</span>
-                    <strong class="number">${response.data.comission == undefined ? '0,00' : removeMoneyCurrency(response.data.comission)}</strong>
+                    <strong class="number">${comission == undefined ? '0,00' : removeMoneyCurrency(comission)}</strong>
                 </div>
             `;
 
@@ -263,14 +262,14 @@ function onResume() {
                 <span class="title">Total em Chargebacks</span>
                 <div class="d-flex">
                     <span class="detail">R$</span>
-                    <strong class="number"><span class="bold">${response.data.chargeback == undefined ? '0,00' : removeMoneyCurrency(response.data.chargeback)}</span></strong>
+                    <strong class="number"><span class="bold">${chargeback == undefined ? '0,00' : removeMoneyCurrency(chargeback)}</span></strong>
                 </div>
             `;
 
             $("#finance-commission").html(commission);
             $("#finance-ticket").html(ticket);
             $("#finance-chargebacks").html(chargebacks);
-            $("#finance-transactions").html(transactions);
+            $("#finance-transactions").html(trans);
         }
     });
 
@@ -278,8 +277,8 @@ function onResume() {
 
 function onCommission() {
     let infoComission = '';
-    $('#info-commission .onPreLoad *').remove();
-    $("#info-commission").prepend(skeLoad);
+    $('#card-commission .onPreLoad *').remove();
+    $("#block-commission").prepend(skeLoad);
 
     return $.ajax({
         method: "GET",
@@ -293,40 +292,59 @@ function onCommission() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            infoComission = `
-                <section class="container">
-                    <header class="d-flex title-graph">
-                        <h5 class="grey font-size-16">
-                            <strong>Comissão</strong>
-                        </h5>
-                    </header>
+            let { chart, total, variation } = response.data;
 
-                    <div class="d-flex justify-content-between box-finances-values">
-                        <div class="finances-values">
-                            <span>R$</span>
-                            <strong>${removeMoneyCurrency(response.data.total)}</strong>
-                        </div>
-                        <div class="finances-values">
-                            <svg class="${response.data.variation.color}" width="18" height="14" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M10.1237 0L16.9451 0.00216293L17.1065 0.023901L17.2763 0.0736642L17.4287 0.145306L17.4865 0.18052L17.5596 0.23218L17.6737 0.332676L17.8001 0.484464L17.8876 0.634047L17.9499 0.792176L17.9845 0.938213L18 1.125V7.88084C18 8.50216 17.4964 9.00583 16.8751 9.00583C16.3057 9.00583 15.835 8.58261 15.7606 8.03349L15.7503 7.88084L15.7495 3.8415L9.41947 10.1762C9.01995 10.5759 8.39457 10.6121 7.95414 10.2849L7.82797 10.1758L5.62211 7.96668L1.92041 11.6703C1.48121 12.1098 0.768994 12.1099 0.329622 11.6707C-0.069807 11.2713 -0.106236 10.6463 0.220416 10.2059L0.329304 10.0797L4.82693 5.57966C5.22645 5.17994 5.85182 5.14374 6.29225 5.47097L6.41841 5.58004L8.62427 7.78914L14.1597 2.25H10.1237C9.55424 2.25 9.08361 1.82677 9.00912 1.27766L8.99885 1.125C8.99885 0.50368 9.50247 0 10.1237 0Z" fill="#1BE4A8"/>
-                            </svg>
-                            <em class="${response.data.variation.color}">${response.data.variation.value}</em>
-                        </div>
+            infoComission = `
+                <div class="d-flex justify-content-between box-finances-values">
+                    <div class="finances-values">
+                        <span>R$</span>
+                        <strong>${removeMoneyCurrency(total)}</strong>
                     </div>
-                </section>
-                <section class="container">
+                    <div class="finances-values">
+                        <svg class="${variation.color}" width="18" height="14" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10.1237 0L16.9451 0.00216293L17.1065 0.023901L17.2763 0.0736642L17.4287 0.145306L17.4865 0.18052L17.5596 0.23218L17.6737 0.332676L17.8001 0.484464L17.8876 0.634047L17.9499 0.792176L17.9845 0.938213L18 1.125V7.88084C18 8.50216 17.4964 9.00583 16.8751 9.00583C16.3057 9.00583 15.835 8.58261 15.7606 8.03349L15.7503 7.88084L15.7495 3.8415L9.41947 10.1762C9.01995 10.5759 8.39457 10.6121 7.95414 10.2849L7.82797 10.1758L5.62211 7.96668L1.92041 11.6703C1.48121 12.1098 0.768994 12.1099 0.329622 11.6707C-0.069807 11.2713 -0.106236 10.6463 0.220416 10.2059L0.329304 10.0797L4.82693 5.57966C5.22645 5.17994 5.85182 5.14374 6.29225 5.47097L6.41841 5.58004L8.62427 7.78914L14.1597 2.25H10.1237C9.55424 2.25 9.08361 1.82677 9.00912 1.27766L8.99885 1.125C8.99885 0.50368 9.50247 0 10.1237 0Z" fill="#1BE4A8"/>
+                        </svg>
+                        <em class="${variation.color}">${variation.value}</em>
+                    </div>
+                </div>
+                <section style="margin-left: -15px;">
                     <div class="graph-reports">
-                        <div class="${response.data.total !== 'R$ 0,00' ?'new-finance-graph' : ''  }"></div>
+                        <div class="${removeMoneyCurrency(total) !== '0,00' ? 'new-finance-graph' : ''  }"></div>
                     </div>
                 </section>
             `;
-            $("#info-commission").html(infoComission);
+            $("#block-commission").html(infoComission);
 
-            if( response.data.total !== 'R$ 0,00' ) {
+            if( removeMoneyCurrency(total) !== '0,00' ) {
                 $('.new-finance-graph').html('<canvas id=comission-graph></canvas>');
-                let labels = [...response.data.chart.labels];
-                let series = [...response.data.chart.values];
+                let labels = [...chart.labels];
+                let series = [...chart.values];
                 graphComission(series, labels);
+            } else {
+                infoComission = `
+                    <div class="d-flex" style="justify-content: center;">
+                        <div class="info-graph">
+                            <div class="no-sell">
+                                <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
+                                    <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
+                                    <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
+                                    <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
+                                    <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
+                                    <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
+                                </svg>
+                                <footer>
+                                    <h4>Nada por aqui...</h4>
+                                    <p>
+                                        Não há dados suficientes
+                                        para gerar este relatório.
+                                    </p>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $("#block-commission").html(infoComission);
             }
         }
     });
@@ -476,6 +494,7 @@ function changeCalendar() {
         }
     })
     .on('datepicker-change', function () {
+        updateStorage({calendar: $(this).val()});
         updateReports();
     })
     .on('datepicker-open', function () {
@@ -487,11 +506,6 @@ function changeCalendar() {
             $(this).addClass('active');
         }
     });
-
-    $('input[name="daterange"]').change(function() {
-        updateStorage({calendar: $(this).val()})
-    })
-
 }
 
 function changeCompany() {
@@ -559,13 +573,13 @@ function updateReports() {
 }
 
 
-function updateStorage(value){
-    let prevData;
-    if(sessionStorage.info) JSON.parse(sessionStorage.getItem('info'));
-    Object.keys(value).forEach(function(val, key){
-         prevData[val] = value[val];
-    })
-    sessionStorage.setItem('info', JSON.stringify(prevData));
+function updateStorage(v){
+    var existing = sessionStorage.getItem('info');
+    existing = existing ? JSON.parse(existing) : {};
+    Object.keys(v).forEach(function(val, key){
+        existing[val] = v[val];
+   })
+    sessionStorage.setItem('info', JSON.stringify(existing));
 }
 
 function graphComission(series, labels) {
@@ -699,7 +713,7 @@ function barGraph(series, labels, withdraw) {
                         color:'#636363',
                         backgroundColor: "rgba(69, 208, 126, 1)",
                         borderRadius: 4,
-                        barThickness: 30,
+                        barPercentage: 0.72
                     },
                     {
                         label: 'Saques',
@@ -707,7 +721,7 @@ function barGraph(series, labels, withdraw) {
                         color:'#636363',
                         backgroundColor: "rgba(216, 245, 228, 1)",
                         borderRadius: 4,
-                        barThickness: 30,
+                        barPercentage: 1
                     }
                 ]
             },
@@ -731,7 +745,7 @@ function barGraph(series, labels, withdraw) {
                         text: 'Últimos 6 meses',
                         align: 'end',
                         color: '#9E9E9E',
-                        fullSize: false,
+                        fullSize: false,                        
                         padding: {
                             top: 0,
                             bottom: -23,
@@ -761,9 +775,6 @@ function barGraph(series, labels, withdraw) {
                             color: '#ECE9F1',
                             drawBorder: false
                         },
-                        // beginAtZero: true,
-                        // min: 0,
-                        // max: 100000,
                         ticks: {
                             padding: 0,
                             font: {
@@ -851,6 +862,14 @@ function distributionGraph(series) {
 function kFormatter(num) {
     return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num);
 }
+
+const formatCash = n => {
+    if (n < 1e3) return n;
+    if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K";
+    if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "M";
+    if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "B";
+    if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T";
+};
 
 let skeLoad = `
     <div class="ske-load">

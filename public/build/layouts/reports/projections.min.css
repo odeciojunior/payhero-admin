@@ -838,7 +838,7 @@ h4.number{
 #info-commission .ske-load { margin: 20px auto 0; }
 .new-finance-graph {
     height: 359px;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
 }
 
 @media only screen and (min-width: 1220px) {
@@ -856,9 +856,19 @@ h4.number{
     align-items: center;
     height: 50px;
 }
+.box-chart-primary .title-graph.title-distribution {
+    margin-bottom: 0;
+}
+
+.box-chart-primary .title-graph-sales { 
+    margin-right: 0; 
+    margin-bottom: 0;
+}
+
 .box-chart-primary .title-graph.recurrence { 
     padding-bottom: 5px; 
     margin-bottom: 0; 
+    margin-left: 0;
 }
 
 .box-chart-primary .title-graph h5 { margin: 0; }
@@ -872,7 +882,11 @@ h4.number{
     padding: 20px 0; 
     align-items: center;
 }
-
+.box-finances-values.finances-sales { 
+    padding-right: 20px; 
+    padding-top: 0;
+}
+#sales-graph { height: 359px; }
 
 .finances-values span {
     color: #9E9E9E;
@@ -933,6 +947,9 @@ h4.number{
         max-width: 50%;
         padding: 0 1.0715rem 0 0;
     }
+    .inner-comission + .inner-comission { padding: 0 0 0 0.0715rem; }
+}
+@media only screen and (min-width: 1600px) {
     .inner-comission + .inner-comission { padding: 0 0 0 1.0715rem; }
 }
 
@@ -1082,6 +1099,8 @@ h4.number{
 }
 
 .inner.relative .title-graph { position: absolute; }
+
+.inner.relative .title-graph.title-withdraw { height: 38px; }
 
 .inner.relative .title-graph.no-withdrawals { position: relative; }
 
@@ -1831,6 +1850,30 @@ h4.number{
     position: absolute;
     transform: translate(0, -40%);
 }
+
+.sirius-select1 .sirius-select-text.active.on + .sirius-select-options { display: block !important; }
+.sirius-select1 .sirius-select-text.active + .sirius-select-options { display: none !important; }
+.sirius-select1 .sirius-select-text.active {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMSIgaGVpZ2h0PSI2IiBmaWxsPSJub25lIj48cGF0aCBmaWxsPSIjNjM2MzYzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMC43ODEgMS4yMjUgNi4wMjggNS43OWEuNzY5Ljc2OSAwIDAgMS0xLjA1NiAwTC4yMTkgMS4yMjVhLjY5Ny42OTcgMCAwIDEgMC0xLjAxNS43NjkuNzY5IDAgMCAxIDEuMDU2IDBMNS41IDQuMjY4IDkuNzI1LjIxYS43NjkuNzY5IDAgMCAxIDEuMDU2IDAgLjY5Ny42OTcgMCAwIDEgMCAxLjAxNVoiIGNsaXAtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPgo=');
+    background-repeat: no-repeat;
+}
+.sirius-select1 .sirius-select-text.active.on {
+    background-repeat: no-repeat;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMSIgaGVpZ2h0PSI2IiBmaWxsPSJub25lIj48cGF0aCBmaWxsPSIjNjM2MzYzIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0uMjE5IDQuNzc1IDQuOTcyLjIxYS43NjkuNzY5IDAgMCAxIDEuMDU2IDBsNC43NTMgNC41NjVhLjY5Ny42OTcgMCAwIDEgMCAxLjAxNS43NjkuNzY5IDAgMCAxLTEuMDU2IDBMNS41IDEuNzMyIDEuMjc1IDUuNzlhLjc2OS43NjkgMCAwIDEtMS4wNTYgMCAuNjk3LjY5NyAwIDAgMSAwLTEuMDE1WiIgY2xpcC1ydWxlPSJldmVub2RkIi8+PC9zdmc+Cg==);
+}
+
+.sirius-select1 .sirius-select-text {
+    width: 175px;
+    padding: 5px 35px 5px 16px;
+    float: right;
+}
+.sirius-select1 .sirius-select-options { 
+    right: 0;
+    top: 44px;
+    width: 175px;
+ }
+
+ .new-sell-graph { padding-bottom: 20px; }
 .page-holder {
     font-family: 'Muli', sans-serif;
     color: black;
