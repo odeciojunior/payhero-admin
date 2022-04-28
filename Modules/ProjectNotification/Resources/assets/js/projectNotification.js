@@ -48,16 +48,11 @@ $(function () {
                 errorAjaxResponse(response);
             }, success: function success(response) {
                 $('#modal-edit-project-notification .project-notification-id').val(projectNotification);
-                if (response.data.type_enum == 1) {
-                    $('#modal-edit-project-notification .project-notification-type').prop("selectedIndex", 0).change();
-                } else {
-                    $('#modal-edit-project-notification .project-notification-type').prop("selectedIndex", 1).change();
-                }
-                if (response.data.status == 1) {
-                    $('#modal-edit-project-notification .project-notification-status').prop("selectedIndex", 0).change();
-                } else {
-                    $('#modal-edit-project-notification .project-notification-status').prop("selectedIndex", 1).change();
-                }
+
+                $('#modal-edit-project-notification .project-notification-type').find('select').val(response.data.type_enum).trigger('change');
+
+                $('#modal-edit-project-notification .project-notification-status').find('select').val(response.data.status).trigger('change');
+
                 $('#modal-edit-project-notification .project-notification-time').val(response.data.time);
                 $('#modal-edit-project-notification .project-notification-message').val(response.data.message);
 
@@ -65,7 +60,7 @@ $(function () {
                 $('#modal-edit-project-notification .project-notification-subject').val(response.data.subject);
 
                 if (response.data.event_enum > 0) {
-                    $('#modal-edit-project-notification .project-notification-event').prop("selectedIndex", response.data.event_enum - 1).change();
+                    $('#modal-edit-project-notification .project-notification-event').find('select').val(response.data.event_enum).trigger('change');
                 }
 
                 if (response.data.type_enum == 1) {
