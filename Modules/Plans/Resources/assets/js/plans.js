@@ -219,6 +219,9 @@ $(function () {
         removeProductArraySelecteds(modal);
 
         if (type == 'edit') {
+            $(modal).find('.box-photos-products').mCustomScrollbar('destroy');
+            $(modal).find('.box-photos-products').mCustomScrollbar('update');
+
             $(modal).find('.nav-tabs-horizontal').css('display', 'none');
 
             $(modal).find('.modal-footer').html(
@@ -356,7 +359,8 @@ $(function () {
                         $(modal).find('.ph-item').fadeOut(100, function(){ this.remove(); }).promise().done(function() {
                             $(modal).find('#tab-general-data_panel').addClass('show active').promise().done(function() {
                                 $(modal).find(find_stage).addClass('show active').promise().done(function() {
-                                    var autoHeight = $(modal).find('.height-auto').height() + 18;
+                                    var autoHeight = $(modal).find('.height-auto').stop(true, true).height() + (type == 'edit' ? 88 : 18);
+
                                     $(modal).find('.modal-body').stop(true, true).height(curHeight).animate({ height: autoHeight }, 300);
                                 });
                             });
