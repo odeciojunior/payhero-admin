@@ -18,6 +18,10 @@ use Spatie\Activitylog\Models\Activity;
  * @property string $value
  * @property string $code
  * @property boolean $status
+ * @property mixed $progressive_rules
+ * @property mixed $plans
+ * @property boolean $discount
+ * @property datetime $expires
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -45,6 +49,10 @@ class DiscountCoupon extends Model
         'value',
         'code',
         'status',
+        'progressive_rules',
+        'plans',
+        'discount',
+        'expires',
         'rule_value',
         'created_at',
         'updated_at',

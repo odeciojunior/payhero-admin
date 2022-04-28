@@ -45,15 +45,39 @@ $(document).ready(function () {
         atualizarFrete();
     });
 
+    $(document).on('click', '.shipping-regions', function () {
+        if($(this).is(':checked')){
+            $('#shipping-multiple-value').hide()
+            $('#shipping-single-value').show()
+        }else{
+            $('#shipping-multiple-value').show()
+            $('#shipping-single-value').hide()
+            $('.shipping-value1').trigger('focus');
+        }
+    })
+
+    $(document).on('click', '.shipping-regions-edit', function () {
+        if($(this).is(':checked')){
+            $('#shipping-multiple-value-edit').hide()
+            $('#shipping-single-value-edit').show()
+        }else{
+            $('#shipping-multiple-value-edit').show()
+            $('#shipping-single-value-edit').hide()
+            $('.shipping-value1-edit').trigger('focus');
+        }
+    })
+    
     $(document).on('change', '#shipping-type', function () {
         // altera campo value dependendo do tipo do frete
         let selected = $(this).val();
+        
         if (selected === 'static') {
             $('.information-shipping-row').show();
             $('.value-shipping-row').show();
             $('.zip-code-origin-shipping-row').hide();
             $('.options-shipping-row').hide();
             $('.shipping-description').attr('placeholder', 'Frete grátis');
+            
         } else if (selected === 'pac') {
             $('.information-shipping-row').show();
             $('.value-shipping-row').hide();
@@ -75,8 +99,8 @@ $(document).ready(function () {
         }
     });
 
-    $('.shipping-value').mask('#.##0,00', {reverse: true});
-    $('.rule-shipping-value').mask('#.##0,00', {reverse: true});
+    $('.shipping-money-format').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: 'R$'}).attr('placeholder', 'R$');
+    
 
     $('.rule-shipping-value').on('blur', function () {
         if ($(this).val().length == 1) {
@@ -175,6 +199,16 @@ $(document).ready(function () {
                         break;
                 }
                 $('#modal-detail-shipping .shipping-description').html(response.name);
+                if(response.regions_values){
+                    var regions_values = JSON.parse(response.regions_values);
+                    response.value = '<div class="row">'
+                    for(i in regions_values){
+                        response.value += '<div class="col-8">'
+                        response.value += regions_values[i].name+': </div><div class="col-4">'+regions_values[i].value+''
+                        response.value += '</div>'
+                    }
+                    response.value += '</div>'
+                }
                 $('#modal-detail-shipping .shipping-value').html(response.type != 'static' ? ' Calculado automaticamente' : response.value);
                 $('#modal-detail-shipping .shipping-info').html(response.information);
                 $('#modal-detail-shipping .rule-shipping-value').html(response.rule_value);
@@ -204,10 +238,26 @@ $(document).ready(function () {
             }, success: function success(response) {
 
                 $('#modal-edit-shipping .shipping-id').val(response.id_code).change();
-
+                
+                
+                $('.shipping-regions-edit').prop('checked', true);
+                $('#shipping-multiple-value-edit').hide();
+                $('#shipping-single-value-edit').show();
+                
                 switch (response.type) {
                     case 'static':
                         $('#modal-edit-shipping #shipping-type').prop("selectedIndex", 0).change();
+                        if(response.regions_values){
+                            $('.shipping-regions-edit').prop('checked', false);
+                            $('#shipping-single-value-edit').hide();
+                            $('#shipping-multiple-value-edit').show();
+                            $('.regions_values').val(response.regions_values);
+                            var regions_values = JSON.parse(response.regions_values);
+                            for(i in regions_values){
+                                ii = i; ii++
+                                $('.shipping-value'+ii+'-edit').val(regions_values[i].value);
+                            }
+                        }
                         break;
                     case 'pac':
                         $('#modal-edit-shipping #shipping-type').prop("selectedIndex", 1).change();
@@ -222,7 +272,7 @@ $(document).ready(function () {
                 }
                 $('#modal-edit-shipping .shipping-description').val(response.name);
                 $('#modal-edit-shipping .shipping-info').val(response.information);
-                $('#modal-edit-shipping .shipping-value').val(response.value);
+                $('#modal-edit-shipping .shipping-value').val(!response.regions_values?response.value:'0,00');
                 $('#modal-edit-shipping .rule-shipping-value').val(response.rule_value).trigger('input');
                 $('#modal-edit-shipping .shipping-zipcode').val(response.zip_code_origin);
                 $('#modal-edit-shipping .shipping-status').prop('checked', !!response.status).change();
@@ -285,6 +335,36 @@ $(document).ready(function () {
 
     //cria novo frete
     $("#modal-create-shipping .btn-save").click(function () {
+        if($('.shipping-regions').is(':visible')==true && $('.shipping-regions').is(':checked')==false){
+            
+            var regions_values = []
+            var regions = ['NORTE', 'NORDESTE', 'CENTRO-OESTE', 'SUDESTE', 'SUL']
+            for(i in regions){
+                var ii = i
+                ii++
+                regions_values.push( { name: regions[i], value:$('.shipping-value'+ii).val() } );
+            }   
+            
+            for(i=1;i<=5;i++){
+                //if(isNaN(parseInt($('.shipping-value'+i).val()))) $('.shipping-value'+i).val(0);
+                if(!$('.shipping-value'+i).val()){
+                    var ii = i
+                    ii--
+                    alertCustom("error", "Preencha um valor para a regição "+regions[ii]+"");
+                    return false
+                }
+            }
+            $('#regions_values').val(JSON.stringify(regions_values))
+        }
+        if($('.shipping-regions').is(':visible')==true && $('.shipping-regions').is(':checked')==true){
+            //if(isNaN(parseInt($('#shipping-single-value > input').val()))) $('#shipping-single-value > input').val(0);
+            
+            $('#regions_values').val('')
+
+        }
+
+        
+
         let formData = new FormData(document.getElementById('form-add-shipping'));
 
         $.ajax({
@@ -312,12 +392,41 @@ $(document).ready(function () {
 
     //atualizar frete
     $("#modal-edit-shipping .btn-update").on('click', function () {
+        
+        if($('.shipping-regions-edit').is(':visible')==true && $('.shipping-regions-edit').is(':checked')==false){
+            var regions_values = []
+            var regions = ['NORTE', 'NORDESTE', 'CENTRO-OESTE', 'SUDESTE', 'SUL']
+            for(i in regions){
+                var ii = i
+                ii++
+                regions_values.push( { name: regions[i], value:$('.shipping-value'+ii+'-edit').val() } );
+            }   
+            
+            for(i=1;i<=5;i++){
+                //if(isNaN(parseInt($('.shipping-value'+i+'-edit').val()))) $('.shipping-value'+i+'-edit').val(0);
+                if(!$('.shipping-value'+i+'-edit').val()){
+                    var ii = i
+                    ii--
+                    alertCustom("error", "Preencha um valor para a regição "+regions[ii]+"");
+                    return false
+                }
+            }
+            $('.regions_values').val(JSON.stringify(regions_values))
+
+        }
+        if($('.shipping-regions-edit').is(':visible')==true && $('.shipping-regions-edit').is(':checked')==true){
+            
+            $('.regions_values').val('')
+        }
+
         let formData = new FormData(document.querySelector('#modal-edit-shipping #form-update-shipping'));
         formData.set('status', $('#modal-edit-shipping .shipping-status').is(':checked') ? 1 : 0);
         formData.set('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').is(':checked') ? 1 : 0);
         formData.set('receipt', $('#modal-edit-shipping .shipping-receipt').is(':checked') ? 1 : 0);
         formData.set('own_hand', $('#modal-edit-shipping .shipping-ownhand').is(':checked') ? 1 : 0);
         let frete = $('#modal-edit-shipping .shipping-id').val();
+
+        
 
         $.ajax({
             method: "POST",
