@@ -836,7 +836,7 @@ h4.number{
 #info-commission .ske-load { margin: 20px auto 0; }
 .new-finance-graph {
     height: 359px;
-    padding-bottom: 30px;
+    padding-bottom: 10px;
 }
 
 @media only screen and (min-width: 1220px) {
@@ -935,6 +935,13 @@ h4.number{
 .sub-comission {
     flex-direction: column;
 }
+
+@media only screen and (min-width: 480px) {
+    .space-mobol {
+        margin-bottom: 2.143rem;
+    }
+}
+
 @media only screen and (min-width: 1220px) {
     .sub-comission {
         flex-direction: row;

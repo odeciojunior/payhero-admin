@@ -125,7 +125,7 @@
                         <!-- comission -->    
                         <div class="commission">
                             <div class="card" id="card-commission">
-                                <section class="container">
+                                <section class="container pb-20">
                                     <header class="d-flex title-graph mb-0">
                                         <h5 class="grey font-size-16">
                                             <strong>Comissão</strong>
@@ -166,8 +166,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="inner-comission" id="card-draw">
-                                        <div class="card inner relative" id="card-withdraw">
+                                    <div class="inner-comission space-mobol" id="card-draw">
+                                        <div class="card inner relative pad-bottom-0" id="card-withdraw">
                                             <header class="d-flex title-graph title-withdraw">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Saques</strong>
