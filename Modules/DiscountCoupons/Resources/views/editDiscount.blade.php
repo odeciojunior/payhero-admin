@@ -150,7 +150,7 @@
 
                 </div>
 
-                <div style='min-height: 100px; position: relative' class="pt-20 pb-30 pr-30 pl-30 ">
+                <div style='min-height: 100px; position: relative' class="pt-20 pb-10 pr-30 pl-30 ">
 
                     <div class="modal-disc pb-20">
 
