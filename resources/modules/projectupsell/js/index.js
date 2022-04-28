@@ -364,7 +364,7 @@ $(document).ready(function () {
                 $('#header_config').val(`${upsellConfig.header}`);
                 $('#title_config').val(`${upsellConfig.title}`);
                 descriptionconfig.setData(`${upsellConfig.description ?? ' '}`);
-                $('#countdown_time_upsell').val(`${upsellConfig.countdown_time}`);
+                $('#countdown_time_config').val(`${upsellConfig.countdown_time}`);
 
                 if (upsellConfig.countdown_flag) {
                     $('#countdown_flag').prop('checked', true);
@@ -390,7 +390,7 @@ $(document).ready(function () {
         let header = $('#header_config').val();
         let title = $('#title_config').val();
         let description = descriptionconfig.getData();
-        let countdownTime = $('#countdown_time_upsell').val();
+        let countdownTime = $('#countdown_time_config').val();
         let countDownFlag = $('#countdown_flag').val();
         
         form_data.set('header', header);

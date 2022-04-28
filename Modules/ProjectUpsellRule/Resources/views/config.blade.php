@@ -27,9 +27,9 @@
         </div>
         <div class="row mb-10">
             <div class='form-group col-md-4 div-countdown-time'>
-                <label for="countdown_time_upsell">Contador (em minutos)</label>
+                <label for="countdown_time_config">Contador (em minutos)</label>
                 <div class="d-flex input-group">
-                    <input type="number" min="0" class="form-control" name="countdown_time_upsell" id="countdown_time_upsell" placeholder="Digite o tempo do contador em minutos" maxlength='2' data-mask="0#">
+                    <input type="number" min="0" class="form-control" name="countdown_time_config" id="countdown_time_config" placeholder="Digite o tempo do contador em minutos" maxlength='2' data-mask="0#">
                 </div>
             </div>
             <div class="form-group col-md-4">
