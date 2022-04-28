@@ -995,6 +995,7 @@ img.border-icon{
 }
 .modal-new-layout .modal-header .close {
     line-height: 28px;
+    margin-right: -5px;
 }
 .modal-new-layout .modal-body {
     padding: 24px !important;
@@ -1806,7 +1807,7 @@ input[type="checkbox"], input[type="radio"] {
     margin-right: 0 !important;
 }
 .modal-body.mCustomScrollbar .height-auto {
-    padding: 0 20px 20px !important;
+    padding: 0 30px 20px !important;
 }
 
 .box-products.customizations .mCustomScrollBox {
