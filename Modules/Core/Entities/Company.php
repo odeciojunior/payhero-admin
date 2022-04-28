@@ -73,7 +73,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property int|null $has_pix_key
  * @property string $pix_key_situation
  * @property string|null $installment_tax
- * @property string|null $extra_document
+ //* @property string|null $extra_document
  * @property string|null $id_wall_date_update
  * @property string|null $transaction_rate
  * @property int $block_checkout
@@ -135,8 +135,8 @@ class Company extends Model
         'complement',
         'neighborhood',        
         'number',        
-        'support_email',//
-        'support_telephone',//
+        //'support_email',
+        //'support_telephone',
         'cielo_balance',
         'asaas_balance',
         'safe2pay_balance',
@@ -145,11 +145,11 @@ class Company extends Model
         'contract_document_status',
         'company_type',        
         'order_priority',
-        'account_type',//
-        'extra_document',//*
-        'document_issue_date',//
-        'document_issuer',//
-        'document_issuer_state',//
+        //'account_type',
+        //'extra_document',
+        //'document_issue_date',
+        //'document_issuer',
+        //'document_issuer_state',
         'active_flag',
         'gateway_tax',
         'installment_tax',
@@ -160,6 +160,7 @@ class Company extends Model
         'updated_at',
         'id_wall_result',
         'block_checkout',
+        //'annual_income'
 ];
     /**
      * @var bool
