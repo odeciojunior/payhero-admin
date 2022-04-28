@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Entities\Transaction;
@@ -66,6 +67,13 @@ class UpdateSaleChargebackListener implements ShouldQueue
                     'status' => SaleContestation::STATUS_LOST
                 ]);
             }
+
+            $blockSales = BlockReasonSale::where('status',BlockReasonSale::STATUS_BLOCKED)->where('sale_id',$sale->id)->first();
+            if(!empty($blockSales)){
+                $blockSales->update([
+                    'status' => BlockReasonSale::STATUS_UNLOCKED
+                ]);
+            }            
 
             DB::commit();
         } catch (Exception $e) {
