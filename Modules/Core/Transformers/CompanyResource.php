@@ -90,7 +90,7 @@ class CompanyResource extends JsonResource
             'account' => '',
             'account_digit' => '',
             'document_status' => $documentStatus,
-            'bank_document_status' => $presenter->getBankDocumentStatus($this->resource->bank_document_status),
+            // 'bank_document_status' => $presenter->getBankDocumentStatus($this->resource->bank_document_status),
             'address_document_status' => $presenter->getAddressDocumentStatus($this->resource->address_document_status),
             'contract_document_status' => $presenter->getContractDocumentStatus($this->resource->contract_document_status),
             'bank_document_translate' => __('definitions.enum.status.' . $presenter->getBankDocumentStatus()),

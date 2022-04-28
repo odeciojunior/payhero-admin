@@ -77,7 +77,7 @@ use Spatie\Activitylog\Models\Activity;
  * @property string|null $id_wall_date_update
  * @property string|null $transaction_rate
  * @property int $block_checkout
- * @property int|null $annual_income
+ //* @property int|null $annual_income
  * @property-read Collection|Activity[] $activities
  * @property-read int|null $activities_count
  * @property-read int|null $affiliates_count
@@ -140,7 +140,7 @@ class Company extends Model
         'cielo_balance',
         'asaas_balance',
         'safe2pay_balance',
-        'bank_document_status',
+        //'bank_document_status',
         'address_document_status',
         'contract_document_status',
         'company_type',        
