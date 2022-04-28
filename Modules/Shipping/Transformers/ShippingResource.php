@@ -59,11 +59,15 @@ class ShippingResource extends JsonResource
                 }
             }
         }
+        if($this->regions_values){
+            $this->value = 'Por regiões';
+        }
 
         return [
             'id_code' => Hashids::encode($this->id),
             'shipping_id' => Hashids::encode($this->id),
             'name' => $this->name,
+            'regions_values' => $this->regions_values,
             'information' => $this->type_enum !== 4 ? $this->information : 'Calculado automaticamente',
             'value' => $this->value == null || $this->type_enum != 1 ? 'Calculado automaticamente' : $this->value,
             'type' => $this->present()->getTypeEnum($this->type_enum),
