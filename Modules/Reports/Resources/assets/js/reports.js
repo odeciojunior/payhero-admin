@@ -146,7 +146,7 @@ $(function () {
                         ${response.data.variation.value}
                     </em>`;
 
-                    $("#comission").after(variation);
+                    // $("#comission").after(variation);
 
                     let labels = [...response.data.chart.labels];
                     let series = [...response.data.chart.values];
