@@ -1,14 +1,5 @@
 $(function () {
-    
-    // Se existir apenas um prjeto esconder todo conteudo drag e drop
-    function verifyHasOnlyOne(){
-        let hasOnlyOne = $("#data-table-projects").children().length <= 1;
-        if(hasOnlyOne){
-            $("img.drag-drop-icon").hide();
-            $("#subtitle_drag_drop").hide();
-        }
-    }
-    
+
     // Funcao Responsavel por gerar cards de cada projeto
     function index() {
         loadingOnScreen();
@@ -100,7 +91,11 @@ $(function () {
                     verifyHasOnlyOne();
 
                 } else {
-                    $("#data-table-projects").hide();
+                    
+                    $("#subtitle_drag_drop").hide();
+                    $("#button_toggle").css({visibility: "hidden"});
+                    $("#data-table-projects").css({visibility: "hidden"});
+
                     $("#btn-config").css({visibility: "hidden"});
 
                     if (response.no_company) {
@@ -116,6 +111,59 @@ $(function () {
                 loadingOnScreenRemove();
             },
         });
+    }
+    
+    // Funcao responsavel pelo Arrastar e soltar(DRAG e DROP)
+    const sortableElement = $("#data-table-projects");
+    sortableElement.sortable({
+        opacity: 1,
+        revert: true,
+        tolerance: "pointer",
+        cursor: "move",
+        disabled: "",
+        update: function(event, ui){
+            let projectOrder = $(this).sortable('toArray', {
+                attribute: "data-id"
+            });
+            $.ajax({
+                method: "POST",
+                url: "/api/projects/updateorder",
+                dataType: "json",
+                data: {order: projectOrder},
+                headers: {
+                    Authorization: $('meta[name="access-token"]').attr("content"),
+                    Accept: "application/json",
+                },
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
+                success: function success(data) {
+                    alertCustom("success", data.message);
+                },
+            });
+
+        },
+        start: function (event, ui) {
+            ui.helper.css({
+                'margin-top':$("body").scrollTop(),
+                top: '0px'
+            });
+        },
+        beforeStop: function (event, ui){ 
+            ui.helper.css('margin-top',0); 
+        }
+    });
+
+    // Se existir apenas um prjeto esconder todo conteudo drag e drop
+    function verifyHasOnlyOne(){
+        let hasOnlyOne = $("#data-table-projects").children().length <= 1;
+        if(hasOnlyOne){
+            $("img.drag-drop-icon").hide();
+            $("#subtitle_drag_drop").hide();
+            sortableElement.sortable({
+                disabled: true,
+            })
+        }
     }
 
     // Seta valor do filtro toggle(ALTERNANCIA) para exibir/esconder projetos 
@@ -153,46 +201,6 @@ $(function () {
                 alertCustom("success", response.message);
             },
         });
-    });
-
-    // Funcao responsavel pelo Arrastar e soltar(DRAG e DROP)
-    const sortableElement = $("#data-table-projects");
-    sortableElement.sortable({
-        opacity: 1,
-        revert: true,
-        tolerance: "pointer",
-        cursor: "move",
-        update: function(event, ui){
-            let projectOrder = $(this).sortable('toArray', {
-                attribute: "data-id"
-            });
-            $.ajax({
-                method: "POST",
-                url: "/api/projects/updateorder",
-                dataType: "json",
-                data: {order: projectOrder},
-                headers: {
-                    Authorization: $('meta[name="access-token"]').attr("content"),
-                    Accept: "application/json",
-                },
-                error: function (response) {
-                    errorAjaxResponse(response);
-                },
-                success: function success(data) {
-                    alertCustom("success", data.message);
-                },
-            });
-
-        },
-        start: function (event, ui) {
-            ui.helper.css({
-                'margin-top':$("body").scrollTop(),
-                top: '0px'
-            });
-        },
-        beforeStop: function (event, ui){ 
-            ui.helper.css('margin-top',0); 
-        }
     });
 
     index();

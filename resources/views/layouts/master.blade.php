@@ -84,6 +84,7 @@
         <script> verifyDocumentPending(); </script>
 
         @stack('scripts')
+        @stack('scriptsModal')
 
         @if(env('APP_ENV', 'production') == 'production')
             <script src="{{ mix('build/layouts/master/production.min.js') }}"></script>

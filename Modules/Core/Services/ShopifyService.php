@@ -994,8 +994,14 @@ class ShopifyService
                 $productIds = $products->pluck('id');
 
                 $plans = Plan::select(DB::raw('plans.*'))
-                    ->with(['productsPlans', 'plansSales', 'affiliateLinks'])
-                    ->join('products_plans', 'products_plans.plan_id', '=', 'plans.id')
+                    ->with([
+                        'plansSales',
+                        'affiliateLinks',
+                        'productsPlans' => function ($query) use ($productIds) {
+                            $query->whereIn('product_id', $productIds);
+                        }
+                    ])->join('products_plans', 'products_plans.plan_id', '=', 'plans.id')
+                    ->whereNull('products_plans.deleted_at')
                     ->whereIn('products_plans.product_id', $productIds)
                     ->get();
 
@@ -1018,9 +1024,12 @@ class ShopifyService
                         }
                     }
                 }
+
                 Product::whereIn('products.id', collect($arrayDelete))
-                    ->leftJoin('products_plans as pp', 'pp.product_id', '=', 'products.id')
-                    ->whereNull('pp.id')
+                    ->leftJoin('products_plans as pp', function ($join) {
+                        $join->on('pp.product_id', '=', 'products.id')
+                            ->whereNull('pp.deleted_at');
+                    })->whereNull('pp.id')
                     ->delete();
             }
 

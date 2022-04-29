@@ -76,7 +76,7 @@ class ResendBankSlipWebhookSafe2pay extends Command
                     $sale = Sale::select('id','status','gateway_transaction_id')->find($saleId);
                     if(!empty($sale))
                     {
-                        if($sale->status <> Sale::STATUS_APPROVED){
+                        if(!in_array($sale->status, [Sale::STATUS_APPROVED,Sale::STATUS_CANCELED, Sale::STATUS_REFUNDED])){
                             $this->comment($sale->id);
                             $safe->resendWebhook($sale->gateway_transaction_id);
                         }

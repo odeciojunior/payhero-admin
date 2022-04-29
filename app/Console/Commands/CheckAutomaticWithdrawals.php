@@ -70,9 +70,11 @@ class CheckAutomaticWithdrawals extends Command
                     $withdrawalValue = $this->getAvailableBalance($settings,$availableBalance);
 
                     if ($withdrawalValue >= 10000) {
-                        $withdrawal = $gatewayService->createWithdrawal($withdrawalValue);
-                        if($withdrawal){
-                            event(new WithdrawalRequestEvent($withdrawal));
+                        if($gatewayService->existsBankAccountApproved()){
+                            $withdrawal = $gatewayService->createWithdrawal($withdrawalValue);
+                            if($withdrawal){
+                                event(new WithdrawalRequestEvent($withdrawal));
+                            }                        
                         }
                     }
                 }

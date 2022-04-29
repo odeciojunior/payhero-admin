@@ -59,13 +59,13 @@ class ReleaseUnblockedBalanceGetnet extends Command
                 $blockSales = BlockReasonSale::where('status',BlockReasonSale::STATUS_BLOCKED)->where('sale_id',$contestation->sale_id)->first();
                 if(!empty($blockSales)){
                     $blockSales->update([
-                                            'status' => BlockReasonSale::STATUS_UNLOCKED
-                                        ]);
+                        'status' => BlockReasonSale::STATUS_UNLOCKED
+                    ]);
                 }
 
                 $contestation->update([
-                                          'status'=>SaleContestation::STATUS_WIN
-                                      ]);
+                    'status'=>SaleContestation::STATUS_WIN
+                ]);
             }
 
         } catch (Exception $e) {
