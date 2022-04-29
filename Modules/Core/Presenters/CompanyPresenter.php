@@ -114,8 +114,8 @@ class CompanyPresenter extends Presenter
     {
         if (is_numeric($type)) {
             switch ($type) {
-                case 1:
-                    return 'bank_document_status';
+                // case 1:
+                //     return 'bank_document_status';
                 case 2:
                     return 'address_document_status';
                 case 3:
@@ -126,8 +126,8 @@ class CompanyPresenter extends Presenter
         } 
         
         switch ($type) {
-            case 'bank_document_status':
-                return 1;
+            // case 'bank_document_status':
+            //     return 1;
             case 'address_document_status':
                 return 2;
             case 'contract_document_status':
