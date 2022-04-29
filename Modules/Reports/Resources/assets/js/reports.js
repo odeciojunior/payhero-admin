@@ -146,7 +146,7 @@ $(function () {
                         ${response.data.variation.value}
                     </em>`;
 
-                    $("#comission").after(variation);
+                    // $("#comission").after(variation);
 
                     let labels = [...response.data.chart.labels];
                     let series = [...response.data.chart.values];
@@ -950,7 +950,7 @@ $(function () {
                         },
                     },
                     pointBackgroundColor:"#2E85EC",
-                    radius: 3,
+                    radius: 0.1,
                     interaction: {
                       intersect: false,
                       mode: "index",
@@ -1033,7 +1033,7 @@ $(function () {
                         },
                     },
                     pointBackgroundColor:"#1BE4A8",
-                    radius: 3,
+                    radius: 0.1,
                     interaction: {
                       intersect: false,
                       mode: "index",
@@ -1115,7 +1115,7 @@ $(function () {
                         },
                     },
                     pointBackgroundColor:"#FF7900",
-                    radius: 3,
+                    radius: 0.1,
                     interaction: {
                         intersect: false,
                         mode: "index",
@@ -1214,7 +1214,7 @@ $(function () {
                         },
                     },
                     pointBackgroundColor:"#2E85EC",
-                    radius: 3,
+                    radius: 0.1,
                     interaction: {
                       intersect: false,
                       mode: "index",

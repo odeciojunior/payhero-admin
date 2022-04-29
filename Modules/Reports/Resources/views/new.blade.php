@@ -10,48 +10,45 @@
     
     <div class="page mb-0">
         <div style="display: none" class="page-header container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col-lg-4 col-sm-12 col-xs-12">
-                            <h1 class="page-title new-title grey">Relatórios</h1>
-                            <span type="hidden" class="error-data"></span>
+            <div class="filter-container row justify-content-between">
+
+                <div class="col-sm-12 col-lg-3 col-xl-3">
+                    <h1 class="page-title new-title grey">
+                        Relatórios
+                    </h1>
+                    <span type="hidden" class="error-data"></span>
+                </div>
+
+                <div class=" col-sm-12 col-lg-9 col-xl-7">
+
+                    <div class="row justify-content-end align-items-center">
+
+                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects">
+                            <select id='select_projects' class="sirius-select">
+                                {{-- JS carrega.. --}}
+                            </select>
                         </div>
-                        <div class="col-lg-8 col-sm-12 col-xs-12">
-                            <div class="row">
-                                <div class="col-sm-6 col-m-3 col-lg-4">
-                                    <div>
-                                        <select id='select_projects' class="form-control input-pad">
-                                            {{-- JS carrega.. --}}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 col-m-3 col-lg-5">
-                                    <div class="row align-items-center form-icons box-select">
-                                        <i style="right:10%;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
-                                        <input 
-                                            id="date-filter" 
-                                            type="text" 
-                                            name="daterange" 
-                                            class="input-pad text-center pr-30 font-size-14 ml-5 filter-badge editable daterange" 
-                                            style="width: 92%" 
-                                            value="" 
-                                            readonly 
-                                        />
-                                    </div>
-                                </div>
-                                <div class="box-export col-lg-3">
-                                    <div class="inner-reports">
-                                        <a href="" class="grey lk-export">
-                                            <i class="o-download-cloud-1 mr-2"></i>
-                                            Exportar relatórios
-                                        </a>
-                                    </div>
-                                </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4 mb-10 date-report">
+                            <div class="row align-items-center form-icons box-select">
+                                <input id="date-filter" type="text" name="daterange" class="font-size-14" value="" readonly>
+                                <i style="right:16px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
                             </div>
                         </div>
+
+                        <div class="col-12 col-sm-12 col-lg-4 mb-10 pr-0">
+                            <div class="inner-reports">
+                                <a href="" class="grey lk-export">
+                                    <i class="o-download-cloud-1 mr-2"></i>
+                                    Exportar relatórios
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
+
                 </div>
+
             </div>
             <div class="line-reports row">
                 <div class="modal-reports">
