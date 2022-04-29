@@ -157,7 +157,7 @@ class ShopifyApiController extends Controller
             $checkoutConfig = CheckoutConfig::create([
                 'company_id' => $company->id,
                 'project_id' => $projectCreated->id,
-                'pix_enabled' => !!empty($bankAccount) && $bankAccount->transfer_type=='PIX', //!!$company->has_pix_key,
+                'pix_enabled' => !!(!empty($bankAccount) && $bankAccount->transfer_type=='PIX'),
             ]);
 
             if (empty($checkoutConfig)) {
