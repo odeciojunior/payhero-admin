@@ -1600,7 +1600,6 @@ h4.number{
 .list-products .bars {
     border-radius: 4px;
     height: 25px;
-    min-width: 28%;
 }
 .list-products span {
     color: #fff;
