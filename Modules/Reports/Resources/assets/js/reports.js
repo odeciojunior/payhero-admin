@@ -248,9 +248,9 @@ $(function () {
                                             title="${name}">
                                                 <img class="photo" src="${image}" width="24px" height="24px" />
                                         </figure>
-                                        <span style="color: #636363; padding-left: 0;">${(( 100 * amount ) / total) >= 28 ? '' : amount}</span>
+                                        <span style="color: #636363; padding-left: 0;">${(( 100 * amount ) / total) > 19 ? '' : amount}</span>
                                         <div class="bars ${color}" style="width:${(( 100 * amount ) / total)}%">
-                                            <span>${(( 100 * amount ) / total) >= 28 ? amount : ''}</span>
+                                            <span>${(( 100 * amount ) / total) > 19 ? amount : ''}</span>
                                         </div>
                                     </div>
                                 </li>`
