@@ -163,16 +163,23 @@ function coupon_rules(data) {
         html += '<strong>dinheiro</strong>'
         value = 'R$'+data.value
     }
+    console.log(data);
+    //if(!expires) data.nao_vence = 1
     var expires = data.nao_vence?'Não vence':'';
-    if(data.expires_days < 0){
-        expires = '<span id="c-expire-label" style="color:">Vencido</span>'
+    if(data.nao_vence) data.expires_days = null
+    if(!data.nao_vence){
+
+        if(data.expires_days < 0){
+            expires = '<span id="c-expire-label" style="color:">Vencido</span>'
+        }
+        if(data.expires_days > 0){
+            expires = '<span style="color:">Vence em '+data.expires_days+' dia(s)</span>'
+        }
+        if(data.expires_days == 0){
+            expires = '<span style="color:">Vence hoje</span>'
+        }
     }
-    if(data.expires_days > 0){
-        expires = '<span style="color:">Vence em '+data.expires_days+' dia(s)</span>'
-    }
-    if(data.expires_days == 0){
-        expires = '<span style="color:">Vence hoje</span>'
-    }
+    
     if(data.expires_days >= 0 || data.nao_vence){
         $('#c-edit_status_label').html('Desconto ativo');
         $('#c-edit_status').prop('checked', true);
@@ -1222,6 +1229,7 @@ $(function () {
                     // mount_selected_items()
                     // set_item_click()
                     show_plans()
+                    
                     coupon_rules(response)
 
                     $('#c-cancel_name_edit').trigger('click')
