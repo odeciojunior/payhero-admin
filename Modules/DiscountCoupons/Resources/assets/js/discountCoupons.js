@@ -2918,10 +2918,10 @@ $(function () {
             $('#mm-arrow-up').show()
 
         }else{
-            $('#show_plans').stop(true, false).animate({
-                height: "88px"
-            });
-
+            // $('#show_plans').stop(true, false).animate({
+            //     height: "88px"
+            // });
+            $('#show_plans').css('height', 88);
 
             var myDiv = document.getElementById('show_plans');
             myDiv.scrollTop = 0;
@@ -2955,9 +2955,10 @@ $(function () {
             $('#mm-arrow-up2').show()
 
         }else{
-            $('#c-show_plans').stop(true, false).animate({
-                height: "88px"
-            });
+            // $('#c-show_plans').stop(true, false).animate({
+            //     height: "88px"
+            // });
+            $('#c-show_plans').css('height', 88);
 
             var myDiv = document.getElementById('c-show_plans');
             myDiv.scrollTop = 0;
