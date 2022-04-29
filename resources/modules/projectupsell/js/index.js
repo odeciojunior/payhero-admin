@@ -386,6 +386,11 @@ $(document).ready(function () {
             return false;
         }
 
+        if ($('#countdown_time_config').val() < 1 || $('#countdown_time_config').val() > 60) {
+            alertCustom('error', 'Contador deve ter um valor entre 1 e 60 minutos.');
+            return false;
+        }
+
         let form_data = new FormData(document.getElementById('form_config_upsell'));
         let header = $('#header_config').val();
         let title = $('#title_config').val();
@@ -446,7 +451,7 @@ $(document).ready(function () {
             }, success: function success(response) {
 
                 let upsell = response.data;
-
+                
                 $('#div-upsell-products').html('');
 
                 $('#upsell-header').html(upsell.header);
@@ -454,10 +459,10 @@ $(document).ready(function () {
                 $('#upsell-description').html(upsell.description);
 
                 if (upsell.countdown_flag) {
-                    $('#timer').show();
+                    $('#timer_upsell').show();
                     startCountdown(upsell.countdown_time);
                 } else {
-                    $('#timer').hide();
+                    $('#timer_upsell').hide();
                 }
 
                 let data = "";
