@@ -523,11 +523,10 @@ class ReportSaleService
 
             $productsArray = $query->toArray();
 
-            array_push($productsArray, (object) [
+            return [
+                'products' => $productsArray,
                 'total' => $total
-            ]);
-
-            return $productsArray;
+            ];
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
