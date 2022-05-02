@@ -359,7 +359,7 @@
             <div id="c-edit_step2" style="display: none">
 
 
-                <div style='padding: 25px 30px 44px' class=" simple-border-bottom">
+                <div style='padding: 25px 30px 25px' class=" simple-border-bottom">
 
                     <div>
 
