@@ -120,52 +120,22 @@
 										<div class="row cards-reports">
 											<div class="card" id="card-comission">
 												<div class="card-body data-content">
-                                                    <div class="ske-load">
-                                                        <div class="px-20 py-0">
-                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
-                                                        </div>
-                                                        <div class="px-20 py-0">
-                                                            <div class="row align-items-center mx-0 py-10">
-                                                                <div class="skeleton skeleton-circle"></div>
-                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
-                                                            </div>
-                                                            <div class="skeleton skeleton-text"></div>
-                                                        </div>
-                                                    </div>
                                                     <div class="content-info">
                                                         <header class="container">
                                                             <h6 class="font-size-16 gray-700 grey"> Comissão </h6>
-                                                            <div class="d-flex value-price">
-                                                                <h4 id='comission' class="font-size-24 bold grey"></h4>
-                                                            </div>
                                                         </header>
-                                                        <div class="new-graph graph"></div>
+                                                        <div class="onPreLoad" id="block-comission"></div>
                                                     </div>
 												</div>
                                                 
 											</div>
 											<div class="card" id="card-pending">
 												<div class="card-body data-content">
-                                                    <div class="ske-load">
-                                                        <div class="px-20 py-0">
-                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
-                                                        </div>
-                                                        <div class="px-20 py-0">
-                                                            <div class="row align-items-center mx-0 py-10">
-                                                                <div class="skeleton skeleton-circle"></div>
-                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
-                                                            </div>
-                                                            <div class="skeleton skeleton-text"></div>
-                                                        </div>
-                                                    </div>
                                                     <div class="content-info">
                                                         <header class="container">
                                                             <h6 class="font-size-16 gray-700 grey"> Pendentes </h6>
-                                                            <div class="d-flex value-price">
-                                                                <h4 id='pending' class="font-size-24 bold grey">0</h4>
-                                                            </div>
                                                         </header>
-                                                        <div class="new-graph-pending graph"></div>
+                                                        <div class="onPreLoad" id="block-pending"></div>
                                                     </div>
 												</div>
 											</div>
@@ -174,9 +144,7 @@
                                                     <header class="container">
                                                         <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
                                                     </header>
-                                                    <div class="onPreLoad" id="block-cash">
-                                                        
-                                                    </div>
+                                                    <div class="onPreLoad" id="block-cash"></div>
 												</div>
 											</div>
 										</div>
@@ -693,7 +661,7 @@
                             </div>
                             <div class="widget-content tab-content bg-white p-20">
                                 <div id="empty-graph" class="row justify-content-center align-items-center d-flex" style="vertical-align: middle">
-                                    <img src="{!! asset('modules/global/img/sem-dados.svg') !!}" alt="">
+                                    <img src="{!! asset('/build/global/img/sem-dados.svg') !!}" alt="">
                                     <p style="font-size: 23px" class="gray">Nenhuma venda encontrada</p>
                                 </div>
                                 <div class="ct-chart tab-pane active" id="scoreLineToDay"></div>

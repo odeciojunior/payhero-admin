@@ -70,6 +70,10 @@ $(function () {
     }
 
     function getPending() {
+        let pendHtml = '';
+        $('#card-pending .onPreLoad *' ).remove();
+        $("#block-pending").html(skeLoad);
+
         return $.ajax({
             method: "GET",
             url: resumeUrl+ "/pendings?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -80,37 +84,55 @@ $(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-                $('#card-pending .ske-load').hide();
-                $('.graph-pending').remove();
-                $("#pending").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
-                $('.new-graph-pending').removeClass('visible');
-                $('.new-graph-pending').next('.no-graph').remove();
-                $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
             },
-            success: function success(response, status) {
-                $("#pending").html("<span class='currency'>R$ </span>" + response.data.total).addClass('visible');
-
-                if(response.data.total !== '0,00') {
-                    $('.new-graph-pending').html('<canvas id=graph-pending></canvas>').addClass('visible');
-                    $(".new-graph-pending").next('.no-graph').remove();
-
-                    let labels = [...response.data.chart.labels];
-                    let series = [...response.data.chart.values];
+            success: function success(response) {
+                let { chart, total, variation } = response.data;
+                
+                if( total !== "0,00" ) {
+                    pendHtml = `
+                        <div class="container d-flex value-price">
+                            <h4 id='cashback' class="font-size-24 bold grey">
+                                <span class="currency">R$ </span>
+                                ${total}
+                            </h4>
+                            <em class="${variation.color} visible">
+                                <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
+                                </svg>
+                                ${variation.value}
+                            </em>
+                        </div>
+                        <div class="new-graph-pending graph"></div>
+                    `;
+                    $("#block-pending").html(pendHtml);
+                    $('.new-graph-pending').html('<canvas id=graph-pending></canvas>')
+                    let labels = [...chart.labels];
+                    let series = [...chart.values];
                     newGraphPending(series,labels);
-
+                    
                 } else {
-                    $('#graph-pending').addClass('invisible');
-                    $('.new-graph-pending').removeClass('visible');
-                    $('.new-graph-pending').after('<div class=no-graph>Não há dados suficientes</div>');
-                    $("#pending").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
+                    pendHtml = `
+                        <div class="container d-flex value-price">                            
+                            <h4 id='pending' class="font-size-24 bold grey">
+                                <span class="currency">R$ </span>
+                                0,00
+                            </h4>
+                        </div>
+                        <div class="no-graph">
+                            <span>Não há dados suficientes</span>
+                            <img src="/build/global/img/reports/bg-no-graph.png" />
+                        </div>
+                    `;
+                    $("#block-pending").html(pendHtml);
                 }
-
-                $('#card-pending .ske-load').hide();
             }
         });
     }
 
     function getCommission() {
+        let comissionhtml = '';
+        $('#card-comission .onPreLoad *' ).remove();
+        $("#block-comission").html(skeLoad);
 
         return $.ajax({
             method: "GET",
@@ -122,42 +144,46 @@ $(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-                $('#card-comission .ske-load').hide();
-                $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
-                $('.new-graph').removeClass('visible');
-                $('.new-graph').next('.no-graph').remove();
-                $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
             },
             success: function success(response) {
-
-                $("#comission").html("<span class='currency'>R$ </span>" + removeMoneyCurrency(response.data.total)).addClass('visible');
-
-                if(response.data.total !== 'R$ 0,00') {
-                    $('.new-graph').html('<canvas id=comission-graph></canvas>').addClass('visible');
-                    $(".new-graph").next('.no-graph').remove();
-
-                    let variation = `
-                    <em class="${response.data.variation.color} visible">
-                        <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
-                        </svg>
-                        ${response.data.variation.value}
-                    </em>`;
-
-                    // $("#comission").after(variation);
-
-                    let labels = [...response.data.chart.labels];
-                    let series = [...response.data.chart.values];
+                let { chart, total, variation } = response.data;
+                
+                if( total !== 'R$ 0,00' ) {
+                    comissionhtml = `
+                        <div class="container d-flex value-price">
+                            <h4 id='comission' class="font-size-24 bold grey">
+                                <span class="currency">R$ </span>
+                                ${removeMoneyCurrency(total)}
+                            </h4>
+                            <em class="${variation.color} visible" style="display: none;">
+                                <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
+                                </svg>
+                                ${variation.value}
+                            </em>
+                        </div>
+                        <div class="new-graph graph"></div>
+                    `;
+                    $("#block-comission").html(comissionhtml);
+                    $('.new-graph').html('<canvas id=comission-graph></canvas>');
+                    let labels = [...chart.labels];
+                    let series = [...chart.values];
                     graphComission(series, labels);
-
                 } else {
-                    $('#comission-graph').addClass('invisible');
-                    $('.new-graph').removeClass('visible');
-                    $('.new-graph').after('<div class=no-graph>Não há dados suficientes</div>');
-                    $("#comission").html("<span class='currency'>R$ </span>" + '0,00').addClass('visible');
+                    comissionhtml = `
+                        <div class="container d-flex value-price">                            
+                            <h4 id='comission' class="font-size-24 bold grey">
+                                <span class="currency">R$ </span>
+                                0,00
+                            </h4>
+                        </div>
+                        <div class="no-graph">
+                            <span>Não há dados suficientes</span>
+                            <img src="/build/global/img/reports/bg-no-graph.png" />
+                        </div>
+                    `;
+                    $("#block-comission").html(comissionhtml);
                 }
-
-                $('#card-comission .ske-load').hide();
             }
         });
 
