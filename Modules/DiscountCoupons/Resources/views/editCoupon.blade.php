@@ -299,9 +299,9 @@
                     </div> --}}
 
                     <div class="d-flex modal-new-layout box-description">
-                        <input class="form-control form-control-lg search_input_create_coupon search_coupon" type="text" id="search_input2" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
+                        <input class="form-control form-control-lg search_input_create_coupon search_coupon search_input_create_coupon_id" type="text" id="search_input2" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
                         <div class="input-group input-group-lg" style="width: 678px;">
-                            <input onkeyup="set_description_value(this, $('.search_input_create_coupon'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
+                            <input onkeyup="set_description_value(this, $('.search_input_create_coupon_id'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
                             <div class="input-group-append">
                                 <span class="input-group-text">
                                     <img src="/build/global/img/icon-search.svg" alt="Icon Search">

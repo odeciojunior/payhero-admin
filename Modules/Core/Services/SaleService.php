@@ -311,12 +311,13 @@ class SaleService
         $transactionStatus = implode(
             ',',
             [
-                $transactionModel->present()->getStatusEnum('paid'),
-                $transactionModel->present()
-                    ->getStatusEnum('transfered'),
+                Transaction::STATUS_PAID,
+                Transaction::STATUS_TRANSFERRED,
+                Transaction::STATUS_CHARGEBACK,
+                Transaction::STATUS_REFUNDED
             ]
         );
-        $statusDispute = (new Sale())->present()->getStatus('in_dispute');
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
 
         $resume = $transactions->without(['sale'])
             ->select(
@@ -762,11 +763,10 @@ class SaleService
         $transactionModel = new Transaction();
         $filters['invite'] = 1;
         $transactions = $this->getSalesBlockedBalance($filters);
-        $transactionStatus = implode(
-            ',',
-            [
-                $transactionModel->present()->getStatusEnum('transfered'),
-                $transactionModel->present()->getStatusEnum('paid'),
+        $transactionStatus = implode(',',
+            [                
+                Transaction::STATUS_TRANSFERRED,
+                Transaction::STATUS_PAID                
             ]
         );
 
@@ -803,8 +803,7 @@ class SaleService
         try {
             $customerModel = new Customer();
             $transactionModel = new Transaction();
-            $blockReasonSaleModel = new BlockReasonSale();
-
+            
             $transactions = $transactionModel->with(
                 [
                     'sale.project',
@@ -815,17 +814,17 @@ class SaleService
                     'sale.affiliate' => function ($funtionTrash) {
                         $funtionTrash->withTrashed()->with('user');
                     },
-                    'blockReasonSale' => function ($blocked) use ($blockReasonSaleModel) {
-                        $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+                    'blockReasonSale' => function ($blocked) {
+                        $blocked->where('status', BlockReasonSale::STATUS_BLOCKED);
                     },
                 ]
             )
-                ->where('user_id', auth()->user()->account_owner_id)
+                ->where('user_id', auth()->user()->account_owner_id)                
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereHas(
                     'blockReasonSale',
-                    function ($blocked) use ($blockReasonSaleModel) {
-                        $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+                    function ($blocked){
+                        $blocked->where('status', BlockReasonSale::STATUS_BLOCKED);
                     }
                 );
 
@@ -870,7 +869,7 @@ class SaleService
                 $transactions->where('sales.payment_method', $filters["payment_method"]);
             }
 
-            $status = (!empty($filters['status'])) ? [$filters['status']] : [1, 24];
+            
             if (!empty($filters["plan"])) {
                 $planId = current(Hashids::decode($filters["plan"]));
                 $transactions->whereHas(
@@ -883,15 +882,17 @@ class SaleService
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
+            //$status = (!empty($filters['status'])) ? [$filters['status']] : [1, 24];
             $transactions->whereBetween(
                 'sales.' . $filters["date_type"],
                 [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
             )
-                ->whereIn('sales.status', $status)
-                ->selectRaw('transactions.*, sales.start_date')
-                ->orderByDesc('sales.start_date');
-
+            //->whereIn('sales.status', $status)
+            ->selectRaw('transactions.*, sales.start_date')
+            ->orderByDesc('sales.start_date');
+           
             return $transactions;
+
         } catch (Exception $e) {
             report($e);
 

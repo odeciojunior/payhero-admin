@@ -10,6 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleLog;
@@ -30,6 +31,7 @@ class GerencianetService implements Statement
 {
 
     public Company $company;
+    public CompanyBankAccount $companyBankAccount;
     public $gatewayIds = [];
 
     public function __construct()
@@ -44,6 +46,10 @@ class GerencianetService implements Statement
     {
         $this->company = $company;
         return $this;
+    }
+
+    public function setBankAccount(CompanyBankAccount $companyBankAccount){
+        $this->companyBankAccount = $companyBankAccount;
     }
 
     public function getAvailableBalanceWithoutBlocking(): int
@@ -119,10 +125,20 @@ class GerencianetService implements Statement
         return true;
     }
 
+    public function existsBankAccountApproved(){
+        //verifica se existe uma chave pix aprovada 
+        $bankAccount =  $this->company->getDefaultBankAccount();
+        if(empty($bankAccount) || (!empty($bankAccount) && $bankAccount->transfer_type=='TED')){
+            return false;
+        }
+        $this->companyBankAccount = $bankAccount;
+        return true;
+    }
+
     public function createWithdrawal($withdrawalValue)
     {
         try {
-
+            
             if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID : Gateway::GERENCIANET_SANDBOX_ID)) {
                 return false;
             }
@@ -141,11 +157,14 @@ class GerencianetService implements Statement
                 [
                     'value' => $withdrawalValue,
                     'company_id' => $this->company->id,
-                    'bank' => $this->company->bank,
-                    'agency' => $this->company->agency,
-                    'agency_digit' => $this->company->agency_digit,
-                    'account' => $this->company->account,
-                    'account_digit' => $this->company->account_digit,
+                    'transfer_type'=>'PIX',
+                    'type_key_pix'=>$this->companyBankAccount->type_key_pix,
+                    'key_pix'=>$this->companyBankAccount->key_pix,
+                    // 'bank' => $this->company->bank,
+                    // 'agency' => $this->company->agency,
+                    // 'agency_digit' => $this->company->agency_digit,
+                    // 'account' => $this->company->account,
+                    // 'account_digit' => $this->company->account_digit,
                     'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
                     'tax' => 0,
                     'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
