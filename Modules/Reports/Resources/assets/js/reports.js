@@ -190,6 +190,10 @@ $(function () {
     }
 
     function getSales() {
+        let salesHtml = '';
+        $('#card-sales .onPreLoad *' ).remove();
+        $("#block-sales").html(skeLoad);
+
         return $.ajax({
             method: "GET",
             url: resumeUrl + "/sales?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -200,38 +204,44 @@ $(function () {
             },
             error: function error(response) {
                 errorAjaxResponse(response);
-
             },
             success: function success(response) {
-                $("#sales").addClass('visible');
-                $("#sales").html(response.data.total);
-
-                if(response.data.total !== 0){
-                    $('.new-graph-sell').html('<canvas id=graph-sell></canvas>').addClass('visible');
-                    $(".new-graph-sell").next('.no-graph').remove();
-
-                    let variation = `
-                    <em class="${response.data.variation.color} visible">
-                        <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
-                        </svg>
-                        ${response.data.variation.value}
-                    </em>`;
-
-                    $("#sales").after(variation);
-
-                    let labels = [...response.data.chart.labels];
-                    let series = [...response.data.chart.values];
+                let { chart, total, variation } = response.data;
+                
+                if( total !== 0 ) {
+                    salesHtml = `
+                        <div class="container d-flex value-price">
+                            <h4 id='sales' class=" font-size-24 bold">
+                                ${total}
+                            </h4>
+                            <em class="${variation.color} visible">
+                                <svg width="19" height="19" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.849471 0.404734L7.11918 0.245869C7.50392 0.23612 7.80791 0.540111 7.79816 0.924852L7.63929 7.19456C7.62955 7.5793 7.30975 7.8991 6.92501 7.90884C6.54027 7.91859 6.23628 7.6146 6.24603 7.22986L6.36228 2.64198L1.52072 7.48353C1.24178 7.76248 0.800693 7.77365 0.535534 7.5085C0.270375 7.24334 0.281551 6.80225 0.560497 6.52331L5.40205 1.68175L0.814167 1.798C0.429427 1.80775 0.125436 1.50376 0.135185 1.11902C0.144933 0.73428 0.46473 0.414483 0.849471 0.404734Z" fill="#1BE4A8"/>
+                                </svg>
+                                ${variation.value}
+                            </em>
+                        </div>
+                        <div class="new-graph-sell graph"></div>
+                    `;
+                    $("#block-sales").html(salesHtml);
+                    $('.new-graph-sell').html('<canvas id=graph-sell></canvas>');
+                    let labels = [...chart.labels];
+                    let series = [...chart.values];
                     newGraphSell(series, labels);
-
-                } else {
-                    $('#graph-sell').remove();
-                    $("#sales").html('0');
-                    $('.new-graph-sell').removeClass('visible');
-                    $(".new-graph-sell").next('.no-graph').remove();
-                    $('.new-graph-sell').after('<div class=no-graph>Não há dados suficientes</div>');
+                }else {
+                    salesHtml = `
+                        <div class="container d-flex value-price">                            
+                            <h4 id='sales' class="font-size-24 bold grey">
+                                0
+                            </h4>
+                        </div>
+                        <div class="no-graph">
+                            <span>Não há dados suficientes</span>
+                            <img src="/build/global/img/reports/bg-no-graph.png" />
+                        </div>
+                    `;
+                    $("#block-sales").html(salesHtml);
                 }
-                $('#card-sales .ske-load').hide();
             }
         });
 
@@ -273,7 +283,7 @@ $(function () {
                                                 <img class="photo" src="${image}" width="24px" height="24px" />
                                         </figure>
                                         <span style="color: #636363; padding-left: 0;">${(( 100 * amount ) / total) > 19 ? '' : amount}</span>
-                                        <div class="bars ${color}" style="width:${(( 100 * amount ) / total).toFixed(2)}%">
+                                        <div class="bars ${color}" style="width:${(( 100 * amount ) / total).toFixed(1)}%">
                                             <span>${(( 100 * amount ) / total) > 19 ? amount : ''}</span>
                                         </div>
                                     </div>

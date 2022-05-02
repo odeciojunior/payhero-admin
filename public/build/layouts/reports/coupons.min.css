@@ -1880,7 +1880,7 @@ h4.number{
 
 #card-comission .new-graph,
 #card-pending .new-graph-pending,
-#card-sales .new-graph-sell.visible,
+#card-sales .new-graph-sell,
 #card-cashback .new-graph-cashback { height: 159px; }
 
 #card-regions .new-graph-regions.visible {
