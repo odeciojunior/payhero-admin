@@ -20,13 +20,14 @@ class ShippingUpdateRequest extends FormRequest
             "type"               => "required|string",
             "name"               => "required|string|max:60",
             "information"        => $isMenv ? "" : "required|string|max:100",
-            "value"              => $isStatic ? "required|max:8" : "",
+            "value"              => "nullable",
             "zip_code_origin"    => $isStatic ? "" : "required|min:9",
             "status"             => "nullable",
             "pre_selected"       => "nullable",
             'receipt'            => 'nullable',
             'own_hand'           => 'nullable',
             "rule_value"         => "nullable",
+            "regions_values"     => "nullable",
             "apply_on_plans"     => "required|array",
             "not_apply_on_plans" => "sometimes|required|array"
         ];
