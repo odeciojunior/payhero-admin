@@ -10,6 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
@@ -28,6 +29,7 @@ use Modules\Withdrawals\Transformers\WithdrawalResource;
 class Safe2PayService implements Statement
 {
     public Company $company;
+    public CompanyBankAccount $companyBankAccount;
     public $gatewayIds = [];
     public $apiKey;
     public $companyId;
@@ -44,6 +46,10 @@ class Safe2PayService implements Statement
     {
         $this->company = $company;
         return $this;
+    }
+
+    public function setBankAccount(CompanyBankAccount $companyBankAccount){
+        $this->companyBankAccount = $companyBankAccount;
     }
 
     public function getAvailableBalanceWithoutBlocking(): int
@@ -128,6 +134,12 @@ class Safe2PayService implements Statement
         return true;
     }
 
+    public function existsBankAccountApproved(){        
+        //verifica se existe uma conta bancaria aprovada 
+        $this->companyBankAccount =  $this->company->getDefaultBankAccount();
+        return !empty($this->companyBankAccount);        
+    }
+
     public function createWithdrawal($value)
     {
         try {
@@ -155,27 +167,31 @@ class Safe2PayService implements Statement
                     );
                 }
 
-                $withdrawal = Withdrawal::create(
-                    [
-                        'value' => $value,
-                        'company_id' => $this->company->id,
-                        'bank' => $this->company->bank,
-                        'agency' => $this->company->agency,
-                        'agency_digit' => $this->company->agency_digit,
-                        'account' => $this->company->account,
-                        'account_digit' => $this->company->account_digit,
-                        'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
-                        'tax' => 0,
-                        'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                        'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
-                    ]
-                );
-            } else {
-                $withdrawalValueSum = $withdrawal->value + $value;
+                $data = [
+                    'value' => $value,
+                    'company_id' => $this->company->id,                   
+                    'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
+                    'tax' => 0,
+                    'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
+                    'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
+                ];
 
-                $withdrawal->update([
+                $data = array_merge($data,$this->setBankAccountArray($this->companyBankAccount));
+
+                $withdrawal = Withdrawal::create($data);
+
+            } else {
+                
+                $withdrawalValueSum = $withdrawal->value + $value;
+                $data = [
                     'value' => $withdrawalValueSum
-                ]);
+                ];
+
+                if($withdrawal->transfer_type <> $this->companyBankAccount->transfer_type){
+                    $data = array_merge($data,$this->setBankAccountArray($this->companyBankAccount));
+                }
+
+                $withdrawal->update($data);
             }
             DB::commit();
         } catch (Exception $e) {
@@ -185,6 +201,29 @@ class Safe2PayService implements Statement
         }
 
         return $withdrawal;
+    }
+
+    public function setBankAccountArray($bankAccount){
+        switch($bankAccount->transfer_type){
+            case 'TED':
+               return [
+                    'transfer_type'=>'TED',
+                    'bank' => $bankAccount->bank,
+                    'agency' => $bankAccount->agency,
+                    'agency_digit' => $bankAccount->agency_digit,
+                    'account' => $bankAccount->account,
+                    'account_digit' => $bankAccount->account_digit,
+                ];
+            break;
+            case 'PIX':
+                return [
+                    'transfer_type'=>'PIX',
+                    'type_key_pix'=>$bankAccount->type_key_pix,
+                    'key_pix'=>$bankAccount->key_pix,
+                ];
+            break;
+        }
+        return [];
     }
 
     public function updateAvailableBalance($saleId = null)

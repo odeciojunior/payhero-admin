@@ -44,6 +44,33 @@ if (!function_exists('builder2sql')) {
     }
 }
 
+if (!function_exists('getRegionByIp')) {
+    function getRegionByIp($ip)
+    {
+        $regionJson = [];
+
+        $query = @unserialize(file_get_contents('http://ip-api.com/php/'.$ip));
+        if($query && $query['status'] == 'success') {
+            $regionJson['status'] = $query['status'];
+            $regionJson['country'] = $query['country'];
+            $regionJson['countryCode'] = $query['countryCode'];
+            $regionJson['region'] = $query['region'];
+            $regionJson['regionName'] = $query['regionName'];
+            $regionJson['city'] = $query['city'];
+            $regionJson['zip'] = $query['zip'];
+            $regionJson['lat'] = $query['lat'];
+            $regionJson['lon'] = $query['lon'];
+            $regionJson['timezone'] = $query['timezone'];
+            $regionJson['isp'] = $query['isp'];
+            $regionJson['org'] = $query['org'];
+            $regionJson['as'] = $query['as'];
+            $regionJson['query'] = $query['query'];
+        }
+
+        return $regionJson;
+    }
+}
+
 if (!function_exists('versionsFile')) {
     function versionsFile()
     {
