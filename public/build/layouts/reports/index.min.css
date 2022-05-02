@@ -685,6 +685,14 @@ h4.number{
     margin: 0;
     display: flex;
 }
+.donut-pie figure + div {
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline;
+}
+
 .donut-pie.blue svg,
 .donut-pie.blue svg rect { 
     color: #2E85EC; 

@@ -249,7 +249,7 @@ $(function () {
                                                 <img class="photo" src="${image}" width="24px" height="24px" />
                                         </figure>
                                         <span style="color: #636363; padding-left: 0;">${(( 100 * amount ) / total) > 19 ? '' : amount}</span>
-                                        <div class="bars ${color}" style="width:${(( 100 * amount ) / total)}%">
+                                        <div class="bars ${color}" style="width:${(( 100 * amount ) / total).toFixed(2)}%">
                                             <span>${(( 100 * amount ) / total) > 19 ? amount : ''}</span>
                                         </div>
                                     </div>
