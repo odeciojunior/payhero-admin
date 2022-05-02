@@ -171,25 +171,12 @@
 											</div>
                                             <div class="card" id="card-cashback">
 												<div class="card-body data-content">
-                                                    <div class="ske-load">
-                                                        <div class="px-20 py-0">
-                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
-                                                        </div>
-                                                        <div class="px-20 py-0">
-                                                            <div class="row align-items-center mx-0 py-10">
-                                                                <div class="skeleton skeleton-circle"></div>
-                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
-                                                            </div>
-                                                            <div class="skeleton skeleton-text"></div>
-                                                        </div>
-                                                    </div>
                                                     <header class="container">
                                                         <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
-                                                        <div class="d-flex value-price">
-                                                            <h4 id='cashback' class="font-size-24 bold grey">0</h4>
-                                                        </div>
                                                     </header>
-													<div class="new-graph-cashback graph"></div>
+                                                    <div class="onPreLoad" id="block-cash">
+                                                        
+                                                    </div>
 												</div>
 											</div>
 										</div>
