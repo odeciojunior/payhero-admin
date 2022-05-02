@@ -1230,6 +1230,9 @@ $(function () {
                     // set_item_click()
                     show_plans()
                     
+                    if(!response.expires && response.status){
+                        response.nao_vence = 1
+                    }
                     coupon_rules(response)
 
                     $('#c-cancel_name_edit').trigger('click')
@@ -2549,7 +2552,7 @@ $(function () {
 
                 $('#c-edit-name').show()
 
-
+                console.log('oi');
                 //coupon_rules()
                 // show_rules(edit_rules)
                 plans_count2()
@@ -2793,10 +2796,17 @@ $(function () {
             return false;
         }
 
+        if($('#date_range2').val()=='' && !$('#nao_vence2').is(':checked')){
+            //$('#date_range2').focus().addClass('warning-input')
+            alertCustom("error", 'Preencha uma data de vencimento ou marque "Não vence"');
+            return false;
+        }
+
         if($('#2c_type_value').prop('checked')) $('#2c_value').val($('#2discount_value').val());
 
         if($('#2c_type_percent').prop('checked')) $('#2c_value').val($('#2percent_value').val());
 
+        cupom_data.nao_vence = $('#nao_vence2').prop('checked')?1:0
         cupom_data.value = $('#2c_value').val()
         cupom_data.rule_value = $('#2minimum_value').val()
         cupom_data.type = $('#2c_type_value').prop('checked')?1:0
