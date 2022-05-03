@@ -1569,19 +1569,20 @@ h4.number{
     align-items: center;
     justify-content: center;
     display: flex;
+    height: 208px;
 }
-.footer-products.visible { height: 208px; }
+
 
 .list-products {
     margin: 0;
     list-style: none;
-    display: none;
+    display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     height: 188px;
     position: relative;
 }
-.list-products.visible { display: flex; }
+
 
 .list-products li {
     /* margin: 0 20px 0 0; */
@@ -1614,8 +1615,9 @@ h4.number{
     color: #fff;
     font-weight: bold;
     font-size: 12px;
-    padding: 0 10px;
     line-height: 26px;
+    text-align: center;
+    display: block;
 }
 .list-products .blue { background: #2E85EC; }
 .list-products .purple { background: #665FE8; }

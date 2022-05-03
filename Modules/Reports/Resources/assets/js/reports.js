@@ -186,7 +186,6 @@ $(function () {
                 }
             }
         });
-
     }
 
     function getSales() {
@@ -249,6 +248,9 @@ $(function () {
 
     function getProducts() {
         let lista = '';
+        $('#card-products .onPreLoad *' ).remove();
+        $("#block-products").html(skeLoad);
+
         return $.ajax({
             method: "GET",
             url: resumeUrl+ "/products?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -261,15 +263,17 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                $('#card-products .ske-load').show();
-                $("#qtd").addClass('visible');
-                $("#card-products .value-price").next('.no-graph').remove();
-                $('.list-products li').remove();
-
-                var total = response.data.total;
+                let { total, products } = response.data;
+                
                 if(total) {
-                    $.each(response.data.products, function (i, product) {
-                        let { color, amount, percentage, image, name } = product;
+                    $("#block-products").prepend(`
+                        <footer class="footer-products">
+                            <ul class="list-products container"></ul>
+                        </footer>
+                    `);
+
+                    $.each(products, function (i, product) {
+                        let { color, amount, image, name } = product;
                         if(amount) {
                             lista = `
                                 <li class="${( i > 3 && i < 8 ) ? 'line': ''}">
@@ -280,18 +284,17 @@ $(function () {
                                             data-placement="top" 
                                             data-toggle="tooltip" 
                                             title="${name}">
-                                                <img class="photo" src="${image}" width="24px" height="24px" />
+                                            <img class="photo" src="${image}" width="24px" height="24px" />
                                         </figure>
-                                        <span style="color: #636363; padding-left: 0;">${(( 100 * amount ) / total) > 19 ? '' : amount}</span>
+                                        <span style="color: #636363; padding-right: 3px;">${(( 100 * amount ) / total) > 9 ? '' : amount}</span>
                                         <div class="bars ${color}" style="width:${(( 100 * amount ) / total).toFixed(1)}%">
-                                            <span>${(( 100 * amount ) / total) > 19 ? amount : ''}</span>
+                                            <span>${(( 100 * amount ) / total) > 9 ? amount : ''}</span>
                                         </div>
                                     </div>
-                                </li>`
-                            ;
-                            $(".list-products").append(lista);
-                            $(".list-products, .footer-products").addClass('visible');
-                            $('#card-products .value-price').addClass('invisible');
+                                </li>
+                            `;
+
+                            $("#block-products .list-products").append(lista);
                             $('[data-toggle="tooltip"]').tooltip({
                                 container: '.list-products'
                             });
@@ -301,14 +304,20 @@ $(function () {
                         }
                     });
                 }else {
-                    $('#card-products .value-price').removeClass('invisible');
-                    $("#qtd").html(0);
-                    $("#card-products .value-price").next('.no-graph').remove();
-                    $("#card-products .value-price").after('<div class=no-graph>Não há dados suficientes</div>');
-                    $('#card-products .no-graph').css('height','111px');
-                    $(".footer-products").removeClass('visible');
+                    lista = `
+                        <div class="container d-flex value-price">                            
+                            <h4 id='sales' class="font-size-24 bold grey">
+                                0
+                            </h4>
+                        </div>
+                        <div class="no-graph">
+                            <span>Não há dados suficientes</span>
+                            <img src="/build/global/img/reports/bg-no-graph.png" />
+                        </div>
+                    `;
+                    $("#block-products").html(lista);
                 }
-                $('#card-products .ske-load').hide();
+                $('#card-products .ske-load').remove();
             }
         });
     }

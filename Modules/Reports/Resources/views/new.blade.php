@@ -303,27 +303,10 @@
 											</div>
 											<div class="card" id="card-products">
 												<div class="card-body data-content">
-                                                    <div class="ske-load">
-                                                        <div class="px-20 py-0">
-                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
-                                                        </div>
-                                                        <div class="px-20 py-0">
-                                                            <div class="row align-items-center mx-0 py-10">
-                                                                <div class="skeleton skeleton-circle"></div>
-                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
-                                                            </div>
-                                                            <div class="skeleton skeleton-text"></div>
-                                                        </div>
-                                                    </div>
                                                     <header class="container">
 													    <h6 class="font-size-16 gray-700 grey"> Produtos </h6>
-                                                        <div class="d-flex value-price">
-                                                            <h4 id='qtd' class=" font-size-24 bold">0</h4>
-                                                        </div>
                                                     </header>
-                                                    <footer class="footer-products">
-                                                        <ul class="list-products container"></ul>
-                                                    </footer>
+                                                    <div class="onPreLoad" id="block-products"></div>
 												</div>
 											</div>
 										</div>
