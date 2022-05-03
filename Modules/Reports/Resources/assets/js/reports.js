@@ -58,10 +58,7 @@ $(function () {
                                 0,00
                             </h4>
                         </div>
-                        <div class="no-graph">
-                            <span>Não há dados suficientes</span>
-                            <img src="/build/global/img/reports/bg-no-graph.png" />
-                        </div>
+                        <div class="no-graph">${emptyGraph}</div>
                     `;
                     $("#block-cash").html(cashHtml);
                 }
@@ -118,10 +115,7 @@ $(function () {
                                 0,00
                             </h4>
                         </div>
-                        <div class="no-graph">
-                            <span>Não há dados suficientes</span>
-                            <img src="/build/global/img/reports/bg-no-graph.png" />
-                        </div>
+                        <div class="no-graph">${emptyGraph}</div>
                     `;
                     $("#block-pending").html(pendHtml);
                 }
@@ -177,10 +171,7 @@ $(function () {
                                 0,00
                             </h4>
                         </div>
-                        <div class="no-graph">
-                            <span>Não há dados suficientes</span>
-                            <img src="/build/global/img/reports/bg-no-graph.png" />
-                        </div>
+                        <div class="no-graph">${emptyGraph}</div>
                     `;
                     $("#block-comission").html(comissionhtml);
                 }
@@ -234,10 +225,7 @@ $(function () {
                                 0
                             </h4>
                         </div>
-                        <div class="no-graph">
-                            <span>Não há dados suficientes</span>
-                            <img src="/build/global/img/reports/bg-no-graph.png" />
-                        </div>
+                        <div class="no-graph">${emptyGraph}</div>
                     `;
                     $("#block-sales").html(salesHtml);
                 }
