@@ -334,7 +334,7 @@ $(() => {
 
 
         // PORCENTAGEM
-        $('#percentage-affiliates').val('0');
+        $('#percentage-affiliates').val(0);
 
         $('#percentage-affiliates').click( function(){
             if( $(this).val()=='0' ) $(this).val('');
