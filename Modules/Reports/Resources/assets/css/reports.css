@@ -1262,6 +1262,7 @@ h4.number{
     padding: 15px 20px 20px 20px; 
     text-align: center;
     position: relative;
+    min-height: 446px;
 }
 
 .filter-brazil-map {
@@ -1337,16 +1338,30 @@ h4.number{
     margin: 15px 10px 15px 5px;
 }
 
-.box-states ul { 
+.box-states > ul { 
     padding: 0; 
     list-style: none;
     display: flex;
+    height: 400px;
     flex-direction: column;
     justify-content: space-between;
 }
 
-.states-list { padding: 10px 0; }
-.states-list:nth-child(even) { background: #FBFBFB; }
+.list-states{
+    overflow-y: scroll;
+}
+
+.states-list { 
+    padding: 10px 0; 
+}
+
+.states-list ul {
+    padding: 0;
+}
+
+.states-list:nth-child(even) { 
+    background: #FBFBFB; 
+}
 
 .states-list div:first-child { 
     min-height: 50px; 
@@ -1388,6 +1403,11 @@ h4.number{
 /* mapa brasil */
 #svg-map path {
     fill: #f9f9f9;
+    stroke: #c5c5c5;
+}
+
+#svg-map-empty path {
+    fill: #F1F1F1;
     stroke: #c5c5c5;
 }
   
@@ -1758,6 +1778,20 @@ h4.number{
 .skeleton-text{
     height: 32px;
     margin-bottom: 15px;
+    border-radius: 20px;
+}
+
+.skeleton-li-item{
+    height: 32px;
+    width: 32px;
+    margin-right: 8px;
+    border-radius: 99px;
+}
+
+.skeleton-li{
+    height: 32px;
+    width: 100%;
+    margin-bottom: 30px;
     border-radius: 20px;
 }
 .skeleton-gateway-logo{

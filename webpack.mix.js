@@ -789,7 +789,8 @@ mix.babel([
  mix.babel([
     'Modules/Reports/Resources/assets/js/chart-js/Chartjs-3.7-min.js',
     'Modules/Reports/Resources/assets/js/moment.min.js',
-    'resources/modules/global/js/daterangepicker.min.js',
+    // 'resources/modules/global/js/daterangepicker.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
     'Modules/Reports/Resources/assets/js/chartist.min.js',
     'Modules/Reports/Resources/assets/js/chartist-plugin-tooltip.min.js',
     'Modules/Reports/Resources/assets/js/chartist-plugin-legend.min.js',

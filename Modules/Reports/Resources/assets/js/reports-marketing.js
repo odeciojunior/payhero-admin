@@ -9,7 +9,7 @@ $(function() {
 
         $(".data-pie ul").remove();
         $('.onPreLoad *').remove();
-        $('.onPreLoad').append(skeLoad);
+        // $('.onPreLoad').append(skeLoad);
         updateStorage({company: $(this).val()})
         reload();
     });
@@ -42,6 +42,8 @@ function loadOrigins(link = null) {
     $("#origin").on('change', function(){
         loadOrigins();
     });
+    $("#origins-table").html('');
+    $("#origins-table").html(skeLoadOriginTable);
 
     let url = '';
     if(link == null) {
@@ -63,15 +65,31 @@ function loadOrigins(link = null) {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let td = `
-                <td>
-                    <img src=${$("#origins-table").attr("img-empty")}></td>
-                <td>
-                    <p class='no-data-origin'>
-                        <strong>Sem dados, por enquanto...</strong>
-                        Ainda faltam dados suficientes a comparação, continue rodando!
-                    </p>
-                </td>`;
+            $("#origins-table").html('');
+
+                let td = `
+                <div class="d-flex" style="justify-content: center; margin: auto;" >
+                <div class="info-graph">
+                    <div class="no-sell">
+                        <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
+                            <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
+                            <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
+                            <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
+                            <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
+                            <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
+                        </svg>
+                        <footer>
+                            <h4>Nada por aqui...</h4>
+                            <p>
+                                Não há dados suficientes
+                                para gerar este relatório.
+                            </p>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+                `;
 
             if (response.data == '') {
                 $("#origins-table").html(td);
@@ -103,7 +121,7 @@ function loadOrigins(link = null) {
 
 function loadResume() {
     let checkouts, salesCount,salesValue = '';
-    // $("#checkouts_count, #sales_count, #sales_value").prepend(skeLoad2);
+    $("#checkouts_count, #sales_count, #sales_value").prepend(skeLoad);
 
     return $.ajax({
         method: "GET",
@@ -228,7 +246,7 @@ function loadCoupons() {
 function loadFrequenteSales() {
     let salesBlock = '';
     $('#card-most-sales .onPreLoad *' ).remove();
-    $("#block-sales").prepend(skeLoad);
+    $("#block-sales").prepend(skeLoadOriginTable);
 
     return $.ajax({
         method: "GET",
@@ -242,6 +260,37 @@ function loadFrequenteSales() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
+            $("#block-sales").html('');
+
+            if(response.data.length == 0) {
+                noData = `
+                    <div class="d-flex" style="justify-content: center; margin: auto;" >
+                        <div class="info-graph">
+                            <div class="no-sell">
+                                <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
+                                    <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
+                                    <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
+                                    <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
+                                    <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
+                                    <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
+                                </svg>
+                                <footer>
+                                    <h4>Nada por aqui...</h4>
+                                    <p>
+                                        Não há dados suficientes
+                                        para gerar este relatório.
+                                    </p>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                $("#block-sales").append(noData);
+                return;
+            }
+
             $.each(response.data, function (i, item) {
                 let value = removeMoneyCurrency(item.value);
                 let newV = value.replace(/[\D]+/g,'');
@@ -265,7 +314,7 @@ function loadFrequenteSales() {
                 `;
                 $("#block-sales").append(salesBlock);
             });
-            $('#block-sales .ske-load' ).remove();
+            
         }
     });
 }
@@ -361,12 +410,12 @@ function loadDevices() {
                                 <div class="box-payment-option option">
                                     <div class="col-payment">
                                         <div class="box-payment center">
-                                            <span class="silver">${percentage_mobile}</span>
+                                            <span class="silver">${percentage_mobile|| '0.0%'}</span>
                                         </div>
                                     </div>
                                     <div class="col-payment">
                                         <div class="box-payment right">
-                                            <strong class="grey font-size-14">${value_mobile}</strong>
+                                            <strong class="grey font-size-14">${value_mobile || 'R$ 0,00'}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -385,12 +434,12 @@ function loadDevices() {
                                 <div class="box-payment-option option">
                                     <div class="col-payment">
                                         <div class="box-payment center">
-                                            <span class="silver">${percentage_desktop}</span>
+                                            <span class="silver">${percentage_desktop || '0.0%'}</span>
                                         </div>
                                     </div>
                                     <div class="col-payment">
                                         <div class="box-payment right">
-                                            <strong class="grey font-size-14">${value_desktop}</strong>
+                                            <strong class="grey font-size-14">${value_desktop || 'R$ 0,00'}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -405,6 +454,9 @@ function loadDevices() {
 }
 
 function loadOperationalSystems() {
+
+    $('#container-operational-systems').html('');
+    $('#container-operational-systems').append(skeLoad);
 
     $.ajax({
         method: "GET",
@@ -421,11 +473,62 @@ function loadOperationalSystems() {
 
             $('#container-operational-systems').html('');
 
+            if(response.data.length == 0) {
+                stateNoData = `
+                    <div class="d-flex" style="justify-content: center; margin: auto;" >
+                        <div class="info-graph">
+                            <div class="no-sell">
+                                <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
+                                    <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
+                                    <path d="M55.5 75.48C65.3086 75.48 73.26 67.5286 73.26 57.72C73.26 47.9114 65.3086 39.96 55.5 39.96C45.6914 39.96 37.74 47.9114 37.74 57.72C37.74 67.5286 45.6914 75.48 55.5 75.48Z" fill="#2E85EC"/>
+                                    <path d="M61.7791 66.0922L55.5 59.8131L49.2209 66.0922L47.1279 63.9992L53.407 57.7201L47.1279 51.441L49.2209 49.348L55.5 55.6271L61.7791 49.348L63.8721 51.441L57.593 57.7201L63.8721 63.9992L61.7791 66.0922Z" fill="white"/>
+                                    <path d="M65.1199 79.92H45.8799C44.6538 79.92 43.6599 80.9139 43.6599 82.14C43.6599 83.3661 44.6538 84.36 45.8799 84.36H65.1199C66.346 84.36 67.3399 83.3661 67.3399 82.14C67.3399 80.9139 66.346 79.92 65.1199 79.92Z" fill="#DFEAFB"/>
+                                    <path d="M71.78 88.8H39.22C37.9939 88.8 37 89.7939 37 91.02C37 92.2461 37.9939 93.24 39.22 93.24H71.78C73.0061 93.24 74 92.2461 74 91.02C74 89.7939 73.0061 88.8 71.78 88.8Z" fill="#DFEAFB"/>
+                                </svg>
+                                <footer>
+                                    <h4>Nada por aqui...</h4>
+                                    <p>
+                                        Não há dados suficientes
+                                        para gerar este relatório.
+                                    </p>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('#container-operational-systems').append(stateNoData);               
+
+            }
+
             $.each(response.data, function(i, data){
 
                 if(data.percentage == '0.0%') {
                     return true;
                 }
+                $('#container-operational-systems').append(`
+                    <div class="container">
+                        <div class="data-holder b-bottom">
+                            <div class="box-payment-option pad-0">
+                                <div class="col-payment grey box-image-payment">
+                                    <div class="box-ico">
+                                        <span class="">
+                                            ${getOperationalSystemSvg(data.description)}
+                                        </span>
+                                    </div> ${data.description}
+                                </div>
+                                <div class="box-payment-option option">
+                                    <div class="col-payment col-graph">
+                                        <div class="bar blue" style="width:43%">barrinha</div>
+                                    </div>
+                                    <div class="col-payment">
+                                        <span class="money-td green bold grey font-size-14  value-percent">${data.percentage}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
 
                 $('#container-operational-systems').append(`
                     <div class="container">
@@ -520,77 +623,92 @@ function updateStorage(value){
 function changeCalendar() {
     $('.onPreLoad *').remove();
 
-    $('input[name="daterange"]').daterangepicker(
-        {
-            startDate: moment().subtract(30, "days"),
-            endDate: moment(),
-            opens: "left",
-            maxDate: moment().endOf("day"),
-            alwaysShowCalendar: true,
-            showCustomRangeLabel: "Customizado",
-            autoUpdateInput: true,
-            locale: {
-                locale: "pt-br",
-                format: "DD/MM/YYYY",
-                applyLabel: "Aplicar",
-                cancelLabel: "Limpar",
-                fromLabel: "De",
-                toLabel: "Até",
-                customRangeLabel: "Customizado",
-                weekLabel: "W",
-                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
-                monthNames: [
-                    "Janeiro",
-                    "Fevereiro",
-                    "Março",
-                    "Abril",
-                    "Maio",
-                    "Junho",
-                    "Julho",
-                    "Agosto",
-                    "Setembro",
-                    "Outubro",
-                    "Novembro",
-                    "Dezembro",
-                ],
-                firstDay: 0,
-            },
-            ranges: {
-                Hoje: [moment(), moment()],
-                Ontem: [
-                    moment().subtract(1, "days"),
-                    moment().subtract(1, "days"),
-                ],
-                "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
-                "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
-                "Este mês": [
-                    moment().startOf("month"),
-                    moment().endOf("month"),
-                ],
-                "Mês passado": [
-                    moment().subtract(1, "month").startOf("month"),
-                    moment().subtract(1, "month").endOf("month"),
-                ],
-            },
-        },
-        function (start, end) {
-            startDate = start.format("YYYY-MM-DD");
-            endDate = end.format("YYYY-MM-DD");
-            $('.onPreLoad *').remove();
-            $('.onPreLoad').append(skeLoad);
-            reload();
+    var startDate = moment().subtract(30, "days").format("DD/MM/YYYY");
+    var endDate = moment().format("DD/MM/YYYY");
+
+    $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+    $('input[name="daterange"]').dateRangePicker({
+        setValue: function (s) {
+
+            console.log('teste');
+            if (s) {
+                let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
+                $(this).html(s).data('value', normalize);
+                $('input[name="daterange"]').attr('value', normalize);
+                $('input[name="daterange"]').val(normalize);
+            } else {
+                $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+                $('input[name="daterange"]').val(`${startDate}-${endDate}`);
+            }
         }
-    );
-
-    $('input[name="daterange"]').change(function() {
-        updateStorage({calendar: $(this).val()});
     })
+    .on('datepicker-change', function () {
+        updateStorage({calendar: $(this).val()});
+        updateReports();
+    })
+    .on('datepicker-open', function () {
+        $('.filter-badge-input').removeClass('show');
+    })
+    .on('datepicker-close', function () {
+        $(this).removeClass('focused');
+        if ($(this).data('value')) {
+            $(this).addClass('active');
+        }
+    });
+}
 
-    let info = JSON.parse(sessionStorage.getItem('info'));
+function updateReports() {
+    $('.onPreLoad *').remove();
+    $('.onPreLoad').html(skeLoad);
 
-    if(!isEmpty(info)) {
-        $('input[name=daterange]').val(info.calendar);
-    }
+    $.ajax({
+        method: "GET",
+        url: "/api/projects?select=true",
+        dataType: "json",
+        headers: {
+            Authorization: $('meta[name="access-token"]').attr("content"),
+            Accept: "application/json",
+        },
+        error: function error(response) {
+            loadingOnScreenRemove();
+            $("#modal-content").hide();
+            errorAjaxResponse(response);
+        },
+        success: function success(response) {
+            if (!isEmpty(response.data)) {
+
+                $("#project-empty").hide();
+                $("#project-not-empty").show();
+                $("#export-excel").show();
+
+                $.each(response.data, function (i, project) {
+                    $("#select_projects").append(
+                        $("<option>", {
+                            value: project.id,
+                            text: project.name,
+                        })
+                    );
+                });
+                if(sessionStorage.info) {
+                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
+                }
+            } else {
+                $("#export-excel").hide();
+                $("#project-not-empty").hide();
+                $("#project-empty").show();
+            }
+
+            loadingOnScreenRemove();
+            $('.onPreLoad *').remove();
+            loadResume();
+            loadCoupons();
+            loadDevices();
+            loadOperationalSystems();
+            loadFrequenteSales();
+            loadBrazilMap();
+            loadOrigins();
+        },
+    });
 }
 
 function kFormatter(num) {
@@ -598,7 +716,6 @@ function kFormatter(num) {
 }
 
 $('.state').on('click', function(e){
-
     e.preventDefault();
 
     if(!$($('#' + $(this).attr('id') + '-position')).length) {
@@ -640,6 +757,10 @@ $('.back-list').on('click', function(e){
 });
 
 function loadBrazilMap() {
+    $('#list-states').html('');
+    $("#list-states").prepend(skeLoadStatesList);
+    $(".state").addClass('skeleton');
+
 
     $.ajax({
         method: "GET",
@@ -653,11 +774,35 @@ function loadBrazilMap() {
 
         },
         success: function success(response) {
+            $(".state").removeClass('skeleton');
+            $("#list-states").html('');
 
+            if(response.data.length == 0){
+
+                $('.state path').css({ fill: '#F1F1F1', stroke: '#F1F1F1' });
+                $('.state text').css({ fill: '#F1F1F1' });
+
+
+                let noData = `
+                <div class="d-flex justify-content-center align-items-center px-5" style="margin: auto;">
+                    <div>
+                        <img src=${$("#origins-table").attr("img-empty")}>
+                    </div>
+                    <div class="px-10">
+                        <p class='no-data-origin'>
+                            <strong>Sem dados, por enquanto...</strong>
+                            Ainda faltam dados suficientes a comparação, continue rodando!
+                        </p>
+                    </div>
+                </div>
+                    `;
+
+                $("#list-states").append(noData);
+                return;
+            }
+            
             $('.state path').css({ fill: '#FFFFFF' });
             $('.state text').css({ fill: '#6C757D' });
-
-            $("#list-states").html('');
 
             let maxValue = null;
             $.each(response.data, function(i, data){
@@ -677,7 +822,6 @@ function loadBrazilMap() {
                     setCustomMapCss('#state-' + data.state, maxValue, onlyNumbers(data.value));
                 }
                 appendStateDataToStateList(data, i + 1);
-
             });
         }
     });
@@ -733,27 +877,26 @@ function setCustomMapCss(selector, maxValue, value) {
 }
 
 function appendStateDataToStateList(data, index) {
-
     let stateData = `
-                    <li class="states-list">
-                        <div class="d-flex container">
-                            <ul>
-                                <li class="item-state">
-                                    <dl class="d-flex">
-                                        <dd id="state-${data.state}-position">${index}°</dd>
-                                        <dd class="dd-state">${data.state}</dd>
-                                    </dl>
-                                </li>
-                                <li class="item-state">
-                                    <dl class="d-flex justify-content-between">
-                                        <dd><span>${data.percentage}</span></dd>
-                                        <dd><strong>${data.value}</strong></dd>
-                                    </dl>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                `;
+            <li class="states-list">
+                <div class="d-flex container">
+                    <ul style="list-style: none;">
+                        <li class="item-state">
+                            <dl class="d-flex">
+                                <dd id="state-${data.state}-position">${index}°</dd>
+                                <dd class="dd-state">${data.state}</dd>
+                            </dl>
+                        </li>
+                        <li class="item-state">
+                            <dl class="d-flex justify-content-between">
+                                <dd><span>${data.percentage}</span></dd>
+                                <dd><strong>${data.value}</strong></dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        `;
 
     $("#list-states").append(stateData);
 }
@@ -769,3 +912,42 @@ let skeLoad = `
         </div>
     </div>
 `;
+
+let skeLoadStatesList = `
+    <div class="ske-load">
+        <div class="p-10">
+            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
+                <div class="skeleton skeleton-li-item"></div>
+                <div class="skeleton skeleton-li"></div>
+            </div>
+            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
+                <div class="skeleton skeleton-li-item"></div>
+                <div class="skeleton skeleton-li"></div>
+            </div>
+            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
+                <div class="skeleton skeleton-li-item"></div>
+                <div class="skeleton skeleton-li"></div>
+            </div>
+            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
+                <div class="skeleton skeleton-li-item"></div>
+                <div class="skeleton skeleton-li"></div>
+            </div>
+            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
+                <div class="skeleton skeleton-li-item"></div>
+                <div class="skeleton skeleton-li"></div>
+            </div>
+            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
+                <div class="skeleton skeleton-li-item"></div>
+                <div class="skeleton skeleton-li"></div>
+            </div>
+        </div>
+    </div>
+`;
+
+let skeLoadOriginTable = `
+    <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div>
+    <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div>
+    <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div>
+    <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div> 
+`;
+

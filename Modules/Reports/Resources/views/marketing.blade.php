@@ -9,54 +9,51 @@
 
     <div class="page mb-0">
         <div style="display: none" class="page-header container">
+            <div class="filter-container row justify-content-between">
 
-                    <div class="filter-container row justify-content-between">
+                <div class="col-sm-12 col-lg-3 col-xl-3">
+                    <h1 class="page-title new-title grey">
+                        <span class="box-title ico-mkt">
+                            <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.1462 0.0673562C17.4768 0.204264 17.6923 0.526793 17.6923 0.884549V5.30717H22.1154C22.4732 5.30717 22.7957 5.52267 22.9326 5.8532C23.0696 6.18372 22.9939 6.56417 22.7409 6.81714L19.2024 10.3552C19.0365 10.5211 18.8115 10.6143 18.5769 10.6143H13.6356L12.3247 11.9251C12.3638 12.0713 12.3846 12.2249 12.3846 12.3833C12.3846 13.1402 11.9092 13.786 11.2408 14.0387C11.2407 14.0387 11.2408 14.0387 11.2408 14.0387C11.0463 14.1122 10.8356 14.1524 10.6154 14.1524C9.63826 14.1524 8.84614 13.3604 8.84614 12.3834C8.84614 12.3834 8.84614 12.3834 8.84614 12.3834C8.84614 12.3559 8.84678 12.3284 8.84802 12.3012C8.89094 11.3623 9.66579 10.6143 10.6154 10.6143C10.7739 10.6143 10.9275 10.6351 11.0737 10.6742L12.3846 9.3634V4.42264C12.3846 4.18805 12.4778 3.96307 12.6437 3.79719L16.1822 0.259097C16.4352 0.00612484 16.8156 -0.0695512 17.1462 0.0673562ZM18.2105 8.84526L19.9797 7.07621H16.8077C16.3191 7.07621 15.9231 6.6802 15.9231 6.19169V3.01998L14.1538 4.78902V8.84526H18.2105ZM21.1337 10.9265C21.1992 11.4031 21.2331 11.8899 21.2331 12.3846C21.2331 18.2473 16.4799 23 10.6165 23C4.75318 23 0 18.2473 0 12.3846C0 6.52182 4.75318 1.76912 10.6165 1.76912C11.1101 1.76912 11.5959 1.80281 12.0716 1.868L11.3931 2.54641C11.1102 2.82923 10.8978 3.16932 10.7671 3.53943C10.717 3.53859 10.6668 3.53817 10.6165 3.53817C5.7303 3.53817 1.76923 7.49884 1.76923 12.3846C1.76923 17.2703 5.7303 21.231 10.6165 21.231C15.5028 21.231 19.4638 17.2703 19.4638 12.3846C19.4638 12.3334 19.4634 12.2824 19.4625 12.2315C19.832 12.1008 20.1715 11.8886 20.4539 11.6063L21.1337 10.9265ZM10.6154 6.19174C7.19546 6.19174 4.42307 8.96384 4.42307 12.3834C4.42307 15.803 7.19546 18.5751 10.6154 18.5751C14.0353 18.5751 16.8076 15.803 16.8077 12.3835H15.0384C15.0384 14.826 13.0581 16.806 10.6154 16.806C8.17258 16.806 6.1923 14.8259 6.1923 12.3834C6.1923 9.94086 8.17258 7.96079 10.6154 7.96079V6.19174Z" fill="#F43F5E"/>
+                            </svg>
+                        </span>
+                        Marketing
+                    </h1>
+                    <span type="hidden" class="error-data"></span>
+                </div>
 
-                        <div class="col-sm-12 col-lg-3 col-xl-3">
-                            <h1 class="page-title new-title grey">
-                                <span class="box-title ico-mkt">
-                                    <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.1462 0.0673562C17.4768 0.204264 17.6923 0.526793 17.6923 0.884549V5.30717H22.1154C22.4732 5.30717 22.7957 5.52267 22.9326 5.8532C23.0696 6.18372 22.9939 6.56417 22.7409 6.81714L19.2024 10.3552C19.0365 10.5211 18.8115 10.6143 18.5769 10.6143H13.6356L12.3247 11.9251C12.3638 12.0713 12.3846 12.2249 12.3846 12.3833C12.3846 13.1402 11.9092 13.786 11.2408 14.0387C11.2407 14.0387 11.2408 14.0387 11.2408 14.0387C11.0463 14.1122 10.8356 14.1524 10.6154 14.1524C9.63826 14.1524 8.84614 13.3604 8.84614 12.3834C8.84614 12.3834 8.84614 12.3834 8.84614 12.3834C8.84614 12.3559 8.84678 12.3284 8.84802 12.3012C8.89094 11.3623 9.66579 10.6143 10.6154 10.6143C10.7739 10.6143 10.9275 10.6351 11.0737 10.6742L12.3846 9.3634V4.42264C12.3846 4.18805 12.4778 3.96307 12.6437 3.79719L16.1822 0.259097C16.4352 0.00612484 16.8156 -0.0695512 17.1462 0.0673562ZM18.2105 8.84526L19.9797 7.07621H16.8077C16.3191 7.07621 15.9231 6.6802 15.9231 6.19169V3.01998L14.1538 4.78902V8.84526H18.2105ZM21.1337 10.9265C21.1992 11.4031 21.2331 11.8899 21.2331 12.3846C21.2331 18.2473 16.4799 23 10.6165 23C4.75318 23 0 18.2473 0 12.3846C0 6.52182 4.75318 1.76912 10.6165 1.76912C11.1101 1.76912 11.5959 1.80281 12.0716 1.868L11.3931 2.54641C11.1102 2.82923 10.8978 3.16932 10.7671 3.53943C10.717 3.53859 10.6668 3.53817 10.6165 3.53817C5.7303 3.53817 1.76923 7.49884 1.76923 12.3846C1.76923 17.2703 5.7303 21.231 10.6165 21.231C15.5028 21.231 19.4638 17.2703 19.4638 12.3846C19.4638 12.3334 19.4634 12.2824 19.4625 12.2315C19.832 12.1008 20.1715 11.8886 20.4539 11.6063L21.1337 10.9265ZM10.6154 6.19174C7.19546 6.19174 4.42307 8.96384 4.42307 12.3834C4.42307 15.803 7.19546 18.5751 10.6154 18.5751C14.0353 18.5751 16.8076 15.803 16.8077 12.3835H15.0384C15.0384 14.826 13.0581 16.806 10.6154 16.806C8.17258 16.806 6.1923 14.8259 6.1923 12.3834C6.1923 9.94086 8.17258 7.96079 10.6154 7.96079V6.19174Z" fill="#F43F5E"/>
-                                    </svg>
-                                </span>
-                                Marketing
-                            </h1>
-                            <span type="hidden" class="error-data"></span>
+                <div class=" col-sm-12 col-lg-9 col-xl-7">
+
+                    <div class="row justify-content-end align-items-center">
+
+                        <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects">
+                            <select id='select_projects' class="sirius-select">
+                                {{-- JS carrega.. --}}
+                            </select>
                         </div>
 
-                        <div class=" col-sm-12 col-lg-9 col-xl-7">
-
-                            <div class="row justify-content-end align-items-center">
-
-                                <div class="col-12 col-sm-6 col-lg-4 mb-10 select-projects">
-                                    <select id='select_projects' class="sirius-select">
-                                        {{-- JS carrega.. --}}
-                                    </select>
-                                </div>
-
-                                <div class="col-12 col-sm-6 col-lg-4 mb-10 date-report">
-                                    <div class="row align-items-center form-icons box-select">
-                                        <input id="date-filter" type="text" name="daterange" class="font-size-14" value="" readonly>
-                                        <i style="right:16px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-sm-12 col-lg-4 mb-5 pr-0">
-                                    <div class="inner-reports">
-                                        <a href="" class="grey lk-export">
-                                            <i class="o-download-cloud-1 mr-2"></i>
-                                            Exportar relatórios
-                                        </a>
-                                    </div>
-                                </div>
-
+                        <div class="col-12 col-sm-6 col-lg-4 mb-10 date-report">
+                            <div class="row align-items-center form-icons box-select">
+                                <input id="date-filter" type="text" name="daterange" class="font-size-14" value="" readonly>
+                                <i style="right:16px;" class="form-control-icon form-control-icon-right o-agenda-1 font-size-18"></i>
                             </div>
+                        </div>
 
+                        <div class="col-12 col-sm-12 col-lg-4 mb-10 pr-0">
+                            <div class="inner-reports">
+                                <a href="" class="grey lk-export">
+                                    <i class="o-download-cloud-1 mr-2"></i>
+                                    Exportar relatórios
+                                </a>
+                            </div>
                         </div>
 
                     </div>
-                
 
+                </div>
+
+            </div>
             <div class="line-reports row">
                 <div class="modal-reports">
                     <header class="head-modal">
@@ -133,13 +130,13 @@
                                     <div class="row">
                                         <div class="d-flex justify-content-between box-conversion-state">
                                             <!-- lista de estados -->
-                                            <div class="box-states" style="max-height: 410px; overflow-y: scroll">
+                                            <div class="box-states">
                                                 <header class="d-flex title-graph">
                                                     <h5 class="grey font-size-16 tt-state">
                                                         <strong>Conversão por estado</strong>
                                                     </h5>
                                                 </header>
-                                                <ul id="list-states">
+                                                <ul id="list-states" class="onPreLoad p-10 scroll-212">
                                                     <!-- js load -->
                                                 </ul>
 
@@ -639,7 +636,7 @@
 
                                 <div class="card-body card-origin">
                                     <div class="row">
-                                        <div class="data-holder">
+                                        <div class="data-holder" style="width: 100%;">
                                             <div class="row">
                                                 <div class="col-12">
                                                     <table width="100%" class="table-vendas table table-striped " style="width:100%;margin: auto; margin-top:15px;">
@@ -649,7 +646,6 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <br/>
                                             <div class="col-12">
                                                 <ul id="pagination-origins" class="pagination-sm float-right margin-chat-pagination"
                                                     style="margin-top:10px; margin-left: 5%; width: 100%">
