@@ -447,8 +447,8 @@ h4.number{
     justify-content: space-between;
     align-items: center;
 }
-.value-price h4 { opacity: 0; }
-.value-price h4.visible { opacity: 1; }
+/* .value-price h4 { opacity: 0; }
+.value-price h4.visible { opacity: 1; } */
 
 .value-price em {
     font-style: normal;
@@ -610,12 +610,13 @@ h4.number{
     font-weight: bold;
     text-align: center;
     width: 100%;
-    background: url('/build/global/img/reports/bg-no-graph.png') no-repeat bottom center;
     height: 46%;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
+.no-graph span { position: absolute; }
 
 /* new graph pie */
 .box-donut { 
@@ -683,6 +684,14 @@ h4.number{
     margin: 0;
     display: flex;
 }
+.donut-pie figure + div {
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline;
+}
+
 .donut-pie.blue svg,
 .donut-pie.blue svg rect { 
     color: #2E85EC; 
@@ -1578,19 +1587,20 @@ h4.number{
     align-items: center;
     justify-content: center;
     display: flex;
+    height: 208px;
 }
-.footer-products.visible { height: 208px; }
+
 
 .list-products {
     margin: 0;
     list-style: none;
-    display: none;
+    display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     height: 188px;
     position: relative;
 }
-.list-products.visible { display: flex; }
+
 
 .list-products li {
     /* margin: 0 20px 0 0; */
@@ -1623,8 +1633,9 @@ h4.number{
     color: #fff;
     font-weight: bold;
     font-size: 12px;
-    padding: 0 10px;
     line-height: 26px;
+    text-align: center;
+    display: block;
 }
 .list-products .blue { background: #2E85EC; }
 .list-products .purple { background: #665FE8; }
@@ -1830,10 +1841,10 @@ h4.number{
 #graph-sell + .no-graph,
 #graph-cashback + .no-graph { height: 110px; }
 
-#card-comission .new-graph.visible,
-#card-pending .new-graph-pending.visible,
-#card-sales .new-graph-sell.visible,
-#card-cashback .new-graph-cashback.visible { height: 159px; }
+#card-comission .new-graph,
+#card-pending .new-graph-pending,
+#card-sales .new-graph-sell,
+#card-cashback .new-graph-cashback { height: 159px; }
 
 #card-regions .new-graph-regions.visible {
     width: 180px;
