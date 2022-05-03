@@ -615,7 +615,6 @@ h4.number{
     height: 46%;
     display: flex;
     align-items: center;
-    justify-content: center;
     position: relative;
 }
 .no-graph span { position: absolute; }
