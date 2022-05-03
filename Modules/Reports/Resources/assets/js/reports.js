@@ -289,7 +289,7 @@ $(function () {
                                         <div class="bars ${color}" style="width:${(( 100 * amount ) / total).toFixed(1)}%">
                                             <span>${(( 100 * amount ) / total) > 9 ? amount : ''}</span>
                                         </div>
-                                        <span style="color: #636363; padding-left: 3px;">${(( 100 * amount ) / total) > 9 ? '' : amount}</span>
+                                        <span style="color: #636363;">${(( 100 * amount ) / total) > 9 ? '' : amount}</span>
                                     </div>
                                 </li>
                             `;
