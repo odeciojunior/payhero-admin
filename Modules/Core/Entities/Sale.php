@@ -136,6 +136,7 @@ class Sale extends Model
 
     public const GETNET_SANDBOX_ID = 14;
     public const GETNET_PRODUCTION_ID = 15;
+    public const GERENCIANET_PRODUCTION_ID = 18;
 
     public const CREDIT_CARD_PAYMENT = 1;
     public const BOLETO_PAYMENT = 2;
