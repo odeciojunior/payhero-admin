@@ -3,6 +3,7 @@
 namespace Modules\Finances\Exports\Reports;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -77,6 +78,13 @@ class ExtractReportExport implements FromQuery, WithHeadings, ShouldAutoSize, Wi
         if(!empty($data['value'])){
             $value = intval(preg_replace('/[^0-9]/', '', $data['value']));
             $transfers->where('transfers.value', $value);
+        }
+
+        if(!empty($data['gateway_id'])){
+            $gatewayId = hashids_decode($data['gateway_id']);
+            if(!empty($gatewayId)){
+                $transfers->where('transfers.gateway_id', $gatewayId);
+            }
         }
 
         $balanceInPeriod = $transfers->selectRaw("sum(CASE WHEN transfers.type_enum = 2 THEN (transfers.value * -1) ELSE transfers.value END) as balanceInPeriod")

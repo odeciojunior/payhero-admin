@@ -41,9 +41,10 @@ class CreateCompanyGetnet extends Command
             $companies = Company::whereDoesntHave('gatewayCompanyCredential', function($q){
                 $q->where('gateway_id',Gateway::GETNET_PRODUCTION_ID);
             })
-            ->where('bank_document_status', 3)
-            ->where('address_document_status', 3)
-            ->where('contract_document_status', 3)->get();
+            //->where('bank_document_status', Company::STATUS_APPROVED)
+            ->where('address_document_status', Company::STATUS_APPROVED)
+            ->where('contract_document_status', Company::STATUS_APPROVED)
+            ->get();
 
             $companyService = new CompanyService();
             foreach ($companies as $company) {

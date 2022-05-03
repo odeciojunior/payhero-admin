@@ -25,6 +25,7 @@ use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\BilletRefundedEvent;
 use Modules\Products\Transformers\ProductsSaleResource;
 use Modules\Transfers\Services\GetNetStatementService;
+use PDF;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -246,7 +247,7 @@ class SaleService
                 $status = [1, 2, 4, 7, 8, 12, 20, 21, 22, 24];
             } else {
                 $status = explode(',', $filters['status']);
-                //$status = in_array(7, $status) ? [7, 22] : $status; //REMOVER ESTA LINHA PARA APARECER TODOS OS STATUS
+                $status = in_array(7, $status) ? array_merge($status, [22]) : $status;
             }
 
             if(!empty($status)) {
@@ -310,12 +311,13 @@ class SaleService
         $transactionStatus = implode(
             ',',
             [
-                $transactionModel->present()->getStatusEnum('paid'),
-                $transactionModel->present()
-                    ->getStatusEnum('transfered'),
+                Transaction::STATUS_PAID,
+                Transaction::STATUS_TRANSFERRED,
+                Transaction::STATUS_CHARGEBACK,
+                Transaction::STATUS_REFUNDED
             ]
         );
-        $statusDispute = (new Sale())->present()->getStatus('in_dispute');
+        $statusDispute = Sale::STATUS_IN_DISPUTE;
 
         $resume = $transactions->without(['sale'])
             ->select(
@@ -391,6 +393,9 @@ class SaleService
         //valor do produtor
         $value = $userTransaction->value??0;
         $cashbackValue = $sale->cashback->value ?? 0;
+        $progressiveDiscount = $sale->progressive_discount ?? 0;
+        $total -= $progressiveDiscount;
+
         $comission = 'R$ ' . number_format($value/100, 2, ',', '.');
 
         //valor do afiliado
@@ -668,7 +673,7 @@ class SaleService
                 ]);
                 continue;
             }
-            
+
             $safe2payBalance = $transaction->company->safe2pay_balance;
 
             if($transaction->status_enum == Transaction::STATUS_PAID) {
@@ -758,11 +763,10 @@ class SaleService
         $transactionModel = new Transaction();
         $filters['invite'] = 1;
         $transactions = $this->getSalesBlockedBalance($filters);
-        $transactionStatus = implode(
-            ',',
-            [
-                $transactionModel->present()->getStatusEnum('transfered'),
-                $transactionModel->present()->getStatusEnum('paid'),
+        $transactionStatus = implode(',',
+            [                
+                Transaction::STATUS_TRANSFERRED,
+                Transaction::STATUS_PAID                
             ]
         );
 
@@ -799,8 +803,7 @@ class SaleService
         try {
             $customerModel = new Customer();
             $transactionModel = new Transaction();
-            $blockReasonSaleModel = new BlockReasonSale();
-
+            
             $transactions = $transactionModel->with(
                 [
                     'sale.project',
@@ -811,17 +814,17 @@ class SaleService
                     'sale.affiliate' => function ($funtionTrash) {
                         $funtionTrash->withTrashed()->with('user');
                     },
-                    'blockReasonSale' => function ($blocked) use ($blockReasonSaleModel) {
-                        $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+                    'blockReasonSale' => function ($blocked) {
+                        $blocked->where('status', BlockReasonSale::STATUS_BLOCKED);
                     },
                 ]
             )
-                ->where('user_id', auth()->user()->account_owner_id)
+                ->where('user_id', auth()->user()->account_owner_id)                
                 ->join('sales', 'sales.id', 'transactions.sale_id')
                 ->whereHas(
                     'blockReasonSale',
-                    function ($blocked) use ($blockReasonSaleModel) {
-                        $blocked->where('status', $blockReasonSaleModel->present()->getStatus('blocked'));
+                    function ($blocked){
+                        $blocked->where('status', BlockReasonSale::STATUS_BLOCKED);
                     }
                 );
 
@@ -866,7 +869,7 @@ class SaleService
                 $transactions->where('sales.payment_method', $filters["payment_method"]);
             }
 
-            $status = (!empty($filters['status'])) ? [$filters['status']] : [1, 24];
+            
             if (!empty($filters["plan"])) {
                 $planId = current(Hashids::decode($filters["plan"]));
                 $transactions->whereHas(
@@ -879,15 +882,17 @@ class SaleService
 
             $dateRange = FoxUtils::validateDateRange($filters["date_range"]);
 
+            //$status = (!empty($filters['status'])) ? [$filters['status']] : [1, 24];
             $transactions->whereBetween(
                 'sales.' . $filters["date_type"],
                 [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']
             )
-                ->whereIn('sales.status', $status)
-                ->selectRaw('transactions.*, sales.start_date')
-                ->orderByDesc('sales.start_date');
-
+            //->whereIn('sales.status', $status)
+            ->selectRaw('transactions.*, sales.start_date')
+            ->orderByDesc('sales.start_date');
+           
             return $transactions;
+
         } catch (Exception $e) {
             report($e);
 
@@ -1230,5 +1235,35 @@ class SaleService
                 ];
         }
         return [];
+    }
+
+    public static function refundReceipt($hashSaleId, $transaction)
+    {
+        $company = (object)$transaction->company->toArray();
+        $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
+        $transaction->flag = strtoupper($transaction->sale->flag) ?? null;
+
+        $saleInfo = DB::table('sale_informations')
+            ->select('customer_name', 'last_four_digits')
+            ->where('sale_id', '=', $transaction->sale_id)
+            ->first();
+
+        $arr = explode(' ',trim($saleInfo->customer_name));
+        $saleInfo->firstname = $arr[0];
+
+        $checkoutConfigs = DB::table('checkout_configs')
+            ->select('checkout_logo')
+            ->where('checkout_logo_enabled', '=', '1')
+            ->where('project_id', '=', $transaction->sale->project_id)
+            ->first();
+
+        $productsPlansSales = DB::table('products_plans_sales')
+            ->select('amount', 'name')
+            ->where('sale_id', '=', $transaction->sale_id)
+            ->get();
+
+        $refundDate = $transaction->sale->saleLogs()->whereIn('status_enum', [Sale::STATUS_REFUNDED, Sale::STATUS_BILLET_REFUNDED])->first()->created_at;
+
+        return PDF::loadView('sales::refund_receipt', compact('company', 'transaction', 'saleInfo', 'checkoutConfigs','productsPlansSales', 'refundDate'));
     }
 }

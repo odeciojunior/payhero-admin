@@ -521,6 +521,15 @@ $(() => {
             $("#partial-refund-value").hide();
         }
 
+        if (parseInt(sale.progressive_discount.replace(/[^\d]/g, "")) > 0) {
+            $("#discount-prog-title").show();
+            $("#discount-prog-data span").html(sale.progressive_discount);
+            $("#discount-prog-data").show();
+        } else {
+            $("#discount-prog-data").hide();
+            $("#discount-prog-title").hide();
+        }
+
         if (sale.status_name == 'refunded') {
             $('#comission-details').css('display','none');
         }
@@ -807,10 +816,9 @@ $(() => {
             $("#div_refund_transaction").html("");
         }
 
-        if (sale.status == 7) {
-            //href="/sales/${sale.id}/refundreceipt"
+        if (sale.status == 7 || sale.status == 22) {
             $("#div_refund_receipt").html(
-                `<a class="btn btn-sm btn-primary" target="_blank" style="color:white">Comprovante de estorno</a>`
+                '<a href="/sales/'+sale.id+'/refundreceipt" class="btn btn-sm btn-primary" target="_blank" style="color:white">Comprovante de estorno</a>'
             );
         } else {
             $("#div_refund_receipt").html("");

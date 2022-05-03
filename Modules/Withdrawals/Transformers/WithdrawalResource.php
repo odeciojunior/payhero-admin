@@ -43,17 +43,26 @@ class WithdrawalResource extends JsonResource
 
     private function accountInformation(): string
     {
-        $agency = "Ag: $this->agency";
-        if ($this->agency_digit) {
-            $agency .= "-$this->agency_digit";
+        $bankAccount =  $this->company->getDefaultBankAccount();
+        if(!empty($bankAccount)){
+            switch($bankAccount->transfer_type){
+                case 'PIX':
+                    return $bankAccount->transfer_type.': '.$bankAccount->key_pix;                    
+                case 'TED':
+                    $agency = "Ag: $bankAccount->agency";
+                    if ($bankAccount->agency_digit) {
+                        $agency .= "-$bankAccount->agency_digit";
+                    }
+            
+                    $account = "Conta: $bankAccount->account";
+                    if ($bankAccount->account_digit) {
+                        $account .= "-$bankAccount->account_digit";
+                    }
+            
+                    return "$agency - $account";
+            }            
         }
-
-        $account = "Conta: $this->account";
-        if ($this->account_digit) {
-            $account .= "-$this->account_digit";
-        }
-
-        return "$agency - $account";
+        return '';
     }
 }
 

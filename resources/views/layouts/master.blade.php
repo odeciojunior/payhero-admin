@@ -64,7 +64,7 @@
             <div class="top-alert warning col-sm-12 col-md-5" id="document-pending" style="display:none;">
                 <div class="top-alert-message-container">
                     <div class="col-4 text-center">
-                        <img class="top-alert-img" src=" " alt="">
+                    <img class="top-alert-img"  alt="">
                     </div>
                     <div class="col-8 pr-20 d-flex flex-wrap">
                         <span class="top-alert-message">Existem itens pendentes em seu cadastro</span>
@@ -84,6 +84,7 @@
         <script> verifyDocumentPending(); </script>
 
         @stack('scripts')
+        @stack('scriptsModal')
 
         @if(env('APP_ENV', 'production') == 'production')
             <script src="{{ mix('build/layouts/master/production.min.js') }}"></script>
