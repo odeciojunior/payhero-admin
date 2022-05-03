@@ -22,6 +22,8 @@ use App\Traits\LogsActivity;
  * @property string $browser
  * @property string $id_log_session
  * @property string $ip
+ * @property string $ip_localization
+ * @property string $ip_state
  * @property string $city
  * @property string $state
  * @property string $state_name
@@ -90,6 +92,8 @@ class Checkout extends Model
         'browser',
         'id_log_session',
         'ip',
+        'ip_localization',
+        'ip_state',
         'city',
         'state',
         'state_name',

@@ -8,7 +8,7 @@
                 <p id="upsell-description"></p>
             </div>
         </div>
-        <div class="timer" id="timer">
+        <div class="timer" id="timer_upsell">
             <span class="timer-title">Oferta por tempo limitado:</span>
             <div class="d-flex justify-content-center">
                 <div class="d-flex flex-column">

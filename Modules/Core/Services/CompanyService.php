@@ -106,6 +106,7 @@ class CompanyService
         return false;
     }
 
+    /*PARA DELETAR: não achei nenhuma chamada a esta função 
     public function getChangesUpdateBankData($company): bool
     {
         $companyChanges = $company->getChanges();
@@ -124,7 +125,7 @@ class CompanyService
             return true;
         }
         return false;
-    }
+    }*/
 
     public function getChangesUpdateCNPJ($company, $documentType)
     {
