@@ -59,10 +59,10 @@
                                 </svg>
                         </div> --}}
 
-                        <div class="d-flex modal-new-layout box-description">
+                        <div class="d-flex modal-new-layout box-description" style="width: 594px">
                             <input class="form-control form-control-lg search_input_create_coupon  search_coupon search_input_create_coupon_id" type="text" id="search_input" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
-                            <div class="input-group input-group-lg" style="width: 690px;">
-                                <input onkeyup="set_description_value(this, $('.search_input_create_coupon_id'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
+                            <div class="input-group input-group-lg" style="width: 644px;">
+                                <input onkeyup="set_description_value(this, $('.search_input_create_coupon_id') )" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
                                 <div class="input-group-append">
                                     <span class="input-group-text">
                                         <img src="/build/global/img/icon-search.svg" alt="Icon Search">
@@ -71,7 +71,7 @@
                             </div>
                         </div>
                             
-                        <div id="search_result" class="mt-20 " style=" height: 393px">
+                        <div id="search_result" class="mt-20 " style=" height: 393px; width:621px">
                             
                             
 
@@ -222,7 +222,7 @@
                     <div class="modal-footer">
                         <div style="width: 100%" class="justify-center text-center mt-10">
                             <button class="btn back-btn add-coupon-back" type="button">Voltar</button>
-                            <button class="btn btn-primary coupon-next btn2 add-coupon"  type="button">Finalizar</button>
+                            <button class="btn btn-primary btn2 add-coupon"  type="button">Finalizar</button>
                         </div>
                     </div>
 

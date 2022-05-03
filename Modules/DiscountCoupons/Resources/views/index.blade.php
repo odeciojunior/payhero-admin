@@ -133,7 +133,7 @@
     </div>
 
     <!-- Create -->
-    <div id="modal-create-coupon" class="modal  fade example-modal-lg modal-slide-bottom" role="dialog" tabindex="-1">
+    <div data-backdrop="static" id="modal-create-coupon" class="modal  fade example-modal-lg modal-slide-bottom" role="dialog" tabindex="-1">
         <div id="modal-create-holder" class="modal-dialog modal-dialog-centered modal-simple">
 
             @include('discountcoupons::create')
@@ -144,7 +144,7 @@
     </div>
 
     <!-- Edit -->
-    <div id="modal-edit-coupon" class="modal fade example-modal-lg modal-slide-bottom" role="dialog" tabindex="-1">
+    <div data-backdrop="static"  id="modal-edit-coupon" class="modal fade example-modal-lg modal-slide-bottom" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-simple">
             @include('discountcoupons::editCoupon')
             @include('discountcoupons::editDiscount')
@@ -153,7 +153,7 @@
     </div>
 
     <!-- Delete -->
-    <div id="modal-delete-coupon" class="modal fade example-modal-lg modal-slide-bottom" aria-hidden="true"
+    <div data-backdrop="static"  id="modal-delete-coupon" class="modal fade example-modal-lg modal-slide-bottom" aria-hidden="true"
         role="dialog" tabindex="-1">
         <div class="modal-dialog  modal-dialog-centered  modal-simple">
             <div class="modal-content">
