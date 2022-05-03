@@ -146,8 +146,8 @@
 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-view-upsell-config" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" style='overflow-y:auto;'>
     <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content" id="">
-            <div class="modal-header border-bottom">
-                <h4 class="modal-title" id="modal-title">Upsell no checkout</h4>
+            <div class="modal-header border-bottom d-flex justify-content-center">
+                <h4 class="modal-title" id="modal-title" style="margin-left: 0;">Upsell no checkout</h4>
             </div>
             <div class="pt-0 px-0 modal_upsell_body">
                 @include('projectupsellconfig::previewupsellconfig')

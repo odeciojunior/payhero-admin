@@ -406,9 +406,13 @@
                     {{-- js carrega... --}}
                 </ul>
             </div>
+
             <!-- Modal detalhes da venda-->
             @include('sales::details')
-            <!-- End Modal -->
+
+            <!-- Modal estonar transação-->
+            @include('sales::modal_refund_transaction')
+
             <!-- Modal detalhes tracking -->
             <div class="modal fade modal-3d-flip-vertical" id="modal-tracking" aria-hidden="true" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered modal-simple modal-sidebar modal-lg" style="width: 500px;">

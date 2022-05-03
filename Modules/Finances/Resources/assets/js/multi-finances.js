@@ -17,6 +17,7 @@ $(document).ready(function(){
             },
             success: function success(response) {
                 if (!isEmpty(response.data)) {
+                    $("#project-empty-title").hide();
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
 
@@ -24,6 +25,7 @@ $(document).ready(function(){
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
+                    $("#project-empty-title").show();
                 }
 
                 loadingOnScreenRemove();

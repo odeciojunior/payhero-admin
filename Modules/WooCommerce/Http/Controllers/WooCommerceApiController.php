@@ -168,10 +168,11 @@ class WooCommerceApiController extends Controller
                 );
             }
 
+            $bankAccount = $company->getDefaultBankAccount();
             $checkoutConfig = CheckoutConfig::create([
                 'company_id' => $company->id,
                 'project_id' => $projectCreated->id,
-                'pix_enabled' => !!$company->getDefaultBankAccount()->transfer_type=='PIX',
+                'pix_enabled' => !!(!empty($bankAccount) && $bankAccount->transfer_type=='PIX')
             ]);
 
             if (empty($checkoutConfig)) {

@@ -4,7 +4,7 @@
 
     <div style="display: none" id="edit-discount">
         
-        <div class="modal-content s-border-radius" style="width:646px; height:706px; position: relative;">
+        <div class="modal-content s-border-radius" style="width:646px; min-height:624px; position: relative;">
             
             <div class="mdtpad simple-border-bottom ">
                 <span class="  " id="modal-title"
@@ -22,7 +22,8 @@
                 </a>
             </div>
 
-            <div id="edit_step0" style="height: 553px; overflow: hidden;">
+            {{-- <div id="edit_step0" style="height: 553px; overflow: hidden;"> --}}
+            <div id="edit_step0" style="min-height: 471px; max-height: 520px; overflow: hidden;">
 
                 <div style='min-height: 100px; position: relative;' class="pt-25 pb-30 pr-30 pl-30 simple-border-bottom">
 
@@ -149,7 +150,7 @@
 
                 </div>
 
-                <div style='min-height: 100px; position: relative' class="pt-20 pb-30 pr-30 pl-30 ">
+                <div style='min-height: 100px; position: relative' class="pt-20 pb-10 pr-30 pl-30 ">
 
                     <div class="modal-disc pb-20">
 
@@ -193,7 +194,7 @@
             
             
             <div id="edit_step1" style="display: none">
-                <div style='min-height: 100px; position: relative;' class="pt-25 pr-30 pl-30 ">
+                <div style='min-height: 100px; position: relative;' class="pt-25 pr-30 pl-25 ">
                 
                     <p>
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -229,9 +230,9 @@
                             </svg>
                     </div> --}}
 
-                    <div class="d-flex modal-new-layout box-description">
+                    <div class="d-flex modal-new-layout box-description" style="width: 594px">
                         <input class="form-control form-control-lg search_input_create_coupon search_coupon" type="text" id="search_input2" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
-                        <div class="input-group input-group-lg" style="width: 660px;">
+                        <div class="input-group input-group-lg" style="width: 644px;">
                             <input onkeyup="set_description_value(this, $('.search_input_create_coupon'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
                             <div class="input-group-append">
                                 <span class="input-group-text">
@@ -241,7 +242,7 @@
                         </div>
                     </div>
                         
-                    <div id="search_result2" class="mt-30  " style="height: 312px; width:596px; overflow: hidden">
+                    <div id="search_result2" class="mt-20  search_result2" style="height: 322px; width:621px; overflow: hidden">
 
                         {{-- <div class="item item_selected" >
                             <span style="background-image: url(http://dev.woo.com/wp-content/uploads/2021/07/sunglasses-2.jpg)" class="image"></span>
@@ -464,7 +465,7 @@
             </div>
 
 
-            <div class="modal-footer footer-padding" style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; position: absolute; bottom:0px; width:646px; border-top: 1px solid #EBEBEB; background-color: #fff">
+            <div class="modal-footer footer-padding" style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; bottom:0px; width:646px; border-top: 1px solid #EBEBEB; background-color: #fff">
                 <div class="d-flex mt-10" style="width: 610px">
                     
 

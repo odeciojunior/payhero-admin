@@ -84,7 +84,7 @@ $(document).ready(function () {
                         data += `
                         <tr>
                             <td>${value.description}</td>
-                            <td class="text-center">${value.active_flag ? `<span class="badge badge-success text-left">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
+                            <td class="text-center">${value.active_flag ? `<span class="badge badge-success">Ativo</span>` : `<span class="badge badge-danger">Desativado</span>`}</td>
                             <td style='text-align:center'>
                                 <div class='d-flex justify-content-end align-items-center'>
                                     <a role='button' title='Visualizar' class='mg-responsive details-upsell pointer' data-upsell="${value.id}" data-target='#modal-detail-upsell' data-toggle='modal'><span class="o-eye-1"></span></a>
@@ -364,7 +364,7 @@ $(document).ready(function () {
                 $('#header_config').val(`${upsellConfig.header}`);
                 $('#title_config').val(`${upsellConfig.title}`);
                 descriptionconfig.setData(`${upsellConfig.description ?? ' '}`);
-                $('#countdown_time').val(`${upsellConfig.countdown_time}`);
+                $('#countdown_time_config').val(`${upsellConfig.countdown_time}`);
 
                 if (upsellConfig.countdown_flag) {
                     $('#countdown_flag').prop('checked', true);
@@ -381,14 +381,28 @@ $(document).ready(function () {
     });
     $(document).on('click', '.bt-upsell-config-update', function (event) {
         event.preventDefault();
-        if ($('#countdown_flag').is(':checked') && $('#countdown_time').val() == '') {
+        if ($('#countdown_flag').is(':checked') && $('#countdown_time_config').val() == '') {
             alertCustom('error', 'Preencha o campo Contagem');
             return false;
         }
 
+        if ($('#countdown_time_config').val() < 1 || $('#countdown_time_config').val() > 60) {
+            alertCustom('error', 'Contador deve ter um valor entre 1 e 60 minutos.');
+            return false;
+        }
+
         let form_data = new FormData(document.getElementById('form_config_upsell'));
+        let header = $('#header_config').val();
+        let title = $('#title_config').val();
         let description = descriptionconfig.getData();
+        let countdownTime = $('#countdown_time_config').val();
+        let countDownFlag = $('#countdown_flag').val();
+        
+        form_data.set('header', header);
+        form_data.set('title', title);
         form_data.set('description', description);
+        form_data.set('countdown_time', countdownTime);
+        form_data.set('countdown_flag', countDownFlag);
 
         $.ajax({
             method: "POST",
@@ -437,7 +451,7 @@ $(document).ready(function () {
             }, success: function success(response) {
 
                 let upsell = response.data;
-
+                
                 $('#div-upsell-products').html('');
 
                 $('#upsell-header').html(upsell.header);
@@ -445,10 +459,10 @@ $(document).ready(function () {
                 $('#upsell-description').html(upsell.description);
 
                 if (upsell.countdown_flag) {
-                    $('#timer').show();
+                    $('#timer_upsell').show();
                     startCountdown(upsell.countdown_time);
                 } else {
-                    $('#timer').hide();
+                    $('#timer_upsell').hide();
                 }
 
                 let data = "";
