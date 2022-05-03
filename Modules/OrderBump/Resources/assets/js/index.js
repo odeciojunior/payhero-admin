@@ -139,10 +139,10 @@ $(() => {
                 }
                 offerPlansInput.val(offerPlans);
 
-                if (rule.active_flag) {
-                    $('#update-active-flag-order-bump').val(1).prop('checked', true);
+                if (rule.active_flag===1) {
+                    $('#update-active-flag-order-bump').val("1").trigger("change");
                 } else {
-                    $('#update-active-flag-order-bump').val(0).prop('checked', false);
+                    $('#update-active-flag-order-bump').val("0").trigger("change");
                 }
 
                 $('#btn-update-order-bump').data('id', id);
