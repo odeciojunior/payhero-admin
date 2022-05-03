@@ -267,7 +267,7 @@ $(function () {
                 
                 if(total) {
                     $("#block-products").prepend(`
-                        <footer class="footer-products">
+                        <footer class="footer-products scroll-212">
                             <ul class="list-products container"></ul>
                         </footer>
                     `);
@@ -276,7 +276,7 @@ $(function () {
                         let { color, amount, image, name } = product;
                         if(amount) {
                             lista = `
-                                <li class="${( i > 3 && i < 8 ) ? 'line': ''}">
+                                <li>
                                     <div class="box-list-products">
                                         <figure 
                                             data-container="body" 
@@ -286,10 +286,10 @@ $(function () {
                                             title="${name}">
                                             <img class="photo" src="${image}" width="24px" height="24px" />
                                         </figure>
-                                        <span style="color: #636363; padding-right: 3px;">${(( 100 * amount ) / total) > 9 ? '' : amount}</span>
                                         <div class="bars ${color}" style="width:${(( 100 * amount ) / total).toFixed(1)}%">
                                             <span>${(( 100 * amount ) / total) > 9 ? amount : ''}</span>
                                         </div>
+                                        <span style="color: #636363; padding-left: 3px;">${(( 100 * amount ) / total) > 9 ? '' : amount}</span>
                                     </div>
                                 </li>
                             `;
