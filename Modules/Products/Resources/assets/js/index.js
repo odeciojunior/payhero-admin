@@ -148,10 +148,10 @@ jQuery(function () {
         let name = existFilters() != null ? existFilters().getName : $("#name").val();
         let project = '';
         if (existFilters() != null) {
-            if (existFilters().getProject_1){
+            if (type == 1 && existFilters().getProject_1){
                 project = existFilters().getProject_1;
             }
-            else if (existFilters().getProject_2){
+            else if (type == 2 && existFilters().getProject_2){
                 project = existFilters().getProject_2;
             }
         }
