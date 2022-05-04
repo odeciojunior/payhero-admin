@@ -423,13 +423,23 @@ h4.number{
     left: 0;
     transform: translate(0, -50%);
 }
-.cards-reports .card-origin { padding: 1.429rem; }
+.cards-reports .card-origin { 
+    padding: 1.429rem;
+}
+
+.card.origin {
+    height: 540px;
+}
 
 .cards-reports h6 { margin-top: 0; }
 
 .cards-reports .card { 
     width: 100%; 
     border-radius: 8px; 
+}
+
+.cards-reports .card.origin { 
+    /* min-height: ; */
 }
 
 #comission { height: 29px; }
@@ -537,7 +547,7 @@ h4.number{
 
 .box-ico {
     width: 36px;
-    height: 37px;
+    height: 36px;
     background: #F5F5FA;
     border-radius: 8px;
     text-align: center;
@@ -546,6 +556,11 @@ h4.number{
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+}
+
+.box-ico img {
+    object-fit: cover;
 }
 
 .box-ico i { font-size: 20px; }
@@ -1195,6 +1210,7 @@ h4.number{
     width: 47px;
     height: 47px;
     margin-right: 15px;
+    min-width: 47px;
 }
 .header-resume h6 { 
     display: flex;
@@ -1271,7 +1287,6 @@ h4.number{
     padding: 15px 20px 20px 20px; 
     text-align: center;
     position: relative;
-    min-height: 446px;
 }
 
 .filter-brazil-map {
@@ -1351,7 +1366,7 @@ h4.number{
     padding: 0; 
     list-style: none;
     display: flex;
-    height: 400px;
+    height: 308px;
     flex-direction: column;
     justify-content: space-between;
 }
@@ -1410,14 +1425,15 @@ h4.number{
     font-weight: bold;
 }
 /* mapa brasil */
+#svg-map {
+    height: 340px;
+}
+
 #svg-map path {
     fill: #f9f9f9;
     stroke: #c5c5c5;
-}
-
-#svg-map-empty path {
-    fill: #F1F1F1;
-    stroke: #c5c5c5;
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
 }
   
 #svg-map text {
@@ -1778,7 +1794,7 @@ h4.number{
     /* -webkit-mask-repeat:no-repeat; */
     background:linear-gradient(90deg,#ECECEC 40%,#FFFA ,#ECECEC 60%) right/300% 100% ;
     opacity: 0;
-    animation: m 0.5s linear infinite;
+    animation: m 1s linear infinite;
 }
 .skeleton-circle{
     height: 10px;

@@ -218,11 +218,11 @@
                                             <div class="brazil-map">
                                                 <div class="filter-brazil-map">
                                                     <div id="brazil-map-filter" class="radio-group">
-                                                        <input class="custom-radio-report" id="checkout_type_steps" type="radio" name="map_filter" value="1" checked style="width: 70px"/>
-                                                        <label for="checkout_type_steps" class="left-label">VENDAS</label>
+                                                        <input class="custom-radio-report" id="brazil_map_filter_sells" type="radio" name="brazil_map_filter" value="value" checked style="width: 70px"/>
+                                                        <label for="brazil_map_filter_sells" class="left-label">VENDAS</label>
 
-                                                        <input class="custom-radio-report" id="checkout_type_unique" type="radio" name="map_filter" value="2" style="width: 70px"/>
-                                                        <label for="checkout_type_unique" class="right-label">DENSIDADE</label>
+                                                        <input class="custom-radio-report" id="brazil_map_filter_density" type="radio" name="brazil_map_filter" value="density" style="width: 70px"/>
+                                                        <label for="brazil_map_filter_density" class="right-label">DENSIDADE</label>
                                                     </div>
                                                 </div>
 
@@ -619,7 +619,24 @@
                         
                         <!-- distribtion -->
                         <div class="distribution mkt">
-                            <div class="card inner pad-bottom-0">
+                        <div class="d-flex sub-distribution">
+                                <div class="card inner" id="card-most-sales">
+                                    <header class="d-flex title-graph">
+                                        <h5 class="grey font-size-16">
+                                            <strong>Vendas mais frequentes</strong>
+                                        </h5>
+                                    </header>
+                                    <div  class="custom-table scrollbar pb-0 pt-0">
+                                        <div class="row">
+                                            <div class="container">
+                                                <div class="data-holder b-bottom scroll-212  onPreLoad" id="block-sales"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card inner pad-bottom-0 origin">
                                 <header class="d-flex title-graph">
                                     <h5 class="grey font-size-16">
                                         <strong>Origem</strong>
@@ -655,25 +672,6 @@
                                         </div>
                                         {{-- <div class="row">
                                         </div> --}}
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="">
-                                <div class="d-flex sub-distribution">
-                                    <div class="card inner" id="card-most-sales">
-                                        <header class="d-flex title-graph">
-                                            <h5 class="grey font-size-16">
-                                                <strong>Vendas mais frequentes</strong>
-                                            </h5>
-                                        </header>
-                                        <div  class="custom-table scrollbar pb-0 pt-0">
-                                            <div class="row">
-                                                <div class="container">
-                                                    <div class="data-holder b-bottom scroll-212  onPreLoad" id="block-sales"></div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

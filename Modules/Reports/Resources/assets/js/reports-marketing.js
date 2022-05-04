@@ -294,21 +294,23 @@ function loadFrequenteSales() {
             $.each(response.data, function (i, item) {
                 let value = removeMoneyCurrency(item.value);
                 let newV = value.replace(/[\D]+/g,'');
+
+                console.log(item.photo);
                 salesBlock = `
                     <div class="box-payment-option pad-0">
-                        <div class="d-flex align-items list-sales">
-                            <div class="d-flex align-items">
-                                <div>
-                                    <figure class="box-ico">
-                                        <img width="34px" height="34px" src="${item.photo}" alt="${item.description}">
-                                    </figure>
+                        <div class="d-flex justify-content-between align-items list-sales">
+                            <div class="d-flex justify-content-between  align-items">
+                                <div class="box-ico">
+                                    <img width="37px" height="37px" onerror=this.src='/build/global/img/produto.png' src="${item.photo}" alt="${item.description}">
                                 </div>
                                 <div>
-                                    <span>${item.name}</span>
+                                    <span style="text-overflow: ellipsis;">${item.name}</span>
                                 </div>
                             </div>
-                            <div class="grey font-size-14">${item.sales_amount}</div>
-                            <div class="grey font-size-14 value"><strong>${kFormatter(newV)}</strong></div>
+                            <div class="d-flex justify-content-between align-items" style="min-width: 100px;">
+                                <div class="grey font-size-14">${item.sales_amount}</div>
+                                <div class="grey font-size-14 value"><strong>${kFormatter(newV)}</strong></div>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -629,8 +631,6 @@ function changeCalendar() {
     $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
     $('input[name="daterange"]').dateRangePicker({
         setValue: function (s) {
-
-            console.log('teste');
             if (s) {
                 let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
                 $(this).html(s).data('value', normalize);
@@ -729,6 +729,17 @@ $('.state').on('click', function(e){
     $('.name-state').text($(this).attr('rel'));
     $('#state-position').text($('#' + $(this).attr('id') + '-position').text());
 
+    $('#state-total-value').html("");
+    $('#state-sales-amount').html("");
+    $('#state-accesses').html("");
+    $('#state-conversion').html("");
+
+    $('#state-total-value').html(skeLoadStateMetric);
+    $('#state-sales-amount').html(skeLoadStateMetric);
+    $('#state-accesses').html(skeLoadStateMetric);
+    $('#state-conversion').html(skeLoadStateMetric);
+    
+
     $.ajax({
         method: "GET",
         url: "http://dev.sirius.com/api/reports/marketing/state-details?state=" + $(this).children('text').text() + "&project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -759,12 +770,14 @@ $('.back-list').on('click', function(e){
 function loadBrazilMap() {
     $('#list-states').html('');
     $("#list-states").prepend(skeLoadStatesList);
+    $('.state path').css({ fill: '#F1F1F1', stroke: '#F1F1F1' });
+    $('.state text').css({ fill: '#F1F1F1' });
     $(".state").addClass('skeleton');
 
 
     $.ajax({
         method: "GET",
-        url: "http://dev.sirius.com/api/reports/marketing/sales-by-state?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val() + "&map_filter="+ $("#brazil_map_filter").val(),
+        url: "http://dev.sirius.com/api/reports/marketing/sales-by-state?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val() + "&map_filter="+ $("input[name='brazil_map_filter']:checked").val(),
         dataType: "json",
         headers: {
             Authorization: $('meta[name="access-token"]').attr("content"),
@@ -778,11 +791,6 @@ function loadBrazilMap() {
             $("#list-states").html('');
 
             if(response.data.length == 0){
-
-                $('.state path').css({ fill: '#F1F1F1', stroke: '#F1F1F1' });
-                $('.state text').css({ fill: '#F1F1F1' });
-
-
                 let noData = `
                 <div class="d-flex justify-content-center align-items-center px-5" style="margin: auto;">
                     <div>
@@ -936,10 +944,6 @@ let skeLoadStatesList = `
                 <div class="skeleton skeleton-li-item"></div>
                 <div class="skeleton skeleton-li"></div>
             </div>
-            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
-                <div class="skeleton skeleton-li-item"></div>
-                <div class="skeleton skeleton-li"></div>
-            </div>
         </div>
     </div>
 `;
@@ -949,5 +953,9 @@ let skeLoadOriginTable = `
     <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div>
     <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div>
     <div class="skeleton skeleton-li" style="width: 100%; margin-bottom: 17px;"></div> 
+`;
+
+let skeLoadStateMetric = `
+    <div class="skeleton skeleton-li" style="width: 100%; height: 20px; margin-bottom: 0px;"></div>
 `;
 
