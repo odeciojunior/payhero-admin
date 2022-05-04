@@ -556,7 +556,6 @@ $(function () {
                 regionsHtml = `
                     <footer class="container footer-regions">
                         <section class="new-graph-regions graph">
-                            
                         </section>
                         <section class="info-regions">
                             <ul class="conversion-colors">
@@ -574,6 +573,8 @@ $(function () {
                         </section>
                     </footer>
                 `;
+
+                $("#block-regions").html(regionsHtml);
 
                 // if(response.data != ''){
                 //     $('.new-graph-regions').html('<canvas id=regionsChart></canvas>').addClass('visible');
