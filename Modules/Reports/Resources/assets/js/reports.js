@@ -308,6 +308,10 @@ $(function () {
     }
 
     function getCoupons() {
+        let cuponsHtml = '';
+        $('#card-coupons .onPreLoad *').remove();
+        $("#block-coupons").html(skeLoad);
+
         return $.ajax({
             method: "GET",
             url: resumeUrl + "/coupons?project_id=" + $("#select_projects option:selected").val() + "&date_range=" + $("input[name='daterange']").val(),
@@ -320,27 +324,30 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                if(response.data != ''){
-                    if(response.data[0].total != 0){
-                        $('.box-donut').css('height','190px');
-                        $(".box-donut").next('.no-graph').remove();
+                let { coupons, total } = response.data;
+                
+                if( total != 0 ) {
+                    cuponsHtml = `
+                        <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
+                            <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
+                        </div>
+                        <div class="container d-flex justify-content-between box-donut">
+                            <div class="new-graph-pie graph"></div>
+                            <div class="data-pie"><ul></ul></div>
+                        </div>
+                    `;
+                    $("#block-coupons").html(cuponsHtml);
+                    $('.new-graph-pie').html('<div class=graph-pie></div>');
+                    let arr = [];
+                    let seriesArr = [];
 
-                        $('#card-coupons .value-price').addClass('invisible');
-                        $('.new-graph-pie').html('<div class=graph-pie></div>');
-                        $(".new-graph-pie").next('.no-graph').remove();
+                    $.each(coupons, function (i, coupon) {
+                        arr.push(coupon);
+                    });
 
-                        let arr = [];
-                        let seriesArr = [];
-
-                        $.each(response.data, function (i, coupon) {
-                            arr.push(coupon);
-                        });
-
-
-                        for(let i = 0; i < arr.length; i++) {
-                            if(arr[i].amount != undefined) {
-                                seriesArr.push(arr[i].amount);
-
+                    for(let i = 0; i < arr.length; i++) {
+                        if(arr[i].amount != undefined) {
+                            seriesArr.push(arr[i].amount);
                                 $('.data-pie ul').append(
                                     `
                                         <li>
@@ -357,8 +364,8 @@ $(function () {
                                     `
                                 );
 
-                            }
                         }
+                    }
                         new Chartist.Pie('.graph-pie',
                         { series: seriesArr },
                         {
@@ -370,21 +377,15 @@ $(function () {
                             chartPadding: 0,
                             labelOffset: 0,
                         });
-                    } else {
-                        $(".data-pie ul li").remove();
-                        $("#qtd-dispute").html('0').addClass('visible');
-                        $('#card-coupons .value-price').removeClass('invisible');
-                        $('.box-donut').css('height','0');
-                        $(".box-donut").next('.no-graph').remove();
-                        $('.box-donut').after('<div class=no-graph>Não há dados suficientes</div>');
-                    }
+                    
                 } else {
-                    $(".data-pie ul li").remove();
-                    $("#qtd-dispute").html('0').addClass('visible');
-                    $('#card-coupons .value-price').removeClass('invisible');
-                    $('.box-donut').css('height','0');
-                    $(".box-donut").next('.no-graph').remove();
-                    $('.box-donut').after('<div class=no-graph>Não há dados suficientes</div>');
+                    cuponsHtml = `
+                        <div class="container d-flex value-price" style="visibility: hidden;">
+                            <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
+                        </div>
+                        <div class="no-graph">${emptyGraph}</div>
+                    `;
+                    $("#block-coupons").html(cuponsHtml);
                 }
                 $('#card-coupons .ske-load').hide();
             }
