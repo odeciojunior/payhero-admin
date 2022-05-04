@@ -119,11 +119,11 @@ class SalesResource extends JsonResource
         }
 
         $data['asaas_amount_refund'] = '';
-        if(in_array($this->gateway_id,[Gateway::ASAAS_PRODUCTION_ID,Gateway::ASAAS_SANDBOX_ID]) && !empty($this->anticipation_status))
+        if(in_array($this->gateway_id,[Gateway::ASAAS_PRODUCTION_ID,Gateway::ASAAS_SANDBOX_ID]))
         {
             $data['asaas_amount_refund'] = $this->getSalesTaxesChargeback();
         }
-        
+
         $data['has_shopify_integration'] = null;
         if (count($shopifyIntegrations) > 0)
         {
@@ -181,10 +181,10 @@ class SalesResource extends JsonResource
     }
 
     public function getSalesTaxesChargeback()
-    {        
+    {
         $cashbackValue = !empty($this->cashback) ? $this->cashback->value:0;
         $saleTax = (new SaleService)->getSaleTaxRefund($this,$cashbackValue);
 
-        return FoxUtils::formatMoney(($saleTax + foxutils()->onlyNumbers($this->details->comission)) / 100); 
+        return FoxUtils::formatMoney(($saleTax + foxutils()->onlyNumbers($this->details->comission)) / 100);
     }
 }

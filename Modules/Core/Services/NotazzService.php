@@ -797,7 +797,7 @@ class NotazzService
             )
             //->whereColumn('attempts', '<', 'max_attempts')
             ->where('schedule', '<', Carbon::now())
-            ->limit(40)
+            ->limit(100)
             ->get();
 
         foreach ($notazzInvoices as $notazzInvoice) {

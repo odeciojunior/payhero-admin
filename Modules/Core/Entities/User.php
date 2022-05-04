@@ -170,7 +170,6 @@ class User extends Authenticable
         'total_commission_value',
         'show_old_finances',//
         'mkt_information',
-        'asaas_alert',//
         'created_at',
         'updated_at',
         'deleted_at',
