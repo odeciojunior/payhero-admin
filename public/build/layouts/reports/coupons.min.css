@@ -586,8 +586,8 @@ h4.number{
     .box-payment-option { flex: 1; }
     .box-payment-option.option { flex-direction: row; }
 }
-#type-payment { display: none; }
-#type-payment.visible { display: flex; }
+
+#type-payment { display: flex; }
 .container-payment {
     height: 176px;
     align-items: center;
@@ -660,11 +660,6 @@ h4.number{
 .bar.blue { background: #2E85EC; text-indent: -9000em;}
 .bar.blue-1 { background: #002F66; text-indent: -9000em;}
 .bar.blue-2 { background: #0050AF; text-indent: -9000em;}
-
-.bar.visible { 
-    text-indent: 0; 
-    background: transparent !important;
-}
 
 /* graph */
 .new-graph .ct-series-a .ct-line { stroke: #2e85ec; }
