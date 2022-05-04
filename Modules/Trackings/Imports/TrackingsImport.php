@@ -44,7 +44,7 @@ class TrackingsImport implements ToCollection, WithChunkReading, ShouldQueue, Wi
 
             $row = $value->toArray();
 
-            if (!empty($row[1]) && strlen($row[1]) <= 18 && strlen($row[1]) >= 10) {
+            if (!empty($row[1]) && strlen($row[1]) <= 18 && strlen($row[1]) >= 9) {
                 $saleId = str_replace('#', '', $row[0]);
                 $trackingCode = $row[1];
                 $productId = str_replace('#', '', $row[2]);
