@@ -523,8 +523,8 @@ h4.number{
     .box-payment-option { flex: 1; }
     .box-payment-option.option { flex-direction: row; }
 }
-#type-payment { display: none; }
-#type-payment.visible { display: flex; }
+
+#type-payment { display: flex; }
 .container-payment {
     height: 176px;
     align-items: center;
@@ -603,11 +603,6 @@ h4.number{
 .bar.blue-1 { background: #002F66; text-indent: -9000em;}
 .bar.blue-2 { background: #0050AF; text-indent: -9000em;}
 
-.bar.visible { 
-    text-indent: 0; 
-    background: transparent !important;
-}
-
 /* graph */
 .new-graph .ct-series-a .ct-line { stroke: #2e85ec; }
 .new-graph-pending .ct-series-a .ct-line { stroke: #FF7900; }
@@ -628,7 +623,6 @@ h4.number{
     height: 46%;
     display: flex;
     align-items: center;
-    justify-content: center;
     position: relative;
 }
 .no-graph span { position: absolute; }
@@ -1603,14 +1597,15 @@ h4.number{
     align-items: center;
     justify-content: center;
     display: flex;
-    height: 208px;
+    height: 194px;
+    margin: 0 12px 0 0;
+    overflow: auto;
 }
 
 
 .list-products {
     margin: 0;
     list-style: none;
-    display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     height: 188px;
@@ -1650,8 +1645,8 @@ h4.number{
     font-weight: bold;
     font-size: 12px;
     line-height: 26px;
-    text-align: center;
     display: block;
+    text-indent: 10px;
 }
 .list-products .blue { background: #2E85EC; }
 .list-products .purple { background: #665FE8; }
@@ -1794,7 +1789,7 @@ h4.number{
     /* -webkit-mask-repeat:no-repeat; */
     background:linear-gradient(90deg,#ECECEC 40%,#FFFA ,#ECECEC 60%) right/300% 100% ;
     opacity: 0;
-    animation: m 1s linear infinite;
+    animation: m 0.6s linear infinite;
 }
 .skeleton-circle{
     height: 10px;

@@ -323,11 +323,10 @@ class ReportMarketingService
 
             $couponsArray = $coupons->toArray();
 
-            array_push($couponsArray, [
+            return [
+                'coupons' => $couponsArray,
                 'total' => $total
-            ]);
-
-            return $couponsArray;
+            ];
         } catch(Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
