@@ -137,7 +137,7 @@ class AsaasService implements Statement
     }
 
     public function existsBankAccountApproved(){
-        //verifica se existe uma chave pix aprovada        
+        //verifica se existe uma chave pix aprovada
         $this->companyBankAccount =  $this->company->getBankAccountTED();
         return !empty($this->companyBankAccount);
     }
@@ -145,7 +145,7 @@ class AsaasService implements Statement
     public function createWithdrawal($value)
     {
         try {
-            DB::beginTransaction();            
+            DB::beginTransaction();
 
             $this->company->update([
                 'asaas_balance' => $this->company->asaas_balance -= $value
@@ -168,7 +168,7 @@ class AsaasService implements Statement
                         Task::find(Task::TASK_FIRST_WITHDRAWAL)
                     );
                 }
-              
+
                 $withdrawal = Withdrawal::create(
                     [
                         'value' => $value,
@@ -465,7 +465,7 @@ class AsaasService implements Statement
 
             $saleService = new SaleService();
             $saleTax = 0;
-            if (!empty($sale->anticipation_status)) {
+            if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
                 $cashbackValue = $sale->cashback()->first()->value ?? 0;
                 $saleTax = $saleService->getSaleTaxRefund($sale, $cashbackValue);
             }
@@ -503,7 +503,7 @@ class AsaasService implements Statement
                             'asaas_balance' => $company->asaas_balance -= $refundValue
                         ]);
 
-                    } elseif (!empty($sale->anticipation_status)) {
+                    } elseif ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
                         if ($refundTransaction->type <> Transaction::TYPE_PRODUCER) continue;
 
                         Transfer::create(
