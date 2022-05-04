@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Modules\Core\Entities\Customer;
+use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\FoxUtils;
@@ -136,17 +137,23 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             $sale->products->add($pps->product);
         }
 
+        $domain = Domain::select('name')->where('project_id', $sale->project_id)->where('status', 3)->first();
+        $domainName = $domain->name??'cloudfox.net';
+        $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto";
+
+
         $saleData = [];
         foreach ($sale->products as $product) {
 
             $productName = $product->name . ($product->description ? ' (' . $product->description . ')' : '');
 
+            
             $data = [
                 //sale
                 'sale_code'                  => '#' . Hashids::connection('sale_id')->encode($sale->id),
                 'shopify_order'              => strval($sale->shopify_order),
                 'payment_form'               => $sale->present()->getPaymentForm(),
-                'boleto_link'                => $sale->boleto_link ?? '',
+                'boleto_link'                => $boletoLink ?? '',
                 'boleto_digitable_line'      => $sale->boleto_digitable_line ?? '',
                 'start_date'                 => $sale->start_date . ' ' . $sale->hours,
                 'boleto_due_date'            => $sale->boleto_due_date,
