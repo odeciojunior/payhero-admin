@@ -229,50 +229,16 @@
 													    <h6 class="font-size-16 gray-700 grey"> Cupons </h6>
                                                     </header>
                                                     <div class="onPreLoad" id="block-coupons"></div>
-                                                    <!-- <div class="container d-flex justify-content-between box-donut">
-														<div class="new-graph-pie graph"></div>
-														<div class="data-pie"><ul></ul></div>
-                                                    </div> -->
 												</div>
 											</div>
 											<div class="card" id="card-regions">
 												<div class="card-body">
-                                                    <div class="ske-load">
-                                                        <div class="px-20 py-0">
-                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
-                                                        </div>
-                                                        <div class="px-20 py-0">
-                                                            <div class="row align-items-center mx-0 py-10">
-                                                                <div class="skeleton skeleton-circle"></div>
-                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
-                                                            </div>
-                                                            <div class="skeleton skeleton-text"></div>
-                                                        </div>
-                                                    </div>
-
                                                     <header class="container">
                                                         <h6 class="font-size-16 gray-700 grey"> Regiões </h6>
                                                         <!-- <h4 id='qtd-chargeback' class=" font-size-24 bold">0</h4> -->
                                                     </header>
-                                                    <footer class="container footer-regions">
-                                                        <section class="new-graph-regions graph">
-                                                            
-                                                        </section>
-                                                        <section class="info-regions">
-                                                            <ul class="conversion-colors">
-                                                                <!-- <li class="blue">60%</li>
-                                                                <li class="purple">42%</li>
-                                                                <li class="pink">48%</li>
-                                                                <li class="orange">35%</li> -->
-                                                            </ul>
-                                                        </section>
-                                                        <section class="info-regions">
-                                                            <ul class="regions-legend">
-                                                                <!-- <li class="access"><span></span>Acessos</li>
-                                                                <li class="conversion"><span></span>Conversões</li> -->
-                                                            </ul>
-                                                        </section>
-                                                    </footer>
+                                                    <div class="onPreLoad" id="block-regions"></div>
+                                                    
 												</div>
 											</div>
 											<div class="card " id="card-origin">

@@ -535,6 +535,9 @@ $(function () {
     }
 
     function getRegions() {
+        let regionsHtml = '';
+        $('#card-regions .onPreLoad *' ).remove();
+        $("#block-regions").html(skeLoad);
 
         return $.ajax({
             method: "GET",
@@ -548,25 +551,49 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                if(response.data != ''){
-                    $('.new-graph-regions').html('<canvas id=regionsChart></canvas>').addClass('visible');
-                    $(".new-graph-regions").next('.no-graph').remove();
-                    graphRegions();
+                console.log(response.data);
 
-                    let percentage = `<li class='blue'>60%</li>`;
-                    let legend = `<li class='conversion'><span></span>Conversões</li>`;
-                    $('.conversion-colors').append(percentage);
-                    $('.regions-legend').append(legend);
+                regionsHtml = `
+                    <footer class="container footer-regions">
+                        <section class="new-graph-regions graph">
+                            
+                        </section>
+                        <section class="info-regions">
+                            <ul class="conversion-colors">
+                                <!-- <li class="blue">60%</li>
+                                <li class="purple">42%</li>
+                                <li class="pink">48%</li>
+                                <li class="orange">35%</li> -->
+                            </ul>
+                        </section>
+                        <section class="info-regions">
+                            <ul class="regions-legend">
+                                <!-- <li class="access"><span></span>Acessos</li>
+                                <li class="conversion"><span></span>Conversões</li> -->
+                            </ul>
+                        </section>
+                    </footer>
+                `;
+
+                // if(response.data != ''){
+                //     $('.new-graph-regions').html('<canvas id=regionsChart></canvas>').addClass('visible');
+                //     $(".new-graph-regions").next('.no-graph').remove();
+                //     graphRegions();
+
+                //     let percentage = `<li class='blue'>60%</li>`;
+                //     let legend = `<li class='conversion'><span></span>Conversões</li>`;
+                //     $('.conversion-colors').append(percentage);
+                //     $('.regions-legend').append(legend);
 
 
-                } else {
-                    $('.info-regions li').remove();
-                    $('#regionsChart').remove();
-                    $(".new-graph-regions").next('.no-graph').remove();
-                    $('.new-graph-regions').after('<div class=no-graph>Não há dados suficientes</div>');
-                    $('.new-graph-regions').removeClass('visible');
-                }
-                $('#card-regions .ske-load').hide();
+                // } else {
+                //     $('.info-regions li').remove();
+                //     $('#regionsChart').remove();
+                //     $(".new-graph-regions").next('.no-graph').remove();
+                //     $('.new-graph-regions').after('<div class=no-graph>Não há dados suficientes</div>');
+                //     $('.new-graph-regions').removeClass('visible');
+                // }
+                // $('#card-regions .ske-load').hide();
             }
         });
     }
