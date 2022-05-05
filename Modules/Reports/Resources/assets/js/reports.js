@@ -8,9 +8,11 @@ $(function () {
     sessionStorage.removeItem('info');
 
     let resumeUrl = '/api/reports/resume';
+    let initialWidth = '';
+    
 
     function getCashback() {
-        let cashHtml = '';
+        let cashHtml = '', size, heights;
         $('#card-cashback .onPreLoad *' ).remove();
         $("#block-cash").html(skeLoad);
 
@@ -46,10 +48,21 @@ $(function () {
                         <div class="new-graph-cashback graph"></div>
                     `;
                     $("#block-cash").html(cashHtml);
-                    $('.new-graph-cashback').html('<canvas id="graph-cashback"></canvas>');
+                    
+                    let heights = $(".graph").height() + 8;
+                    $('.new-graph-cashback').width(redimensione(initialWidth));
+                    $('.new-graph-cashback').html(`<canvas id="graph-cashback"></canvas>`);
                     let labels = [...chart.labels];
                     let series = [...chart.values];
                     newGraphCashback(series, labels);
+                    
+                    $(window).on("resize", function() {
+                        $('.new-graph-cashback').width($(".graph").width() + 6);
+                        setTimeout((() =>{
+                            $('.new-graph-cashback').width($(".graph").width() + 6);
+                        }), 100);
+                    });
+                    
                 } else {
                     cashHtml = `
                         <div class="container d-flex value-price">
@@ -64,6 +77,8 @@ $(function () {
                 }
             }
         });
+
+        
     }
 
     function getPending() {
@@ -551,7 +566,7 @@ $(function () {
                 errorAjaxResponse(response);
             },
             success: function success(response) {
-                console.log(response.data);
+                // console.log(response.data);
 
                 regionsHtml = `
                     <footer class="container footer-regions">
@@ -1502,6 +1517,18 @@ $(function () {
         });
     }
 });
+
+function redimensione(value) {
+    initialWidth = parseInt($(".graph").width() + 6);
+     let newWidth = '';
+    
+    $(window).on("resize", function() {
+        newWidth, initialWidth = $(".graph").width() + 6;
+    });
+
+    value = initialWidth;
+    return value;
+}
 
 let skeLoad = `
     <div class="ske-load">
