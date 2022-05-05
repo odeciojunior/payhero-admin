@@ -175,7 +175,7 @@ $(function () {
                         <div class="new-graph graph"></div>
                     `;
                     $("#block-comission").html(comissionhtml);
-                    $('.new-graph').width(redimensione(initialWidth) + 8);
+                    $('.new-graph').width(redimensione(initialWidth) + 9);
                     $('.new-graph').html('<canvas id=comission-graph></canvas>');
                     let labels = [...chart.labels];
                     let series = [...chart.values];
@@ -236,7 +236,7 @@ $(function () {
                         <div class="new-graph-sell graph"></div>
                     `;
                     $("#block-sales").html(salesHtml);
-                    $('.new-graph-sell').width($('#block-sales').width() + 8);
+                    $('.new-graph-sell').width($('#block-sales').width() + 9);
                     $('.new-graph-sell').html('<canvas id=graph-sell></canvas>');
                     let labels = [...chart.labels];
                     let series = [...chart.values];
