@@ -12,7 +12,7 @@ $(function () {
     
 
     function getCashback() {
-        let cashHtml = '', size, heights;
+        let cashHtml = '';
         $('#card-cashback .onPreLoad *' ).remove();
         $("#block-cash").html(skeLoad);
 
@@ -48,19 +48,15 @@ $(function () {
                         <div class="new-graph-cashback graph"></div>
                     `;
                     $("#block-cash").html(cashHtml);
-                    
-                    let heights = $(".graph").height() + 8;
-                    $('.new-graph-cashback').width(redimensione(initialWidth));
+                    $('.new-graph-cashback').width(redimensione(initialWidth) + 6);
+
                     $('.new-graph-cashback').html(`<canvas id="graph-cashback"></canvas>`);
                     let labels = [...chart.labels];
                     let series = [...chart.values];
                     newGraphCashback(series, labels);
                     
                     $(window).on("resize", function() {
-                        $('.new-graph-cashback').width($(".graph").width() + 6);
-                        setTimeout((() =>{
-                            $('.new-graph-cashback').width($(".graph").width() + 6);
-                        }), 100);
+                        $('.new-graph-cashback').width($("#block-cash").width() + 6);
                     });
                     
                 } else {
@@ -117,10 +113,15 @@ $(function () {
                         <div class="new-graph-pending graph"></div>
                     `;
                     $("#block-pending").html(pendHtml);
+                    $('.new-graph-pending').width(redimensione(initialWidth) + 9);
                     $('.new-graph-pending').html('<canvas id=graph-pending></canvas>')
                     let labels = [...chart.labels];
                     let series = [...chart.values];
                     newGraphPending(series,labels);
+
+                    $(window).on("resize", function() {
+                        $('.new-graph-pending').width($('#block-pending').width() + 8);
+                    });
                     
                 } else {
                     pendHtml = `
@@ -174,10 +175,16 @@ $(function () {
                         <div class="new-graph graph"></div>
                     `;
                     $("#block-comission").html(comissionhtml);
+                    $('.new-graph').width(redimensione(initialWidth) + 8);
                     $('.new-graph').html('<canvas id=comission-graph></canvas>');
                     let labels = [...chart.labels];
                     let series = [...chart.values];
                     graphComission(series, labels);
+
+                    $(window).on("resize", function() {
+                        $('.new-graph').width($('#block-comission').width() + 8);
+                    });
+
                 } else {
                     comissionhtml = `
                         <div class="container d-flex value-price">                            
@@ -229,10 +236,16 @@ $(function () {
                         <div class="new-graph-sell graph"></div>
                     `;
                     $("#block-sales").html(salesHtml);
+                    $('.new-graph-sell').width($('#block-sales').width() + 8);
                     $('.new-graph-sell').html('<canvas id=graph-sell></canvas>');
                     let labels = [...chart.labels];
                     let series = [...chart.values];
                     newGraphSell(series, labels);
+
+                    $(window).on("resize", function() {
+                        $('.new-graph-sell').width($('#block-sales').width() + 8);
+                    });
+
                 }else {
                     salesHtml = `
                         <div class="container d-flex value-price">                            
@@ -1519,11 +1532,11 @@ $(function () {
 });
 
 function redimensione(value) {
-    initialWidth = parseInt($(".graph").width() + 6);
+    initialWidth = parseInt($(".graph").width());
      let newWidth = '';
     
     $(window).on("resize", function() {
-        newWidth, initialWidth = $(".graph").width() + 6;
+        newWidth, initialWidth = parseInt($(".graph").width());
     });
 
     value = initialWidth;
