@@ -294,14 +294,12 @@ function loadFrequenteSales() {
             $.each(response.data, function (i, item) {
                 let value = removeMoneyCurrency(item.value);
                 let newV = value.replace(/[\D]+/g,'');
-
-                console.log(item.photo);
                 salesBlock = `
                     <div class="box-payment-option pad-0">
                         <div class="d-flex justify-content-between align-items list-sales">
                             <div class="d-flex justify-content-between  align-items">
                                 <div class="box-ico">
-                                    <img width="37px" height="37px" onerror=this.src='/build/global/img/produto.png' src="${item.photo}" alt="${item.description}">
+                                    <img width="37px" height="37px" onerror=this.src='https://cloudfox-files.s3.amazonaws.com/produto.svg' src="${item.photo}" alt="${item.description}">
                                 </div>
                                 <div>
                                     <span style="text-overflow: ellipsis;">${item.name}</span>
@@ -309,7 +307,7 @@ function loadFrequenteSales() {
                             </div>
                             <div class="d-flex justify-content-between align-items" style="min-width: 100px;">
                                 <div class="grey font-size-14">${item.sales_amount}</div>
-                                <div class="grey font-size-14 value"><strong>${kFormatter(newV)}</strong></div>
+                                <div class="grey font-size-14 value"><strong>R$ ${nFormatter(parseInt(newV), 1)}</strong></div>
                             </div>
                         </div>
                     </div>
@@ -508,29 +506,6 @@ function loadOperationalSystems() {
                 if(data.percentage == '0.0%') {
                     return true;
                 }
-                $('#container-operational-systems').append(`
-                    <div class="container">
-                        <div class="data-holder b-bottom">
-                            <div class="box-payment-option pad-0">
-                                <div class="col-payment grey box-image-payment">
-                                    <div class="box-ico">
-                                        <span class="">
-                                            ${getOperationalSystemSvg(data.description)}
-                                        </span>
-                                    </div> ${data.description}
-                                </div>
-                                <div class="box-payment-option option">
-                                    <div class="col-payment col-graph">
-                                        <div class="bar blue" style="width:43%">barrinha</div>
-                                    </div>
-                                    <div class="col-payment">
-                                        <span class="money-td green bold grey font-size-14  value-percent">${data.percentage}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `);
 
                 $('#container-operational-systems').append(`
                     <div class="container">
@@ -545,10 +520,10 @@ function loadOperationalSystems() {
                                 </div>
                                 <div class="box-payment-option option">
                                     <div class="col-payment col-graph">
-                                        <div class="bar blue" style="width:43%">barrinha</div>
+                                        <div class="bar blue" style="width:${data.percentage || '0$'}">barrinha</div>
                                     </div>
                                     <div class="col-payment">
-                                        <span class="money-td green bold grey font-size-14  value-percent">${data.percentage}</span>
+                                        <span class="money-td green bold grey font-size-14 value-percent">${data.percentage}</span>
                                     </div>
                                 </div>
                             </div>
@@ -714,6 +689,23 @@ function updateReports() {
 function kFormatter(num) {
     return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num);
 }
+
+function nFormatter(num, digits) {
+    const lookup = [
+      { value: 1, symbol: "" },
+      { value: 1e3, symbol: "k" },
+      { value: 1e6, symbol: "M" },
+      { value: 1e9, symbol: "G" },
+      { value: 1e12, symbol: "T" },
+      { value: 1e15, symbol: "P" },
+      { value: 1e18, symbol: "E" }
+    ];
+    const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+    var item = lookup.slice().reverse().find(function(item) {
+      return num >= item.value;
+    });
+    return item ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol : "0";
+  }
 
 $('.state').on('click', function(e){
     e.preventDefault();
@@ -924,23 +916,19 @@ let skeLoad = `
 let skeLoadStatesList = `
     <div class="ske-load">
         <div class="p-10">
-            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
+            <div class="d-flex" style="width: 100%; margin-bottom: 5px;">
                 <div class="skeleton skeleton-li-item"></div>
                 <div class="skeleton skeleton-li"></div>
             </div>
-            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
+            <div class="d-flex" style="width: 100%; margin-bottom: 5px;">
+            <div class="skeleton skeleton-li-item"></div>
+            <div class="skeleton skeleton-li"></div>
+            </div>
+            <div class="d-flex" style="width: 100%; margin-bottom: 5px;">
                 <div class="skeleton skeleton-li-item"></div>
                 <div class="skeleton skeleton-li"></div>
             </div>
-            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
-                <div class="skeleton skeleton-li-item"></div>
-                <div class="skeleton skeleton-li"></div>
-            </div>
-            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
-                <div class="skeleton skeleton-li-item"></div>
-                <div class="skeleton skeleton-li"></div>
-            </div>
-            <div class="d-flex" style="width: 100%; margin-bottom: 7px;">
+            <div class="d-flex" style="width: 100%; margin-bottom: 5px;">
                 <div class="skeleton skeleton-li-item"></div>
                 <div class="skeleton skeleton-li"></div>
             </div>

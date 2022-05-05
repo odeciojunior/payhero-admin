@@ -427,8 +427,8 @@ h4.number{
     padding: 1.429rem;
 }
 
-.card.origin {
-    height: 540px;
+#reports-content .card.origin {
+    height: 660px;
 }
 
 .cards-reports h6 { margin-top: 0; }
@@ -438,9 +438,7 @@ h4.number{
     border-radius: 8px; 
 }
 
-.cards-reports .card.origin { 
-    /* min-height: ; */
-}
+
 
 #comission { height: 29px; }
 .cards-reports h6 {font-weight: 700;}
