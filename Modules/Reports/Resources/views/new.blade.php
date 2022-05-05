@@ -141,10 +141,12 @@
 											</div>
                                             <div class="card" id="card-cashback">
 												<div class="card-body data-content">
-                                                    <header class="container">
-                                                        <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
-                                                    </header>
-                                                    <div class="onPreLoad" id="block-cash"></div>
+                                                    <div class="content-info">    
+                                                        <header class="container">
+                                                            <h6 class="font-size-16 gray-700 grey"> Cashback </h6>
+                                                        </header>
+                                                        <div class="onPreLoad" id="block-cash"></div>
+                                                    </div>
 												</div>
 											</div>
 										</div>
@@ -174,26 +176,32 @@
 										<div class="row cards-reports">
 											<div class="card" id="card-sales">
 												<div class="card-body data-content">
-                                                    <header class="container">
-                                                        <h6 class="font-size-16 gray-700 grey"> Vendas realizadas </h6>
-                                                    </header>
-                                                    <div class="onPreLoad" id="block-sales"></div>
+                                                    <div class="content-info">
+                                                        <header class="container">
+                                                            <h6 class="font-size-16 gray-700 grey"> Vendas realizadas </h6>
+                                                        </header>
+                                                        <div class="onPreLoad" id="block-sales"></div>
+                                                    </div>
 												</div>
 											</div>
 											<div class="card" id="card-typepayments">
 												<div class="card-body data-content">
-                                                    <header class="container">
-													    <h6 class="font-size-16 gray-700 grey"> Meios de pagamento </h6>
-                                                    </header>
-                                                   <div class="onPreLoad" id="block-payments"></div>
+                                                    <div class="content-info">
+                                                        <header class="container">
+                                                            <h6 class="font-size-16 gray-700 grey"> Meios de pagamento </h6>
+                                                        </header>
+                                                        <div class="onPreLoad" id="block-payments"></div>
+                                                    </div>
 												</div>
 											</div>
 											<div class="card" id="card-products">
 												<div class="card-body data-content">
-                                                    <header class="container">
-													    <h6 class="font-size-16 gray-700 grey"> Produtos </h6>
-                                                    </header>
-                                                    <div class="onPreLoad" id="block-products"></div>
+                                                    <div class="content-info">
+                                                        <header class="container">
+                                                            <h6 class="font-size-16 gray-700 grey"> Produtos </h6>
+                                                        </header>
+                                                        <div class="onPreLoad" id="block-products"></div>
+                                                    </div>
 												</div>
 											</div>
 										</div>
@@ -225,109 +233,80 @@
 										<div class="row cards-reports">
 											<div class="card" id="card-coupons">
 												<div class="card-body data-content">
-                                                    <header class="container">
-													    <h6 class="font-size-16 gray-700 grey"> Cupons </h6>
-                                                    </header>
-                                                    <div class="onPreLoad" id="block-coupons"></div>
-                                                    <!-- <div class="container d-flex justify-content-between box-donut">
-														<div class="new-graph-pie graph"></div>
-														<div class="data-pie"><ul></ul></div>
-                                                    </div> -->
+                                                    <div class="content-info">
+                                                        <header class="container">
+                                                            <h6 class="font-size-16 gray-700 grey"> Cupons </h6>
+                                                        </header>
+                                                        <div class="onPreLoad" id="block-coupons"></div>
+                                                    </div>
 												</div>
 											</div>
 											<div class="card" id="card-regions">
 												<div class="card-body">
-                                                    <div class="ske-load">
-                                                        <div class="px-20 py-0">
-                                                            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
-                                                        </div>
-                                                        <div class="px-20 py-0">
-                                                            <div class="row align-items-center mx-0 py-10">
-                                                                <div class="skeleton skeleton-circle"></div>
-                                                                <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
-                                                            </div>
-                                                            <div class="skeleton skeleton-text"></div>
-                                                        </div>
+                                                    <div class="content-info">
+                                                        <header class="container">
+                                                            <h6 class="font-size-16 gray-700 grey"> Regiões </h6>
+                                                            <!-- <h4 id='qtd-chargeback' class=" font-size-24 bold">0</h4> -->
+                                                        </header>
+                                                        <div class="onPreLoad" id="block-regions"></div>
                                                     </div>
-
-                                                    <header class="container">
-                                                        <h6 class="font-size-16 gray-700 grey"> Regiões </h6>
-                                                        <!-- <h4 id='qtd-chargeback' class=" font-size-24 bold">0</h4> -->
-                                                    </header>
-                                                    <footer class="container footer-regions">
-                                                        <section class="new-graph-regions graph">
-                                                            
-                                                        </section>
-                                                        <section class="info-regions">
-                                                            <ul class="conversion-colors">
-                                                                <!-- <li class="blue">60%</li>
-                                                                <li class="purple">42%</li>
-                                                                <li class="pink">48%</li>
-                                                                <li class="orange">35%</li> -->
-                                                            </ul>
-                                                        </section>
-                                                        <section class="info-regions">
-                                                            <ul class="regions-legend">
-                                                                <!-- <li class="access"><span></span>Acessos</li>
-                                                                <li class="conversion"><span></span>Conversões</li> -->
-                                                            </ul>
-                                                        </section>
-                                                    </footer>
 												</div>
 											</div>
 											<div class="card " id="card-origin">
 												<div class="card-body card-origin">
-													<div class="row">
-                                                        <div class="ske-load">
-                                                            <div class="px-20 py-0">
-                                                                <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
-                                                            </div>
-                                                            <div class="px-20 py-0">
-                                                                <div class="row align-items-center mx-0 py-10">
-                                                                    <div class="skeleton skeleton-circle"></div>
-                                                                    <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                    <div class="content-info">
+                                                        <div class="row">
+                                                            <div class="ske-load">
+                                                                <div class="px-20 py-0">
+                                                                    <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
                                                                 </div>
-                                                                <div class="skeleton skeleton-text"></div>
+                                                                <div class="px-20 py-0">
+                                                                    <div class="row align-items-center mx-0 py-10">
+                                                                        <div class="skeleton skeleton-circle"></div>
+                                                                        <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
+                                                                    </div>
+                                                                    <div class="skeleton skeleton-text"></div>
+                                                                </div>
+                                                            </div>
+    
+                                                            <header class="col-6">
+                                                                <h6 class="font-size-16 gray-700"> Origens </h6>
+                                                            </header>
+                                                            
+                                                            <div class="col-6">
+                                                                <select class="form-control float-right" id='origin'>
+                                                                    <option selected value="src">SRC</option>
+                                                                    <option value="utm_source">UTM Source</option>
+                                                                    <option value="utm_medium">UTM Medium</option>
+                                                                    <option value="utm_campaign">UTM Campaign</option>
+                                                                    <option value="utm_term">UTM Term</option>
+                                                                    <option value="utm_content">UTM Content</option>
+                                                                </select>
                                                             </div>
                                                         </div>
-
-														<header class="col-6">
-															<h6 class="font-size-16 gray-700"> Origens </h6>
-														</header>
-                                                        
-														<div class="col-6">
-															<select class="form-control float-right" id='origin'>
-																<option selected value="src">SRC</option>
-																<option value="utm_source">UTM Source</option>
-																<option value="utm_medium">UTM Medium</option>
-																<option value="utm_campaign">UTM Campaign</option>
-																<option value="utm_term">UTM Term</option>
-																<option value="utm_content">UTM Content</option>
-															</select>
-														</div>
-													</div>
-													<div class="row">
-														<div class="data-holder">
-															<div class="row">
-																<div class="col-12">
-																	<table class="table-vendas table table-striped "style="width:100%;margin: auto; margin-top:15px">
-																		<tbody id="origins-table"  class="origin-report">
-																			{{-- js carrega... --}}
-																		</tbody>
-																	</table>
-																</div>
-															</div>
-															<br/>
-														</div>
-														<div class="row">
-															<div class="col-11">
-																<ul id="pagination-origins" class="pagination-sm float-right margin-chat-pagination"
-																	style="margin-top:10px; margin-left: 5%">
-																	{{-- js carrega... --}}
-																</ul>
-															</div>
-														</div>
-													</div>
+                                                        <div class="row">
+                                                            <div class="data-holder">
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <table class="table-vendas table table-striped "style="width:100%;margin: auto; margin-top:15px">
+                                                                            <tbody id="origins-table"  class="origin-report">
+                                                                                {{-- js carrega... --}}
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                <br/>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-11">
+                                                                    <ul id="pagination-origins" class="pagination-sm float-right margin-chat-pagination"
+                                                                        style="margin-top:10px; margin-left: 5%">
+                                                                        {{-- js carrega... --}}
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 												</div>
 											</div>
 										</div>
