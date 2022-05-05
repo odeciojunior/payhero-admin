@@ -113,7 +113,7 @@ $(function () {
                         <div class="new-graph-pending graph"></div>
                     `;
                     $("#block-pending").html(pendHtml);
-                    $('.new-graph-pending').width(redimensione(initialWidth) + 9);
+                    $('.new-graph-pending').width($('#block-pending').width() + 8);
                     $('.new-graph-pending').html('<canvas id=graph-pending></canvas>')
                     let labels = [...chart.labels];
                     let series = [...chart.values];
