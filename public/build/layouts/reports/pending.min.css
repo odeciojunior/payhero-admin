@@ -627,6 +627,8 @@ h4.number{
 }
 .no-graph span { position: absolute; }
 
+.no-graph svg { margin: 0 auto; }
+
 /* new graph pie */
 .box-donut { 
     padding-left: 0;
@@ -635,7 +637,8 @@ h4.number{
 .box-donut.invis { display: none !important; }
 @media only screen and (min-width: 768px) and (max-width : 1219px){
     .box-donut {
-        flex-direction: column;
+        /* flex-direction: column; */
+        padding-bottom: 10px;
     }
 }
 
