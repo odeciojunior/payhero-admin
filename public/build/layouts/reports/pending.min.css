@@ -1647,7 +1647,7 @@ h4.number{
     font-size: 12px;
     line-height: 26px;
     display: block;
-    text-indent: 10px;
+    text-indent: 3px;
 }
 .list-products .blue { background: #2E85EC; }
 .list-products .purple { background: #665FE8; }

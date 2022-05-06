@@ -5,11 +5,12 @@ $(function () {
     distributionGraphSeller();
     getInfo();
 
-    sessionStorage.removeItem('info');
-
     let resumeUrl = '/api/reports/resume';
-    let initialWidth = '';
     
+    if(sessionStorage.info) {
+        let info = JSON.parse(sessionStorage.getItem('info'));
+        $('input[name=daterange]').val(info.calendar);
+    }
 
     function getCashback() {
         let cashHtml = '';
@@ -48,7 +49,7 @@ $(function () {
                         <div class="new-graph-cashback graph"></div>
                     `;
                     $("#block-cash").html(cashHtml);
-                    $('.new-graph-cashback').width(redimensione(initialWidth) + 6);
+                    $('.new-graph-cashback').width($("#block-cash").width() + 6);
 
                     $('.new-graph-cashback').html(`<canvas id="graph-cashback"></canvas>`);
                     let labels = [...chart.labels];
@@ -175,7 +176,7 @@ $(function () {
                         <div class="new-graph graph"></div>
                     `;
                     $("#block-comission").html(comissionhtml);
-                    $('.new-graph').width(redimensione(initialWidth) + 9);
+                    $('.new-graph').width($("#block-comission").width() + 8);
                     $('.new-graph').html('<canvas id=comission-graph></canvas>');
                     let labels = [...chart.labels];
                     let series = [...chart.values];
@@ -236,7 +237,7 @@ $(function () {
                         <div class="new-graph-sell graph"></div>
                     `;
                     $("#block-sales").html(salesHtml);
-                    $('.new-graph-sell').width($('#block-sales').width() + 9);
+                    $('.new-graph-sell').width($('#block-sales').width() + 8);
                     $('.new-graph-sell').html('<canvas id=graph-sell></canvas>');
                     let labels = [...chart.labels];
                     let series = [...chart.values];
@@ -684,6 +685,7 @@ $(function () {
 
     $("#select_projects").on("change", function () {
         // updateReports();
+        updateStorage({company: $(this).val()})
         resume();
         $(".data-pie ul li").remove();
     });
@@ -1058,13 +1060,16 @@ $(function () {
                 let normalize = s.replace(/(\d{2}\/\d{2}\/)(\d{2}) à (\d{2}\/\d{2}\/)(\d{2})/, "$120$2-$320$4");
                 $(this).html(s).data('value', normalize);
                 $('input[name="daterange"]').attr('value', normalize);
+                $('input[name="daterange"]').val(normalize);
             } else {
                 $('input[name="daterange"]').attr('value', `${startDate}-${endDate}`);
+                $('input[name="daterange"]').val(`${startDate}-${endDate}`);
             }
         }
     })
     .on('datepicker-change', function () {
-        updateReports();
+        updateStorage({calendar: $(this).val()});
+        resume();
     })
     .on('datepicker-open', function () {
         $('.filter-badge-input').removeClass('show');
@@ -1529,19 +1534,16 @@ $(function () {
             sessionStorage.setItem('info', JSON.stringify(obj));
         });
     }
+
+    function updateStorage(v){
+        var existing = sessionStorage.getItem('info');
+        existing = existing ? JSON.parse(existing) : {};
+        Object.keys(v).forEach(function(val, key){
+            existing[val] = v[val];
+       })
+        sessionStorage.setItem('info', JSON.stringify(existing));
+    }
 });
-
-function redimensione(value) {
-    initialWidth = parseInt($(".graph").width());
-     let newWidth = '';
-    
-    $(window).on("resize", function() {
-        newWidth, initialWidth = parseInt($(".graph").width());
-    });
-
-    value = initialWidth;
-    return value;
-}
 
 let skeLoad = `
     <div class="ske-load">
