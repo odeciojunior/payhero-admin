@@ -1,5 +1,15 @@
 $(document).ready(function () {
 
+    selectCompanies();
+
+    $('#company').change(function(){
+        localStorage.setItem('companySelected', $(this).val());
+        thisPage = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+        if(thisPage!='dashboard'){
+            location.reload();
+        }
+    })
+
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
@@ -955,4 +965,25 @@ function removeMoneyCurrency(string) {
         return '-' + string.substring(4);
     }
     return string.substring(3);
+}
+
+function selectCompanies(){
+    actualPage = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+    if(actualPage!='dashboard'){
+        if (localStorage.getItem('companies') != null) {
+            let parseLocalStorageCompanies = JSON.parse(localStorage.getItem('companies'));
+            console.log(parseLocalStorageCompanies)
+            for (let i = 0; i < parseLocalStorageCompanies.length; i++) {
+                if (parseLocalStorageCompanies[i].company_type == '1') {
+                    $('#company').append('<option value="' + parseLocalStorageCompanies[i].id_code + '">Pessoa física</option>')
+                } else {
+                    $('#company').append('<option value="' + parseLocalStorageCompanies[i].id_code + '">' + parseLocalStorageCompanies[i].fantasy_name + '</option>')
+                }
+            }
+            if(localStorage.getItem('companySelected')){
+                $('#company').val(localStorage.getItem('companySelected')).change();
+            }
+            $('#company-select').addClass('d-sm-flex');
+        }
+    }
 }

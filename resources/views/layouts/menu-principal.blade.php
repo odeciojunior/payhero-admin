@@ -8,9 +8,11 @@
     </button>
 
     <!-- SIRIUS LOGO -->
-    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
-        <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}">
-        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100">
+    <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu" style="background-color: #0e0233">
+        {{-- <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/svg/icon-sirius.svg') }}">
+        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/svg/sirius-logo.svg') }}" width="100"> --}}
+        <img id="logoIconSirius" class="navbar-brand-logo" src="{{ mix('build/global/img/logos/2021/icon-primary.png') }}" style="height: 1.8rem;">
+        <img id="logoSirius" class="navbar-brand-logo d-none logo-sirius" src="{{ mix('build/global/img/logos/2021/logo-primary.png') }}" width="100">
     </div>
 
     <!-- BOTAO HAMBURGUER NO DESKTOP-->
@@ -26,7 +28,7 @@
             </li>
         </ul>
     </div>
-        
+
     <div class="row no-gutters ml-auto">
 
         <!-- CONTAINER DOS ICONES/LINKS DO ANNOUNCEKIT, NOTIFICACOES E USUARIO -->
@@ -37,41 +39,53 @@
             <input type='hidden' id='user_hash' value='{{Vinkla\Hashids\Facades\Hashids::encode(auth()->user()->id)}}'>
             <input type='hidden' id='user_name' value='{{auth()->user()->name}}'>
             <input type='hidden' id='user_email' value='{{auth()->user()->email}}'>
-    
+
             <!-- NAVERBAR FILHA DA CONTAINER -->
             <div class="row no-gutters d-flex" id="site-navbar-collapse">
 
+                <!-- EMPRESAS -->
+                <div class="pr-20" id="company-select" style="display:none"><!--d-sm-flex -->
+                    <div class="d-lg-flex align-items-center justify-content-end">
+                        <div>
+                            <select id="company" class="sirius-select"> </select>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
-                <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center"> 
-                    <b class="pr-5"> Novidades </b>
+                <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center">
+                    {{-- <b class="pr-5"> Novidades </b> --}}
+                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Novidades" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
+                        <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Novidades">
+                    </span>
                 </div>
 
                 <!-- BOTOES DE NOTIFICAO E USUARIO -->
                 <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-    
+
                     <!-- BOTAO DE NOTIFICACAO -->
-                    @hasanyrole('account_owner|admin')
-    
+                    {{-- @hasanyrole('account_owner|admin')
+
                         <li id="notifications_button" class="nav-item dropdown" disabled='true'>
-    
+
                             <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Notificações" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
                                 <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Notificacao">
-    
+
                                 @if( count(auth()->user()->unreadNotifications) > 0)
                                     <span class="badge badge-notification" id="notification-amount"></span>
                                 @else
                                     <span class="badge badge-notification-false" id="notification-amount"></span>
                                 @endif
                             </span>
-    
+
                             <!-- MODAL DE NOTIFICACAO -->
                             <div id="notifications_card" class="dropdown-menu dropdown-menu-right dropdown-menu-media ">
                                 <div id='notificationTemplate' class="scrollable-content"  img-empty="{!! mix('build/global/img/notificacoes.svg')!!}" style="scrollbar-width:thin;"></div>
                             </div>
-    
+
                         </li>
-                    @endhasanyrole
-    
+                    @endhasanyrole --}}
+
                     <!-- BOTAO DE USUARIO -->
                     <li class="nav-item dropdown">
 
@@ -82,10 +96,10 @@
                                 <i></i>
                             </span>
                         </a>
-    
+
                         <!-- BOTOES DE OPCAO DOS USUARIO -->
                         <div id="dropdown_profile_card" class="dropdown-menu" role="menu">
-    
+
                             <!-- BOTAO DE CONFIGURACOES -->
                             @if(foxutils()->isHomolog())
                                 <div data-toggle="tooltip" data-placement="left" title="Desabilitado na versão de testes">
@@ -100,21 +114,21 @@
                                     Configurações
                                 </a>
                             @endif
-    
+
                             <!-- DIV DIVISORA DOS ELEMENTOS -->
                             <div class="dropdown-divider" role="presentation"></div>
-    
+
                             <!-- BOTAO DE LOGOUT (SAIR DO USUARIO)-->
                             <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <img height="24" width="24" src="{{ mix('build/global/img/svg/power_settings_new.svg') }}"/>
                                 Logout
                             </a>
-    
+
                             <form id="logout-form" action="/logout" method="POST" style="display: none;">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             </form>
                         </div>
-    
+
                     </li>
                 </ul>
             </div>

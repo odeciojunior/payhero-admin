@@ -14,7 +14,7 @@
         <div style="display: none" class="page-header container mb-15 mb-sm-0">
 
             <div class="row align-items-center justify-content-between" style="min-height:50px">
-                
+
                 <div class="col-lg-6 mb-25">
                     <h1 class="page-title">Dashboard</h1>
                 </div>
@@ -26,13 +26,13 @@
                     <b>Clique para ver as novidades</b>
                 </div>
 
-                <div class="col-lg-4" id="company-select" style="display:none">
+                {{-- <div class="col-lg-4" id="company-select" style="display:none">
                     <div class="d-lg-flex align-items-center justify-content-end">
                         <div>
                             <select id="company" class="sirius-select"> </select>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
             </div>
 

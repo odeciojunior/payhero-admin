@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    
+
     let userAccepted = true;
 
     function updateChart() {
@@ -139,17 +139,26 @@ $(document).ready(function () {
             },
             success: function success(data) {
                 if (!isEmpty(data.companies)) {
+                    localStorage.setItem('companies', JSON.stringify(data.companies));
                     for (let i = 0; i < data.companies.length; i++) {
+
+                        if(localStorage.getItem('companySelected') == data.companies[i].id_code)
+                            itemSel = 'selected="selected"'
+                        else
+                            itemSel = ''
+
                         if (data.companies[i].company_type == '1') {
-                            $('#company').append('<option value="' + data.companies[i].id_code + '">Pessoa física</option>')
+                            $('#company').append('<option value="' + data.companies[i].id_code + '" '+itemSel+'>Pessoa física</option>')
                         } else {
-                            $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
+                            $('#company').append('<option value="' + data.companies[i].id_code + '" '+itemSel+'>' + data.companies[i].fantasy_name + '</option>')
                         }
                     }
-
+                    // if(localStorage.getItem('companySelected')){
+                    //     $('#company').val(localStorage.getItem('companySelected')).change();
+                    // }
 
                     $(".content-error").hide();
-                    $('#company-select').show();
+                    $('#company-select').addClass('d-sm-flex');//show();
 
                     updateValues();
                     updateChart();
