@@ -30,7 +30,7 @@ class PixService
             ->whereHas(
                 'pixCharges',
                 function ($querySale) {
-                    $querySale->whereIn('status', ['ATIVA', 'EXPIRED']);
+                    $querySale->whereIn('status', ['ATIVA']);
                     $querySale->where( 'created_at', '<=', Carbon::now()->subHour()->toDateTimeString());
                 }
             );
