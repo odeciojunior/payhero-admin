@@ -1075,6 +1075,7 @@ h4.number{
     margin-right: 15px;
 }
 .align-items { align-items: center; }
+.justify-around { justify-content: space-around; }
 .align-items .qtd {
     height: 33px;
     display: flex;
@@ -1937,6 +1938,13 @@ h4.number{
  }
 
  .new-sell-graph { padding-bottom: 20px; }
+
+ .msg-coupon {
+     font-size: 16px;
+     line-height: 20px;
+     color: #999;
+     font-style: normal;
+ }
 .page-holder {
     font-family: 'Muli', sans-serif;
     color: black;

@@ -304,9 +304,9 @@ $(function () {
                                             <img class="photo" src="${image}" width="24px" height="24px" />
                                         </figure>
                                         <div class="bars ${color}" style="width:${(( 100 * amount ) / total).toFixed(1)}%">
-                                            <span>${(( 100 * amount ) / total) > 9 ? amount : ''}</span>
+                                            <span>${(( 100 * amount ) / total) > 6.1 ? amount : ''}</span>
                                         </div>
-                                        <span style="color: #636363;">${(( 100 * amount ) / total) > 9 ? '' : amount}</span>
+                                        <span style="color: #636363;">${(( 100 * amount ) / total) > 6.1 ? '' : amount}</span>
                                     </div>
                                 </li>
                             `;
@@ -412,7 +412,11 @@ $(function () {
                         <div class="container d-flex value-price" style="visibility: hidden;">
                             <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
                         </div>
-                        <div class="no-graph">${emptyGraph}</div>
+                        <div class="d-flex align-items justify-around">
+                            <div class="no-coupon">${emptyCoupons}</div>
+                            <div class="msg-coupon">Nenhum cupom utilizado</div>
+                        </div>
+                        
                     `;
                     $("#block-coupons").html(cuponsHtml);
                 }
@@ -1570,5 +1574,14 @@ let emptyGraph = `
 <stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
 </linearGradient>
 </defs>
+</svg>
+`;
+
+let emptyCoupons = `
+<svg width="132" height="126" viewBox="0 0 132 126" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M123.632 78.3097C120.484 90.0588 113.922 100.611 104.777 108.63C95.6322 116.65 84.3144 121.779 72.2549 123.366C60.1954 124.954 47.9359 122.93 37.0268 117.55C26.1176 112.17 17.0487 103.676 10.9669 93.1423L32.2712 80.8423C35.9202 87.1627 41.3616 92.2591 47.9071 95.4869C54.4526 98.7148 61.8082 99.9293 69.0439 98.9767C76.2796 98.0241 83.0703 94.9472 88.5574 90.1352C94.0444 85.3232 97.9813 78.9922 99.8702 71.9428L123.632 78.3097Z" fill="#F4F6FB" fill-opacity="0.8"/>
+<path d="M64.2275 0.892341C77.7658 0.892339 90.9257 5.35954 101.666 13.6011C112.407 21.8427 120.128 33.398 123.632 46.475L99.8702 52.8419C97.7678 44.9958 93.1352 38.0625 86.6908 33.1176C80.2464 28.1727 72.3505 25.4923 64.2275 25.4923L64.2275 0.892341Z" fill="#F4F6FB" fill-opacity="0.25"/>
+<path d="M123.632 46.475C126.426 56.9026 126.426 67.8821 123.632 78.3097L99.8702 71.9428C101.547 65.6862 101.547 59.0985 99.8702 52.8419L123.632 46.475Z" fill="#E8EAEB"/>
+<path d="M10.9669 93.1423C5.56919 83.7932 2.72751 73.1878 2.72751 62.3923C2.72751 51.5968 5.5692 40.9915 10.9669 31.6423C16.3647 22.2932 24.1283 14.5295 33.4775 9.13177C42.8267 3.73402 53.432 0.892339 64.2275 0.892341L64.2275 25.4923C57.7502 25.4923 51.387 27.1974 45.7775 30.436C40.168 33.6747 35.5098 38.3328 32.2712 43.9423C29.0325 49.5518 27.3275 55.915 27.3275 62.3923C27.3275 68.8696 29.0325 75.2328 32.2712 80.8423L10.9669 93.1423Z" fill="#F4F6FB" fill-opacity="0.6"/>
 </svg>
 `;
