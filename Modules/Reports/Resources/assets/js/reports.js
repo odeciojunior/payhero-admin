@@ -674,8 +674,6 @@ $(function () {
                         })
                     );
                 });
-
-                // updateReports();
                 resume();
             } else {
                 $("#export-excel").hide();
@@ -688,7 +686,7 @@ $(function () {
     });
 
     $("#select_projects").on("change", function () {
-        // updateReports();
+        $.ajaxQ.abortAll();
         updateStorage({company: $(this).val()})
         resume();
         $(".data-pie ul li").remove();
@@ -1072,6 +1070,7 @@ $(function () {
         }
     })
     .on('datepicker-change', function () {
+        $.ajaxQ.abortAll();
         updateStorage({calendar: $(this).val()});
         resume();
     })
@@ -1547,6 +1546,30 @@ $(function () {
        })
         sessionStorage.setItem('info', JSON.stringify(existing));
     }
+
+    $.ajaxQ = (function(){
+        var id = 0, Q = {};
+      
+        $(document).ajaxSend(function(e, jqx){
+          jqx._id = ++id;
+          Q[jqx._id] = jqx;
+        });
+        $(document).ajaxComplete(function(e, jqx){
+          delete Q[jqx._id];
+        });
+      
+        return {
+          abortAll: function(){
+            var r = [];
+            $.each(Q, function(i, jqx){
+              r.push(jqx._id);
+              jqx.abort();
+            });
+            return r;
+          }
+        };
+      
+      })();
 });
 
 let skeLoad = `
