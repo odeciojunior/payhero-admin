@@ -38,9 +38,6 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
 
     public function query()
     {
-        $salesModel        = new Sale();
-        $userProjectsModel = new UserProject();
-        $customerModel     = new Customer();
 
         $dateRange = FoxUtils::validateDateRange($this->filters['date_range']);
         $startDate = null;
@@ -51,8 +48,8 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             $endDate   = $dateRange[1] . ' 23:59:59';
         }
 
-        $salesExpired = $salesModel
-            ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
+        $salesExpired = Sale::
+            select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id as checkout_id',
                      'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
             ->leftJoin('plans_sales as plan_sale', function($join) {
                 $join->on('plan_sale.sale_id', '=', 'sales.id');
@@ -72,7 +69,7 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 ]);
 
         if (!empty($this->filters['client'])) {
-            $customerSearch = $customerModel->where('name', 'like', '%' . $this->filters['client'] . '%')->pluck('id')
+            $customerSearch = Customer::where('name', 'like', '%' . $this->filters['client'] . '%')->pluck('id')
             ->toArray();
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
@@ -85,17 +82,19 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             }
             $salesExpired->whereIn('sales.project_id', $projectIds);
         } else {
-            $userProjects = UserProject::select('project_id')
-                ->where('user_id', $this->user->id)
-                ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
-                ->get()
-                ->pluck('project_id')
-                ->toArray();
-            $salesExpired->whereIn('sales.project_id', $userProjects);
+            // $userProjects = UserProject::select('project_id')
+            //     ->where('user_id', $this->user->account_owner_id)
+            //     ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
+            //     ->get()
+            //     ->pluck('project_id')
+            //     ->toArray();
+            // $salesExpired->whereIn('sales.project_id', $userProjects);
+
+            $salesExpired->where('sales.owner_id', $this->user->account_owner_id);
         }
 
         if (!empty($this->filters['client_document'])) {
-            $customerSearch = $customerModel->where('document', FoxUtils::onlyNumbers($this->filters['client_document']))->pluck('id');
+            $customerSearch = Customer::where('document', FoxUtils::onlyNumbers($this->filters['client_document']))->pluck('id');
             $salesExpired->whereIn('sales.customer_id', $customerSearch);
         }
 
@@ -191,6 +190,8 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 'utm_campaign'               => $sale->checkout->utm_campaign ?? '',
                 'utm_term'                   => $sale->checkout->utm_term ?? '',
                 'utm_content'                => $sale->checkout->utm_content ?? '',
+                'link' => $sale->checkout->present()->getCheckoutLink($sale->project->domains->first()),
+                'whatsapp_link' => "https://api.whatsapp.com/send?phone=+55" . preg_replace('/[^0-9]/', '', $sale->customer->telephone) . '&text=Olá ' . explode(' ', $sale->customer->name)[0],
             ];
 
             //remove caracteres indesejados em todos os campos
@@ -241,13 +242,15 @@ class BilletExpiredReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             'Estado',
             'País',
             //track
-            'src',
-            'utm_source',
-            'utm_medium',
-            'utm_campaign',
-            'utm_term',
-            'utm_content',
-            'utm_perfect',
+            'Src',
+            'Utm_source',
+            'Utm_medium',
+            'Utm_campaign',
+            'Utm_term',
+            'Utm_content',
+            'Utm_perfect',
+            'Link',
+            'Link Whatsapp',
         ];
     }
 

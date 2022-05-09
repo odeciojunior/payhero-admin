@@ -37,7 +37,6 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
 
     public function query()
     {
-        $checkoutModel = new Checkout();
         $domainModel = new Domain();
 
         $dateRange = FoxUtils::validateDateRange($this->filters['date_range']);
@@ -48,10 +47,10 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             $startDate = $dateRange[0] . ' 00:00:00';
             $endDate = $dateRange[1] . ' 23:59:59';
         }
-        
-        $abandonedCarts = $checkoutModel->whereIn('status_enum', [
-            $checkoutModel->present()->getStatusEnum('recovered'),
-            $checkoutModel->present()->getStatusEnum('abandoned cart'),
+
+        $abandonedCarts = Checkout::whereIn('status_enum', [
+            Checkout::STATUS_RECOVERED,
+            Checkout::STATUS_ABANDONED_CART
         ]);
 
         $parseProjectIds = explode(',', $this->filters['project']);
@@ -63,7 +62,7 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
             $abandonedCarts->whereIn('project_id', $projectIds);
         } else {
             $userProjects = UserProject::select('project_id')
-                ->where('user_id', $this->user->id)
+                ->where('user_id', $this->user->account_owner_id)
                 ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM)
                 ->get()
                 ->pluck('project_id')
@@ -92,7 +91,7 @@ class AbandonedCartReportExport implements FromQuery, WithHeadings, ShouldAutoSi
                 $query->whereIn('plan_id', $planIds);
             });
         }
-        
+
         if (!empty($startDate) && !empty($endDate)) {
             $abandonedCarts->whereBetween('checkouts.created_at', [$startDate, $endDate]);
         } else {

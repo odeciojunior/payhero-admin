@@ -32,8 +32,8 @@ const systemStatus = {
 $(() => {
 
     $('.applySelect2').select2({
-        width:'100%',
-        multiple:true,
+        width: '100%',
+        multiple: true,
         language: {
             noResults: function () {
                 return "Nenhum resultado encontrado";
@@ -83,16 +83,16 @@ $(() => {
 
         let row = $(this).parent().parent();
         row.find('.input-tracking-code')
-        .prop('readonly', true).blur()
-        .removeClass('border-danger')
-        .attr('placeholder', 'Clique para adicionar');
+            .prop('readonly', true).blur()
+            .removeClass('border-danger')
+            .attr('placeholder', 'Clique para adicionar');
 
-        if($(this).attr('data-code').length < 1){
+        if ($(this).attr('data-code').length < 1) {
             row.find('.input-tracking-code').addClass('fake-label').val('');
         }
 
         let compare = $(this).attr('data-code');
-        if(row.find('.input-tracking-code').val() !== compare){
+        if (row.find('.input-tracking-code').val() !== compare) {
             row.find('.input-tracking-code').val(compare);
         }
 
@@ -101,9 +101,8 @@ $(() => {
         $(this).hide();
     });
 
-    $('#bt_filtro').on('click', function () {
-        index();
-        getResume();
+    $('#bt_filter').on('click', function () {
+        loadData();
     });
 
     let startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
@@ -142,6 +141,31 @@ $(() => {
         startDate = start.format('YYYY-MM-DD');
         endDate = end.format('YYYY-MM-DD');
     });
+
+    function searchIsLocked(elementButton) {
+        return elementButton.attr('block_search');
+    }
+
+    function lockSearch(elementButton) {
+        elementButton.attr('block_search', 'true');
+        //set layout do button block
+    }
+
+    function unlockSearch(elementButton) {
+        elementButton.attr('block_search', 'false');
+        //layout do button block
+    }
+
+    function loadData() {
+        elementButton = $('#bt_filter');
+        if (searchIsLocked(elementButton) != 'true') {
+            lockSearch(elementButton);
+            console.log(elementButton.attr('block_search'));
+            index();
+            getResume();
+        };
+    }
+
 
     function getFilters(urlParams = false) {
         let data = {
@@ -192,7 +216,7 @@ $(() => {
                     $("#project-not-empty").show();
                     $("#export-excel").show()
 
-                    if(response.data != 'api sales') {
+                    if (response.data != 'api sales') {
 
                         $.each(response.data, function (i, project) {
                             $("#project-select").append($('<option>', {
@@ -202,8 +226,7 @@ $(() => {
                         });
                     }
 
-                    index();
-                    getResume();
+                    loadData();
                 } else {
                     $("#export-excel").hide()
                     $("#project-not-empty").hide();
@@ -244,12 +267,12 @@ $(() => {
             options: {
                 responsive: true,
                 plugins: {
-                    legend: {display: false},
+                    legend: { display: false },
                     tooltip: {
                         enabled: true,
                         callbacks: {
                             title: (tooltipItem) => `${tooltipItem[0].label}`,
-                            label: (tooltipItem) => tooltipItem.dataset.data[tooltipItem.dataIndex] > 10000 ? Math.round(tooltipItem.dataset.data[tooltipItem.dataIndex]/1000, 1)+'K' : numberWithDecimal(tooltipItem.dataset.data[tooltipItem.dataIndex])
+                            label: (tooltipItem) => tooltipItem.dataset.data[tooltipItem.dataIndex] > 10000 ? Math.round(tooltipItem.dataset.data[tooltipItem.dataIndex] / 1000, 1) + 'K' : numberWithDecimal(tooltipItem.dataset.data[tooltipItem.dataIndex])
                         }
                     },
                 },
@@ -258,9 +281,9 @@ $(() => {
 
     }
 
-    function showLoading(loadOnAny,loadingSelector,loadingSettings ){
+    function showLoading(loadOnAny, loadingSelector, loadingSettings) {
         loadOnAny(loadingSelector, false, loadingSettings);
-        $('#graphic-loading').append($('.loader-any-container')[6]).show().css('z-index','2');
+        $('#graphic-loading').append($('.loader-any-container')[6]).show().css('z-index', '2');
     }
 
     //GERANDO DADOS DO CARD E DO GRAFICO
@@ -281,7 +304,7 @@ $(() => {
             }
         };
 
-        showLoading(loadOnAny,loadingSelector,loadingSettings);
+        showLoading(loadOnAny, loadingSelector, loadingSettings);
 
         $.ajax({
             method: 'GET',
@@ -320,7 +343,7 @@ $(() => {
     }
 
     function setDataView(data) {
-        let {total, posted, dispatched, out_for_delivery, delivered, exception, unknown} = data;
+        let { total, posted, dispatched, out_for_delivery, delivered, exception, unknown } = data;
         const thousand = 10000;
 
         if (verifyValueIsZero(data.total)) {
@@ -339,7 +362,7 @@ $(() => {
             $('#myChart, .labels, .total-container').show();
             inicializeChart(chartDefaultColorsLabel, [posted, dispatched, out_for_delivery, exception, unknown, delivered]);
         }
-        const formatTotal = '<div>Total:<br> <b>'+numberWithDecimal(total)+'</b> </div>';
+        const formatTotal = '<div>Total:<br> <b>' + numberWithDecimal(total) + '</b> </div>';
 
         $('#total-products').text(total > thousand ? `${parseFloat(numberWithDecimal(total)).toFixed(1)}K` : numberWithDecimal(total)).attr('data-original-title', formatTotal);
 
@@ -411,7 +434,7 @@ $(() => {
                         <a class='tracking-add pointer mt-1 ml-10 px-0 default-buttons' title="Adicionar">
                             <span id="add-tracking-code" class='o-add-1 text-primary border border-primary'></span>
                         </a>`
-                    ;
+                        ;
 
                     let htmlButtonEdit = `
                         <div class="edit-detail d-flex justify-content-between px-0 col-5">
@@ -424,7 +447,7 @@ $(() => {
                                 <span class="o-eye-1"></span>
                             </a>
                         </div>`
-                    ;
+                        ;
 
                     let dados = `
                         <tr ${grayRow ? 'class="td-odd"' : ''}>
@@ -433,10 +456,10 @@ $(() => {
                                 <td class="detalhes_venda pointer table-title col-sm-1" venda="${tracking.sale}">
                                     #${tracking.sale}
                                 </td>`
-                                :
-                                `<td>
+                            :
+                            `<td>
                                 </td>`
-                            }
+                        }
 
                             <td class="col-sm-4">
                                 <span style="max-width: 330px; display:block; margin: 0px 0px 0px 0px;">
@@ -462,7 +485,7 @@ $(() => {
 
                                     ${tracking.tracking_status_enum ? `
                                     <input maxlength="18" minlength="10" class="mr-10 col-7 form-control font-weight-bold input-tracking-code" readonly placeholder="Informe o código de rastreio" style="border-radius: 8px;" value="${tracking.tracking_code}">` + htmlButtonEdit
-                                    :htmlButtonAdd}
+                            : htmlButtonAdd}
 
                                     <div class="save-close buttons d-flex px-0 col-5" style="max-height: 38px;">
 
@@ -477,11 +500,14 @@ $(() => {
                             </td>
 
                         </tr>`
-                    ;
+                        ;
                     $('#dados_tabela').append(dados);
                     lastSale = tracking.sale;
                 });
                 pagination(response, 'trackings', index);
+            },
+            complete: response => {
+                unlockSearch($('#bt_filter'));
             }
         });
     }
@@ -566,7 +592,7 @@ $(() => {
         $.ajax({
             method: "POST",
             url: '/api/tracking',
-            data: {tracking_code: tracking_code, product_plan_sale_id: ppsId},
+            data: { tracking_code: tracking_code, product_plan_sale_id: ppsId },
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -577,13 +603,13 @@ $(() => {
                 errorAjaxResponse(response);
 
                 btnSave.parent().parent().find('.input-tracking-code').addClass('border-danger');
-                setTimeout(()=>{
+                setTimeout(() => {
                     btnSave.parent().parent()
-                    .find('.input-tracking-code')
-                    .val('').removeClass('border-danger')
-                    .attr('placeholder', 'Clique para adicionar')
+                        .find('.input-tracking-code')
+                        .val('').removeClass('border-danger')
+                        .attr('placeholder', 'Clique para adicionar')
                     btnSave.parent().parent().find('.tracking-close').trigger('click')
-                },1000);
+                }, 1000);
             },
             success: (response) => {
 
@@ -611,14 +637,14 @@ $(() => {
                                 <span class="o-eye-1"></span>
                             </a>
                         </div>`
-                    ;
+                        ;
 
                     $(buttons).insertBefore(saveClose);
 
                     let statusBadge = btnSave.parent().parent().parent().find('.badge');
                     statusBadge.removeClass('statusPosted statusOnDelivery statusDelivered statusInTransit statusProblem statusWithoutInfo')
-                    .addClass(statusEnum[tracking.tracking_status_enum])
-                    .html(tracking.tracking_status);
+                        .addClass(statusEnum[tracking.tracking_status_enum])
+                        .html(tracking.tracking_status);
 
                     alertCustom('success', 'Código de rastreio salvo com sucesso')
                 }
@@ -725,17 +751,16 @@ $(() => {
 
     $(document).on('keypress', function (e) {
         if (e.keyCode == 13) {
-            index();
-            getResume();
+            loadData();
         }
     });
 
     //COMPORTAMENTO DO FILTRO MULTIPLO
-    function behaviorMultipleFilter(data, selectId){
-        var $select = $('#'+selectId);
+    function behaviorMultipleFilter(data, selectId) {
+        var $select = $('#' + selectId);
         var values = $select.val();
 
-        if($(`#${selectId}`).val()[0] == 'all' || $(`#${selectId}`).val()[0] == ''){
+        if ($(`#${selectId}`).val()[0] == 'all' || $(`#${selectId}`).val()[0] == '') {
             var valueToRemove = $(`#${selectId}`).val()[0]
         }
 
@@ -748,7 +773,7 @@ $(() => {
                     $select.val(values).change();
                 }
             }
-            } else {
+        } else {
             if (values) {
                 values.splice(0, values.lenght);
                 $select.val(null).change();
@@ -760,16 +785,16 @@ $(() => {
     }
 
     //NAO PERMITI QUE O FILTRO FIQUE VAZIO
-    function deniedEmptyFilter(selectId){
+    function deniedEmptyFilter(selectId) {
         let arrayValues = $(`#${selectId}`).val();
         let valueAmount = $(`#${selectId}`).val().length;
 
-        if(valueAmount === 0){
-            if(selectId == 'project'){
+        if (valueAmount === 0) {
+            if (selectId == 'project') {
                 arrayValues.push('all');
                 arrayValues = $(`#${selectId}`).val('all').trigger("change");
 
-            }else{
+            } else {
                 arrayValues.push('');
                 arrayValues = $(`#${selectId}`).val('').trigger("change");
             }

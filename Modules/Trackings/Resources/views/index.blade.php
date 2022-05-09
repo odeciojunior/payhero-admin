@@ -209,7 +209,7 @@
                         </div>
                     </div>
                     <div class="col-6 col-xl-3 mt-20">
-                        <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
+                        <div id="bt_filter" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
                             <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/check-all.svg') }} " />
                             Aplicar <br class="d-flex d-sm-none"> filtros
                         </div>
