@@ -842,6 +842,7 @@ h4.number{
         flex-direction: row;
     }
 }
+
 .commission, .distribution { border-radius: 8px; }
 .inner { padding: 0 20px 20px 20px; }
 .inner.cash { padding-bottom: 30px; }
@@ -858,14 +859,19 @@ h4.number{
     padding-bottom: 10px;
 }
 
+@media only screen and (max-width: 768px) {
+    .primary { max-width: 638px; }
+}
+
 @media only screen and (min-width: 1220px) {
-    .commission { flex: 0 0 67%; }
-    .distribution { flex: 0 0 30%; }
+    .primary { width: 753px; }
+    .distribution { width: 344px;  }
     .commission.mkt { flex: 0 0 65.8%; }
 }
 @media only screen and (min-width: 1600px) {
     .distribution.mkt { flex: 0 0 31.75%; }
-    .commission { flex: 0 0 68%; }
+    .distribution { width: 353px; }
+    .primary { width: 915px; }
 }
 
 .box-chart-primary .title-graph {

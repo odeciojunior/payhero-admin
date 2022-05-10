@@ -190,26 +190,39 @@ function blockeds() {
             Authorization: $('meta[name="access-token"]').attr("content"),
             Accept: "application/json",
         },
+        beforeSend: function( jqXHR, settings ) {
+            jqXHR.then(dados => {
+                let { value } = dados.data;
+                if( removeMoneyCurrency(value) == "0,00" ) {
+                    $('#card-blockeds').hide();
+                }
+            })
+        },
         error: function error(response) {
             errorAjaxResponse(response);
         },
         success: function success(response) {
              let {amount, value} = response.data;
 
-             blockedsHtml = `
-                <div class="d-flex">
-                    <div class="balance col-3">
-                        <h6 class="grey font-size-14">Total</h6>
-                        <strong class="grey total">${kFormatter(amount)}</strong>
+            //  if( removeMoneyCurrency(value) !== '0,00' ) {
+                 blockedsHtml = `
+                    <div class="d-flex">
+                        <div class="balance col-3">
+                            <h6 class="grey font-size-14">Total</h6>
+                            <strong class="grey total">${kFormatter(amount)}</strong>
+                        </div>
+                        <div class="balance col-9">
+                            <h6 class="font-size-14">Saldo</h6>
+                            <small>R$</small>
+                            <strong class="total red ">${removeMoneyCurrency(value)}</strong>
+                        </div>
                     </div>
-                    <div class="balance col-9">
-                        <h6 class="font-size-14">Saldo</h6>
-                        <small>R$</small>
-                        <strong class="total red ">${removeMoneyCurrency(value)}</strong>
-                    </div>
-                </div>
-             `;
-             $("#block-blockeds").html(blockedsHtml);
+                 `;
+                 $("#block-blockeds").html(blockedsHtml);
+            //  } else {
+            //     $('#card-blockeds' ).hide();
+            //  }
+
         }
     });
 }
@@ -870,6 +883,31 @@ const formatCash = n => {
     if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "B";
     if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T";
 };
+
+// abort all ajax
+$.ajaxQ = (function(){
+    var id = 0, Q = {};
+  
+    $(document).ajaxSend(function(e, jqx){
+      jqx._id = ++id;
+      Q[jqx._id] = jqx;
+    });
+    $(document).ajaxComplete(function(e, jqx){
+      delete Q[jqx._id];
+    });
+  
+    return {
+      abortAll: function(){
+        var r = [];
+        $.each(Q, function(i, jqx){
+          r.push(jqx._id);
+          jqx.abort();
+        });
+        return r;
+      }
+    };
+  
+  })();
 
 let skeLoad = `
     <div class="ske-load">

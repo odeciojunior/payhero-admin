@@ -126,7 +126,7 @@
                 <div class="row">
                     <div class="container d-flex box-chart-primary">
                         <!-- comission -->
-                        <div class="commission">
+                        <div class="primary">
                             <div class="card" id="card-status">
                                 <section class="container pb-20">
                                     <header class="d-flex title-graph title-graph-sales">
