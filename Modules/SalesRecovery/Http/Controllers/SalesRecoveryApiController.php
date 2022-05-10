@@ -215,7 +215,7 @@ class SalesRecoveryApiController extends Controller
     {
         $data                 = $request->all();
         $salesRecoveryService = new SalesRecoveryService();
-        
+
         $projectIds = ['all'];
 
         if ($data['project'] != 'all') {
@@ -237,7 +237,7 @@ class SalesRecoveryApiController extends Controller
         if (!empty($data['client_document'])) {
             $clientDocument = $data['client_document'];
         }
-        
+
         $plans = null;
         if ($data['plan'] != 'all') {
             $plans = [];
@@ -401,7 +401,6 @@ class SalesRecoveryApiController extends Controller
             } else if ($dataRequest['recovery_type'] == 4) {
                 $filename = 'report_pix_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
                 (new PixExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
-                
             } else {
                 $filename = 'report_billet_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
                 (new BilletExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
