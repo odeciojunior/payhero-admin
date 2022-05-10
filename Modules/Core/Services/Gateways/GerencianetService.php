@@ -138,11 +138,6 @@ class GerencianetService implements Statement
     public function createWithdrawal($withdrawalValue)
     {
         try {
-            
-            if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GERENCIANET_PRODUCTION_ID : Gateway::GERENCIANET_SANDBOX_ID)) {
-                return false;
-            }
-
             $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
             if ($isFirstUserWithdrawal) {

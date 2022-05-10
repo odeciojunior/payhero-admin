@@ -215,7 +215,7 @@ class SalesRecoveryApiController extends Controller
     {
         $data                 = $request->all();
         $salesRecoveryService = new SalesRecoveryService();
-        
+
         $projectIds = ['all'];
 
         if ($data['project'] != 'all') {
@@ -237,7 +237,7 @@ class SalesRecoveryApiController extends Controller
         if (!empty($data['client_document'])) {
             $clientDocument = $data['client_document'];
         }
-        
+
         $plans = null;
         if ($data['plan'] != 'all') {
             $plans = [];
@@ -307,77 +307,67 @@ class SalesRecoveryApiController extends Controller
      */
     public function regenerateBoleto(Request $request)
     {
-
         try {
             $validator = Validator::make($request->all(), [
                 'saleId' => 'required|string',
                 'date'   => 'required|string',
             ]);
+
             if ($validator->fails()) {
                 return response()->json([
                     'message' => "Preencha os dados corretamente",
                 ], 400);
-            } else {
-
-                $saleModel   = new Sale();
-                $saleService = new SaleService();
-
-                $sale = $saleModel->find(current(Hashids::decode($request->input('saleId'))));
-
-                if (!empty($sale)) {
-                    $totalPaidValue = (int)preg_replace("/[^0-9]/", "", $sale->sub_total) - (int)$sale->automatic_discount;
-                    $shippingPrice  = (int)preg_replace("/[^0-9]/", "", $sale->shipment_value);
-
-                    if (!empty($request->input('discountValue'))) {
-
-                        if ($request->discountType == 'percentage') {
-                            $discount       = (int)($totalPaidValue * (((int)preg_replace("/[^0-9]/", "", $request->input('discountValue'))) / 100));
-                            $totalPaidValue -= $discount;
-                        } else {
-                            $discount       = (int)(preg_replace("/[^0-9]/", "", $request->input('discountValue')));
-                            $totalPaidValue -= $discount;
-                        }
-
-                        $sale->update([
-                            'shopify_discount' => $discount,
-                        ]);
-                    }
-
-                    $dueDate = $request->input('date');
-                    if (Carbon::parse($dueDate)->isWeekend()) {
-                        $dueDate = Carbon::parse($dueDate)->nextWeekday()->format('Y-m-d');
-                    }
-                    //                    if (in_array($sale->gateway_id, [7])) {
-                    $checkoutService   = new CheckoutService();
-                    $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
-                    ->encode($sale->id), ($totalPaidValue + $shippingPrice), $dueDate);
-                    //                    } else {
-                    //                        $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
-                    //
-                    //                        $boletoRegenerated = $pagarmeService->boletoPayment($dueDate);
-                    //                    }
-                    if ($boletoRegenerated['status'] == 'success') {
-                        $message = 'Boleto regenerado com sucesso';
-                        $status  = 200;
-                    } else {
-                        $message = 'Ocorreu um erro tente novamente mais tarde';
-                        $status  = 400;
-                    }
-
-                    return response()->json([
-                        'message' => $message,
-                    ], $status);
-                } else {
-
-                    return response()->json([
-                        'message' => "Ocorreu um erro, tente novamente mais tarde",
-                    ], 400);
-                }
             }
+
+            $sale = Sale::find(current(Hashids::decode($request->saleId)));
+            if (empty($sale)) {
+                return response()->json([
+                    'message' => "Ocorreu um erro, tente novamente mais tarde",
+                ], 400);
+            }
+
+            $totalPaidValue = $sale->original_total_paid_value;
+
+            if (!empty($request->discountValue)) {
+
+                $totalPaidValue+=intval($sale->shopify_discount);
+                if ($request->discountType == 'percentage') {
+                    $discount       = ($totalPaidValue * $request->discountValue*100)/100;
+                    $totalPaidValue -= $discount;
+                } else {
+                    $discount       = $request->discountType*100;
+                    $totalPaidValue -= $discount;
+                }
+
+                $sale->update([
+                    'shopify_discount' => $discount,
+                ]);
+            }
+
+            $dueDate = $request->input('date');
+            if (Carbon::parse($dueDate)->isWeekend()) {
+                $dueDate = Carbon::parse($dueDate)->nextWeekday()->format('Y-m-d');
+            }
+            
+            $checkoutService = new CheckoutService();
+                        
+            $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
+            ->encode($sale->id), $totalPaidValue, $dueDate);
+
+            $message = 'Ocorreu um erro tente novamente mais tarde';
+            $status  = 400;                
+            if ($boletoRegenerated['status'] == 'success') {
+                $message = 'Boleto regenerado com sucesso';
+                $status  = 200;
+            }
+
+            return response()->json([
+                'message' => $message,
+            ], $status);            
+                            
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar regenerar Boleto (saleRecoveryApiController - regenerateSale)');
-            report($e);
-            Log::info($e->getMessage());
+            report($e);            
+
             return response()->json([
                 'message' => "Ocorreu um erro, tente novamente mais tarde",
             ], 400);
@@ -401,7 +391,6 @@ class SalesRecoveryApiController extends Controller
             } else if ($dataRequest['recovery_type'] == 4) {
                 $filename = 'report_pix_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
                 (new PixExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
-                
             } else {
                 $filename = 'report_billet_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
                 (new BilletExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');

@@ -34,13 +34,12 @@ class WithdrawalService
         return $isFirstUserWithdrawal;
     }
 
-    public function isNotFirstWithdrawalToday($companyId, $gatewayId)
+    public function companyCanWithdraw($companyId, $gatewayId)
     {
-        return (new Withdrawal())
-                ->where('company_id', $companyId)
+        return Withdrawal::where('company_id', $companyId)
                 ->where('gateway_id', $gatewayId)
                 ->whereDate('created_at', now())
-                ->exists();
+                ->count() < 3;
     }
 
 }

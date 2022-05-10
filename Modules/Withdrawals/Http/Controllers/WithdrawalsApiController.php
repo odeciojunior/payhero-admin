@@ -75,8 +75,8 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Sem permissão para saques'], 403);
             }
 
-            if ((new WithdrawalService)->isNotFirstWithdrawalToday($company->id, $gatewayId)) {
-                return response()->json(['message' => 'Você só pode fazer um pedido de saque por dia.'], 403);
+            if (!(new WithdrawalService)->companyCanWithdraw($company->id, $gatewayId)) {
+                return response()->json(['message' => 'Você só pode fazer 3 pedidos de saque por dia.'], 403);
             }
 
             $gatewayService = Gateway::getServiceById($gatewayId)->setCompany($company);

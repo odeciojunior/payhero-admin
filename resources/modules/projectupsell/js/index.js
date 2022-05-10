@@ -111,6 +111,7 @@ $(document).ready(function () {
         $(".bt-upsell-update").hide();
         $('#form_add_upsell').show();
         $('#form_edit_upsell').hide()
+        $('#add_active_flag').val("1").trigger("change");
         $('#add_description_upsell').val('');
         $('#add_discount_upsell').val('');
     });
@@ -141,10 +142,10 @@ $(document).ready(function () {
                 $('#edit_description_upsell').val(`${upsell.description}`);
                 $('#edit_discount_upsell').val(`${upsell.discount}`);
 
-                if (upsell.active_flag) {
-                    $('#edit_active_flag').val(1).prop('checked', true);
+                if (upsell.active_flag===1) {
+                    $('#edit_active_flag').val("1").trigger("change");
                 } else {
-                    $('#edit_active_flag').val(0).prop('checked', false);
+                    $('#edit_active_flag').val("0").trigger("change");
                 }
                 // Seleciona a opção do select de acordo com o que vem do banco
                 $('#edit_apply_on_plans, #edit_offer_on_plans').html('');
@@ -397,7 +398,7 @@ $(document).ready(function () {
         let description = descriptionconfig.getData();
         let countdownTime = $('#countdown_time_config').val();
         let countDownFlag = $('#countdown_flag').val();
-        
+
         form_data.set('header', header);
         form_data.set('title', title);
         form_data.set('description', description);
@@ -451,7 +452,7 @@ $(document).ready(function () {
             }, success: function success(response) {
 
                 let upsell = response.data;
-                
+
                 $('#div-upsell-products').html('');
 
                 $('#upsell-header').html(upsell.header);
