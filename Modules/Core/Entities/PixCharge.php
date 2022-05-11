@@ -21,6 +21,7 @@ class PixCharge extends Model
         'qrcode',
         'qrcode_image',
         'status',
+        'expiration_date',
         'created_at',
         'updated_at'
     ];
