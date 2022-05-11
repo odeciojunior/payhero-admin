@@ -969,6 +969,8 @@ function removeMoneyCurrency(string) {
 
 function selectCompanies(){
     actualPage = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+    $('#company').append('<option value="demo">Empresa demo</option>');
+    
     if(actualPage!='dashboard'){
         if (localStorage.getItem('companies') != null) {
             let parseLocalStorageCompanies = JSON.parse(localStorage.getItem('companies'));
@@ -980,6 +982,7 @@ function selectCompanies(){
                     $('#company').append('<option value="' + parseLocalStorageCompanies[i].id_code + '">' + parseLocalStorageCompanies[i].fantasy_name + '</option>')
                 }
             }
+            
             if(localStorage.getItem('companySelected')){
                 $('#company').val(localStorage.getItem('companySelected')).change();
             }

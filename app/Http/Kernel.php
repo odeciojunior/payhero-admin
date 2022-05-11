@@ -13,6 +13,7 @@ use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\VerifyCsrfToken;
 use App\Http\Middleware\VerifyShopifyPostback;
+use App\Http\Middleware\DemoAccount;
 use Fruitcake\Cors\HandleCors;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
@@ -103,5 +104,6 @@ class Kernel extends HttpKernel
         'scope' => CheckForAnyScope::class,
         'InternalApiAuth' => InternalApiAuth::class,
         'IsCloudFoxAccount' => IsCloudFoxAccount::class,
+        'IsDemoAccount'=>DemoAccount::class
     ];
 }

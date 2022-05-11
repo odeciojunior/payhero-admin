@@ -57,5 +57,6 @@
     "HotBillet": true,
     "AstronMembers": true,
     "CheckoutApiPostback": true,
-    "CheckoutEditor": true
+    "CheckoutEditor": true,
+    "DemoAccount": true
 }
