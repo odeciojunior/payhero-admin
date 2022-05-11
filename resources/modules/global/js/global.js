@@ -1,13 +1,11 @@
 $(document).ready(function () {
 
-    selectCompanies();
+    getCompanies();
 
-    $('#company').change(function(){
-        localStorage.setItem('companySelected', $(this).val());
-        thisPage = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
-        if(thisPage!='dashboard'){
-            location.reload();
-        }
+    $('#company').change(function () {
+        sessionStorage.setItem('companySelected', $(this).val());
+        //thisPage = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+        location.reload();
     })
 
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
@@ -805,7 +803,7 @@ function renderSiriusSelect(target) {
         let attributes = Object.values(this.attributes)
             .reduce((text, attr) => {
                 if (!['id', 'value', 'data-value', 'selected', 'disabled'].includes(attr.name)) {
-                    if(attr.value) return text + ` ${attr.name}="${attr.value}"`;
+                    if (attr.value) return text + ` ${attr.name}="${attr.value}"`;
                     return text + ` ${attr.name}`;
                 }
                 return text;
@@ -905,7 +903,7 @@ $(document).ready(function () {
 
     $(document).on('click', '.sirius-select-options div', function () {
         let $target = $(this);
-        if(!$target.hasClass('disabled')) {
+        if (!$target.hasClass('disabled')) {
             let $wrapper = $target.parents('.sirius-select-container');
             $wrapper.find('select')
                 .val($target.data('value'))
@@ -967,26 +965,61 @@ function removeMoneyCurrency(string) {
     return string.substring(3);
 }
 
-function selectCompanies(){
-    actualPage = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+function selectCompanies() {
+    let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
     $('#company').append('<option value="demo">Empresa demo</option>');
-    
-    if(actualPage!='dashboard'){
-        if (localStorage.getItem('companies') != null) {
-            let parseLocalStorageCompanies = JSON.parse(localStorage.getItem('companies'));
-            console.log(parseLocalStorageCompanies)
-            for (let i = 0; i < parseLocalStorageCompanies.length; i++) {
-                if (parseLocalStorageCompanies[i].company_type == '1') {
-                    $('#company').append('<option value="' + parseLocalStorageCompanies[i].id_code + '">Pessoa física</option>')
-                } else {
-                    $('#company').append('<option value="' + parseLocalStorageCompanies[i].id_code + '">' + parseLocalStorageCompanies[i].fantasy_name + '</option>')
-                }
-            }
-            
-            if(localStorage.getItem('companySelected')){
-                $('#company').val(localStorage.getItem('companySelected')).change();
-            }
-            $('#company-select').addClass('d-sm-flex');
+    for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
+        if (sessionStorage.getItem('companySelected') == parseSessionStorageCompanies[i].id)
+            itemSelected = 'selected="selected"'
+        else
+            itemSelected = ''
+
+        if (parseSessionStorageCompanies[i].active_flag == true)
+            itemDisabled = '';
+        else
+            itemDisabled = 'disabled="disabled"';
+
+        if (parseSessionStorageCompanies[i].company_type == '1') {
+            $('#company').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
+        } else {
+            $('#company').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + parseSessionStorageCompanies[i].name + '</option>')
         }
     }
+    $('#company-select').addClass('d-sm-flex');
 }
+
+function getCompanies() {
+    if (sessionStorage.getItem('companies') != null) {
+        selectCompanies()
+    }
+    else{
+        $.ajax({
+            method: "GET",
+            //url: `/api/dashboard${window.location.search}`,
+            url: `/api/core/usercompanies`,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'appliation/json',
+            },
+            error: function error(response) {
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+            },
+            success: function success(data) {
+                companies = data.data
+                if (!isEmpty(companies)) {
+                    sessionStorage.setItem('companies', JSON.stringify(companies));
+                    $(".content-error").hide();
+                    selectCompanies()
+
+                } else {
+                    $(".content-error").show();
+                    $('#company-select, .page-content').hide();
+                    loadingOnScreenRemove();
+                }
+            }
+        });
+    }
+}
+
