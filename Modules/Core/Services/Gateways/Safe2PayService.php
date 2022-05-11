@@ -134,10 +134,10 @@ class Safe2PayService implements Statement
         return true;
     }
 
-    public function existsBankAccountApproved(){        
-        //verifica se existe uma conta bancaria aprovada 
+    public function existsBankAccountApproved(){
+        //verifica se existe uma conta bancaria aprovada
         $this->companyBankAccount =  $this->company->getDefaultBankAccount();
-        return !empty($this->companyBankAccount);        
+        return !empty($this->companyBankAccount);
     }
 
     public function createWithdrawal($value)
@@ -169,7 +169,7 @@ class Safe2PayService implements Statement
 
                 $data = [
                     'value' => $value,
-                    'company_id' => $this->company->id,                   
+                    'company_id' => $this->company->id,
                     'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
                     'tax' => 0,
                     'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
@@ -181,7 +181,7 @@ class Safe2PayService implements Statement
                 $withdrawal = Withdrawal::create($data);
 
             } else {
-                
+
                 $withdrawalValueSum = $withdrawal->value + $value;
                 $data = [
                     'value' => $withdrawalValueSum
