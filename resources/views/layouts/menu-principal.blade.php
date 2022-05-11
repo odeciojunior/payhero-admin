@@ -55,7 +55,7 @@
                 <!-- MODAL DE NOVIDADE ANNOUCEKIT -->
                 <div id="my-iframe" class="announcekit-widget d-none d-sm-flex align-items-center">
                     {{-- <b class="pr-5"> Novidades </b> --}}
-                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Novidades" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
+                    <span class="nav-link navbar-avatar" data-toggle="dropdown" title="Novidades" id='notification' aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer; padding-right: .0rem'>
                         <img class="svg-menu" src="{{ mix('build/global/img/svg/notificacao.svg') }}" alt="Novidades">
                     </span>
                 </div>
