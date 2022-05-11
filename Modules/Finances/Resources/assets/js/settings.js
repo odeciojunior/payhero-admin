@@ -18,7 +18,7 @@ $(document).ready(function () {
     }
 
     var financesSettingsForm = $('#finances-settings-form')
-    var companySelect = $('#transfers_company_select')
+    var companySelect = $("#company").val() //$('#transfers_company_select')
     var withdrawalByPeriod = $('#withdrawal_by_period')
     var frequencyContainer = $('.frequency-container')
     var frequencyButtons = frequencyContainer.find('.btn')
@@ -54,7 +54,7 @@ $(document).ready(function () {
     window.saveSettings = function (data) {
 
         settingsData = Object.assign(settingsData, {
-            company_id: companySelect.val(),
+            company_id: $("#company").val(), //companySelect.val(),
             amount: withdrawalAmount.val(),
         })
 
@@ -166,7 +166,7 @@ $(document).ready(function () {
 
     window.clearSettingsForm = function () {
         settingsData = {
-            company_id: companySelect.val(),
+            company_id: $("#company").val(), //companySelect.val(),
             rule: null,
             frequency: null,
             weekday: null,
@@ -225,9 +225,9 @@ $(document).ready(function () {
         }
     }
 
-    companySelect.on('change', function () {
-        getSettings($(this).val())
-    })
+    // companySelect.on('change', function () {
+    //     getSettings($(this).val())
+    // })
 
     frequencyButtons.on('click', function () {
         frequencyButtons.removeClass('active')
@@ -292,8 +292,8 @@ $(document).ready(function () {
     withdrawalAmount.maskMoney({thousands: '.', decimal: ',', allowZero: true});
     frequencyButtons.removeClass('active')
 
-    if (!isEmpty(companySelect.val())) {
-        getSettings(companySelect.val())
+    if (!isEmpty($("#company").val())) { //companySelect.val()
+        getSettings($("#company").val()) //companySelect.val()
     } else {
         onWithdrawalByAmountChange()
         onWithdrawalByPeriodChange()

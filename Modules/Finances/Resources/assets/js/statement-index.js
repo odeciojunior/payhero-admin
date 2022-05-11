@@ -170,12 +170,12 @@ $(window).on("load", function(){
 
                 $('.page-content').show();
                 $('.content-error').hide();
-
+console.log(response.data);
                 $(response.data).each(function (index, value) {
                     let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
-                    $("#transfers_company_select").append(data);
+                    $("#transfers_company_select").append(data);//
                     $("#transfers_company_select_mobile").append(data);
-                    $("#extract_company_select").append(data);
+                    $("#extract_company_select").append(data);//
                     $("#statement_company_select").append(data);
                 });
 
@@ -187,6 +187,8 @@ $(window).on("load", function(){
                 $("#nav-statement-tab").on('click', function () {
                     $("#nav-statement").css('display', '');
                 });
+
+                $('.company_name').val( $("#company").find('option:selected').text() );
 
                 loadingOnScreenRemove();
             }

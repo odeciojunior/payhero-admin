@@ -202,7 +202,7 @@ $(document).ready(function(){
     }
 
     window.updateStatements = function() {
-        let companyId = $("#transfers_company_select").val()
+        let companyId = $("#company").val() //$("#transfers_company_select").val()
         $.ajax({
             url: `/api/finances/get-statement-resumes?company_id=${companyId}`,
             type: "GET",
@@ -402,7 +402,7 @@ $(document).ready(function(){
         });
     }
      window.updateWithdrawals = function() {
-        let companyId = $("#transfers_company_select").val()
+        let companyId = $("#company").val() //$("#transfers_company_select").val()
 
         $.ajax({
             url: `/api/withdrawals/get-resume?company_id=${companyId}`,

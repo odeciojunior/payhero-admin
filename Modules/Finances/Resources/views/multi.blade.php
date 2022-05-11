@@ -26,19 +26,15 @@
                             Finanças
                         </h1>
                     </div>
-                    <div class="col-12 col-md-5 d-flex d-fall align-items-end justify-content-end order-2 order-md-1 p-0">
+                    {{-- <div class="col-12 col-md-5 d-flex d-fall align-items-end justify-content-end order-2 order-md-1 p-0">
                         <div class="col-12 col-md-11 float-right px-0">
-                            {{--                        <div class="skeleton skeleton-gateway-logo" style="height: 50px" id="skeleton-select"></div>--}}
+
                             <div class="input-holder">
                                 <select class="sirius-select" id="transfers_company_select" data-width="100%"></select>
                             </div>
                         </div>
-                        {{--                    <div class="col-sm-12 float-right d-none d-sm-flex justify-content-end">--}}
-                        {{--                        <div class="d-flex justify-content-end align-items-center" style="font-size: 16px;color: #636363;">--}}
-                        {{--                            <span style="margin-right: 9px" class="o-question-help-1"></span> Dúvidas sobre adquirentes?--}}
-                        {{--                        </div>--}}
-                        {{--                    </div>--}}
-                    </div>
+
+                    </div> --}}
                     <div class="col-sm-12 order-1 order-md-2 p-0 px-md-15">
                         <p class="mt-10 mb-0">
                             <span class="badge badge-primary d-none d-md-inline-block">NOVO!</span>
