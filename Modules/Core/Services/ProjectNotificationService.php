@@ -261,30 +261,37 @@ class ProjectNotificationService
                     }
                 }
 
-                if (strpos($message, '{url_boleto}') !== false) {
+                $domainName='';
+                if(!empty($sale)){
+                    $domain = Domain::select('name')->where('project_id', $sale->project_id)->where('status', 3)->first();
+                    $domainName = $domain->name??'cloudfox.net';                    
+                }
+
+                if (strpos($message, '{url_boleto}') !== false && !empty($sale)) {
+                    $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto";             
                     if ($notificationType == 'sms') {
                         $linkShortenerService = new LinkShortenerService();
-                        $link                 = $linkShortenerService->shorten($sale->boleto_link);
+                        $link                 = $linkShortenerService->shorten($boletoLink);
                         $message              = str_replace('{url_boleto}', $link, $message);
                     } else {
-                        $message = str_replace('{url_boleto}', $sale->boleto_link, $message);
+                        $message = str_replace('{url_boleto}', $boletoLink, $message);
                     }
                 }
 
-                if (strpos($message, '{codigo_venda}') !== false) {
+                if (strpos($message, '{codigo_venda}') !== false && !empty($sale)) {
                     $saleCode = Hashids::connection('sale_id')->encode($sale->id);
                     $message  = str_replace('{codigo_venda}', '#' . $saleCode, $message);
                 }
 
-                if (strpos($message, '{codigo_rastreio}') !== false) {
+                if (strpos($message, '{codigo_rastreio}') !== false && !empty($trackingCode)) {
                     $message = str_replace('{codigo_rastreio}', $trackingCode, $message);
                 }
 
-                if (strpos($message, '{projeto_nome}') !== false) {
+                if (strpos($message, '{projeto_nome}') !== false && !empty($project)) {
                     $message = str_replace('{projeto_nome}', $project->name, $message);
                 }
 
-                if (strpos($message, '{link_rastreamento}') !== false) {
+                if (strpos($message, '{link_rastreamento}') !== false && !empty($sale)) {
                     $domainModel = new Domain();
                     $domain      = $domainModel->where('project_id', $sale->project_id)
                                                ->where('status', 3)
@@ -303,7 +310,7 @@ class ProjectNotificationService
                     }
                 }
 
-                if (strpos($message, '{link_carrinho_abandonado}') !== false) {
+                if (strpos($message, '{link_carrinho_abandonado}') !== false && !empty($linkCheckout)) {
                     if ($notificationType == 'sms') {
                         $linkShortenerService = new LinkShortenerService();
                         $link                 = $linkShortenerService->shorten($linkCheckout);
@@ -314,11 +321,10 @@ class ProjectNotificationService
                 }
 
                 return $message;
-            } else {
-                return '';
-            }
-        } catch
-        (Exception $ex) {
+            } 
+            return '';
+
+        } catch(Exception $ex) {
             Log::warning('Erro ao formatar dados da notificação de email - ProjectNotificationService - formatNotificationData');
             report($ex);
         }

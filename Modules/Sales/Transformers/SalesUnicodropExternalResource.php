@@ -5,6 +5,7 @@ namespace Modules\Sales\Transformers;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\PixCharge;
 
 /**
@@ -27,6 +28,9 @@ class SalesUnicodropExternalResource extends JsonResource
         $fee += preg_replace("/[^0-9]/", "", $this->installment_tax_value ?? 0) / 100;
 
         $pixCharge = PixCharge::where('sale_id',$this->id)->orderBy('id','DESC')->first();
+        $domain = Domain::select('name')->where('project_id', $this->project_id)->where('status', 3)->first();
+        $domainName = $domain->name??'cloudfox.net';
+        $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($this->id)."/download-boleto";
 
         return [
             'id' => Hashids::connection('sale_id')->encode($this->id),
@@ -40,7 +44,7 @@ class SalesUnicodropExternalResource extends JsonResource
             'refunded_at' => $this->date_refunded,
             'products' => $this->products ?? [],
             'billet_digitable_line' => $this->boleto_digitable_line,
-            'billet_url' => $this->boleto_link,
+            'billet_url' => $boletoLink,
             'billet_due_date' => $this->boleto_due_date,
             'pix_code' => $pixCharge ? $pixCharge->qrcode : "",
             'pix_expires_at' => $this->boleto_link,

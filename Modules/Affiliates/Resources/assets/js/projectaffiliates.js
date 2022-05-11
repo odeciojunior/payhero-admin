@@ -131,6 +131,8 @@ $(document).ready(function () {
                     );
                 } else {
                     $.each(response.data, function (index, value) {
+                        if (value.percentage=='' || value.percentage=='0')
+                            value.percentage='0%';
                         data = "";
                         data += "<tr>";
                         data +=
@@ -245,6 +247,8 @@ $(document).ready(function () {
                             errorAjaxResponse(response);
                         },
                         success: function success(response) {
+                            if (response.data.percentage=='' || response.data.percentage=='0')
+                                response.data.percentage='0%';
                             $("#modal-edit-affiliate .affiliate-id").val(
                                 affiliate
                             );
@@ -286,6 +290,8 @@ $(document).ready(function () {
                             errorAjaxResponse(response);
                         },
                         success: function success(response) {
+                            if (response.data.percentage=='' || response.data.percentage=='0')
+                                response.data.percentage='0%';
                             $("#modal-show-affiliate .affiliate-name").text(
                                 response.data.name
                             );

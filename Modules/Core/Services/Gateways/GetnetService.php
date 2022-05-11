@@ -148,10 +148,6 @@ class GetnetService implements Statement
                 throw new Exception('Saque negado devido ao saldo negativo no Asaas');
             }
 
-            if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID)) {
-                return false;
-            }
-
             $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
 
             if ($isFirstUserWithdrawal) {

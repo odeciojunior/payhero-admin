@@ -108,13 +108,16 @@ class ReportanaService
                 $totalValue = number_format(($sale->original_total_paid_value - $sale->interest_total_value) / 100, 2, '.', '');
                 $subtotal   = number_format($sale->sub_total, 2, '.', '');
 
+                $domainName = $domain->name??'cloudfox.net';
+                $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto";
+
                 $data = [
                     'type'         => 'order',
                     'event_type'   => $eventSale,
                     'payment_type' => (new Sale())->present()->getPaymentType($sale->payment_method),
                     'order'        => [
                         'financial_status'  => $status,
-                        'billet_url'        => $sale->boleto_link,
+                        'billet_url'        => $boletoLink,
                         'gateway'           => 'cloudfox',
                         'checkout_url'      => "https://checkout." . $domain->name . "/recovery/" . Hashids::encode($sale->checkout_id),
                         'id'                => $sale->checkout_id,
