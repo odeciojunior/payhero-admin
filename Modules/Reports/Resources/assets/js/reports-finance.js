@@ -190,7 +190,7 @@ function blockeds() {
             Authorization: $('meta[name="access-token"]').attr("content"),
             Accept: "application/json",
         },
-        beforeSend: function( jqXHR, settings ) {
+        beforeSend: function( jqXHR ) {
             jqXHR.then(dados => {
                 let { value } = dados.data;
                 if( removeMoneyCurrency(value) == "0,00" ) {
@@ -203,26 +203,21 @@ function blockeds() {
         },
         success: function success(response) {
              let {amount, value} = response.data;
-
-            //  if( removeMoneyCurrency(value) !== '0,00' ) {
-                 blockedsHtml = `
-                    <div class="d-flex">
-                        <div class="balance col-3">
-                            <h6 class="grey font-size-14">Total</h6>
-                            <strong class="grey total">${kFormatter(amount)}</strong>
-                        </div>
-                        <div class="balance col-9">
-                            <h6 class="font-size-14">Saldo</h6>
-                            <small>R$</small>
-                            <strong class="total red ">${removeMoneyCurrency(value)}</strong>
-                        </div>
+             
+             blockedsHtml = `
+                <div class="d-flex">
+                    <div class="balance col-3">
+                        <h6 class="grey font-size-14">Total</h6>
+                        <strong class="grey total">${kFormatter(amount)}</strong>
                     </div>
-                 `;
-                 $("#block-blockeds").html(blockedsHtml);
-            //  } else {
-            //     $('#card-blockeds' ).hide();
-            //  }
-
+                    <div class="balance col-9">
+                        <h6 class="font-size-14">Saldo</h6>
+                        <small>R$</small>
+                        <strong class="total red ">${removeMoneyCurrency(value)}</strong>
+                    </div>
+                </div>
+             `;
+             $("#block-blockeds").html(blockedsHtml);
         }
     });
 }
@@ -320,7 +315,7 @@ function onCommission() {
                         <em class="${variation.color}">${variation.value}</em>
                     </div>
                 </div>
-                <section style="margin-left: -15px;">
+                <section style="margin-left: -7px;">
                     <div class="graph-reports">
                         <div class="${removeMoneyCurrency(total) !== '0,00' ? 'new-finance-graph' : ''  }"></div>
                     </div>
@@ -335,7 +330,7 @@ function onCommission() {
                 graphComission(series, labels);
             } else {
                 infoComission = `
-                    <div class="d-flex" style="justify-content: center;">
+                    <div class="d-flex empty-graph">
                         <div class="info-graph">
                             <div class="no-sell">
                                 <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -366,7 +361,7 @@ function onCommission() {
 function getPending() {
     let pendingBlock = '';
     $('#card-pending .onPreLoad *' ).remove();
-    $("#block-pending").prepend(skeLoad);
+    $("#block-pending").html(skeLoad);
 
     return $.ajax({
         method: "GET",
@@ -378,27 +373,26 @@ function getPending() {
         },
         error: function error(response) {
             errorAjaxResponse(response);
-
         },
         success: function success(response) {
             let { amount, value } = response.data;
 
             pendingBlock = `
-            <footer class="">
-                <div class="d-flex">
-                    <div class="balance col-3">
-                        <h6 class="grey font-size-14">Total</h6>
-                        <strong class="grey total">${kFormatter(amount)}</strong>
+                <footer class="">
+                    <div class="d-flex">
+                        <div class="balance col-3">
+                            <h6 class="grey font-size-14">Total</h6>
+                            <strong class="grey total">${kFormatter(amount)}</strong>
+                        </div>
+                        <div class="balance col-9">
+                            <h6 class="font-size-14">Saldo</h6>
+                            <small>R$</small>
+                            <strong class="total orange">${removeMoneyCurrency(value)}</strong>
+                        </div>
                     </div>
-                    <div class="balance col-9">
-                        <h6 class="font-size-14">Saldo</h6>
-                        <small>R$</small>
-                        <strong class="total orange">${removeMoneyCurrency(value)}</strong>
-                    </div>
-                </div>
-            </footer>
+                </footer>
             `;
-            $("#block-pending").html(pendingBlock)
+            $("#block-pending").html(pendingBlock);
         }
     });
 }
@@ -507,6 +501,7 @@ function changeCalendar() {
         }
     })
     .on('datepicker-change', function () {
+        $.ajaxQ.abortAll();
         updateStorage({calendar: $(this).val()});
         updateReports();
     })
@@ -525,6 +520,7 @@ function changeCompany() {
     $("#select_projects").on("change", function () {
         $('.onPreLoad *').remove();
         $('.onPreLoad').html(skeLoad);
+        $.ajaxQ.abortAll();
         updateStorage({company: $(this).val()})
         updateReports();
     });
@@ -664,7 +660,7 @@ function graphComission(series, labels) {
                         },
                         color: "#A2A3A5",
                         callback: function(value){
-                            return (value / 100000) + 'K '
+                            return 'R$ ' + (value / 100000) + 'K '
                         }
                     }
 
@@ -919,7 +915,7 @@ let skeLoad = `
                 <div class="skeleton skeleton-circle"></div>
                 <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
             </div>
-            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text ske"></div>
         </div>
     </div>
 `;

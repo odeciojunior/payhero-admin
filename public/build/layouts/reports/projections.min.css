@@ -729,6 +729,34 @@ h4.number{
 }
 
 /* REPORTS FINANCE */
+.graph-principal { height: 398px; }
+.distribution-content { 
+    min-height: 303px; 
+    padding-bottom: 0 !important; 
+}
+.secondary-blocks { height: 125px; }
+.secondary-blocks h6 { margin: 0; }
+#block-commission { height: 300px; }
+#block-commission .ske-load {
+    position: absolute;
+    transform: translate(0, -50%);
+}
+.empty-graph {
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+#block-distribution .ske-load {
+    position: absolute;
+    transform: translate(0, -50%);
+}
+#block-pending .ske-load,
+#block-blockeds .ske-load { position: absolute; }
+
+#block-pending .ske,
+#block-blockeds .ske { display: none; }
+
 @media only screen and (min-width: 1220px) {
     .box-items-finance  { padding-right: 0; }
     .pending.box-items-finance { padding-right: 1.0715rem; }
@@ -857,7 +885,7 @@ h4.number{
 }
 #info-commission .ske-load { margin: 20px auto 0; }
 .new-finance-graph {
-    height: 359px;
+    height: 278px;
     padding-bottom: 10px;
 }
 
@@ -903,10 +931,7 @@ h4.number{
     margin: 0;
 }
 
-.box-finances-values { 
-    padding: 20px 0; 
-    align-items: center;
-}
+.box-finances-values { align-items: center; }
 .box-finances-values.finances-sales { 
     padding-right: 20px; 
     padding-top: 0;

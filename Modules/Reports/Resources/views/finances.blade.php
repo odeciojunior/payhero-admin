@@ -125,7 +125,7 @@
                         <!-- comission -->    
                         <div class="primary">
                             <div class="card" id="card-commission">
-                                <section class="container pb-20">
+                                <section class="container pb-20 graph-principal">
                                     <header class="d-flex title-graph mb-0">
                                         <h5 class="grey font-size-16">
                                             <strong>Comissão</strong>
@@ -186,7 +186,7 @@
                         
                         <!-- distribtion -->
                         <div class="distribution">
-                            <div class="card inner" id="card-distribution">
+                            <div class="card inner distribution-content" id="card-distribution">
                                 <header class="d-flex title-graph mb-0">
                                     <h5 class="grey font-size-16">
                                         <strong>Distribuição</strong>
@@ -197,7 +197,7 @@
                             </div>
                             <div class="">
                                 <div class="d-flex sub-distribution">
-                                    <div class="card inner" id="card-pending">
+                                    <div class="card inner secondary-blocks" id="card-pending">
                                         <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
                                                 <strong>Pendente</strong>
@@ -209,7 +209,7 @@
                                         </header>
                                         <div class="onPreLoad" id="block-pending"></div>
                                     </div>
-                                    <div class="card inner" id="card-blockeds">
+                                    <div class="card inner secondary-blocks" id="card-blockeds">
                                         <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
                                                 <strong>Bloqueado</strong>
