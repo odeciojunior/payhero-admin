@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Sale;
 use Vinkla\Hashids\Facades\Hashids;
@@ -27,6 +28,10 @@ class HotZappService
      */
     function boletoPaid(Sale $sale)
     {
+        $domain = Domain::select('name')->where('project_id', $sale->project_id)->where('status', 3)->first();
+        $domainName = $domain->name??'cloudfox.net';
+        $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto";
+
         $data = [
             'transaction_id' => Hashids::connection('sale_id')->encode($sale->id),
             'name' => $sale->customer->name,
@@ -46,7 +51,7 @@ class HotZappService
             'cms_aff' => '',
             'aff' => '',
             'aff_name' => '',
-            'billet_url' => $sale->boleto_link,
+            'billet_url' => $boletoLink,
             'transaction_error_msg' => '',
             'paid_at' => '',
             'payment_method' => 'billet',
