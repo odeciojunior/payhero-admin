@@ -136,8 +136,11 @@ class Safe2PayService implements Statement
 
     public function existsBankAccountApproved(){        
         //verifica se existe uma conta bancaria aprovada 
-        $this->companyBankAccount =  $this->company->getDefaultBankAccount();
-        return !empty($this->companyBankAccount);        
+        if(!empty($this->company)){
+            $this->companyBankAccount = $this->company->getDefaultBankAccount();
+            return !empty($this->companyBankAccount);        
+        }
+        return false;
     }
 
     public function createWithdrawal($value)

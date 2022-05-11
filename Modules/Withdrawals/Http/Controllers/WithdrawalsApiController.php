@@ -69,6 +69,10 @@ class WithdrawalsApiController
             }
 
             $company = Company::find(hashids_decode($request->company_id));
+            if (empty($company)) {
+                return response()->json(['message' => 'Não identificamos a empresa.',],400);
+            }
+
             $gatewayId = hashids_decode($request->gateway_id);
 
             if (!Gate::allows('edit', [$company])) {
