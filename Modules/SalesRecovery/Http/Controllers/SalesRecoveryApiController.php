@@ -333,9 +333,9 @@ class SalesRecoveryApiController extends Controller
                 if ($request->discountType == 'percentage') {
                     $discount       = ($totalPaidValue * (foxutils()->onlyNumbers($request->discountValue)/100));
                     $totalPaidValue -= $discount;
-                    $discount = $discount/100; //salva como valor decimal
+                    $discount = round($discount/100,2,PHP_ROUND_HALF_DOWN); //converte para decimal
                 } else {
-                    $discount       = $request->discountType;
+                    $discount       = $request->discountValue;
                     $totalPaidValue -= $discount*100;
                 }
                 
