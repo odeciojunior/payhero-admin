@@ -17,5 +17,7 @@ Route::group(
         Route::get('/core/companies', 'CoreApiController@companies')
         //->names('api.companies')
         ->middleware('permission:sales|finances|report_pending|apps|invitations');
+
+        Route::post('/core/company-default','CoreApiController@updateCompanyDefault');
     }
 );

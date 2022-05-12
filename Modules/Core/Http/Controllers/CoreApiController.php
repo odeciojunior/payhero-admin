@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Modules\Companies\Http\Requests\CompanyCreateRequest;
@@ -144,6 +145,43 @@ class CoreApiController extends Controller
                 400
             );
         }
+    }
+
+    public function updateCompanyDefault(Request $request){
+
+        if(empty($request->company_id)){
+            return response()->json(['message'=>'Informe a empresa selecionada'],400);
+        }
+
+        $companyId = 0;
+        if($request->company_id <> 'demo'){
+            $companyId = current(Hashids::decode($request->company_id));            
+        }
+        
+        $user = Auth::user();
+        if($user->company_default == $companyId){
+            return response()->json(['message'=>'A empresa selecionada já é a default.'],400);
+        }
+
+        if($request->company_id <> 'demo'){
+            $company = Company::where('user_id',$user->id)->where('id',$companyId)->exists();
+            if(empty($company)){
+                return response()->json(['message'=>'Não foi possivel identificar a empresa'],400);
+            }
+        }
+
+        try{
+
+            $user->company_default = $companyId;
+            $user->save();
+    
+            return response()->json(['message'=>'Empresa atualizada.']);
+
+        }catch(Exception $e){
+            report($e);
+            return response()->json(['message'=>'Não foi possivel atualizar a empresa default.']);
+        }
+        
     }
 
 }

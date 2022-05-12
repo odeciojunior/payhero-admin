@@ -14,7 +14,7 @@ class AlterTableUserAddColumnCompanyDefault extends Migration
     public function up()
     {
         Schema::table('users',function(Blueprint $table){
-            $table->unsignedInteger('company_default')->after('mkt_information');
+            $table->unsignedInteger('company_default')->default(null)->after('mkt_information');
         });
     }
 

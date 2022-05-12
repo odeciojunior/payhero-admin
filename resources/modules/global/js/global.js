@@ -3,10 +3,24 @@ $(document).ready(function () {
     getCompanies();
 
     $('#company').change(function () {
-        //a fazer: ajax api pra salvar companyDefault no banco
-
-        sessionStorage.setItem('companyDefault', $(this).val());
-        window.location.href = window.location.href
+        
+        $.ajax({
+            method: 'POST',
+            url: '/api/core/company-default',
+            data:{company_id:$(this).val()},
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: response => {
+                errorAjaxResponse(response);
+            },
+            success: response => {
+                // sessionStorage.setItem('companyDefault', $(this).val());
+                // window.location.href = window.location.href
+            },
+        });
+        
     })
 
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
