@@ -382,19 +382,21 @@ class SalesRecoveryApiController extends Controller
             $user        = auth()->user();
 
             if ($dataRequest['recovery_type'] == 1) {
-                $filename = 'report_abandoned_cart' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+                $filename = 'report_abandoned_cart' . Hashids::encode($user->id) . '.csv'; //. $dataRequest['format'];
                 (new AbandonedCartReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
 
             } else if ($dataRequest['recovery_type'] == 3) {
-                $filename = 'report_card_refused' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+                $filename = 'report_card_refused' . Hashids::encode($user->id) . '.csv'; //. $dataRequest['format'];
                 (new CardRefusedReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
 
             } else if ($dataRequest['recovery_type'] == 4) {
-                $filename = 'report_pix_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+                $filename = 'report_pix_expired' . Hashids::encode($user->id) . '.csv'; //. $dataRequest['format'];
                 (new PixExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+
             } else {
-                $filename = 'report_billet_expired' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+                $filename = 'report_billet_expired' . Hashids::encode($user->id) . '.csv'; //. $dataRequest['format'];
                 (new BilletExpiredReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
+
             }
 
             return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);

@@ -100,7 +100,7 @@ class SalesApiController extends Controller
                 }
             )->log('Exportou tabela ' . $dataRequest['format'] . ' de vendas');
             $user = auth()->user();
-            $filename = 'sales_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+            $filename = 'sales_report_' . Hashids::encode($user->id) . '.csv'; //. $dataRequest['format'];
             (new SaleReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
             return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
         } catch (Exception $e) {
