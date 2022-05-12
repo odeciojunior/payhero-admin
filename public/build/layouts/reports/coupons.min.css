@@ -831,7 +831,9 @@ h4.number{
 #block-pending .ske,
 #block-blockeds .ske { display: none; }
 
-#block-withdraw , #draw{ height: 228px; }
+@media(min-width: 1024px) {
+    #block-withdraw , #draw{ height: 228px; }
+}
 
 @media only screen and (min-width: 1220px) {
     .box-items-finance  { padding-right: 0; }
@@ -951,7 +953,6 @@ h4.number{
 
 .commission, .distribution { border-radius: 8px; }
 .inner { padding: 0 20px 20px 20px; }
-.inner.cash { padding-bottom: 30px; }
 
 #info-commission { 
     min-height: 126px; 
@@ -984,6 +985,7 @@ h4.number{
     justify-content: space-between;
     align-items: center;
     height: 50px;
+    margin-left: 0;
 }
 .box-chart-primary .title-graph.title-distribution {
     margin-bottom: 0;
@@ -1236,13 +1238,13 @@ h4.number{
 
 .inner.relative .title-graph { position: absolute; }
 
-.inner.relative .title-graph.title-withdraw { height: 35px; }
+.inner.relative .title-graph.title-withdraw { height: 19px; }
 
 .inner.relative .title-graph.no-withdrawals { position: relative; }
 
 .inner.relative .title-graph.no-withdrawals small { font-size: 14px; }
 
-#financesChart { margin-top: 24px; }
+#financesChart { margin-top: 18px; }
 
 .no-info-graph {
     width: 100%;
@@ -1482,6 +1484,7 @@ h4.number{
 }
 
 .title-graph { margin: 15px 10px 0 5px; }
+.title-cash { margin-bottom: 5px; }
 
 .box-states > ul { 
     padding: 0; 
@@ -1993,8 +1996,10 @@ h4.number{
     justify-content: center;
     align-items: center;
 }
-#card-withdraw {
-    height: 274px;
+@media (min-width: 1024px) {
+    #card-withdraw {
+        height: 274px;
+    }
 }
 #card-withdraw  .ske-load {
     position: absolute;

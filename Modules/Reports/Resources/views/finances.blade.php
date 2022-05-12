@@ -139,7 +139,7 @@
                                 <div class="d-flex justify-content-between sub-comission">
                                     <div class="inner-comission">
                                         <div class="card inner cash card-cashback" id="card-cashback">
-                                            <header class="d-flex title-graph">
+                                            <header class="d-flex title-graph title-cash">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Cashback</strong>
                                                 </h5>
