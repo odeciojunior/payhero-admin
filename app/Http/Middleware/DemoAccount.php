@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 class DemoAccount
 {
@@ -17,11 +18,11 @@ class DemoAccount
      */
     public function handle(Request $request, Closure $next)
     {
-        //IMPLEMENTANDO
-        // if(str_contains($request->path(),'api/')){
-        //     $route = str_replace('api/','',$request->path());
-        //     return Route::toDemoAccount($request, str_replace('/','.',$route));
-        // }
+        
+        if(str_contains($request->path(),'api/')){
+            $route = str_replace('api/','',$request->path());
+            return Route::toDemoAccount($request, str_replace('/','.',$route));
+        }
         return $next($request);
     }
 }
