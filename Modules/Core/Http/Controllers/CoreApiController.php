@@ -25,6 +25,7 @@ use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\CompanyServiceGetnet;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\Gateways\Safe2PayService;
 use Modules\Core\Services\UserService;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -144,6 +145,26 @@ class CoreApiController extends Controller
                 400
             );
         }
+    }
+
+    public function getCompanyBalance($comanyId)
+    {
+        $company = Company::find(hashids_decode($comanyId));
+
+        if(empty($company)) {
+            return response()->json('Empresa não encontrada', 400);
+        }
+
+        $safe2payService = new Safe2PayService();
+        $safe2payService->setCompany($company);
+
+        $availableBalance = $safe2payService->getAvailableBalance();
+        $pendingBalance = $safe2payService->getPendingBalance();
+        $safe2payService->applyBlockedBalance($availableBalance, $pendingBalance);
+
+        return response()->json([
+            'balance' => $availableBalance + $pendingBalance
+        ], 200);
     }
 
 }

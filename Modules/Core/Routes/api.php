@@ -19,3 +19,13 @@ Route::group(
         ->middleware('permission:sales|finances|report_pending|apps|invitations');
     }
 );
+
+Route::group(
+    [
+        'middleware' => ['InternalApiAuth'],
+    ],
+    function() {
+        Route::get('/core/get-company-balance/{company_id}', 'CoreApiController@getCompanyBalance');
+    }
+);
+

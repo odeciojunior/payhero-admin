@@ -53,27 +53,19 @@ class AsaasService implements Statement
         return $this;
     }
 
-    public function setBankAccount(CompanyBankAccount $companyBankAccount){
-        $this->companyBankAccount = $companyBankAccount;
-    }
-
-    public function getAvailableBalanceWithoutBlocking(): int
+    public function setBankAccount(CompanyBankAccount $companyBankAccount)
     {
-        return $this->company->asaas_balance;
+        $this->companyBankAccount = $companyBankAccount;
     }
 
     public function getAvailableBalance(): int
     {
-        return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
+        return $this->company->asaas_balance;
     }
 
     public function getPendingBalance(): int
     {
-        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
-            $join->on('brs.sale_id', '=', 'transactions.sale_id')
-                ->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
-        })->whereNull('brs.id')
-            ->where('transactions.company_id', $this->company->id)
+        return Transaction::where('transactions.company_id', $this->company->id)
             ->where('transactions.status_enum', Transaction::STATUS_PAID)
             ->whereIn('transactions.gateway_id', $this->gatewayIds)
             ->where('transactions.created_at', '>', '2021-09-20')
@@ -84,7 +76,7 @@ class AsaasService implements Statement
     {
         return Transaction::where('company_id', $this->company->id)
             ->whereIn('gateway_id', $this->gatewayIds)
-            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+            ->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
             ->sum('value');
@@ -92,12 +84,7 @@ class AsaasService implements Statement
 
     public function getBlockedBalancePending(): int
     {
-        return Transaction::where('company_id', $this->company->id)
-            ->whereIn('gateway_id', $this->gatewayIds)
-            ->where('status_enum', Transaction::STATUS_PAID)
-            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-            ->sum('value');
+        return 0;
     }
 
     public function getPendingDebtBalance(): int
@@ -136,7 +123,8 @@ class AsaasService implements Statement
         return true;
     }
 
-    public function existsBankAccountApproved(){
+    public function existsBankAccountApproved()
+    {
         //verifica se existe uma chave pix aprovada
         $this->companyBankAccount =  $this->company->getBankAccountTED();
         return !empty($this->companyBankAccount);
@@ -268,7 +256,6 @@ class AsaasService implements Statement
         return (new StatementService)->getPeriodBalance($this->company->id, $this->gatewayIds, $filters);
     }
 
-
     public function getResume()
     {
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
@@ -278,25 +265,45 @@ class AsaasService implements Statement
         if (empty($lastTransaction) && $this->company->asaas_balance == 0) {
             return [];
         }
-        $pendingBalance = $this->getPendingBalance();
-        $blockedBalance = $this->getBlockedBalance();
-        $availableBalance = $this->getAvailableBalanceWithoutBlocking() - $blockedBalance;
-        $blockedBalancePending = $this->getBlockedBalancePending();
-
-        $totalBlockedBalance = $blockedBalance + $blockedBalancePending;
-        $totalBalance = $availableBalance + $pendingBalance + $totalBlockedBalance;
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
+
+        $blockedBalance = null;
+        $pendingBalance = $this->getPendingBalance();
+        $availableBalance = $this->getAvailableBalance();
+        $totalBalance = $availableBalance + $pendingBalance;
+
+        $this->applyBlockedBalance($availableBalance, $pendingBalance, $blockedBalance);
 
         return [
             'name' => 'Asaas',
-            'available_balance' => foxutils()->formatMoney($availableBalance / 100),
-            'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
-            'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
-            'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+            'available_balance' => $availableBalance,
+            'pending_balance' => $pendingBalance,
+            'blocked_balance' => $blockedBalance,
+            'total_balance' => $totalBalance,
             'total_available' => $availableBalance,
+            'pending_debt_balance' => 0,
             'last_transaction' => $lastTransactionDate,
             'id' => 'NzJqoR32egVj5D6'
         ];
+    }
+
+    public function applyBlockedBalance(&$availableBalance, &$pendingBalance, &$blockedBalance = null)
+    {
+        $blockedBalance = $this->getBlockedBalance();
+
+        if($blockedBalance <= $availableBalance) {
+            $availableBalance -= $blockedBalance;
+            return;
+        }
+
+        if($blockedBalance <= ($availableBalance + $pendingBalance)) {
+            $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
+            $availableBalance = 0;
+            return;
+        }
+
+        $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $pendingBalance = 0;
     }
 
     public function getGatewayAvailable()

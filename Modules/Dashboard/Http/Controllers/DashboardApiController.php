@@ -69,88 +69,49 @@ class DashboardApiController extends Controller
     public function getValues(Request $request): JsonResponse
     {
         try {
-            if ($request->has('company') && !empty($request->input('company'))) {
-                $values = $this->getDataValues($request->company);
-
-                if ($values) {
-                    return response()->json($values, 200);
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                    ],
-                    400
-                );
-            }
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
-        }
-    }
-
-    private function getDataValues($companyHash): array
-    {
-        try {
-            if (empty($companyHash)) {
-                return [];
-            }
-            $companyModel = new Company();
-            $saleModel = new Sale();
-            $transactionModel = new Transaction();
-            $companyId = current(Hashids::decode($companyHash));
-            $company = $companyModel->find($companyId);
-            $companyService = new CompanyBalanceService($company);
+            $companyId = hashids_decode($request->company);
+            $company = Company::find($companyId);
 
             if (empty($company)) {
-                return [];
+                return response()->json(['message' => 'Ocorreu algum erro'], 400);
             }
 
-            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
-
-            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
-            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
-
-            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE) ;
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance +$blockedBalancePending;
-            $blockedBalanceTotal = $blockedBalance + $blockedBalancePending;
-            $statusArray = [
-                $transactionModel->present()->getStatusEnum('paid'),
-                $transactionModel->present()->getStatusEnum('transfered'),
-            ];
-
-            $todayBalance = $saleModel
-                ->join('transactions as t', 't.sale_id', '=', 'sales.id')
+            $todayBalance = Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                 ->where('t.company_id', $companyId)
                 ->whereDate('sales.end_date', Carbon::today()->toDateString())
-                ->whereIn('t.status_enum', $statusArray)
+                ->whereIn('t.status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
                 ->sum('t.value');
 
-            return [
-                'available_balance'     => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                'total_balance'         => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                'pending_balance'       => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+            // $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
+
+            // $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
+            // $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
+
+            // $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE) ;
+            // $totalBalance = $availableBalance + $pendingBalance + $blockedBalance +$blockedBalancePending;
+            // $blockedBalanceTotal = $blockedBalance + $blockedBalancePending;
+
+
+            $companyService = new CompanyBalanceService($company);
+            $balancesResume = $companyService->getResumes();
+            // dd($balancesResume);
+            $availableBalance = array_sum(array_column($balancesResume, 'available_balance'));
+            $pendingBalance = array_sum(array_column($balancesResume, 'pending_balance'));
+            $blockedBalance = array_sum(array_column($balancesResume, 'blocked_balance'));
+            $totalBalance = array_sum(array_column($balancesResume, 'total_balance'));
+
+            return response()->json([
+                'available_balance'     => foxutils()->formatMoney($availableBalance / 100),
+                'pending_balance'       => foxutils()->formatMoney($pendingBalance / 100),
+                'blocked_balance_total' => foxutils()->formatMoney($blockedBalance / 100),
+                'total_balance'         => foxutils()->formatMoney($totalBalance / 100),
                 'today_balance'         => number_format(intval($todayBalance) / 100, 2, ',', '.'),
                 'currency'              => 'R$',
-                'blocked_balance_total' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
-            ];
+            ]);
         } catch (Exception $e) {
             report($e);
 
-            return [];
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
         }
     }
 
@@ -205,7 +166,6 @@ class DashboardApiController extends Controller
             );
         }
     }
-
 
     public function getChartData(Request $request)
     {

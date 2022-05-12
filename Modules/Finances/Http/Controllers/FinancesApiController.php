@@ -26,10 +26,6 @@ class FinancesApiController extends Controller
     public function getBalances(Request $request): JsonResponse
     {
         try {
-            if (empty($request->input('company'))) {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
-            }
-
             $company = Company::find(hashids_decode($request->input('company')));
             $gatewayId = hashids_decode($request->input('gateway_id'));
 
@@ -41,26 +37,20 @@ class FinancesApiController extends Controller
                 return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
             }
 
-            $companyService = new CompanyBalanceService($company, Gateway::getServiceById($gatewayId));
+            $gatewayService = Gateway::getServiceById($gatewayId);
+            $gatewayService->setCompany($company);
 
-            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
-            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
-            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
-            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
-
-            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalanceTotal;
-            $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
+            $balanceResume = $gatewayService->getResume();
 
             return response()->json(
                 [
-                    'available_balance' => foxutils()->formatMoney($availableBalance / 100),
-                    'total_balance' => foxutils()->formatMoney($totalBalance / 100),
-                    'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
-                    'blocked_balance' => foxutils()->formatMoney($blockedBalanceTotal / 100),
-                    'pending_debt_balance' => foxutils()->formatMoney($pendingDebtBalance / 100)
-                ]
-            );
+                    'available_balance' => foxutils()->formatMoney($balanceResume['available_balance'] / 100),
+                    'total_balance' => foxutils()->formatMoney($balanceResume['total_balance'] / 100),
+                    'pending_balance' => foxutils()->formatMoney($balanceResume['pending_balance'] / 100),
+                    'blocked_balance' => foxutils()->formatMoney($balanceResume['blocked_balance'] / 100),
+                    'pending_debt_balance' => foxutils()->formatMoney($balanceResume['pending_debt_balance'] / 100)
+                ]);
+
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Ocorreu algum erro, tente novamente!',], 400);
@@ -91,7 +81,16 @@ class FinancesApiController extends Controller
     {
         $company = Company::find(hashids_decode($request->company_id));
         $companyService = new CompanyBalanceService($company);
-        return response()->json($companyService->getResumes());
+        $statementResumes = $companyService->getResumes();
+        foreach($statementResumes as &$statementResume) {
+            if(!is_array($statementResume) || empty($statementResume)) {
+                continue;
+            }
+            foreach($statementResume as &$data) {
+                $data = is_int($data) ? foxutils()->formatMoney($data / 100) : $data;
+            }
+        }
+        return response()->json($statementResumes);
     }
 
     public function getAcquirers($companyId=null)

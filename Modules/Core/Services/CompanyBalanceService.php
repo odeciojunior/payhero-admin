@@ -17,14 +17,7 @@ use Modules\Core\Services\Gateways\Safe2PayService;
  */
 class CompanyBalanceService
 {
-    public const AVAILABLE_BALANCE = 'getAvailableBalance';
-    public const PENDING_BALANCE = 'getPendingBalance';
-    public const BLOCKED_BALANCE = 'getBlockedBalance';
-    public const BLOCKED_PENDING_BALANCE = 'getBlockedBalancePending';
-    public const PENDING_DEBT_BALANCE = 'getPendingDebtBalance';
-
     private Company $company;
-    private ?Statement $gatewayStatementService;
 
     private $defaultGateways = [
         Safe2PayService::class,
@@ -34,32 +27,9 @@ class CompanyBalanceService
         CieloService::class,
     ];
 
-    public function __construct(Company $company, Statement $gatewayStatementService = null)
+    public function __construct(Company $company)
     {
         $this->company = $company;
-        $this->gatewayStatementService = $gatewayStatementService;
-    }
-
-    public function getBalance($method) : int
-    {
-        if(!empty($this->gatewayStatementService)) {
-            $this->gatewayStatementService->setCompany($this->company);
-            return $this->gatewayStatementService->$method();
-        }
-        else {
-            $balances = [];
-            foreach($this->defaultGateways as $gatewayClass) {
-                $gateway = app()->make($gatewayClass);
-                $gateway->setCompany($this->company);
-                $balances[] = $gateway->$method();
-            }
-            return array_sum($balances);
-        }
-    }
-
-    public function hasEnoughBalanceToRefund(Sale $sale): bool
-    {
-        return $this->gatewayStatementService->hasEnoughBalanceToRefund($sale);
     }
 
     public function getResumes() : array

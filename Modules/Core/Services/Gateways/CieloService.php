@@ -44,17 +44,12 @@ class CieloService implements Statement
         return $this;
     }
 
-    public function getAvailableBalanceWithoutBlocking(): int
+    public function getAvailableBalance(): int
     {
         if (!$this->company->user->show_old_finances) {
             return 0;
         }
         return $this->company->cielo_balance;
-    }
-
-    public function getAvailableBalance(): int
-    {
-        return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
     public function getPendingBalance(): int
@@ -86,7 +81,7 @@ class CieloService implements Statement
 
         return Transaction::where('company_id', $this->company->id)
             ->whereIn('gateway_id', $this->gatewayIds)
-            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+            ->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
             ->sum('value');
@@ -94,16 +89,7 @@ class CieloService implements Statement
 
     public function getBlockedBalancePending(): int
     {
-        if (!$this->company->user->show_old_finances) {
-            return 0;
-        }
-
-        return Transaction::where('company_id', $this->company->id)
-            ->whereIn('gateway_id', $this->gatewayIds)
-            ->where('status_enum', Transaction::STATUS_PAID)
-            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-            ->sum('value');
+        return 0;
     }
 
     public function getPendingDebtBalance(): int
@@ -269,26 +255,45 @@ class CieloService implements Statement
         if (empty($lastTransaction)) {
             return [];
         }
-
-        $pendingBalance = $this->getPendingBalance();
-        $blockedBalance = $this->getBlockedBalance();
-        $availableBalance = $this->getAvailableBalanceWithoutBlocking() - $blockedBalance;
-        $blockedBalancePending = $this->getBlockedBalancePending();
-
-        $totalBlockedBalance = $blockedBalance + $blockedBalancePending;
-        $totalBalance = $availableBalance + $pendingBalance + $totalBlockedBalance;
         $lastTransactionDate = $lastTransaction->created_at->format('d/m/Y');
+
+        $blockedBalance = null;
+        $pendingBalance = $this->getPendingBalance();
+        $availableBalance = $this->getAvailableBalance();
+        $totalBalance = $availableBalance + $pendingBalance;
+
+        $this->applyBlockedBalance($availableBalance, $pendingBalance, $blockedBalance);
 
         return [
             'name' => 'Cielo',
-            'available_balance' => foxutils()->formatMoney($availableBalance / 100),
-            'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
-            'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
-            'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+            'available_balance' => $availableBalance,
+            'pending_balance' => $pendingBalance,
+            'blocked_balance' => $blockedBalance,
+            'total_balance' => $totalBalance,
             'total_available' => $availableBalance,
+            'pending_debt_balance' => 0,
             'last_transaction' => $lastTransactionDate,
             'id' => 'pM521rZJrZeaXoQ'
         ];
+    }
+
+    public function applyBlockedBalance(&$availableBalance, &$pendingBalance, &$blockedBalance = null)
+    {
+        $blockedBalance = $this->getBlockedBalance();
+
+        if($blockedBalance <= $availableBalance) {
+            $availableBalance -= $blockedBalance;
+            return;
+        }
+
+        if($blockedBalance <= ($availableBalance + $pendingBalance)) {
+            $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
+            $availableBalance = 0;
+            return;
+        }
+
+        $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $pendingBalance = 0;
     }
 
     public function getGatewayAvailable()

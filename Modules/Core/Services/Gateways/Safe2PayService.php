@@ -52,46 +52,32 @@ class Safe2PayService implements Statement
         $this->companyBankAccount = $companyBankAccount;
     }
 
-    public function getAvailableBalanceWithoutBlocking(): int
+    public function getAvailableBalance(): int
     {
         return $this->company->safe2pay_balance;
     }
 
-    public function getAvailableBalance(): int
-    {
-        return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
-    }
-
     public function getPendingBalance(): int
     {
-        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
-            $join->on('brs.sale_id', '=', 'transactions.sale_id')
-                ->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
-        })->whereNull('brs.id')
-            ->where('transactions.company_id', $this->company->id)
-            ->where('transactions.status_enum', Transaction::STATUS_PAID)
-            ->whereIn('transactions.gateway_id', $this->gatewayIds)
-            ->sum('transactions.value');
+        return Transaction::where('transactions.company_id', $this->company->id)
+                                        ->where('transactions.status_enum', Transaction::STATUS_PAID)
+                                        ->whereIn('transactions.gateway_id', $this->gatewayIds)
+                                        ->sum('transactions.value');
     }
 
     public function getBlockedBalance(): int
     {
         return Transaction::where('company_id', $this->company->id)
-            ->whereIn('gateway_id', $this->gatewayIds)
-            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-            ->sum('value');
+                            ->whereIn('gateway_id', $this->gatewayIds)
+                            ->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
+                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+                            ->sum('value');
     }
 
     public function getBlockedBalancePending(): int
     {
-        return Transaction::where('company_id', $this->company->id)
-            ->whereIn('gateway_id', $this->gatewayIds)
-            ->where('status_enum', Transaction::STATUS_PAID)
-            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-            ->sum('value');
+        return 0;
     }
 
     public function getPendingDebtBalance(): int
@@ -134,7 +120,8 @@ class Safe2PayService implements Statement
         return true;
     }
 
-    public function existsBankAccountApproved(){        
+    public function existsBankAccountApproved()
+    {
         //verifica se existe uma conta bancaria aprovada 
         if(!empty($this->company)){
             $this->companyBankAccount = $this->company->getDefaultBankAccount();
@@ -206,7 +193,8 @@ class Safe2PayService implements Statement
         return $withdrawal;
     }
 
-    public function setBankAccountArray($bankAccount){
+    public function setBankAccountArray($bankAccount)
+    {
         switch($bankAccount->transfer_type){
             case 'TED':
                return [
@@ -300,26 +288,45 @@ class Safe2PayService implements Statement
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
             ->where('company_id', $this->company->id)
             ->orderBy('id', 'desc')->first();
-
-        $pendingBalance = $this->getPendingBalance();
-        $blockedBalance = $this->getBlockedBalance();
-        $availableBalance = $this->getAvailableBalanceWithoutBlocking() - $blockedBalance;
-        $blockedBalancePending = $this->getBlockedBalancePending();
-
-        $totalBlockedBalance = $blockedBalance + $blockedBalancePending;
-        $totalBalance = $availableBalance + $pendingBalance + $totalBlockedBalance;
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
+
+        $blockedBalance = null;
+        $pendingBalance = $this->getPendingBalance();
+        $availableBalance = $this->getAvailableBalance();
+        $totalBalance = $availableBalance + $pendingBalance;
+
+        $this->applyBlockedBalance($availableBalance, $pendingBalance, $blockedBalance);
 
         return [
             'name' => 'Vega',
-            'available_balance' => foxutils()->formatMoney($availableBalance / 100),
-            'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
-            'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
-            'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+            'available_balance' => $availableBalance,
+            'pending_balance' => $pendingBalance,
+            'blocked_balance' => $blockedBalance,
+            'total_balance' => $totalBalance,
             'total_available' => $availableBalance,
             'last_transaction' => $lastTransactionDate,
+            'pending_debt_balance' => 0,
             'id' => 'BeYEwR3AdgdKykA'
         ];
+    }
+
+    public function applyBlockedBalance(&$availableBalance, &$pendingBalance, &$blockedBalance = null)
+    {
+        $blockedBalance = $this->getBlockedBalance();
+
+        if($blockedBalance <= $availableBalance) {
+            $availableBalance -= $blockedBalance;
+            return;
+        }
+
+        if($blockedBalance <= ($availableBalance + $pendingBalance)) {
+            $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
+            $availableBalance = 0;
+            return;
+        }
+
+        $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $pendingBalance = 0;
     }
 
     public function getGatewayAvailable()
