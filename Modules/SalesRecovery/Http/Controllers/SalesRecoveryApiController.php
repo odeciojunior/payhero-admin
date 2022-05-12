@@ -334,8 +334,9 @@ class SalesRecoveryApiController extends Controller
                     $discount = round($discount/100,2,PHP_ROUND_HALF_DOWN); //converte para decimal
                     $totalPaidValue -= $discount*100;                    
                 } else {
-                    $discount       = $request->discountValue;
-                    $totalPaidValue -= $discount*100;
+                    $discount       = (int)(preg_replace("/[^0-9]/", "", $request->discountValue));
+                    $totalPaidValue -= $discount;
+                    $discount = $discount/100;//converte para decimal
                 }
                 
                 $totalPaidValue+=foxutils()->onlyNumbers($sale->shopify_discount);
