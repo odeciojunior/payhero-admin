@@ -113,9 +113,10 @@
                             <div class="row companies-container">
                                 <div class="form-group col-sm-12 col-md">
                                     <label for="empresa">Empresa</label>
-                                    <select name="company_id" id="companies" class="sirius-select">
+                                    <input type="text" disabled="" class="company_name">
+                                    {{-- <select name="company_id" id="companies" class="sirius-select">
                                         <option value="">Selecione a empresa</option>
-                                    </select>
+                                    </select> --}}
                                 </div>
                             </div>
                             <div class="row postback-container">

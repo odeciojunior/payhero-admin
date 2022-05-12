@@ -42,9 +42,10 @@
                                 <div class="row align-items-baseline">
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                         <label for="company">Empresa</label>
-                                        <select name='select_company' id="company" class="sirius-select">
+                                        <input type="text" disabled="" class="company_name">
+                                        {{-- <select name='select_company' id="company" class="sirius-select">
                                             <option value="0">Todas as empresas</option>
-                                        </select>
+                                        </select> --}}
                                     </div>
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                         <label for="project">Lojas</label>

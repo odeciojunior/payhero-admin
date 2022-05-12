@@ -256,8 +256,8 @@ $(document).ready(function () {
                         if (company.company_has_sale_before_getnet) {
                             hasSale = true;
                         }
-                        const document = (company.document.replace(/\D/g, '').length > 11 ? 'CNPJ: ' : 'CPF: ') + company.document;
-                        $('#company').append(`<option value="${company.id}" data-toggle="tooltip" title="${document}">${company.name}</option>`)
+                        //const document = (company.document.replace(/\D/g, '').length > 11 ? 'CNPJ: ' : 'CPF: ') + company.document;
+                        //$('#company').append(`<option value="${company.id}" data-toggle="tooltip" title="${document}">${company.name}</option>`)
                     });
 
                     if (hasSale) {
@@ -342,5 +342,7 @@ $(document).ready(function () {
             atualizar();
         }
     });
+
+    $('.company_name').val( $("#company").find('option:selected').text() );
 
 });

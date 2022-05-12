@@ -3,9 +3,10 @@ $(document).ready(function () {
     getCompanies();
 
     $('#company').change(function () {
-        sessionStorage.setItem('companySelected', $(this).val());
-        //thisPage = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
-        location.reload();
+        //a fazer: ajax api pra salvar companyDefault no banco
+
+        sessionStorage.setItem('companyDefault', $(this).val());
+        window.location.href = window.location.href
     })
 
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
@@ -969,7 +970,7 @@ function selectCompanies() {
     let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
     $('#company').append('<option value="demo">Empresa demo</option>');
     for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
-        if (sessionStorage.getItem('companySelected') == parseSessionStorageCompanies[i].id)
+        if (sessionStorage.getItem('companyDefault') == parseSessionStorageCompanies[i].id)
             itemSelected = 'selected="selected"'
         else
             itemSelected = ''
@@ -989,13 +990,19 @@ function selectCompanies() {
 }
 
 function getCompanies() {
+    let thisPage = window.location.hostname
+    var lastPage = new URL(document.referrer).hostname
+    if (thisPage != lastPage) {
+        sessionStorage.removeItem('companies')
+        sessionStorage.removeItem('companyDefault')
+    }
+
     if (sessionStorage.getItem('companies') != null) {
         selectCompanies()
     }
     else{
         $.ajax({
             method: "GET",
-            //url: `/api/dashboard${window.location.search}`,
             url: `/api/core/usercompanies`,
             dataType: "json",
             headers: {
