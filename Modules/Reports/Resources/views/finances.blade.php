@@ -138,7 +138,7 @@
                             <div class="">
                                 <div class="d-flex justify-content-between sub-comission">
                                     <div class="inner-comission">
-                                        <div class="card inner cash" id="card-cashback">
+                                        <div class="card inner cash card-cashback" id="card-cashback">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Cashback</strong>
@@ -159,7 +159,7 @@
                                                     </span>
                                                 </div>
                                                 <div>
-                                                    <span>
+                                                    <span class="txt-cash">
                                                         O cashback por venda varia de acordo com o número de parcelas escolhidas pelo cliente.
                                                     </span>
                                                 </div>

@@ -1,7 +1,5 @@
 $(function () {
     loadingOnScreen();
-
-    
     distributionGraphSeller();
     getInfo();
 

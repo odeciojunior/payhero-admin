@@ -825,8 +825,13 @@ h4.number{
 #block-pending .ske-load,
 #block-blockeds .ske-load { position: absolute; }
 
+.card-cashback { height: 148px; }
+.txt-cash { font-size: 12px; }
+
 #block-pending .ske,
 #block-blockeds .ske { display: none; }
+
+#block-withdraw , #draw{ height: 228px; }
 
 @media only screen and (min-width: 1220px) {
     .box-items-finance  { padding-right: 0; }
@@ -1073,7 +1078,7 @@ h4.number{
     .inner-comission {
         flex: 0 0 50%;
         max-width: 50%;
-        padding: 0 1.0715rem 0 0;
+        padding: 0 1.5715rem 0 0;
     }
     .inner-comission + .inner-comission { padding: 0 0 0 0.0715rem; }
 }
@@ -1203,11 +1208,13 @@ h4.number{
     color: #1BE4A8;
     font-weight: bold;
     font-size: 16px;
+    margin-bottom: 7px;
 }
 .txt-no-cashback,
 .txt-no-orderbump {
     color: #828282;
     font-size: 14px;
+    line-height: 19px;
 }
 .no-orderbump { color: #2E85EC; }
 
@@ -1229,13 +1236,29 @@ h4.number{
 
 .inner.relative .title-graph { position: absolute; }
 
-.inner.relative .title-graph.title-withdraw { height: 38px; }
+.inner.relative .title-graph.title-withdraw { height: 35px; }
 
 .inner.relative .title-graph.no-withdrawals { position: relative; }
 
 .inner.relative .title-graph.no-withdrawals small { font-size: 14px; }
 
-#financesChart { margin-top: 28px; }
+#financesChart { margin-top: 24px; }
+
+.no-info-graph {
+    width: 100%;
+    display: flex;
+    position: relative;
+}
+.footer-no-info {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+}
+
+@media (min-width: 1600px) {
+    #financesChart { height: 256px !important;}
+}
 
 .box-distribution.secondary {
     overflow: hidden;
@@ -1458,9 +1481,7 @@ h4.number{
     padding: 25px 15px; 
 }
 
-.title-graph {
-    margin: 15px 10px 15px 5px;
-}
+.title-graph { margin: 15px 10px 0 5px; }
 
 .box-states > ul { 
     padding: 0; 
@@ -1973,7 +1994,7 @@ h4.number{
     align-items: center;
 }
 #card-withdraw {
-    min-height: 273px;
+    height: 274px;
 }
 #card-withdraw  .ske-load {
     position: absolute;
