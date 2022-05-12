@@ -16,8 +16,8 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: response => {
-                // sessionStorage.setItem('companyDefault', $(this).val());
-                // window.location.href = window.location.href
+                sessionStorage.setItem('companyDefault', $(this).val());
+                window.location.href = window.location.href
             },
         });
         
