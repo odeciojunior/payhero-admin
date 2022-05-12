@@ -6,6 +6,8 @@ var exportFormat = null;
 // Obtem lista de vendas
 //atualizar = function (link = null) {
 function atualizar(link = null) {
+    loadingOnScreen();
+
     currentPage = link;
 
     let updateResume = true;
@@ -27,6 +29,7 @@ function atualizar(link = null) {
             Accept: "application/json",
         },
         error: function error(response) {
+            loadingOnScreenRemove();
             errorAjaxResponse(response);
         },
         success: function success(response) {
@@ -245,7 +248,7 @@ function atualizar(link = null) {
 
             }
             pagination(response, "sales", atualizar);
-
+            loadingOnScreenRemove();
         },
     });
 
@@ -275,7 +278,7 @@ function getFilters(urlParams = false) {
         'cashback': $("#cashback").val(),
         'plan': $('#plan').val(),
         'coupon': $("#cupom").val(),
-        'company': $("#empresa").val(),
+        'company': $("#company").val(), //$("#empresa").val(),
         'value': $("#valor").val().replace(/[^\d]+/g, ''),
         'email_client': $("#email_cliente").val(),
         'upsell': $("#upsell").val(),
@@ -549,7 +552,8 @@ $(document).ready(function () {
     // FIM - COMPORTAMENTOS DA JANELA
 
     getProjects();
-    getCompanies();
+    atualizar();
+    //getCompanies();
 
     //Carrega o modal para regerar boleto
     $(document).on("click", ".boleto-pending", function () {
@@ -873,6 +877,6 @@ $(document).ready(function () {
         }
     });
 
-    //$.getScript('build/layouts/sales/details.min.js')
+    $('.company_name').val( $("#company").find('option:selected').text() );
 
 });

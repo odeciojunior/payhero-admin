@@ -96,9 +96,10 @@
 
                                     <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="empresa">Empresa</label>
-                                        <select name="select_company" id="empresa" class="form-control select-pad select-company applySelect2">
+                                        <input type="text" disabled="" class="company_name">
+                                        {{-- <select name="select_company" id="empresa" class="form-control select-pad select-company applySelect2">
                                             <option value="">Todas empresas</option>
-                                        </select>
+                                        </select> --}}
                                     </div>
 
                                     <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
