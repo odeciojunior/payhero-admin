@@ -326,14 +326,13 @@ class SalesRecoveryApiController extends Controller
                 ], 400);
             }
 
-            $totalPaidValue = $sale->original_total_paid_value;
-
+            $totalPaidValue = $sale->original_total_paid_value;            
             if (!empty($request->discountValue)) {
 
                 if ($request->discountType == 'percentage') {
-                    $discount       = ($totalPaidValue * (foxutils()->onlyNumbers($request->discountValue)/100));
-                    $totalPaidValue -= $discount;
+                    $discount = ($totalPaidValue * (foxutils()->onlyNumbers($request->discountValue)/100));                    
                     $discount = round($discount/100,2,PHP_ROUND_HALF_DOWN); //converte para decimal
+                    $totalPaidValue -= $discount*100;                    
                 } else {
                     $discount       = $request->discountValue;
                     $totalPaidValue -= $discount*100;
@@ -343,8 +342,8 @@ class SalesRecoveryApiController extends Controller
 
                 $sale->update([
                     'shopify_discount' => $discount,
-                ]);
-            }
+                ]);                
+            }            
 
             $dueDate = $request->input('date');
             if (Carbon::parse($dueDate)->isWeekend()) {
@@ -355,7 +354,7 @@ class SalesRecoveryApiController extends Controller
                         
             $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
             ->encode($sale->id), $totalPaidValue, $dueDate);
-
+            
             $message = 'Ocorreu um erro tente novamente mais tarde';
             $status  = 400;                
             if ($boletoRegenerated['status'] == 'success') {
