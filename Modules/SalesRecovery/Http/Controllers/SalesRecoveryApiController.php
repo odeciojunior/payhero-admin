@@ -330,7 +330,6 @@ class SalesRecoveryApiController extends Controller
 
             if (!empty($request->discountValue)) {
 
-                $totalPaidValue+=intval($sale->shopify_discount);
                 if ($request->discountType == 'percentage') {
                     $discount       = ($totalPaidValue * (foxutils()->onlyNumbers($request->discountValue)/100));
                     $totalPaidValue -= $discount;
@@ -338,6 +337,8 @@ class SalesRecoveryApiController extends Controller
                     $discount       = $request->discountType*100;
                     $totalPaidValue -= $discount;
                 }
+                
+                $totalPaidValue+=foxutils()->onlyNumbers($sale->shopify_discount);
 
                 $sale->update([
                     'shopify_discount' => $discount,
