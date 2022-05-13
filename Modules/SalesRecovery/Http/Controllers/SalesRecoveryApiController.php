@@ -326,23 +326,25 @@ class SalesRecoveryApiController extends Controller
                 ], 400);
             }
 
-            $totalPaidValue = $sale->original_total_paid_value;
-
+            $totalPaidValue = $sale->original_total_paid_value;            
             if (!empty($request->discountValue)) {
 
-                $totalPaidValue+=intval($sale->shopify_discount);
                 if ($request->discountType == 'percentage') {
-                    $discount       = ($totalPaidValue * (foxutils()->onlyNumbers($request->discountValue)/100));
-                    $totalPaidValue -= $discount;
+                    $discount = ($totalPaidValue * (foxutils()->onlyNumbers($request->discountValue)/100));                    
+                    $discount = number_format($discount/100,2,'.',''); //converte para decimal
+                    $totalPaidValue -= $discount*100;                    
                 } else {
-                    $discount       = $request->discountType*100;
+                    $discount       = (int)(preg_replace("/[^0-9]/", "", $request->discountValue));
                     $totalPaidValue -= $discount;
+                    $discount = number_format($discount/100,2,'.','');//converte para decimal
                 }
+                
+                $totalPaidValue+=foxutils()->onlyNumbers($sale->shopify_discount);
 
                 $sale->update([
                     'shopify_discount' => $discount,
-                ]);
-            }
+                ]);                
+            }            
 
             $dueDate = $request->input('date');
             if (Carbon::parse($dueDate)->isWeekend()) {
@@ -353,7 +355,7 @@ class SalesRecoveryApiController extends Controller
                         
             $boletoRegenerated = $checkoutService->regenerateBillet(Hashids::connection('sale_id')
             ->encode($sale->id), $totalPaidValue, $dueDate);
-
+            
             $message = 'Ocorreu um erro tente novamente mais tarde';
             $status  = 400;                
             if ($boletoRegenerated['status'] == 'success') {
