@@ -1376,7 +1376,7 @@ function salesStatus(st) {
                 newSellGraph(series, labels);
             } else {
                 statusHtml = `
-                    <div class="finances-values">
+                    <div class="finances-values" style="visibility: hidden;">
                         <span>R$</span>
                         <strong>0</strong>
                     </div>
