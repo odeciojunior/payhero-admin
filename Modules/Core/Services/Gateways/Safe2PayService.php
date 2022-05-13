@@ -19,6 +19,7 @@ use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\CompanyBalanceService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\SaleService;
@@ -73,11 +74,6 @@ class Safe2PayService implements Statement
                             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
                             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
                             ->sum('value');
-    }
-
-    public function getBlockedBalancePending(): int
-    {
-        return 0;
     }
 
     public function getPendingDebtBalance(): int
@@ -295,7 +291,7 @@ class Safe2PayService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $totalBalance = $availableBalance + $pendingBalance;
 
-        $this->applyBlockedBalance($availableBalance, $pendingBalance, $blockedBalance);
+        (new CompanyService)->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
 
         return [
             'name' => 'Vega',

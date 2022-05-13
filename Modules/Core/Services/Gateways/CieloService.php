@@ -14,6 +14,7 @@ use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
@@ -85,11 +86,6 @@ class CieloService implements Statement
             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
             ->sum('value');
-    }
-
-    public function getBlockedBalancePending(): int
-    {
-        return 0;
     }
 
     public function getPendingDebtBalance(): int
@@ -262,7 +258,7 @@ class CieloService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $totalBalance = $availableBalance + $pendingBalance;
 
-        $this->applyBlockedBalance($availableBalance, $pendingBalance, $blockedBalance);
+        (new CompanyService)->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
 
         return [
             'name' => 'Cielo',
@@ -275,25 +271,6 @@ class CieloService implements Statement
             'last_transaction' => $lastTransactionDate,
             'id' => 'pM521rZJrZeaXoQ'
         ];
-    }
-
-    public function applyBlockedBalance(&$availableBalance, &$pendingBalance, &$blockedBalance = null)
-    {
-        $blockedBalance = $this->getBlockedBalance();
-
-        if($blockedBalance <= $availableBalance) {
-            $availableBalance -= $blockedBalance;
-            return;
-        }
-
-        if($blockedBalance <= ($availableBalance + $pendingBalance)) {
-            $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
-            $availableBalance = 0;
-            return;
-        }
-
-        $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
-        $pendingBalance = 0;
     }
 
     public function getGatewayAvailable()

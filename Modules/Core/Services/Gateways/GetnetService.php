@@ -84,11 +84,6 @@ class GetnetService implements Statement
             ->sum('value');
     }
 
-    public function getBlockedBalancePending(): int
-    {
-        return 0;
-    }
-
     public function getPendingDebtBalance(): int
     {
         return PendingDebt::where('company_id', $this->company->id)
@@ -400,7 +395,7 @@ class GetnetService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $totalBalance = $availableBalance + $pendingBalance;
 
-        $this->applyBlockedBalance($availableBalance, $pendingBalance, $blockedBalance);
+        (new CompanyService)->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
 
         return [
             'name' => 'Getnet',
@@ -413,25 +408,6 @@ class GetnetService implements Statement
             'last_transaction' => $lastTransactionDate,
             'id' => 'w7YL9jZD6gp4qmv'
         ];
-    }
-
-    public function applyBlockedBalance(&$availableBalance, &$pendingBalance, &$blockedBalance = null)
-    {
-        $blockedBalance = $this->getBlockedBalance();
-
-        if($blockedBalance <= $availableBalance) {
-            $availableBalance -= $blockedBalance;
-            return;
-        }
-
-        if($blockedBalance <= ($availableBalance + $pendingBalance)) {
-            $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
-            $availableBalance = 0;
-            return;
-        }
-
-        $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
-        $pendingBalance = 0;
     }
 
     public function getGatewayAvailable()
@@ -512,23 +488,4 @@ class GetnetService implements Statement
         }
     }
 
-    public function refundReceiptOLD($hashSaleId, $transaction)
-    {
-        $company = (object)$transaction->company->toArray();
-        $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
-        $getnetService = new GetnetBackOfficeService();
-        $result = json_decode($getnetService->setStatementSubSellerId($company->subseller_getnet_id)
-            ->setStatementSaleHashId($hashSaleId)
-            ->getStatement());
-
-        if (empty($result) || empty($result->list_transactions)) {
-            throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
-        }
-
-        $sale = end($result->list_transactions);
-
-        $sale->flag = strtoupper($transaction->sale->flag) ?? null;
-
-        return PDF::loadView('sales::refund_receipt_getnet', compact('company', 'sale'));
-    }
 }

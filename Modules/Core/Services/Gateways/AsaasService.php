@@ -23,6 +23,7 @@ use Modules\Core\Entities\SaleGatewayRequest;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
@@ -80,11 +81,6 @@ class AsaasService implements Statement
             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
             ->sum('value');
-    }
-
-    public function getBlockedBalancePending(): int
-    {
-        return 0;
     }
 
     public function getPendingDebtBalance(): int
@@ -272,7 +268,7 @@ class AsaasService implements Statement
         $availableBalance = $this->getAvailableBalance();
         $totalBalance = $availableBalance + $pendingBalance;
 
-        $this->applyBlockedBalance($availableBalance, $pendingBalance, $blockedBalance);
+        (new CompanyService)->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
 
         return [
             'name' => 'Asaas',
@@ -285,25 +281,6 @@ class AsaasService implements Statement
             'last_transaction' => $lastTransactionDate,
             'id' => 'NzJqoR32egVj5D6'
         ];
-    }
-
-    public function applyBlockedBalance(&$availableBalance, &$pendingBalance, &$blockedBalance = null)
-    {
-        $blockedBalance = $this->getBlockedBalance();
-
-        if($blockedBalance <= $availableBalance) {
-            $availableBalance -= $blockedBalance;
-            return;
-        }
-
-        if($blockedBalance <= ($availableBalance + $pendingBalance)) {
-            $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
-            $availableBalance = 0;
-            return;
-        }
-
-        $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
-        $pendingBalance = 0;
     }
 
     public function getGatewayAvailable()
@@ -587,70 +564,4 @@ class AsaasService implements Statement
         }
     }
 
-    public function refundReceipt($hashSaleId, $transaction)
-    {
-        $credential = DB::table('gateways_companies_credentials')->select('gateway_api_key')
-            ->where('company_id', $transaction->company_id)->where('gateway_id', $transaction->gateway_id)->first();
-
-        if (!empty($credential)) {
-            $this->apiKey = $credential->gateway_api_key;
-        }
-
-        $domainAsaas = 'https://www.asaas.com';
-        $url = $domainAsaas . '/api/v3/payments/' . $transaction->sale->gateway_transaction_id;
-
-        $curl = curl_init($url);
-
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            'Content-Type: multipart/form-data',
-            'access_token: ' . $this->apiKey,
-        ]);
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $response = json_decode($result);
-
-        if (($httpStatus < 200 || $httpStatus > 299) && (!isset($response->errors))) {
-            //report(new Exception('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus));
-            report('Erro ao consultar o status do pagamento' . $url . ' - code:' . $httpStatus);
-        }
-
-        if (!empty($response) && !empty($response->status) && $response->status == 'REFUNDED' && !empty($response->transactionReceiptUrl)) {
-
-            $curl = curl_init($response->transactionReceiptUrl);
-
-            curl_setopt($curl, CURLOPT_ENCODING, '');
-            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-
-            $result = curl_exec($curl);
-
-            curl_close($curl);
-
-            $of = [
-                'href="/assets',
-                'src="/assets',
-                '</head>',
-                'Cobrança intermediada por ASAAS - gerar boletos nunca foi tão fácil.'
-            ];
-
-            $to = [
-                'href="' . $domainAsaas . '/assets',
-                'src="' . $domainAsaas . '/assets',
-                '<style>#loading-backdrop{display:none !important}</style>',
-                ''
-            ];
-
-            $view = str_replace($of, $to, $result);
-
-            return PDF::loadHtml($view);
-        }
-
-        return PDF::loadHtml('<h2>Não foi possivel gerar o comprovante de estorno!.</h2>');
-    }
 }

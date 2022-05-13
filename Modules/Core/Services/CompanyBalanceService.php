@@ -36,10 +36,6 @@ class CompanyBalanceService
     {
         $gatewaysBalances = [];
 
-        // if (!auth()->user()->show_old_finances) {
-        //     array_pop($this->defaultGateways);
-        // }
-
         $totalAvailable = 0;
         foreach($this->defaultGateways as $gatewayClass) 
         {
