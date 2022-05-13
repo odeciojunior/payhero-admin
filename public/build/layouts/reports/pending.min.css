@@ -404,6 +404,19 @@ h4.number{
     .cards-reports { flex-direction: row; }
 }
 
+.distribution-content.sales { 
+    height: 446px; 
+    position: relative;
+}
+.no-distribution-graph {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+}
+.card-most-sales { height: 308px; }
+
 .sales-card .ske-load {
     position: absolute;
     transform: translate(6%, -35%);
@@ -732,10 +745,14 @@ h4.number{
     min-height: 303px; 
     padding-bottom: 0 !important; 
 }
+
 .secondary-blocks { height: 125px; }
 .secondary-blocks h6 { margin: 0; }
-#block-commission { height: 300px; }
-#block-commission .ske-load {
+
+#block-commission, #block-status { height: 300px; }
+
+#block-commission .ske-load,
+#block-status .ske-load {
     position: absolute;
     transform: translate(0, -50%);
 }

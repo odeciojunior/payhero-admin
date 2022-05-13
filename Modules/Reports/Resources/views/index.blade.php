@@ -128,7 +128,7 @@
                         <!-- comission -->
                         <div class="primary">
                             <div class="card" id="card-status">
-                                <section class="container pb-20">
+                                <section class="container pb-20 graph-principal">
                                     <header class="d-flex title-graph title-graph-sales">
                                         <h5 class="grey font-size-16">
                                             <strong>Quantidade</strong>
@@ -223,7 +223,7 @@
 
                         <!-- distribtion -->
                         <div class="distribution">
-                            <div class="card inner" id="card-distribution">
+                            <div class="card inner distribution-content sales" id="card-distribution">
                                 <header class="d-flex title-graph title-distribution">
                                     <h5 class="grey font-size-16">
                                         <strong>Distribuição</strong>
@@ -234,7 +234,7 @@
                             </div>
                             <div class="">
                                 <div class="d-flex sub-distribution">
-                                    <div class="card inner sales-card" id="card-most-sales">
+                                    <div class="card inner sales-card card-most-sales" id="card-most-sales">
                                         <header class="d-flex title-graph">
                                             <h5 class="grey font-size-16">
                                                 <strong>Vendas mais frequentes</strong>
