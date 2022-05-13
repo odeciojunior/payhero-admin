@@ -12,6 +12,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\PendingDebt;
 use Modules\Core\Entities\PendingDebtWithdrawal;
@@ -33,6 +34,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class GetnetService implements Statement
 {
     public Company $company;
+    public CompanyBankAccount $companyBankAccount;
     public $gatewayIds = [];
 
     public function __construct()
@@ -49,56 +51,61 @@ class GetnetService implements Statement
         return $this;
     }
 
-    public function getAvailableBalanceWithoutBlocking() : int
-    {
-        return Transaction::whereIn('gateway_id', $this->gatewayIds)
-        ->where('company_id', $this->company->id)
-        ->where('is_waiting_withdrawal', 1)
-        ->whereNull('withdrawal_id')
-        ->sum('value');
+    public function setBankAccount(CompanyBankAccount $companyBankAccount){
+        $this->companyBankAccount = $companyBankAccount;
     }
 
-    public function getAvailableBalance() : int
+    public function getAvailableBalanceWithoutBlocking(): int
+    {
+        return Transaction::whereIn('gateway_id', $this->gatewayIds)
+            ->where('company_id', $this->company->id)
+            ->where('is_waiting_withdrawal', 1)
+            ->whereNull('withdrawal_id')
+            ->sum('value');
+    }
+
+    public function getAvailableBalance(): int
     {
         return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
-    public function getPendingBalance() : int
+    public function getPendingBalance(): int
     {
-        return Transaction::where('company_id', $this->company->id)
-                            ->where('status_enum', Transaction::STATUS_PAID)
-                            ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('is_waiting_withdrawal', 0)
-                            ->whereNull('withdrawal_id')
-                            ->whereDoesntHave('blockReasonSale',function ($query) {
-                                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
-                            ->sum('value');
+        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
+            $join->on('brs.sale_id', '=', 'transactions.sale_id')
+                ->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
+        })->whereNull('brs.id')
+            ->where('transactions.company_id', $this->company->id)
+            ->where('transactions.status_enum', Transaction::STATUS_PAID)
+            ->whereIn('transactions.gateway_id', $this->gatewayIds)
+            ->where('transactions.is_waiting_withdrawal', 0)
+            ->whereNull('transactions.withdrawal_id')
+            ->sum('transactions.value');
     }
 
-    public function getBlockedBalance() : int
+    public function getBlockedBalance(): int
     {
         return Transaction::where('company_id', $this->company->id)
-                            ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-                            //->where('type', '!=', Transaction::TYPE_INVITATION)
-                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-                            ->sum('value');
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+            //->where('type', '!=', Transaction::TYPE_INVITATION)
+            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+            ->sum('value');
     }
 
-    public function getBlockedBalancePending() : int
+    public function getBlockedBalancePending(): int
     {
         return Transaction::where('company_id', $this->company->id)
-                            ->whereNull('invitation_id')
-                            ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('status_enum', Transaction::STATUS_PAID)
-                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-                            ->sum('value');
+            ->whereNull('invitation_id')
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->where('status_enum', Transaction::STATUS_PAID)
+            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+            ->sum('value');
     }
 
-    public function getPendingDebtBalance() : int
+    public function getPendingDebtBalance(): int
     {
         return PendingDebt::where('company_id', $this->company->id)
             ->doesntHave('withdrawals')
@@ -109,8 +116,8 @@ class GetnetService implements Statement
     public function getWithdrawals(): JsonResource
     {
         $withdrawals = Withdrawal::where('company_id', $this->company->id)
-                                    ->whereIn('gateway_id', $this->gatewayIds)
-                                    ->orderBy('id', 'DESC');
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->orderBy('id', 'DESC');
 
         return WithdrawalResource::collection($withdrawals->paginate(10));
     }
@@ -127,16 +134,18 @@ class GetnetService implements Statement
         return true;
     }
 
+    public function existsBankAccountApproved(){        
+        //verifica se existe uma conta bancaria aprovada 
+        $this->companyBankAccount =  $this->company->getBankAccountTED();
+        return !empty($this->companyBankAccount);
+    }
+
     public function createWithdrawal($value)
     {
-        try {
+        try {            
 
-            if($this->company->asaas_balance < 0 && $value-$this->company->asaas_balance < 0){
+            if ($this->company->asaas_balance < 0 && $value - $this->company->asaas_balance < 0) {
                 throw new Exception('Saque negado devido ao saldo negativo no Asaas');
-            }
-
-            if ((new WithdrawalService)->isNotFirstWithdrawalToday($this->company->id, foxutils()->isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID)) {
-                return false;
             }
 
             $isFirstUserWithdrawal = (new WithdrawalService)->isFirstUserWithdrawal($this->company->user_id);
@@ -152,11 +161,12 @@ class GetnetService implements Statement
                 [
                     'value' => $value,
                     'company_id' => $this->company->id,
-                    'bank' => $this->company->bank,
-                    'agency' => $this->company->agency,
-                    'agency_digit' => $this->company->agency_digit,
-                    'account' => $this->company->account,
-                    'account_digit' => $this->company->account_digit,
+                    'transfer_type'=>'TED',
+                    'bank' => $this->companyBankAccount->bank,
+                    'agency' => $this->companyBankAccount->agency,
+                    'agency_digit' => $this->companyBankAccount->agency_digit,
+                    'account' => $this->companyBankAccount->account,
+                    'account_digit' => $this->companyBankAccount->account_digit,
                     'status' => Withdrawal::STATUS_PROCESSING,
                     'tax' => 0,
                     'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
@@ -175,7 +185,7 @@ class GetnetService implements Statement
         }
     }
 
-    public function processWithdrawal(Withdrawal $withdrawal, $isFirstUserWithdrawal ): bool
+    public function processWithdrawal(Withdrawal $withdrawal, $isFirstUserWithdrawal): bool
     {
         try {
             DB::beginTransaction();
@@ -224,9 +234,9 @@ class GetnetService implements Statement
             }
 
             $withdrawal->update([
-                    'debt_pending_value' => $pendingDebtsSum,
-                    'status' => $withdrawal->present()->getStatus($isFirstUserWithdrawal ? 'in_review' : 'pending'),
-                ]);
+                'debt_pending_value' => $pendingDebtsSum,
+                'status' => $withdrawal->present()->getStatus($isFirstUserWithdrawal ? 'in_review' : 'pending'),
+            ]);
 
             DB::commit();
             return true;
@@ -259,7 +269,7 @@ class GetnetService implements Statement
                 foreach ($transactions as $transaction) {
                     $currentValue += $transaction->value;
 
-                    if($currentValue > $availableBalance) {
+                    if ($currentValue > $availableBalance) {
                         $biggerValue = $lowerValue;
                         $lowerValue = 0;
                         return;
@@ -336,7 +346,7 @@ class GetnetService implements Statement
                         }
 
                         $getnetService->setStatementSubSellerId($subsellerId)
-                                        ->setStatementSaleHashId($saleIdEncoded);
+                            ->setStatementSaleHashId($saleIdEncoded);
 
                         $result = json_decode($getnetService->getStatement());
 
@@ -347,7 +357,7 @@ class GetnetService implements Statement
                             && $result->list_transactions[0]->details[0]->release_status == 'N'
                         ) {
                             $transaction->update([
-                                    'is_waiting_withdrawal' => 1,
+                                'is_waiting_withdrawal' => 1,
                             ]);
 
                         } elseif (empty($result->list_transactions)) {
@@ -392,10 +402,10 @@ class GetnetService implements Statement
     public function getResume()
     {
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
-                                        ->where('company_id', $this->company->id)
-                                        ->orderBy('id', 'desc')->first();
+            ->where('company_id', $this->company->id)
+            ->orderBy('id', 'desc')->first();
 
-        if(empty($lastTransaction)) {
+        if (empty($lastTransaction)) {
             return [];
         }
 
@@ -422,17 +432,18 @@ class GetnetService implements Statement
         ];
     }
 
-    public function getGatewayAvailable(){
+    public function getGatewayAvailable()
+    {
         $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
-                                        ->where('company_id', $this->company->id)
-                                        ->orderBy('id', 'desc')->first();
+            ->where('company_id', $this->company->id)
+            ->orderBy('id', 'desc')->first();
 
-        return !empty($lastTransaction) ? ['Getnet']:[];
+        return !empty($lastTransaction) ? ['Getnet'] : [];
     }
 
     public function getGatewayId()
     {
-        return FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID:Gateway::GETNET_SANDBOX_ID;
+        return FoxUtils::isProduction() ? Gateway::GETNET_PRODUCTION_ID : Gateway::GETNET_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool
@@ -499,7 +510,7 @@ class GetnetService implements Statement
         }
     }
 
-    public function refundReceipt($hashSaleId,$transaction)
+    public function refundReceiptOLD($hashSaleId, $transaction)
     {
         $company = (object)$transaction->company->toArray();
         $company->subseller_getnet_id = CompanyService::getSubsellerId($transaction->company);
@@ -508,7 +519,7 @@ class GetnetService implements Statement
             ->setStatementSaleHashId($hashSaleId)
             ->getStatement());
 
-        if(empty($result) || empty($result->list_transactions)){
+        if (empty($result) || empty($result->list_transactions)) {
             throw new Exception('Não foi possivel continuar, entre em contato com o suporte!');
         }
 

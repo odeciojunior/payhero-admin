@@ -11,7 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Companies\Transformers\CompaniesSelectResource;
+use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\CheckoutConfig;
 use Modules\Core\Entities\Company;
@@ -152,10 +152,12 @@ class ShopifyApiController extends Controller
                 return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
             }
 
+            $bankAccount = $company->getDefaultBankAccount();
+
             $checkoutConfig = CheckoutConfig::create([
                 'company_id' => $company->id,
                 'project_id' => $projectCreated->id,
-                'pix_enabled' => !!$company->has_pix_key,
+                'pix_enabled' => !!(!empty($bankAccount) && $bankAccount->transfer_type=='PIX'),
             ]);
 
             if (empty($checkoutConfig)) {

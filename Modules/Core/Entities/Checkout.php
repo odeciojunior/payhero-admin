@@ -22,6 +22,8 @@ use App\Traits\LogsActivity;
  * @property string $browser
  * @property string $id_log_session
  * @property string $ip
+ * @property string $ip_localization
+ * @property string $ip_state
  * @property string $city
  * @property string $state
  * @property string $state_name
@@ -57,6 +59,15 @@ class Checkout extends Model
     const STATUS_RECOVERED = 3;
     const STATUS_SALE_FINALIZED = 4;
 
+    const OPERATIONAL_SYSTEM_UNKNOWN = 0;
+    const OPERATIONAL_SYSTEM_IOS = 1;
+    const OPERATIONAL_SYSTEM_ANDROID = 2;
+    const OPERATIONAL_SYSTEM_WINDOWS = 3;
+    const OPERATIONAL_SYSTEM_LINUX = 4;
+    const OPERATIONAL_SYSTEM_CHROME = 5;
+    const OPERATIONAL_SYSTEM_BLACK_BERRY = 6;
+    const OPERATIONAL_SYSTEM_JAVA = 7;
+
     public const CHECKOUT_ONE_STEP = 2;
 
     /**
@@ -77,9 +88,12 @@ class Checkout extends Model
         'status',
         'status_enum',
         'operational_system',
+        'os_enum',
         'browser',
         'id_log_session',
         'ip',
+        'ip_localization',
+        'ip_state',
         'city',
         'state',
         'state_name',

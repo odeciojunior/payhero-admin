@@ -155,6 +155,14 @@ class SystemStatusService
 
     private function getSacStatus(): array
     {
+        $data = [
+            'status' => 'success',
+            'messages' => [],
+            'attacks' => []
+        ];
+        $data['messages'][] = self::SUCCESS_MESSAGE;
+        return $data;
+
         $system = ['status' => '', 'messages' => [], 'attacks' => []];
 
         $response = $this->call('https://sac.cloudfox.net/api/project');

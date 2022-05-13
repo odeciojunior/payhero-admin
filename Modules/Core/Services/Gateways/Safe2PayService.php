@@ -6,11 +6,11 @@ use Carbon\Carbon;
 use Exception;
 use Modules\Core\Entities\Task;
 use Modules\Core\Services\TaskService;
-use PDF;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
@@ -20,6 +20,7 @@ use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
 use Modules\Withdrawals\Services\WithdrawalService;
@@ -28,6 +29,7 @@ use Modules\Withdrawals\Transformers\WithdrawalResource;
 class Safe2PayService implements Statement
 {
     public Company $company;
+    public CompanyBankAccount $companyBankAccount;
     public $gatewayIds = [];
     public $apiKey;
     public $companyId;
@@ -46,48 +48,53 @@ class Safe2PayService implements Statement
         return $this;
     }
 
-    public function getAvailableBalanceWithoutBlocking() : int
+    public function setBankAccount(CompanyBankAccount $companyBankAccount){
+        $this->companyBankAccount = $companyBankAccount;
+    }
+
+    public function getAvailableBalanceWithoutBlocking(): int
     {
         return $this->company->safe2pay_balance;
     }
 
-    public function getAvailableBalance() : int
+    public function getAvailableBalance(): int
     {
         return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
     }
 
-    public function getPendingBalance() : int
+    public function getPendingBalance(): int
     {
-        return Transaction::where('company_id', $this->company->id)
-                            ->where('status_enum', Transaction::STATUS_PAID)
-                            ->whereIn('gateway_id', $this->gatewayIds)
-                            ->whereDoesntHave('blockReasonSale',function ($query) {
-                                $query->where('status', BlockReasonSale::STATUS_BLOCKED);
-                            })
-                            ->sum('value');
+        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
+            $join->on('brs.sale_id', '=', 'transactions.sale_id')
+                ->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
+        })->whereNull('brs.id')
+            ->where('transactions.company_id', $this->company->id)
+            ->where('transactions.status_enum', Transaction::STATUS_PAID)
+            ->whereIn('transactions.gateway_id', $this->gatewayIds)
+            ->sum('transactions.value');
     }
 
-    public function getBlockedBalance() : int
+    public function getBlockedBalance(): int
     {
         return Transaction::where('company_id', $this->company->id)
-                            ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-                            ->sum('value');
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
+            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+            ->sum('value');
     }
 
-    public function getBlockedBalancePending() : int
+    public function getBlockedBalancePending(): int
     {
         return Transaction::where('company_id', $this->company->id)
-                            ->whereIn('gateway_id', $this->gatewayIds)
-                            ->where('status_enum', Transaction::STATUS_PAID)
-                            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-                            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-                            ->sum('value');
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->where('status_enum', Transaction::STATUS_PAID)
+            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
+            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
+            ->sum('value');
     }
 
-    public function getPendingDebtBalance() : int
+    public function getPendingDebtBalance(): int
     {
         return 0;
     }
@@ -98,10 +105,9 @@ class Safe2PayService implements Statement
         $pendingBalance = $this->getPendingBalance();
         $availableBalance += $pendingBalance;
 
-        if($sale->payment_method == Sale::BOLETO_PAYMENT) {
-            return $availableBalance >= (int) foxutils()->onlyNumbers($sale->total_paid_value);
-        }
-        else {
+        if ($sale->payment_method == Sale::BOLETO_PAYMENT) {
+            return $availableBalance >= (int)foxutils()->onlyNumbers($sale->total_paid_value);
+        } else {
             $transaction = Transaction::where('sale_id', $sale->id)->where('user_id', auth()->user()->account_owner_id)->first();
             return $availableBalance >= $transaction->value;
         }
@@ -111,8 +117,8 @@ class Safe2PayService implements Statement
     public function getWithdrawals(): JsonResource
     {
         $withdrawals = Withdrawal::where('company_id', $this->company->id)
-                                    ->whereIn('gateway_id', $this->gatewayIds)
-                                    ->orderBy('id', 'DESC');
+            ->whereIn('gateway_id', $this->gatewayIds)
+            ->orderBy('id', 'DESC');
 
         return WithdrawalResource::collection($withdrawals->paginate(10));
     }
@@ -128,21 +134,27 @@ class Safe2PayService implements Statement
         return true;
     }
 
+    public function existsBankAccountApproved(){
+        //verifica se existe uma conta bancaria aprovada
+        $this->companyBankAccount =  $this->company->getDefaultBankAccount();
+        return !empty($this->companyBankAccount);
+    }
+
     public function createWithdrawal($value)
     {
         try {
             DB::beginTransaction();
 
             $this->company->update([
-                'safe2pay_balance' => $this->company->safe2pay_balance -= $value
+                'safe2pay_balance' => $this->company->safe2pay_balance - $value
             ]);
 
             $withdrawal = Withdrawal::where([
-                                        ['company_id', $this->company->id],
-                                        ['status', Withdrawal::STATUS_PENDING],
-                                ])
-                                ->whereIn('gateway_id', $this->gatewayIds)
-                                ->first();
+                ['company_id', $this->company->id],
+                ['status', Withdrawal::STATUS_PENDING],
+            ])
+                ->whereIn('gateway_id', $this->gatewayIds)
+                ->first();
 
             if (empty($withdrawal)) {
 
@@ -155,27 +167,31 @@ class Safe2PayService implements Statement
                     );
                 }
 
-                $withdrawal = Withdrawal::create(
-                    [
-                        'value' => $value,
-                        'company_id' => $this->company->id,
-                        'bank' => $this->company->bank,
-                        'agency' => $this->company->agency,
-                        'agency_digit' => $this->company->agency_digit,
-                        'account' => $this->company->account,
-                        'account_digit' => $this->company->account_digit,
-                        'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
-                        'tax' => 0,
-                        'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
-                        'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
-                    ]
-                );
-            } else {
-                $withdrawalValueSum = $withdrawal->value + $value;
+                $data = [
+                    'value' => $value,
+                    'company_id' => $this->company->id,
+                    'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
+                    'tax' => 0,
+                    'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
+                    'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
+                ];
 
-                $withdrawal->update([
+                $data = array_merge($data,$this->setBankAccountArray($this->companyBankAccount));
+
+                $withdrawal = Withdrawal::create($data);
+
+            } else {
+
+                $withdrawalValueSum = $withdrawal->value + $value;
+                $data = [
                     'value' => $withdrawalValueSum
-                ]);
+                ];
+
+                if($withdrawal->transfer_type <> $this->companyBankAccount->transfer_type){
+                    $data = array_merge($data,$this->setBankAccountArray($this->companyBankAccount));
+                }
+
+                $withdrawal->update($data);
             }
             DB::commit();
         } catch (Exception $e) {
@@ -185,6 +201,29 @@ class Safe2PayService implements Statement
         }
 
         return $withdrawal;
+    }
+
+    public function setBankAccountArray($bankAccount){
+        switch($bankAccount->transfer_type){
+            case 'TED':
+               return [
+                    'transfer_type'=>'TED',
+                    'bank' => $bankAccount->bank,
+                    'agency' => $bankAccount->agency,
+                    'agency_digit' => $bankAccount->agency_digit,
+                    'account' => $bankAccount->account,
+                    'account_digit' => $bankAccount->account_digit,
+                ];
+            break;
+            case 'PIX':
+                return [
+                    'transfer_type'=>'PIX',
+                    'type_key_pix'=>$bankAccount->type_key_pix,
+                    'key_pix'=>$bankAccount->key_pix,
+                ];
+            break;
+        }
+        return [];
     }
 
     public function updateAvailableBalance($saleId = null)
@@ -227,7 +266,7 @@ class Safe2PayService implements Statement
                 );
 
                 $company->update([
-                    'safe2pay_balance' => $company->safe2pay_balance += $transaction->value
+                    'safe2pay_balance' => $company->safe2pay_balance + $transaction->value
                 ]);
 
                 $transaction->update([
@@ -235,6 +274,7 @@ class Safe2PayService implements Statement
                     'status_enum' => Transaction::STATUS_TRANSFERRED,
                 ]);
             }
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -255,8 +295,8 @@ class Safe2PayService implements Statement
     public function getResume()
     {
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
-                                        ->where('company_id', $this->company->id)
-                                        ->orderBy('id', 'desc')->first();
+            ->where('company_id', $this->company->id)
+            ->orderBy('id', 'desc')->first();
 
         $pendingBalance = $this->getPendingBalance();
         $blockedBalance = $this->getBlockedBalance();
@@ -282,10 +322,10 @@ class Safe2PayService implements Statement
     public function getGatewayAvailable()
     {
         $lastTransaction = DB::table('transactions')->whereIn('gateway_id', $this->gatewayIds)
-                                        ->where('company_id', $this->company->id)
-                                        ->orderBy('id', 'desc')->first();
+            ->where('company_id', $this->company->id)
+            ->orderBy('id', 'desc')->first();
 
-        return !empty($lastTransaction) ? ['Vega']:[];
+        return !empty($lastTransaction) ? ['Vega'] : [];
     }
 
     public function getCompanyApiKey(Sale $sale)
@@ -299,7 +339,7 @@ class Safe2PayService implements Statement
 
     public function getGatewayId()
     {
-        return FoxUtils::isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID:Gateway::SAFE2PAY_SANDBOX_ID;
+        return FoxUtils::isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID;
     }
 
     public function cancel($sale, $response, $refundObservation): bool
@@ -324,14 +364,14 @@ class Safe2PayService implements Statement
             $saleService = new SaleService();
             $saleTax = 0;
 
-            $cashbackValue = $sale->cashback()->first()->value??0;
-            $saleTax = $saleService->getSaleTaxRefund($sale,$cashbackValue);
+            $cashbackValue = $sale->cashback()->first()->value ?? 0;
+            $saleTax = $saleService->getSaleTaxRefund($sale, $cashbackValue);
 
             $totalSale = $saleService->getSaleTotalValue($sale);
-
+            $safe2payBalance = 0;
             foreach ($sale->transactions as $refundTransaction) {
 
-                if(empty($refundTransaction->company_id)) {
+                if (empty($refundTransaction->company_id)) {
                     $refundTransaction->update([
                         'status_enum' => Transaction::STATUS_REFUNDED,
                         'status' => 'refunded',
@@ -339,7 +379,9 @@ class Safe2PayService implements Statement
                     continue;
                 }
 
-                if($refundTransaction->status_enum == Transaction::STATUS_PAID) {
+                $safe2payBalance = $refundTransaction->company->safe2pay_balance;
+
+                if ($refundTransaction->status_enum == Transaction::STATUS_PAID) {
 
                     Transfer::create(
                         [
@@ -352,9 +394,9 @@ class Safe2PayService implements Statement
                             'gateway_id' => foxutils()->isProduction() ? Gateway::SAFE2PAY_PRODUCTION_ID : Gateway::SAFE2PAY_SANDBOX_ID
                         ]
                     );
-
+                    $safe2payBalance+= $refundTransaction->value;
                     $refundTransaction->company->update([
-                        'safe2pay_balance' => $refundTransaction->company->safe2pay_balance += $refundTransaction->value
+                        'safe2pay_balance' => $safe2payBalance
                     ]);
                 }
 
@@ -363,7 +405,7 @@ class Safe2PayService implements Statement
                     $refundValue += $saleTax;
                 }
 
-                if($refundValue > $totalSale){
+                if ($refundValue > $totalSale) {
                     $refundValue = $totalSale;
                 }
 
@@ -380,7 +422,7 @@ class Safe2PayService implements Statement
                 ]);
 
                 $refundTransaction->company->update([
-                    'safe2pay_balance' => $refundTransaction->company->safe2pay_balance -= $refundValue
+                    'safe2pay_balance' => $safe2payBalance - $refundValue
                 ]);
 
                 $refundTransaction->status = 'refunded';
@@ -413,8 +455,4 @@ class Safe2PayService implements Statement
         }
     }
 
-    public function refundReceipt($hashSaleId,$transaction)
-    {
-        return PDF::loadHtml('<h2>Não foi possivel gerar o comprovante de estorno!.</h2>');
-    }
 }

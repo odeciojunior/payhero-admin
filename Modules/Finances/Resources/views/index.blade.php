@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            @include('companies::empty')
+            @include('utils.empty-companies-error')
 
         </div>
 

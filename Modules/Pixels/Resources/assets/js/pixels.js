@@ -246,6 +246,7 @@ $(function () {
         isChecked($(".purchase-card-edit"), pixel.purchase_card);
         isChecked($(".purchase-boleto-edit"), pixel.purchase_boleto);
         isChecked($(".purchase-pix-edit"), pixel.purchase_pix);
+        isChecked($(".purchase-all-edit"), pixel.purchase_all);
         isChecked($(".upsell-edit"), pixel.upsell);
         isChecked($(".purchase-upsell-edit"), pixel.purchase_upsell);
         isChecked($(".send-value-edit"), pixel.send_value_checkout);
@@ -398,6 +399,7 @@ $(function () {
                 purchase_card: $("#modal-edit-pixel .purchase-card-edit").is(':checked'),
                 purchase_boleto: $("#modal-edit-pixel .purchase-boleto-edit").is(':checked'),
                 purchase_pix: $("#modal-edit-pixel .purchase-pix-edit").is(':checked'),
+                purchase_all: false, //$("#modal-edit-pixel .purchase-all-edit").is(':checked'),
                 upsell: true, // $("#modal-edit-pixel .upsell-edit").is(':checked'),
                 purchase_upsell: true, // $("#modal-edit-pixel .purchase-upsell-edit").is(':checked'),
                 event_select: $("#modal-edit-pixel #single-event-edit").val(),
@@ -585,7 +587,7 @@ $(function () {
 
         $("#add_pixel_plans").val(null).trigger("change");
 
-        isChecked($("#modal-create-pixel .status"), true);
+        isChecked($("#modal-create-pixel .pixel-status"), true);
         isChecked($("#modal-create-pixel .checkout"), true);
         isChecked($("#modal-create-pixel .basic-data"), true);
         isChecked($("#modal-create-pixel .delivery"), true);
@@ -594,6 +596,7 @@ $(function () {
         isChecked($("#modal-create-pixel .purchase-card"), true);
         isChecked($("#modal-create-pixel .purchase-boleto"), true);
         isChecked($("#modal-create-pixel .purchase-pix"), true);
+        isChecked($("#modal-create-pixel .purchase-all"), true);
         isChecked($("#modal-create-pixel .upsell"), true);
         isChecked($("#modal-create-pixel .purchase-upsell"), true);
 
@@ -680,7 +683,7 @@ $(function () {
     $("#modal-create-pixel #btn-store-pixel").on('click', function () {
         const formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
 
-        formData.append('status', $("#modal-create-pixel .status").is(':checked'));
+        formData.append('status', $("#modal-create-pixel .pixel-status").is(':checked'));
         formData.append('checkout', $("#modal-create-pixel .checkout").is(':checked'));
         formData.append('basic_data', true) // $("#modal-create-pixel .basic-data").is(':checked'));
         formData.append('delivery', true) // $("#modal-create-pixel .delivery").is(':checked'));
@@ -689,6 +692,7 @@ $(function () {
         formData.append('purchase_card', $("#modal-create-pixel .purchase-card").is(':checked'));
         formData.append('purchase_boleto', $("#modal-create-pixel .purchase-boleto").is(':checked'));
         formData.append('purchase_pix', $("#modal-create-pixel .purchase-pix").is(':checked'));
+        formData.append('purchase_all', false)//$("#modal-create-pixel .purchase-all").is(':checked'));
         formData.append('upsell', true) // $("#modal-create-pixel .upsell").is(':checked'));
         formData.append('purchase_upsell', true) // $("#modal-create-pixel .purchase-upsell").is(':checked'));
         formData.append('event_select', $("#modal-create-pixel #single-event").val());

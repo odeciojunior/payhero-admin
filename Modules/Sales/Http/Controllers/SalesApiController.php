@@ -100,7 +100,7 @@ class SalesApiController extends Controller
                 }
             )->log('Exportou tabela ' . $dataRequest['format'] . ' de vendas');
             $user = auth()->user();
-            $filename = 'sales_report_' . Hashids::encode($user->id) . '.' . $dataRequest['format'];
+            $filename = 'sales_report_' . Hashids::encode($user->id) . '.csv'; //. $dataRequest['format'];
             (new SaleReportExport($dataRequest, $user, $filename))->queue($filename)->allOnQueue('high');
             return response()->json(['message' => 'A exportação começou', 'email' => $dataRequest['email']]);
         } catch (Exception $e) {
@@ -132,6 +132,14 @@ class SalesApiController extends Controller
         try {
             $saleIdDecoded = hashids_decode($saleId, 'sale_id');
             $sale = Sale::find($saleIdDecoded);
+
+            if($sale->status != Sale::STATUS_APPROVED) {
+                return response()->json(
+                    ['status' => 'error', 'message' => 'Somente vendas aprovadas podem ser estornadas.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
             if (!in_array($sale->gateway_id, [
                 Gateway::GERENCIANET_PRODUCTION_ID,
                 Gateway::GERENCIANET_SANDBOX_ID,
@@ -158,13 +166,17 @@ class SalesApiController extends Controller
             $gatewayService->setCompany($producerCompany);
 
             if (!$gatewayService->hasEnoughBalanceToRefund($sale)) {
-                return response()->json(['message' => 'Saldo insuficiente para realizar o estorno'], 400);
+                return response()->json(
+                    ['status' => 'error', 'message' => 'Saldo insuficiente para realizar o estorno'],
+                    Response::HTTP_BAD_REQUEST);
             }
 
             $refundObservation = $request->input('refund_observation') ?? null;
             $result = (new CheckoutService())->cancelPaymentCheckout($sale);
             if ($result['status'] != 'success') {
-                return response()->json(['message' => $result['message']], 400);
+                return response()->json(
+                    ['status' => 'error', 'message' => $result['message']],
+                    Response::HTTP_BAD_REQUEST);
             }
 
             $gatewayService->cancel($sale,$result['response'], $refundObservation);
@@ -176,7 +188,9 @@ class SalesApiController extends Controller
             return response()->json(['message' => $result['message']], Response::HTTP_OK);
         } catch (Exception $e) {
             report($e);
-            return response()->json(['message' => 'Erro ao tentar estornar venda.'], 400);
+            return response()->json(
+                ['status' => 'error', 'message' => 'Erro ao tentar estornar venda.'],
+                Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -187,9 +201,7 @@ class SalesApiController extends Controller
 
             if(!in_array($sale->gateway_id, [Gateway::SAFE2PAY_PRODUCTION_ID, Gateway::SAFE2PAY_SANDBOX_ID])) {
                 return response()->json(
-                    [
-                        'message' => 'Estorno de boleto habilitado somente no Vega'
-                    ],
+                    ['status' => 'error', 'message' => 'Estorno de boleto habilitado somente no Vega'],
                     Response::HTTP_BAD_REQUEST
                 );
             }
@@ -201,9 +213,7 @@ class SalesApiController extends Controller
 
             if (!$gatewayService->hasEnoughBalanceToRefund($sale)) {
                 return response()->json(
-                    [
-                        'message' => 'Saldo insuficiente para realizar o estorno'
-                    ],
+                    ['status' => 'error', 'message' => 'Saldo insuficiente para realizar o estorno'],
                     Response::HTTP_BAD_REQUEST
                 );
             }
@@ -211,14 +221,14 @@ class SalesApiController extends Controller
             (new SaleService())->refundBillet($sale);
 
             return response()->json(
-                [
-                    'message' => 'Boleto estornado com sucesso'
-                ],
+                ['message' => 'Boleto estornado com sucesso'],
                 Response::HTTP_OK
             );
         } catch (Exception $e) {
             report($e);
-            return response()->json(['error' => 'Erro ao tentar estornar boleto'], 400);
+            return response()->json(
+                ['status' => 'error', 'error' => 'Erro ao tentar estornar boleto'],
+                Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -264,11 +274,11 @@ class SalesApiController extends Controller
 
     public function newOrderWoocommerce(Request $request, $saleId)
     {
-        
+
 
         try {
             // if (FoxUtils::isProduction()) {
-                
+
                 $saleModel = new Sale();
                 $sale = $saleModel->with('upsells')->find(Hashids::connection('sale_id')->decode($saleId))->first();
                 $integration = WooCommerceIntegration::where('project_id', $sale->project_id)->first();
@@ -280,8 +290,8 @@ class SalesApiController extends Controller
                 )->log('Gerou nova ordem no woocommerce para transação: #' . $saleId);
                 if (!FoxUtils::isEmpty($integration)) {
                     $service = new WooCommerceService( $integration->url_store, $integration->token_user, $integration->token_pass);
-                    
-                    
+
+
                     $request = SaleWoocommerceRequests::where('sale_id', $sale->id)
                                 ->where('status', 0)
                                 ->where('method', 'CreatePendingOrder')->first();
@@ -304,14 +314,14 @@ class SalesApiController extends Controller
                             $saleModel = Sale::where('id',$request['sale_id'])->first();
                             $saleModel->woocommerce_order = $order;
                             $saleModel->save();
-                            
+
                             $result = json_encode($result);
                             $service->updatePostRequest($request['id'], 1, $result, $order);
 
-                            
+
 
                             if($changeToPaidStatus == 1){
-                                
+
                                 $result = $service->approveBillet($order, $request['project_id'], $request['sale_id']);
 
                             }
@@ -324,12 +334,12 @@ class SalesApiController extends Controller
 
                         }
 
-                        
+
                     }else{
                         return response()->json(['message' => 'Requisição não encontrada!'], Response::HTTP_BAD_REQUEST);
 
                     }
-                    
+
                 }else {
                     return response()->json(['message' => 'Integração não encontrada'], Response::HTTP_BAD_REQUEST);
                 }
@@ -340,10 +350,10 @@ class SalesApiController extends Controller
             //     );
             // }
         } catch (Exception $e) {
-            
+
             report($e);
             $message = 'Erro ao tentar gerar ordem no Woocommerce.';
-            
+
             return response()->json(['message' => $message], Response::HTTP_BAD_REQUEST);
         }
     }
@@ -402,7 +412,7 @@ class SalesApiController extends Controller
             $data = $request->all();
             $planModel = new Plan();
             $userProjectModel = new UserProject();
-            
+
             $projectIds = [current(Hashids::decode($data['project_id']))];
 
             if(is_array($data['project_id'])){
@@ -411,7 +421,7 @@ class SalesApiController extends Controller
                     array_push($projectIds, current(Hashids::decode($project)));
                 };
             }
-                        
+
             if (current($projectIds)) {
 
                 $plans = null;

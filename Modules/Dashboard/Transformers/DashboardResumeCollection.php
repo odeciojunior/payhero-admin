@@ -4,7 +4,7 @@ namespace Modules\Dashboard\Transformers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Modules\Companies\Transformers\CompanyResource;
+use Modules\Core\Transformers\CompanyResource;
 use Modules\Core\Entities\User;
 
 /**

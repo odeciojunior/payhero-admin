@@ -10,7 +10,7 @@ $(document).ready(function () {
 
     $.ajax({
         method: "GET",
-        url: "/api/companies?select=true",
+        url: "/api/core/companies?select=true",
         dataType: "json",
         headers: {
             'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -38,12 +38,7 @@ $(document).ready(function () {
             $('#button-information').hide();
             $("#companies-not-approved-getnet").show();
         } else if (!allCompanyNotApproved) {
-            if (woocommerceIntegrationNotFound) {
-                $("#no-integration-found").show();
-            }else{
-                $("#no-integration-found").hide();
-
-            }
+            
 
             $('#btn-integration-model').show();
             $('#button-information').show().addClass('d-flex').css('display', 'flex');
@@ -69,6 +64,11 @@ $(document).ready(function () {
 
                 if (isEmpty(data)) {
                     woocommerceIntegrationNotFound = true;
+                    if (woocommerceIntegrationNotFound) {
+                        $("#no-integration-found").show();
+                    }else{
+                        $("#no-integration-found").hide();
+                    }
                     return;
                 }
 

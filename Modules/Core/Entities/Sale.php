@@ -74,8 +74,6 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property int $is_chargeback_recovered
  * @property int $has_valid_tracking
  * @property int $has_order_bump
- * @property string|null $anticipation_status
- * @property string|null $anticipation_id
  * @property string|null $observation
  * @property string|null $antifraud_warning_level
  * @property Carbon|null $created_at
@@ -136,6 +134,7 @@ class Sale extends Model
 
     public const GETNET_SANDBOX_ID = 14;
     public const GETNET_PRODUCTION_ID = 15;
+    public const GERENCIANET_PRODUCTION_ID = 18;
 
     public const CREDIT_CARD_PAYMENT = 1;
     public const BOLETO_PAYMENT = 2;
@@ -244,9 +243,7 @@ class Sale extends Model
         'has_order_bump',
         'observation',
         'original_total_paid_value',
-        'antifraud_warning_level',
-        'anticipation_status',
-        'anticipation_id'
+        'antifraud_warning_level'
     ];
 
     public function checkout(): BelongsTo
@@ -347,6 +344,11 @@ class Sale extends Model
     public function saleGatewayRequests(): HasMany
     {
         return $this->hasMany(SaleGatewayRequest::class);
+    }
+
+    public function saleWoocommerceRequests(): HasMany
+    {
+        return $this->hasMany(SaleWoocommerceRequests::class);
     }
 
     public function contestations(): HasMany

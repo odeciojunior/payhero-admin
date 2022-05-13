@@ -4,7 +4,7 @@ $(document).ready(function () {
     function getCompanies() {
         $.ajax({
             method: "GET",
-            url: "/api/companies?select=true",
+            url: "/api/core/companies?select=true",
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -108,7 +108,7 @@ $(document).ready(function () {
                                 </defs>
                                 <title>Configurações da Integração</title>
                             </svg>
-                                <img class="card-img-top img-fluid w-full" onerror="this.src = '/build/global/img/produto.png'" src="${
+                                <img class="card-img-top img-fluid w-full" style="height: 297px;" onerror="this.src = '/build/global/img/produto.png'" src="${
                                     !shopifyIntegration.project_photo
                                         ? "/build/global/img/produto.png"
                                         : shopifyIntegration.project_photo

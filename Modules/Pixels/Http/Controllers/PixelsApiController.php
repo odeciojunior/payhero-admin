@@ -120,7 +120,9 @@ class PixelsApiController extends Controller
                 } else {
                     foreach ($applyPlanDecoded as $key => $value) {
                         $plan = $planModel->select(
-                            'plans.*',
+                            'plans.id',
+                            'plans.name',
+                            'plans.description',
                             DB::raw(
                                 '(select sum(if(p.shopify_id is not null and p.shopify_id = plans.shopify_id, 1, 0)) from plans p where p.deleted_at is null) as variants'
                             )
@@ -136,9 +138,12 @@ class PixelsApiController extends Controller
                 }
             }
 
-            foreach (PixelService::EVENTS as $EVENT) {
-                if ($pixel->$EVENT == true) {
-                    $pixel->event_select = $EVENT;
+            $pixel->event_select = '';
+            if ($pixel->platform == 'google_adwords') {
+                foreach (PixelService::EVENTS as $EVENT) {
+                    if ($pixel->$EVENT == true) {
+                        $pixel->event_select = $EVENT;
+                    }
                 }
             }
 

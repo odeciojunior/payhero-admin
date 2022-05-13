@@ -151,9 +151,9 @@ class User extends Authenticable
         'account_owner_id',
         'deleted_project_filter',
         'id_wall_result',
-        'sex',
-        'mother_name',
-        'has_sale_before_getnet',
+        'sex',//
+        'mother_name',//
+        'has_sale_before_getnet',//
         'account_is_approved',
         'chargeback_rate',
         'account_score',
@@ -168,9 +168,8 @@ class User extends Authenticable
         'level',
         'ignore_automatic_benefits_updates',
         'total_commission_value',
-        'show_old_finances',
+        'show_old_finances',//
         'mkt_information',
-        'asaas_alert',
         'created_at',
         'updated_at',
         'deleted_at',

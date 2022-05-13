@@ -2,6 +2,8 @@
 
 namespace Modules\Finances\Providers;
 
+use Modules\Core\Entities\Company;
+use Modules\Finances\Policies\FinancePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -10,6 +12,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
+        Company::class => FinancePolicy::class,
     ];
 
     /**

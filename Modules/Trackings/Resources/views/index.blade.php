@@ -209,7 +209,7 @@
                         </div>
                     </div>
                     <div class="col-6 col-xl-3 mt-20">
-                        <div id="bt_filtro" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
+                        <div id="bt_filter" class="btn btn-primary-1 w-p100 bold d-flex justify-content-center align-items-center" style="white-space: normal">
                             <img style="height: 12px; margin-right: 4px" class="hidden-xs-down" src=" {{ mix('build/global/img/svg/check-all.svg') }} " />
                             Aplicar <br class="d-flex d-sm-none"> filtros
                         </div>
@@ -406,9 +406,13 @@
                     {{-- js carrega... --}}
                 </ul>
             </div>
+
             <!-- Modal detalhes da venda-->
             @include('sales::details')
-            <!-- End Modal -->
+
+            <!-- Modal estonar transação-->
+            @include('sales::modal_refund_transaction')
+
             <!-- Modal detalhes tracking -->
             <div class="modal fade modal-3d-flip-vertical" id="modal-tracking" aria-hidden="true" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered modal-simple modal-sidebar modal-lg" style="width: 500px;">

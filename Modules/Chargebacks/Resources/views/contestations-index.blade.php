@@ -79,9 +79,9 @@
                                 <label for="is_expired">Expiração</label>
                                 <br>
                                 <select name='is_expired' id="is_expired" class="sirius-select">
-                                    <option value="0">Ambos</option>
+                                    <option value="0" selected>Ambos</option>
                                     <option value="1">Expirado</option>
-                                    <option value="2" selected>Não expirado</option>
+                                    <option value="2">Não expirado</option>
                                 </select>
                             </div>
 
@@ -136,15 +136,21 @@
                                     <input id="customer" name="customer" class="input-pad" placeholder="Nome do cliente">
                                 </div>
                             </div>
-                            <div class="row justify-content-end">
-                                <div class='col-sm-12 col-md-2 mt-10 px-0'>
-                                    <label for="sale_approve" class='pl-50 mb-10'>Vendas aprovadas</label>
-                                    <br>
-                                    <label class="switch mr-0" style="margin-left:140px">
+
+                            <div class="row no-gutters justify-content-between justify-content-sm-end mt-20">
+                                <div class="mr-10">
+                                    <label for="sale_approve" class=''>
+                                        Vendas aprovadas
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label class="switch m-0">
                                         <input type="checkbox" id='sale_approve' name="sale_approve" >
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
+
                             </div>
                         </div>
 
@@ -169,12 +175,14 @@
                         </div>
                     </div>
                 </form>
+
                 <div class="fixhalf"></div>
 
-                <div class="row justify-content-center mt-10">
-                    <div class="col-md-3 px-0">
+                <div class="row no-gutters mt-10">
+
+                    <div class="col-md-3 pl-0 py-15 pr-15">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body p-15">
+                            <div class="card-body">
                                 <h5 class="font-size-16 text-muted">N° de contestações</h5>
                                 <h4 class="total-number">
                                     <span class="font-size-30 bold" style="color:#5A5A5A" id="total-contestation"></span>
@@ -184,9 +192,9 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3 pr-0">
+                    <div class="col-md-3 pl-0 py-15 pr-15">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body p-15">
+                            <div class="card-body">
                                 <h5 class="font-size-16 text-muted">Resultou em chargeback</h5>
                                 <h4 class="total-number">
                                     <span class="font-size-30 bold" style="color:#5A5A5A" id="total-chargeback-tax-val"></span>
@@ -196,9 +204,9 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-3 pl-0 py-15 pr-15">
                         <div class="card shadow" style='display:block;'>
-                            <div class="card-body p-15">
+                            <div class="card-body">
                                 <h5 class="font-size-16 text-muted">Total</h5>
                                 <h4 class="total-number">
                                     <span class="text-muted">R$ </span>
@@ -229,23 +237,22 @@
                         <table id="chargebacks-table" class="table-vendas table table-striped unify"
                                style="width:100%;">
                             <thead>
-                            <tr class="">
-                                <td class="table-title">Transação</td>
-                                <td class="table-title" style="min-width: 200px; text-align:left">Empresa</td>
-                                <td class="table-title">Compra</td>
-                                <td class="table-title text-center" style="min-width: 100px;">Status</td>
-                                {{--<td class="table-title">Situação</td>--}}
-                                <td class="table-title">Motivo</td>
-                                {{--                            <td class="table-title">Valor</td>--}}
-                                <td class="table-title" style="min-width: 100px;"></td>
-                            </tr>
+                                <tr class="">
+                                    <td class="table-title">Transação</td>
+                                    <td class="table-title" style="min-width: 200px; text-align:left">Empresa</td>
+                                    <td class="table-title">Compra</td>
+                                    <td class="table-title text-center" style="min-width: 100px;">Status</td>
+                                    {{--<td class="table-title">Situação</td>--}}
+                                    <td class="table-title">Motivo</td>
+                                    {{--                            <td class="table-title">Valor</td>--}}
+                                    <td class="table-title" style="min-width: 100px;"></td>
+                                </tr>
                             </thead>
                             <tbody id="chargebacks-table-data" img-empty="{!! mix('build/global/img/contestacoes.svg')!!}">
-                            {{-- js carrega... --}}
+                                {{-- js carrega... --}}
                             </tbody>
                         </table>
                     </div>
-
                 </div>
                 <div class="row justify-content-center justify-content-md-end pb-60">
                     <ul id="pagination" class="pl-5 pr-md-15 mb-10">
@@ -256,13 +263,19 @@
                 @include('sales::details')
 
             </div>
-            {{-- Quando não tem loja cadastrado  --}}
-            @include('projects::empty')
-            {{-- FIM loja nao existem lojas--}}
+        {{-- Quando não tem loja cadastrado  --}}
+        @include('projects::empty')
+        {{-- FIM loja nao existem lojas--}}
         </div>
+    </div>
 
-        @push('scripts')
-            <script src="{{ mix('build/layouts/chargebacks/contestations-index.min.js') }}"></script>
+    <!-- @push('scripts')
+        <script src="{{ mix('build/layouts/chargebacks/contestations-index.min.js') }}"></script>
+        <script src="{{ mix('build/layouts/sales/details.min.js') }}"></script>
+    @endpush -->
+
+    @push('scriptsView')
+        <script src="{{ mix('build/layouts/chargebacks/contestations-index.min.js') }}"></script>
     @endpush
 
 @endsection

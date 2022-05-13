@@ -17,6 +17,7 @@ $(document).ready(function(){
             },
             success: function success(response) {
                 if (!isEmpty(response.data)) {
+                    $("#project-empty-title").hide();
                     $("#project-empty").hide();
                     $("#project-not-empty").show();
 
@@ -24,6 +25,7 @@ $(document).ready(function(){
                 } else {
                     $("#project-empty").show();
                     $("#project-not-empty").hide();
+                    $("#project-empty-title").show();
                 }
 
                 loadingOnScreenRemove();
@@ -54,7 +56,7 @@ $(document).ready(function(){
     function getCompanies() {
         $.ajax({
             method: "GET",
-            url: "/api/companies?select=true",
+            url: "/api/core/companies?select=true",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -74,8 +76,10 @@ $(document).ready(function(){
                 $('.page-content').show();
                 $('.content-error').hide();
 
-                $(response.data).each(function (index, value) {
-                    let data = `<option country="${value.country}" value="${value.id}">${value.name}</option>`;
+                $(response.data).each(function (index, company) {
+                    const document = (company.document.replace(/\D/g, '').length > 11 ? 'CNPJ: ' : 'CPF: ') + company.document;
+                    let data = `<option country="${company.country}" value="${company.id}"
+                                        data-toggle="tooltip" title="${document}">${company.name}</option>`;
                     $("#transfers_company_select").append(data);
                     $("#extract_company_select").append(data);
                     $("#statement_company_select").append(data);

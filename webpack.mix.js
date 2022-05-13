@@ -243,76 +243,6 @@ mix.copy(
 'public/build/layouts/checkouteditor/files');
 
 /**
- * Modules/Companies/Resources/views/create.blade.php
- */
-mix.babel([
-    'Modules/Companies/Resources/assets/js/create.js'
-],'public/build/layouts/companies/create.min.js');
-
-/**
- * Modules/Companies/Resources/views/edit_cnpj.blade.php
- */
-mix.styles([
-    'Modules/Profile/Resources/assets/css/basic.css',
-    'Modules/Profile/Resources/assets/css/dropzone.css',
-    'resources/cdn/select2.min.css',
-    'resources/modules/global/css/switch.css'
-],'public/build/layouts/companies/edit_cnpj.min.css')
-mix.babel([
-    'resources/modules/global/js/dropzone.js',
-    'Modules/Companies/Resources/assets/js/edit_cnpj.js',
-    'resources/cdn/select2.min.js'
-],'public/build/layouts/companies/edit_cnpj.min.js');
-
-/**
- * Modules/Companies/Resources/views/edit_cpf.blade.php
- */
-mix.styles([
-    'Modules/Profile/Resources/assets/css/basic.css',
-    'Modules/Profile/Resources/assets/css/dropzone.css',
-    'resources/cdn/select2.min.css',
-    'resources/modules/global/css/switch.css'
-],'public/build/layouts/companies/edit_cpf.min.css')
-mix.babel([
-    'resources/modules/global/js/dropzone.js',
-    'Modules/Companies/Resources/assets/js/edit_cpf.js',
-    'resources/cdn/select2.min.js'
-],'public/build/layouts/companies/edit_cpf.min.js');
-
-/**
- * Modules/Companies/Resources/views/empty.blade.php
- */
-mix.styles([
-    'resources/modules/global/css/empty.css',
-],'public/build/layouts/companies/empty.min.css')
-
-/**
- * Modules/Companies/Resources/views/index.blade.php
- */
-mix.babel([
-    'Modules/Companies/Resources/assets/js/index.js'
-],'public/build/layouts/companies/index.min.js');
-
-/**
- * Modules/Companies/Resources/views/not_company_approved_getnet.blade.php
- */
-mix.styles([
-    'resources/modules/global/css/empty.css',
-],'public/build/layouts/companies/not_company_approved_getnet.min.css')
-
-/**
- * Modules/Companies/Resources/views/testecreate.blade.php
- */
-mix.styles([
-    'Modules/Profile/Resources/assets/css/basic.css',
-    'Modules/Profile/Resources/assets/css/dropzone.css'
-],'public/build/layouts/companies/testecreate.min.css')
-mix.babel([
-    'resources/modules/global/js/dropzone.js',
-    'Modules/Companies/Resources/assets/js/edit.js'
-],'public/build/layouts/companies/testecreate.min.js');
-
-/**
  * Modules/ConvertaX/Resources/views/include.blade.php
  */
  mix.styles([
@@ -393,7 +323,8 @@ mix.babel([
     'resources/modules/global/js/confetti.browser.min.js',
     'Modules/Dashboard/Resources/assets/js/dashboard-performance.js',
     'Modules/Dashboard/Resources/assets/js/dashboard.js',
-    'Modules/Dashboard/Resources/assets/js/dashboard-account-health.js'
+    'Modules/Dashboard/Resources/assets/js/dashboard-account-health.js',
+    'Modules/Dashboard/Resources/assets/js/announcekit-dashboard-mobile.js'
 ],'public/build/layouts/dashboard/scripts.min.js');
 
 /**
@@ -624,21 +555,6 @@ mix.styles([
 ],'public/build/layouts/products/index.min.css');
 
 /**
- * Modules/Profile/Resources/views/index.blade.php
- */
- mix.styles([
-    'Modules/Profile/Resources/assets/css/basic.css',
-    'Modules/Profile/Resources/assets/css/dropzone.css',
-    'resources/modules/global/css/switch.css',
-    'resources/cdn/select2.min.css'
-],'public/build/layouts/profile/index.min.css')
-mix.babel([
-    'resources/modules/global/js/dropzone.js',
-    'Modules/Profile/Resources/assets/js/profile.js',
-    'resources/cdn/select2.min.js'
-],'public/build/layouts/profile/index.min.js');
-
-/**
  * Modules/Projects/Resources/views/projectaffiliate.blade.php
  */
 mix.styles([
@@ -665,7 +581,9 @@ mix.styles([
     'resources/modules/global/scrollbar-plugin/jquery.mCustomScrollbar.css',
     'resources/modules/global/css/switch.css',
     'resources/modules/global/css/table.css',
-    'Modules/Projects/Resources/assets/css/style.css'
+    'Modules/Projects/Resources/assets/css/style.css',
+    'Modules/DiscountCoupons/Resources/assets/css/styles.css',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.css',
 ],'public/build/layouts/projects/project.min.css')
 mix.copy(
     'resources/cdn/ckeditor.js'
@@ -682,7 +600,6 @@ mix.babel([
     'Modules/Pixels/Resources/assets/js/pixels.js',
     'resources/modules/projectupsell/js/index.js',
     'Modules/OrderBump/Resources/assets/js/index.js',
-    'Modules/DiscountCoupons/Resources/assets/js/discountCoupons.js',
     'Modules/ProjectReviews/Resources/assets/js/index.js',
     'Modules/ProjectNotification/Resources/assets/js/projectNotification.js',
     'Modules/Projects/Resources/assets/js/projects.js',
@@ -694,16 +611,21 @@ mix.babel([
     'Modules/WooCommerce/Resources/assets/js/syncproducts.js',
     'resources/modules/global/scrollbar-plugin/jquery.mousewheel.min.js',
     'resources/modules/global/scrollbar-plugin/jquery.mCustomScrollbar.js',
+    'resources/modules/global/js-extra/moment.min.js',
+    'resources/modules/global/jquery-daterangepicker/daterangepicker.js',
+    'Modules/DiscountCoupons/Resources/assets/js/discountCoupons.js',
 ],'public/build/layouts/projects/project.min.js')
 
 /**
  * Modules/Projects/Resources/views/index.blade.php
  */
 mix.styles([
+    'resources/cdn/jquery-ui.min.css',
     'Modules/Projects/Resources/assets/css/index.css',
     'resources/modules/global/css/switch.css'
 ], 'public/build/layouts/projects/index.min.css');
 mix.babel([
+    'resources/cdn/jquery-ui.min.js',
     'Modules/Projects/Resources/assets/js/index.js'
 ], 'public/build/layouts/projects/index.min.js');
 
@@ -757,13 +679,6 @@ mix.copy(
 ], 'public/build/layouts/projectupsellconfig/previewupsellconfig.min.css');
 
 /**
- * Modules/Register/Resources/assets/js/register.js
- */
- mix.styles([
-    'resources/modules/global/css/page-error.css'
-], 'public/build/layouts/register/page-error.min.css');
-
-/**
  * Modules/Reportana/Resources/views/index.blade.php
  */
  mix.styles([
@@ -780,9 +695,6 @@ mix.babel([
 mix.styles([
     'Modules/Sales/Resources/assets/css/index.css'
 ], 'public/build/layouts/reports/details.min.css');
-mix.babel([
-    'Modules/Sales/Resources/assets/js/detail.js'
-], 'public/build/layouts/reports/details.min.js');
 
 /**
  * Modules/Reports/Resources/views/blockedbalance.blade.php
@@ -858,7 +770,6 @@ mix.styles([
     'resources/modules/global/css/switch.css'
 ], 'public/build/layouts/reports/pending.min.css');
 mix.babel([
-    'Modules/Reports/Resources/assets/js/detail.js',
     'Modules/Reports/Resources/assets/js/report-pending.js',
     'resources/modules/global/js-extra/moment.min.js',
     'resources/modules/global/js/daterangepicker.min.js',
@@ -959,6 +870,7 @@ mix.babel([
  */
  mix.styles([
     'Modules/Shopify/Resources/assets/css/index.css',
+    'resources/modules/global/css/empty.css',
     'resources/modules/global/css/switch.css'
 ],'public/build/layouts/shopify/index.min.css')
 mix.babel([
@@ -1100,12 +1012,11 @@ mix.babel([
     'resources/modules/global/adminremark/assets/examples/js/dashboard/v1.js',
     'resources/modules/global/adminremark/global/vendor/sortable/Sortable.js',
     'resources/modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js',
-    'resources/modules/global/js/global.js'
-],'public/build/layouts/master/plugins.min.js')
-mix.babel([
+    'resources/modules/global/js/global.js',
     'resources/modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js',
-    'resources/modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js'
-],'public/build/layouts/master/plugins2.min.js')
+    'resources/modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js',
+    'resources/modules/global/js/announcekit-global.js'
+],'public/build/layouts/master/plugins.min.js')
 mix.babel([
     'resources/modules/global/js-extra/pusher.min.js',
     'resources/modules/global/js/notifications.js'

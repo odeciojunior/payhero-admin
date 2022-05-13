@@ -90,7 +90,7 @@ $(document).ready(function () {
     function getCompanyData() {
         $.ajax({
             method: "GET",
-            url: "/api/companies/usercompanies",
+            url: "/api/core/usercompanies",
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

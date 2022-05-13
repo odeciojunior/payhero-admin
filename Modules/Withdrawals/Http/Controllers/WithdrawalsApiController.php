@@ -69,14 +69,18 @@ class WithdrawalsApiController
             }
 
             $company = Company::find(hashids_decode($request->company_id));
+            if (empty($company)) {
+                return response()->json(['message' => 'Não identificamos a empresa.',],400);
+            }
+
             $gatewayId = hashids_decode($request->gateway_id);
 
             if (!Gate::allows('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão para saques'], 403);
             }
 
-            if ((new WithdrawalService)->isNotFirstWithdrawalToday($company->id, $gatewayId)) {
-                return response()->json(['message' => 'Você só pode fazer um pedido de saque por dia.'], 403);
+            if (!(new WithdrawalService)->companyCanWithdraw($company->id, $gatewayId)) {
+                return response()->json(['message' => 'Você só pode fazer 3 pedidos de saque por dia.'], 403);
             }
 
             $gatewayService = Gateway::getServiceById($gatewayId)->setCompany($company);
@@ -93,6 +97,10 @@ class WithdrawalsApiController
 
             if (!$gatewayService->withdrawalValueIsValid($withdrawalValue)) {
                 return response()->json(['message' => 'Valor informado inválido',],400);
+            }
+
+            if(!$gatewayService->existsBankAccountApproved()){
+                return response()->json(['message' => 'Cadastre um meio de recebimento para solicitar saques',],400);
             }
 
             $responseCreateWithdrawal = $gatewayService->createWithdrawal($withdrawalValue);

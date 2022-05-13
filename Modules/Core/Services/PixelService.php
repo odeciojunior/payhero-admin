@@ -10,6 +10,7 @@ class PixelService
 {
     public const EVENTS = [
         'checkout',
+        'purchase_all',
         'basic_data',
         'delivery',
         'coupon',
@@ -83,9 +84,10 @@ class PixelService
                 'name' => $dataValidated['name'],
                 'code' => $dataValidated['code'],
                 'platform' => $dataValidated['platform'],
-                'status' => (bool)$dataValidated['status'],
+                'status' => $dataValidated['status'] == 'true',
                 'checkout' => $dataValidated['checkout'] == 'true',
                 'send_value_checkout' => $dataValidated['send_value_checkout'] == 'true',
+                'purchase_all' => $dataValidated['purchase_all'] == 'true',
                 'basic_data' => $dataValidated['basic_data'] == 'true',
                 'delivery' => $dataValidated['delivery'] == 'true',
                 'coupon' => $dataValidated['coupon'] == 'true',
@@ -184,6 +186,7 @@ class PixelService
                 'apply_on_plans' => $applyPlanEncoded,
                 'checkout' => $dataValidated['checkout'] == 'true',
                 'send_value_checkout' => $dataValidated['send_value_checkout'] == 'true',
+                'purchase_all' => $dataValidated['purchase_all'] == 'true',
                 'basic_data' => $dataValidated['basic_data'] == 'true',
                 'delivery' => $dataValidated['delivery'] == 'true',
                 'coupon' => $dataValidated['coupon'] == 'true',
