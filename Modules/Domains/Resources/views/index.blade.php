@@ -103,7 +103,7 @@
                         <div class='form-group col-lg-2'>
                             <select id='type-register' name='type-register' class='sirius-select'>
                                 <option value='A'>A</option>
-                                <option value='AAA'>AAA</option>
+                                <option value='AAAA'>AAAA</option>
                                 <option value='CNAME'>CNAME</option>
                                 <option value='TXT'>TXT</option>
                                 <option value='MX'>MX</option>

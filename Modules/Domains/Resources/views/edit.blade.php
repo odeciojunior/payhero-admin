@@ -11,7 +11,7 @@
                 <div class="col-sm-12 col-md-6 col-lg-2 mb-3">
                     <select id="tipo_registro" class="form-control input-pad">
                         <option value="A">A</option>
-                        <option value="AAA">AAA</option>
+                        <option value="AAAA">AAAA</option>
                         <option value="CNAME">CNAME</option>
                         <option value="TXT">TXT</option>
                         <option value="MX">MX</option>
