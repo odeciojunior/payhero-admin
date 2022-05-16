@@ -113,15 +113,15 @@ class GetnetService implements Statement
         return true;
     }
 
-    public function existsBankAccountApproved(){        
-        //verifica se existe uma conta bancaria aprovada 
+    public function existsBankAccountApproved(){
+        //verifica se existe uma conta bancaria aprovada
         $this->companyBankAccount =  $this->company->getBankAccountTED();
         return !empty($this->companyBankAccount);
     }
 
     public function createWithdrawal($value)
     {
-        try {            
+        try {
 
             if ($this->company->asaas_balance < 0 && $value - $this->company->asaas_balance < 0) {
                 throw new Exception('Saque negado devido ao saldo negativo no Asaas');
@@ -171,7 +171,7 @@ class GetnetService implements Statement
 
             $transactionsSum = $this->company->transactions()
                 ->whereIn('gateway_id', $this->gatewayIds)
-                ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED, Transaction::STATUS_CHARGEBACK])
+                ->whereIn('status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED, Transaction::STATUS_CHARGEBACK, Transaction::STATUS_REFUNDED])
                 ->where('is_waiting_withdrawal', 1)
                 ->whereNull('withdrawal_id')
                 ->orderBy('id');

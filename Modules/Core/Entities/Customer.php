@@ -123,4 +123,12 @@ class Customer extends Model
     {
         return $this->hasMany(Delivery::class);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function customerWithdrawals()
+    {
+        return $this->hasMany('Modules\Core\Entities\CustomerWithdrawal');
+    }
 }
