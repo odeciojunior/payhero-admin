@@ -168,9 +168,9 @@ class CoreApiController extends Controller
             return response()->json(['message'=>'Informe a empresa selecionada'],400);
         }
 
-        $companyId = 0;
-        if($request->company_id <> 'demo'){
-            $companyId = current(Hashids::decode($request->company_id));
+        $companyId = current(Hashids::decode($request->company_id));
+        if(empty($companyId)){
+            return response()->json(['message'=>'Não foi possivel identificar a empresa'],400);
         }
 
         $user = Auth::user();
@@ -178,7 +178,7 @@ class CoreApiController extends Controller
             return response()->json(['message'=>'A empresa selecionada já é a default.'],400);
         }
 
-        if($request->company_id <> 'demo'){
+        if($companyId > 1){
             $company = Company::where('user_id',$user->id)->where('id',$companyId)->exists();
             if(empty($company)){
                 return response()->json(['message'=>'Não foi possivel identificar a empresa'],400);

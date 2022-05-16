@@ -46,6 +46,7 @@ class ProjectsResource extends JsonResource
         $affiliated = !empty($affiliate);
 
         $notazzConfig = json_decode($this->notazz_configs);
+        $billterReleaseDays = $this->usersProjects->first()->company->gateway_release_money_days;
 
         return [
             'id' => hashids_encode($this->id),
@@ -59,7 +60,7 @@ class ProjectsResource extends JsonResource
             'woocommerce_id' => $this->woocommerce_id,
             'url_page' => $this->url_page,
             'boleto_redirect' => $this->boleto_redirect,
-            'billet_release_days' => $this->usersProjects->first()->company->gateway_release_money_days ?? '',
+            'billet_release_days' => $billterReleaseDays ?? '',
             'card_redirect' => $this->card_redirect,
             'pix_redirect' => $this->pix_redirect,
             'analyzing_redirect' => $this->analyzing_redirect,

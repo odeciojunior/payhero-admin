@@ -239,22 +239,17 @@ class DashboardApiController extends Controller
 
                 if ($values) {
                     return response()->json($values, 200);
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                        ],
-                        400
-                    );
                 }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                    ],
-                    400
-                );
+
+                return response()->json([
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde'
+                ],400);                
             }
+
+            return response()->json([
+                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+            ],400);
+            
         } catch (Exception $e) {
             report($e);
 
@@ -302,22 +297,17 @@ class DashboardApiController extends Controller
 
                 if ($values) {
                     return response()->json($values, 200);
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                    ],
-                    400
-                );
+                } 
+
+                return response()->json([
+                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                ],400);                
             }
+
+            return response()->json([
+                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+            ],400);
+            
         } catch (Exception $e) {
             report($e);
 
@@ -336,9 +326,9 @@ class DashboardApiController extends Controller
             if (empty($companyHash)) {
                 return [];
             }
-            $companyModel = new Company();
+            
             $companyId = current(Hashids::decode($companyHash));
-            $company = $companyModel->find($companyId);
+            $company = Company::find($companyId);
             $user = $company->user;
 
             if (empty($company)) {
