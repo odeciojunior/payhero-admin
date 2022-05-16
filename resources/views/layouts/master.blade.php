@@ -61,12 +61,13 @@
                 z-index: 1200;
                 justify-content: center;
                 padding: 40px 48px 48px;
+                margin-bottom: 44px;
+                overflow-y: auto;
             }
 
             .new-register-overlay-container {
                 position: absolute;
                 width: 588px;
-                border: 1px solid black;
             }
             @media screen and (max-width: 767px) {
                 .new-register-overlay {
@@ -126,6 +127,25 @@
                 border-radius: 100%;
                 margin-right: 24px;
             }
+            .new-register-overlay-body .card button {
+                border: none;
+                border-radius: 4px;
+                background: #F4F6FB;
+                font-weight: 700;
+                font-size: 14px;
+                color: #3D4456;
+                padding: 12px 18px;
+                margin-top: 6px;
+            }
+            .new-register-overlay-body .card.status-check .icon {
+                background: #59BF75;
+            }
+            .new-register-overlay-body .card.status-warning .icon {
+                background: #FF9900;
+            }
+            .new-register-overlay-body .card.status-error .icon {
+                background: #E81414;
+            }
             .new-register-overlay-body .card .icon img {
                 margin: 0 auto;
             }
@@ -137,7 +157,7 @@
                 color: #0B1D3D;
                 font-weight: 600;
                 font-size: 16px;
-                margin: 0;
+                margin: 0 0 4px 0;
             }
             .new-register-overlay-body .card .description {
                 color: #5B5B5B;
@@ -161,6 +181,17 @@
                 font-size: 16px;
                 text-align: center;
                 margin: 0
+            }
+
+            .new-register-overlay-footer {
+                margin-top: 44px;
+                text-align: center;
+            }
+            .new-register-overlay-footer a {
+                font-weight: 600;
+                font-size: 16px;
+                color: #2E85EC;
+                text-align: center;
             }
         </style>
     </head>
@@ -223,8 +254,9 @@
                         <p class="description">Criamos um passo a passo para você finalizar o seu cadastro</p>
                     </div>
 
+                    <!-- Status doc company -->
                     <div class="card">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex">
                             <div>
                                 <div class="icon d-flex align-items-center">
                                     <img src="{{ asset('build/global/img/icon-company.svg') }}" alt="">
@@ -237,11 +269,12 @@
                         </div>
                     </div>
 
+                    <!-- Status doc user -->
                     <div class="card">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex">
                             <div>
                                 <div class="icon d-flex align-items-center">
-                                    <img src="{{ asset('build/global/img/icon-company.svg') }}" alt="">
+                                    <img src="{{ asset('build/global/img/icon-docs.svg') }}" alt="">
                                 </div>
                             </div>
                             <div class="content">
@@ -250,8 +283,54 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="card status-check">
+                        <div class="d-flex">
+                            <div>
+                                <div class="icon d-flex align-items-center">
+                                    <img src="{{ asset('build/global/img/icon-check.svg') }}" alt="">
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h1 class="title">Envie seu documento pessoal</h1>
+                                <p class="description">Precisamos do seu documento oficial com foto e um comprovante de residência.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card status-warning">
+                        <div class="d-flex">
+                            <div>
+                                <div class="icon d-flex align-items-center">
+                                    <img src="{{ asset('build/global/img/icon-warning.svg') }}" alt="">
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h1 class="title">Envie seu documento pessoal</h1>
+                                <p class="description">Precisamos do seu documento oficial com foto e um comprovante de residência.</p>
+                                <button class="btn btn-default">Regularizar documentos</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card status-error">
+                        <div class="d-flex">
+                            <div>
+                                <div class="icon d-flex align-items-center">
+                                    <img src="{{ asset('build/global/img/icon-error.svg') }}" alt="">
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h1 class="title">Envie seu documento pessoal</h1>
+                                <p class="description">Precisamos do seu documento oficial com foto e um comprovante de residência.</p>
+                                <button class="btn btn-default">Regularizar documentos</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="new-register-overlay-footer"></div>
+                <div class="new-register-overlay-footer">
+                    <a href="#" type="button">Deixar para mais tarde</a>
+                </div>
             </div>
         </div>
 
