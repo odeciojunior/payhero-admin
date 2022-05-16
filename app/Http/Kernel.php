@@ -104,6 +104,6 @@ class Kernel extends HttpKernel
         'scope' => CheckForAnyScope::class,
         'InternalApiAuth' => InternalApiAuth::class,
         'IsCloudFoxAccount' => IsCloudFoxAccount::class,
-        'IsDemoAccount'=>DemoAccount::class
+        'demo_account'=>DemoAccount::class
     ];
 }

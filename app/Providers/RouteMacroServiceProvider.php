@@ -27,12 +27,14 @@ class RouteMacroServiceProvider extends ServiceProvider
     {
         Route::macro(
             'toDemoAccount',
-            function (Request $request, string $routeName) {
-                $route = tap($this->routes->getByName($routeName))->bind($request);
+            function (Request $request, string $routeAction) {
+                
+                $route = tap($this->routes->getByAction($routeAction))->bind($request);
         
                 $this->current = $route;
         
                 return $this->runRoute($request, $this->current);
+
             }
         );
     }
