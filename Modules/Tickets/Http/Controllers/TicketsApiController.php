@@ -35,7 +35,8 @@ class TicketsApiController extends Controller
                 DB::raw("ifnull((select m.message from ticket_messages as m where m.ticket_id = tickets.id order by id desc limit 1), tickets.description) as description"),
                 'tickets.ticket_status_enum',
                 'tickets.last_message_type_enum',
-                'customers.name as customer_name'
+                'customers.name as customer_name',
+                'sales.id as sale_id'
             ])->withCount([
                 'messages as admin_answers' => function ($query) {
                     $query->where('type_enum', TicketMessage::TYPE_FROM_ADMIN);
@@ -54,6 +55,18 @@ class TicketsApiController extends Controller
                         ->where('plans_sales.sale_id', DB::raw('sales.id'))
                         ->where('plans_sales.plan_id', hashids_decode($data->plan));
                 });
+            }
+
+            if($data->transaction) {
+                preg_match_all('/[0-9A-Za-z]+/', $data->transaction, $matches);
+                $ids = array_map(
+                    function ($item) {
+                        return is_numeric($item) ? $item : hashids_decode($item, 'sale_id');
+                    },
+                    current($matches)
+                );
+
+                $ticketsQuery->whereIn('sale_id', $ids);
             }
 
             if ($data->category) {
