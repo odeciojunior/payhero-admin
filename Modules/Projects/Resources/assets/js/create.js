@@ -1,5 +1,8 @@
 $(document).ready(function () {
 
+    $('.company_name').val( $("#companyTopbar").find('option:selected').text() );
+    $('.company_id').val( $("#companyTopbar").find('option:selected').val() );
+
     loadingOnScreen();
     $.ajax({
         url: '/api/projects/create',
@@ -60,10 +63,12 @@ $(document).ready(function () {
         if ($('#name').val().length === 0) {
             alertCustom('error', 'É obrigatório preencher o campo Nome!');
             return true;
-        } else if ($("#company option:selected").val().length === 0) {
+        // } else if ($("#company option:selected").val().length === 0) {
+        //     alertCustom('error', 'É obrigatório selecionar uma empresa!');
+        //     return true;
+        } else if ($("#company").val().length === 0) {
             alertCustom('error', 'É obrigatório selecionar uma empresa!');
             return true;
-
         } else {
             return false;
         }
@@ -72,11 +77,15 @@ $(document).ready(function () {
     let btnSave = $('#btn-save')
     btnSave.on('click', () => {
         if (verifyFields()) {
+            console.log('formData errrrr');
             return false;
         } else {
             btnSave.prop("disabled", true);
             loadingOnScreen();
             let formData = new FormData(document.querySelector('#form-create-project'));
+            console.log('formData');
+            console.log(formData);
+            //return;
             $.ajax({
                 method: 'post',
                 url: '/api/projects',

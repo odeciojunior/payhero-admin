@@ -22,7 +22,7 @@ $(function () {
         $.ajax({
             method: "GET",
             url: link,
-            data: {company: $("#company").val()}, //$("#extract_company_select").val()},
+            data: {company: $("#companyTopbar").val()}, //$("#extract_company_select").val()},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },

@@ -47,7 +47,7 @@
                 <div class="pr-20" id="company-select" style="display:none"><!--d-sm-flex -->
                     <div class="d-lg-flex align-items-center justify-content-end">
                         <div>
-                            <select id="company" class="sirius-select"> </select>
+                            <select id="companyTopbar" class="sirius-select"> </select>
                         </div>
                     </div>
                 </div>

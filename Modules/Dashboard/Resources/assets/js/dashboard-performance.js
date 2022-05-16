@@ -100,7 +100,7 @@ $(document).ready(function () {
                 'Accept': 'application/json',
             },
             data: {
-                company: $('#company').val(),
+                company: $('#companyTopbar').val(),
             },
             error: function error(response) {
                 loadingOnAccountsHealthRemove('.sirius-performance > .card .sirius-loading');

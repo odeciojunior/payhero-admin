@@ -399,7 +399,7 @@ class InvitesApiController extends Controller
 
             return response()->json(
                 [
-                    'message' => 'Ocorreu um erro com o link do convite, tente novamente mais tarde',
+                    'message' => 'Ocorreu um erro com o link do convite, tente novamente mais tarde.',
                 ], 400
             );
         }

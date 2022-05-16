@@ -36,9 +36,11 @@
 
                                     <div class='form-group col-12'>
                                         <label for='company'>Empresa</label>
-                                        <select name='company' class='sirius-select' id='company' required>
+                                        <input type="text" disabled class="company_name">
+                                        <input type="hidden" name='company' id='company' class="company_id" required>
+                                        {{-- <select name='company' class='sirius-select' id='company' required>
                                             <option value=''>Selecione</option>
-                                        </select>
+                                        </select> --}}
                                     </div>
 
                                     <div class="form-group col-12">
