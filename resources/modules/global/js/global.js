@@ -982,7 +982,7 @@ function removeMoneyCurrency(string) {
 
 function selectCompanies() {
     let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
-    $('#company').append('<option value="demo">Empresa demo</option>');
+    $('#company').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
     for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
         if (sessionStorage.getItem('companyDefault') == parseSessionStorageCompanies[i].id)
             itemSelected = 'selected="selected"'

@@ -115,6 +115,8 @@ class Company extends Model
     public const GATEWAY_TAX_15 = 5.9;
     public const GATEWAY_TAX_30 = 4.9;
 
+    public const USER_ID_DEMO = 1;
+    public const COMPANY_ID_DEMO = 1;
 
     protected $presenter = CompanyPresenter::class;
     /**

@@ -19,11 +19,12 @@ class CompaniesSelectResource extends JsonResource
 
         $companyDocumentStatus = ($companyDocumentValidated) ? 'approved' : 'pending';
 
-        $userAddressDocumentStatus = (new User())->present()->getAddressDocumentStatus(
-            $this->user->address_document_status
+        $user = $this->user;
+        $userAddressDocumentStatus = $user->present()->getAddressDocumentStatus(
+            $user->address_document_status
         );
-        $userPersonalDocumentStatus = (new User())->present()->getAddressDocumentStatus(
-            $this->user->personal_document_status
+        $userPersonalDocumentStatus = $user->present()->getAddressDocumentStatus(
+            $user->personal_document_status
         );
 
         $bankAccount = CompanyBankAccount::where('company_id',$this->id)->where('is_default',true)->where('status','VERIFIED')->first();
