@@ -114,6 +114,7 @@ $(() => {
             category.push(3);
         }
 
+        let transaction = $("#filter-transaction").data('value') || '';
         let document = $('#filter-document').data('value') || '';
         let name = $('#filter-name').data('value') || '';
         let answered = $("#filter-answer").data('value') || '';
@@ -135,6 +136,7 @@ $(() => {
             status,
             nameOrDocument,
             page,
+            transaction,
         }
 
         return Object.entries(filters).map(([key, val]) => `${key}=${val}`).join('&');
