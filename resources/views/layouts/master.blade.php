@@ -65,7 +65,7 @@
 
             .new-register-overlay-container {
                 position: absolute;
-                width: 700px;
+                width: 588px;
                 border: 1px solid black;
             }
             @media screen and (max-width: 767px) {
@@ -89,6 +89,7 @@
                 display: flex;
                 flex-direction: column;
                 row-gap: 8px;
+                margin-bottom: 48px;
             }
 
             .new-register-overlay-title {
@@ -101,7 +102,65 @@
                 color: #999999;
                 font-size: 16px;
                 text-align: center;
-                padding: 0px 24px;
+                padding: 0px 48px;
+            }
+
+            .new-register-overlay-body .card {
+                border: 1px solid #ffffff;
+                border-radius: 8px;
+                padding: 24px;
+                margin: 0 0 16px 0;
+            }
+            .new-register-overlay-body .card.extra-informations-user {
+                border: 1px solid #2E85EC;
+                margin-bottom: 48px;
+            }
+            .new-register-overlay-body .card.extra-informations-user .icon {
+                border-radius: 0;
+                background: transparent;
+            }
+            .new-register-overlay-body .card .icon {
+                width: 36px;
+                height: 36px;
+                background: #F4F6FB;
+                border-radius: 100%;
+                margin-right: 24px;
+            }
+            .new-register-overlay-body .card .icon img {
+                margin: 0 auto;
+            }
+            .new-register-overlay-body .card .icon span {
+                display: block;
+                margin: 0 auto;
+            }
+            .new-register-overlay-body .card .title {
+                color: #0B1D3D;
+                font-weight: 600;
+                font-size: 16px;
+                margin: 0;
+            }
+            .new-register-overlay-body .card .description {
+                color: #5B5B5B;
+                font-weight: 400;
+                font-size: 14px;
+                margin: 0;
+            }
+
+            .init-operation-container {
+                margin-bottom: 32px;
+            }
+            .init-operation-container .title {
+                color: #0B1D3D;
+                font-weight: 400;
+                font-size: 24px;
+                text-align: center;
+                margin: 0 0 8px 0;
+            }
+            .init-operation-container .description {
+                color: #999999;
+                font-size: 16px;
+                text-align: center;
+                margin: 0
             }
         </style>
     </head>
@@ -140,11 +199,58 @@
             <div class="container new-register-overlay-container">
                 <div class="new-register-overlay-header">
                     <div class="new-register-overlay-title-container">
-                        <span class="new-register-overlay-title">Bem vindo, <strong>User</strong></span>
+                        <span class="new-register-overlay-title">Bem vindo, <strong>Pedro</strong></span>
                         <span class="new-register-overlay-subtitle">Você acabou de chegar na Cloudfox e queremos te proporcionar uma experiência única</span>
                     </div>
                 </div>
-                <div class="new-register-overlay-body"></div>
+                <div class="new-register-overlay-body">
+                    <div class="card extra-informations-user">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <div class="icon d-flex align-items-center">
+                                    <span class="bg-color-blue account-health-note-circle"></span>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h1 class="title">Queremos conhecer você!</h1>
+                                <p class="description">Temos algumas perguntas para conhecer melhor você e seu negócio.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="init-operation-container">
+                        <h1 class="title">Para <b>começar a sua operação</b> na Cloudfox</h1>
+                        <p class="description">Criamos um passo a passo para você finalizar o seu cadastro</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <div class="icon d-flex align-items-center">
+                                    <img src="{{ asset('build/global/img/icon-company.svg') }}" alt="">
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h1 class="title">Cadastre sua empresa</h1>
+                                <p class="description">Na Cloudfox você pode ter uma ou mais empresas.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <div class="icon d-flex align-items-center">
+                                    <img src="{{ asset('build/global/img/icon-company.svg') }}" alt="">
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h1 class="title">Envie seu documento pessoal</h1>
+                                <p class="description">Precisamos do seu documento oficial com foto e um comprovante de residência.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="new-register-overlay-footer"></div>
             </div>
         </div>
