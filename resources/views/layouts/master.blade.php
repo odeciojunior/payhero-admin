@@ -48,6 +48,62 @@
         <script>
             Breakpoints();
         </script>
+
+        <style>
+            .new-register-overlay {
+                background: #f1f4f5;
+                position: fixed;
+                display: none;
+                top: 4.286rem;
+                left: 65px;
+                right: 0;
+                bottom: 0;
+                z-index: 1200;
+                justify-content: center;
+                padding: 40px 48px 48px;
+            }
+
+            .new-register-overlay-container {
+                position: absolute;
+                width: 700px;
+                border: 1px solid black;
+            }
+            @media screen and (max-width: 767px) {
+                .new-register-overlay {
+                    left: 0;
+                }
+
+                .new-register-overlay-container {
+                    width: 90%;
+                    padding: 0px 16px;
+                }
+            }
+
+            .new-register-overlay-header {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+            }
+
+            .new-register-overlay-title-container {
+                display: flex;
+                flex-direction: column;
+                row-gap: 8px;
+            }
+
+            .new-register-overlay-title {
+                color: #0B1D3D;
+                font-size: 30px;
+                text-align: center;
+            }
+
+            .new-register-overlay-subtitle {
+                color: #999999;
+                font-size: 16px;
+                text-align: center;
+                padding: 0px 24px;
+            }
+        </style>
     </head>
     <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
         <!-- Google Tag Manager (noscript) -->
@@ -78,6 +134,20 @@
         </div>
         <input type="hidden" id="accountStatus">
         @yield('content')
+
+        <!-- New Register Overlay Modal -->
+        <div class="new-register-overlay">
+            <div class="container new-register-overlay-container">
+                <div class="new-register-overlay-header">
+                    <div class="new-register-overlay-title-container">
+                        <span class="new-register-overlay-title">Bem vindo, <strong>User</strong></span>
+                        <span class="new-register-overlay-subtitle">Você acabou de chegar na Cloudfox e queremos te proporcionar uma experiência única</span>
+                    </div>
+                </div>
+                <div class="new-register-overlay-body"></div>
+                <div class="new-register-overlay-footer"></div>
+            </div>
+        </div>
 
         <!-- Plugins -->
         <script src="{{ mix('build/layouts/master/plugins.min.js') }}"></script>
@@ -135,5 +205,18 @@
         {{-- resources/modules/global/js/global.js --}}
         <script async src="https://cdn.announcekit.app/widget-v2.js"></script>
 
+        @if(auth()->user()->account_is_approved === 0)
+            <script>
+                $(document).ready(function () {
+                    $('#new_register_btn').click(function () {
+                        $(this).parent().parent().hide(); // hide navbar button
+
+                        let modalOverlay = $('.new-register-overlay');
+
+                        modalOverlay.css('display', 'flex');
+                    });
+                });
+            </script>
+        @endif
     </body>
 </html>
