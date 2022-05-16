@@ -25,7 +25,7 @@ Route::group(
         'middleware' => ['InternalApiAuth'],
     ],
     function() {
-        Route::get('/core/get-company-balance/{company_id}', 'CoreApiController@getCompanyBalance');
+        Route::get('/core/sac/allow-block/{company_id}/{sale_id}', 'CoreApiController@allowBlockBalance');
     }
 );
 

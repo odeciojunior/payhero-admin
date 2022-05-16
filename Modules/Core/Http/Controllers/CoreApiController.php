@@ -20,6 +20,8 @@ use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
@@ -147,12 +149,13 @@ class CoreApiController extends Controller
         }
     }
 
-    public function getCompanyBalance($comanyId)
+    public function allowBlockBalance($comanyId, $saleId)
     {
         $company = Company::find(hashids_decode($comanyId));
+        $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
 
-        if(empty($company)) {
-            return response()->json('Empresa não encontrada', 400);
+        if(empty($company) || empty($sale)) {
+            return response()->json('Dados inválidos', 400);
         }
 
         $safe2payService = new Safe2PayService();
@@ -162,8 +165,12 @@ class CoreApiController extends Controller
         $pendingBalance = $safe2payService->getPendingBalance();
         $safe2payService->applyBlockedBalance($availableBalance, $pendingBalance);
 
+        $transaction = Transaction::where('sale_id', $sale->id)->where('company_id', $company->id)->first();
+
+        $allowBlock = $availableBalance + $pendingBalance > $transaction->value;
+
         return response()->json([
-            'balance' => $availableBalance + $pendingBalance
+            'allow_block' => $allowBlock ? 'true' : 'false'
         ], 200);
     }
 
