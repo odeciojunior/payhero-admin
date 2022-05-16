@@ -496,6 +496,9 @@ h4.number{
     width: 89.5%;
 }
 
+.card-payments { height: 210px; }
+.tp-payment { height: 140px; }
+
 .cards-reports .card-body { 
     padding: 0; 
     padding-top: 1.429rem;
@@ -614,6 +617,11 @@ h4.number{
     align-items: center;
 }
 #type-payment.container-payment { height: 161px; }
+
+.card-devices { height: 211px; }
+.gadgets { height: 145px; }
+
+.card-abandoned { height: 118px; }
 
 .container-payment.visible { display: flex; }
 
@@ -2073,7 +2081,7 @@ h4.number{
     width: 175px;
  }
 
- .new-sell-graph { padding-bottom: 20px; }
+ .new-sell-graph { height: 278px; padding-bottom: 10px; } 
 
  .msg-coupon {
      font-size: 16px;

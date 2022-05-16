@@ -437,7 +437,7 @@ function loadDevices() {
             let { desktop, mobile } = response.data;
 
             deviceBlock = `
-                 <div class="row container-payment">
+                 <div class="row container-payment gadgets">
                     <div class="container">
                         <div class="data-holder b-bottom">
                             <div class="box-payment-option pad-0">
@@ -517,7 +517,7 @@ function typePayments() {
             let { credit_card, pix, boleto } = response.data;
             
             paymentsHtml = `
-                <div class="row container-payment">
+                <div class="row container-payment tp-payment">
                     <div class="container">
                         <div class="data-holder b-bottom">
                             <div class="box-payment-option pad-0">

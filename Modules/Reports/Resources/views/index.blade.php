@@ -155,7 +155,7 @@
                             <div class="">
                                 <div class="d-flex justify-content-between sub-comission">
                                     <div class="inner-comission">
-                                        <div class="card inner" id="card-payments">
+                                        <div class="card inner card-payments" id="card-payments">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Meios de pagamento</strong>
@@ -178,7 +178,7 @@
                                     </div>
                                     <div class="inner-comission">
 
-                                        <div class="card inner" id="card-devices">
+                                        <div class="card inner card-devices" id="card-devices">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Dispositivos</strong>
@@ -187,7 +187,7 @@
                                             <div class="custom-table pb-0 pt-0 onPreLoad" id="block-devices"></div>
                                         </div>
 
-                                        <div class="card inner" id="card-abandoned">
+                                        <div class="card inner card-abandoned" id="card-abandoned">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Recuperação</strong>
