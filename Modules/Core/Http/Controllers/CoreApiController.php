@@ -173,7 +173,7 @@ class CoreApiController extends Controller
             $transaction = Transaction::where('sale_id', $sale->id)->where('company_id', $company->id)->first();
 
             $response = (object)[
-                'allow_block' => ($availableBalance + $pendingBalance) > $transaction->value
+                'allow_block' => ($availableBalance + $pendingBalance) >= $transaction->value
             ];
 
             return response()->json($response);

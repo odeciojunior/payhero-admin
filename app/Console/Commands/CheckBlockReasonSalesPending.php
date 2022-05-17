@@ -14,14 +14,14 @@ class CheckBlockReasonSalesPending extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'check:block-sales';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Verifica vendas pendentes de bloqueio';
 
     /**
      * Create a new command instance.
@@ -42,7 +42,7 @@ class CheckBlockReasonSalesPending extends Command
     {
         $pendingBlockSales = BlockReasonSale::with('sale')
                                             ->where('status', BlockReasonSale::STATUS_PENDING_BLOCK);
-        
+
         foreach ($pendingBlockSales->cursor() as $pendingBlockSale) {
             $transaction = Transaction::where('sale_id', $pendingBlockSale->sale_id)
                                         ->where('type', Transaction::TYPE_PRODUCER)
@@ -54,8 +54,8 @@ class CheckBlockReasonSalesPending extends Command
             $availableBalance = $safe2payService->getAvailableBalance();
             $pendingBalance = $safe2payService->getPendingBalance();
             $safe2payService->applyBlockedBalance($availableBalance, $pendingBalance);
-            
-            if($availableBalance + $pendingBalance > $transaction->value) {
+
+            if(($availableBalance + $pendingBalance) >= $transaction->value) {
                 $pendingBlockSale->update(['status' => BlockReasonSale::STATUS_BLOCKED]);
             }
         }

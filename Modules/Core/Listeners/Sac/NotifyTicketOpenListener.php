@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Listeners;
+namespace Modules\Core\Listeners\Sac;
 
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -26,7 +26,7 @@ class NotifyTicketOpenListener implements ShouldQueue
             ])->join('customers', 'customers.id', '=', 'tickets.customer_id')
                 ->join('sales', 'sales.id', '=', 'tickets.sale_id')
                 ->join('users', 'users.id', '=', 'sales.owner_id')
-                ->joins('user_notifications', 'user_notifications.user_id', '=', 'users.id')
+                ->join('user_notifications', 'user_notifications.user_id', '=', 'users.id')
                 ->where('tickets.id', $event->ticketId)
                 ->first();
 

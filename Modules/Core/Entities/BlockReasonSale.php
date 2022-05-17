@@ -29,6 +29,8 @@ class BlockReasonSale extends Model
     public const STATUS_UNLOCKED = 2;
     public const STATUS_PENDING_BLOCK = 3;
 
+    public const BLOCK_REASON_ID_TICKET = 8;
+
     /**
      * @var string
      */

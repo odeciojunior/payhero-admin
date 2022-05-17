@@ -6,13 +6,13 @@ namespace Modules\Core\Listeners\Sac;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Entities\Ticket;
-use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
+use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
 use Modules\Core\Services\SendgridService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class NotifyTicketClosedListener implements ShouldQueue
 {
-    public function handle(NotifyTicketOpenEvent $event)
+    public function handle(NotifyTicketClosedEvent $event)
     {
         try {
             $sendGridService = new SendgridService();
@@ -27,7 +27,7 @@ class NotifyTicketClosedListener implements ShouldQueue
                 ->where('tickets.id', $event->ticketId)
                 ->first();
 
-            if (!empty($ticket) && $ticket->notify) {
+            if (!empty($ticket)) {
                 $nameParts = explode(' ', $ticket->owner_name);
                 $firstName = $nameParts[0];
 

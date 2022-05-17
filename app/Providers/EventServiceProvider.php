@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Listeners\IntegrationOrderCancelListener;
-use App\Listeners\NotifyTicketOpenListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
@@ -71,6 +70,7 @@ use Modules\Core\Listeners\ReleasedBalanceNotifyUserListener;
 use Modules\Core\Listeners\ResetPasswordSendEmailListener;
 use Modules\Core\Listeners\Sac\NotifyTicketClosedListener;
 use Modules\Core\Listeners\Sac\NotifyTicketMediationListener;
+use Modules\Core\Listeners\Sac\NotifyTicketOpenListener;
 use Modules\Core\Listeners\Sak\SakPixExpiredListener;
 use Modules\Core\Listeners\SaleRefundedSendEmailListener;
 use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;

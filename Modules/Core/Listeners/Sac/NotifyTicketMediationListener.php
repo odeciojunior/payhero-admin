@@ -31,7 +31,7 @@ class NotifyTicketMediationListener implements ShouldQueue
             ])->join('customers', 'customers.id', '=', 'tickets.customer_id')
                 ->join('sales', 'sales.id', '=', 'tickets.sale_id')
                 ->join('users', 'users.id', '=', 'sales.owner_id')
-                ->joins('user_notifications', 'user_notifications.user_id', '=', 'users.id')
+                ->join('user_notifications', 'user_notifications.user_id', '=', 'users.id')
                 ->where('tickets.id', $event->ticketId)
                 ->first();
 
@@ -46,9 +46,12 @@ class NotifyTicketMediationListener implements ShouldQueue
 
             $sendGridService->sendEmail("noreply@cloudox.net", 'CloudFox', $ticket->owner_email, $ticket->owner_name, 'd-7fba4bb29818424e98ace972504d7f2f', $data);
 
-            if ($ticket->user_email) {
-                $data['name'] = $ticket->user_name;
-                $sendGridService->sendEmail("noreply@cloudox.net", 'CloudFox', $ticket->user_email, $ticket->user_name, 'd-7fba4bb29818424e98ace972504d7f2f', $data);
+            if ($ticket->customer_email) {
+                $customerNameParts = explode(' ', $ticket->customer_name);
+                $customerName = $customerNameParts[0];
+                $data['name'] = $customerName;
+
+                $sendGridService->sendEmail("noreply@cloudox.net", 'CloudFox', $ticket->customer_email, $ticket->customer_name, 'd-7fba4bb29818424e98ace972504d7f2f', $data);
             }
         } catch (Exception $e) {
             report($e);
