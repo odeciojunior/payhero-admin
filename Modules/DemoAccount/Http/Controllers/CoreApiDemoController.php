@@ -2,11 +2,9 @@
 
 namespace Modules\DemoAccount\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Http\JsonResponse;
+use Modules\Core\Http\Controllers\CoreApiController;
 
-class CoreApiDemoController extends Controller
+class CoreApiDemoController extends CoreApiController
 {
     public function verifyDocuments(){
         return response()->json(

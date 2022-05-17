@@ -19,9 +19,8 @@ class DemoAccount
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
-    {
+    {        
         Config::set('database.default', 'mysql');
-
         \Log::info($request->path());
         if(str_contains($request->path(),'api/') && !str_contains($request->path(),'api/core/company-default'))
         {
@@ -31,23 +30,16 @@ class DemoAccount
             {
                 Config::set('database.default', 'demo');
                 
-                $routeFragments = explode('/',$request->path());
+                $routeAction = $request->route()->getAction()['controller'];                
+                $routeAction = str_replace(
+                    ['Controller@',explode("\\",$routeAction)['1'].'\\'],
+                    ['DemoController@','DemoAccount\\'],
+                    $routeAction
+                );
                 
-                $routeName = 'demo.';
-                foreach($routeFragments as $key=>$part)
-                {
-                    switch($key){
-                        case 0: break;
-                        case 1:
-                            $routeName.= $part;
-                            break;
-                        case 2:
-                            $routeName.='.'.$part; 
-                            break;
-                    }            
-                }
-                
-                return Route::toDemoAccount($request, $routeName);
+                \Log::info($routeAction);
+
+                return Route::toDemoAccount($request, $routeAction);                
             }
         }
         

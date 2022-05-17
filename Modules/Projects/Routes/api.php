@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin','IsDemoAccount'],
+        'middleware' => ['auth:api', 'scopes:admin','demo_account'],
     ],
     function () {
         Route::get('/projects/user-projects', 'ProjectsApiController@getProjects')
@@ -27,7 +27,7 @@ Route::group(
         Route::post('/projects/updateconfig', 'ProjectsApiController@updateConfig')
             ->middleware('permission:projects_manage');
 
-          Route::get('/projects/{id}/companie', 'ProjectsApiController@getCompanieByProject')
-               ->middleware('permission:projects_manage');
+        Route::get('/projects/{id}/companie', 'ProjectsApiController@getCompanieByProject')
+            ->middleware('permission:projects_manage');
      }
 );

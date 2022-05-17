@@ -425,48 +425,14 @@ class ProjectsApiController extends Controller
                 ], 400);
             }
 
-            $project->chargeback_count = Sale::where('project_id', $project->id)
-                ->where('status', Sale::STATUS_CHARGEBACK)
-                ->count();
+            $resume = $this->getProjectResume($project->id,$userId);
 
-            $project->without_tracking = Sale::where('project_id', $project->id)
-                ->where('has_valid_tracking', false)
-                ->whereNotNull('delivery_id')
-                ->where('status', Sale::STATUS_APPROVED)
-                ->count();
-
-            $project->approved_sales = Sale::where('project_id', $project->id)
-                ->where('status', Sale::STATUS_APPROVED)
-                ->count();
-
-            $project->approved_sales_value = Transaction::where('user_id', auth()->user()->account_owner_id)
-                ->whereHas(
-                    'sale',
-                    function ($query) use ($project) {
-                        $query->where('status', Sale::STATUS_APPROVED);
-                        $query->where('project_id', $project->id);
-                    }
-                )
-                ->sum('value');
-
-            $project->open_tickets = Sale::where('project_id', $project->id)
-                ->whereHas(
-                    'tickets',
-                    function ($query) {
-                        $query->where('ticket_status_enum', Ticket::STATUS_OPEN);
-                    }
-                )
-                ->count();
-
-            $producer = User::whereHas(
-                'usersProjects',
-                function ($query) use ($project) {
-                    $query->where('project_id', $project->id)
-                        ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM);
-                }
-            )->first();
-
-            $project->producer = $producer->name ?? '';
+            $project->chargeback_count = $resume['chargeback_count'];
+            $project->without_tracking = $resume['without_tracking'];
+            $project->approved_sales = $resume['approved_sales'];
+            $project->approved_sales_value = $resume['approved_sales_value'];
+            $project->open_tickets = $resume['open_tickets'];
+            $project->producer = $resume['producer'];
 
             if (Gate::allows('show', [$project])) {
                 activity()->on((new Project()))->tap(
@@ -478,13 +444,71 @@ class ProjectsApiController extends Controller
 
                 return new ProjectsResource($project);
             }
+
             return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
+
         } catch (Exception $e) {
             report($e);
-
             return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
         }
     }
+
+    public function getProjectResume($projectId,$userOwnerId)
+    {
+        $resume = [
+            'chargeback_count'=>0,
+            'without_tracking'=>0,
+            'approved_sales'=>0,
+            'approved_sales_value'=>0,
+            'open_tickets'=>0,
+            'producer'=>''
+        ];
+
+        $resume['chargeback_count'] = Sale::where('project_id', $projectId)
+            ->where('status', Sale::STATUS_CHARGEBACK)
+            ->count();
+
+        $resume['without_tracking'] = Sale::where('project_id', $projectId)
+            ->where('has_valid_tracking', false)
+            ->whereNotNull('delivery_id')
+            ->where('status', Sale::STATUS_APPROVED)
+            ->count();
+
+        $resume['approved_sales'] = Sale::where('project_id', $projectId)
+            ->where('status', Sale::STATUS_APPROVED)
+            ->count();
+
+        $resume['approved_sales_value'] = Transaction::where('user_id', $userOwnerId)
+            ->whereHas(
+                'sale',
+                function ($query) use ($projectId) {
+                    $query->where('status', Sale::STATUS_APPROVED);
+                    $query->where('project_id', $projectId);
+                }
+            )
+            ->sum('value');
+
+        $resume['open_tickets'] = Sale::where('project_id', $projectId)
+            ->whereHas(
+                'tickets',
+                function ($query) {
+                    $query->where('ticket_status_enum', Ticket::STATUS_OPEN);
+                }
+            )
+            ->count();
+
+        $producer = User::select('name')->whereHas(
+            'usersProjects',
+            function ($query) use ($projectId) {
+                $query->where('project_id', $projectId)
+                    ->where('type_enum', UserProject::TYPE_PRODUCER_ENUM);
+            }
+        )->first();
+
+        $resume['producer'] = $producer->name ?? '';
+
+        return $resume;
+    } 
 
     public function getCompanieByProject($id)
     {
