@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\TicketAttachment;
 use Modules\Core\Entities\TicketMessage;
-use Modules\Core\Events\TicketMessageEvent;
+use Modules\Core\Events\Sac\TicketMessageEvent;
 use Modules\Core\Services\AttendanceService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Tickets\Transformers\TicketAttachmentResource;

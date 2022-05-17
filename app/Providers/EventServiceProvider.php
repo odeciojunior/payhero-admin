@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Listeners\IntegrationOrderCancelListener;
+use App\Listeners\NotifyTicketOpenListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\Core\Events\AffiliateEvent;
 use Modules\Core\Events\AffiliateRequestEvent;
@@ -21,13 +22,16 @@ use Modules\Core\Events\NotifyUserLevelEvent;
 use Modules\Core\Events\PixExpiredEvent;
 use Modules\Core\Events\ReleasedBalanceEvent;
 use Modules\Core\Events\ResetPasswordEvent;
+use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
+use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
+use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
 use Modules\Core\Events\SaleApprovedEvent;
 use Modules\Core\Events\SaleRefundedEvent;
 use Modules\Core\Events\SalesExportedEvent;
 use Modules\Core\Events\SendEmailEvent;
 use Modules\Core\Events\SendSmsEvent;
 use Modules\Core\Events\ShopifyIntegrationReadyEvent;
-use Modules\Core\Events\TicketMessageEvent;
+use Modules\Core\Events\Sac\TicketMessageEvent;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Events\TrackingsExportedEvent;
 use Modules\Core\Events\TrackingsImportedEvent;
@@ -65,6 +69,8 @@ use Modules\Core\Listeners\PixExpiredSendEmailListener;
 use Modules\Core\Listeners\PixExpiredUnicodropListener;
 use Modules\Core\Listeners\ReleasedBalanceNotifyUserListener;
 use Modules\Core\Listeners\ResetPasswordSendEmailListener;
+use Modules\Core\Listeners\Sac\NotifyTicketClosedListener;
+use Modules\Core\Listeners\Sac\NotifyTicketMediationListener;
 use Modules\Core\Listeners\Sak\SakPixExpiredListener;
 use Modules\Core\Listeners\SaleRefundedSendEmailListener;
 use Modules\Core\Listeners\SaleRefundedWhatsapp2Listener;
@@ -73,7 +79,7 @@ use Modules\Core\Listeners\SendEmailListener;
 use Modules\Core\Listeners\SendEmailRegisteredListener;
 use Modules\Core\Listeners\SendSmsListener;
 use Modules\Core\Listeners\SetApprovedShopifyOrderListener;
-use Modules\Core\Listeners\TicketMessageSendEmailListener;
+use Modules\Core\Listeners\Sac\TicketMessageSendEmailListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedActiveCampaignListener;
 use Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener;
 use Modules\Core\Listeners\UpdateCompanyGetnetSendEmailListener;
@@ -161,6 +167,15 @@ class EventServiceProvider extends ServiceProvider
         ],
         TicketMessageEvent::class => [
             TicketMessageSendEmailListener::class,
+        ],
+        NotifyTicketMediationEvent::class => [
+            NotifyTicketMediationListener::class,
+        ],
+        NotifyTicketOpenEvent::class => [
+            NotifyTicketOpenListener::class,
+        ],
+        NotifyTicketClosedEvent::class => [
+            NotifyTicketClosedListener::class,
         ],
         AffiliateRequestEvent::class => [
             AffiliateRequestSendEmailListener::class,
