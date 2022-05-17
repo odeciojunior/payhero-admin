@@ -94,7 +94,7 @@ class TicketsApiController extends Controller
                 }
             }
 
-            if ($data->period) {
+            if ($data->period && !$data->transaction) {
                 $dateRange = FoxUtils::validateDateRange($data->period);
                 $ticketsQuery->whereBetween('tickets.created_at', [$dateRange[0] . ' 00:00:00', $dateRange[1] . ' 23:59:59']);
             }
