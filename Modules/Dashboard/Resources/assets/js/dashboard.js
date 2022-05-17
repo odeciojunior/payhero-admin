@@ -11,7 +11,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-chart-data`,
             dataType: "json",
             data: {
-                company: $('#companyTopbar').val(),
+                company: $('#company-navbar').val(),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -184,7 +184,7 @@ $(document).ready(function () {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            data: {company: $('#companyTopbar').val()},
+            data: {company: $('#company-navbar').val()},
             error: function error(response) {
                 loadOnAnyEllipsis('.text-money, .update-text, .text-circle', true)
                 loadingOnScreenRemove();
@@ -777,7 +777,7 @@ $(document).ready(function () {
         $("#cardWelcome").slideUp("600");
     });
 
-    $("#companyTopbar").on("change", function () {
+    $("#company-navbar").on("change", function () {
         updateValues();
         updateChart();
     });

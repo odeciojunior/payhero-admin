@@ -279,7 +279,7 @@ $(document).ready(function () {
                 let description = $("#modal-integrate").find("input[name='description']").val();
                 let tokenTypeEnum = $("#select-enum-list").val();
                 let postback = $("#modal-integrate").find("input[name='postback']").val();
-                let companyHash = $("#companyTopbar").val(); //$("#companies").val();
+                let companyHash = $("#company-navbar").val(); //$("#companies").val();
                 if (description == '') {
                     alertCustom('error', 'O campo Descrição é obrigatório');
                 } else if (!companyHash && tokenTypeEnum == 4) {
@@ -477,5 +477,5 @@ $(document).ready(function () {
         $('#modal-integrate').modal('show');
     }
 
-    $('.company_name').val( $("#companyTopbar").find('option:selected').text() );
+    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
 });

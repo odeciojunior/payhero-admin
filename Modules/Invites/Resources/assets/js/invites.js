@@ -224,7 +224,7 @@ $(document).ready(function () {
                             $("#company-list").html('').append(selCompany);
 
                             var linkInvite = '';
-                            var companyId = $("#companyTopbar").val(); //$("#select-company-list option:selected").val();
+                            var companyId = $("#company-navbar").val(); //$("#select-company-list option:selected").val();
                             linkInvite = 'https://accounts.cloudfox.net/signup?i=' + companyId; //$("#select-company-list option:selected").val();
 
                             $("#invite-link").val(linkInvite);
@@ -396,7 +396,7 @@ $(document).ready(function () {
         }
     }
 
-    $('.company_name').val( $("#companyTopbar").find('option:selected').text() );
+    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
 
     //ALTERAÇÃO DE HTML
 

@@ -1,7 +1,7 @@
 $(document).ready(function () {
     getCompanies();
 
-    $('#companyTopbar').change(function () {
+    $('#company-navbar').change(function () {
         sessionStorage.removeItem('companies')
         sessionStorage.removeItem('company_default')
         sessionStorage.setItem('company_default', $(this).val())
@@ -984,7 +984,7 @@ function removeMoneyCurrency(string) {
 function selectCompanies() {
 
     let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
-    $('#companyTopbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
+    $('#company-navbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
     for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
         if (sessionStorage.getItem('company_default') === parseSessionStorageCompanies[i].id)
             itemSelected = 'selected="selected"'
@@ -997,9 +997,9 @@ function selectCompanies() {
             itemDisabled = 'disabled="disabled"';
 
         if (parseSessionStorageCompanies[i].company_type == '1') {
-            $('#companyTopbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
+            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
         } else {
-            $('#companyTopbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + parseSessionStorageCompanies[i].name + '</option>')
+            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + parseSessionStorageCompanies[i].name + '</option>')
         }
     }
     $('#company-select').addClass('d-sm-flex');
