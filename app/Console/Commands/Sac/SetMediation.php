@@ -6,8 +6,6 @@ use Illuminate\Console\Command;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Entities\TicketMessage;
 use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
-use Modules\Core\Services\SendgridService;
-use Modules\Core\Services\SmsService;
 
 class SetMediation extends Command
 {
