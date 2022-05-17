@@ -32,7 +32,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class DomainsApiController extends Controller
 {
     public function index($projectId)
-    {
+    {\Log::info('ta caindo aqui');
         try {
             $projectId = hashids_decode($projectId);
             $project = Project::find($projectId);
@@ -54,6 +54,7 @@ class DomainsApiController extends Controller
             $domains = Domain::with('project')->where('project_id', $projectId);
 
             return DomainResource::collection($domains->orderBy('id', 'DESC')->paginate(5));
+            
         } catch (Exception $e) {
             report($e);
 

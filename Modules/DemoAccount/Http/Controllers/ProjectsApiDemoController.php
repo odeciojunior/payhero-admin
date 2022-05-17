@@ -36,7 +36,8 @@ class ProjectsApiDemoController extends ProjectsApiController
             return response()->json(['message' => 'Erro ao tentar acessar projetos'], 400);
         }
     }
-    public function show($id){
+    public function show($id)
+    {
         try {
             $userId = Company::USER_ID_DEMO;
 
@@ -68,8 +69,8 @@ class ProjectsApiDemoController extends ProjectsApiController
             $project->open_tickets = $resume['open_tickets'];
             $project->producer = $resume['producer'];
 
-            return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
-
+            return new ProjectsResource($project);
+            
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);

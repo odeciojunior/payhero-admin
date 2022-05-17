@@ -36,7 +36,7 @@ class DemoAccount
                     ['DemoController@','DemoAccount\\'],
                     $routeAction
                 );
-
+                
                 \Log::info($routeAction);
 
                 return Route::toDemoAccount($request, $routeAction);                
