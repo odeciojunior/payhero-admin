@@ -102,7 +102,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-account-health`,
             dataType: "json",
             data: {
-                company: $('#company').val(),
+                company: $('#company-navbar').val(),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -281,7 +281,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-account-chargeback`,
             dataType: "json",
             data: {
-                company: $('#company').val(),
+                company: $('#company-navbar').val(),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -336,7 +336,7 @@ $(document).ready(function () {
                                                 </p>
 
                                                 <p>
-                                                O índice exigido pelas regras internacionais das bandeiras é de não exceder 1,5%. 
+                                                O índice exigido pelas regras internacionais das bandeiras é de não exceder 1,5%.
                                                 Dentre 1,5% e 3% é considerado alto, podendo sofrer multas por cada chargeback.
                                                 Acima de 3%, além das multas, a sua conta poderá ser bloqueada definitivamente.
                                                 </p>
@@ -410,7 +410,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-account-attendance`,
             dataType: "json",
             data: {
-                company: $('#company').val(),
+                company: $('#company-navbar').val(),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -487,7 +487,7 @@ $(document).ready(function () {
             url: `/api/dashboard/get-account-tracking`,
             dataType: "json",
             data: {
-                company: $('#company').val(),
+                company: $('#company-navbar').val(),
             },
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

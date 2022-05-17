@@ -278,7 +278,7 @@ function getFilters(urlParams = false) {
         'cashback': $("#cashback").val(),
         'plan': $('#plan').val(),
         'coupon': $("#cupom").val(),
-        'company': $("#company").val(), //$("#empresa").val(),
+        'company': $("#company-navbar").val(), //$("#empresa").val(),
         'value': $("#valor").val().replace(/[^\d]+/g, ''),
         'email_client': $("#email_cliente").val(),
         'upsell': $("#upsell").val(),
@@ -877,6 +877,6 @@ $(document).ready(function () {
         }
     });
 
-    $('.company_name').val( $("#company").find('option:selected').text() );
+    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
 
 });

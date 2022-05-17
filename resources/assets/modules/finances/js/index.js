@@ -32,7 +32,7 @@ $(document).ready(function () {
 
 
         $.ajax({
-            url: "/finances/getbalances/" + $("#company").val(), //$("#transfers_company_select").val(),
+            url: "/finances/getbalances/" + $("#company-navbar").val(), //$("#transfers_company_select").val(),
             type: "GET",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
@@ -85,7 +85,7 @@ $(document).ready(function () {
             alertCustom('error', 'Valor do saque inválido!');
         } else {
             $.ajax({
-                url: "/withdrawals/getaccountinformation/" + $("#company").val(), //$("#transfers_company_select").val(),
+                url: "/withdrawals/getaccountinformation/" + $("#company-navbar").val(), //$("#transfers_company_select").val(),
                 type: "GET",
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')

@@ -1,9 +1,11 @@
 $(document).ready(function () {
-
     getCompanies();
 
-    $('#company').change(function () {
-        
+    $('#company-navbar').change(function () {
+        sessionStorage.removeItem('companies')
+        sessionStorage.removeItem('company_default')
+        sessionStorage.setItem('company_default', $(this).val())
+        sessionStorage.setItem('company_default_name', $(this).find('option:selected').text())
         $.ajax({
             method: 'POST',
             url: '/api/core/company-default',
@@ -16,11 +18,10 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: response => {
-                sessionStorage.setItem('companyDefault', $(this).val());
-                window.location.href = window.location.href
+                window.location.href = window.location.href;
             },
         });
-        
+
     })
 
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
@@ -981,10 +982,11 @@ function removeMoneyCurrency(string) {
 }
 
 function selectCompanies() {
+
     let parseSessionStorageCompanies = JSON.parse(sessionStorage.getItem('companies'));
-    $('#company').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
+    $('#company-navbar').append('<option value="v2RmA83EbZPVpYB">Empresa Demo</option>');
     for (let i = 0; i < parseSessionStorageCompanies.length; i++) {
-        if (sessionStorage.getItem('companyDefault') == parseSessionStorageCompanies[i].id)
+        if (sessionStorage.getItem('company_default') === parseSessionStorageCompanies[i].id)
             itemSelected = 'selected="selected"'
         else
             itemSelected = ''
@@ -995,9 +997,9 @@ function selectCompanies() {
             itemDisabled = 'disabled="disabled"';
 
         if (parseSessionStorageCompanies[i].company_type == '1') {
-            $('#company').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
+            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>Pessoa física</option>')
         } else {
-            $('#company').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + parseSessionStorageCompanies[i].name + '</option>')
+            $('#company-navbar').append('<option value="' + parseSessionStorageCompanies[i].id + '" ' + itemSelected + ' ' + itemDisabled + '>' + parseSessionStorageCompanies[i].name + '</option>')
         }
     }
     $('#company-select').addClass('d-sm-flex');
@@ -1008,11 +1010,11 @@ function getCompanies() {
     var lastPage = new URL(document.referrer).hostname
     if (thisPage != lastPage) {
         sessionStorage.removeItem('companies')
-        sessionStorage.removeItem('companyDefault')
+        sessionStorage.removeItem('company_default')
     }
 
     if (sessionStorage.getItem('companies') != null) {
-        selectCompanies()
+        selectCompanies();
     }
     else{
         $.ajax({
@@ -1028,11 +1030,19 @@ function getCompanies() {
                 errorAjaxResponse(response);
             },
             success: function success(data) {
-                companies = data.data
+                companies = data.companies;
+                company_default = data.company_default;
+                company_default_name = data.company_default_name;
                 if (!isEmpty(companies)) {
                     sessionStorage.setItem('companies', JSON.stringify(companies));
+                    sessionStorage.setItem('company_default', company_default);
+                    //sessionStorage.setItem('company_default_name', company_default_name);
+
+                    $('.company_name').val( company_default_name );
+                    $('.company_id').val( company_default );
+
                     $(".content-error").hide();
-                    selectCompanies()
+                    selectCompanies();
 
                 } else {
                     $(".content-error").show();

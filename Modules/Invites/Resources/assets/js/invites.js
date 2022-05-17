@@ -224,8 +224,8 @@ $(document).ready(function () {
                             $("#company-list").html('').append(selCompany);
 
                             var linkInvite = '';
-                            var companyId = $("#select-company-list option:selected").val();
-                            linkInvite = 'https://accounts.cloudfox.net/signup?i=' + $("#select-company-list option:selected").val();
+                            var companyId = $("#company-navbar").val(); //$("#select-company-list option:selected").val();
+                            linkInvite = 'https://accounts.cloudfox.net/signup?i=' + companyId; //$("#select-company-list option:selected").val();
 
                             $("#invite-link").val(linkInvite);
 
@@ -269,6 +269,8 @@ $(document).ready(function () {
     });
 
     function sendInviteAjax(email, companyId) {
+        console.log(email)
+        console.log(companyId)
         $.ajax({
             method: "POST",
             url: "/api/invitations",
@@ -393,6 +395,8 @@ $(document).ready(function () {
             }
         }
     }
+
+    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
 
     //ALTERAÇÃO DE HTML
 

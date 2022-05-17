@@ -99,7 +99,7 @@ function atualizar (link = null) {
 
 function getFilters(urlParams = false) {
     let data = {
-        'company': $("#company").val(),
+        'company': $("#company-navbar").val(),
         'project': $("#project").val(),
         'client': $("#client").val(),
         'customer_document': $("#customer_document").val(),
@@ -312,7 +312,7 @@ $(document).ready(function () {
     function getAcquirer() {
         $.ajax({
             method: "GET",
-            url: '/api/finances/acquirers/'+$('#company').val(),
+            url: '/api/finances/acquirers/'+$('#company-navbar').val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
@@ -343,6 +343,10 @@ $(document).ready(function () {
         }
     });
 
-    $('.company_name').val( $("#company").find('option:selected').text() );
+    console.log('preencher imput text from session agora')
+    //$('.company_name').val( $("#company-navbar").find('option:selected').text() );
+    //$('.company_name').val( $("#company-navbar option[value='"+sessionStorage.getItem('company_default')+"']").text() );
+    $('.company_name').val( sessionStorage.getItem('company_default_name') );
+    //$('.company_name').val( $("#company-navbar").val() );
 
 });

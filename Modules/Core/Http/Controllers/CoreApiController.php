@@ -9,6 +9,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Concerns\ToArray;
 use Modules\Companies\Http\Requests\CompanyCreateRequest;
 use Modules\Companies\Http\Requests\CompanyUpdateRequest;
 use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
@@ -131,10 +133,23 @@ class CoreApiController extends Controller
     {
         try {
             $companyModel = new Company();
-            $companies = $companyModel->newQuery()->where('user_id', auth()->user()->account_owner_id)
+            $companies = $companyModel->newQuery()
+                ->where('user_id', auth()->user()->account_owner_id)
                 ->orderBy('order_priority')->get();
+            $companyDefault = Company::select('company_type','fantasy_name')
+                ->where('id', auth()->user()->company_default)
+                ->first();
+            $company_default_name = $companyDefault->company_type == 1 ? 'Pessoa física' : Str::limit(
+                    $companyDefault->fantasy_name,
+                    20
+                ) ?? '';
+            $return = array(
+                'companies'=>CompaniesSelectResource::collection($companies),
+                'company_default'=>Hashids::encode(auth()->user()->company_default),
+                'company_default_name'=>$company_default_name
+            );
 
-            return CompaniesSelectResource::collection($companies);
+            return $return;
         } catch (Exception $e) {
             report($e);
 
@@ -152,12 +167,12 @@ class CoreApiController extends Controller
         if(empty($request->company_id)){
             return response()->json(['message'=>'Informe a empresa selecionada'],400);
         }
-        
-        $companyId = current(Hashids::decode($request->company_id));                    
+
+        $companyId = current(Hashids::decode($request->company_id));
         if(empty($companyId)){
             return response()->json(['message'=>'Não foi possivel identificar a empresa'],400);
         }
-        
+
         $user = Auth::user();
         if($user->company_default == $companyId){
             return response()->json(['message'=>'A empresa selecionada já é a default.'],400);
@@ -174,14 +189,14 @@ class CoreApiController extends Controller
 
             $user->company_default = $companyId;
             $user->save();
-    
+
             return response()->json(['message'=>'Empresa atualizada.']);
 
         }catch(Exception $e){
             report($e);
             return response()->json(['message'=>'Não foi possivel atualizar a empresa default.']);
         }
-        
+
     }
 
 }
