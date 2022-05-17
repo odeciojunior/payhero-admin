@@ -545,12 +545,21 @@ h4.number{
     height: 176px;
     align-items: center;
 }
+.block-conversion { height: 150px; }
+
+.card-conversion { height: 210px; }
+
 #type-payment.container-payment { height: 161px; }
 
 .card-devices { height: 211px; }
 .gadgets { height: 145px; }
 
 .card-abandoned { height: 118px; }
+
+.card-orderbump,
+.card-upsell { height: 143px; }
+
+.block-abandoned { height: 49px; }
 
 .container-payment.visible { display: flex; }
 
@@ -783,7 +792,12 @@ h4.number{
 .txt-cash { font-size: 12px; }
 
 #block-pending .ske,
-#block-blockeds .ske { display: none; }
+#block-blockeds .ske,
+.block-abandoned .ske,
+#block-orderbump .ske,
+#card-upsell .ske { display: none; }
+
+#card-recurrence { height: 233px; }
 
 @media(min-width: 1024px) {
     #block-withdraw , #draw{ height: 228px; }

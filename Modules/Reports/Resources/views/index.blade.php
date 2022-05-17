@@ -167,13 +167,13 @@
                                             <div class="d-flex align-items cash-box seller onPreLoad" id="block-info-card">
                                             </div>
                                         </div>
-                                        <div class="card inner pad-bottom-0" id="card-conversion">
-                                            <header class="d-flex title-graph">
+                                        <div class="card inner pad-bottom-0 card-conversion" id="card-conversion">
+                                            <header class="d-flex title-graph mt-0">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Conversão</strong>
                                                 </h5>
                                             </header>
-                                            <div class="custom-table scrollbar pb-0 pt-0 onPreLoad" id="block-conversion"></div>
+                                            <div class="custom-table onPreLoad" id="block-conversion"></div>
                                         </div>
                                     </div>
                                     <div class="inner-comission">
@@ -188,15 +188,15 @@
                                         </div>
 
                                         <div class="card inner card-abandoned" id="card-abandoned">
-                                            <header class="d-flex title-graph">
+                                            <header class="d-flex title-graph mt-0">
                                                 <h5 class="grey font-size-16">
-                                                    <strong>Recuperação</strong>
+                                                    <strong>Carrinhos</strong>
                                                 </h5>
                                             </header>
-                                            <div id="block-abandoned" class="custom-table pb-0 pt-0 onPreLoad"></div>
+                                            <div id="block-abandoned" class="block-abandoned onPreLoad"></div>
                                         </div>
 
-                                        <div class="card inner" id="card-orderbump">
+                                        <div class="card inner card-orderbump" id="card-orderbump">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Orderbump</strong>
@@ -207,7 +207,7 @@
                                             </footer>
                                         </div>
 
-                                        <div class="card inner" id="card-upsell">
+                                        <div class="card inner card-upsell" id="card-upsell">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Upsell</strong>

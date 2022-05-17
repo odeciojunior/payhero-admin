@@ -732,7 +732,7 @@ function abandonedCarts() {
                                 <div class="col-payment grey box-image-payment">
                                     <div class="box-ico">
                                         <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.11982 0.436309C0.64062 0.432235 0.255174 0.841681 0.251702 1.34176C0.248229 1.84184 0.64062 2.24314 1.11982 2.24722C1.7605 2.25265 2.27269 2.69985 2.66595 3.5488C3.03404 4.34243 3.14167 4.99554 3.1547 5.07676L4.18517 12.0091C4.50116 13.66 6.00126 14.9236 7.57691 14.9236H13.7614C15.3371 14.9236 16.8441 13.6483 17.1532 12.0374L18.2114 4.68062C18.4571 3.40049 17.5508 2.24722 16.2581 2.24722H3.96814C3.31531 1.12545 2.32044 0.446451 1.11982 0.436309ZM4.72774 4.05812H16.2581C16.4552 4.05812 16.5403 4.16705 16.5021 4.36942L15.4438 11.7262C15.3041 12.4479 14.5097 13.1127 13.7614 13.1127H7.57691C6.82945 13.1127 6.04121 12.4624 5.8945 11.6979L4.89094 4.7938C4.86056 4.60121 4.79025 4.29598 4.72774 4.05812ZM6.76262 15.829C6.04381 15.829 5.46043 16.4371 5.46043 17.1872C5.46043 17.9373 6.04381 18.5454 6.76262 18.5454C7.48142 18.5454 8.0648 17.9373 8.0648 17.1872C8.0648 16.4371 7.48142 15.829 6.76262 15.829ZM14.5757 15.829C13.8569 15.829 13.2735 16.4371 13.2735 17.1872C13.2735 17.9373 13.856 18.5454 14.5757 18.5454C15.2945 18.5454 15.8779 17.9373 15.8779 17.1872C15.8779 16.4371 15.2954 15.829 14.5757 15.829Z" fill="#636363"/></svg>
-                                    </div>Carrinhos
+                                    </div>Recuperados
                                 </div>
 
                                 <div class="box-payment-option option">
@@ -978,7 +978,7 @@ function conversion() {
             let { credit_card, pix, boleto } = response.data;
             
             conversionBlock = `
-                <div class="row container-payment">
+                <div class="row container-payment block-conversion">
                     <div class="container">
                         <div class="data-holder b-bottom">
                             <div class="box-payment-option pad-0">
@@ -1512,7 +1512,7 @@ let skeLoad = `
                 <div class="skeleton skeleton-circle"></div>
                 <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
             </div>
-            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text ske"></div>
         </div>
     </div>
 `;
