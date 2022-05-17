@@ -42,7 +42,7 @@ class ReleaseWithdrawalsWithGetFasterBenefit extends Command
                 ->orderBy('withdrawals.id')
                 ->get()->toArray();
 
-            $managerUrl = env('MANAGER_URL', 'http://dev.manager.com.br') . '/api/release/withdrawalsgetfaster';
+            $managerUrl = env('MANAGER_URL', 'http://dev.manager.com.br') . '/api/withdrawals/release/withdrawalsgetfaster';
 
             foreach ($withdrawals as $withdrawal) {
                 try {
