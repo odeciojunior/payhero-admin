@@ -2,7 +2,12 @@
 
 namespace Modules\DemoAccount\Http\Controllers;
 
+use Exception;
+use Illuminate\Support\Facades\Config;
+use Modules\Core\Entities\Company;
 use Modules\Core\Http\Controllers\CoreApiController;
+use Modules\Core\Transformers\CompaniesSelectResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class CoreApiDemoController extends CoreApiController
 {
@@ -17,4 +22,6 @@ class CoreApiDemoController extends CoreApiController
             ]
         );
     }
+
+
 }
