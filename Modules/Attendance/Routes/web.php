@@ -18,7 +18,7 @@ Route::group(
     function() {
 
         //role:account_owner|admin|attendance
-        Route::Resource('/attendance', 'AttendanceController')
+        Route::Resource('/customer-service', 'AttendanceController')
              ->only('index')->names('attendance');
     }
 );

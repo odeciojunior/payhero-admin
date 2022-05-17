@@ -38,7 +38,7 @@ class VerifyFrozenAccountWeb
             '/trackings',
             '/projects',
             '/products',
-            '/attendance',
+            '/customer-service',
             '/finances',
             '/old-finances',
             '/reports/sales',
