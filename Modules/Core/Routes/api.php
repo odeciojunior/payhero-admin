@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api','demo_account'],
+        'middleware' => ['auth:api'],
     ],
     function() {
 

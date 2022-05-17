@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Http\Controllers;
 
+use Composer\Config;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -132,20 +133,27 @@ class CoreApiController extends Controller
     public function getCompanies()
     {
         try {
+
+            $user = auth()->user();
             $companyModel = new Company();
             $companies = $companyModel->newQuery()
-                ->where('user_id', auth()->user()->account_owner_id)
+                ->where('user_id', $user->account_owner_id)
                 ->orderBy('order_priority')->get();
-            $companyDefault = Company::select('company_type','fantasy_name')
-                ->where('id', auth()->user()->company_default)
-                ->first();
-            $company_default_name = $companyDefault->company_type == 1 ? 'Pessoa física' : Str::limit(
-                    $companyDefault->fantasy_name,
-                    20
-                ) ?? '';
+
+            $company_default_name = 'Empresa Demo';
+            if($user->company_default > 1){
+                $companyDefault = Company::select('company_type','fantasy_name')
+                    ->where('id', $user->company_default)
+                    ->first();
+                $company_default_name = $companyDefault->company_type == 1 ? 'Pessoa física' : Str::limit(
+                        $companyDefault->fantasy_name,
+                        20
+                    ) ?? '';
+            }
+            
             $return = array(
                 'companies'=>CompaniesSelectResource::collection($companies),
-                'company_default'=>Hashids::encode(auth()->user()->company_default),
+                'company_default'=>Hashids::encode($user->company_default),
                 'company_default_name'=>$company_default_name
             );
 
