@@ -102,19 +102,19 @@
 					<div class="col-12 box-items-finance" id="finance-card">
                         <div class="row mb-20">
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border blue mb-10 onPreLoad" id="finance-transactions"></div>
+                                <div class="finance-card no-ske border blue mb-10 onPreLoad" id="finance-transactions"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border orange mb-10 onPreLoad" id="finance-ticket"></div>
+                                <div class="finance-card no-ske border orange mb-10 onPreLoad" id="finance-ticket"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card commission border green mb-10 onPreLoad" id="finance-commission"></div>
+                                <div class="finance-card no-ske commission border green mb-10 onPreLoad" id="finance-commission"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border pink mb-10 onPreLoad" id="finance-chargebacks"></div>
+                                <div class="finance-card no-ske border pink mb-10 onPreLoad" id="finance-chargebacks"></div>
                             </div>
                         </div>
 					</div>
@@ -207,7 +207,7 @@
                                                 <i class="o-arrow-right-1 redirect"></i>
                                             </a>
                                         </header>
-                                        <div class="onPreLoad" id="block-pending"></div>
+                                        <div class="onPreLoad no-ske" id="block-pending"></div>
                                     </div>
                                     <div class="card inner secondary-blocks" id="card-blockeds">
                                         <header class="d-flex title-graph">
@@ -219,7 +219,7 @@
                                                 <i class="o-arrow-right-1 redirect"></i>
                                             </a>
                                         </header>
-                                        <footer class="onPreLoad" id="block-blockeds"></footer>
+                                        <footer class="onPreLoad no-ske" id="block-blockeds"></footer>
                                     </div>
                                 </div>
                             </div>

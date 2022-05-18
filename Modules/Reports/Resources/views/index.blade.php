@@ -105,19 +105,19 @@
 					<div class="col-12 box-items-finance">
                         <div class="row mb-20">
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border blue mb-10 onPreLoad" id="sales-transactions"></div>
+                                <div class="finance-card no-ske border blue mb-10 onPreLoad" id="sales-transactions"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border orange mb-10 onPreLoad" id="sales-average-ticket"></div>
+                                <div class="finance-card no-ske border orange mb-10 onPreLoad" id="sales-average-ticket"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border green mb-10 onPreLoad" id="sales-comission"></div>
+                                <div class="finance-card no-ske border green mb-10 onPreLoad" id="sales-comission"></div>
                             </div>
 
                             <div class="fianance-items col-md-3 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border pink mb-10 onPreLoad" id="sales-number-chargeback"></div>
+                                <div class="finance-card no-ske border pink mb-10 onPreLoad" id="sales-number-chargeback"></div>
                             </div>
                         </div>
 					</div>
@@ -164,7 +164,7 @@
                                             <div class="onPreLoad" id="block-payments"></div>
                                         </div>
                                         <div class="card" id="card-info">
-                                            <div class="d-flex align-items cash-box seller onPreLoad" id="block-info-card">
+                                            <div class="d-flex align-items cash-box seller onPreLoad no-ske" id="block-info-card">
                                             </div>
                                         </div>
                                         <div class="card inner pad-bottom-0 card-conversion" id="card-conversion">
@@ -193,7 +193,7 @@
                                                     <strong>Carrinhos</strong>
                                                 </h5>
                                             </header>
-                                            <div id="block-abandoned" class="block-abandoned onPreLoad"></div>
+                                            <div id="block-abandoned" class="no-ske block-abandoned onPreLoad"></div>
                                         </div>
 
                                         <div class="card inner card-orderbump" id="card-orderbump">
@@ -202,12 +202,12 @@
                                                     <strong>Orderbump</strong>
                                                 </h5>
                                             </header>
-                                            <footer id="block-orderbump" class="onPreLoad">
+                                            <footer id="block-orderbump" class="no-ske onPreLoad">
                                                 
                                             </footer>
                                         </div>
 
-                                        <div class="card inner card-upsell" id="card-upsell">
+                                        <div class="card inner card-upsell no-ske" id="card-upsell">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Upsell</strong>

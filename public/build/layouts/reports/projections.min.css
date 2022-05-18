@@ -791,11 +791,7 @@ h4.number{
 .card-cashback { height: 148px; }
 .txt-cash { font-size: 12px; }
 
-#block-pending .ske,
-#block-blockeds .ske,
-.block-abandoned .ske,
-#block-orderbump .ske,
-#card-upsell .ske { display: none; }
+.no-ske .ske { display: none; }
 
 #card-recurrence { height: 233px; }
 
@@ -837,7 +833,7 @@ h4.number{
 .finance-card { 
     padding: 16px 16px 0 25px;
     border-radius: 12px;
-    min-height: 104px;
+    height: 100px;
     display: flex;
     flex-direction: column;
 }
@@ -1177,7 +1173,7 @@ h4.number{
 .no-cashback, .no-orderbump {
     color: #1BE4A8;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 15px;
     margin-bottom: 7px;
 }
 .txt-no-cashback,

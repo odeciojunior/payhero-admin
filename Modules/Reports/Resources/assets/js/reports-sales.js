@@ -975,122 +975,139 @@ function conversion() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
+            let max = (a,b) => Math.max(a,b);
             let { credit_card, pix, boleto } = response.data;
+            const numbers = [credit_card.total, pix.total, boleto.total].map(Number).reduce((prev, value) => prev + value,0);
+            const bigger = [credit_card.total, pix.total, boleto.total].reduce(max);
             
-            conversionBlock = `
-                <div class="row container-payment block-conversion">
-                    <div class="container">
-                        <div class="data-holder b-bottom">
-                            <div class="box-payment-option pad-0">
-
-                                <div class="col-payment grey box-image-payment">
-                                    <div class="box-ico">
-                                        <svg width="21" height="16" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M13.806 10.415C13.3901 10.415 13.053 10.7814 13.053 11.2334C13.053 11.6855 13.3901 12.0519 13.806 12.0519H16.3163C16.7322 12.0519 17.0693 11.6855 17.0693 11.2334C17.0693 10.7814 16.7322 10.415 16.3163 10.415H13.806ZM2.30106 0.047699C1.03022 0.047699 0 1.16738 0 2.54858V13.0068C0 14.388 1.03022 15.5077 2.30106 15.5077H17.7809C19.0517 15.5077 20.082 14.388 20.082 13.0068V2.54858C20.082 1.16738 19.0517 0.047699 17.7809 0.047699H2.30106ZM1.25512 13.0068V5.95886H18.8268V13.0068C18.8268 13.6346 18.3586 14.1435 17.7809 14.1435H2.30106C1.7234 14.1435 1.25512 13.6346 1.25512 13.0068ZM1.25512 4.59475V2.54858C1.25512 1.92076 1.7234 1.41181 2.30106 1.41181H17.7809C18.3586 1.41181 18.8268 1.92076 18.8268 2.54858V4.59475H1.25512Z" fill="#636363"></path>
-                                        </svg>
-                                    </div>Cartão
-                                </div>
-
-                                <div class="box-payment-option option">
-                                    <div class="col-payment">
-                                        <div class="box-payment center">
-                                            <span>${credit_card.approved}</span>
-                                            /<small>${credit_card.total}</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-payment">
-                                        <div class="box-payment right">
-                                            <strong class="grey font-size-16">${credit_card.percentage}</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="container">
-                        <div class="data-holder b-bottom">
-                            <div class="box-payment-option pad-0">
-                                <div class="col-payment grey box-image-payment">
-                                    <div class="box-ico">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            width="38.867"
-                                            height="40.868"
-                                            viewBox="0 0 38.867 40.868"
-                                            style="width: 24px;"
-                                        >
-                                            <g id="Grupo_61" data-name="Grupo 61" transform="translate(-2948.5 213.743)">
-                                                <g id="g992" transform="translate(2956.673 -190.882)">
-                                                    <path id="path994" d="M-73.541-25.595a5.528,5.528,0,0,1-3.933-1.629l-5.68-5.68a1.079,1.079,0,0,0-1.492,0l-5.7,5.7a5.529,5.529,0,0,1-3.934,1.628H-95.4l7.193,7.194a5.753,5.753,0,0,0,8.136,0l7.214-7.214Z" transform="translate(95.4 34.202)" fill="none" stroke="#3a506c" stroke-width="1"/>
-                                                </g>
-                                                <g id="g996" transform="translate(2956.673 -212.243)">
-                                                    <path id="path998" d="M-3.765-29.869A5.528,5.528,0,0,1,.169-28.24l5.7,5.7a1.056,1.056,0,0,0,1.493,0l5.68-5.68a5.529,5.529,0,0,1,3.934-1.629h.684l-7.214-7.214a5.753,5.753,0,0,0-8.136,0l-7.193,7.193Z" transform="translate(4.884 37.747)" fill="none" stroke="#3a506c" stroke-width="1"/>
-                                                </g>
-                                                <g id="g1000" transform="translate(2949 -201.753)">
-                                                    <path id="path1002" d="M-121.731-14.725l-4.36-4.359a.83.83,0,0,1-.31.063h-1.982a3.917,3.917,0,0,0-2.752,1.14l-5.68,5.68a2.718,2.718,0,0,1-1.927.8,2.719,2.719,0,0,1-1.928-.8l-5.7-5.7a3.917,3.917,0,0,0-2.752-1.14h-2.437a.827.827,0,0,1-.293-.059l-4.377,4.377a5.753,5.753,0,0,0,0,8.136l4.377,4.377a.828.828,0,0,1,.293-.059h2.437a3.917,3.917,0,0,0,2.752-1.14l5.7-5.7a2.792,2.792,0,0,1,3.856,0l5.68,5.679a3.917,3.917,0,0,0,2.752,1.14h1.982a.83.83,0,0,1,.31.062l4.359-4.359a5.753,5.753,0,0,0,0-8.136" transform="translate(157.913 19.102)" fill="none" stroke="#3a506c" stroke-width="1"/>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </div> Pix
-                                </div>
-                                <div class="box-payment-option option">
-                                    <div class="col-payment">
-                                        <div class="box-payment center">
-                                            <span>${pix.approved}</span>
-                                            /<small>${pix.total}</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-payment">
-                                        <div class="box-payment right">
-                                            <strong class="grey font-size-16">${pix.percentage}</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="container">
-                        <div class="data-holder b-bottom">
-                            <div class="box-payment-option pad-0">
-                                <div class="col-payment grey box-image-payment">
-                                    <div class="box-ico">
-                                        <span class="">
-                                            <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <g clip-path="url(#clip0_386_407)">
-                                                    <rect x="-161.098" y="-1313.01" width="646" height="1962" rx="12" fill="white"/>
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M17.4016 2.27981H2.40165C2.07013 2.27981 1.75218 2.41555 1.51776 2.65717C1.28333 2.89878 1.15163 3.22648 1.15163 3.56817V13.875C1.15172 14.2167 1.28346 14.5443 1.51787 14.7858C1.75229 15.0274 2.07019 15.1631 2.40165 15.1631H17.4019C17.7334 15.1631 18.0514 15.0273 18.2858 14.7857C18.5202 14.5441 18.6519 14.2164 18.6519 13.8747V3.56817C18.6519 3.39895 18.6196 3.23139 18.5567 3.07506C18.4939 2.91873 18.4018 2.77668 18.2857 2.65704C18.1696 2.5374 18.0317 2.44251 17.88 2.37779C17.7283 2.31306 17.5658 2.27977 17.4016 2.27981ZM2.40165 0.991455C1.7386 0.991455 1.10271 1.26293 0.633857 1.74616C0.165008 2.22939 -0.0983887 2.88479 -0.0983887 3.56817L-0.0983887 13.875C-0.0983887 14.5584 0.165008 15.2138 0.633857 15.6971C1.10271 16.1803 1.7386 16.4518 2.40165 16.4518H17.4019C17.7302 16.4518 18.0553 16.3851 18.3586 16.2556C18.6619 16.1261 18.9376 15.9363 19.1697 15.6971C19.4019 15.4578 19.586 15.1737 19.7116 14.8611C19.8373 14.5485 19.9019 14.2134 19.9019 13.875V3.56817C19.9019 3.22979 19.8373 2.89473 19.7116 2.58211C19.586 2.26948 19.4019 1.98543 19.1697 1.74616C18.9376 1.50689 18.6619 1.31709 18.3586 1.1876C18.0553 1.0581 17.7302 0.991455 17.4019 0.991455H2.40165Z" fill="#636363"/>
-                                                    <path d="M4.34595 4.99976H6.27182V12.9399H4.34595V4.99976ZM7.23492 4.99976H8.19803V12.9399H7.23492V4.99976ZM14.9387 4.99976H15.9018V12.9399H14.9387V4.99976ZM11.087 4.99976H13.977V12.9399H11.087V4.99976ZM9.16113 4.99976H10.1242V12.9399H9.16113V4.99976Z" fill="#636363"/>
-                                                </g>
-                                                <defs>
-                                                    <clipPath id="clip0_386_407">
-                                                        <rect width="20.082" height="15.46" fill="white" transform="translate(0 0.991486)"/>
-                                                    </clipPath>
-                                                </defs>
+            if( numbers !== 0 ) {
+                conversionBlock = `
+                    <div class="row container-payment block-conversion">
+                        <div class="container">
+                            <div class="data-holder b-bottom">
+                                <div class="box-payment-option pad-0">
+    
+                                    <div class="col-payment grey box-image-payment">
+                                        <div class="box-ico">
+                                            <svg width="21" height="16" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13.806 10.415C13.3901 10.415 13.053 10.7814 13.053 11.2334C13.053 11.6855 13.3901 12.0519 13.806 12.0519H16.3163C16.7322 12.0519 17.0693 11.6855 17.0693 11.2334C17.0693 10.7814 16.7322 10.415 16.3163 10.415H13.806ZM2.30106 0.047699C1.03022 0.047699 0 1.16738 0 2.54858V13.0068C0 14.388 1.03022 15.5077 2.30106 15.5077H17.7809C19.0517 15.5077 20.082 14.388 20.082 13.0068V2.54858C20.082 1.16738 19.0517 0.047699 17.7809 0.047699H2.30106ZM1.25512 13.0068V5.95886H18.8268V13.0068C18.8268 13.6346 18.3586 14.1435 17.7809 14.1435H2.30106C1.7234 14.1435 1.25512 13.6346 1.25512 13.0068ZM1.25512 4.59475V2.54858C1.25512 1.92076 1.7234 1.41181 2.30106 1.41181H17.7809C18.3586 1.41181 18.8268 1.92076 18.8268 2.54858V4.59475H1.25512Z" fill="#636363"></path>
                                             </svg>
-                                        </span>
-                                    </div> Boleto
-                                </div>
-                                <div class="box-payment-option option">
-                                    <div class="col-payment">
-                                        <div class="box-payment center">
-                                            <span>${boleto.approved}</span>
-                                            /<small>${boleto.total}</small>
+                                        </div>Cartão
+                                    </div>
+    
+                                    <div class="box-payment-option option">
+                                        <div class="col-payment">
+                                            <div class="box-payment center">
+                                                <span>${credit_card.approved}</span>
+                                                /<small>${credit_card.total}</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-payment">
+                                            <div class="box-payment right">
+                                                <strong class="grey font-size-16">${credit_card.percentage}</strong>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-payment">
-                                        <div class="box-payment right">
-                                            <strong class="grey font-size-16">${boleto.percentage}</strong>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="container">
+                            <div class="data-holder b-bottom">
+                                <div class="box-payment-option pad-0">
+                                    <div class="col-payment grey box-image-payment">
+                                        <div class="box-ico">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                width="38.867"
+                                                height="40.868"
+                                                viewBox="0 0 38.867 40.868"
+                                                style="width: 24px;"
+                                            >
+                                                <g id="Grupo_61" data-name="Grupo 61" transform="translate(-2948.5 213.743)">
+                                                    <g id="g992" transform="translate(2956.673 -190.882)">
+                                                        <path id="path994" d="M-73.541-25.595a5.528,5.528,0,0,1-3.933-1.629l-5.68-5.68a1.079,1.079,0,0,0-1.492,0l-5.7,5.7a5.529,5.529,0,0,1-3.934,1.628H-95.4l7.193,7.194a5.753,5.753,0,0,0,8.136,0l7.214-7.214Z" transform="translate(95.4 34.202)" fill="none" stroke="#3a506c" stroke-width="1"/>
+                                                    </g>
+                                                    <g id="g996" transform="translate(2956.673 -212.243)">
+                                                        <path id="path998" d="M-3.765-29.869A5.528,5.528,0,0,1,.169-28.24l5.7,5.7a1.056,1.056,0,0,0,1.493,0l5.68-5.68a5.529,5.529,0,0,1,3.934-1.629h.684l-7.214-7.214a5.753,5.753,0,0,0-8.136,0l-7.193,7.193Z" transform="translate(4.884 37.747)" fill="none" stroke="#3a506c" stroke-width="1"/>
+                                                    </g>
+                                                    <g id="g1000" transform="translate(2949 -201.753)">
+                                                        <path id="path1002" d="M-121.731-14.725l-4.36-4.359a.83.83,0,0,1-.31.063h-1.982a3.917,3.917,0,0,0-2.752,1.14l-5.68,5.68a2.718,2.718,0,0,1-1.927.8,2.719,2.719,0,0,1-1.928-.8l-5.7-5.7a3.917,3.917,0,0,0-2.752-1.14h-2.437a.827.827,0,0,1-.293-.059l-4.377,4.377a5.753,5.753,0,0,0,0,8.136l4.377,4.377a.828.828,0,0,1,.293-.059h2.437a3.917,3.917,0,0,0,2.752-1.14l5.7-5.7a2.792,2.792,0,0,1,3.856,0l5.68,5.679a3.917,3.917,0,0,0,2.752,1.14h1.982a.83.83,0,0,1,.31.062l4.359-4.359a5.753,5.753,0,0,0,0-8.136" transform="translate(157.913 19.102)" fill="none" stroke="#3a506c" stroke-width="1"/>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div> Pix
+                                    </div>
+                                    <div class="box-payment-option option">
+                                        <div class="col-payment">
+                                            <div class="box-payment center">
+                                                <span>${pix.approved}</span>
+                                                /<small>${pix.total}</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-payment">
+                                            <div class="box-payment right">
+                                                <strong class="grey font-size-16">${pix.percentage}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="container">
+                            <div class="data-holder b-bottom">
+                                <div class="box-payment-option pad-0">
+                                    <div class="col-payment grey box-image-payment">
+                                        <div class="box-ico">
+                                            <span class="">
+                                                <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <g clip-path="url(#clip0_386_407)">
+                                                        <rect x="-161.098" y="-1313.01" width="646" height="1962" rx="12" fill="white"/>
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M17.4016 2.27981H2.40165C2.07013 2.27981 1.75218 2.41555 1.51776 2.65717C1.28333 2.89878 1.15163 3.22648 1.15163 3.56817V13.875C1.15172 14.2167 1.28346 14.5443 1.51787 14.7858C1.75229 15.0274 2.07019 15.1631 2.40165 15.1631H17.4019C17.7334 15.1631 18.0514 15.0273 18.2858 14.7857C18.5202 14.5441 18.6519 14.2164 18.6519 13.8747V3.56817C18.6519 3.39895 18.6196 3.23139 18.5567 3.07506C18.4939 2.91873 18.4018 2.77668 18.2857 2.65704C18.1696 2.5374 18.0317 2.44251 17.88 2.37779C17.7283 2.31306 17.5658 2.27977 17.4016 2.27981ZM2.40165 0.991455C1.7386 0.991455 1.10271 1.26293 0.633857 1.74616C0.165008 2.22939 -0.0983887 2.88479 -0.0983887 3.56817L-0.0983887 13.875C-0.0983887 14.5584 0.165008 15.2138 0.633857 15.6971C1.10271 16.1803 1.7386 16.4518 2.40165 16.4518H17.4019C17.7302 16.4518 18.0553 16.3851 18.3586 16.2556C18.6619 16.1261 18.9376 15.9363 19.1697 15.6971C19.4019 15.4578 19.586 15.1737 19.7116 14.8611C19.8373 14.5485 19.9019 14.2134 19.9019 13.875V3.56817C19.9019 3.22979 19.8373 2.89473 19.7116 2.58211C19.586 2.26948 19.4019 1.98543 19.1697 1.74616C18.9376 1.50689 18.6619 1.31709 18.3586 1.1876C18.0553 1.0581 17.7302 0.991455 17.4019 0.991455H2.40165Z" fill="#636363"/>
+                                                        <path d="M4.34595 4.99976H6.27182V12.9399H4.34595V4.99976ZM7.23492 4.99976H8.19803V12.9399H7.23492V4.99976ZM14.9387 4.99976H15.9018V12.9399H14.9387V4.99976ZM11.087 4.99976H13.977V12.9399H11.087V4.99976ZM9.16113 4.99976H10.1242V12.9399H9.16113V4.99976Z" fill="#636363"/>
+                                                    </g>
+                                                    <defs>
+                                                        <clipPath id="clip0_386_407">
+                                                            <rect width="20.082" height="15.46" fill="white" transform="translate(0 0.991486)"/>
+                                                        </clipPath>
+                                                    </defs>
+                                                </svg>
+                                            </span>
+                                        </div> Boleto
+                                    </div>
+                                    <div class="box-payment-option option">
+                                        <div class="col-payment">
+                                            <div class="box-payment center">
+                                                <span>${boleto.approved}</span>
+                                                /<small>${boleto.total}</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-payment">
+                                            <div class="box-payment right">
+                                                <strong class="grey font-size-16">${boleto.percentage}</strong>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
-
-            $("#block-conversion").html(conversionBlock);
+                `;
+                $("#block-conversion").html(conversionBlock);
+            } else {
+                conversionBlock = `
+                    <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">
+                        <h4 id='products' class="font-size-24 bold grey">
+                            0
+                        </h4>
+                    </div>
+                    <div class="empty-products pad-0">
+                        ${noData}
+                        <p class="noone">Sem dados</p>   
+                    </div>
+                `;
+                $("#block-conversion").html(conversionBlock);
+            }
         }
     });
 }
@@ -1522,6 +1539,31 @@ let bigGraph = `
 <path d="M748.537 160.747C793.828 168.612 825.042 215.402 863 223.075V242H6.10352e-05V127.825C42.2571 127.825 47.8961 162.696 67.7818 153.097C87.6674 143.497 108.556 77.4964 131.756 80.9871C154.956 84.4778 167.688 -8.14635 216.574 0.580398C265.459 9.30715 301.438 108.98 340.381 66.2193C379.324 23.4582 387.601 46.0209 429.03 37.2942C470.458 28.5674 488.607 133.109 527.846 129.769C567.086 126.428 577.561 213.379 617.605 205.314C666.13 195.541 661.906 190.067 683.483 177.391C705.059 164.714 724.398 156.555 748.537 160.747Z" fill="url(#paint0_linear_2642_647)"/>
 <defs>
 <linearGradient id="paint0_linear_2642_647" x1="431.5" y1="-3.8329e-05" x2="431.5" y2="229.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4F6FB"/>
+<stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>
+`;
+
+let noData = `
+<svg width="275" height="122" viewBox="0 0 275 122" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="48" y="94" width="187" height="25" rx="4" fill="url(#paint0_linear_2696_543)"/>
+<rect x="48" y="5" width="227" height="25" rx="4" fill="url(#paint1_linear_2696_543)"/>
+<rect x="48" y="50" width="227" height="24" rx="4" fill="url(#paint2_linear_2696_543)"/>
+<path opacity="0.6" d="M29 89C31.2091 89 33 90.7909 33 93L33 117C33 119.209 31.2091 121 29 121L5 121C2.79086 121 0.999999 119.209 0.999999 117L1 93C1 90.7909 2.79086 89 5 89L29 89Z" stroke="#CCCCCC" stroke-dasharray="2 2"/>
+<path opacity="0.6" d="M29 1C31.2091 1 33 2.79086 33 5L33 29C33 31.2091 31.2091 33 29 33L5 33C2.79086 33 0.999999 31.2091 0.999999 29L1 5C1 2.79086 2.79086 0.999999 5 0.999999L29 1Z" stroke="#CCCCCC" stroke-dasharray="2 2"/>
+<path opacity="0.6" d="M29 45C31.2091 45 33 46.7909 33 49L33 73C33 75.2091 31.2091 77 29 77L5 77C2.79086 77 0.999999 75.2091 0.999999 73L1 49C1 46.7909 2.79086 45 5 45L29 45Z" stroke="#CCCCCC" stroke-dasharray="2 2"/>
+<defs>
+<linearGradient id="paint0_linear_2696_543" x1="141.5" y1="94" x2="235" y2="94" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4F6FB"/>
+<stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint1_linear_2696_543" x1="161.5" y1="5" x2="275" y2="4.99999" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4F6FB"/>
+<stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint2_linear_2696_543" x1="75.2025" y1="74" x2="250.612" y2="73.9999" gradientUnits="userSpaceOnUse">
 <stop stop-color="#F4F6FB"/>
 <stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
 </linearGradient>
