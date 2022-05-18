@@ -60,5 +60,35 @@ Route::group([
         Route::get('orderbump/{id}', 'OrderBumpApiDemoController@show');
     });
 
+    //discountCoupons
+    Route::group([],function(){
+        Route::get('/project/{projectId}/couponsdiscounts', 'DiscountCouponsApiDemoController@index');
+        Route::get('/project/{projectId}/couponsdiscounts/{id}', 'DiscountCouponsApiDemoController@show');
+    });
+
+    //ProjectReviews
+    Route::group([],function(){
+        Route::get('/projectreviews', 'ProjectReviewsApiDemoController@index');
+        Route::get('/projectreviews/{id}', 'ProjectReviewsApiDemoController@show');
+    });
+
+    //ChekoutEditor
+    Route::group([],function(){
+        Route::apiResource('checkouteditor', 'CheckoutEditorApiDemoController')->only('show');
+    });
+
+    //Pixels
+    Route::group([],function(){
+        Route::get("/projects/{projectId}/pixels/configs", 'PixelsApiDemoController@getPixelConfigs')->name('pixels.getconfig');        
+        Route::get('/project/{projectId}/pixels', 'PixelsApiDemoController@index');
+        Route::get('/project/{projectId}/pixels/{id}', 'PixelsApiDemoController@show');
+    });
+
+    //ProjectNotification
+    Route::group([],function(){
+        Route::get('/project/{projectId}/projectnotification', 'ProjectNotificationApiDemoController@index');
+        Route::get('/project/{projectId}/projectnotification/{id}', 'ProjectNotificationApiDemoController@show');
+    });
+
     Route::get('/not-authorized','DemoAccountController@notAuthorized')->name('demo.not_authorized');
 });

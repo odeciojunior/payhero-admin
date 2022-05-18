@@ -8,10 +8,17 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ProjectService;
+use Modules\Core\Transformers\CompaniesSelectResource;
 use Spatie\Activitylog\Models\Activity;
 use Modules\Projects\Http\Controllers\ProjectsApiController;
 use Modules\Projects\Transformers\ProjectsResource;
+use Modules\Projects\Transformers\UserProjectResource;
+use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProjectsApiDemoController extends ProjectsApiController
 {
@@ -74,6 +81,49 @@ class ProjectsApiDemoController extends ProjectsApiController
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
+        }
+    }
+
+    public function edit($id): JsonResponse
+    {
+        try {
+            $user = User::with('companies')->find(Company::USER_ID_DEMO);
+
+            $project = Project::with(
+                [
+                    'usersProjects',
+                    'usersProjects.company' =>
+                        function ($query) use ($user) {
+                            $query->where('user_id', $user->account_owner_id);
+                        }
+                ]
+            )->find(hashids_decode($id));
+
+            $userProject = UserProject::where('user_id', $user->account_owner_id)
+            ->where('project_id', hashids_decode($id))->first();
+
+            $userProject = new UserProjectResource($userProject);
+
+            $shopifyIntegrations = ShopifyIntegration::where('user_id', $user->account_owner_id)
+            ->where('project_id', hashids_decode($id))->get();
+
+            $shopifyIntegrations = ShopifyIntegrationsResource::collection($shopifyIntegrations);
+
+            $companies = CompaniesSelectResource::collection($user->companies);
+
+            $project = new ProjectsResource($project);
+
+            return response()->json(compact('companies', 'project', 'userProject', 'shopifyIntegrations'));
+            
+        } catch (Exception $e) {
+            report($e);
+
+            return response()->json(
+                [
+                    'message' => 'Erro ao carregar configurações do projeto',
+                ],
+                400
+            );
         }
     }
 }
