@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin'],
+        'middleware' => ['auth:api', 'scopes:admin','demo_account'],
     ],
     function() {
         Route::get('reports', 'ReportsApiController@index')->middleware('permission:report_sales');

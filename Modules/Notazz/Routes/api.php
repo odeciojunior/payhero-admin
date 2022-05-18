@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['auth:api', 'scopes:admin']], function () {
+Route::group(['middleware' => ['auth:api', 'scopes:admin','demo_account']], function () {
 
      Route::get('apps/notazz', 'NotazzApiController@index');
      Route::get('apps/notazz/{id}', 'NotazzApiController@show');

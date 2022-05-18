@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin','permission:apps'],
+        'middleware' => ['auth:api', 'scopes:admin','permission:apps','demo_account'],
     ],
     function() {
         Route::get('/apps/hotbillet', 'HotBilletApiController@index');

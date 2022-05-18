@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin','permission:apps'],
+        'middleware' => ['auth:api', 'scopes:admin','permission:apps','demo_acccount'],
     ],
     function() {
         Route::get('/apps/astronmembers', 'AstronMembersApiController@index');

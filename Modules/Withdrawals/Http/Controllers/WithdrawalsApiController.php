@@ -36,7 +36,7 @@ class WithdrawalsApiController
                 ],403);
             }
 
-            if (!Gate::allows('edit', [$company])) {
+            if ($company->id <> Company::COMPANY_ID_DEMO && !Gate::allows('edit', [$company])) {
                 return response()->json([
                         'message' => 'Sem permissão para visualizar saques',
                     ],403);

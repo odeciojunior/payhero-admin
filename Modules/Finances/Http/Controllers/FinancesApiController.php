@@ -37,7 +37,7 @@ class FinancesApiController extends Controller
                 return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
             }
 
-            if (Gate::denies('edit', [$company])) {
+            if ($company->id <> Company::COMPANY_ID_DEMO && Gate::denies('edit', [$company])) {
                 return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
             }
 

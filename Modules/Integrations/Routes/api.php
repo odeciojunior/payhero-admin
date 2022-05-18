@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => ['auth:api', 'scopes:admin','permission:apps']], function() {
+Route::group(['middleware' => ['auth:api', 'scopes:admin','permission:apps','demo_account']], function() {
      Route::get('integrations', 'IntegrationsApiController@index');
      Route::get('integrations/{id}', 'IntegrationsApiController@show');     
      Route::apiResource('integrations', 'IntegrationsApiController')->only('store', 'destroy','update')

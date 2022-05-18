@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 // role:account_owner|admin|attendance
 Route::group(
     [
-        'middleware' => ['auth:api', 'scopes:admin', 'permission:recovery|sales_manage'],
+        'middleware' => ['auth:api', 'scopes:admin', 'permission:recovery|sales_manage','demo_account'],
     ],
     function() {
         Route::apiResource('recovery', 'SalesRecoveryApiController')->only('index')->names('api.recovery');
