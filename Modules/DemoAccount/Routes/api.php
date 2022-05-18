@@ -58,8 +58,9 @@ Route::group([
             'as'   => 'sales.resume',
             'uses' => 'SalesApiDemoController@resume',
         ]);
-        Route::apiResource('sales', 'SalesApiDemoController')
-        ->only('index', 'show');
+        
+        Route::get('/sales', 'SalesApiDemoController@index');
+        Route::get('/sales/{id}', 'SalesApiDemoController@show');
     });
 
     //ActiveCampaign

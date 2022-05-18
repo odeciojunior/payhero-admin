@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 //'role:account_owner|admin|attendance|finantial'
 Route::group(
     [
-        'middleware' => ['auth:api', 'permission:sales|contestations|trackings|finances', 'scopes:admin','demo_account'],
+        'middleware' => ['auth:api', 'demo_account','permission:sales|contestations|trackings|finances', 'scopes:admin'],
         'prefix'     => 'sales',
     ],
     function() {

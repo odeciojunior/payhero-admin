@@ -47,7 +47,11 @@ class SaleService
             $couponModel = new DiscountCoupon();
 
             if (!$userId) {
-                $userId = auth()->user()->account_owner_id;
+                $user = auth()->user();
+                $userId = Company::USER_ID_DEMO;
+                if(!empty($user)){
+                    $userId = $user->account_owner_id;
+                }
             }
 
             if (empty($filters["company"])) {
