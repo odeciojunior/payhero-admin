@@ -304,32 +304,32 @@ $(() => {
 
         // DURACAO DE COOKIE
         if (project.cookie_duration == 0) {
-            $('.sirius-select').prop("selectedIndex", 0).change();
-            $(".sirius-select-text").text("Eterno");
+            $('.cookie-duration').prop("selectedIndex", 0).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("Eterno");
 
         } else if (project.cookie_duration == 7) {
-            $('.sirius-select').prop("selectedIndex", 1).change();
-            $(".sirius-select-text").text("7 dias");
+            $('.cookie-duration').prop("selectedIndex", 1).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("7 dias");
 
         } else if (project.cookie_duration == 15) {
-            $('.sirius-select').prop("selectedIndex", 2).change();
-            $(".sirius-select-text").text("15 dias");
+            $('.cookie-duration').prop("selectedIndex", 2).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("15 dias");
 
         } else if (project.cookie_duration == 30) {
-            $('.sirius-select').prop("selectedIndex", 3).change();
-            $(".sirius-select-text").text("1 mês");
+            $('.cookie-duration').prop("selectedIndex", 3).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("1 mês");
 
         } else if (project.cookie_duration == 60) {
-            $('.sirius-select').prop("selectedIndex", 4).change();
-            $(".sirius-select-text").text("2 meses");
+            $('.cookie-duration').prop("selectedIndex", 4).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("2 meses");
 
         } else if (project.cookie_duration == 180) {
-            $('.sirius-select').prop("selectedIndex", 5).change();
-            $(".sirius-select-text").text("6 meses");
+            $('.cookie-duration').prop("selectedIndex", 5).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("6 meses");
 
         } else if (project.cookie_duration == 365) {
-            $('.sirius-select').prop("selectedIndex", 6).change();
-            $(".sirius-select-text").text("1 ano");
+            $('.cookie-duration').prop("selectedIndex", 6).change();//.sirius-select
+            $(".cookie-duration .sirius-select-text").text("1 ano");
         }
 
 
