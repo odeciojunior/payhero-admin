@@ -5,7 +5,7 @@
             <div class="input-group col-12">
                 <label for="url_store">URL da sua loja no WooCommerce</label>
                 <div class="d-flex input-group">
-                    <input required type="text" class="input-pad col-7 addon" name="url_store" id="url_store" placeholder="Digite a URL da sua loja">
+                    <input required type="text" class="input-pad" name="url_store" id="url_store" placeholder="Digite a URL da sua loja">
                     
                 </div>
             </div>
