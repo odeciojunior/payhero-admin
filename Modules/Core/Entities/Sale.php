@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use App\Traits\FoxModelTrait;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -131,6 +132,7 @@ class Sale extends Model
     use LogsActivity;
     use PresentableTrait;
     use SoftDeletes;
+    use HasFactory;
 
     public const GETNET_SANDBOX_ID = 14;
     public const GETNET_PRODUCTION_ID = 15;

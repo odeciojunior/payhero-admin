@@ -43,8 +43,7 @@ class SaleService
         try {
             $companyModel = new Company();
             $customerModel = new Customer();
-            $transactionModel = new Transaction();
-            $couponModel = new DiscountCoupon();
+            $transactionModel = new Transaction();            
 
             if (!$userId) {
                 $user = auth()->user();

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\DeliveryPresenter;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property integer $id
@@ -34,7 +35,7 @@ use App\Traits\LogsActivity;
  */
 class Delivery extends Model
 {
-    use PresentableTrait, SoftDeletes, FoxModelTrait, LogsActivity;
+    use PresentableTrait, SoftDeletes, FoxModelTrait, LogsActivity, HasFactory;
     /**
      * @var string
      */

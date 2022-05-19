@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Modules\Core\Entities\Affiliate;
 use NumberFormatter;
 use Symfony\Component\HttpFoundation\File\File;
 use Vinkla\Hashids\Facades\Hashids;
@@ -802,5 +803,17 @@ class FoxUtils
 
         $urlPath = $s3drive->url($pathToSave.$nameFile);
         dd($urlPath);
+    }
+
+    public static function getCookieAffiliate(int $projectId)
+    {
+        if (!empty(request()->cookie('affiliate_cf-' . $projectId))) {
+            $affiliate = Affiliate::find(request()->cookie('affiliate_cf-' . $projectId));
+            if (!empty($affiliate) && $affiliate->status_enum == Affiliate::STATUS_ACTIVE) {
+                return $affiliate->id;
+            }
+        }
+
+        return null;
     }
 }
