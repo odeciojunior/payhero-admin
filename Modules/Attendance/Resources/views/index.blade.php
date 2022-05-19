@@ -76,6 +76,8 @@
                         <div class="filter-container vertical-scroll">
                             <span id="filter-plan" class="filter-badge editable dropdown" data-target="#input-plan">Por plano</span>
                             <span class="vertical-line"></span>
+                            <span id="filter-transaction" class="filter-badge editable" data-target="#input-transaction">Transação</span>
+                            <span class="vertical-line"></span>
                             <span id="category-complaint" class="filter-badge">Reclamação</span>
                             <span id="category-doubt" class="filter-badge">Dúvida</span>
                             <span id="category-suggestion" class="filter-badge">Sugestão</span>
@@ -106,6 +108,12 @@
                         </div>
                         <div class="filter-badge-input" id="input-name">
                             <input class="input-pad" placeholder="Nome do cliente">
+                            <button class="btn btn-primary">
+                                <i class="material-icons">check</i>
+                            </button>
+                        </div>
+                        <div class="filter-badge-input" id="input-transaction">
+                            <input class="input-pad" placeholder="Transação">
                             <button class="btn btn-primary">
                                 <i class="material-icons">check</i>
                             </button>
@@ -175,7 +183,7 @@
                                             <span class="ticket-project"></span>
                                         </div>
                                         <div class="ticket-sale d-none">
-                                            <b>Venda: </b>
+                                            <b>Transação: </b>
                                             <span></span>
                                         </div>
                                     </div>

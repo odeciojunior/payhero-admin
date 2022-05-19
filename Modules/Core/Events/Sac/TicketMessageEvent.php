@@ -1,14 +1,14 @@
 <?php
 
-namespace Modules\Core\Events;
+namespace Modules\Core\Events\Sac;
 
-use Illuminate\Support\Collection;
 use Illuminate\Queue\SerializesModels;
 use Modules\Core\Entities\TicketMessage;
 
 class TicketMessageEvent
 {
     use SerializesModels;
+
     public $ticketMessage;
     public $lastAdminMessage;
 
@@ -19,7 +19,7 @@ class TicketMessageEvent
      */
     public function __construct(TicketMessage $ticketMessage, $lastAdminMessage = null)
     {
-        $this->ticketMessage    = $ticketMessage;
+        $this->ticketMessage = $ticketMessage;
         $this->lastAdminMessage = $lastAdminMessage;
     }
 

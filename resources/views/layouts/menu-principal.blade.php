@@ -303,7 +303,7 @@
                         <li class="site-menu-item">
                             <a href="{{ route('reports.blockedbalance') }}">
                                 <span class="bg-menu"></span>
-                                <span class="site-menu-title">Saldo bloqueado</span>
+                                <span class="site-menu-title">Saldo retido</span>
                             </a>
                         </li>
                     @endcan

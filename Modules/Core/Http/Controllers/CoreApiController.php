@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Log;
 use Modules\Companies\Http\Requests\CompanyCreateRequest;
 use Modules\Companies\Http\Requests\CompanyUpdateRequest;
 use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
+use Modules\Core\Entities\Ticket;
+use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
+use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
+use Modules\Core\Events\Sac\NotifyTicketOpenEvent;
 use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Companies\Transformers\CompanyCpfResource;
 use Modules\Companies\Transformers\CompanyDocumentsResource;
@@ -20,11 +24,14 @@ use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\CompanyServiceGetnet;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\Gateways\Safe2PayService;
 use Modules\Core\Services\UserService;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
@@ -146,4 +153,58 @@ class CoreApiController extends Controller
         }
     }
 
+    public function allowBlockBalance($companyId, $saleId)
+    {
+        try {
+            $company = Company::find(hashids_decode($companyId));
+            $sale = Sale::find(hashids_decode($saleId, 'sale_id'));
+
+            if (empty($company) || empty($sale)) {
+                return response()->json('Dados inválidos', 400);
+            }
+
+            $safe2payService = new Safe2PayService();
+            $safe2payService->setCompany($company);
+
+            $availableBalance = $safe2payService->getAvailableBalance();
+            $pendingBalance = $safe2payService->getPendingBalance();
+            $safe2payService->applyBlockedBalance($availableBalance, $pendingBalance);
+
+            $transaction = Transaction::where('sale_id', $sale->id)->where('company_id', $company->id)->first();
+
+            $response = (object)[
+                'allow_block' => ($availableBalance + $pendingBalance) >= $transaction->value
+            ];
+
+            return response()->json($response);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao verificar bloqueio da comissão!'], 400);
+        }
+    }
+
+    public function notifyTicket($ticketId)
+    {
+        try {
+            $id = hashids_decode($ticketId);
+            $ticket = Ticket::find($id);
+
+            switch ($ticket->ticket_status_enum) {
+                case Ticket::STATUS_OPEN:
+                    event(new NotifyTicketOpenEvent($ticket->id));
+                    break;
+                case Ticket::STATUS_CLOSED:
+                    event(new NotifyTicketClosedEvent($ticket->id));
+                    break;
+                case Ticket::STATUS_MEDIATION:
+                    event(new NotifyTicketMediationEvent($ticket->id));
+                    break;
+            }
+
+            return response()->json(['message' => 'Sucesso']);
+        } catch (Exception $e) {
+            report($e);
+            return response()->json(['message' => 'Erro ao notificar alteração no chamado!'], 400);
+        }
+    }
 }
