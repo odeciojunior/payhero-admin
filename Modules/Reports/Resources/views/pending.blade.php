@@ -40,13 +40,13 @@
                         <form id='filter_form'>
                             <div id="" class="card shadow p-20">
                                 <div class="row align-items-baseline">
-                                    <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                    {{-- <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                         <label for="company">Empresa</label>
                                         <input type="text" disabled="" class="company_name">
                                         {{-- <select name='select_company' id="company" class="sirius-select">
                                             <option value="0">Todas as empresas</option>
-                                        </select> --}}
-                                    </div>
+                                        </select> - -}}
+                                    </div> --}}
                                     <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                         <label for="project">Lojas</label>
                                         <select name='select_project' id="project" class="sirius-select">
@@ -61,10 +61,7 @@
                                         <label for="customer_document">CPF do cliente</label>
                                         <input name='customer_document' id="customer_document" class="input-pad default-border" placeholder="CPF" data-mask="000.000.000-00">
                                     </div>
-                                </div>
-                                <div class="collapse pt-20" id="bt_collapse">
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-3">
+                                    <div class="col-sm-6 col-md-3">
                                             <label for="payment_method">Forma de pagamento</label>
                                             <select name='select_payment_method' id="payment_method" class="sirius-select">
                                                 <option value="">Boleto e cartão de crédito</option>
@@ -73,6 +70,9 @@
                                                 <option value="4">PIX</option>
                                             </select>
                                         </div>
+                                </div>
+                                <div class="collapse pt-20" id="bt_collapse">
+                                    <div class="row">
                                         <div class="col-sm-6 col-md-3">
                                             <label for="sale_code">Transação</label>
                                             <input type="text" id="sale_code" placeholder="transação" class="input-pad">
@@ -90,6 +90,7 @@
                                             <input name='date_range' id="date_range" class="input-pad"
                                             placeholder="Clique para editar..." readonly>
                                         </div>
+
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6 col-md-3 pt-20" style="display:none">
@@ -97,8 +98,7 @@
                                                 <label for="type_statement">Tipo Extrato</label>
                                                 <select name='select_type_statement'
                                                         id="type_statement"
-                                                        class="form-control select-pad"
-                                                >
+                                                        class="form-control select-pad">
                                                     <option value="manual_liquidation">Extrato Antigo</option>
                                                     <option value="automatic_liquidation" selected>Extrato Novo</option>
                                                 </select>

@@ -94,13 +94,13 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
+                                    {{-- <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="empresa">Empresa</label>
                                         <input type="text" disabled="" class="company_name">
                                         {{-- <select name="select_company" id="empresa" class="form-control select-pad select-company applySelect2">
                                             <option value="">Todas empresas</option>
-                                        </select> --}}
-                                    </div>
+                                        </select> - -}}
+                                    </div> --}}
 
                                     <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="projeto">Lojas</label>
@@ -116,14 +116,14 @@
                                         </select>
                                     </div>
 
-                                </div>
-
-                                <div class="row mb-md-15">
-
-                                    <div class="col-sm-12 col-md mb-15 mb-sm-0">
+                                    <div class="col-sm-12 col-md-3 mb-15 mb-sm-0">
                                         <label for="cupom">Cupom</label>
                                         <input name="coupon" id="cupom" class="input-pad" placeholder="Código do cupom">
                                     </div>
+
+                                </div>
+
+                                <div class="row mb-md-15">
 
                                     <div class="col-sm-12 col-md mb-15 mb-sm-0">
                                         <label for="valor">Comissão</label>
@@ -140,13 +140,18 @@
                                         <input name='customer_document' id="customer_document" class="input-pad" placeholder="CPF" data-mask="000.000.000-00">
                                     </div>
 
+                                    <div class="col-sm-12 col-md-3">
+                                        <label for="email_cliente">Email do cliente</label>
+                                        <input name="email_client" id="email_cliente" class="input-pad" placeholder="Email">
+                                    </div>
+
                                 </div>
 
                                 <div class="row mb-md-15 d-flex justify-content-between">
 
                                     <div class="col-sm-12 col-md-3">
-                                        <label for="email_cliente">Email do cliente</label>
-                                        <input name="email_client" id="email_cliente" class="input-pad" placeholder="Email">
+                                        {{-- <label for="email_cliente">Email do cliente</label>
+                                        <input name="email_client" id="email_cliente" class="input-pad" placeholder="Email"> --}}
                                     </div>
 
                                     <div class="col-sm-12 col-md-8 mt-20 pr-0 pl-20" style="flex-grow: 2.134 !important;">
