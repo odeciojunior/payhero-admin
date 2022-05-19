@@ -415,7 +415,7 @@ class GmailService
                     }
                 }
             } catch (Exception $e) {
-                dd($e->getMessage());
+                report($e->getMessage());
             }
         });
 

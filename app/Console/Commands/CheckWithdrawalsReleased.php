@@ -16,7 +16,7 @@ class CheckWithdrawalsReleased extends Command
 {
     protected $signature = 'getnet:check-withdrawals-released';
 
-    protected $description = 'Command description';
+    protected $description = 'Command para transferir as transactions';
 
     public function __construct()
     {
