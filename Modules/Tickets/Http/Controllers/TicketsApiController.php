@@ -57,7 +57,7 @@ class TicketsApiController extends Controller
                 });
             }
 
-            if($data->transaction) {
+            if(!empty($data->transaction)) {
                 preg_match_all('/[0-9A-Za-z]+/', $data->transaction, $matches);
                 $ids = array_map(
                     function ($item) {
