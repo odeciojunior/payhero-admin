@@ -25,8 +25,8 @@ Route::group([
     });
 
     //ChekoutEditor
-    Route::group([],function(){
-        Route::apiResource('checkouteditor', 'CheckoutEditorApiDemoController')->only('show');
+    Route::group([],function(){        
+        Route::get('/checkouteditor/{id}', 'CheckoutEditorApiDemoController@show');
     });
 
     //Pixels
@@ -51,10 +51,10 @@ Route::group([
 
     //Sales
     Route::group([],function(){
-        Route::get('/filters', [
+        Route::get('/sales/filters', [
             'uses' => 'SalesApiDemoController@filters',
         ]);
-        Route::get('/resume', [
+        Route::get('/sales/resume', [
             'as'   => 'sales.resume',
             'uses' => 'SalesApiDemoController@resume',
         ]);
@@ -89,7 +89,7 @@ Route::group([
 
     //Apps
     Route::group([],function(){
-        Route::apiResource('apps', 'AppsApiController')->only('index');
+        Route::get('/apps', 'AppsApiDemoController@index');
     });
 
     //AstronMemebers
@@ -108,8 +108,9 @@ Route::group([
     });
 
     //Checkout
-    Route::group([],function(){
-        Route::apiResource('checkout', 'CheckoutApiDemoController')->only('index', 'show')->names('api.checkout');
+    Route::group([],function(){        
+        Route::get('/checkout', 'CheckoutApiDemoController@index');
+        Route::get('/checkout/{id}', 'CheckoutApiDemoController@show');
     });
 
     //ConvertaX
@@ -144,7 +145,7 @@ Route::group([
 
     //Deliveries
     Route::group([],function(){
-        Route::apiResource('/delivery', 'DeliveryApiDemoController')->only('show')->names('api.client');
+        Route::get('/delivery/{$id}', 'DeliveryApiDemoController@show');
     });
 
     //Finances
@@ -263,7 +264,7 @@ Route::group([
 
     //SalesRecovery
     Route::group([],function(){
-        Route::apiResource('recovery', 'SalesRecoveryApiDemoController')->only('index')->names('api.recovery');
+        Route::get('/recovery', 'SalesRecoveryApiDemoController@index');
 
         Route::get('recovery/getrecoverydata', 'SalesRecoveryApiDemoController@getRecoveryData');
         Route::get('checkout/getrecoverydata', 'SalesRecoveryApiDemoController@getRecoveryData');
@@ -297,7 +298,8 @@ Route::group([
     //Tickets
     Route::group([],function(){
         Route::get('tickets/getvalues', 'TicketsApiDemoController@getTotalValues')->name('api.tickets.getvalues');    
-        Route::apiResource('tickets', 'TicketsApiDemoController')->only('index', 'show')->names('api.tickets');
+        Route::get('/tickets', 'TicketsApiDemoController@index');
+        Route::get('/tickets/{id}', 'TicketsApiDemoController@show');
     });
 
     //Trackings
@@ -317,14 +319,16 @@ Route::group([
 
     //Unicodrops
     Route::group([],function(){
-        Route::apiResource('apps/unicodrop', 'UnicodropApiDemoController')
-        ->only('index', 'edit','show');
+        Route::get('apps/unicodrop', 'UnicodropApiDemoController@index');
+        Route::get('apps/unicodrop/{id}', 'UnicodropApiDemoController@show');
+        Route::get('apps/unicodrop/{id}/edit', 'UnicodropApiDemoController@edit');
     });
 
     //Whatsapp2
-    Route::group([],function(){
-        Route::apiResource('apps/whatsapp2', 'Whatsapp2ApiDemoController')
-        ->only('index', 'edit','show');
+    Route::group([],function(){        
+        Route::get('apps/whatsapp2', 'Whatsapp2ApiDemoController@index');
+        Route::get('apps/whatsapp2/{id}', 'Whatsapp2ApiDemoController@show');
+        Route::get('apps/whatsapp2/{id}/edit', 'Whatsapp2ApiDemoController@edit');
     });
 
     //Withdrawals

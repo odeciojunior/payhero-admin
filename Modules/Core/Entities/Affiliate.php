@@ -31,6 +31,10 @@ use Modules\Core\Presenters\AffiliatePresenter;
 class Affiliate extends Model
 {
     use SoftDeletes, LogsActivity, PresentableTrait;
+
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DISABLED = 2;
+    
     /**
      * @var string
      */

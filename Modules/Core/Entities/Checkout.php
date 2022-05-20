@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CheckoutPresenter;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property integer $id
@@ -53,6 +54,7 @@ use App\Traits\LogsActivity;
 class Checkout extends Model
 {
     use FoxModelTrait, SoftDeletes, PresentableTrait, LogsActivity;
+    use HasFactory;
 
     const STATUS_ACCESSED = 1;
     const STATUS_ABANDONED_CART = 2;

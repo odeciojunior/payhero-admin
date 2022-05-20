@@ -29,12 +29,19 @@ use Modules\Reports\Transformers\ReportCouponResource;
 use Spatie\Activitylog\Models\Activity;
 use Modules\Core\Services\SaleService;
 use Modules\Reports\Transformers\TransactionBlockedResource;
+use ParagonIE\Sodium\Compat;
 
 class ReportsApiController extends Controller
 {
     public function index(request $request): JsonResponse
     {
         try {
+            $user = auth()->user();
+            $accountOwnerId = $user->account_owner_id;
+            if($user->company_default == Company::COMPANY_ID_DEMO){
+                $accountOwnerId = Company::USER_ID_DEMO;
+            }
+
             $userProjectModel = new UserProject();
             $salesModel = new Sale();
             $planModel = new Plan();
@@ -47,13 +54,13 @@ class ReportsApiController extends Controller
             $requestEndDate = $request->input('endDate');
             if ($projectId) {
                 $userProject = $userProjectModel->where([
-                    ['user_id', auth()->user()->account_owner_id],
+                    ['user_id', $accountOwnerId],
                     ['type', 'producer'],
                     ['project_id', $projectId],
                 ])->first();
 
                 $affiliate = $affiliateModel->where([
-                    ['user_id', auth()->user()->account_owner_id],
+                    ['user_id', $accountOwnerId],
                     ['project_id', $projectId],
                 ])->first();
 
@@ -111,7 +118,7 @@ class ReportsApiController extends Controller
                     ->leftJoin('checkouts as checkout', 'sales.checkout_id', '=', 'checkout.id')
                     ->where('sales.project_id', $projectId);
                 if (!empty($userProject)) {
-                    $salesDetails->where('owner_id', auth()->user()->account_owner_id);
+                    $salesDetails->where('owner_id', $accountOwnerId);
                 }
                 if (!empty($affiliate)) {
                     $salesDetails->where('affiliate_id', $affiliate->id);
@@ -298,7 +305,12 @@ class ReportsApiController extends Controller
             $requestStartDate = $request->input('startDate');
             $requestEndDate = $request->input('endDate');
             if ($projectId) {
-                $userId = auth()->user()->account_owner_id;
+                $user = auth()->user();
+                $userId = Company::USER_ID_DEMO;
+                if($user->company_default <> Company::COMPANY_ID_DEMO){
+                    $userId = $user->account_owner_id;
+                }
+
                 $userProject = $userProjectModel->where([
                     ['user_id', $userId],
                     ['type', 'producer'],

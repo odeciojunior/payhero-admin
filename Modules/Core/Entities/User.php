@@ -413,4 +413,5 @@ class User extends Authenticable
             ->join('benefits', 'benefits.id', '=', 'user_benefits.benefit_id')
             ->select('user_benefits.*', 'benefits.name', 'benefits.description', 'benefits.level');
     }
+    
 }
