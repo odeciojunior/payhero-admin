@@ -69,11 +69,6 @@ class TicketsApiController extends Controller
                 $ticketsQuery->whereIn('sale_id', $ids);
             }
 
-            if ($data->category) {
-                $categories = explode(',', $data->category);
-                $ticketsQuery->whereIn('tickets.ticket_category_enum', $categories);
-            }
-
             if ($data->document) {
                 $document = preg_replace('/[^0-9]/', '', $data->document);
                 $ticketsQuery->where('customers.document', $document);
