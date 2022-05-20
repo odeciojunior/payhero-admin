@@ -434,8 +434,9 @@ function loadDevices() {
         },
         success: function success(response) {
             let { desktop, mobile } = response.data;
-
-            deviceBlock = `
+            
+            if(desktop.total !== 0 && mobile.total !== 0) {
+                deviceBlock = `
                  <div class="row container-payment gadgets">
                     <div class="container">
                         <div class="data-holder b-bottom">
@@ -488,8 +489,23 @@ function loadDevices() {
                         </div>
                     </div>
                  </div>
-            `;
-            $("#block-devices").html(deviceBlock);
+                `;
+                $("#block-devices").html(deviceBlock);
+            } else {
+                deviceBlock = `
+                    <div class="container d-flex value-price" style="visibility: hidden; height: 10px;">
+                        <h4 id='products' class="font-size-24 bold grey">
+                            0
+                        </h4>
+                    </div>
+                    <div class="empty-products pad-0">
+                        ${noData}
+                        <p class="noone">Sem dados</p>   
+                    </div>
+                `;
+                $("#block-devices").html(deviceBlock);
+            }
+
         }
     });
 }
