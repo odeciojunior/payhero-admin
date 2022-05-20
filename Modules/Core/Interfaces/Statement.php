@@ -16,8 +16,6 @@ interface Statement
 
     public function getBlockedBalance() : int;
 
-    public function getBlockedBalancePending() : int;
-
     public function getPendingDebtBalance() : int;
 
     public function hasEnoughBalanceToRefund(Sale $sale): bool;

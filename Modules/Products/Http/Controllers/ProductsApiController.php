@@ -3,7 +3,6 @@
 namespace Modules\Products\Http\Controllers;
 
 use Exception;
-use Google\Service\AdExchangeBuyer\Resource\Products;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -177,7 +176,6 @@ class ProductsApiController extends Controller
                         'digital_product_url' => $amazonPath,
                     ]);
                 } catch (Exception $e) {
-                    Log::warning('ProductController - store - Erro ao enviar anexo de produto digital');
                     report($e);
                 }
             }
@@ -364,6 +362,11 @@ class ProductsApiController extends Controller
             $data['type_enum'] = $productModel->present()->getType('digital');
             $data['status_enum'] = $productModel->present()->getStatus('analyzing');
             $product->update($data);
+
+            foreach($product->productsPlans as $productsPlan ) {
+                $productsPlan->delete();
+                $productsPlan->plan->delete();
+            }
 
             return response()->json(['message' => 'Produto convertido para digital com sucesso!'], 200);
         } catch (Exception $e) {

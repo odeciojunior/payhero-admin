@@ -273,7 +273,7 @@ $(document).ready(function(){
                                                     <div id="balance-not-available-${data.name}">
                                                         <h6 style="margin-top: 18px !important" class="font-size-16 m-md-0 px-20"><span class="radio-badge orange"></span>Saldo Pendente</h6>
                                                         <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.pending_balance)}</span></h4>
-                                                        <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge red"></span>Saldo Bloqueado</h6>
+                                                        <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge red"></span>Saldo retido</h6>
                                                         <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.blocked_balance)}</span></h4>
                                                         <h6 class="font-size-16 m-md-0 px-20"><span class="radio-badge blue"></span>Total</h6>
                                                         <h4 class="px-20"><span class="font-size-16">R$</span> <span class="font-size-18 bold">${removeMoneyCurrency(data.total_balance)}</span></h4>

@@ -27,44 +27,8 @@ class OldFinancesApiController
     public function getBalances(Request $request): JsonResponse
     {
         try {
+            return response()->json('Not found', 404);
 
-            if (empty($request->input('company'))) {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
-            }
-
-            $company = Company::find(current(Hashids::decode($request->input('company'))));
-
-            if (empty($company)) {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
-            }
-
-            if (Gate::denies('edit', [$company])) {
-                return response()->json(['message' => 'Sem permissão'], Response::HTTP_FORBIDDEN);
-            }
-
-            $companyService = new CompanyBalanceService($company);
-
-            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
-
-            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE);
-
-            $totalBalance = $availableBalance + $pendingBalance;
-
-            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
-            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
-            $blockedBalanceTotal = $blockedBalancePending + $blockedBalance;
-
-            $pendingDebtBalance = $companyService->getBalance(CompanyBalanceService::PENDING_DEBT_BALANCE);
-
-            return response()->json(
-                [
-                    'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                    'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                    'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                    'blocked_balance' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
-                    'pending_debt_balance' => number_format(intval($pendingDebtBalance) / 100, 2, ',', '.'),
-                ]
-            );
         } catch (Exception $e) {
             report($e);
 

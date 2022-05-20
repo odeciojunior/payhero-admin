@@ -161,6 +161,7 @@ class Sale extends Model
     const PAYMENT_TYPE_CREDIT_CARD = 1;
     const PAYMENT_TYPE_BANK_SLIP = 2;
     const PAYMENT_TYPE_DEBIT = 3;
+    const PAYMENT_TYPE_PIX = 4;
 
     /**
      * @var bool

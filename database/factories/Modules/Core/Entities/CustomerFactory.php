@@ -23,12 +23,12 @@ class CustomerFactory extends Factory
     {
         return [
             'name'=>$this->faker->name(),
-            'document'=>$this->faker->randomNumber(11),
+            'document'=>substr($this->faker->ean13(),-11),
             'email'=>$this->faker->email(),
             'telephone'=>$this->faker->e164PhoneNumber(),
             'balance'=>0,
             'blocked_withdrawal'=>0,
-            'birthday'=>$this->faker->date('Y-m-d','-'.rand(18,70).' years'),
+            'birthday'=>$this->faker->dateTime('-'.rand(18,70).' years'),
             'id_kapsula_client'=>null,
         ];
     }    
