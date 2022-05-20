@@ -239,9 +239,8 @@ function distribution() {
                 distributionHtml = `
                 <div class="d-flex box-graph-dist">
                     <div class="info-graph">
-                        <h6 class="font-size-14 grey">Saldo Total</h6>
+                        <h6 class="font-size-14 grey">Total em vendas</h6>
                         <em>
-                            <small class="font-size-14">R$</small>
                             <strong class="grey">${removeMoneyCurrency(total)}</strong>
                         </em>
                     </div>
@@ -659,7 +658,7 @@ function loadFrequenteSales() {
             if(response.data.length > 0) {
                 $.each(response.data, function (i, item) {
                     let value = removeMoneyCurrency(item.value);
-                    let newV = value.replace(/[\D]+/g,'');
+                    let newV = formatCash(String(parseFloat(value)).replace('.',''));
                     salesBlock = `
                         <div class="box-payment-option pad-0">
                             <div class="d-flex align-items list-sales">
@@ -674,7 +673,7 @@ function loadFrequenteSales() {
                                     </div>
                                 </div>
                                 <div class="grey font-size-14">${item.sales_amount}</div>
-                                <div class="grey font-size-14 value"><strong>${formatCash(newV)}</strong></div>
+                                <div class="grey font-size-14 value"><strong>${newV}</strong></div>
                             </div>
                         </div>
                     `;
@@ -1569,6 +1568,10 @@ function newSellGraph(data, labels) {
            }
          },
    });
+}
+
+function kConverter(num) {
+    return num <= 999 ? num : (0.1 * Math.floor(num / 100)).toFixed(1).replace('.0','');
 }
 
 let skeLoad = `
