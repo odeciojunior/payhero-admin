@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Sac;
 
 use Illuminate\Console\Command;
 use Modules\Core\Entities\Ticket;

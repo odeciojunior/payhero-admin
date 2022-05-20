@@ -62,6 +62,14 @@ $(() => {
 
     loadingOnScreen();
 
+    //fill the filter if the parameter comes in the url
+    const params = new URLSearchParams(window.location.search);
+    if(params.has('sale_id')){
+        $("#filter-transaction").data('value', params.get('sale_id'))
+            .addClass('active');
+        $("#input-transaction input").val(params.get('sale_id'));
+    }
+
     getProjects();
 
     function getProjects() {
@@ -114,6 +122,7 @@ $(() => {
             category.push(3);
         }
 
+        let transaction = $("#filter-transaction").data('value') || '';
         let document = $('#filter-document').data('value') || '';
         let name = $('#filter-name').data('value') || '';
         let answered = $("#filter-answer").data('value') || '';
@@ -135,6 +144,7 @@ $(() => {
             status,
             nameOrDocument,
             page,
+            transaction,
         }
 
         return Object.entries(filters).map(([key, val]) => `${key}=${val}`).join('&');
