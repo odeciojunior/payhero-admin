@@ -103,10 +103,15 @@ class GetnetService implements Statement
 
     public function withdrawalValueIsValid($value): bool
     {
-        $availableBalance = $this->getAvailableBalance();
-        $pendingDebtsSum = $this->getPendingDebtBalance();
+        if (empty($value) || $value < 1) {
+            return false;
+        }
 
-        if (empty($value) || $value < 1 || $value > $availableBalance || $pendingDebtsSum > $value || $pendingDebtsSum > $availableBalance) {
+        $availableBalance = $this->getAvailableBalance();
+        $pendingBalance = $this->getPendingBalance();
+        (new CompanyService)->applyBlockedBalance($this, $availableBalance, $pendingBalance);
+
+        if ($value > $availableBalance) {
             return false;
         }
 

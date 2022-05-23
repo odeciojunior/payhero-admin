@@ -57,7 +57,7 @@ class TicketsApiController extends Controller
                 });
             }
 
-            if($data->transaction) {
+            if(!empty($data->transaction)) {
                 preg_match_all('/[0-9A-Za-z]+/', $data->transaction, $matches);
                 $ids = array_map(
                     function ($item) {
@@ -67,11 +67,6 @@ class TicketsApiController extends Controller
                 );
 
                 $ticketsQuery->whereIn('sale_id', $ids);
-            }
-
-            if ($data->category) {
-                $categories = explode(',', $data->category);
-                $ticketsQuery->whereIn('tickets.ticket_category_enum', $categories);
             }
 
             if ($data->document) {

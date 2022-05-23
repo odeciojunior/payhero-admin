@@ -5,6 +5,7 @@ namespace Modules\Core\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Core\Entities\Customer;
 
 /**
@@ -21,7 +22,7 @@ use Modules\Core\Entities\Customer;
  */
 class CustomerCard extends Model
 {
-    use LogsActivity;
+    use LogsActivity, HasFactory;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string

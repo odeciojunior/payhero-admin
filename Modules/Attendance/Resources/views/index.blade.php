@@ -78,10 +78,6 @@
                             <span class="vertical-line"></span>
                             <span id="filter-transaction" class="filter-badge editable" data-target="#input-transaction">Transação</span>
                             <span class="vertical-line"></span>
-                            <span id="category-complaint" class="filter-badge">Reclamação</span>
-                            <span id="category-doubt" class="filter-badge">Dúvida</span>
-                            <span id="category-suggestion" class="filter-badge">Sugestão</span>
-                            <span class="vertical-line"></span>
                             <span id="filter-name" class="filter-badge editable" data-target="#input-name">Nome</span>
                             <span id="filter-document" class="filter-badge editable"
                                 data-target="#input-document">CPF/CNPJ</span>

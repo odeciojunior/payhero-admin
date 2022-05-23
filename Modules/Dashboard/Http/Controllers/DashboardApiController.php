@@ -78,11 +78,11 @@ class DashboardApiController extends Controller
             $totalBalance = array_sum(array_column($balancesResume, 'total_balance'));
 
             return response()->json([
-                'available_balance'     => foxutils()->formatMoney($availableBalance / 100),
-                'pending_balance'       => foxutils()->formatMoney($pendingBalance / 100),
-                'blocked_balance_total' => foxutils()->formatMoney($blockedBalance / 100),
-                'total_balance'         => foxutils()->formatMoney($totalBalance / 100),
-                'today_balance'         => number_format(intval($todayBalance) / 100, 2, ',', '.'),
+                'available_balance'     => number_format($availableBalance / 100, 2, ',', '.'),
+                'pending_balance'       => number_format($pendingBalance / 100, 2, ',', '.'),
+                'blocked_balance_total' => number_format($blockedBalance / 100, 2, ',', '.'),
+                'total_balance'         => number_format($totalBalance / 100, 2, ',', '.'),
+                'today_balance'         => number_format($todayBalance / 100, 2, ',', '.'),
                 'currency'              => 'R$',
             ]);
         } catch (Exception $e) {
@@ -168,29 +168,13 @@ class DashboardApiController extends Controller
     public function getPerformance(Request $request)
     {
         try {
-            if ($request->has('company') && !empty($request->input('company'))) {
-                $values = $this->getDataPerformance($request->company);
-
-                if ($values) {
-                    return response()->json($values, 200);
-                }
-
-                return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde'
-                ],400);
+            if (!$request->has('company')){
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
             }
 
-            return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-            ],400);
+            $values = $this->getDataPerformance($request->company);
 
-            // if (!$request->has('company')){
-            //     return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
-            // }
-
-            // $values = $this->getDataPerformance($request->company);
-
-            // return response()->json($values, 200);
+            return response()->json($values, 200);
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
@@ -227,31 +211,12 @@ class DashboardApiController extends Controller
     public function getAccountHealth(Request $request)
     {
         try {
-//<<<<<<< HEAD
-            if ($request->has('company') && !empty($request->input('company'))) {
-                $values = $this->getDataAccountHealth($request->company);
-
-                if ($values) {
-                    return response()->json($values, 200);
-                }
-
-                return response()->json([
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],400);
-            }
-
-            return response()->json([
-                'message' => 'Ocorreu um erro, tente novamente mais tarde',
-            ],400);
-
-//=======
             if (!$request->has('company')) {
                 return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
             }
             $values = $this->getDataAccountHealth($request->company);
 
             return response()->json($values, 200);
-//>>>>>>> master
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);

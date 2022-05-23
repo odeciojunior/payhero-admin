@@ -40,6 +40,7 @@ use Modules\Core\Services\UserService;
 use Symfony\Component\HttpFoundation\Response;
 use Vinkla\Hashids\Facades\Hashids;
 
+
 /**
  * Class CoreApiController
  * @package Modules\Core\Http\Controllers
