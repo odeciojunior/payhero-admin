@@ -44,17 +44,31 @@ class CoreApiController extends Controller
 
             $user = $userModel->find(current(Hashids::decode($id)));
 
+            $redirectUser = null;
+            if ($user->personal_document_status == $userModel->present()->getPersonalDocumentStatus('pending') || $user->personal_document_status == $userModel->present()->getPersonalDocumentStatus('refused')) {
+                $redirectUser = '/personal-info';
+            }
+
+            $redirectCompany = null;
+            if ($user->companies->count() > 0) {
+                if ($user->companies->first()->address_document_status == $companyModel->present()->getAddressDocumentStatus('pending') || $user->companies->first()->address_document_status == $companyModel->present()->getAddressDocumentStatus('refused')) {
+                    $redirectCompany = '/companies/company-detail/'. Hashids::encode($user->companies->first()->id) ;
+                }
+            }
+
             return response()->json([
                 'data' => [
                     'account' => $userModel->present()->getAccountStatus($user->account_is_approved),
                     'user' => [
                         'personal_document' => $userModel->present()->getPersonalDocumentStatus($user->personal_document_status),
-                        'address_document' => $userModel->present()->getAddressDocumentStatus($user->address_document_status)
+                        'address_document' => $userModel->present()->getAddressDocumentStatus($user->address_document_status),
+                        'link' => $redirectUser,
                     ],
                     'company' => [
                         'created' => $user->companies->count() > 0 ? true : false,
                         'address_document' => $user->companies->count() > 0 ? $companyModel->present()->getAddressDocumentStatus($user->companies->first()->address_document_status) : null,
-                        'contract_document' => $user->companies->count() > 0 ? $companyModel->present()->getContractDocumentStatus($user->companies->first()->contract_document_status) : null
+                        'contract_document' => $user->companies->count() > 0 ? $companyModel->present()->getContractDocumentStatus($user->companies->first()->contract_document_status) : null,
+                        'link' => $redirectCompany,
                     ]
                 ]
             ], Response::HTTP_OK);

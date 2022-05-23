@@ -4,9 +4,11 @@ $(document).ready(function () {
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
 
-    $('.redirect-to-accounts').click(function (e) {
+    $('.redirect-to-accounts').on('click', function (e) {
         e.preventDefault()
+
         let url_data = $(this).attr('data-url-value')
+
         $.ajax({
             method: 'GET',
             url: '/send-authenticated',
@@ -18,10 +20,13 @@ $(document).ready(function () {
                 errorAjaxResponse(response);
             },
             success: response => {
-                let url = response.url
-                if (url_data)
-                    url = url + url_data
-                window.location.href = url
+                let url = response.url;
+
+                if (url_data) {
+                    url = url + url_data;
+                }
+
+                window.location.href = url;
             },
         });
     });
@@ -698,7 +703,7 @@ function ajaxVerifyAccount() {
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Você cadastrou sua empresa, mas não recebemos nenhum documento';
                         card_company_description = 'Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empreza.';
-                        card_company_button = '<button class="btn btn-default">Enviar documentos</button>';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ response.data.company.link +'">Enviar documentos</button>';
                     } else if (response.data.company.contract_document == 'analyzing' || response.data.company.address_document == 'analyzing') {
                         card_company_status = 'status-warning';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
@@ -710,12 +715,12 @@ function ajaxVerifyAccount() {
                         card_company_icon = '/build/global/img/icon-error.svg';
                         card_company_title = 'Tivemos problemas em verificar sua empresa';
                         card_company_description = 'Há um problema com seus documentos.';
-                        card_company_button = '<button class="btn btn-default">Reenviar documentos</button>';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ response.data.company.link +'">Reenviar documentos</button>';
                     } else if (response.data.company.contract_document == 'approved' || response.data.company.address_document == 'approved') {
                         card_company_status = 'status-check';
                         card_company_icon = '/build/global/img/icon-check.svg';
-                        card_company_title = 'Sua documentação foi recebida e aprovada.';
-                        card_company_description = 'Agora é só vender!';
+                        card_company_title = 'A documentação da sua empresa foi recebida e aprovada.';
+                        card_company_description = 'Se você já aprovou seus documentos pessoais, agora é só vender!';
                         card_company_button = '';
                     }
                 }
@@ -760,7 +765,7 @@ function ajaxVerifyAccount() {
                     card_user_icon = '/build/global/img/icon-error.svg';
                     card_user_title = 'Tivemos um problema com o seu documento';
                     card_user_description = 'Um ou mais documentos foram reprovados após a análise.';
-                    card_user_button = '<button class="btn btn-default">Regularizar documentos</button>';
+                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ response.data.user.link +'">Regularizar documentos</button>';
                 } else if (response.data.user.personal_document == 'approved' || response.data.user.address_document == 'approved') {
                     card_user_status = 'status-check';
                     card_user_icon = '/build/global/img/icon-check.svg';
@@ -791,9 +796,7 @@ function ajaxVerifyAccount() {
 }
 
 function verifyDocumentPending() {
-    if (window.location.href.includes('/dashboard')) {
-        ajaxVerifyAccount();
-    }
+    ajaxVerifyAccount();
 }
 
 /* End - Document Pending Alert */
