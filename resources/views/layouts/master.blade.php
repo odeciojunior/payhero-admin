@@ -258,20 +258,7 @@
                 </div>
                 <div class="new-register-overlay-body">
                     <div class="card extra-informations-user">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <div class="icon d-flex align-items-center">
-                                        <span class="bg-color-blue account-health-note-circle"></span>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <h1 class="title">Queremos conhecer você!</h1>
-                                    <p class="description">Temos algumas perguntas para conhecer melhor você e seu negócio.</p>
-                                </div>
-                            </div>
-                            <img src="{{ asset('build/global/img/icon-chevron-right.svg') }}" alt="">
-                        </div>
+                        <!-- JS load -->
                     </div>
 
                     <div class="init-operation-container">
@@ -281,8 +268,13 @@
                         </div>
 
                         <div class="body">
-                            <div class="company-status"></div>
-                            <div class="user-status"></div>
+                            <div class="company-status">
+                                <!-- JS load -->
+                            </div>
+
+                            <div class="user-status">
+                                <!-- JS load -->
+                            </div>
                         </div>
                     </div>
                 </div>
