@@ -1,18 +1,24 @@
 $(function() {
     loadingOnScreen();
     exportReports();
+
+    changeCompany();
     changeCalendar();
 
     loadStores();
 
-    $("#select_projects").on("change", function () {
+    // $("#select_projects").on("change", function () {
 
-        $(".data-pie ul").remove();
-        $('.onPreLoad *').remove();
-        // $('.onPreLoad').append(skeLoad);
-        updateStorage({company: $(this).val()})
-        reload();
-    });
+    //     $(".data-pie ul").remove();
+    //     $('.onPreLoad *').remove();
+    //     // $('.onPreLoad').append(skeLoad);
+    //     updateStorage({company: $(this).val()})
+    //     reload();
+    // });
+    if(sessionStorage.info) {
+        let info = JSON.parse(sessionStorage.getItem('info'));
+        $('input[name=daterange]').val(info.calendar);
+    }
 
     $("#brazil-map-filter").on("change", function(){
         $('.back-list').trigger('click');
@@ -26,7 +32,6 @@ let resumeUrl = '/api/reports/resume';
 let mktUrl = '/api/reports/marketing';
 
 function reload() {
-
     loadResume();
     loadCoupons();
     loadDevices();
@@ -164,7 +169,7 @@ function loadResume() {
 
 function loadCoupons() {
     $('#card-coupon .onPreLoad *' ).remove();
-    $("#block-coupons").prepend(skeLoad);
+    $("#block-coupons").html(skeLoad);
     let couponList = '';
 
     return $.ajax({
@@ -179,66 +184,73 @@ function loadCoupons() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let arr = [];
-            let seriesArr = [];
-            $('.new-graph-pie-mkt').html('<div class=graph-pie></div>');
+            let { coupons, total } = response.data;
+            
+            if( total != 0 ) {
+                cuponsHtml = `
+                    <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
+                        <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
+                    </div>
+                    <div class="container d-flex justify-content-between box-donut">
+                        <div class="new-graph-pie graph"></div>
+                        <div class="data-pie"><ul></ul></div>
+                    </div>
+                `;
+                $("#block-coupons").html(cuponsHtml);
+                $('.new-graph-pie').html('<div class=graph-pie></div>');
+                let arr = [];
+                let seriesArr = [];
 
-            $.each(response.data, function (i, coupon) {
-                if(coupon != undefined) {
+                $.each(coupons, function (i, coupon) {
                     arr.push(coupon);
-                    $('.data-pie li.donut-pie').remove();
-                }
-                else {
-                    $('#card-coupon').height('232px');
-                    $('#block-coupons').nextAll('div').remove();
-                    $('#block-coupons').after('<div class=no-graph>Não há dados suficientes</div>');
-                }
-            });
-            for(let i = 0; i < arr.length; i++) {
-                if(arr[i].total == 0) {
-                    $('#card-coupon').height('232px');
-                    $('#block-coupons').nextAll('div').remove();
-                    $('#block-coupons').after('<div class=no-graph>Não há dados suficientes</div>');
-                    $(".box-donut").addClass('invis');
-                    $(".data-pie ul").remove();
-                } else {
-                    $(".box-donut").removeClass('invis');
-                    if($('.data-pie *').length == 0) $('.data-pie').html('<ul></ul>');
+                });
 
+                for(let i = 0; i < arr.length; i++) {
                     if(arr[i].amount != undefined) {
                         seriesArr.push(arr[i].amount);
-                        couponList =
-                            `
-                                <li>
-                                    <div class="donut-pie ${arr[i].color}">
-                                        <figure>
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke-width="3"/>
-                                            </svg>
-                                        </figure>
-                                        <div>${arr[i].coupon}</div>
-                                    </div>
-                                    <div class="grey bold">${arr[i].amount}</div>
-                                </li>
-                            `
-
-                        $('.data-pie ul').append(couponList)
+                            $('.data-pie ul').append(
+                                `
+                                    <li>
+                                        <div class="donut-pie ${arr[i].color}">
+                                            <figure>
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect x="1.5" y="1.5" width="13" height="13" rx="6.5" stroke-width="3"/>
+                                                </svg>
+                                            </figure>
+                                            <div>${arr[i].coupon}</div>
+                                        </div>
+                                        <div class="grey bold">${arr[i].amount}</div>
+                                    </li>
+                                `
+                            );
                     }
                 }
+                    new Chartist.Pie('.graph-pie',
+                    { series: seriesArr },
+                    {
+                        donut: true,
+                        donutWidth: 20,
+                        donutSolid: true,
+                        startAngle: 270,
+                        showLabel: false,
+                        chartPadding: 0,
+                        labelOffset: 0,
+                    });
+                
+            } else {
+                cuponsHtml = `
+                    <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
+                        <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
+                    </div>
+                    <div class="d-flex align-items justify-around">
+                        <div class="no-coupon">${emptyCoupons}</div>
+                        <div class="msg-coupon">Nenhum cupom utilizado</div>
+                    </div>
+                    
+                `;
+                $("#block-coupons").html(cuponsHtml);
             }
-            new Chartist.Pie('.graph-pie',
-            { series: seriesArr },
-            {
-                donut: true,
-                donutWidth: 20,
-                donutSolid: true,
-                startAngle: 270,
-                showLabel: false,
-                chartPadding: 0,
-                labelOffset: 0,
-            });
-            $('#card-coupon').height('232px');
-            $('#card-coupon .onPreLoad *' ).remove();
+            $('#card-coupons .ske-load').hide();
         }
     });
 }
@@ -293,7 +305,7 @@ function loadFrequenteSales() {
 
             $.each(response.data, function (i, item) {
                 let value = removeMoneyCurrency(item.value);
-                let newV = value.replace(/[\D]+/g,'');
+                let newV = formatCash(String(parseFloat(value)).replace('.',''));
                 salesBlock = `
                     <div class="box-payment-option pad-0">
                         <div class="d-flex justify-content-between align-items list-sales">
@@ -307,7 +319,7 @@ function loadFrequenteSales() {
                             </div>
                             <div class="d-flex justify-content-between align-items" style="min-width: 100px;">
                                 <div class="grey font-size-14">${item.sales_amount}</div>
-                                <div class="grey font-size-14 value"><strong>R$ ${nFormatter(parseInt(newV), 1)}</strong></div>
+                                <div class="grey font-size-14 value"><strong>${newV}</strong></div>
                             </div>
                         </div>
                     </div>
@@ -323,7 +335,7 @@ function loadStores() {
     $(".box-donut").addClass('invis');
     $('.no-graph').remove();
     $('.onPreLoad *').remove();
-    $('.onPreLoad').append(skeLoad);
+    $('.onPreLoad').html(skeLoad);
 
     $.ajax({
         method: "GET",
@@ -353,10 +365,13 @@ function loadStores() {
                     );
                 });
 
-                let info = JSON.parse(sessionStorage.getItem('info'));
-                if(!isEmpty(info)) {
-                    $("#select_projects").val(info.company);
+                //let info = JSON.parse(sessionStorage.getItem('info'));
+                if(sessionStorage.info) {
+                    $("#select_projects").val(JSON.parse(sessionStorage.getItem('info')).company);
                 }
+                // if(!isEmpty(info)) {
+                //     $("#select_projects").val(info.company);
+                // }
 
             } else {
                 $("#export-excel").hide();
@@ -366,6 +381,16 @@ function loadStores() {
 
             reload();
         }
+    });
+}
+
+function changeCompany() {
+    $("#select_projects").on("change", function () {
+        $('.onPreLoad *').remove();
+        $('.onPreLoad').html(skeLoad);
+        $.ajaxQ.abortAll();
+        updateStorage({company: $(this).val()})
+        loadStores();
     });
 }
 
@@ -586,15 +611,22 @@ function exportReports() {
 
 }
 
-function updateStorage(value){
+function updateStorage(v){
 
-    let prevData = JSON.parse(sessionStorage.getItem('info'));
-    if(!isEmpty(prevData)){
-        Object.keys(value).forEach(function(val, key){
-            prevData[val] = value[val];
-       })
-       sessionStorage.setItem('info', JSON.stringify(prevData));
-    }
+    // let prevData = JSON.parse(sessionStorage.getItem('info'));
+    // if(!isEmpty(prevData)){
+    //     Object.keys(value).forEach(function(val, key){
+    //         prevData[val] = value[val];
+    //    })
+    //    sessionStorage.setItem('info', JSON.stringify(prevData));
+    // }
+
+    var existing = sessionStorage.getItem('info');
+    existing = existing ? JSON.parse(existing) : {};
+    Object.keys(v).forEach(function(val, key){
+        existing[val] = v[val];
+   })
+    sessionStorage.setItem('info', JSON.stringify(existing));
 }
 
 function changeCalendar() {
@@ -901,6 +933,14 @@ function appendStateDataToStateList(data, index) {
     $("#list-states").append(stateData);
 }
 
+const formatCash = n => {
+    if (n < 1e3) return n;
+    if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K";
+    if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "M";
+    if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "B";
+    if (n >= 1e12) return +(n / 1e12).toFixed(1) + "T";
+};
+
 let skeLoad = `
     <div class="ske-load">
         <div class="py-0">
@@ -947,3 +987,36 @@ let skeLoadStateMetric = `
     <div class="skeleton skeleton-li" style="width: 100%; height: 20px; margin-bottom: 0px;"></div>
 `;
 
+let emptyCoupons = `
+<svg width="132" height="126" viewBox="0 0 132 126" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M123.632 78.3097C120.484 90.0588 113.922 100.611 104.777 108.63C95.6322 116.65 84.3144 121.779 72.2549 123.366C60.1954 124.954 47.9359 122.93 37.0268 117.55C26.1176 112.17 17.0487 103.676 10.9669 93.1423L32.2712 80.8423C35.9202 87.1627 41.3616 92.2591 47.9071 95.4869C54.4526 98.7148 61.8082 99.9293 69.0439 98.9767C76.2796 98.0241 83.0703 94.9472 88.5574 90.1352C94.0444 85.3232 97.9813 78.9922 99.8702 71.9428L123.632 78.3097Z" fill="#F4F6FB" fill-opacity="0.8"/>
+<path d="M64.2275 0.892341C77.7658 0.892339 90.9257 5.35954 101.666 13.6011C112.407 21.8427 120.128 33.398 123.632 46.475L99.8702 52.8419C97.7678 44.9958 93.1352 38.0625 86.6908 33.1176C80.2464 28.1727 72.3505 25.4923 64.2275 25.4923L64.2275 0.892341Z" fill="#F4F6FB" fill-opacity="0.25"/>
+<path d="M123.632 46.475C126.426 56.9026 126.426 67.8821 123.632 78.3097L99.8702 71.9428C101.547 65.6862 101.547 59.0985 99.8702 52.8419L123.632 46.475Z" fill="#E8EAEB"/>
+<path d="M10.9669 93.1423C5.56919 83.7932 2.72751 73.1878 2.72751 62.3923C2.72751 51.5968 5.5692 40.9915 10.9669 31.6423C16.3647 22.2932 24.1283 14.5295 33.4775 9.13177C42.8267 3.73402 53.432 0.892339 64.2275 0.892341L64.2275 25.4923C57.7502 25.4923 51.387 27.1974 45.7775 30.436C40.168 33.6747 35.5098 38.3328 32.2712 43.9423C29.0325 49.5518 27.3275 55.915 27.3275 62.3923C27.3275 68.8696 29.0325 75.2328 32.2712 80.8423L10.9669 93.1423Z" fill="#F4F6FB" fill-opacity="0.6"/>
+</svg>
+`;
+
+// abort all ajax
+$.ajaxQ = (function(){
+    var id = 0, Q = {};
+  
+    $(document).ajaxSend(function(e, jqx){
+      jqx._id = ++id;
+      Q[jqx._id] = jqx;
+    });
+    $(document).ajaxComplete(function(e, jqx){
+      delete Q[jqx._id];
+    });
+  
+    return {
+      abortAll: function(){
+        var r = [];
+        $.each(Q, function(i, jqx){
+          r.push(jqx._id);
+          jqx.abort();
+        });
+        return r;
+      }
+    };
+  
+  })();

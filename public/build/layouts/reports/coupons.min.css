@@ -1358,6 +1358,8 @@ h4.number{
     min-height: 142px; 
 }
 
+.card-coupon { height: 219px; }
+
 .box-resume .balance:nth-child(1),
 .box-resume .balance:nth-child(2) { margin-bottom: 20px; }
 

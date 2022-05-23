@@ -579,7 +579,7 @@
                                         </div>
                                     </div>
                                     <div class="inner-comission">
-                                        <div class="card inner pad-bottom-0" id="card-coupon">
+                                        <div class="card inner pad-bottom-0 card-coupon" id="card-coupon">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Cupons</strong>
