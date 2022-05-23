@@ -386,7 +386,7 @@ class ProjectService
      * @param bool $affiliate
      * @return AnonymousResourceCollection
      */
-    public function getUserProjects(string $pagination, array $status, $affiliate = false)
+    public function getUserProjects(string $pagination, array $status, $affiliate = false, $companyId = '')
     {
         $userId = auth()->user()->account_owner_id;
 
@@ -434,7 +434,20 @@ class ProjectService
                 ->orderBy('projects.id', 'DESC');
         }
 
+        if(!empty($companyId)){
+            $projects = $projects->rightJoin(
+                'checkout_configs',
+                function ($join) use ($companyId) {
+                    $join->on('projects.id', '=', 'checkout_configs.project_id')
+                        ->where('checkout_configs.company_id', $companyId)
+                        ->whereNull('checkout_configs.deleted_at');
+                }
+            );
+        }
+
         if ($pagination) {
+            // $projects = $projects->toSql();
+            // Log::debug($projects);
             $projects = $projects->get();
             if(count($projects) == 0) {
                 $apiSale = Sale::where('owner_id', auth()->user()->account_owner_id)->exists();

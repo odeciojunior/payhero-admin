@@ -20,10 +20,12 @@
         </div>
         <div class="row" style="margin-top:30px">
             <div class="col-12">
-                <label for="company">Selecione sua empresa</label>
-                <select class="sirius-select" id="select_companies" name="company">
+                <label for="company">Empresa</label>
+                <input type="text" disabled class="company_name">
+                <input type="hidden" name="company" id="company-navbar-value">
+                {{-- <select class="sirius-select" id="select_companies" name="company"> --}}
                     {{--           JS LOAD           --}}
-                </select>
+                {{-- </select> --}}
             </div>
         </div>
     </div>

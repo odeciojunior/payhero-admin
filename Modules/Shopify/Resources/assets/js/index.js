@@ -1,4 +1,8 @@
 $(document).ready(function () {
+
+    $("#company-navbar-value").val( $("#company-navbar").val() )
+    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
+
     getCompanies();
 
     function getCompanies() {
@@ -516,4 +520,8 @@ $(document).ready(function () {
             }
         });
     });
+
+    $("#company-navbar-value").val( $("#company-navbar").val() )
+    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
+
 });

@@ -4,6 +4,10 @@ $(document).ready(function () {
     let woocommerceIntegrationNotFound = false;
 
     loadingOnScreen();
+
+    $("#company-navbar-value").val( $("#company-navbar").val() )
+    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
+
     $('#btn-integration-model').hide();
 
     index();
@@ -38,7 +42,7 @@ $(document).ready(function () {
             $('#button-information').hide();
             $("#companies-not-approved-getnet").show();
         } else if (!allCompanyNotApproved) {
-            
+
 
             $('#btn-integration-model').show();
             $('#button-information').show().addClass('d-flex').css('display', 'flex');

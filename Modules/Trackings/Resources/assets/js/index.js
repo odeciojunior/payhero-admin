@@ -200,7 +200,7 @@ $(() => {
 
         $.ajax({
             method: 'GET',
-            url: '/api/projects?select=true&affiliate=false',
+            url: '/api/projects?select=true&affiliate=false&company='+ $("#company-navbar").val(),
             dataType: 'json',
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

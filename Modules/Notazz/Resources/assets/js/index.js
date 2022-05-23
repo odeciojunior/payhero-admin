@@ -166,7 +166,7 @@ $(document).ready(function () {
                         var integration_id = $(this).attr("integration");
                         $.ajax({
                             method: "GET",
-                            url: "/api/projects?select=true",
+                            url: "/api/projects?select=true&company="+ $("#company-navbar").val(),
                             headers: {
                                 Authorization: $(
                                     'meta[name="access-token"]'
@@ -363,7 +363,7 @@ $(document).ready(function () {
         clearForm();
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true",
+            url: "/api/projects?select=true&company="+ $("#company-navbar").val(),
             data: {
                 status: "active",
             },

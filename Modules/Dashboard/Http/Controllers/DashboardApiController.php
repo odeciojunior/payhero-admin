@@ -227,7 +227,7 @@ class DashboardApiController extends Controller
     public function getAccountHealth(Request $request)
     {
         try {
-<<<<<<< HEAD
+//<<<<<<< HEAD
             if ($request->has('company') && !empty($request->input('company'))) {
                 $values = $this->getDataAccountHealth($request->company);
 
@@ -244,14 +244,14 @@ class DashboardApiController extends Controller
                 'message' => 'Ocorreu um erro, tente novamente mais tarde',
             ],400);
 
-=======
+//=======
             if (!$request->has('company')) {
                 return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
             }
             $values = $this->getDataAccountHealth($request->company);
 
             return response()->json($values, 200);
->>>>>>> master
+//>>>>>>> master
         } catch (Exception $e) {
             report($e);
             return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);

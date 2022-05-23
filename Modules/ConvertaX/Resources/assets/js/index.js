@@ -324,7 +324,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true",
+            url: "/api/projects?select=true&company="+ $("#company-navbar").val(),
             data: {
                 status: "active",
             },

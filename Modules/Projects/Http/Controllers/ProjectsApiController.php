@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Transformers\CompaniesSelectResource;
 use Modules\Core\Transformers\CompanyResource;
@@ -75,7 +76,14 @@ class ProjectsApiController extends Controller
                     ];
                 }
 
-                return $projectService->getUserProjects($pagination, $projectStatus, $affiliation);
+                if(!empty($request->input('company'))){
+                    $companyId = hashids_decode($request->input('company'));
+                }
+                else{
+                    $companyId='';
+                }
+
+                return $projectService->getUserProjects($pagination, $projectStatus, $affiliation, $companyId);
 
             } else {
                 return response()->json([
@@ -508,7 +516,7 @@ class ProjectsApiController extends Controller
         $resume['producer'] = $producer->name ?? '';
 
         return $resume;
-    } 
+    }
 
     public function getCompanieByProject($id)
     {

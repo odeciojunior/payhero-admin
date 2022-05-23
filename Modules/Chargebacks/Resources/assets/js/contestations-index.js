@@ -196,7 +196,7 @@ $(document).ready(function () {
             });
         });
     }
-    
+
     function atualizar(link = null) {
         loadOnTable("#chargebacks-table-data", "#chargebacks-table");
 
@@ -435,7 +435,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true",
+            url: "/api/projects?select=true&company="+ $("#company-navbar").val(),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),
@@ -477,7 +477,7 @@ $(document).ready(function () {
         atualizar();
         getTotalValues();
     });
-    
+
     $('#transaction').on('change paste keyup select', function () {
         let val = $(this).val();
 
