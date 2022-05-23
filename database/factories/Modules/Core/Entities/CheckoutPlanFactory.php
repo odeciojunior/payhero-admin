@@ -24,9 +24,7 @@ class CheckoutPlanFactory extends Factory
     {
         return [
             'checkout_id'=>Checkout::factory(),
-            'plan_id'=>function (array $attributes) {
-                return Checkout::find($attributes['checkout_id'])->plan_id;
-            },
+            'plan_id'=>null,
             'amount'=>1
         ];
     }    

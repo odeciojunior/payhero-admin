@@ -38,6 +38,9 @@ class Invitation extends Model
     public const INVITATION_PENDING = 2;
     public const INVITATION_EXPIRED = 3;
 
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DISABLED = 0;
+
     /**
      * @var string
      */
