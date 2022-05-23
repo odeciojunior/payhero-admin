@@ -75,6 +75,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $total_commission_value
  * @property int $attendance_average_response_time
  * @property string $mkt_information
+ * @property boolean $block_attendance_balance
  * @property Collection $affiliateRequests
  * @property Collection $affiliates
  * @property Collection $companies
@@ -151,9 +152,9 @@ class User extends Authenticable
         'account_owner_id',
         'deleted_project_filter',
         'id_wall_result',
-        'sex',
-        'mother_name',
-        'has_sale_before_getnet',
+        'sex',//
+        'mother_name',//
+        'has_sale_before_getnet',//
         'account_is_approved',
         'chargeback_rate',
         'account_score',
@@ -168,9 +169,9 @@ class User extends Authenticable
         'level',
         'ignore_automatic_benefits_updates',
         'total_commission_value',
-        'show_old_finances',
+        'show_old_finances',//
         'mkt_information',
-        'asaas_alert',
+        'block_attendance_balance',
         'created_at',
         'updated_at',
         'deleted_at',

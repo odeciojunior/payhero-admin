@@ -218,7 +218,7 @@ $(document).ready(function () {
                 $("#title_available_money").html($titleAvailableMoney)
 
 
-                let title = "Valor incluindo o saldo bloqueado de R$ " + data.blocked_balance_total;
+                let title = "Valor incluindo o saldo retido de R$ " + data.blocked_balance_total;
 
                 $('#info-total-balance').attr('title', title).tooltip({placement: 'bottom'});
 

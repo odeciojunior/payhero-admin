@@ -137,6 +137,18 @@ mix.babel([
 ],'public/build/layouts/astronmembers/index.min.js');
 
 /**
+ * Modules/NotificacoesInteligentes/Resources/views/index.blade.php
+ */
+ mix.styles([
+    'Modules/ConvertaX/Resources/assets/css/index.css',
+    'resources/modules/global/css/empty.css',
+    'Modules/NotificacoesInteligentes/Resources/assets/css/index.css',
+],'public/build/layouts/notificacoesInteligentes/index.min.css');
+mix.babel([
+    'Modules/NotificacoesInteligentes/Resources/assets/js/index.js'
+],'public/build/layouts/notificacoesInteligentes/index.min.js');
+
+/**
  * Modules/Attendance/Resources/views/index.blade.php
  */
 mix.styles([

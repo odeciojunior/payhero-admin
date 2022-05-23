@@ -4,8 +4,20 @@
     <link rel="stylesheet" href="{{ mix('build/layouts/finances/multi.min.css') }}">
 @endpush
 
+
 @section('content')
     <div class="page">
+
+        <div id="project-empty-title">
+            <div class="page-header container px-25 px-md-30" style="padding-bottom: 0; padding-top:30px; display: none;">
+                <div class="col-12 col-md-7 order-0 px-md-15" style="padding: 10px 0 20px">
+                    <h1 class="page-title d-flex">
+                        Finanças
+                    </h1>
+                </div>
+            </div>
+        </div>
+
         <div id="project-not-empty" style="display:none">
             <div class="page-header container px-25 px-md-30" style="padding-bottom: 0; padding-top:30px">
                 <div class="row align-items-center justify-content-between" style="min-height:50px">

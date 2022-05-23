@@ -84,7 +84,7 @@ class PixelService
                 'name' => $dataValidated['name'],
                 'code' => $dataValidated['code'],
                 'platform' => $dataValidated['platform'],
-                'status' => (bool)$dataValidated['status'],
+                'status' => $dataValidated['status'] == 'true',
                 'checkout' => $dataValidated['checkout'] == 'true',
                 'send_value_checkout' => $dataValidated['send_value_checkout'] == 'true',
                 'purchase_all' => $dataValidated['purchase_all'] == 'true',

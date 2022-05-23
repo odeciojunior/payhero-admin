@@ -5,7 +5,7 @@
     <div style="display: none" id="edit-coupon">
 
 
-        <div class="modal-content s-border-radius" style="width:646px; height:706px">
+        <div class="modal-content s-border-radius" style="width:646px; height:auto">
 
             <div class="mdtpad simple-border-bottom">
                 <span class="" id="modal-title"
@@ -24,7 +24,7 @@
             </div>
 
             <div id="c-edit_step0" >
-                <div id="coupon_edit_step0" style="height: 553px; overflow:hidden">
+                <div id="coupon_edit_step0" style="max-height: 553px; min-height:480px; overflow:hidden">
 
                     <div style=' position: relative; padding: 25px 30px 20px' class=" simple-border-bottom">
     
@@ -216,7 +216,7 @@
                     </div>
                 </div>
 
-                <div class="modal-footer " style="position: absolute;
+                <div class="modal-footer " style="
                     bottom: 0;
                     width: 646px;
                     border-top: 1px solid #EBEBEB;
@@ -246,7 +246,7 @@
             </div>
 
             <div id="c-edit_step1" style="display: none">
-                <div style='min-height: 100px; position: relative; padding:25px 25px 30px 30px' class=" ">
+                <div style='min-height: 100px; position: relative; padding:25px 25px 0px 25px' class=" ">
 
                     <div class="mb-20">
 
@@ -298,10 +298,10 @@
                         </svg>
                     </div> --}}
 
-                    <div class="d-flex modal-new-layout box-description">
-                        <input class="form-control form-control-lg search_input_create_coupon search_coupon" type="text" id="search_input2" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
-                        <div class="input-group input-group-lg" style="width: 678px;">
-                            <input onkeyup="set_description_value(this, $('.search_input_create_coupon'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
+                    <div class="d-flex modal-new-layout box-description" style="width: 594px">
+                        <input class="form-control form-control-lg search_input_create_coupon search_coupon search_input_create_coupon_edit_id" type="text" id="search_input2" placeholder="Pesquisa por nome" style="border-top-right-radius: 0;border-bottom-right-radius: 0; height: 48px !important; border-right: 0;">
+                        <div class="input-group input-group-lg" style="width: 644px;">
+                            <input onkeyup="set_description_value(this, $('.search_input_create_coupon_edit_id'))" class="form-control" type="text" id="search_input_description" placeholder="Pesquisa por descrição" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
                             <div class="input-group-append">
                                 <span class="input-group-text">
                                     <img src="/build/global/img/icon-search.svg" alt="Icon Search">
@@ -311,7 +311,7 @@
                     </div>
 
                     <div id="search_result2" class="mt-20  "
-                        style=" height: 312px; width:598px; overflow: hidden">
+                        style=" height: 312px; width:621px; overflow: hidden">
 
                         {{-- <div class="item item_selected" >
                                 <span style="background-image: url(http://dev.woo.com/wp-content/uploads/2021/07/sunglasses-2.jpg)" class="image"></span>
@@ -342,7 +342,7 @@
 
                 </div>
 
-                <div class="modal-footer" style="position: absolute;
+                <div class="modal-footer" style="
                     bottom: 0px;
                     text-align: center;
                     width:646px;
@@ -359,7 +359,7 @@
             <div id="c-edit_step2" style="display: none">
 
 
-                <div style='padding: 25px 30px 44px' class=" simple-border-bottom">
+                <div style='padding: 25px 30px 25px' class=" simple-border-bottom">
 
                     <div>
 
@@ -504,7 +504,7 @@
 
                 <input type="hidden" name="value" id="2c_value">
 
-                <div class="modal-footer" style="position: absolute;
+                <div class="modal-footer" style="
                     bottom: 0;
                     width: 646px;
                     border-top: 1px solid #EBEBEB;

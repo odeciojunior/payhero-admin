@@ -9,6 +9,26 @@ var cancel_edit_rules = []
 
 let projectId = $(window.location.pathname.split('/')).get(-1);
 
+function formatMoney(input) {
+    $(input).on('blur', function() {
+        if($(this).val().length > 2) return;
+        $(this).val( new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format($(this).val() ) );
+        // input = this
+        // if($(input).val().length > 2) return;
+        // $(input).val( new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format($(input).val() ) );
+    });    
+}
+
+
+function setBodyHight(n1, n2){
+    
+    // $('#coupon_edit_step0').css('height', n1);
+    // $('#coupon_edit_step0').css('min-height',468);
+    // $('#edit-coupon .modal-content').css('height', n2);
+}
+// $('.back-btn').on('click',()=>{
+//     setBodyHight('auto', 'auto');
+// })
 
 function count_plans_coupons(qtde) { //thumbnails
     
@@ -143,17 +163,24 @@ function coupon_rules(data) {
         html += '<strong>dinheiro</strong>'
         value = 'R$'+data.value
     }
+    console.log(data);
+    //if(!expires) data.nao_vence = 1
     var expires = data.nao_vence?'Não vence':'';
-    if(data.expires_days < 0){
-        expires = '<span id="c-expire-label" style="color:">Vencido</span>'
+    if(data.nao_vence) data.expires_days = null
+    if(!data.nao_vence){
+
+        if(data.expires_days < 0){
+            expires = '<span id="c-expire-label" style="color:">Vencido</span>'
+        }
+        if(data.expires_days > 0){
+            expires = '<span style="color:">Vence em '+data.expires_days+' dia(s)</span>'
+        }
+        if(data.expires_days == 0){
+            expires = '<span style="color:">Vence hoje</span>'
+        }
     }
-    if(data.expires_days > 0){
-        expires = '<span style="color:">Vence em '+data.expires_days+' dia(s)</span>'
-    }
-    if(data.expires_days == 0){
-        expires = '<span style="color:">Vence hoje</span>'
-    }
-    if(data.expires_days >= 0){
+    
+    if(data.expires_days >= 0 || data.nao_vence){
         $('#c-edit_status_label').html('Desconto ativo');
         $('#c-edit_status').prop('checked', true);
     }else{
@@ -492,7 +519,8 @@ $(function () {
     $(document).on('change', '#edit-coupon-type', function (event) {
         if ($(this).val() == 1) {
             cuponType = 1;
-            $(".coupon-value").mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
+            $(".coupon-value").maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+
         } else {
             cuponType = 0;
             $('.coupon-value').mask('00%', {reverse: true});
@@ -501,14 +529,14 @@ $(function () {
     $(document).on('change', '#create-coupon-type', function (event) {
         if ($(this).val() == 1) {
             cuponType = 1;            
-            $(".coupon-value").mask('#.##0,00', {reverse: true});          
+            $(".coupon-value").maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});          
               
         } else {
             cuponType = 0;
             $('.coupon-value').mask('00%', {reverse: true});
         }
     });
-    $(".rule-value").mask('#.##0,00', {reverse: true});
+    $(".rule-value").maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
 
     $('.rule-value').on('blur', function () {
         applyMaskManually(this);
@@ -639,6 +667,7 @@ $(function () {
             if(items_selected.length > 9){
 
                 $('.edit-disc-plans-thumbs-scroll').css('margin-bottom', 16)
+                $('.search_result2').css('height', 317)
                 $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar('destroy')
                 $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar({
                     axis: 'x',
@@ -649,6 +678,7 @@ $(function () {
             }else{
                 $('.edit-disc-plans-thumbs-scroll').mCustomScrollbar('destroy')
                 $('.edit-disc-plans-thumbs-scroll').css('margin-bottom', 0)
+                $('.search_result2').css('height', 334)
 
             }
 
@@ -715,8 +745,8 @@ $(function () {
         $("#percent-edit").hide()
     })
 
-    $('#value-edit').mask('#.##0,00', {reverse: true});
-
+    $('#value-edit').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+    formatMoney('#value-edit')
     //var rules = edit_rules
     
     $("#add_rule-edit").on('click', function () {
@@ -825,15 +855,10 @@ $(function () {
             $(this).siriusSelect()
         })
         
-        $('.value').mask('#.##0,00', { reverse: true });
+        $('.value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
 
-        // $('.value_edit').on('change', function () {
-        //     if($(this).val().length<3){
-        //         $(this).val($(this).val().padStart(2, '0'))
-        //         $(this).val(','+$(this).val())
-        //         $(this).val($(this).val().padStart(4, '0'))
-        //     }
-        // })
+        formatMoney('.value_edit')
+        
 
 
         set_rules_events()
@@ -994,6 +1019,7 @@ $(function () {
     $("#save_name_edit").on('click', function () {
         let formData = new FormData(document.getElementById('form-update-discount'));
         let id = $('#discount-id').val();
+        $('#edit-name-box').animate({height:44})
 
         $.ajax({
             method: "POST",
@@ -1050,7 +1076,7 @@ $(function () {
             $('#date_range').val('')
         }else{
             $('#date_range').prop('disabled', false)
-            $('#date_range').focus()
+            //$('#date_range').focus()
 
         }
     })
@@ -1061,7 +1087,7 @@ $(function () {
             $('#date_range2').val('')
         }else{
             $('#date_range2').prop('disabled', false)
-            $('#date_range2').focus()
+            //$('#date_range2').trigger('click')
         }
     })
 
@@ -1107,10 +1133,12 @@ $(function () {
     $('#edit-name').on('click', edit_name);
     $('#edit-plans').on('click',edit_plans);
     // carregar modal de edicao
+
     $(document).on('click', '.edit-coupon', function () {
         let coupon = $(this).attr('coupon');
         var discount = $(this).attr('discount');
         
+        setBodyHight('auto','auto');
         
 
         $.ajax({
@@ -1201,6 +1229,10 @@ $(function () {
                     // mount_selected_items()
                     // set_item_click()
                     show_plans()
+                    
+                    if(!response.expires && response.status){
+                        response.nao_vence = 1
+                    }
                     coupon_rules(response)
 
                     $('#c-cancel_name_edit').trigger('click')
@@ -1223,8 +1255,8 @@ $(function () {
                     
                     
                     
-                    response.rule_value = response.rule_value.replace(',','.')
-                    response.value = response.value.replace(',','.')
+                    // response.rule_value = response.rule_value.replace(',','.')
+                    // response.value = response.value.replace(',','.')
                     $('#2minimum_value').val(response.rule_value);
                     
 
@@ -1252,7 +1284,7 @@ $(function () {
 
                         
                     }
-                    
+                    // console.log(response.status);
                     if(response.status==1){
                         // $('#c-edit_status_label').css('color', '#41DC8F');
                         $('#c-edit_status_label').html('Desconto ativo');
@@ -1684,7 +1716,8 @@ $(function () {
 
     let projectId = $(window.location.pathname.split('/')).get(-1);
 
-    $('#value').mask('#.##0,00', {reverse: true});
+    $('#value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+    formatMoney('#value')
 
 
 
@@ -1797,15 +1830,10 @@ $(function () {
 
 
 
-        $('.value').mask('#.##0,00', {reverse: true});
+        $('.value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
 
-        // $('.value_edit').on('change', function () {
-        //     if($(this).val().length<3){
-        //         $(this).val($(this).val().padStart(2, '0'))
-        //         $(this).val(','+$(this).val())
-        //         $(this).val($(this).val().padStart(4, '0'))
-        //     }
-        // })
+        formatMoney('.value')
+        
 
         set_rules_events()
         if(!edit){
@@ -2017,7 +2045,7 @@ $(function () {
 
     })
 
-    $('input').on('change', function () {
+    $('#coupon-modals input').on('change', function () {
         $(this).val($(this).val().replace(/[^\p{L}\p{N}\p{P}\p{Z}^$\n]/gu, ''))
 
     })
@@ -2277,16 +2305,24 @@ $(function () {
     // }
 
     // Create new cupouns
-    $('#discount_value').mask('#.##0,00', { reverse: true });
-    $('#minimum_value').mask('#.##0,00', { reverse: true });
-    $('#2discount_value').mask('#.##0,00', { reverse: true });
-    $('#2minimum_value').mask('#.##0,00', { reverse: true });
+    $('#discount_value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+    $('#minimum_value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+    $('#2discount_value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
+    $('#2minimum_value').maskMoney({thousands: '.', decimal: ',', allowZero: true, prefix: ''});
     
+    
+    formatMoney('#discount_value')
+    formatMoney('#minimum_value')
+    formatMoney('#2discount_value')
+    formatMoney('#2minimum_value')
+
 
     $('.coupon-next').click(function () {
         $('.step1').hide()
         $('.step2').show()
         $('#c_name').focus()
+        $('#nao_vence').prop('checked', false)
+        $('#date_range').prop('disabled', false)
 
     })
 
@@ -2516,7 +2552,7 @@ $(function () {
 
                 $('#c-edit-name').show()
 
-
+                console.log('oi');
                 //coupon_rules()
                 // show_rules(edit_rules)
                 plans_count2()
@@ -2629,18 +2665,20 @@ $(function () {
             $('.edit-plans-thumbs').html(items_thumbs)
 
             if(items_selected.length > 9){
-
+                
                 $('.edit-plans-thumbs-scroll').css('margin-bottom', 16)
+                $('#search_result2').css('height', 312)
                 $('.edit-plans-thumbs-scroll').mCustomScrollbar('destroy')
                 $('.edit-plans-thumbs-scroll').mCustomScrollbar({
                     axis: 'x',
                     advanced: {
-                      autoExpandHorizontalScroll: true
+                        autoExpandHorizontalScroll: true
                     }
-                  })
+                })
             }else{
                 $('.edit-plans-thumbs-scroll').mCustomScrollbar('destroy')
                 $('.edit-plans-thumbs-scroll').css('margin-bottom', 0)
+                $('#search_result2').css('height', 328)
 
             }
 
@@ -2708,6 +2746,9 @@ $(function () {
     }
 
     $('#c-edit-rules').click(function () {
+
+        setBodyHight('auto', 698);
+
         $('#c-edit_step0').hide()
         $('#c-edit_step2').show()
         if($('#nao_vence2').prop('checked')){
@@ -2755,10 +2796,17 @@ $(function () {
             return false;
         }
 
+        if($('#date_range2').val()=='' && !$('#nao_vence2').is(':checked')){
+            //$('#date_range2').focus().addClass('warning-input')
+            alertCustom("error", 'Preencha uma data de vencimento ou marque "Não vence"');
+            return false;
+        }
+
         if($('#2c_type_value').prop('checked')) $('#2c_value').val($('#2discount_value').val());
 
         if($('#2c_type_percent').prop('checked')) $('#2c_value').val($('#2percent_value').val());
 
+        cupom_data.nao_vence = $('#nao_vence2').prop('checked')?1:0
         cupom_data.value = $('#2c_value').val()
         cupom_data.rule_value = $('#2minimum_value').val()
         cupom_data.type = $('#2c_type_value').prop('checked')?1:0
@@ -2802,10 +2850,7 @@ $(function () {
 
     $('#all-plans').click(function () {
         items_selected = []
-        // $('.coupon-next').click()
-        $('.step1').hide()
-        $('.step2').show()
-        $('#c_name').focus()
+        $('.coupon-next').click()
 
         return false
     })
@@ -2891,10 +2936,10 @@ $(function () {
             $('#mm-arrow-up').show()
 
         }else{
-            $('#show_plans').stop(true, false).animate({
-                height: "88px"
-            });
-
+            // $('#show_plans').stop(true, false).animate({
+            //     height: "88px"
+            // });
+            $('#show_plans').css('height', 88);
 
             var myDiv = document.getElementById('show_plans');
             myDiv.scrollTop = 0;
@@ -2928,9 +2973,10 @@ $(function () {
             $('#mm-arrow-up2').show()
 
         }else{
-            $('#c-show_plans').stop(true, false).animate({
-                height: "88px"
-            });
+            // $('#c-show_plans').stop(true, false).animate({
+            //     height: "88px"
+            // });
+            $('#c-show_plans').css('height', 88);
 
             var myDiv = document.getElementById('c-show_plans');
             myDiv.scrollTop = 0;

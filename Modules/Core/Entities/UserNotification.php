@@ -20,6 +20,7 @@ use App\Traits\LogsActivity;
  * @property bool $domain_approved
  * @property bool $send_push_shopify_integration_ready
  * @property bool $user_shopify_integration_store
+ * @property bool $ticket_open
  */
 class UserNotification extends Model
 {
@@ -45,6 +46,7 @@ class UserNotification extends Model
         'domain_approved',
         'shopify',
         'billet_generated',
+        'ticket_open'
     ];
     /**
      * @var bool

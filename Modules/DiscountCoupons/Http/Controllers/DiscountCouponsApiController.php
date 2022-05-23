@@ -119,15 +119,21 @@ class DiscountCouponsApiController extends Controller
                 }else{
                     //Check if coupon exists
                     $result = DiscountCoupon::where('project_id', $requestData["project_id"])
-                                                ->where('code', $requestData["code"])->first();
-                    if(!empty($result)){
-                        return response()->json(
-                            [
-                                'message' => 'Já existe um cupom de código "'.$requestData["code"].'"!',
-                            ],
-                            \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-                        );
-                    }
+                        ->where('status', 1)
+                        ->where('code', $requestData["code"])->get();
+                        if(!empty($result)){
+                            foreach($result as $couponsData){
+
+                                if(empty($couponsData->expires) || (!empty($couponsData->expires) && strtotime($couponsData->expires) >= time())){
+                                    return response()->json(
+                                    [
+                                        'message' => 'Já existe um cupom de código "'.$request["code"].'"!',
+                                    ],
+                                    \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+                                    );
+                                }
+                            }
+                        }
                 }
                 
                 if(empty($requestData["status"])){
@@ -317,24 +323,32 @@ class DiscountCouponsApiController extends Controller
                 }
 
                 
-                if(!empty($request['code'])){
-                    $result = DiscountCoupon::where('project_id', current(Hashids::decode($projectId)))
-                        ->where('id', '!=', $coupon->id)
-                        ->where('status', 1)
-                        ->where('code', $request["code"])->first();
-                    if(!empty($result)){
-                        return response()->json(
-                        [
-                            'message' => 'Já existe um cupom de código "'.$request["code"].'"!',
-                        ],
-                        \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-                        );
-                    }
-                }
+                
                 
                 if($request['set_status']==1){
                     if($request['status']==1){
                         $requestValidated['status']=1;
+
+                        if(!empty($request['code'])){
+                            $result = DiscountCoupon::where('project_id', current(Hashids::decode($projectId)))
+                                ->where('id', '!=', $coupon->id)
+                                ->where('status', 1)
+                                ->where('code', $request["code"])->get();
+                            
+                            if(!empty($result)){
+                                foreach($result as $couponsData){
+
+                                    if(empty($couponsData->expires) || (!empty($couponsData->expires) && strtotime($couponsData->expires) >= time())){
+                                        return response()->json(
+                                        [
+                                            'message' => 'Já existe um cupom de código "'.$request["code"].'"!',
+                                        ],
+                                        \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+                                        );
+                                    }
+                                }
+                            }
+                        }
                     }else{
                         $requestValidated['status']=0;
                     }
@@ -355,24 +369,7 @@ class DiscountCouponsApiController extends Controller
                 if(empty($requestValidated['progressive_rules'])) unset($requestValidated['progressive_rules']);
                 if(empty($requestValidated['name'])) unset($requestValidated['name']);
 
-                // if($requestValidated['plans']=='[]') //todos os planos
-                // {
-                    
-                    // $allPlans = Plan::where('project_id',current(Hashids::decode($projectId)))->with('products')->get();
-                    // $json = [];
-                    // foreach($allPlans as $plan){
-                    //     $id = Hashids::encode($plan->id);
-                    //     $jsonPlan = [ "id"=>$id, 
-                    //         "name"=> $plan->name, 
-                    //         "image"=> $plan->products[0]->photo, 
-                    //         "description"=> $plan->description ];
-                    //     array_push($json, $jsonPlan);
-                    // }
-                    // $json = json_encode($json);
-                    // $requestValidated['plans'] = $json;
-                    //Log::debug(($json));
-
-                // } 
+                
                 
                 $coupon->update($requestValidated);
 

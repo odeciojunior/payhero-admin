@@ -174,8 +174,8 @@ function blockedResume() {
                 $('#total_sales, #commission_blocked, #total').text('');
                 $('#total_sales').html(response.total_sales);
                 $('#commission_blocked').html(`R$ <span class="font-size-30 bold">${response.commission}</span>`);
-                $('.blocked-balance-icon').attr('title', 'Saldo bloqueado de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
-                $('.blocked-balance-icon').attr('data-original-title', 'Saldo bloqueado de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
+                $('.blocked-balance-icon').attr('title', 'Saldo retido de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
+                $('.blocked-balance-icon').attr('data-original-title', 'Saldo retido de convites: R$ ' + response.commission_invite).tooltip({ placement: 'bottom' });
                 $('#total').html(`R$ <span class="font-size-30 bold">${response.total}</span>`);
             }
         }

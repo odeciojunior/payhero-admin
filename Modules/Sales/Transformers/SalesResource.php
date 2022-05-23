@@ -7,6 +7,7 @@ use Google\Service\ShoppingContent\Amount;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Entities\Affiliate;
+use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\SaleWoocommerceRequests;
@@ -36,13 +37,18 @@ class SalesResource extends JsonResource
 
         $thankPageUrl = '';
         $thankLabelText = 'Link página de obrigado:';
-        if (isset($this->project->domains[0]->name)) {
-            $urlCheckout = "https://checkout.{$this->project->domains[0]->name}/order/";
+
+        $domain = Domain::select('name')->where('project_id', $this->project_id)->where('status', 3)->first();
+        $domainName = $domain->name??'cloudfox.net';
+
+        if (!empty($domain->name)) {
+            $urlCheckout = "https://checkout.{$domain->name}/order/";
             if (config('app.env') == 'homolog') {
                 $urlCheckout = "https://checkout-test.cloudfox.net/order/";
             }
             $thankPageUrl = $urlCheckout . Hashids::connection('sale_id')->encode($this->id);
         }
+
         if ($this->payment_method == 4 && $this->status <> Sale::STATUS_APPROVED) {
             $thankLabelText = 'Link página de Qrcode:';
         }
@@ -50,6 +56,10 @@ class SalesResource extends JsonResource
         //     $total = (FoxUtils::formatMoney( (FoxUtils::onlyNumbers($this->details->total) - $this->progressive_discount) / 100) );
         //     $this->details->total = $total;
         // }
+
+        
+        $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($this->id)."/download-boleto";
+
         $data = [
             'id' => hashids_encode($this->id, 'sale_id'),
             'upsell' => hashids_encode($this->upsell_id, 'sale_id'),
@@ -65,7 +75,7 @@ class SalesResource extends JsonResource
             'status_name' => $this->present()->getStatus($this->status),
             'dolar_quotation' => $this->dolar_quotation,
             'installments_amount' => $this->installments_amount,
-            'boleto_link' => $this->boleto_link,
+            'boleto_link' => $boletoLink,
             'boleto_digitable_line' => $this->boleto_digitable_line,
             'boleto_due_date' => $this->boleto_due_date,
             'attempts' => $this->attempts,
@@ -119,11 +129,11 @@ class SalesResource extends JsonResource
         }
 
         $data['asaas_amount_refund'] = '';
-        if(in_array($this->gateway_id,[Gateway::ASAAS_PRODUCTION_ID,Gateway::ASAAS_SANDBOX_ID]) && !empty($this->anticipation_status))
+        if(in_array($this->gateway_id,[Gateway::ASAAS_PRODUCTION_ID,Gateway::ASAAS_SANDBOX_ID]))
         {
             $data['asaas_amount_refund'] = $this->getSalesTaxesChargeback();
         }
-        
+
         $data['has_shopify_integration'] = null;
         if (count($shopifyIntegrations) > 0)
         {
@@ -181,10 +191,10 @@ class SalesResource extends JsonResource
     }
 
     public function getSalesTaxesChargeback()
-    {        
+    {
         $cashbackValue = !empty($this->cashback) ? $this->cashback->value:0;
         $saleTax = (new SaleService)->getSaleTaxRefund($this,$cashbackValue);
 
-        return FoxUtils::formatMoney(($saleTax + foxutils()->onlyNumbers($this->details->comission)) / 100); 
+        return FoxUtils::formatMoney(($saleTax + foxutils()->onlyNumbers($this->details->comission)) / 100);
     }
 }

@@ -57,7 +57,7 @@ class CreateAccountAsaas extends Command
                 $q->where('gateway_id', $this->gatewayId);
             })
                 ->where('contract_document_status', Company::STATUS_APPROVED)
-                ->where('bank_document_status', Company::STATUS_APPROVED)
+                //->where('bank_document_status', Company::STATUS_APPROVED)
                 ->where('address_document_status', Company::STATUS_APPROVED)
                 ->get();
 

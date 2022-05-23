@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\AsaasAnticipationRequests;
 use Modules\Core\Entities\BlockReasonSale;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\CompanyBankAccount;
 use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Transaction;
@@ -22,6 +23,7 @@ use Modules\Core\Entities\SaleGatewayRequest;
 use Modules\Core\Entities\SaleLog;
 use Modules\Core\Entities\SaleRefundHistory;
 use Modules\Core\Interfaces\Statement;
+use Modules\Core\Services\CompanyService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\StatementService;
@@ -33,6 +35,7 @@ use function Clue\StreamFilter\fun;
 class AsaasService implements Statement
 {
     public Company $company;
+    public CompanyBankAccount $companyBankAccount;
     public $gatewayIds = [];
     public $apiKey;
     public $companyId;
@@ -51,56 +54,30 @@ class AsaasService implements Statement
         return $this;
     }
 
-    public function getAvailableBalanceWithoutBlocking(): int
+    public function setBankAccount(CompanyBankAccount $companyBankAccount)
     {
-        return $this->company->asaas_balance;
+        $this->companyBankAccount = $companyBankAccount;
     }
 
     public function getAvailableBalance(): int
     {
-        return $this->getAvailableBalanceWithoutBlocking() - $this->getBlockedBalance();
+        return $this->company->asaas_balance;
     }
 
     public function getPendingBalance(): int
     {
-        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
-            $join->on('brs.sale_id', '=', 'transactions.sale_id')->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
-        })->whereNull('brs.id')
-        ->where('transactions.company_id', $this->company->id)
-        ->where('transactions.status_enum', Transaction::STATUS_PAID)
-        ->whereIn('transactions.gateway_id', $this->gatewayIds)
-        ->where('transactions.created_at', '>', '2021-09-20')
-        ->sum('transactions.value');
-    }
-
-    public function getPendingBalanceCount(): int
-    {
-        return Transaction::leftJoin('block_reason_sales as brs', function ($join) {
-            $join->on('brs.sale_id', '=', 'transactions.sale_id')->where('brs.status', BlockReasonSale::STATUS_BLOCKED);
-        })
-        ->whereNull('brs.id')
-        ->where('transactions.company_id', $this->company->id)
-        ->where('transactions.status_enum', Transaction::STATUS_PAID)
-        ->whereIn('transactions.gateway_id', $this->gatewayIds)
-        ->where('transactions.created_at', '>', '2021-09-20')
-        ->count();
+        return Transaction::where('transactions.company_id', $this->company->id)
+            ->where('transactions.status_enum', Transaction::STATUS_PAID)
+            ->whereIn('transactions.gateway_id', $this->gatewayIds)
+            ->where('transactions.created_at', '>', '2021-09-20')
+            ->sum('transactions.value');
     }
 
     public function getBlockedBalance(): int
     {
         return Transaction::where('company_id', $this->company->id)
             ->whereIn('gateway_id', $this->gatewayIds)
-            ->where('status_enum', Transaction::STATUS_TRANSFERRED)
-            ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
-            ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
-            ->sum('value');
-    }
-
-    public function getBlockedBalancePending(): int
-    {
-        return Transaction::where('company_id', $this->company->id)
-            ->whereIn('gateway_id', $this->gatewayIds)
-            ->where('status_enum', Transaction::STATUS_PAID)
+            ->whereIn('status_enum', [Transaction::STATUS_TRANSFERRED, Transaction::STATUS_PAID])
             ->join('block_reason_sales', 'block_reason_sales.sale_id', '=', 'transactions.sale_id')
             ->where('block_reason_sales.status', BlockReasonSale::STATUS_BLOCKED)
             ->sum('value');
@@ -153,25 +130,32 @@ class AsaasService implements Statement
 
     public function withdrawalValueIsValid($value): bool
     {
-        $availableBalance = $this->getAvailableBalance();
+        if (empty($value) || $value < 1) {
+            return false;
+        }
 
-        if (empty($value) || $value < 1 || $value > $availableBalance) {
+        $availableBalance = $this->getAvailableBalance();
+        $pendingBalance = $this->getPendingBalance();
+        (new CompanyService)->applyBlockedBalance($this, $availableBalance, $pendingBalance);
+
+        if ($value > $availableBalance) {
             return false;
         }
 
         return true;
     }
 
+    public function existsBankAccountApproved()
+    {
+        //verifica se existe uma chave pix aprovada
+        $this->companyBankAccount =  $this->company->getBankAccountTED();
+        return !empty($this->companyBankAccount);
+    }
+
     public function createWithdrawal($value)
     {
         try {
             DB::beginTransaction();
-
-            //verifica se existe uma conta bancaria aprovada 
-            $bankAccount =  $this->company->getBankAccountTED();
-            if(empty($bankAccount)){
-                return false;
-            }
 
             $this->company->update([
                 'asaas_balance' => $this->company->asaas_balance -= $value
@@ -194,17 +178,17 @@ class AsaasService implements Statement
                         Task::find(Task::TASK_FIRST_WITHDRAWAL)
                     );
                 }
-              
+
                 $withdrawal = Withdrawal::create(
                     [
                         'value' => $value,
                         'company_id' => $this->company->id,
                         'transfer_type'=>'TED',
-                        'bank' => $bankAccount->bank,
-                        'agency' => $bankAccount->agency,
-                        'agency_digit' => $bankAccount->agency_digit,
-                        'account' => $bankAccount->account,
-                        'account_digit' => $bankAccount->account_digit,
+                        'bank' => $this->companyBankAccount->bank,
+                        'agency' => $this->companyBankAccount->agency,
+                        'agency_digit' => $this->companyBankAccount->agency_digit,
+                        'account' => $this->companyBankAccount->account,
+                        'account_digit' => $this->companyBankAccount->account_digit,
                         'status' => $isFirstUserWithdrawal ? Withdrawal::STATUS_IN_REVIEW : Withdrawal::STATUS_PENDING,
                         'tax' => 0,
                         'observation' => $isFirstUserWithdrawal ? 'Primeiro saque' : null,
@@ -294,7 +278,6 @@ class AsaasService implements Statement
         return (new StatementService)->getPeriodBalance($this->company->id, $this->gatewayIds, $filters);
     }
 
-
     public function getResume()
     {
         $lastTransaction = Transaction::whereIn('gateway_id', $this->gatewayIds)
@@ -304,22 +287,23 @@ class AsaasService implements Statement
         if (empty($lastTransaction) && $this->company->asaas_balance == 0) {
             return [];
         }
-        $pendingBalance = $this->getPendingBalance();
-        $blockedBalance = $this->getBlockedBalance();
-        $availableBalance = $this->getAvailableBalanceWithoutBlocking() - $blockedBalance;
-        $blockedBalancePending = $this->getBlockedBalancePending();
-
-        $totalBlockedBalance = $blockedBalance + $blockedBalancePending;
-        $totalBalance = $availableBalance + $pendingBalance + $totalBlockedBalance;
         $lastTransactionDate = !empty($lastTransaction) ? $lastTransaction->created_at->format('d/m/Y') : '';
+
+        $blockedBalance = null;
+        $pendingBalance = $this->getPendingBalance();
+        $availableBalance = $this->getAvailableBalance();
+        $totalBalance = $availableBalance + $pendingBalance;
+
+        (new CompanyService)->applyBlockedBalance($this, $availableBalance, $pendingBalance, $blockedBalance);
 
         return [
             'name' => 'Asaas',
-            'available_balance' => foxutils()->formatMoney($availableBalance / 100),
-            'pending_balance' => foxutils()->formatMoney($pendingBalance / 100),
-            'blocked_balance' => foxutils()->formatMoney($totalBlockedBalance / 100),
-            'total_balance' => foxutils()->formatMoney($totalBalance / 100),
+            'available_balance' => $availableBalance,
+            'pending_balance' => $pendingBalance,
+            'blocked_balance' => $blockedBalance,
+            'total_balance' => $totalBalance,
             'total_available' => $availableBalance,
+            'pending_debt_balance' => 0,
             'last_transaction' => $lastTransactionDate,
             'id' => 'NzJqoR32egVj5D6'
         ];
@@ -491,7 +475,7 @@ class AsaasService implements Statement
 
             $saleService = new SaleService();
             $saleTax = 0;
-            if (!empty($sale->anticipation_status)) {
+            if ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
                 $cashbackValue = $sale->cashback()->first()->value ?? 0;
                 $saleTax = $saleService->getSaleTaxRefund($sale, $cashbackValue);
             }
@@ -529,7 +513,7 @@ class AsaasService implements Statement
                             'asaas_balance' => $company->asaas_balance -= $refundValue
                         ]);
 
-                    } elseif (!empty($sale->anticipation_status)) {
+                    } elseif ($sale->payment_method == Sale::CREDIT_CARD_PAYMENT) {
                         if ($refundTransaction->type <> Transaction::TYPE_PRODUCER) continue;
 
                         Transfer::create(
@@ -606,70 +590,4 @@ class AsaasService implements Statement
         }
     }
 
-    public function refundReceipt($hashSaleId, $transaction)
-    {
-        $credential = DB::table('gateways_companies_credentials')->select('gateway_api_key')
-            ->where('company_id', $transaction->company_id)->where('gateway_id', $transaction->gateway_id)->first();
-
-        if (!empty($credential)) {
-            $this->apiKey = $credential->gateway_api_key;
-        }
-
-        $domainAsaas = 'https://www.asaas.com';
-        $url = $domainAsaas . '/api/v3/payments/' . $transaction->sale->gateway_transaction_id;
-
-        $curl = curl_init($url);
-
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            'Content-Type: multipart/form-data',
-            'access_token: ' . $this->apiKey,
-        ]);
-
-        $result = curl_exec($curl);
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        $response = json_decode($result);
-
-        if (($httpStatus < 200 || $httpStatus > 299) && (!isset($response->errors))) {
-            //report(new Exception('Erro na executação do Curl - Asaas Anticipations' . $url . ' - code:' . $httpStatus));
-            report('Erro ao consultar o status do pagamento' . $url . ' - code:' . $httpStatus);
-        }
-
-        if (!empty($response) && !empty($response->status) && $response->status == 'REFUNDED' && !empty($response->transactionReceiptUrl)) {
-
-            $curl = curl_init($response->transactionReceiptUrl);
-
-            curl_setopt($curl, CURLOPT_ENCODING, '');
-            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-
-            $result = curl_exec($curl);
-
-            curl_close($curl);
-
-            $of = [
-                'href="/assets',
-                'src="/assets',
-                '</head>',
-                'Cobrança intermediada por ASAAS - gerar boletos nunca foi tão fácil.'
-            ];
-
-            $to = [
-                'href="' . $domainAsaas . '/assets',
-                'src="' . $domainAsaas . '/assets',
-                '<style>#loading-backdrop{display:none !important}</style>',
-                ''
-            ];
-
-            $view = str_replace($of, $to, $result);
-
-            return PDF::loadHtml($view);
-        }
-
-        return PDF::loadHtml('<h2>Não foi possivel gerar o comprovante de estorno!.</h2>');
-    }
 }

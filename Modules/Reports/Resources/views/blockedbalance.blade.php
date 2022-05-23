@@ -57,7 +57,7 @@
         <div style="display: none" class="page-header container">
             <!-- <div class="row align-items-center justify-content-between" style="min-height:50px">
                 <div class="col-6">
-                    <h1 class="page-title">Vendas com saldo bloqueado</h1>
+                    <h1 class="page-title">Vendas com saldo retido</h1>
                 </div>
             </div> -->
             <header class="top-system">
@@ -228,7 +228,7 @@
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12 card">
                             <div class="card-body">
-                                <h5 class="font-size-14 gray-600">Saldo bloqueado</h5>
+                                <h5 class="font-size-14 gray-600">Saldo retido</h5>
                                 <h4 id="commission_blocked"></h4>
                             </div>
                             <div class="s-border-right yellow"></div>

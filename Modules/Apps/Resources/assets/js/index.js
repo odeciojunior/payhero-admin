@@ -110,6 +110,11 @@ $(document).ready(function () {
                     $('#astronmembers-icon').removeClass('o-add-1').addClass('o-checkmark-1');
                 }
 
+                if (response.notificacoesinteligentesIntegrations > 0) {
+                    $('#notificacoesinteligentes-bt').addClass('added');
+                    $('#notificacoesinteligentes-icon').removeClass('o-add-1').addClass('o-checkmark-1');
+                }
+
                 if (response.hotbilletIntegrations > 0) {
                     $('#hotbillet-bt').addClass('added');
                     $('#hotbillet-icon').removeClass('o-add-1').addClass('o-checkmark-1');

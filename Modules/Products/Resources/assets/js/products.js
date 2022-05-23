@@ -277,7 +277,7 @@ $(document).ready(function () {
 
             $.ajax({
                 method: 'POST',
-                url: '/api/products/updateproducttype/' + product,
+                url: '/api/products/update-product-type/' + product,
                 dataType: "json",
                 headers: {
                     'Authorization': $('meta[name="access-token"]').attr('content'),

@@ -51,11 +51,11 @@ class PopulateIpLocalizationInCheckout extends Command
             foreach($checkouts as $checkout) {
                 $progress->advance();
 
-                $localization = json_decode(getRegionByIp($checkout->ip));
+                $localization = getRegionByIp($checkout->ip);
 
                 $checkout->update([
-                    'ip_localization' => $localization,
-                    'ip_state' => $localization->state
+                    'ip_localization' => json_encode($localization),
+                    'ip_state' => $localization['region']
                 ]);
             }
 

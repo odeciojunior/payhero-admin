@@ -8,6 +8,7 @@ use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\IntegrationLog;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\UnicodropIntegration;
+use Vinkla\Hashids\Facades\Hashids;
 
 class UnicodropService
 {
@@ -24,6 +25,9 @@ class UnicodropService
     {
         try{
             $comission = $sale->transactions->where('type', Transaction::TYPE_PRODUCER)->first()->value;
+            $domain = Domain::select('name')->where('project_id', $sale->project_id)->where('status', 3)->first();
+            $domainName = $domain->name??'cloudfox.net';
+            $boletoLink = "https://checkout.{$domainName}/order/".Hashids::connection('sale_id')->encode($sale->id)."/download-boleto";
 
             $data = [
                 'transaction_id' => hashids_encode($sale->id, 'sale_id'),
@@ -43,7 +47,7 @@ class UnicodropService
                 'document' => $sale->customer->document,
                 'shipping_value' => $sale->shipment_value,
                 'total_price' => $sale->sub_total,
-                'billet_url' => $sale->boleto_link,
+                'billet_url' => $boletoLink,
                 'products' => $this->getPlansList($sale),
                 'created_at' => $sale->created_at->format('Y-m-d H:i:s'),
                 'paid_at' => $sale->end_date
@@ -59,7 +63,7 @@ class UnicodropService
     function pixExpired(Sale $sale)
     {
         try{
-            $domain = Domain::where('project_id', $sale->project->id)->where('status', Domain::STATUS_APPROVED)->first();
+            $domain = Domain::where('project_id', $sale->project_id)->where('status', Domain::STATUS_APPROVED)->first();
             $pixLink = 'https://checkout.' . ( $domain ? $domain->name : 'cloudfox.net' ) . '/order/' . hashids_encode($sale->id, 'sale_id');
             $comission = $sale->transactions->where('type', Transaction::TYPE_PRODUCER)->first()->value;
 

@@ -106,26 +106,6 @@ class CompanyService
         return false;
     }
 
-    public function getChangesUpdateBankData($company): bool
-    {
-        $companyChanges = $company->getChanges();
-        if (
-            (!empty($companyChanges['bank']) || array_key_exists('bank', $companyChanges)) ||
-            (!empty($companyChanges['agency']) || array_key_exists('agency', $companyChanges)) ||
-            (!empty($companyChanges['account']) || array_key_exists('account', $companyChanges)) ||
-            (!empty($companyChanges['agency_digit']) || array_key_exists('agency_digit', $companyChanges)) ||
-            (!empty($companyChanges['account_digit']) || array_key_exists('account_digit', $companyChanges))
-        ) {
-            $company->update(
-                [
-                    'bank_document_status' => Company::DOCUMENT_STATUS_PENDING,
-                ]
-            );
-            return true;
-        }
-        return false;
-    }
-
     public function getChangesUpdateCNPJ($company, $documentType)
     {
         if (!empty($documentType) && $documentType != $company->document) {
@@ -325,23 +305,8 @@ class CompanyService
         }
     }
 
-    // public function updateCompanyGetnet(Company $company): array
-    // {
-    //     $getnetService = new GetnetBackOfficeService();
-    //     $user = $company->user;
-    //     if ($company->company_type == Company::PHYSICAL_PERSON && (!(new UserService())->verifyFieldsEmpty($user)))
-    //     {
-    //         $getnetService->updatePfCompany($company);
-    //     } elseif (!empty($user->cellphone) && !empty($user->email)) {
-    //         $getnetService->updatePjCompany($company);
-    //     }
-    //     return [
-    //         'message' => 'success',
-    //         'data' => '',
-    //     ];
-    // }
-
-    public function createRowCredential($companyId){
+    public function createRowCredential($companyId)
+    {
         return GatewaysCompaniesCredential::create([
             'company_id'=>$companyId,
             'gateway_id'=>Gateway::GETNET_PRODUCTION_ID,
@@ -384,6 +349,7 @@ class CompanyService
         }
         return false;
     }
+
     public function getCompanyType(Company $company)
     {
         $userDocument = foxutils()->onlyNumbers($company->user->document);
@@ -415,4 +381,24 @@ class CompanyService
                 return Company::GATEWAY_TAX_2;
         }
     }
+
+    public function applyBlockedBalance($gatewayService, &$availableBalance, &$pendingBalance, &$blockedBalance = null)
+    {
+        $blockedBalance = $gatewayService->getBlockedBalance();
+
+        if($blockedBalance <= $availableBalance) {
+            $availableBalance -= $blockedBalance;
+            return;
+        }
+
+        if($blockedBalance <= ($availableBalance + $pendingBalance)) {
+            $pendingBalance = $availableBalance + $pendingBalance - $blockedBalance;
+            $availableBalance = 0;
+            return;
+        }
+
+        $availableBalance = $availableBalance + $pendingBalance - $blockedBalance;
+        $pendingBalance = 0;
+    }
+
 }
