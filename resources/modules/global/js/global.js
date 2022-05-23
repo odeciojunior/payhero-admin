@@ -24,8 +24,12 @@ $(document).ready(function () {
                 window.location.href = url
             },
         });
-    })
+    });
 
+    $('.new-register-close').on('click', function () {
+        $('.new-register-overlay').fadeOut();
+        $('#new_register-menu').fadeIn();
+    });
 });
 
 function stringToMoney(string, currency = 'BRL') {
@@ -655,10 +659,10 @@ $('.top-alert-close').on('click', function () {
 
 sessionStorage.removeItem('documentsPending');
 
-function ajaxVerifyDocumentPending() {
+function ajaxVerifyAccount() {
     $.ajax({
         method: 'GET',
-        url: '/api/core/verifydocuments',
+        url: '/api/core/verify-account/' + $('meta[name="user-id"]').attr('content'),
         headers: {
             'Authorization': $('meta[name="access-token"]').attr('content'),
             'Accept': 'application/json',
@@ -667,32 +671,120 @@ function ajaxVerifyDocumentPending() {
             errorAjaxResponse(response);
         },
         success: response => {
-            sessionStorage.setItem('documentsPending', JSON.stringify(response));
-            // if (response.pending) {
-            //     $('#document-pending').show();
-            //     $('#document-pending .top-alert-action').attr('href', response.link);
-            // }
-            $('#accountStatus').val(response.accountStatus);
-            if (response.accountType == 'owner') {
-                if (response.analyzing) {
-                    $('.top-alert-img').attr('src', '/build/global/img/svg/alerta-amar.svg');
-                    $('.top-alert-message').html('Seu acesso ainda é <strong>restrito</strong> pois sua conta está <strong>em análise</strong>');
-                    $('#document-pending .top-alert-action').hide();
-                    $('#document-pending').show();
-                } else if (response.refused) {
-                    $('.top-alert').removeClass('warning');
-                    $('.top-alert').addClass('top-bar-danger');
-                    $('.top-alert-img').attr('src', '/build/global/img/svg/alerta-verm.svg');
-                    $('.top-alert-message').addClass('top-alert-danger');
-                    $('.top-alert-message').html('Um de seus documentos foi recusado');
-                    $('#document-pending').show();
-                    $('#document-pending .top-alert-action').attr('data-url-value', response.link);
-                } else if (response.accountStatus == 'account frozen') {
-                    $('.top-alert-img').attr('src', '/build/global/img/svg/alerta-amar.svg');
-                    $('.top-alert-message').html('Seu acesso é <strong>restrito</strong>, sua conta está <strong>congelada</strong>');
-                    $('#document-pending .top-alert-action').hide();
-                    $('#document-pending').show();
+            if (response.data.account !== 'approved') {
+                sessionStorage.getItem('verifyAccount');
+                if (sessionStorage == null) {
+                    $('#new_register-menu').fadeIn();
+                    $('.new-register-overlay').fadeIn();
+
+                    sessionStorage.setItem('verifyAccount', JSON.stringify(response.data));
                 }
+
+                var card_company_status = '';
+                var card_company_icon = '';
+                var card_company_title = '';
+                var card_company_description = '';
+                var card_company_button = '';
+
+                if (!response.data.company.created) {
+                    card_company_status = '';
+                    card_company_icon = '/build/global/img/icon-company.svg';
+                    card_company_title = 'Cadastre sua empresa';
+                    card_company_description = 'Na Cloudfox você pode ter uma ou mais empresas.';
+                    card_company_button = '';
+                } else {
+                    if (response.data.company.contract_document == 'pending' || response.data.company.address_document == 'pending') {
+                        card_company_status = 'status-info';
+                        card_company_icon = '/build/global/img/icon-analysing.svg';
+                        card_company_title = 'Você cadastrou sua empresa, mas não recebemos nenhum documento';
+                        card_company_description = 'Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empreza.';
+                        card_company_button = '<button class="btn btn-default">Enviar documentos</button>';
+                    } else if (response.data.company.contract_document == 'analyzing' || response.data.company.address_document == 'analyzing') {
+                        card_company_status = 'status-warning';
+                        card_company_icon = '/build/global/img/icon-analysing.svg';
+                        card_company_title = 'Estamos analisando seus documentos da sua empresa';
+                        card_company_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
+                        card_company_button = '';
+                    } else if (response.data.company.contract_document == 'refused' || response.data.company.address_document == 'refused') {
+                        card_company_status = 'status-error';
+                        card_company_icon = '/build/global/img/icon-error.svg';
+                        card_company_title = 'Tivemos problemas em verificar sua empresa';
+                        card_company_description = 'Há um problema com seus documentos.';
+                        card_company_button = '<button class="btn btn-default">Reenviar documentos</button>';
+                    } else if (response.data.company.contract_document == 'approved' || response.data.company.address_document == 'approved') {
+                        card_company_status = 'status-check';
+                        card_company_icon = '/build/global/img/icon-check.svg';
+                        card_company_title = 'Sua documentação foi recebida e aprovada.';
+                        card_company_description = 'Agora é só vender!';
+                        card_company_button = '';
+                    }
+                }
+
+                $('.company-status').html(`
+                    <div class="card ${card_company_status}">
+                        <div class="d-flex">
+                            <div>
+                                <div class="icon d-flex align-items-center">
+                                    <img src="${card_company_icon}" alt="">
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h1 class="title">${card_company_title}</h1>
+                                <p class="description">${card_company_description}</p>
+                                ${card_company_button}
+                            </div>
+                        </div>
+                    </div>
+                `);
+
+                var card_user_status = '';
+                var card_user_icon = '';
+                var card_user_title = '';
+                var card_user_description = '';
+                var card_user_button = '';
+
+                if (response.data.user.personal_document == 'pending' || response.data.user.address_document == 'pending') {
+                    card_user_status = '';
+                    card_user_icon = '/build/global/img/icon-docs.svg';
+                    card_user_title = 'Envie sua documentação pessoal';
+                    card_user_description = 'Precisamos do seu documento oficial com foto e um comprovante de residência.';
+                    card_user_button = '';
+                } else if (response.data.user.personal_document == 'analyzing' || response.data.user.address_document == 'analyzing') {
+                    card_user_status = 'status-warning';
+                    card_user_icon = '/build/global/img/icon-analysing.svg';
+                    card_user_title = 'Estamos analisando seus documentos';
+                    card_user_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
+                    card_user_button = '';
+                } else if (response.data.user.personal_document == 'refused' || response.data.user.address_document == 'refused') {
+                    card_user_status = 'status-error';
+                    card_user_icon = '/build/global/img/icon-error.svg';
+                    card_user_title = 'Tivemos um problema com o seu documento';
+                    card_user_description = 'Um ou mais documentos foram reprovados após a análise.';
+                    card_user_button = '<button class="btn btn-default">Regularizar documentos</button>';
+                } else if (response.data.user.personal_document == 'approved' || response.data.user.address_document == 'approved') {
+                    card_user_status = 'status-check';
+                    card_user_icon = '/build/global/img/icon-check.svg';
+                    card_user_title = 'Sua documentação foi recebida e aprovada';
+                    card_user_description = 'Se você já aprovou uma empresa com a gente, agora é só vender!';
+                    card_user_button = '';
+                }
+
+                $('.user-status').html(`
+                    <div class="card ${card_user_status}">
+                        <div class="d-flex">
+                            <div>
+                                <div class="icon d-flex align-items-center">
+                                    <img src="${card_user_icon}" alt="">
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h1 class="title">${card_user_title}</h1>
+                                <p class="description">${card_user_description}</p>
+                                ${card_user_button}
+                            </div>
+                        </div>
+                    </div>
+                `);
             }
         },
     });
@@ -700,21 +792,7 @@ function ajaxVerifyDocumentPending() {
 
 function verifyDocumentPending() {
     if (window.location.href.includes('/dashboard')) {
-        sessionStorage.removeItem('documentsPending');
-        $('#document-pending').hide();
-    }
-
-    if (!window.location.href.includes('/companies') && !window.location.href.includes('/core')) {
-        let documentsPending = sessionStorage.getItem('documentsPending');
-        if (documentsPending === null) {
-            ajaxVerifyDocumentPending();
-        } else {
-            documentsPending = JSON.parse(documentsPending);
-            if (documentsPending.pending) {
-                $('#document-pending').show();
-                $('#document-pending .top-alert-action').attr('href', documentsPending.link);
-            }
-        }
+        ajaxVerifyAccount();
     }
 }
 

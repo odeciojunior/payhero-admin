@@ -29,6 +29,7 @@
         <!-- access token used for api ajax requests -->
         <meta name="access-token" content="Bearer {{ auth()->check() ? auth()->user()->createToken("Laravel Password Grant Client", ['admin'])->accessToken : ''  }}">
         <meta name="current-url" content="{{ env('APP_URL') }}">
+        <meta name="user-id" content="{{ \Vinkla\Hashids\Facades\Hashids::encode(auth()->user()->id) }}">
         <!-- Favicon -->
         <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('build/global/img/logos/2021/favicon/apple-touch-icon.png') }}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('build/global/img/logos/2021/favicon/favicon-32x32.png') }}">
@@ -66,8 +67,7 @@
             }
 
             .new-register-overlay-container {
-                position: absolute;
-                width: 588px;
+                width: 612px;
             }
             @media screen and (max-width: 767px) {
                 .new-register-overlay {
@@ -111,6 +111,9 @@
                 border-radius: 8px;
                 padding: 24px;
                 margin: 0 0 16px 0;
+                text-align: left;
+                min-height: 0;
+                cursor: pointer;
             }
             .new-register-overlay-body .card.extra-informations-user {
                 border: 1px solid #2E85EC;
@@ -135,10 +138,13 @@
                 font-size: 14px;
                 color: #3D4456;
                 padding: 12px 18px;
-                margin-top: 6px;
+                margin-top: 12px;
             }
             .new-register-overlay-body .card.status-check .icon {
                 background: #59BF75;
+            }
+            .new-register-overlay-body .card.status-info .icon {
+                background: #2E85EC;
             }
             .new-register-overlay-body .card.status-warning .icon {
                 background: #FF9900;
@@ -158,12 +164,14 @@
                 font-weight: 600;
                 font-size: 16px;
                 margin: 0 0 4px 0;
+                text-align: left;
             }
             .new-register-overlay-body .card .description {
                 color: #5B5B5B;
                 font-weight: 400;
                 font-size: 14px;
                 margin: 0;
+                text-align: left;
             }
 
             .init-operation-container {
@@ -183,15 +191,27 @@
                 margin: 0
             }
 
+            .init-operation-container .body {
+                margin-top: 32px;
+            }
+
             .new-register-overlay-footer {
                 margin-top: 44px;
                 text-align: center;
             }
-            .new-register-overlay-footer a {
+            .new-register-overlay-footer .btn {
                 font-weight: 600;
                 font-size: 16px;
                 color: #2E85EC;
                 text-align: center;
+                padding: 0;
+                background: transparent;
+                border: none;
+                line-height: 1;
+            }
+
+            .new_register-menu {
+                display: none;
             }
         </style>
     </head>
@@ -222,7 +242,9 @@
                 </div>
             </div>
         </div>
+
         <input type="hidden" id="accountStatus">
+
         @yield('content')
 
         <!-- New Register Overlay Modal -->
@@ -230,106 +252,42 @@
             <div class="container new-register-overlay-container">
                 <div class="new-register-overlay-header">
                     <div class="new-register-overlay-title-container">
-                        <span class="new-register-overlay-title">Bem vindo, <strong>Pedro</strong></span>
+                        <span class="new-register-overlay-title">Bem vindo, <strong>{{ explode(' ', trim(auth()->user()->name))[0] }}</strong></span>
                         <span class="new-register-overlay-subtitle">Você acabou de chegar na Cloudfox e queremos te proporcionar uma experiência única</span>
                     </div>
                 </div>
                 <div class="new-register-overlay-body">
                     <div class="card extra-informations-user">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <div class="icon d-flex align-items-center">
-                                    <span class="bg-color-blue account-health-note-circle"></span>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <div class="icon d-flex align-items-center">
+                                        <span class="bg-color-blue account-health-note-circle"></span>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <h1 class="title">Queremos conhecer você!</h1>
+                                    <p class="description">Temos algumas perguntas para conhecer melhor você e seu negócio.</p>
                                 </div>
                             </div>
-                            <div class="content">
-                                <h1 class="title">Queremos conhecer você!</h1>
-                                <p class="description">Temos algumas perguntas para conhecer melhor você e seu negócio.</p>
-                            </div>
+                            <img src="{{ asset('build/global/img/icon-chevron-right.svg') }}" alt="">
                         </div>
                     </div>
 
                     <div class="init-operation-container">
-                        <h1 class="title">Para <b>começar a sua operação</b> na Cloudfox</h1>
-                        <p class="description">Criamos um passo a passo para você finalizar o seu cadastro</p>
-                    </div>
-
-                    <!-- Status doc company -->
-                    <div class="card">
-                        <div class="d-flex">
-                            <div>
-                                <div class="icon d-flex align-items-center">
-                                    <img src="{{ asset('build/global/img/icon-company.svg') }}" alt="">
-                                </div>
-                            </div>
-                            <div class="content">
-                                <h1 class="title">Cadastre sua empresa</h1>
-                                <p class="description">Na Cloudfox você pode ter uma ou mais empresas.</p>
-                            </div>
+                        <div class="header">
+                            <h1 class="title">Para <b>começar a sua operação</b> na Cloudfox</h1>
+                            <p class="description">Criamos um passo a passo para você finalizar o seu cadastro</p>
                         </div>
-                    </div>
 
-                    <!-- Status doc user -->
-                    <div class="card">
-                        <div class="d-flex">
-                            <div>
-                                <div class="icon d-flex align-items-center">
-                                    <img src="{{ asset('build/global/img/icon-docs.svg') }}" alt="">
-                                </div>
-                            </div>
-                            <div class="content">
-                                <h1 class="title">Envie seu documento pessoal</h1>
-                                <p class="description">Precisamos do seu documento oficial com foto e um comprovante de residência.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card status-check">
-                        <div class="d-flex">
-                            <div>
-                                <div class="icon d-flex align-items-center">
-                                    <img src="{{ asset('build/global/img/icon-check.svg') }}" alt="">
-                                </div>
-                            </div>
-                            <div class="content">
-                                <h1 class="title">Envie seu documento pessoal</h1>
-                                <p class="description">Precisamos do seu documento oficial com foto e um comprovante de residência.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card status-warning">
-                        <div class="d-flex">
-                            <div>
-                                <div class="icon d-flex align-items-center">
-                                    <img src="{{ asset('build/global/img/icon-warning.svg') }}" alt="">
-                                </div>
-                            </div>
-                            <div class="content">
-                                <h1 class="title">Envie seu documento pessoal</h1>
-                                <p class="description">Precisamos do seu documento oficial com foto e um comprovante de residência.</p>
-                                <button class="btn btn-default">Regularizar documentos</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card status-error">
-                        <div class="d-flex">
-                            <div>
-                                <div class="icon d-flex align-items-center">
-                                    <img src="{{ asset('build/global/img/icon-error.svg') }}" alt="">
-                                </div>
-                            </div>
-                            <div class="content">
-                                <h1 class="title">Envie seu documento pessoal</h1>
-                                <p class="description">Precisamos do seu documento oficial com foto e um comprovante de residência.</p>
-                                <button class="btn btn-default">Regularizar documentos</button>
-                            </div>
+                        <div class="body">
+                            <div class="company-status"></div>
+                            <div class="user-status"></div>
                         </div>
                     </div>
                 </div>
                 <div class="new-register-overlay-footer">
-                    <a href="#" type="button">Deixar para mais tarde</a>
+                    <button class="btn new-register-close" type="button">Deixar para mais tarde</button>
                 </div>
             </div>
         </div>
@@ -394,11 +352,11 @@
             <script>
                 $(document).ready(function () {
                     $('#new_register_btn').click(function () {
-                        $(this).parent().parent().hide(); // hide navbar button
+                        $(this).parent().parent().fadeOut('slow'); // hide navbar button
 
                         let modalOverlay = $('.new-register-overlay');
 
-                        modalOverlay.css('display', 'flex');
+                        modalOverlay.fadeIn();
                     });
                 });
             </script>
