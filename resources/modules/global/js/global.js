@@ -679,7 +679,7 @@ function ajaxVerifyAccount() {
             if (response.data.account !== 'approved') {
                 let verifyAccount = localStorage.getItem('verifyAccount');
                 if (verifyAccount == null) {
-                    $('#new_register-menu').fadeIn();
+                    changeOpenNewRegisterModalBtnVisiblity();
                     $('.new-register-overlay').fadeIn();
 
                     localStorage.setItem('verifyAccount', JSON.stringify(response.data));

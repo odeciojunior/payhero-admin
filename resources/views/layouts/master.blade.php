@@ -534,10 +534,6 @@
                 border: none;
                 line-height: 1;
             }
-
-            .new_register-menu {
-                display: none;
-            }
         </style>
     </head>
     <body class="animsition site-navbar-small dashboard site-menubar-fold site-menubar-hide">
