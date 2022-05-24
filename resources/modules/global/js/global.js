@@ -686,28 +686,9 @@ function ajaxVerifyAccount() {
                 }
 
                 if (response.data.user.informations) {
-                    $('.extra-informations-user').html(`
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <div class="icon d-flex align-items-center">
-                                        <span class="bg-color-blue account-health-note-circle"></span>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <h1 class="title">Queremos conhecer você!</h1>
-                                    <p class="description">Temos algumas perguntas para conhecer melhor você e seu negócio.</p>
-                                </div>
-                            </div>
-                            <div>
-                                <button id="open-steps-btn" type="button" class="btn new-register-btn">
-                                    <img src="/build/global/img/icon-chevron-right.svg" alt="">
-                                </button>
-                            </div>
-                        </div>
-                    `);
+                    $('.extra-informations-user').show();
                 } else {
-                    $('.extra-informations-user').remove();
+                    $('.extra-informations-user').hide();
                 }
 
                 var card_company_status = '';
