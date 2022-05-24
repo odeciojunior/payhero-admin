@@ -758,6 +758,19 @@ h4.number{
     stroke: #F43F5E; 
 }
 
+.data-coupon {
+    display: block;
+    width: 180px;
+    padding: 0 14px 0 0;
+}
+
+.block-cupons {
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* REPORTS FINANCE */
 .graph-principal { height: 398px; }
 .distribution-content { 
@@ -1288,6 +1301,10 @@ h4.number{
 }
 
 .card-coupon { height: 219px; }
+.pie-coupon { 
+    height: 117px; 
+    width: 116px; 
+}
 
 .box-resume .balance:nth-child(1),
 .box-resume .balance:nth-child(2) { margin-bottom: 20px; }

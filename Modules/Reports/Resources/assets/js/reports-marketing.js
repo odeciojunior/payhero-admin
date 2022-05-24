@@ -126,7 +126,7 @@ function loadOrigins(link = null) {
 
 function loadResume() {
     let checkouts, salesCount,salesValue = '';
-    $("#checkouts_count, #sales_count, #sales_value").prepend(skeLoad);
+    $("#checkouts_count, #sales_count, #sales_value").html(skeLoad);
 
     return $.ajax({
         method: "GET",
@@ -188,16 +188,13 @@ function loadCoupons() {
             
             if( total != 0 ) {
                 cuponsHtml = `
-                    <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
-                        <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
-                    </div>
                     <div class="container d-flex justify-content-between box-donut">
-                        <div class="new-graph-pie graph"></div>
-                        <div class="data-pie"><ul></ul></div>
+                        <div class="new-graph-pie graph" style="height: 117px;"></div>
+                        <div class="data-pie data-coupon"><ul></ul></div>
                     </div>
                 `;
                 $("#block-coupons").html(cuponsHtml);
-                $('.new-graph-pie').html('<div class=graph-pie></div>');
+                $('.new-graph-pie').html("<div class='graph-pie pie-coupon'></div>");
                 let arr = [];
                 let seriesArr = [];
 
@@ -239,10 +236,7 @@ function loadCoupons() {
                 
             } else {
                 cuponsHtml = `
-                    <div class="container d-flex value-price" style="visibility: hidden; height: 15px;">
-                        <h4 id="qtd-dispute" class="font-size-24 bold">0</h4>
-                    </div>
-                    <div class="d-flex align-items justify-around">
+                    <div class="d-flex align-items justify-around" style="width: 100%;">
                         <div class="no-coupon">${emptyCoupons}</div>
                         <div class="msg-coupon">Nenhum cupom utilizado</div>
                     </div>
@@ -397,7 +391,7 @@ function changeCompany() {
 function loadDevices() {
     let deviceBlock = '';
     $('#card-devices .onPreLoad *' ).remove();
-    $("#block-devices").prepend(skeLoad);
+    $("#block-devices").html(skeLoad);
 
     return $.ajax({
         method: "GET",
@@ -481,7 +475,7 @@ function loadDevices() {
 function loadOperationalSystems() {
 
     $('#container-operational-systems').html('');
-    $('#container-operational-systems').append(skeLoad);
+    $('#container-operational-systems').html(skeLoad);
 
     $.ajax({
         method: "GET",
@@ -943,12 +937,15 @@ const formatCash = n => {
 
 let skeLoad = `
     <div class="ske-load">
-        <div class="py-0">
+        <div class="px-20 py-0">
+            <div class="skeleton skeleton-gateway-logo" style="height: 30px"></div>
+        </div>
+        <div class="px-20 py-0">
             <div class="row align-items-center mx-0 py-10">
                 <div class="skeleton skeleton-circle"></div>
                 <div class="skeleton skeleton-text mb-0" style="height: 15px; width:50%"></div>
             </div>
-            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text ske"></div>
         </div>
     </div>
 `;

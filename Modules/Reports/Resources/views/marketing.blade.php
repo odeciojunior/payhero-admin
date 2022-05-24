@@ -590,7 +590,7 @@
                                                 </a>
                                             </header>
                                             
-                                            <div class="onPreLoad" id="block-coupons">
+                                            <div class="onPreLoad block-cupons" id="block-coupons">
 
                                             </div>
 
