@@ -800,6 +800,11 @@ function ajaxVerifyAccount() {
                         </div>
                     </div>
                 `);
+            } else {
+                let verifyAccount = JSON.parse(localStorage.getItem('verifyAccount'));
+                if (verifyAccount.account !== 'approved') {
+                    localStorage.setItem('verifyAccount', JSON.stringify(response.data));
+                }
             }
         },
     });
