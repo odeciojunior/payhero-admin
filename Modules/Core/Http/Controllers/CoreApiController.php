@@ -73,27 +73,32 @@ class CoreApiController extends Controller
 
             $companyStatus = null;
             $companyRedirect = null;
-            $companyApproved = $companyService->companyDocumentApproved();
-            if (!empty($companyApproved)) {
-                $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_APPROVED);
+            if ($user->companies->count() > 0) {
+                $companyStatus = null;
                 $companyRedirect = '';
             } else {
-                $companyPending = $companyService->companyDocumentPending();
-                if (!empty($companyPending)) {
-                    $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_PENDING);
-                    $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyPending->id);
-                }
+                $companyApproved = $companyService->companyDocumentApproved();
+                if (!empty($companyApproved)) {
+                    $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_APPROVED);
+                    $companyRedirect = '/companies';
+                } else {
+                    $companyPending = $companyService->companyDocumentPending();
+                    if (!empty($companyPending)) {
+                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_PENDING);
+                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyPending->id);
+                    }
 
-                $companyAnalyzing = $companyService->companyDocumentAnalyzing();
-                if (!empty($companyAnalyzing)) {
-                    $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_ANALYZING);
-                    $companyRedirect = '';
-                }
+                    $companyAnalyzing = $companyService->companyDocumentAnalyzing();
+                    if (!empty($companyAnalyzing)) {
+                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_ANALYZING);
+                        $companyRedirect = '';
+                    }
 
-                $companyRefused = $companyService->companyDocumentRefused();
-                if (!empty($companyRefused)) {
-                    $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_REFUSED);
-                    $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyRefused->id);
+                    $companyRefused = $companyService->companyDocumentRefused();
+                    if (!empty($companyRefused)) {
+                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_REFUSED);
+                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyRefused->id);
+                    }
                 }
             }
 
@@ -108,6 +113,7 @@ class CoreApiController extends Controller
                     'account' => $userModel->present()->getAccountStatus($user->account_is_approved),
                     'user' => [
                         'status' => $userStatus,
+                        'document' => $user->document,
                         'informations' => $userInformations,
                         'link' => $userRedirect,
                     ],

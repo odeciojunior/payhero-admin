@@ -712,12 +712,14 @@ function ajaxVerifyAccount() {
                 var card_company_description = '';
                 var card_company_button = '';
 
-                if (!response.data.company.status == null) {
-                    card_company_status = '';
+                if (response.data.company.status == null) {
+                    card_company_status = 'redirect-to-accounts';
                     card_company_icon = '/build/global/img/icon-company.svg';
                     card_company_title = 'Cadastre sua empresa';
                     card_company_description = 'Na Cloudfox você pode ter uma ou mais empresas.';
                     card_company_button = '';
+
+                    $('.company-status').attr('data-url-value', response.data.company.link);
                 } else {
                     if (response.data.company.status == 'pending' || response.data.company.status == 'pending') {
                         card_company_status = 'status-info';
@@ -770,11 +772,13 @@ function ajaxVerifyAccount() {
                 var card_user_button = '';
 
                 if (response.data.user.status == 'pending' || response.data.user.status == 'pending') {
-                    card_user_status = '';
+                    card_user_status = 'redirect-to-accounts';
                     card_user_icon = '/build/global/img/icon-docs.svg';
                     card_user_title = 'Envie sua documentação pessoal';
                     card_user_description = 'Precisamos do seu documento oficial com foto e um comprovante de residência.';
                     card_user_button = '';
+
+                    $('.user-status').attr('data-url-value', response.data.company.link);
                 } else if (response.data.user.status == 'analyzing' || response.data.user.status == 'analyzing') {
                     card_user_status = 'status-warning';
                     card_user_icon = '/build/global/img/icon-analysing.svg';
