@@ -1121,7 +1121,7 @@
                         $('.new-register-overlay').fadeIn();
                     });
 
-                    $('.close-modal').on('click', function () {
+                    $('#new-register-steps-actions').on('click', '.close-modal', function () {
                         $('.new-register-overlay').fadeOut();
 
                         changeOpenNewRegisterModalBtnVisiblity();
