@@ -628,8 +628,12 @@
                                 </div>
 
                                 <div class="body">
-                                    <div class="company-status"></div>
-                                    <div class="user-status"></div>
+                                    <div class="company-status">
+                                        <!-- JS load -->
+                                    </div>
+                                    <div class="user-status">
+                                        <!-- JS load -->
+                                    </div>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center">

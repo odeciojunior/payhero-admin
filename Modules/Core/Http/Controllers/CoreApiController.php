@@ -21,6 +21,8 @@ use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\GatewaysCompaniesCredential;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserDocument;
+use Modules\Core\Entities\UserInformation;
 use Modules\Core\Services\AmazonFileService;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\CompanyService;
@@ -39,22 +41,85 @@ class CoreApiController extends Controller
     public function verifyAccount($id)
     {
         try {
-            $companyModel = new Company();
             $userModel = new User();
+            $userService = new UserService();
 
-            $user = $userModel->find(current(Hashids::decode($id)));
+            $companyModel = new Company();
+            $companyService = new CompanyService();
+
+            $user = User::find(current(Hashids::decode($id)));
+
+            $userInformations = UserInformation::where('document', $user->document)->exists();
+
+            $userStatus = null;
+            $userRedirect = null;
+            if ($userService->haveAnyDocumentPending()) {
+                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
+                $userRedirect = 'personal-info';
+            }
+
+            if ($userService->haveAnyDocumentAnalyzing()) {
+                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_ANALYZING);
+            }
+
+            if ($userService->haveAnyDocumentApproved()) {
+                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_APPROVED);
+            }
+
+            if ($userService->haveAnyDocumentRefused()) {
+                $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_REFUSED);
+                $userRedirect = '/personal-info';
+            }
+
+            $companyStatus = null;
+            $companyRedirect = null;
+            if ($user->companies->count() > 0) {
+                $companyStatus = null;
+                $companyRedirect = '';
+            } else {
+                $companyApproved = $companyService->companyDocumentApproved();
+                if (!empty($companyApproved)) {
+                    $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_APPROVED);
+                    $companyRedirect = '/companies';
+                } else {
+                    $companyPending = $companyService->companyDocumentPending();
+                    if (!empty($companyPending)) {
+                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_PENDING);
+                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyPending->id);
+                    }
+
+                    $companyAnalyzing = $companyService->companyDocumentAnalyzing();
+                    if (!empty($companyAnalyzing)) {
+                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_ANALYZING);
+                        $companyRedirect = '';
+                    }
+
+                    $companyRefused = $companyService->companyDocumentRefused();
+                    if (!empty($companyRefused)) {
+                        $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_REFUSED);
+                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyRefused->id);
+                    }
+                }
+            }
+
+            if ($userStatus == 'approved' && $userInformations == true && !empty($companyApproved)) {
+                $user->update([
+                    'account_is_approved' => 1
+                ]);
+            }
 
             return response()->json([
                 'data' => [
                     'account' => $userModel->present()->getAccountStatus($user->account_is_approved),
                     'user' => [
-                        'personal_document' => $userModel->present()->getPersonalDocumentStatus($user->personal_document_status),
-                        'address_document' => $userModel->present()->getAddressDocumentStatus($user->address_document_status)
+                        'status' => $userStatus,
+                        'document' => $user->document,
+                        'informations' => $userInformations,
+                        'link' => $userRedirect,
                     ],
                     'company' => [
-                        'created' => $user->companies->count() > 0 ? true : false,
-                        'address_document' => $user->companies->count() > 0 ? $companyModel->present()->getAddressDocumentStatus($user->companies->first()->address_document_status) : null,
-                        'contract_document' => $user->companies->count() > 0 ? $companyModel->present()->getContractDocumentStatus($user->companies->first()->contract_document_status) : null
+                        'status' => $companyStatus,
+                        'link' => $companyRedirect,
                     ]
                 ]
             ], Response::HTTP_OK);

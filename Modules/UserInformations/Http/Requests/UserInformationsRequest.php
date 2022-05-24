@@ -14,10 +14,7 @@ class UserInformationsRequest extends FormRequest
     public function rules()
     {
         return [
-            "email" => "required",
-            "name" => "required",
-            "document" => "required",
-            "phone" => "required"
+            "document" => "required"
         ];
     }
 
