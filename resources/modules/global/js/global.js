@@ -677,12 +677,12 @@ function ajaxVerifyAccount() {
         },
         success: response => {
             if (response.data.account !== 'approved') {
-                sessionStorage.getItem('verifyAccount');
-                if (sessionStorage == null) {
+                let verifyAccount = localStorage.getItem('verifyAccount');
+                if (verifyAccount == null) {
                     $('#new_register-menu').fadeIn();
                     $('.new-register-overlay').fadeIn();
 
-                    sessionStorage.setItem('verifyAccount', JSON.stringify(response.data));
+                    localStorage.setItem('verifyAccount', JSON.stringify(response.data));
                 }
 
                 if (response.data.user.informations) {

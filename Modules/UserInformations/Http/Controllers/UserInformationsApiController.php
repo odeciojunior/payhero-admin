@@ -60,8 +60,8 @@ class UserInformationsApiController extends Controller
             $model->gateway = $data['gateway'];
         }
 
-        if (! empty($data['store'])) {
-            $model->ecommerce = $data['store'];
+        if (! empty($data['ecommerce'])) {
+            $model->ecommerce = $data['ecommerce'];
         }
 
         if (! empty($data['cloudfox_referer'])) {
