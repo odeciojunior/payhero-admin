@@ -63,7 +63,6 @@ $(document).ready(function () {
     $('#new-register-steps-actions').on('click', '.close-modal', function () {
         if (localStorage.getItem('new-register-step') == '4') {
             $('#new-register-steps-container').fadeOut();
-
             $('#new-register-firt-page').fadeIn();
         } else {
             $('.new-register-overlay').fadeOut();
@@ -1124,6 +1123,7 @@ function saveNewRegisterData() {
 
             $('#new-register-steps-actions').removeClass('justify-content-between');
             $('#new-register-steps-actions').addClass('justify-content-center');
+            $('.extra-informations-user').hide();
 
             $('#new-register-steps-actions').html('<button type="button" class="btn new-register-btn close-modal">Fechar</button>');
 
