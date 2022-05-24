@@ -1074,6 +1074,8 @@
                         },
                         error: function error(response) {
                             loadingOnScreenRemove();
+
+                            alertCustom('error', 'Houve um erro ao tentar cadastrar os dados, tente novamente!');
                         },
                         success: function success(response) {
                             localStorage.setItem('new-register-step', '4');
@@ -1093,6 +1095,8 @@
                 }
 
                 $(document).ready(function () {
+                    localStorage.setItem('new-register-step', '1');
+
                     changeOpenNewRegisterModalBtnVisiblity();
 
                     window.onresize = changeOpenNewRegisterModalBtnVisiblity;
