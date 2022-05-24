@@ -123,7 +123,7 @@
             .new-register-overlay-container {
                 display: flex;
                 flex-direction: column;
-                row-gap: 24px;
+                row-gap: 40px;
                 position: absolute;
                 width: 650px;
             }
@@ -675,7 +675,7 @@
                                         </div>
                                         <div class="step-1-options-container">
                                             <div class="d-flex flex-column align-items-center">
-                                                <div class="step-1-option" data-step-1-value="1" data-step-1-selected="false">
+                                                <div class="step-1-option" data-step-1-value="dropshipping-import" data-step-1-selected="0">
                                                     <svg class="svg-icon-1" xmlns="http://www.w3.org/2000/svg" width="66" height="66" viewBox="0 0 66 66" fill="none">
                                                         <circle cx="33.0001" cy="34.5895" r="21.8761" stroke="#2E85EC" stroke-width="3.22653"/>
                                                         <path d="M54.8116 32.772C49.3143 35.9601 41.5745 37.9453 33.0001 37.9453C24.4256 37.9453 16.6858 35.9601 11.1885 32.772" stroke="#2E85EC" stroke-width="3.22653"/>
@@ -685,7 +685,7 @@
                                                 <span class="font-size-14 font-weight-400 text-center" style="color: #5B5B5B">Dropshipping e importação</span>
                                             </div>
                                             <div class="d-flex flex-column align-items-center">
-                                                <div class="step-1-option" data-step-1-value="2" data-step-1-selected="false">
+                                                <div class="step-1-option" data-step-1-value="physical-product" data-step-1-selected="0">
                                                     <svg class="svg-icon-2" xmlns="http://www.w3.org/2000/svg" width="56" height="66" viewBox="0 0 56 56" fill="none">
                                                         <path d="M17.6262 17.626V10.7102C17.6262 6.89074 20.7226 3.79443 24.5421 3.79443C25.8017 3.79443 26.9828 4.13123 28 4.71968C29.0172 4.13123 30.1983 3.79443 31.458 3.79443C35.2774 3.79443 38.3738 6.89074 38.3738 10.7102V17.626H40.1026C42.9672 17.626 45.2895 19.9483 45.2895 22.8129V45.2892C45.2895 49.1087 42.1931 52.205 38.3737 52.205H17.6263C13.8068 52.205 10.7104 49.1087 10.7104 45.2892V22.8129C10.7104 19.9483 13.0327 17.626 15.8973 17.626H17.6262ZM21.0842 10.7102V17.626H28V10.7102C28 8.80049 26.4518 7.25233 24.5421 7.25233C22.6323 7.25233 21.0842 8.80049 21.0842 10.7102ZM38.3737 48.7471C40.2834 48.7471 41.8316 47.199 41.8316 45.2892V22.8129C41.8316 21.858 41.0575 21.0839 40.1026 21.0839H34.9158V45.2892C34.9158 47.199 36.4639 48.7471 38.3737 48.7471ZM31.4579 21.0839H15.8973C14.9424 21.0839 14.1683 21.858 14.1683 22.8129V45.2892C14.1683 47.199 15.7165 48.7471 17.6263 48.7471H32.3831C31.7946 47.7299 31.4579 46.5489 31.4579 45.2892V21.0839ZM31.4579 10.7102V17.626H34.9159V10.7102C34.9159 8.80049 33.3677 7.25233 31.458 7.25233C31.1597 7.25233 30.8703 7.29009 30.5942 7.36108C31.1445 8.35335 31.4579 9.4952 31.4579 10.7102Z" fill="#2E85EC"/>
                                                     </svg>
@@ -693,7 +693,7 @@
                                                 <span class="font-size-14 font-weight-400 text-center" style="color: #5B5B5B">Produtos  físicos</span>
                                             </div>
                                             <div class="d-flex flex-column align-items-center">
-                                                <div class="step-1-option" data-step-1-value="3" data-step-1-selected="false">
+                                                <div class="step-1-option" data-step-1-value="digital-product" data-step-1-selected="0">
                                                     <svg class="svg-icon-2" xmlns="http://www.w3.org/2000/svg" width="50" height="66" viewBox="0 0 50 50" fill="none">
                                                         <path d="M9.3953 11.5931C10.1391 8.94952 12.551 7.12305 15.2981 7.12305H35.7318C38.479 7.12305 40.8909 8.94952 41.6346 11.5931L46.7207 29.6705C47.8648 33.737 44.8076 37.7712 40.5818 37.7712H22.4507V34.7064H40.5818C42.776 34.7064 44.3633 32.6117 43.7693 30.5002L38.6832 12.4229C38.3113 11.1011 37.1054 10.1879 35.7318 10.1879H15.2981C13.9245 10.1879 12.7186 11.1011 12.3467 12.4229L11.2509 16.3175H8.65416C8.45413 16.3175 8.25588 16.3252 8.05971 16.3402L9.3953 11.5931ZM22.2974 43.9009H36.2456C37.0922 43.9009 37.7786 43.2148 37.7786 42.3685C37.7786 41.5221 37.0922 40.8361 36.2456 40.8361H22.4507V42.3685C22.4507 42.8933 22.3979 43.4057 22.2974 43.9009ZM11.7199 30.1092C12.9899 30.1092 14.0193 29.0801 14.0193 27.8106C14.0193 26.5411 12.9899 25.512 11.7199 25.512C10.45 25.512 9.4205 26.5411 9.4205 27.8106C9.4205 29.0801 10.45 30.1092 11.7199 30.1092ZM4.05518 23.9796C4.05518 21.4406 6.11415 19.3823 8.65402 19.3823H14.7858C17.3257 19.3823 19.3847 21.4406 19.3847 23.9796V42.3685C19.3847 44.9074 17.3257 46.9657 14.7858 46.9657H8.65402C6.11415 46.9657 4.05518 44.9074 4.05518 42.3685V23.9796ZM8.65402 22.4471C7.8074 22.4471 7.12107 23.1332 7.12107 23.9796V42.3685C7.12107 43.2148 7.8074 43.9009 8.65402 43.9009H14.7858C15.6324 43.9009 16.3188 43.2148 16.3188 42.3685V23.9796C16.3188 23.1332 15.6324 22.4471 14.7858 22.4471H8.65402Z" fill="#2E85EC"/>
                                                     </svg>
@@ -701,7 +701,7 @@
                                                 <span class="font-size-14 font-weight-400 text-center" style="color: #5B5B5B">Produtos digitais</span>
                                             </div>
                                             <div class="d-flex flex-column align-items-center">
-                                                <div class="step-1-option" data-step-1-value="4" data-step-1-selected="false">
+                                                <div class="step-1-option" data-step-1-value="classes" data-step-1-selected="0">
                                                     <svg class="svg-icon-2" xmlns="http://www.w3.org/2000/svg" width="66" height="66" viewBox="0 0 66 66" fill="none">
                                                         <path d="M10.7295 9.72461C6.03723 9.72461 2.2334 13.5721 2.2334 18.3182V46.0821C2.2334 50.8282 6.03723 54.6757 10.7295 54.6757H38.1843C42.8766 54.6757 46.6804 50.8282 46.6804 46.0821V41.9062L58.5518 50.134C60.7203 51.637 63.6666 50.0664 63.6666 47.4074V16.9919C63.6666 14.3334 60.7211 12.7627 58.5525 14.2649L46.6804 22.4885V18.3182C46.6804 13.5721 42.8766 9.72461 38.1843 9.72461H10.7295ZM46.6804 37.0982V27.2957L59.7453 18.2458V46.1531L46.6804 37.0982ZM42.7591 18.3182V46.0821C42.7591 48.6377 40.7109 50.7094 38.1843 50.7094H10.7295C8.20289 50.7094 6.15467 48.6377 6.15467 46.0821V18.3182C6.15467 15.7626 8.20289 13.6909 10.7295 13.6909H38.1843C40.7109 13.6909 42.7591 15.7626 42.7591 18.3182Z" fill="#2E85EC"/>
                                                     </svg>
@@ -709,7 +709,7 @@
                                                 <span class="font-size-14 font-weight-400 text-center" style="color: #5B5B5B">Cursos</span>
                                             </div>
                                             <div class="d-flex flex-column align-items-center">
-                                                <div class="step-1-option" data-step-1-value="5" data-step-1-selected="false">
+                                                <div class="step-1-option" data-step-1-value="subscriptions" data-step-1-selected="0">
                                                     <svg class="svg-icon-2" xmlns="http://www.w3.org/2000/svg" width="66" height="66" viewBox="0 0 66 66" fill="none">
                                                         <path d="M11.822 44.5064C11.1244 45.204 11.1244 46.335 11.822 47.0325L22.5397 57.7502C23.2373 58.4478 24.3683 58.4478 25.0659 57.7502C25.7635 57.0527 25.7635 55.9216 25.0659 55.2241L17.3976 47.5557H52.3833C53.3699 47.5557 54.1696 46.756 54.1696 45.7695C54.1696 44.7829 53.3699 43.9832 52.3833 43.9832H17.3976L25.0659 36.3149C25.7635 35.6173 25.7635 34.4863 25.0659 33.7887C24.3683 33.0911 23.2373 33.0911 22.5397 33.7887L11.822 44.5064ZM53.6676 22.003C54.3369 21.3106 54.3369 20.2123 53.6676 19.52L43.3068 8.80227C42.6212 8.09298 41.4903 8.07383 40.781 8.7595C40.0717 9.44518 40.0526 10.576 40.7382 11.2853L48.1721 18.9752L13.0855 18.9752C12.0989 18.9752 11.2992 19.775 11.2992 20.7615C11.2992 21.748 12.0989 22.5478 13.0855 22.5478L48.1721 22.5478L40.7382 30.2377C40.0526 30.947 40.0717 32.0778 40.781 32.7635C41.4903 33.4492 42.6212 33.43 43.3068 32.7207L53.6676 22.003Z" fill="#2E85EC"/>
                                                     </svg>
@@ -717,7 +717,7 @@
                                                 <span class="font-size-14 font-weight-400 text-center" style="color: #5B5B5B">Assinaturas</span>
                                             </div>
                                             <div class="d-flex flex-column align-items-center">
-                                                <div class="step-1-option" data-step-1-value="6" data-step-1-selected="false">
+                                                <div class="step-1-option" data-step-1-value="others" data-step-1-selected="0">
                                                     <svg class="svg-icon-2" xmlns="http://www.w3.org/2000/svg" width="56" height="66" viewBox="0 0 56 56" fill="none">
                                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M41.0839 47.1859H29.644V39.0332H47.6093V40.6606C47.6093 44.2644 44.6878 47.1859 41.0839 47.1859ZM47.6093 35.7458H29.644V7.96807H41.0839C44.6878 7.96807 47.6093 10.8896 47.6093 14.4934V35.7458ZM50.8967 35.7458L50.8967 14.4934C50.8967 9.07396 46.5033 4.68066 41.0839 4.68066H29.644V4.68058H26.3566V4.68066H14.9167C9.4973 4.68066 5.104 9.07398 5.104 14.4934V40.6606C5.104 46.08 9.49732 50.4733 14.9167 50.4733H41.0839C46.5034 50.4733 50.8967 46.08 50.8967 40.6606L50.8967 39.0332V35.7458ZM26.3566 16.1204V7.96807H14.9167C11.3129 7.96807 8.39141 10.8896 8.39141 14.4934V16.1204H26.3566ZM26.3566 19.4078H8.39141V40.6606C8.39141 44.2644 11.3129 47.1859 14.9167 47.1859H26.3566V19.4078Z" fill="#2E85EC"/>
                                                     </svg>
@@ -733,13 +733,13 @@
                                             <div class="d-flex">
                                                 <div class="step-2-checkbox-option">
                                                     <div>
-                                                        <input type="checkbox" />
+                                                        <input type="checkbox" id="integrated-store" />
                                                         <span>Loja integrada</span>
                                                     </div>
                                                 </div>
                                                 <div class="step-2-checkbox-option">
                                                     <div>
-                                                        <input type="checkbox" />
+                                                        <input type="checkbox" id="wix" />
                                                         <span>Wix</span>
                                                     </div>
                                                 </div>
@@ -747,13 +747,13 @@
                                             <div class="d-flex">
                                                 <div class="step-2-checkbox-option">
                                                     <div>
-                                                        <input type="checkbox" />
+                                                        <input type="checkbox" id="woo-commerce" />
                                                         <span>WooComerce</span>
                                                     </div>
                                                 </div>
                                                 <div class="step-2-checkbox-option">
                                                     <div>
-                                                        <input type="checkbox" />
+                                                        <input type="checkbox" id="shopify" />
                                                         <span>Shopify</span>
                                                     </div>
                                                 </div>
@@ -761,13 +761,13 @@
                                             <div class="d-flex">
                                                 <div class="step-2-checkbox-option">
                                                     <div>
-                                                        <input type="checkbox" name="step-2-other-ecommerce-check" />
+                                                        <input type="checkbox" id="other-ecommerce" name="step-2-other-ecommerce-check" />
                                                         <span>Outros</span>
                                                     </div>
                                                 </div>
                                                 <div class="step-2-checkbox-option">
                                                     <div style="width: 100%">
-                                                        <input type="text" name="step-2-other-ecommerce" placeholder="Qual outro?" disabled />
+                                                        <input type="text" id="other-ecommerce-name" name="step-2-other-ecommerce" placeholder="Qual outro?" disabled />
                                                     </div>
                                                 </div>
                                             </div>
@@ -777,13 +777,13 @@
                                             <div class="d-flex">
                                                 <div class="step-2-checkbox-option">
                                                     <div>
-                                                        <input type="checkbox" />
+                                                        <input type="checkbox" id="cloudfox-referer-facebook" />
                                                         <span>Facebook</span>
                                                     </div>
                                                 </div>
                                                 <div class="step-2-checkbox-option">
                                                     <div>
-                                                        <input type="checkbox" />
+                                                        <input type="checkbox" id="cloudfox-referer-ad" />
                                                         <span>Anúncios</span>
                                                     </div>
                                                 </div>
@@ -791,13 +791,13 @@
                                             <div class="d-flex">
                                                 <div class="step-2-checkbox-option">
                                                     <div>
-                                                        <input type="checkbox" />
+                                                        <input type="checkbox" id="cloudfox-referer-linkedin" />
                                                         <span>Linkedin</span>
                                                     </div>
                                                 </div>
                                                 <div class="step-2-checkbox-option">
                                                     <div>
-                                                        <input type="checkbox" />
+                                                        <input type="checkbox" id="cloudfox-referer-youtube" />
                                                         <span>Youtube</span>
                                                     </div>
                                                 </div>
@@ -805,7 +805,7 @@
                                             <div class="d-flex">
                                                 <div class="step-2-checkbox-option">
                                                     <div>
-                                                        <input type="checkbox" name="step-2-know-cloudfox-check" />
+                                                        <input type="checkbox" id="cloudfox-referer-other" name="step-2-know-cloudfox-check" />
                                                         <span>Outros</span>
                                                     </div>
                                                 </div>
@@ -821,7 +821,7 @@
                                     <div id="new-register-step-3-container" class="p-4">
                                         <div class="d-flex flex-column mb-4">
                                             <span class="font-size-16 font-weight-600 mb-4" style="color: #0B1D3D">Qual o seu site de vendas?</span>
-                                            <input type="text" name="step-3-sales-site" placeholder="Cole aqui o link para o seu site" class="form-control mb-3" />
+                                            <input type="text" id="step-3-sales-site" name="step-3-sales-site" placeholder="Cole aqui o link para o seu site" class="form-control mb-3" />
                                             <div class="d-flex align-items-center pt-5">
                                                 <input type="checkbox" name="step-3-sales-site-check" />
                                                 <span class="font-size-12 font-weight-400" style="color: #636363; margin-left: 10px;">Não tenho um site de vendas</span>
@@ -829,7 +829,7 @@
                                         </div>
                                         <div class="d-flex flex-column mb-4 mt-4">
                                             <span class="font-size-16 font-weight-600 mb-4" style="color: #0B1D3D">Qual gateway você utiliza hoje?</span>
-                                            <input type="text" name="step-3-gateway" placeholder="Insira aqui o gateway" class="form-control mb-3" />
+                                            <input type="text" id="step-3-gateway" name="step-3-gateway" placeholder="Insira aqui o gateway" class="form-control mb-3" />
                                             <div class="d-flex align-items-center pt-5">
                                                 <input type="checkbox" name="step-3-gateway-check" />
                                                 <span class="font-size-12 font-weight-400" style="color: #636363; margin-left: 10px;">Não utilizo nenhum gateway</span>
@@ -995,7 +995,7 @@
 
                     switch (parseInt(step)) {
                         case 1:
-                            isValid = $("div[data-step-1-selected*='true']").length > 0;
+                            isValid = $("div[data-step-1-selected*='1']").length > 0;
                             break;
                         case 2:
                             isValid = true;
@@ -1025,29 +1025,56 @@
                 }
 
                 function saveNewRegisterData() {
+                    const newRegisterData = {
+                        document: localStorage.getItem('verifyAccount'),
+                        niche: {
+                            others: $("div[data-step-1-value=others]").attr('data-step-1-selected'),
+                            classes: $("div[data-step-1-value=classes]").attr('data-step-1-selected'),
+                            subscriptions: $("div[data-step-1-value=subscriptions]").attr('data-step-1-selected'),
+                            digitalProduct: $("div[data-step-1-value=digital-product]").attr('data-step-1-selected'),
+                            physicalProduct: $("div[data-step-1-value=physical-product]").attr('data-step-1-selected'),
+                            dropshippingImport: $("div[data-step-1-value=dropshipping-import]").attr('data-step-1-selected'),
+                        },
+                        ecommerce: {
+                            wix: +$('#wix').is(':checked'),
+                            shopify: +$('#shopify').is(':checked'),
+                            pageLand: 0,
+                            wooCommerce: +$('#woo-commerce').is(':checked'),
+                            otherEcommerce: +$('#other-ecommerce').is(':checked'),
+                            integratedStore: +$('#integrated-store').is(':checked'),
+                            otherEcommerceName: $('#other-ecommerce-name').val(),
+                        },
+                        cloudfox_referer: {
+                            ad: +$('#cloudfox-referer-ad').is(':checked'),
+                            email: 0,
+                            other: +$('#cloudfox-referer-other').is(':checked'),
+                            youtube: +$('#cloudfox-referer-youtube').is(':checked'),
+                            facebook: +$('#cloudfox-referer-facebook').is(':checked'),
+                            linkedin: +$('#cloudfox-referer-linkedin').is(':checked'),
+                            instagram: 0,
+                            recomendation: 0,
+                        },
+                        website_url: $('#step-3-sales-site').val(),
+                        gateway: $('#step-3-gateway').val(),
+                        monthly_income: $('#new-register-range').val() * 1000,
+                    };
+
                     loadingOnScreen();
 
                     $.ajax({
                         method: "POST",
                         url: "/api/user-informations",
-                        data: {
-                            niche: '',
-                            website_url: '',
-                            gateway: '',
-                            monthly_income: '',
-                            store: '',
-                            cloudfox_referer: '',
-                        },
+                        data: newRegisterData,
                         dataType: "json",
                         headers: {
                             'Authorization': $('meta[name="access-token"]').attr('content'),
                             'Accept': 'application/json'
                         },
                         error: function error(response) {
-                            // setTimeout(function () {
-                            //     loadingOnScreenRemove();
-                            // }, 3000);
-                            console.log(response);
+                            loadingOnScreenRemove();
+                        },
+                        success: function success(response) {
+                            localStorage.setItem('new-register-step', '4');
 
                             $('#new-register-step-3-container').removeClass('d-flex flex-column');
 
@@ -1058,12 +1085,7 @@
 
                             $('#new-register-steps-actions').html('<button type="button" class="btn new-register-btn close-modal">Fechar</button>');
 
-                            setTimeout(function () {
-                                loadingOnScreenRemove();
-                            }, 3000);
-                        },
-                        success: function success(response) {
-
+                            loadingOnScreenRemove();
                         }
                     });
                 }
@@ -1118,10 +1140,10 @@
                     $('.step-1-option').on('click', function () {
                         if ($(this).hasClass('option-selected')) {
                             $(this).removeClass('option-selected');
-                            $(this).attr('data-step-1-selected', 'false');
+                            $(this).attr('data-step-1-selected', '0');
                         } else {
                             $(this).addClass('option-selected');
-                            $(this).attr('data-step-1-selected', 'true');
+                            $(this).attr('data-step-1-selected', '1');
                         }
 
                         setStepButton(localStorage.getItem('new-register-step'));
@@ -1202,13 +1224,13 @@
 
                         let step = lastStep + 1;
 
-                        localStorage.setItem('new-register-step', step.toString());
-
                         if (step === 4) {
                             saveNewRegisterData();
 
                             return;
                         }
+
+                        localStorage.setItem('new-register-step', step.toString());
 
                         $('#new-register-step-' + lastStep + '-container').removeClass('d-flex flex-column');
 
