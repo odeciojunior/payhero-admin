@@ -116,6 +116,7 @@ class CoreApiController extends Controller
                     'user' => [
                         'status' => $userStatus,
                         'document' => $user->document,
+                        'email' => $user->email,
                         'informations' => $userInformations,
                         'link' => $userRedirect,
                     ],
