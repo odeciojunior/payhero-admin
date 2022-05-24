@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none');
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
@@ -31,10 +30,190 @@ $(document).ready(function () {
         });
     });
 
-    $('.new-register-close').on('click', function () {
-        $('.new-register-overlay').fadeOut();
-        $('#new_register-menu').fadeIn();
+    localStorage.setItem('new-register-step', '1');
+
+    changeOpenNewRegisterModalBtnVisiblity();
+
+    window.onresize = changeOpenNewRegisterModalBtnVisiblity;
+
+    $('.new-register-open-modal-btn').on('click', function () {
+        $('.new-register-navbar-open-modal-container').fadeOut('slow');
+
+        if (!localStorage.getItem('new-register-step')) {
+            localStorage.setItem('new-register-step', '1');
+        }
+
+        let step = localStorage.getItem('new-register-step');
+
+        changeProgressBar(step);
+
+        setStepButton(step);
+
+        $('#new-register-step-' + step + '-container').addClass('d-flex flex-column');
+
+        $('.new-register-overlay').fadeIn();
     });
+
+    $('.close-modal').on('click', function () {
+        $('.new-register-overlay').fadeOut();
+
+        changeOpenNewRegisterModalBtnVisiblity();
+    });
+
+    $('#new-register-steps-actions').on('click', '.close-modal', function () {
+        if (localStorage.getItem('new-register-step') == '4') {
+            $('#new-register-steps-container').fadeOut();
+
+            $('#new-register-firt-page').fadeIn();
+        } else {
+            $('.new-register-overlay').fadeOut();
+        }
+
+        changeOpenNewRegisterModalBtnVisiblity();
+    });
+
+    $('#open-steps-btn').on('click', function () {
+        $('#new-register-firt-page').hide();
+
+        $('.modal-top-btn').hide();
+
+        setStepButton(localStorage.getItem('new-register-step'));
+
+        $('#new-register-steps-container').show();
+    });
+
+    $('#new-register-step-container input[type=text]').on('input', function() {
+        setStepButton(localStorage.getItem('new-register-step'));
+    });
+
+    $('#new-register-step-container input[type=checkbox]').change(function() {
+        setStepButton(localStorage.getItem('new-register-step'));
+    });
+
+    $('.step-1-option').on('click', function () {
+        if ($(this).hasClass('option-selected')) {
+            $(this).removeClass('option-selected');
+            $(this).attr('data-step-1-selected', '0');
+        } else {
+            $(this).addClass('option-selected');
+            $(this).attr('data-step-1-selected', '1');
+        }
+
+        setStepButton(localStorage.getItem('new-register-step'));
+    });
+
+    $("input[name='step-2-other-ecommerce-check']").change(function () {
+        let input = $("input[name='step-2-other-ecommerce']");
+
+        if ($(this).is(":checked")) {
+            input.removeAttr('disabled');
+        } else {
+            input.val('');
+            input.attr('disabled', true);
+        }
+    });
+
+    $("input[name='step-2-know-cloudfox-check']").change(function () {
+        let input = $("input[name='step-2-know-cloudfox']");
+
+        if ($(this).is(":checked")) {
+            input.removeAttr('disabled');
+        } else {
+            input.val('');
+            input.attr('disabled', true);
+        }
+    });
+
+    $("input[name='step-3-sales-site-check']").change(function () {
+        let input = $("input[name='step-3-sales-site']");
+
+        if ($(this).is(":checked")) {
+            input.val('');
+            input.attr('disabled', true);
+        } else {
+            input.removeAttr('disabled');
+        }
+    });
+
+    $("input[name='step-3-gateway-check']").change(function () {
+        let input = $("input[name='step-3-gateway']");
+
+        if ($(this).is(":checked")) {
+            input.val('');
+            input.attr('disabled', true);
+        } else {
+            input.removeAttr('disabled');
+        }
+    });
+
+    $('#new-register-previous-step').on('click', function () {
+        let step = parseInt(localStorage.getItem('new-register-step'));
+
+        if (step === 1) {
+            $('#new-register-firt-page').show();
+
+            $('.modal-top-btn').show();
+
+            $('#new-register-steps-container').hide();
+
+            return;
+        }
+
+        $('#new-register-step-' + step + '-container').removeClass('d-flex flex-column');
+
+        step--;
+
+        localStorage.setItem('new-register-step', step.toString());
+
+        changeProgressBar(step);
+
+        setStepButton(step);
+
+        $('#new-register-step-' + step + '-container').addClass('d-flex flex-column');
+    });
+
+    $('#new-register-next-step').on('click', function () {
+        let lastStep = parseInt(localStorage.getItem('new-register-step'));
+
+        let step = lastStep + 1;
+
+        if (step === 4) {
+            saveNewRegisterData();
+
+            return;
+        }
+
+        localStorage.setItem('new-register-step', step.toString());
+
+        $('#new-register-step-' + lastStep + '-container').removeClass('d-flex flex-column');
+
+        changeProgressBar(step);
+
+        setStepButton(step);
+
+        $('#new-register-step-' + step + '-container').addClass('d-flex flex-column');
+    });
+
+    const monthRevenueInput = document.getElementById('new-register-range');
+
+    monthRevenueInput.style.backgroundSize = (monthRevenueInput.value - monthRevenueInput.min) * 100 / (monthRevenueInput.max - monthRevenueInput.min) + '% 100%';
+
+    function handleInputRangeChange(e) {
+        let target = e.target;
+
+        const minVal = target.min;
+        const maxVal = target.max;
+        let val = target.value;
+
+        target.style.backgroundSize = (val - minVal) * 100 / (maxVal - minVal) + '% 100%';
+
+        val = val * 1000;
+
+        $('#new-register-month-revenue span:first-child').text((val === 5000 ? 'Até ' : val === 1000000 ? 'Acima de ' : '') + 'R$');
+        $('#new-register-month-revenue span:last-child').text(val.toLocaleString('pt-BR', { maximumFractionDigits: 2, minimumFractionDigits: 2 }));
+    }
+
+    monthRevenueInput.addEventListener('input', handleInputRangeChange);
 });
 
 function stringToMoney(string, currency = 'BRL') {
@@ -812,6 +991,145 @@ function ajaxVerifyAccount() {
 
 function verifyDocumentPending() {
     ajaxVerifyAccount();
+}
+
+function changeProgressBar(step) {
+    switch (parseInt(step)) {
+        case 1:
+            $('#new-register-step-progress-bar-1').css('width', '50%');
+            $('#new-register-step-progress-bar-2').css('width', '0');
+            $(".new-register-step[data-step*='1']").addClass('step-active');
+            $(".new-register-step[data-step*='2']").removeClass('step-active');
+            break;
+        case 2:
+            $('#new-register-step-progress-bar-1').css('width', '100%');
+            $('#new-register-step-progress-bar-2').css('width', '50%');
+            $(".new-register-step[data-step*='1']").addClass('step-active');
+            $(".new-register-step[data-step*='2']").addClass('step-active');
+            $(".new-register-step[data-step*='3']").removeClass('step-active');
+            break;
+        case 3:
+        case 4:
+            $('#new-register-step-progress-bar-1').css('width', '100%');
+            $('#new-register-step-progress-bar-2').css('width', '100%');
+            $(".new-register-step[data-step*='1']").addClass('step-active');
+            $(".new-register-step[data-step*='2']").addClass('step-active');
+            $(".new-register-step[data-step*='3']").addClass('step-active');
+            break;
+    }
+}
+
+function changeOpenNewRegisterModalBtnVisiblity() {
+    if (window.innerWidth >= 847) {
+        $('.new-register-page-open-modal-container').fadeOut();
+        $('.new-register-navbar-open-modal-container').fadeIn();
+    } else {
+        $('.new-register-navbar-open-modal-container').fadeOut();
+        $('.new-register-page-open-modal-container').fadeIn();
+    }
+}
+
+function validateStep(step) {
+    let isValid = false;
+
+    switch (parseInt(step)) {
+        case 1:
+            isValid = $("div[data-step-1-selected*='1']").length > 0;
+            break;
+        case 2:
+            isValid = true;
+            break;
+        case 3:
+            isValid = ($("input[name='step-3-sales-site-check']").is(':checked') || $("input[name='step-3-sales-site']").val()) &&
+                ($("input[name='step-3-gateway-check']").is(':checked') || $("input[name='step-3-gateway']").val());
+            break;
+        default:
+            isValid = true;
+            break;
+    }
+
+    return isValid;
+}
+
+function setStepButton(step) {
+    let btn = $('#new-register-next-step');
+
+    if (!validateStep(step)) {
+        btn.attr('disabled', true);
+    } else {
+        btn.removeAttr('disabled');
+    }
+
+    btn.attr('data-step-btn', step);
+}
+
+function saveNewRegisterData() {
+    const newRegisterData = {
+        document: JSON.parse(localStorage.getItem('verifyAccount')).user.document,
+        email: JSON.parse(localStorage.getItem('verifyAccount')).user.email,
+        niche: JSON.stringify({
+            others: $("div[data-step-1-value=others]").attr('data-step-1-selected'),
+            classes: $("div[data-step-1-value=classes]").attr('data-step-1-selected'),
+            subscriptions: $("div[data-step-1-value=subscriptions]").attr('data-step-1-selected'),
+            digitalProduct: $("div[data-step-1-value=digital-product]").attr('data-step-1-selected'),
+            physicalProduct: $("div[data-step-1-value=physical-product]").attr('data-step-1-selected'),
+            dropshippingImport: $("div[data-step-1-value=dropshipping-import]").attr('data-step-1-selected'),
+        }),
+        ecommerce: JSON.stringify({
+            wix: +$('#wix').is(':checked'),
+            shopify: +$('#shopify').is(':checked'),
+            pageLand: 0,
+            wooCommerce: +$('#woo-commerce').is(':checked'),
+            otherEcommerce: +$('#other-ecommerce').is(':checked'),
+            integratedStore: +$('#integrated-store').is(':checked'),
+            otherEcommerceName: $('#other-ecommerce-name').val(),
+        }),
+        cloudfox_referer: JSON.stringify({
+            ad: +$('#cloudfox-referer-ad').is(':checked'),
+            email: 0,
+            other: +$('#cloudfox-referer-other').is(':checked'),
+            youtube: +$('#cloudfox-referer-youtube').is(':checked'),
+            facebook: +$('#cloudfox-referer-facebook').is(':checked'),
+            linkedin: +$('#cloudfox-referer-linkedin').is(':checked'),
+            instagram: 0,
+            recomendation: 0,
+        }),
+        website_url: $('#step-3-sales-site').val(),
+        gateway: $('#step-3-gateway').val(),
+        monthly_income: $('#new-register-range').val() * 1000,
+    };
+
+    loadingOnScreen();
+
+    $.ajax({
+        method: "POST",
+        url: "/api/user-informations",
+        data: newRegisterData,
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json'
+        },
+        error: function error(response) {
+            loadingOnScreenRemove();
+
+            alertCustom('error', 'Houve um erro ao tentar cadastrar os dados, tente novamente!');
+        },
+        success: function success(response) {
+            localStorage.setItem('new-register-step', '4');
+
+            $('#new-register-step-3-container').removeClass('d-flex flex-column');
+
+            $('#new-register-step-4-container').addClass('d-flex flex-column');
+
+            $('#new-register-steps-actions').removeClass('justify-content-between');
+            $('#new-register-steps-actions').addClass('justify-content-center');
+
+            $('#new-register-steps-actions').html('<button type="button" class="btn new-register-btn close-modal">Fechar</button>');
+
+            loadingOnScreenRemove();
+        }
+    });
 }
 
 /* End - Document Pending Alert */
