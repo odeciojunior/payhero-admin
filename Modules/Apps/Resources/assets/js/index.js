@@ -7,7 +7,7 @@ $(document).ready(function () {
     function getProjects() {
         $.ajax({
             method: "GET",
-            url: '/api/projects?select=true&status=active',
+            url: '/api/projects?select=true&status=active&company='+ $("#company-navbar").val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),

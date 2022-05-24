@@ -24,9 +24,9 @@ $(document).ready(function () {
         var cont = 0;
 
         if (link == null) {
-            link = '/api/invitations';
+            link = '/api/invitations?company='+ $("#company-navbar").val();
         } else {
-            link = '/api/invitations' + link;
+            link = '/api/invitations' + link + '&company='+ $("#company-navbar").val();
         }
 
         $.ajax({
@@ -299,7 +299,7 @@ $(document).ready(function () {
     function getInvitationData() {
         $.ajax({
             method: "GET",
-            url: '/api/invitations/getinvitationdata',
+            url: '/api/invitations/getinvitationdata' + '?company='+ $("#company-navbar").val(),
             dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
