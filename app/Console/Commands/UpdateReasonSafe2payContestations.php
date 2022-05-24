@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\SaleContestation;
 use Modules\Core\Services\Gateways\Safe2payGateway;
 
@@ -47,7 +48,15 @@ class UpdateReasonSafe2payContestations extends Command
         $limit = 100;
         $total = 0;
         $itens = 0;
-        
+
+        $saleContestations = DB::table('sale_contestations as c')->select('c.id','s.gateway_transaction_id')
+        ->join('sales as s','s.id','=','c.sale_id')
+        ->where('c.gateway_id',Gateway::SAFE2PAY_PRODUCTION_ID)->whereNull('c.reason')->get();
+
+        if(count($saleContestations) == 0){
+            exit;
+        }
+       
         do {
             $response = $safe->listChargebacks([
                 'PageNumber'=>$pageNumber,
@@ -63,12 +72,11 @@ class UpdateReasonSafe2payContestations extends Command
                     
                     $this->line($row->IdTransaction);
                     $itens++;
-                                      
-                    $sale = DB::table('sales')->select('id','status','gateway_transaction_id')->where('gateway_transaction_id',$row->IdTransaction)->first();
-                    if(!empty($sale))
-                    {
-                        $saleContestation = SaleContestation::where('sale_id',$sale->id)->first();
-                        if(!empty($saleContestation) && empty($saleContestation->reason)){
+
+                    foreach($saleContestations as $key=>$contestation){
+                        if($contestation->gateway_transaction_id == $row->IdTransaction)
+                        {
+                            $saleContestation = SaleContestation::find($contestation->id);                            
                             $saleContestation->update([
                                 'request_date'=>$row->ChargebackDate,
                                 'reason'=>$row->ReasonMessage,
@@ -77,10 +85,17 @@ class UpdateReasonSafe2payContestations extends Command
                                 'data'=>json_encode($row),
                                 'expiration_date'=>$row->DisputeDueDate, //Data final para defesa da contestação.
                             ]);
-                            $this->comment('Atualizando sale contestation '.$saleContestation->id);
-                        }                       
+                            $this->comment('Atualizando sale contestation '.$contestation->id);
+                            
+                            unset($saleContestations[$key]);
+                        }
+                    }    
+                    
+                    if(count($saleContestations) == 0){
+                        exit;
                     }
                 }
+
                 $this->line($itens.'/'.$total);
             }
             

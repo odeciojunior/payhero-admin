@@ -107,16 +107,23 @@ class Safe2PayService implements Statement
 
     public function withdrawalValueIsValid($value): bool
     {
-        $availableBalance = $this->getAvailableBalance();
+        if (empty($value) || $value < 1) {
+            return false;
+        }
 
-        if (empty($value) || $value < 1 || $value > $availableBalance) {
+        $availableBalance = $this->getAvailableBalance();
+        $pendingBalance = $this->getPendingBalance();
+        (new CompanyService)->applyBlockedBalance($this, $availableBalance, $pendingBalance);
+
+        if ($value > $availableBalance) {
             return false;
         }
 
         return true;
     }
 
-    public function existsBankAccountApproved(){
+    public function existsBankAccountApproved()
+    {
         //verifica se existe uma conta bancaria aprovada
         $this->companyBankAccount =  $this->company->getDefaultBankAccount();
         return !empty($this->companyBankAccount);

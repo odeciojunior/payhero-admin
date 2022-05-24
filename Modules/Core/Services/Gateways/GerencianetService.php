@@ -96,11 +96,17 @@ class GerencianetService implements Statement
         return WithdrawalResource::collection($withdrawals->paginate(10));
     }
 
-    public function withdrawalValueIsValid($withdrawalValue): bool
+    public function withdrawalValueIsValid($value): bool
     {
-        $availableBalance = $this->getAvailableBalance();
+        if (empty($value) || $value < 1) {
+            return false;
+        }
 
-        if (empty($withdrawalValue) || $withdrawalValue < 1 || $withdrawalValue > $availableBalance) {
+        $availableBalance = $this->getAvailableBalance();
+        $pendingBalance = $this->getPendingBalance();
+        (new CompanyService)->applyBlockedBalance($this, $availableBalance, $pendingBalance);
+
+        if ($value > $availableBalance) {
             return false;
         }
 
