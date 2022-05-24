@@ -685,7 +685,7 @@ function ajaxVerifyAccount() {
                     localStorage.setItem('verifyAccount', JSON.stringify(response.data));
                 }
 
-                if (response.data.user.informations) {
+                if (!response.data.user.informations) {
                     $('.extra-informations-user').show();
                 } else {
                     $('.extra-informations-user').hide();
