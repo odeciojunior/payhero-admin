@@ -1031,16 +1031,17 @@
 
                 function saveNewRegisterData() {
                     const newRegisterData = {
-                        document: localStorage.getItem('verifyAccount'),
-                        niche: {
+                        document: JSON.parse(localStorage.getItem('verifyAccount')).user.document,
+                        email: JSON.parse(localStorage.getItem('verifyAccount')).user.email,
+                        niche: JSON.stringify({
                             others: $("div[data-step-1-value=others]").attr('data-step-1-selected'),
                             classes: $("div[data-step-1-value=classes]").attr('data-step-1-selected'),
                             subscriptions: $("div[data-step-1-value=subscriptions]").attr('data-step-1-selected'),
                             digitalProduct: $("div[data-step-1-value=digital-product]").attr('data-step-1-selected'),
                             physicalProduct: $("div[data-step-1-value=physical-product]").attr('data-step-1-selected'),
                             dropshippingImport: $("div[data-step-1-value=dropshipping-import]").attr('data-step-1-selected'),
-                        },
-                        ecommerce: {
+                        }),
+                        ecommerce: JSON.stringify({
                             wix: +$('#wix').is(':checked'),
                             shopify: +$('#shopify').is(':checked'),
                             pageLand: 0,
@@ -1048,8 +1049,8 @@
                             otherEcommerce: +$('#other-ecommerce').is(':checked'),
                             integratedStore: +$('#integrated-store').is(':checked'),
                             otherEcommerceName: $('#other-ecommerce-name').val(),
-                        },
-                        cloudfox_referer: {
+                        }),
+                        cloudfox_referer: JSON.stringify({
                             ad: +$('#cloudfox-referer-ad').is(':checked'),
                             email: 0,
                             other: +$('#cloudfox-referer-other').is(':checked'),
@@ -1058,7 +1059,7 @@
                             linkedin: +$('#cloudfox-referer-linkedin').is(':checked'),
                             instagram: 0,
                             recomendation: 0,
-                        },
+                        }),
                         website_url: $('#step-3-sales-site').val(),
                         gateway: $('#step-3-gateway').val(),
                         monthly_income: $('#new-register-range').val() * 1000,

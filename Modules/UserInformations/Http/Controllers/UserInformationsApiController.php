@@ -26,6 +26,7 @@ class UserInformationsApiController extends Controller
             }
 
             $model->document = $data['document'];
+            $model->email = $data['email'];
             $model = $this->setData($model, $data);
             $model->save();
 
