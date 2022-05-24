@@ -1096,6 +1096,8 @@
                 }
 
                 $(document).ready(function () {
+                    localStorage.setItem('new-register-step', '1');
+
                     changeOpenNewRegisterModalBtnVisiblity();
 
                     window.onresize = changeOpenNewRegisterModalBtnVisiblity;
