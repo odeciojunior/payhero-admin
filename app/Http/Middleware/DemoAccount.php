@@ -21,7 +21,7 @@ class DemoAccount
     public function handle(Request $request, Closure $next)
     {        
         Config::set('database.default', 'mysql');
-        //\Log::info($request->path());
+        
         if(str_contains($request->path(),'api/') && !str_contains($request->path(),'api/core/company-default'))
         {
             $user = Auth::user();
@@ -37,8 +37,6 @@ class DemoAccount
                     $routeAction
                 );
                 
-                //\Log::info($routeAction);
-
                 return Route::toDemoAccount($request, $routeAction);                
             }
         }

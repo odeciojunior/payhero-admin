@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Arr;
 use Modules\Core\Entities\Customer;
 use Modules\Core\Entities\Delivery;
+use Modules\Core\Services\FoxUtilsFakeService;
 
 class DeliveryFactory extends Factory
 {
@@ -31,7 +32,7 @@ class DeliveryFactory extends Factory
             },
             'zip_code'=>$this->faker->randomNumber(8),
             'country'=>'BR',
-            'state'=>$this->getRandomUf(),
+            'state'=>FoxUtilsFakeService::getRandomUf(),
             'city'=>$this->faker->city(),
             'neighborhood'=>$this->faker->city(),
             'street'=>$this->faker->streetAddress(),
@@ -41,11 +42,5 @@ class DeliveryFactory extends Factory
         ];
     }    
 
-    public function getRandomUf(){
-        $ufs = [
-            'AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SP','TO'
-        ];
-
-        return Arr::random($ufs);
-    }
+    
 }

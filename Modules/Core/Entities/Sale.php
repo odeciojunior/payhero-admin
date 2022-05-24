@@ -140,6 +140,7 @@ class Sale extends Model
 
     public const CREDIT_CARD_PAYMENT = 1;
     public const BOLETO_PAYMENT = 2;
+    public const DEBIT_CARD_PAYMENT = 3;
     public const PIX_PAYMENT = 4;
 
     public const STATUS_APPROVED = 1;

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Arr;
 use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Gateway;
 use Modules\Core\Entities\Sale;
 
 class SaleFactory extends Factory
@@ -23,10 +24,11 @@ class SaleFactory extends Factory
      * @return array
      */
     public function definition()
-    {        
+    {
         return [
             'progressive_discount' => null,
             'owner_id' => Company::USER_ID_DEMO,
+            'gateway_id'=>Gateway::SAFE2PAY_PRODUCTION_ID,
             'customer_id' =>  null,
             'project_id' =>  null,
             'shipping_id' =>  null,
@@ -43,9 +45,7 @@ class SaleFactory extends Factory
             'gateway_status' => '',
             'installments_amount' => null,
             'installments_value' => null,
-            'flag' => function (array $attributes) {
-                return $attributes['payment_method'] == Sale::CREDIT_CARD_PAYMENT ?  $this->getRandoFlagCC(): '';
-            },
+            'flag' => null,
             'delivery_id' => null,
             'shopify_discount' => '0',
             'installment_tax_value' => null,
@@ -56,22 +56,15 @@ class SaleFactory extends Factory
             'status'=>Sale::STATUS_PENDING,
             'gateway_status'=>function (array $attributes) {
                 return $this->getSaleStatus($attributes['status']);
-            }
+            },
+            'boleto_digitable_line'=>null,
+            'gateway_billet_identificator'=>null,
+            'boleto_due_date'=>null,
+            'has_valid_tracking'=>$this->faker->boolean()
         ];
     }   
 
-    public function getRandoFlagCC(){
-        $flags = ['visa','mastercad','aura','discover','hipercard','amex','elo','diners','jcb'];
-        return Arr::random($flags);
-    }
     
-    public function getRandomStatus($paymentMethod){
-        $status = [Sale::STATUS_PENDING, Sale::STATUS_APPROVED,Sale::STATUS_CANCELED];
-        if($paymentMethod == Sale::CREDIT_CARD_PAYMENT){
-            $status = [Sale::STATUS_APPROVED,Sale::STATUS_CANCELED_ANTIFRAUD, Sale::STATUS_IN_REVIEW,sale::STATUS_REFUSED];
-        }
-        return Arr::random($status);
-    }
 
     public function getSaleStatus($status)
     {        
@@ -91,7 +84,7 @@ class SaleFactory extends Factory
         }       
     }
 
-    public function getTransactionStatus($status){
+    public function getTransactionStatus($status){        
         switch ($status) {
             case Sale::STATUS_PENDING:
                 return 'PENDING';                    

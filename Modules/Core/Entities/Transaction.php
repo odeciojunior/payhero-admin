@@ -67,7 +67,8 @@ class Transaction extends Model
     const STATUS_REFUSED = 7;
     const STATUS_PENDING_ANTIFRAUD = 8;
     const STATUS_CANCELED_ANTIFRAUD = 9;
-    const STATUS_WAITING_WITHDRAWAL = 10;
+    const STATUS_IN_PROCESS = 10;
+    //const STATUS_WAITING_WITHDRAWAL = 10;
     const STATUS_ANTICIPATED = 12;
     const STATUS_BILLET_REFUNDED = 13;
 

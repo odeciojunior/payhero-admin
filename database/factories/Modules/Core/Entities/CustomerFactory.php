@@ -28,7 +28,7 @@ class CustomerFactory extends Factory
             'telephone'=>$this->faker->e164PhoneNumber(),
             'balance'=>0,
             'blocked_withdrawal'=>0,
-            'birthday'=>$this->faker->dateTime('-'.rand(18,70).' years'),
+            'birthday'=>$this->faker->dateTime('-'.rand(18,50).' years'),
             'id_kapsula_client'=>null,
         ];
     }    
