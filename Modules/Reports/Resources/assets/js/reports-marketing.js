@@ -405,17 +405,12 @@ function loadDevices() {
             errorAjaxResponse(response);
         },
         success: function success(response) {
-            let {
-                total,
-                percentage_desktop,
-                percentage_mobile,
-                count_desktop,
-                count_mobile,
-                value_desktop,
-                value_mobile
-            } = response.data;
+            let { desktop, mobile } = response.data;
+            const numbers = [desktop.total, mobile.total].map(Number).reduce((prev, value) => prev + value,0);
+            console.log(numbers);
 
-            deviceBlock = `
+            if( numbers !== 0 ) {
+                deviceBlock = `
                 <div class="row container-devices">
                     <div class="container">
                         <div class="data-holder b-bottom">
@@ -429,12 +424,12 @@ function loadDevices() {
                                 <div class="box-payment-option option">
                                     <div class="col-payment">
                                         <div class="box-payment center">
-                                            <span class="silver">${percentage_mobile|| '0.0%'}</span>
+                                            <span class="silver">${mobile.percentage}</span>
                                         </div>
                                     </div>
                                     <div class="col-payment">
                                         <div class="box-payment right">
-                                            <strong class="grey font-size-14">${value_mobile || 'R$ 0,00'}</strong>
+                                            <strong class="grey font-size-14">${mobile.value}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -453,12 +448,12 @@ function loadDevices() {
                                 <div class="box-payment-option option">
                                     <div class="col-payment">
                                         <div class="box-payment center">
-                                            <span class="silver">${percentage_desktop || '0.0%'}</span>
+                                            <span class="silver">${desktop.percentage}</span>
                                         </div>
                                     </div>
                                     <div class="col-payment">
                                         <div class="box-payment right">
-                                            <strong class="grey font-size-14">${value_desktop || 'R$ 0,00'}</strong>
+                                            <strong class="grey font-size-14">${desktop.value}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -466,8 +461,18 @@ function loadDevices() {
                         </div>
                     </div>
                 </div>
-            `;
-            $("#block-devices").html(deviceBlock);
+                `;
+                $("#block-devices").html(deviceBlock);
+            } else {
+                deviceBlock = `
+                    <div class="empty-products pad-0" style="width: 100%;">
+                        ${noData}
+                        <p class="noone">Sem dados</p>   
+                    </div>
+                `;
+                $("#block-devices").html(deviceBlock);
+            }
+           
         }
     });
 }
@@ -990,6 +995,31 @@ let emptyCoupons = `
 <path d="M64.2275 0.892341C77.7658 0.892339 90.9257 5.35954 101.666 13.6011C112.407 21.8427 120.128 33.398 123.632 46.475L99.8702 52.8419C97.7678 44.9958 93.1352 38.0625 86.6908 33.1176C80.2464 28.1727 72.3505 25.4923 64.2275 25.4923L64.2275 0.892341Z" fill="#F4F6FB" fill-opacity="0.25"/>
 <path d="M123.632 46.475C126.426 56.9026 126.426 67.8821 123.632 78.3097L99.8702 71.9428C101.547 65.6862 101.547 59.0985 99.8702 52.8419L123.632 46.475Z" fill="#E8EAEB"/>
 <path d="M10.9669 93.1423C5.56919 83.7932 2.72751 73.1878 2.72751 62.3923C2.72751 51.5968 5.5692 40.9915 10.9669 31.6423C16.3647 22.2932 24.1283 14.5295 33.4775 9.13177C42.8267 3.73402 53.432 0.892339 64.2275 0.892341L64.2275 25.4923C57.7502 25.4923 51.387 27.1974 45.7775 30.436C40.168 33.6747 35.5098 38.3328 32.2712 43.9423C29.0325 49.5518 27.3275 55.915 27.3275 62.3923C27.3275 68.8696 29.0325 75.2328 32.2712 80.8423L10.9669 93.1423Z" fill="#F4F6FB" fill-opacity="0.6"/>
+</svg>
+`;
+
+let noData = `
+<svg width="275" height="122" viewBox="0 0 275 122" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="48" y="94" width="187" height="25" rx="4" fill="url(#paint0_linear_2696_543)"/>
+<rect x="48" y="5" width="227" height="25" rx="4" fill="url(#paint1_linear_2696_543)"/>
+<rect x="48" y="50" width="227" height="24" rx="4" fill="url(#paint2_linear_2696_543)"/>
+<path opacity="0.6" d="M29 89C31.2091 89 33 90.7909 33 93L33 117C33 119.209 31.2091 121 29 121L5 121C2.79086 121 0.999999 119.209 0.999999 117L1 93C1 90.7909 2.79086 89 5 89L29 89Z" stroke="#CCCCCC" stroke-dasharray="2 2"/>
+<path opacity="0.6" d="M29 1C31.2091 1 33 2.79086 33 5L33 29C33 31.2091 31.2091 33 29 33L5 33C2.79086 33 0.999999 31.2091 0.999999 29L1 5C1 2.79086 2.79086 0.999999 5 0.999999L29 1Z" stroke="#CCCCCC" stroke-dasharray="2 2"/>
+<path opacity="0.6" d="M29 45C31.2091 45 33 46.7909 33 49L33 73C33 75.2091 31.2091 77 29 77L5 77C2.79086 77 0.999999 75.2091 0.999999 73L1 49C1 46.7909 2.79086 45 5 45L29 45Z" stroke="#CCCCCC" stroke-dasharray="2 2"/>
+<defs>
+<linearGradient id="paint0_linear_2696_543" x1="141.5" y1="94" x2="235" y2="94" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4F6FB"/>
+<stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint1_linear_2696_543" x1="161.5" y1="5" x2="275" y2="4.99999" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4F6FB"/>
+<stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint2_linear_2696_543" x1="75.2025" y1="74" x2="250.612" y2="73.9999" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F4F6FB"/>
+<stop offset="1" stop-color="#F4F6FB" stop-opacity="0"/>
+</linearGradient>
+</defs>
 </svg>
 `;
 

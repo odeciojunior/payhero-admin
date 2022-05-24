@@ -553,13 +553,13 @@
                             <div class="">
                                 <div class="d-flex justify-content-between sub-comission">
                                     <div class="inner-comission">
-                                        <div class="card inner pad-bottom-0" id="card-devices">
+                                        <div class="card inner pad-bottom-0 card-devices-mkt" id="card-devices">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Dispositivos</strong>
                                                 </h5>
                                             </header>
-                                            <div class="custom-table pb-0 pt-0 onPreLoad" id="block-devices"></div>
+                                            <div class="custom-table pb-0 pt-0 onPreLoad block-devices-mkt" id="block-devices"></div>
                                         </div>
                                         <div class="card">
                                             <div class="d-flex align-items cash-box">

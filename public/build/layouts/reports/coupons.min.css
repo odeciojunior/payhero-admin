@@ -608,7 +608,7 @@ h4.number{
 
 @media only screen and (min-width: 768px) and (max-width : 1219px){
     .box-payment-option { flex: 1; }
-    .box-payment-option.option { flex-direction: row; }
+    .box-payment-option.option { flex-direction: row; }    
 }
 
 #type-payment { display: flex; }
@@ -623,6 +623,30 @@ h4.number{
 #type-payment.container-payment { height: 161px; }
 
 .card-devices { height: 211px; }
+.card-devices-mkt { height: 219px; }
+
+.block-devices-mkt { 
+    height: 139px; 
+    display: flex;
+    align-items: center;
+}
+.block-devices-mkt .container-devices { height: 100%; }
+
+.block-devices-mkt .container-devices .container {
+    margin: 0;
+    height: 60px;
+    align-items: center;
+    display: flex;
+    width: 100%;
+}
+.block-devices-mkt .container .data-holder { width: 100%; }
+
+.block-devices-mkt .data-holder .col-payment { flex: 2; }
+
+@media only screen and (min-width: 768px) and (max-width : 1219px){
+    .block-devices-mkt .data-holder .col-payment { flex: 1; }
+}
+
 .gadgets { height: 145px; }
 
 .card-abandoned { height: 118px; }
