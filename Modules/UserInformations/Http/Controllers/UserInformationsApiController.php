@@ -19,29 +19,23 @@ class UserInformationsApiController extends Controller
             $model = new UserInformation();
             $exists = $model->where('document', $data['document'])->first();
 
-            if (empty($exists)) {
-                //Create
-
-                $model->document = $data['document'];
-                $model->email = $data['email'];
-                $model = $this->setData($model, $data);
-                $model->save();
-
+            if (!empty($exists)) {
                 return response()->json([
-                    'message' => 'Informações do usuário cadastradas'
-                ], Response::HTTP_OK);
-            } else {
-                // Update
-
-                $exists->email = $data['email'];
-                $model = $this->setData($exists, $data);
-                $model->save();
-
-                return response()->json([
-                    'message' => 'Informações do usuário atualizada'
-                ], Response::HTTP_OK);
+                    'message' => 'Já existem Informações do usuário cadastradas'
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
+
+            $model->document = $data['document'];
+            $model->email = $data['email'];
+            $model = $this->setData($model, $data);
+            $model->save();
+
+            return response()->json([
+                'message' => 'Informações do usuário cadastradas'
+            ], Response::HTTP_OK);
         } catch (Exception $exception) {
+            report($exception);
+
             return response()->json([
                 'message' => $exception->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
