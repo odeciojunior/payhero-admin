@@ -443,6 +443,11 @@
                 }
             }
 
+            #open-steps-btn:not(:disabled):not(.disabled).active:focus,
+            #open-steps-btn:not(:disabled):not(.disabled):active:focus {
+                box-shadow: none;
+            }
+
             #new-register-range {
                 padding: 0;
                 height: 4px;

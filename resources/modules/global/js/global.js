@@ -677,37 +677,18 @@ function ajaxVerifyAccount() {
         },
         success: response => {
             if (response.data.account !== 'approved') {
-                sessionStorage.getItem('verifyAccount');
-                if (sessionStorage == null) {
+                let verifyAccount = localStorage.getItem('verifyAccount');
+                if (verifyAccount == null) {
                     $('#new_register-menu').fadeIn();
                     $('.new-register-overlay').fadeIn();
 
-                    sessionStorage.setItem('verifyAccount', JSON.stringify(response.data));
+                    localStorage.setItem('verifyAccount', JSON.stringify(response.data));
                 }
 
-                if (response.data.user.informations) {
-                    $('.extra-informations-user').html(`
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <div class="icon d-flex align-items-center">
-                                        <span class="bg-color-blue account-health-note-circle"></span>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <h1 class="title">Queremos conhecer você!</h1>
-                                    <p class="description">Temos algumas perguntas para conhecer melhor você e seu negócio.</p>
-                                </div>
-                            </div>
-                            <div>
-                                <button id="open-steps-btn" type="button" class="btn new-register-btn">
-                                    <img src="/build/global/img/icon-chevron-right.svg" alt="">
-                                </button>
-                            </div>
-                        </div>
-                    `);
+                if (!response.data.user.informations) {
+                    $('.extra-informations-user').show();
                 } else {
-                    $('.extra-informations-user').remove();
+                    $('.extra-informations-user').hide();
                 }
 
                 var card_company_status = '';

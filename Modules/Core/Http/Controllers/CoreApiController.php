@@ -102,10 +102,12 @@ class CoreApiController extends Controller
                 }
             }
 
-            if ($userStatus == 'approved' && $userInformations == true && !empty($companyApproved)) {
-                $user->update([
-                    'account_is_approved' => 1
-                ]);
+            if (!$user->account_is_approved) {
+                if ($userStatus == 'approved' && $userInformations == true && !empty($companyApproved)) {
+                    $user->update([
+                        'account_is_approved' => 1
+                    ]);
+                }
             }
 
             return response()->json([
