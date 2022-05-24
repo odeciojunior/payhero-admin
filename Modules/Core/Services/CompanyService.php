@@ -242,7 +242,7 @@ class CompanyService
                 if($company->address_document_status == Company::DOCUMENT_STATUS_REFUSED && $company->contract_document_status == Company::DOCUMENT_STATUS_REFUSED) {
                     return $company;
                 }
-            } else{
+            } else {
                 return $company;
             }
         }

@@ -699,7 +699,11 @@ function ajaxVerifyAccount() {
                                     <p class="description">Temos algumas perguntas para conhecer melhor você e seu negócio.</p>
                                 </div>
                             </div>
-                            <img src="/build/global/img/icon-chevron-right.svg" alt="">
+                            <div>
+                                <button id="open-steps-btn" type="button" class="btn new-register-btn">
+                                    <img src="/build/global/img/icon-chevron-right.svg" alt="">
+                                </button>
+                            </div>
                         </div>
                     `);
                 } else {

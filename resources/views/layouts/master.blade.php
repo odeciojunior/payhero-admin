@@ -1073,7 +1073,7 @@
 
                     window.onresize = changeOpenNewRegisterModalBtnVisiblity;
 
-                    $('.new-register-open-modal-btn').click(function () {
+                    $('.new-register-open-modal-btn').on('click', function () {
                         $('.new-register-navbar-open-modal-container').fadeOut('slow');
 
                         if (!localStorage.getItem('new-register-step')) {
@@ -1091,13 +1091,13 @@
                         $('.new-register-overlay').fadeIn();
                     });
 
-                    $('.close-modal').click(function () {
+                    $('.close-modal').on('click', function () {
                         $('.new-register-overlay').fadeOut();
 
                         changeOpenNewRegisterModalBtnVisiblity();
                     });
 
-                    $('#open-steps-btn').click(function () {
+                    $('#open-steps-btn').on('click', function () {
                         $('#new-register-firt-page').hide();
 
                         $('.modal-top-btn').hide();
@@ -1115,7 +1115,7 @@
                         setStepButton(localStorage.getItem('new-register-step'));
                     });
 
-                    $('.step-1-option').click(function () {
+                    $('.step-1-option').on('click', function () {
                         if ($(this).hasClass('option-selected')) {
                             $(this).removeClass('option-selected');
                             $(this).attr('data-step-1-selected', 'false');
@@ -1171,7 +1171,7 @@
                         }
                     });
 
-                    $('#new-register-previous-step').click(function () {
+                    $('#new-register-previous-step').on('click', function () {
                         let step = parseInt(localStorage.getItem('new-register-step'));
 
                         if (step === 1) {
@@ -1197,7 +1197,7 @@
                         $('#new-register-step-' + step + '-container').addClass('d-flex flex-column');
                     });
 
-                    $('#new-register-next-step').click(function () {
+                    $('#new-register-next-step').on('click', function () {
                         let lastStep = parseInt(localStorage.getItem('new-register-step'));
 
                         let step = lastStep + 1;

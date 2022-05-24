@@ -75,7 +75,7 @@ class CoreApiController extends Controller
             $companyRedirect = null;
             if ($user->companies->count() > 0) {
                 $companyStatus = null;
-                $companyRedirect = '';
+                $companyRedirect = '/companies';
             } else {
                 $companyApproved = $companyService->companyDocumentApproved();
                 if (!empty($companyApproved)) {
