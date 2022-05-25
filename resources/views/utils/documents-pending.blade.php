@@ -302,8 +302,8 @@
                         </div>
                     </div>
                     <div id="new-register-steps-actions" class="d-flex justify-content-between flex-wrap-reverse">
-                        <div class="d-flex justify-content-center">
-                            <button type="button" class="btn new-register-btn close-modal finish-later-container">Terminar depois</button>
+                        <div class="d-flex justify-content-center finish-later-container">
+                            <button type="button" class="btn new-register-btn close-modal">Terminar depois</button>
                         </div>
                         <div class="new-register-step-btn-container">
                             <button id="new-register-previous-step" type="button" class="btn btn-light new-register-step-btn">Voltar</button>
