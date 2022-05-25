@@ -6,28 +6,17 @@ $(document).ready(function () {
     $('.init-operation-container').on('click', '.redirect-to-accounts', function (e) {
         e.preventDefault();
 
-        let url_data = $(this).attr('data-url-value')
+        let url_data = $(this).attr('data-url-value');
 
-        $.ajax({
-            method: 'GET',
-            url: '/send-authenticated',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: response => {
-                errorAjaxResponse(response);
-            },
-            success: response => {
-                let url = response.url;
+        redirectToAccounts(url_data);
+    });
 
-                if (url_data) {
-                    url = url + url_data;
-                }
+    $('.redirect-to-accounts').on('click', function (e) {
+        e.preventDefault();
 
-                window.location.href = url;
-            },
-        });
+        let url_data = $(this).attr('data-url-value');
+
+        redirectToAccounts(url_data);
     });
 
     localStorage.setItem('new-register-step', '1');
@@ -214,6 +203,30 @@ $(document).ready(function () {
 
     monthRevenueInput.addEventListener('input', handleInputRangeChange);
 });
+
+function redirectToAccounts(url_data)
+{
+    $.ajax({
+        method: 'GET',
+        url: '/send-authenticated',
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: response => {
+            errorAjaxResponse(response);
+        },
+        success: response => {
+            let url = response.url;
+
+            if (url_data) {
+                url = url + url_data;
+            }
+
+            window.location.href = url;
+        },
+    });
+}
 
 function stringToMoney(string, currency = 'BRL') {
     let value = parseInt(string, 10);
