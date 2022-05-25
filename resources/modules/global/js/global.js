@@ -1034,16 +1034,18 @@ function changeNewRegisterLayoutOnWindowResize() {
 
     if (window.innerWidth <= 470) {
         if (userNameText.length > 10) {
-            $('.new-register-overlay-title strong').text(userNameText.substring(0, 9) + '...');
+            $('.new-register-overlay-title strong').css('display', 'block');
         }
     } else if (window.innerWidth > 470 && window.innerWidth <= 665) {
         if (userNameText.length > 14) {
-            $('.new-register-overlay-title strong').text(userNameText.substring(0, 13) + '...');
+            $('.new-register-overlay-title strong').css('display', 'block');
         }
     } else if (window.innerWidth > 665) {
         if (userNameText.length > 20) {
             $('.new-register-overlay-title strong').text(userNameText.substring(0, 19) + '...');
         }
+    } else {
+        $('.new-register-overlay-title strong').css('display', 'unset');
     }
 
     if (window.innerWidth >= 847) {
