@@ -3,8 +3,8 @@ $(document).ready(function () {
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
 
-    $('.redirect-to-accounts').on('click', function (e) {
-        e.preventDefault()
+    $('.init-operation-container').on('click', '.redirect-to-accounts', function (e) {
+        e.preventDefault();
 
         let url_data = $(this).attr('data-url-value')
 
