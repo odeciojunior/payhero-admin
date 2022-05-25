@@ -75,7 +75,7 @@ function loadOrigins(link = null) {
                 let td = `
                 <div class="d-flex" style="justify-content: center; margin: auto;" >
                 <div class="info-graph">
-                    <div class="no-sell">
+                    <div class="no-sell -origin">
                         <svg width="111" height="111" viewBox="0 0 111 111" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M55.5 111C86.1518 111 111 86.1518 111 55.5C111 24.8482 86.1518 0 55.5 0C24.8482 0 0 24.8482 0 55.5C0 86.1518 24.8482 111 55.5 111Z" fill="#F6F8FE"/>
                             <path d="M88.7999 111H22.2V39.22C25.339 39.2165 28.3485 37.9679 30.5682 35.7483C32.7879 33.5286 34.0364 30.5191 34.04 27.38H76.96C76.9566 28.935 77.2617 30.4753 77.8576 31.9116C78.4534 33.3479 79.3282 34.6519 80.4313 35.7479C81.5273 36.8513 82.8313 37.7264 84.2678 38.3224C85.7043 38.9184 87.2447 39.2235 88.7999 39.22V111Z" fill="white"/>
@@ -252,7 +252,7 @@ function loadCoupons() {
 function loadFrequenteSales() {
     let salesBlock = '';
     $('#card-most-sales .onPreLoad *' ).remove();
-    $("#block-sales").prepend(skeLoadOriginTable);
+    $("#block-sales").html(skeLoad);
 
     return $.ajax({
         method: "GET",
@@ -308,7 +308,7 @@ function loadFrequenteSales() {
                                     <img width="37px" height="37px" onerror=this.src='https://cloudfox-files.s3.amazonaws.com/produto.svg' src="${item.photo}" alt="${item.description}">
                                 </div>
                                 <div>
-                                    <span style="text-overflow: ellipsis;">${item.name}</span>
+                                    <span class="desc-product">${item.name}</span>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items" style="min-width: 100px;">
@@ -407,7 +407,6 @@ function loadDevices() {
         success: function success(response) {
             let { desktop, mobile } = response.data;
             const numbers = [desktop.total, mobile.total].map(Number).reduce((prev, value) => prev + value,0);
-            console.log(numbers);
 
             if( numbers !== 0 ) {
                 deviceBlock = `

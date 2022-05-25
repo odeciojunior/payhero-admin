@@ -104,10 +104,8 @@
 						<div class="row">
 							<header class="header-reports container">
 								<h3 class="title-reports">
-									<a href="{!! route('reports.finances') !!}" class="lk-reports grey">
-										<span class="box-title ico-finance">financeiro</span>
-										Financeiro
-									</a>
+									<span class="box-title ico-finance">financeiro</span>
+									Financeiro
 								</h3>
 								<a href="{!! route('reports.finances') !!}" class="box-link">
                                     <span>Acessar&nbsp&nbsp</span>
@@ -160,10 +158,8 @@
 						<div class="row">
 							<header class="header-reports container">
 								<h3 class="title-reports">
-									<a href="{!! route('reports.index') !!}" class="lk-reports grey">
-										<span class="box-title ico-sell">vendas</span>
-										Vendas
-									</a>
+									<span class="box-title ico-sell">vendas</span>
+									Vendas
 								</h3>
                                 <a href="{!! route('reports.index') !!}" class="box-link">
                                     <span>Acessar&nbsp&nbsp</span>
@@ -215,12 +211,10 @@
 						<div class="row">
 							<header class="header-reports container">
 								<h3 class="title-reports">
-									<a href="" class="lk-reports grey">
-										<span class="box-title ico-mkt">
-                                            Marketing
-                                        </span>
-										Marketing
-									</a>
+                                    <span class="box-title ico-mkt">
+                                        Marketing
+                                    </span>
+                                    Marketing
 								</h3>
                                 <a href="{!! route('reports.marketing') !!}" class="box-link">
                                     <span>Acessar&nbsp&nbsp</span>

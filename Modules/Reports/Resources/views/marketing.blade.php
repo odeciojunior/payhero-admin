@@ -106,15 +106,15 @@
 					<div class="col-12 box-items-finance mkt">
                         <div class="row mb-20">
                             <div class="fianance-items col-md-4 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border blue mb-10 onPreLoad" id="checkouts_count"></div>
+                                <div class="finance-card border blue mb-10 onPreLoad no-ske" id="checkouts_count"></div>
                             </div>
 
                             <div class="fianance-items col-md-4 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border purple mb-10 onPreLoad" id="sales_count"></div>
+                                <div class="finance-card border purple mb-10 onPreLoad no-ske" id="sales_count"></div>
                             </div>
 
                             <div class="fianance-items col-md-4 col-6 pr-5 pr-md-15">
-                                <div class="finance-card border green mb-10 onPreLoad" id="sales_value"></div>
+                                <div class="finance-card border green mb-10 onPreLoad no-ske" id="sales_value"></div>
                             </div>
                         </div>
 					</div>
@@ -619,8 +619,8 @@
                         
                         <!-- distribtion -->
                         <div class="distribution mkt">
-                        <div class="d-flex sub-distribution">
-                                <div class="card inner" id="card-most-sales">
+                            <div class="d-flex sub-distribution">
+                                <div class="card inner card-most-sales" id="card-most-sales">
                                     <header class="d-flex title-graph">
                                         <h5 class="grey font-size-16">
                                             <strong>Vendas mais frequentes</strong>
@@ -629,7 +629,7 @@
                                     <div  class="custom-table scrollbar pb-0 pt-0">
                                         <div class="row">
                                             <div class="container">
-                                                <div class="data-holder b-bottom scroll-212  onPreLoad" id="block-sales"></div>
+                                                <div class="data-holder b-bottom scroll-212 onPreLoad block-sales-mkt" id="block-sales"></div>
                                             </div>
                                         </div>
                                     </div>

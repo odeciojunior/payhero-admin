@@ -321,6 +321,7 @@ h4.number{
     display: flex;
     align-items: center;
     margin-bottom: 0;
+    font-size: 20px;
 }
 
 .lk-reports {
@@ -445,9 +446,7 @@ h4.number{
     padding: 1.429rem;
 }
 
-#reports-content .card.origin {
-    height: 660px;
-}
+#reports-content .card.origin { height: 540px; }
 
 .cards-reports h6 { margin-top: 0; }
 
@@ -456,7 +455,7 @@ h4.number{
     border-radius: 8px; 
 }
 
-
+.-origin { height: 370px; }
 
 #comission { height: 29px; }
 .cards-reports h6 {font-weight: 700;}
@@ -622,11 +621,17 @@ h4.number{
 .sel-origin {margin-top: 5px;}
 
 .desc-product {
-    width: 138px;
+    width: 120px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     display: block;
+}
+
+.block-sales-mkt { position: relative; }
+.block-sales-mkt .ske-load {
+    position: absolute;
+    transform: translate(0, -50%);
 }
 
 /* payment options */
