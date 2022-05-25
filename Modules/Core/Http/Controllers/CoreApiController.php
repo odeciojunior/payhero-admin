@@ -51,10 +51,12 @@ class CoreApiController extends Controller
 
             if ($userService->haveAnyDocumentAnalyzing()) {
                 $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_ANALYZING);
+                $userRedirect = '/personal-info';
             }
 
             if ($userService->haveAnyDocumentApproved()) {
                 $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_APPROVED);
+                $userRedirect = '/personal-info';
             }
 
             if ($userService->haveAnyDocumentRefused()) {
@@ -82,7 +84,7 @@ class CoreApiController extends Controller
                     $companyAnalyzing = $companyService->companyDocumentAnalyzing();
                     if (!empty($companyAnalyzing)) {
                         $companyStatus = $companyModel->present()->getAddressDocumentStatus(CompanyDocument::STATUS_ANALYZING);
-                        $companyRedirect = '';
+                        $companyRedirect = '/companies/company-detail/'. Hashids::encode($companyAnalyzing->id);
                     }
 
                     $companyRefused = $companyService->companyDocumentRefused();

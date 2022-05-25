@@ -266,7 +266,7 @@ class CompanyService
         $companies = Company::where('user_id', auth()->user()->account_owner_id)->where('active_flag', true)->get();
         foreach ($companies as $company) {
             if ($company->company_type == Company::JURIDICAL_PERSON) {
-                if ($company->address_document_status == Company::DOCUMENT_STATUS_APPROVED || $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED) {
+                if ($company->address_document_status == Company::DOCUMENT_STATUS_APPROVED && $company->contract_document_status == Company::DOCUMENT_STATUS_APPROVED) {
                     return $company;
                 }
             } else{
