@@ -38,7 +38,9 @@ class Whatsapp2ApiController extends Controller
                 'project' => function ($query) {
                     $query->where('status', Project::STATUS_ACTIVE);
                 }
-            ])->where('user_id', $authUser->account_owner_id)->get();
+            ])->where([['user_id', $authUser->account_owner_id],[
+                'company_id', auth()->user()->company_default
+            ]])->get();
 
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {

@@ -29,13 +29,15 @@ class InvitesApiController extends Controller
     /**
      * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
             $invitationModel = new Invitation();
 
-            $invites = $invitationModel->where('invite', auth()->user()->account_owner_id)->with('company');
+            $invites = $invitationModel->where('invite', auth()->user()->account_owner_id)
+            ->where('company_id', Hashids::decode($request->company))
+            ->with('company');
 
             activity()->on($invitationModel)->tap(function (Activity $activity) {
                 $activity->log_name = 'visualization';
@@ -211,7 +213,7 @@ class InvitesApiController extends Controller
     /**
      * @return JsonResponse
      */
-    public function getInvitationData()
+    public function getInvitationData(Request $request)
     {
         try {
             $invitationModel = new Invitation();
@@ -226,16 +228,23 @@ class InvitesApiController extends Controller
                         'status',
                         $invitationModel->present()->getStatus('accepted'),
                     ],
+                    [
+                        'company_id',
+                        Hashids::decode($request->company)
+                    ]
                 ]
             )->count();
             $invitationSentCount = $invitationModel->where('invite', auth()->user()->account_owner_id)
+                ->where('company_id', Hashids::decode($request->company))
                 ->count();
             $userIdInvites = $invitationModel->where('invite', auth()->user()->account_owner_id)
                 ->pluck('id')
                 ->toArray();
             $commissionPaid = $transactionModel->whereIn('invitation_id', $userIdInvites)->where('user_id', auth()->user()->account_owner_id)
+                ->where('company_id', Hashids::decode($request->company))
                 ->where('status_enum', $transactionModel->present()->getStatusEnum('transfered'))->sum('value');
             $commissionPending = $transactionModel->whereIn('invitation_id', $userIdInvites)->where('user_id', auth()->user()->account_owner_id)
+                ->where('company_id', Hashids::decode($request->company))
                 ->where('status_enum', $transactionModel->present()->getStatusEnum('paid'))->sum('value');
 
             return response()->json(

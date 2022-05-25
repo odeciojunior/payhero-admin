@@ -39,7 +39,10 @@ class ActiveCampaignApiController extends Controller
                                                                     ->get();
 
             $projects     = collect();
-            $userProjects = $userProjectModel->where('user_id', $user->account_owner_id)->with('project')->get();
+            $userProjects = $userProjectModel->where([[
+                'user_id', $user->account_owner_id],[
+                'company_id', auth()->user()->company_default
+            ]])->with('project')->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     if (!empty($userProject->project)) {
