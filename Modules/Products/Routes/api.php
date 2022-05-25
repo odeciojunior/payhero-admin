@@ -15,7 +15,7 @@ Route::group(
         ->only('store', 'update', 'destroy', 'create')
         ->names('api.products')->middleware('permission:products_manage');
 
-        Route::post('/products/updateproducttype/{id}', 'ProductsApiController@updateProductType')->name('api.products.updateproducttype')
+        Route::post('/products/update-product-type/{id}', 'ProductsApiController@updateProductType')->name('api.products.update-product-type')
         ->middleware('permission:projects_manage|sales_manage');
 
         Route::put('/products/{id}/update-custom', 'ProductsApiController@updateCustom')

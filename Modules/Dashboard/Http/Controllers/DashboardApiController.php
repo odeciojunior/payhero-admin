@@ -2,170 +2,105 @@
 
 namespace Modules\Dashboard\Http\Controllers;
 
-use App\Console\Commands\UpdateUserAchievements;
-use App\Console\Commands\UpdateUserLevel;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
-use Jenssegers\Agent\Facades\Agent;
-use Modules\Core\Entities\Cashback;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\DashboardNotification;
-use Modules\Core\Entities\Product;
+use Illuminate\Http\Request;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Ticket;
+use Modules\Core\Entities\Product;
+use Modules\Core\Entities\Company;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Jenssegers\Agent\Facades\Agent;
+use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\Cashback;
 use Modules\Core\Entities\Tracking;
 use Modules\Core\Entities\Transaction;
-use Modules\Core\Services\AchievementService;
-use Modules\Core\Services\BenefitsService;
-use Modules\Core\Services\ChargebackService;
-use Modules\Core\Services\CompanyBalanceService;
-use Modules\Core\Services\CompanyService;
-use Modules\Core\Services\ReportService;
 use Modules\Core\Services\SaleService;
 use Modules\Core\Services\TaskService;
-use Modules\Core\Services\TrackingService;
 use Modules\Core\Services\UserService;
-use Modules\Dashboard\Transformers\DashboardAchievementsResource;
 use Spatie\Activitylog\Models\Activity;
+use Modules\Core\Services\ReportService;
+use App\Console\Commands\UpdateUserLevel;
+use Modules\Core\Services\CompanyService;
+use Modules\Core\Services\BenefitsService;
+use Modules\Core\Services\TrackingService;
+use Modules\Core\Services\ChargebackService;
+use Modules\Core\Services\AchievementService;
 use Symfony\Component\HttpFoundation\Response;
-use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\DashboardNotification;
+use Modules\Core\Services\CompanyBalanceService;
+use App\Console\Commands\UpdateUserAchievements;
+use Modules\Dashboard\Transformers\DashboardAchievementsResource;
 
 class DashboardApiController extends Controller
 {
-    public function index(): JsonResponse
+    public function index()
     {
         try {
-            activity()->tap(
-                function (Activity $activity) {
-                    $activity->log_name = 'visualization';
-                }
-            )->log('Visualizou Dashboard');
-
             $companies = Company::where('user_id', auth()->user()->account_owner_id)
                     ->where('active_flag', true)
                     ->orderBy('order_priority')
                     ->get() ?? collect();
 
             return response()->json(['companies' => $companies]);
+
         } catch (Exception $e) {
             report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
         }
     }
 
-    public function getValues(Request $request): JsonResponse
+    public function getValues(Request $request)
     {
         try {
-            if ($request->has('company') && !empty($request->input('company'))) {
-                $values = $this->getDataValues($request->company);
-
-                if ($values) {
-                    return response()->json($values, 200);
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                    ],
-                    400
-                );
-            }
-        } catch (Exception $e) {
-            report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
-        }
-    }
-
-    private function getDataValues($companyHash): array
-    {
-        try {
-            if (empty($companyHash)) {
-                return [];
-            }
-            $companyModel = new Company();
-            $saleModel = new Sale();
-            $transactionModel = new Transaction();
-            $companyId = current(Hashids::decode($companyHash));
-            $company = $companyModel->find($companyId);
-            $companyService = new CompanyBalanceService($company);
+            $companyId = hashids_decode($request->company);
+            $company = Company::find($companyId);
 
             if (empty($company)) {
-                return [];
+                return response()->json(['message' => 'Ocorreu algum erro'], 400);
             }
 
-            $blockedBalancePending = $companyService->getBalance(CompanyBalanceService::BLOCKED_PENDING_BALANCE);
-
-            $blockedBalance = $companyService->getBalance(CompanyBalanceService::BLOCKED_BALANCE);
-            $pendingBalance = $companyService->getBalance(CompanyBalanceService::PENDING_BALANCE);
-
-            $availableBalance = $companyService->getBalance(CompanyBalanceService::AVAILABLE_BALANCE) ;
-            $totalBalance = $availableBalance + $pendingBalance + $blockedBalance +$blockedBalancePending;
-            $blockedBalanceTotal = $blockedBalance + $blockedBalancePending;
-            $statusArray = [
-                $transactionModel->present()->getStatusEnum('paid'),
-                $transactionModel->present()->getStatusEnum('transfered'),
-            ];
-
-            $todayBalance = $saleModel
-                ->join('transactions as t', 't.sale_id', '=', 'sales.id')
+            $todayBalance = Sale::join('transactions as t', 't.sale_id', '=', 'sales.id')
                 ->where('t.company_id', $companyId)
                 ->whereDate('sales.end_date', Carbon::today()->toDateString())
-                ->whereIn('t.status_enum', $statusArray)
+                ->whereIn('t.status_enum', [Transaction::STATUS_PAID, Transaction::STATUS_TRANSFERRED])
                 ->sum('t.value');
 
-            return [
-                'available_balance'     => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                'total_balance'         => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                'pending_balance'       => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                'today_balance'         => number_format(intval($todayBalance) / 100, 2, ',', '.'),
+
+            $companyService = new CompanyBalanceService($company);
+            $balancesResume = $companyService->getResumes();
+
+            $availableBalance = array_sum(array_column($balancesResume, 'available_balance'));
+            $pendingBalance = array_sum(array_column($balancesResume, 'pending_balance'));
+            $blockedBalance = array_sum(array_column($balancesResume, 'blocked_balance'));
+            $totalBalance = array_sum(array_column($balancesResume, 'total_balance'));
+
+            return response()->json([
+                'available_balance'     => number_format($availableBalance / 100, 2, ',', '.'),
+                'pending_balance'       => number_format($pendingBalance / 100, 2, ',', '.'),
+                'blocked_balance_total' => number_format($blockedBalance / 100, 2, ',', '.'),
+                'total_balance'         => number_format($totalBalance / 100, 2, ',', '.'),
+                'today_balance'         => number_format($todayBalance / 100, 2, ',', '.'),
                 'currency'              => 'R$',
-                'blocked_balance_total' => number_format(intval($blockedBalanceTotal) / 100, 2, ',', '.'),
-            ];
+            ]);
         } catch (Exception $e) {
             report($e);
 
-            return [];
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
         }
     }
 
-    public function verifyPendingData(): JsonResponse
+    public function verifyPendingData()
     {
         try {
             $user = auth()->user();
-            $companyModel = new Company();
             $userService = new UserService();
             $companyService = new CompanyService();
-            $companies = $companyModel->where('user_id', $user->account_owner_id)->where('active_flag', true)->orderBy(
+            $companies = Company::where('user_id', $user->account_owner_id)->where('active_flag', true)->orderBy(
                 'order_priority'
-            )
-                ->get();
-
+            )->get();
 
             if ($user->created_at <= '2020-07-01') {
                 $pendingUserData = $userService->verifyFieldsEmpty($user);
@@ -206,7 +141,6 @@ class DashboardApiController extends Controller
         }
     }
 
-
     public function getChartData(Request $request)
     {
         try {
@@ -231,43 +165,23 @@ class DashboardApiController extends Controller
         }
     }
 
-    public function getPerformance(Request $request): JsonResponse
+    public function getPerformance(Request $request)
     {
         try {
-            if ($request->has('company') && !empty($request->input('company'))) {
-                $values = $this->getDataPerformance($request->company);
-
-                if ($values) {
-                    return response()->json($values, 200);
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                    ],
-                    400
-                );
+            if (!$request->has('company')){
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
             }
+
+            $values = $this->getDataPerformance($request->company);
+
+            return response()->json($values, 200);
         } catch (Exception $e) {
             report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
         }
     }
 
-    private function getDataPerformance($companyHash): array
+    private function getDataPerformance($companyHash)
     {
         try {
             $company = Company::find(current(Hashids::decode($companyHash)));
@@ -294,43 +208,22 @@ class DashboardApiController extends Controller
         }
     }
 
-    public function getAccountHealth(Request $request): JsonResponse
+    public function getAccountHealth(Request $request)
     {
         try {
-            if ($request->has('company') && !empty($request->input('company'))) {
-                $values = $this->getDataAccountHealth($request->company);
-
-                if ($values) {
-                    return response()->json($values, 200);
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                    ],
-                    400
-                );
+            if (!$request->has('company')) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
             }
+            $values = $this->getDataAccountHealth($request->company);
+
+            return response()->json($values, 200);
         } catch (Exception $e) {
             report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
         }
     }
 
-    private function getDataAccountHealth($companyHash): array
+    private function getDataAccountHealth($companyHash)
     {
         try {
             if (empty($companyHash)) {
@@ -359,43 +252,23 @@ class DashboardApiController extends Controller
         }
     }
 
-    public function getAccountChargeback(Request $request): JsonResponse
+    public function getAccountChargeback(Request $request)
     {
         try {
-            if ($request->has('company') && !empty($request->input('company'))) {
-                $values = $this->getDataAccountChargeback($request->company);
-
-                if ($values) {
-                    return response()->json($values, 200);
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                    ],
-                    400
-                );
+            if (!$request->has('company')) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
             }
+
+            $values = $this->getDataAccountChargeback($request->company);
+            return response()->json($values, 200);
+
         } catch (Exception $e) {
             report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
         }
     }
 
-    private function getDataAccountChargeback($companyHash): array
+    private function getDataAccountChargeback($companyHash)
     {
         try {
             if (empty($companyHash)) {
@@ -433,43 +306,22 @@ class DashboardApiController extends Controller
         }
     }
 
-    public function getAccountAttendance(Request $request): JsonResponse
+    public function getAccountAttendance(Request $request)
     {
         try {
-            if ($request->has('company') && !empty($request->input('company'))) {
-                $values = $this->getDataAccountAttendance($request->company);
-
-                if ($values) {
-                    return response()->json($values, 200);
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                    ],
-                    400
-                );
+            if (!$request->has('company')) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
             }
+            $values = $this->getDataAccountAttendance($request->company);
+
+            return response()->json($values, 200);
         } catch (Exception $e) {
             report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
         }
     }
 
-    private function getDataAccountAttendance($companyHash): array
+    private function getDataAccountAttendance($companyHash)
     {
         try {
             if (empty($companyHash)) {
@@ -518,43 +370,22 @@ class DashboardApiController extends Controller
         }
     }
 
-    public function getAccountTracking(Request $request): JsonResponse
+    public function getAccountTracking(Request $request)
     {
         try {
-            if ($request->has('company') && !empty($request->input('company'))) {
-                $values = $this->getDataAccountTracking($request->company);
-
-                if ($values) {
-                    return response()->json($values, 200);
-                } else {
-                    return response()->json(
-                        [
-                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                        ],
-                        400
-                    );
-                }
-            } else {
-                return response()->json(
-                    [
-                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                    ],
-                    400
-                );
+            if (!$request->has('company')) {
+                return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
             }
+            $values = $this->getDataAccountTracking($request->company);
+            return response()->json($values, 200);
+
         } catch (Exception $e) {
             report($e);
-
-            return response()->json(
-                [
-                    'message' => 'Ocorreu um erro, tente novamente mais tarde',
-                ],
-                400
-            );
+            return response()->json(['message' => 'Ocorreu um erro, tente novamente mais tarde',],400);
         }
     }
 
-    private function getDataAccountTracking($companyHash): array
+    private function getDataAccountTracking($companyHash)
     {
         try {
             if (empty($companyHash)) {
@@ -629,9 +460,6 @@ class DashboardApiController extends Controller
         return number_format(intval(Cashback::where('user_id', auth()->user()->account_owner_id)->sum('value')) / 100, 2, ',', '.');
     }
 
-    /**
-     * @return JsonResponse|AnonymousResourceCollection
-     */
     public function getAchievements()
     {
         try {
@@ -680,11 +508,7 @@ class DashboardApiController extends Controller
         }
     }
 
-    /**
-     * @param $achievement
-     * @return JsonResponse
-     */
-    public function updateAchievements($achievement): JsonResponse
+    public function updateAchievements($achievement)
     {
         try {
             $idAchievement = \hashids()->decode($achievement);

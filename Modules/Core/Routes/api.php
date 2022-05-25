@@ -20,3 +20,14 @@ Route::group(
         ->middleware('permission:sales|finances|report_pending|apps|invitations');
     }
 );
+
+Route::group(
+    [
+        'middleware' => ['InternalApiAuth'],
+    ],
+    function() {
+        Route::get('/core/sac/allow-block/{company_id}/{sale_id}', 'CoreApiController@allowBlockBalance');
+        Route::post('/core/sac/ticket-notification/{ticketId}', 'CoreApiController@notifyTicket');
+    }
+);
+

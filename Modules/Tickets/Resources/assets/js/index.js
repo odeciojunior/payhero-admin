@@ -3,11 +3,6 @@ const statusEnum = {
     2: 'Finalizado',
     3: 'Em mediação',
 };
-const categoryEnum = {
-    1: 'Reclamação',
-    2: 'Dúvida',
-    3: 'Sugestão',
-};
 const typeEnum = {
     1: 'customer',
     2: 'admin',
@@ -62,6 +57,14 @@ $(() => {
 
     loadingOnScreen();
 
+    //fill the filter if the parameter comes in the url
+    const params = new URLSearchParams(window.location.search);
+    if(params.has('sale_id')){
+        $("#filter-transaction").data('value', params.get('sale_id'))
+            .addClass('active');
+        $("#input-transaction input").val(params.get('sale_id'));
+    }
+
     getProjects();
 
     function getProjects() {
@@ -103,17 +106,7 @@ $(() => {
 
         let plan = $('#filter-plan').data('value') || '';
 
-        let category = [];
-        if ($('#category-complaint.active').length) {
-            category.push(1);
-        }
-        if ($('#category-doubt.active').length) {
-            category.push(2);
-        }
-        if ($('#category-suggestion.active').length) {
-            category.push(3);
-        }
-
+        let transaction = $("#filter-transaction").data('value') || '';
         let document = $('#filter-document').data('value') || '';
         let name = $('#filter-name').data('value') || '';
         let answered = $("#filter-answer").data('value') || '';
@@ -127,7 +120,6 @@ $(() => {
         let filters = {
             project,
             plan,
-            category,
             document,
             name,
             answered,
@@ -135,6 +127,7 @@ $(() => {
             status,
             nameOrDocument,
             page,
+            transaction,
         }
 
         return Object.entries(filters).map(([key, val]) => `${key}=${val}`).join('&');
@@ -243,15 +236,14 @@ $(() => {
         $('.ticket-status .ticket-status-text').text(statusEnum[ticket.ticket_status_enum]);
         $('.ticket-status .ticket-status-icon').removeClass('open closed mediation answered')
             .addClass(statusColor[ticket.ticket_status_enum] || 'answered');
-        $('.ticket-category-text').text(categoryEnum[ticket.ticket_category_enum]);
         $('.ticket-start-date').text(ticket.created_at);
         $('.ticket-project').text(ticket.project_name);
         $('.ticket-sale span').text(`#${ticket.sale_id}`)
-        $('.ticket-back, .ticket-customer, .ticket-status, .ticket-category, .ticket-sale').removeClass('d-none');
+        $('.ticket-back, .ticket-customer, .ticket-status, .ticket-sale').removeClass('d-none');
 
         let html = '';
         if (isMobile()) {
-            html += `<div class="ticket-messages-resume"><b>${categoryEnum[ticket.ticket_category_enum]}</b> aberta em ${ticket.created_at} para <b>${ticket.project_name}</b> referente a venda <b>#${ticket.sale_id}</b></div>`;
+            html += `<div class="ticket-messages-resume"><b>Reclamação aberta em ${ticket.created_at} para <b>${ticket.project_name}</b> referente a venda <b>#${ticket.sale_id}</b></div>`;
         }
         for (let message of ticket.messages) {
             html += renderMessage(message);
@@ -278,7 +270,7 @@ $(() => {
     function clearViews() {
         $('.tickets-container').html('');
         $('.messages-container').html('');
-        $('.ticket-back, .ticket-customer, .ticket-status, .ticket-category, .ticket-sale').addClass('d-none');
+        $('.ticket-back, .ticket-customer, .ticket-status, .ticket-sale').addClass('d-none');
         $('.write-container').hide();
         $('.pagination-container').hide();
     }

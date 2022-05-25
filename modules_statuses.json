@@ -59,5 +59,6 @@
     "CheckoutApiPostback": true,
     "CheckoutEditor": true,
     "UserInformations": true,
-    "Users": true
+    "Users": true,
+    "NotificacoesInteligentes": true
 }
