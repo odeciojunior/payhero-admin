@@ -17,12 +17,19 @@ class UserInformationsApiController extends Controller
             $data = $request->all();
 
             $model = new UserInformation();
-            $exists = $model->where('document', $data['document'])->first();
+            $exists = $model->where('document', $data['document'])->exists();
 
-            if (!empty($exists)) {
+            if ($exists) {
+                $user = $model->where('document', $data['document'])->first();
+                $user->status = 1;
+                $user->document = $data['document'];
+                $user->email = $data['email'];
+                $user = $this->setData($user, $data);
+                $user->save();
+
                 return response()->json([
-                    'message' => 'Já existem Informações do usuário cadastradas'
-                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    'message' => 'Informações do usuário atualizadas'
+                ], Response::HTTP_OK);
             }
 
             $model->status = 1;
