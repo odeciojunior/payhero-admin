@@ -874,9 +874,9 @@ function ajaxVerifyAccount() {
                     $('.new-register-navbar-open-modal-container').hide();
 
                     $('.new-register-overlay').fadeIn();
-
-                    localStorage.setItem('verifyAccount', JSON.stringify(response.data));
                 }
+
+                localStorage.setItem('verifyAccount', JSON.stringify(response.data));
 
                 if (!response.data.user.informations) {
                     $('.extra-informations-user').show();
@@ -1149,7 +1149,7 @@ function saveNewRegisterData() {
         error: function error(response) {
             loadingOnScreenRemove();
 
-            alertCustom('error', 'Houve um erro ao tentar cadastrar os dados, tente novamente!');
+            alertCustom('error', response.responseJSON.message);
         },
         success: function success(response) {
             localStorage.setItem('new-register-step', '4');
