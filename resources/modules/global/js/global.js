@@ -945,7 +945,7 @@ function ajaxVerifyAccount() {
                     card_user_icon = '/build/global/img/icon-analysing.svg';
                     card_user_title = 'Estamos analisando seus documentos';
                     card_user_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
-                    card_user_button = '';
+                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';
                 } else if (response.data.user.status == 'refused' || response.data.user.status == 'refused') {
                     card_user_status = 'status-error';
                     card_user_icon = '/build/global/img/icon-error.svg';
