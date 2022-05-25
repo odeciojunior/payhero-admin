@@ -2337,11 +2337,7 @@ tbody td{
     border: 1px solid #2E85EC;
     margin-bottom: 48px;
 }
-@media screen and (max-width: 475px) {
-    .new-register-overlay-body .card {
-        padding: 8px;
-    }
-}
+
 .new-register-overlay-body .card.extra-informations-user .icon {
     border-radius: 0;
     background: transparent;
@@ -2411,7 +2407,7 @@ tbody td{
         margin-right: 4px;
     }
     .new-register-overlay-body .extra-informations-user #open-steps-btn {
-        padding: 8px;
+        padding: 8px 0px 8px 8px;
     }
 }
 
@@ -2709,4 +2705,25 @@ tbody td{
     background: transparent;
     border: none;
     line-height: 1;
+}
+
+@media screen and (max-width: 767px) {
+    .new-register-overlay-title-container {
+        padding: 0;
+    }
+    .new-register-btn {
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 475px) {
+    .new-register-overlay-body .card {
+        padding: 16px;
+    }
+    .new-register-overlay-body .card .icon {
+        margin-right: 14px;
+    }
+    .new-register-overlay-body .card .new-register-btn {
+        padding-right: 0;
+    }
 }
