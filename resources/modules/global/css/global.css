@@ -2446,7 +2446,8 @@ tbody td{
     border-radius: 3px;
     font-size: 16px;
     font-weight: 600;
-    margin: 0!important;
+    margin: 0 !important;
+    height: 38px;
 }
 
 .new-register-card {

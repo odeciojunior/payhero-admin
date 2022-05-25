@@ -25,6 +25,7 @@ class UserInformationsApiController extends Controller
                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
+            $model->status = 1;
             $model->document = $data['document'];
             $model->email = $data['email'];
             $model = $this->setData($model, $data);

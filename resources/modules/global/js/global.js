@@ -3,31 +3,20 @@ $(document).ready(function () {
     $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical');
     $(".mm-panels").css('scrollbar-width', 'none');
 
+    $('.init-operation-container').on('click', '.redirect-to-accounts', function (e) {
+        e.preventDefault();
+
+        let url_data = $(this).attr('data-url-value');
+
+        redirectToAccounts(url_data);
+    });
+
     $('.redirect-to-accounts').on('click', function (e) {
-        e.preventDefault()
+        e.preventDefault();
 
-        let url_data = $(this).attr('data-url-value')
+        let url_data = $(this).attr('data-url-value');
 
-        $.ajax({
-            method: 'GET',
-            url: '/send-authenticated',
-            headers: {
-                'Authorization': $('meta[name="access-token"]').attr('content'),
-                'Accept': 'application/json',
-            },
-            error: response => {
-                errorAjaxResponse(response);
-            },
-            success: response => {
-                let url = response.url;
-
-                if (url_data) {
-                    url = url + url_data;
-                }
-
-                window.location.href = url;
-            },
-        });
+        redirectToAccounts(url_data);
     });
 
     localStorage.setItem('new-register-step', '1');
@@ -214,6 +203,30 @@ $(document).ready(function () {
 
     monthRevenueInput.addEventListener('input', handleInputRangeChange);
 });
+
+function redirectToAccounts(url_data)
+{
+    $.ajax({
+        method: 'GET',
+        url: '/send-authenticated',
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: response => {
+            errorAjaxResponse(response);
+        },
+        success: response => {
+            let url = response.url;
+
+            if (url_data) {
+                url = url + url_data;
+            }
+
+            window.location.href = url;
+        },
+    });
+}
 
 function stringToMoney(string, currency = 'BRL') {
     let value = parseInt(string, 10);
@@ -874,6 +887,7 @@ function ajaxVerifyAccount() {
                 var card_company_title = '';
                 var card_company_description = '';
                 var card_company_button = '';
+                var card_company_link = response.data.company.link;
 
                 if (response.data.company.status == null) {
                     card_company_status = 'redirect-to-accounts';
@@ -881,29 +895,27 @@ function ajaxVerifyAccount() {
                     card_company_title = 'Cadastre sua empresa';
                     card_company_description = 'Na Cloudfox você pode ter uma ou mais empresas.';
                     card_company_button = '';
-
-                    $('.company-status').attr('data-url-value', response.data.company.link);
                 } else {
                     if (response.data.company.status == 'pending' || response.data.company.status == 'pending') {
                         card_company_status = 'status-info';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Você cadastrou sua empresa, mas não recebemos nenhum documento';
-                        card_company_description = 'Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empreza.';
-                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ response.data.company.link +'">Enviar documentos</button>';
+                        card_company_description = 'Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empresa.';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
                     } else if (response.data.company.status == 'analyzing' || response.data.company.status == 'analyzing') {
                         card_company_status = 'status-warning';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Estamos analisando seus documentos da sua empresa';
                         card_company_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
-                        card_company_button = '';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
                     } else if (response.data.company.status == 'refused' || response.data.company.status == 'refused') {
                         card_company_status = 'status-error';
                         card_company_icon = '/build/global/img/icon-error.svg';
                         card_company_title = 'Tivemos problemas em verificar sua empresa';
                         card_company_description = 'Há um problema com seus documentos.';
-                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ response.data.company.link +'">Reenviar documentos</button>';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Reenviar documentos</button>';
                     } else if (response.data.company.status == 'approved' || response.data.company.status == 'approved') {
-                        card_company_status = 'status-check';
+                        card_company_status = 'status-check redirect-to-accounts';
                         card_company_icon = '/build/global/img/icon-check.svg';
                         card_company_title = 'A documentação da sua empresa foi recebida e aprovada.';
                         card_company_description = 'Se você já aprovou seus documentos pessoais, agora é só vender!';
@@ -912,7 +924,7 @@ function ajaxVerifyAccount() {
                 }
 
                 $('.company-status').html(`
-                    <div class="card ${card_company_status}">
+                    <div class="card ${card_company_status}" data-url-value="${card_company_link}">
                         <div class="d-flex">
                             <div>
                                 <div class="icon d-flex align-items-center">
@@ -933,6 +945,7 @@ function ajaxVerifyAccount() {
                 var card_user_title = '';
                 var card_user_description = '';
                 var card_user_button = '';
+                var card_user_link = response.data.user.link;
 
                 if (response.data.user.status == 'pending' || response.data.user.status == 'pending') {
                     card_user_status = 'redirect-to-accounts';
@@ -940,22 +953,20 @@ function ajaxVerifyAccount() {
                     card_user_title = 'Envie sua documentação pessoal';
                     card_user_description = 'Precisamos do seu documento oficial com foto e um comprovante de residência.';
                     card_user_button = '';
-
-                    $('.user-status').attr('data-url-value', response.data.company.link);
                 } else if (response.data.user.status == 'analyzing' || response.data.user.status == 'analyzing') {
-                    card_user_status = 'status-warning';
+                    card_user_status = 'status-warning redirect-to-accounts';
                     card_user_icon = '/build/global/img/icon-analysing.svg';
                     card_user_title = 'Estamos analisando seus documentos';
                     card_user_description = 'Esse processo de revisão leva um tempinho. Mas em breve retornaremos.';
-                    card_user_button = '';
+                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';
                 } else if (response.data.user.status == 'refused' || response.data.user.status == 'refused') {
                     card_user_status = 'status-error';
                     card_user_icon = '/build/global/img/icon-error.svg';
                     card_user_title = 'Tivemos um problema com o seu documento';
                     card_user_description = 'Um ou mais documentos foram reprovados após a análise.';
-                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ response.data.user.link +'">Regularizar documentos</button>';
+                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Regularizar documentos</button>';
                 } else if (response.data.user.status == 'approved' || response.data.user.status == 'approved') {
-                    card_user_status = 'status-check';
+                    card_user_status = 'status-check redirect-to-accounts';
                     card_user_icon = '/build/global/img/icon-check.svg';
                     card_user_title = 'Sua documentação foi recebida e aprovada';
                     card_user_description = 'Se você já aprovou uma empresa com a gente, agora é só vender!';
@@ -963,7 +974,7 @@ function ajaxVerifyAccount() {
                 }
 
                 $('.user-status').html(`
-                    <div class="card ${card_user_status}">
+                    <div class="card ${card_user_status}" data-url-value="${card_user_link}">
                         <div class="d-flex">
                             <div>
                                 <div class="icon d-flex align-items-center">
