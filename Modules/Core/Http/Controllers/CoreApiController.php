@@ -3,14 +3,8 @@
 namespace Modules\Core\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use Modules\Companies\Http\Requests\CompanyCreateRequest;
-use Modules\Companies\Http\Requests\CompanyUpdateRequest;
-use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
 use Modules\Core\Entities\Ticket;
 use Modules\Core\Events\Sac\NotifyTicketClosedEvent;
 use Modules\Core\Events\Sac\NotifyTicketMediationEvent;
@@ -52,7 +46,7 @@ class CoreApiController extends Controller
             $userRedirect = null;
             if ($userService->haveAnyDocumentPending()) {
                 $userStatus = $userModel->present()->getAddressDocumentStatus(UserDocument::STATUS_PENDING);
-                $userRedirect = 'personal-info';
+                $userRedirect = '/personal-info';
             }
 
             if ($userService->haveAnyDocumentAnalyzing()) {
@@ -70,7 +64,7 @@ class CoreApiController extends Controller
 
             $companyStatus = null;
             $companyRedirect = null;
-            if ($user->companies->count() > 0) {
+            if ($user->companies->count() == 0) {
                 $companyStatus = null;
                 $companyRedirect = '/companies';
             } else {

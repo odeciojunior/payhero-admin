@@ -874,6 +874,7 @@ function ajaxVerifyAccount() {
                 var card_company_title = '';
                 var card_company_description = '';
                 var card_company_button = '';
+                var card_company_link = response.data.company.link;
 
                 if (response.data.company.status == null) {
                     card_company_status = 'redirect-to-accounts';
@@ -881,15 +882,13 @@ function ajaxVerifyAccount() {
                     card_company_title = 'Cadastre sua empresa';
                     card_company_description = 'Na Cloudfox você pode ter uma ou mais empresas.';
                     card_company_button = '';
-
-                    $('.company-status').attr('data-url-value', response.data.company.link);
                 } else {
                     if (response.data.company.status == 'pending' || response.data.company.status == 'pending') {
                         card_company_status = 'status-info';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
                         card_company_title = 'Você cadastrou sua empresa, mas não recebemos nenhum documento';
                         card_company_description = 'Você só poderá começar a sua operação depois de enviar e aprovar os documentos da sua empreza.';
-                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ response.data.company.link +'">Enviar documentos</button>';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
                     } else if (response.data.company.status == 'analyzing' || response.data.company.status == 'analyzing') {
                         card_company_status = 'status-warning';
                         card_company_icon = '/build/global/img/icon-analysing.svg';
@@ -901,7 +900,7 @@ function ajaxVerifyAccount() {
                         card_company_icon = '/build/global/img/icon-error.svg';
                         card_company_title = 'Tivemos problemas em verificar sua empresa';
                         card_company_description = 'Há um problema com seus documentos.';
-                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ response.data.company.link +'">Reenviar documentos</button>';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Reenviar documentos</button>';
                     } else if (response.data.company.status == 'approved' || response.data.company.status == 'approved') {
                         card_company_status = 'status-check';
                         card_company_icon = '/build/global/img/icon-check.svg';
@@ -912,7 +911,7 @@ function ajaxVerifyAccount() {
                 }
 
                 $('.company-status').html(`
-                    <div class="card ${card_company_status}">
+                    <div class="card ${card_company_status}" data-url-value="${card_company_link}">
                         <div class="d-flex">
                             <div>
                                 <div class="icon d-flex align-items-center">
@@ -933,6 +932,7 @@ function ajaxVerifyAccount() {
                 var card_user_title = '';
                 var card_user_description = '';
                 var card_user_button = '';
+                var card_user_link = response.data.user.link;
 
                 if (response.data.user.status == 'pending' || response.data.user.status == 'pending') {
                     card_user_status = 'redirect-to-accounts';
@@ -940,8 +940,6 @@ function ajaxVerifyAccount() {
                     card_user_title = 'Envie sua documentação pessoal';
                     card_user_description = 'Precisamos do seu documento oficial com foto e um comprovante de residência.';
                     card_user_button = '';
-
-                    $('.user-status').attr('data-url-value', response.data.company.link);
                 } else if (response.data.user.status == 'analyzing' || response.data.user.status == 'analyzing') {
                     card_user_status = 'status-warning';
                     card_user_icon = '/build/global/img/icon-analysing.svg';
@@ -953,7 +951,7 @@ function ajaxVerifyAccount() {
                     card_user_icon = '/build/global/img/icon-error.svg';
                     card_user_title = 'Tivemos um problema com o seu documento';
                     card_user_description = 'Um ou mais documentos foram reprovados após a análise.';
-                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ response.data.user.link +'">Regularizar documentos</button>';
+                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Regularizar documentos</button>';
                 } else if (response.data.user.status == 'approved' || response.data.user.status == 'approved') {
                     card_user_status = 'status-check';
                     card_user_icon = '/build/global/img/icon-check.svg';
@@ -963,7 +961,7 @@ function ajaxVerifyAccount() {
                 }
 
                 $('.user-status').html(`
-                    <div class="card ${card_user_status}">
+                    <div class="card ${card_user_status}" data-url-value="${card_user_link}">
                         <div class="d-flex">
                             <div>
                                 <div class="icon d-flex align-items-center">
