@@ -3,16 +3,20 @@
     <div class="d-flex justify-content-center">
         <div class="new-register-overlay-container pb-4">
             <div class="new-register-overlay-header">
-                <div>
-                    <div class="new-register-btn close-modal modal-top-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M3.21967 10.7197C2.92678 11.0126 2.92678 11.4874 3.21967 11.7803L7.71967 16.2803C8.01256 16.5732 8.48744 16.5732 8.78033 16.2803C9.07322 15.9874 9.07322 15.5126 8.78033 15.2197L5.56066 12H20.25C20.6642 12 21 11.6642 21 11.25C21 10.8358 20.6642 10.5 20.25 10.5H5.56066L8.78033 7.28033C9.07322 6.98744 9.07322 6.51256 8.78033 6.21967C8.48744 5.92678 8.01256 5.92678 7.71967 6.21967L3.21967 10.7197Z" fill="#0050AF"/>
-                        </svg>
-                    </div>
-                </div>
                 <div class="new-register-overlay-title-container">
-                    <span class="new-register-overlay-title">Bem vindo, <strong>{{ explode(' ', trim(auth()->user()->name))[0] }}</strong></span>
-                    <span class="new-register-overlay-subtitle">Você acabou de chegar na Cloudfox e queremos te proporcionar uma experiência única</span>
+                    <div class="d-flex">
+                        <div class="mr-4">
+                            <div class="new-register-btn close-modal modal-top-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M3.21967 10.7197C2.92678 11.0126 2.92678 11.4874 3.21967 11.7803L7.71967 16.2803C8.01256 16.5732 8.48744 16.5732 8.78033 16.2803C9.07322 15.9874 9.07322 15.5126 8.78033 15.2197L5.56066 12H20.25C20.6642 12 21 11.6642 21 11.25C21 10.8358 20.6642 10.5 20.25 10.5H5.56066L8.78033 7.28033C9.07322 6.98744 9.07322 6.51256 8.78033 6.21967C8.48744 5.92678 8.01256 5.92678 7.71967 6.21967L3.21967 10.7197Z" fill="#0050AF"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="new-register-overlay-title">Bem vindo, <strong>{{ explode(' ', trim(auth()->user()->name))[0] }}</strong></div>
+                    </div>
+                    <div class="new-register-overlay-subtitle">
+                        Você acabou de chegar na Cloudfox e queremos te proporcionar uma experiência única
+                    </div>
                 </div>
             </div>
             <div class="new-register-overlay-body">

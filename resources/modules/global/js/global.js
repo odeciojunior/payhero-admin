@@ -32,9 +32,9 @@ $(document).ready(function () {
 
     localStorage.setItem('new-register-step', '1');
 
-    changeOpenNewRegisterModalBtnVisiblity();
+    changeNewRegisterLayoutOnWindowResize();
 
-    window.onresize = changeOpenNewRegisterModalBtnVisiblity;
+    window.onresize = changeNewRegisterLayoutOnWindowResize;
 
     $('.new-register-open-modal-btn').on('click', function () {
         $('.new-register-navbar-open-modal-container').fadeOut('slow');
@@ -57,7 +57,7 @@ $(document).ready(function () {
     $('.close-modal').on('click', function () {
         $('.new-register-overlay').fadeOut();
 
-        changeOpenNewRegisterModalBtnVisiblity();
+        changeNewRegisterLayoutOnWindowResize();
     });
 
     $('#new-register-steps-actions').on('click', '.close-modal', function () {
@@ -68,7 +68,7 @@ $(document).ready(function () {
             $('.new-register-overlay').fadeOut();
         }
 
-        changeOpenNewRegisterModalBtnVisiblity();
+        changeNewRegisterLayoutOnWindowResize();
     });
 
     $('#open-steps-btn').on('click', function () {
@@ -857,7 +857,7 @@ function ajaxVerifyAccount() {
             if (response.data.account !== 'approved') {
                 let verifyAccount = localStorage.getItem('verifyAccount');
                 if (verifyAccount == null) {
-                    changeOpenNewRegisterModalBtnVisiblity();
+                    changeNewRegisterLayoutOnWindowResize();
                     $('.new-register-overlay').fadeIn();
 
                     localStorage.setItem('verifyAccount', JSON.stringify(response.data));
@@ -1018,7 +1018,23 @@ function changeProgressBar(step) {
     }
 }
 
-function changeOpenNewRegisterModalBtnVisiblity() {
+function changeNewRegisterLayoutOnWindowResize() {
+    let userNameText = $('.new-register-overlay-title strong').text();
+
+    if (window.innerWidth <= 470) {
+        if (userNameText.length > 10) {
+            $('.new-register-overlay-title strong').text(userNameText.substring(0, 9) + '...');
+        }
+    } else if (window.innerWidth > 470 && window.innerWidth <= 665) {
+        if (userNameText.length > 14) {
+            $('.new-register-overlay-title strong').text(userNameText.substring(0, 13) + '...');
+        }
+    } else if (window.innerWidth > 665) {
+        if (userNameText.length > 20) {
+            $('.new-register-overlay-title strong').text(userNameText.substring(0, 19) + '...');
+        }
+    }
+
     if (window.innerWidth >= 847) {
         $('.new-register-page-open-modal-container').fadeOut();
         $('.new-register-navbar-open-modal-container').fadeIn();

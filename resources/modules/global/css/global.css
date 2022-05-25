@@ -2287,21 +2287,33 @@ tbody td{
 .new-register-overlay-title-container {
     display: flex;
     flex-direction: column;
-    row-gap: 8px;
-    padding: 0 24px;
+    row-gap: 12px;
 }
 
 .new-register-overlay-title {
     color: #0B1D3D;
     font-size: 30px;
     text-align: center;
+    width: 100%;
+    word-break: break-all;
+}
+@media screen and (max-width: 540px) {
+    .new-register-overlay-title {
+        font-size: 25px;
+    }
 }
 
 .new-register-overlay-subtitle {
+    width: 100%;
     color: #999999;
     font-size: 16px;
     text-align: center;
     padding: 0px 48px;
+}
+@media screen and (max-width: 540px) {
+    .new-register-overlay-subtitle {
+        padding: 0;
+    }
 }
 
 @media screen and (max-width: 767px) {
@@ -2324,6 +2336,11 @@ tbody td{
 .new-register-overlay-body .card.extra-informations-user {
     border: 1px solid #2E85EC;
     margin-bottom: 48px;
+}
+@media screen and (max-width: 475px) {
+    .new-register-overlay-body .card {
+        padding: 8px;
+    }
 }
 .new-register-overlay-body .card.extra-informations-user .icon {
     border-radius: 0;
@@ -2380,6 +2397,24 @@ tbody td{
     text-align: left;
 }
 
+@media screen and (max-width: 400px) {
+    .new-register-overlay-title {
+        font-size: 22px;
+    }
+    .new-register-overlay-body .card .title {
+        font-size: 14px;
+    }
+    .new-register-overlay-body .card .description {
+        font-size: 14px;
+    }
+    .new-register-overlay-body .extra-informations-user .icon {
+        margin-right: 4px;
+    }
+    .new-register-overlay-body .extra-informations-user #open-steps-btn {
+        padding: 8px;
+    }
+}
+
 .init-operation-container {
     margin-bottom: 32px;
 }
@@ -2404,7 +2439,7 @@ tbody td{
 .new-register-btn {
     display: flex;
     align-items: center;
-    background: transparent!important;
+    background: transparent;
     color: #2E85EC;
     cursor: pointer;
     border: none;
@@ -2580,6 +2615,9 @@ tbody td{
     }
 }
 
+#open-steps-btn {
+    background: transparent!important;
+}
 #open-steps-btn:not(:disabled):not(.disabled).active:focus,
 #open-steps-btn:not(:disabled):not(.disabled):active:focus {
     box-shadow: none;
