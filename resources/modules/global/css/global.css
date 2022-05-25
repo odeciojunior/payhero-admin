@@ -2242,6 +2242,11 @@ tbody td{
     padding: 12px;
     font-weight: 500;
 }
+@media screen and (max-width: 480px) {
+    .new-register-page-open-modal {
+        margin: 1rem 0;
+    }
+}
 
 .new-register-overlay {
     background: #f1f4f5;
