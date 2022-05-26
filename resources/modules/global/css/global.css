@@ -2265,7 +2265,6 @@ tbody td{
 .new-register-overlay-container {
     display: flex;
     flex-direction: column;
-    row-gap: 40px;
     position: absolute;
     width: 650px;
 }
@@ -2287,6 +2286,7 @@ tbody td{
     display: flex;
     flex-direction: row;
     width: 100%;
+    margin-bottom: 48px;
 }
 
 .new-register-overlay-title-container {
@@ -2598,7 +2598,8 @@ tbody td{
     color: #0B1D3D;
 }
 .step-2-checkbox-option input[type="checkbox"] {
-    margin: 3px 0 0 0!important;
+    -webkit-margin: 3px 0 0 0 !important;
+    margin: 0 !important;
 }
 .step-2-checkbox-option span {
     margin-left: 12px;
