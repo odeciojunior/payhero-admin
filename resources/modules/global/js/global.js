@@ -915,7 +915,7 @@ function ajaxVerifyAccount() {
                         card_company_icon = '/build/global/img/icon-error.svg';
                         card_company_title = 'Tivemos problemas em verificar sua empresa';
                         card_company_description = 'Há um problema com seus documentos.';
-                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Reenviar documentos</button>';
+                        card_company_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_company_link +'">Enviar documentos</button>';
                     } else if (response.data.company.status == 'approved' || response.data.company.status == 'approved') {
                         card_company_status = 'status-check redirect-to-accounts';
                         card_company_icon = '/build/global/img/icon-check.svg';
@@ -966,7 +966,7 @@ function ajaxVerifyAccount() {
                     card_user_icon = '/build/global/img/icon-error.svg';
                     card_user_title = 'Tivemos um problema com o seu documento';
                     card_user_description = 'Um ou mais documentos foram reprovados após a análise.';
-                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Regularizar documentos</button>';
+                    card_user_button = '<button class="btn btn-default redirect-to-accounts" data-url-value="'+ card_user_link +'">Enviar documentos</button>';
                 } else if (response.data.user.status == 'approved' || response.data.user.status == 'approved') {
                     card_user_status = 'status-check redirect-to-accounts';
                     card_user_icon = '/build/global/img/icon-check.svg';
