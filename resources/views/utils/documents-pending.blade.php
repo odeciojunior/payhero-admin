@@ -331,7 +331,9 @@
                                     </svg>
                                 </div>
                                 <div class="d-flex flex-column mt-4">
-                                    <span class="font-size-24 text-center mb-3" style="color: #0B1D3D"><strong>Obrigado, {{ explode(' ', trim(auth()->user()->name))[0] }}</strong></span>
+                                    <span class="font-size-24 text-center mb-3" style="color: #0B1D3D; word-wrap: break-word;">
+                                        <strong>Obrigado, {{ explode(' ', trim(auth()->user()->name))[0] }}</strong>
+                                    </span>
                                     <p class="font-size-14 font-weight-400 text-center mb-4" style="color: #636363">As suas respostas ajudam a Cloudfox a entender melhor o negócio de cada um
                                         de nossos clientes de forma individualizada. Isso nos auxilia a desenvolver
                                         novas funcionalidades focadas no sucesso da sua operação!
