@@ -238,7 +238,7 @@
                 </a>
             </li>
         @endcan
-        <!-- unlessrole('attendance') -->
+        <!-- unlessrole('customer-service') -->
         @can('finances')
         @php
             $user = auth()->user();
