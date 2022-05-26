@@ -216,8 +216,8 @@
                 </a>
             </li>
         @endcan
-        <!-- hasanyrole('account_owner|admin|customer-service') -->
-        @can('customer-service')
+        <!-- hasanyrole('account_owner|admin|attendance') -->
+        @can('attendance')
             <li class="site-menu-item has-sub">
                 <a href="{{ route('attendance.index') }}">
                     <span class="bg-menu">
