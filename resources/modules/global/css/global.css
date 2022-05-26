@@ -2732,3 +2732,34 @@ tbody td{
         padding-right: 0;
     }
 }
+
+.account-health-note-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 100%;
+    content: "";
+}
+
+.bg-color-blue {
+    background: #108DEC;
+    -webkit-animation: ripple-blue .7s linear infinite;
+    animation: ripple-blue .7s linear infinite;
+}
+
+@-webkit-keyframes ripple-blue {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 141, 236, 0.3), 0 0 0 5px rgba(16, 141, 236, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(16, 141, 236, 0.3), 0 0 0 15px rgba(16, 141, 236, 0);
+    }
+}
+
+@keyframes ripple-blue {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 141, 236, 0.3), 0 0 0 5px rgba(16, 141, 236, 0.3);
+    }
+    to {
+        box-shadow: 0 0 0 5px rgba(16, 141, 236, 0.3), 0 0 0 15px rgba(16, 141, 236, 0);
+    }
+}
