@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Modules\Core\Entities;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Arr;
 use Modules\Core\Entities\Gateway;
@@ -24,7 +25,7 @@ class SaleContestationFactory extends Factory
      */
     public function definition()
     {
-        $todayDate = $this->faker->date('Y-m-d','now');        
+        $todayDate = Carbon::now()->format('Y-m-d');        
         return [
             'sale_id'=>Sale::factory(),
             'gateway_id'=>Gateway::SAFE2PAY_PRODUCTION_ID,
@@ -37,8 +38,8 @@ class SaleContestationFactory extends Factory
             'reason'=>$this->getReasonRandom(),
             'observation'=>null,
             'is_contested'=>0,
-            'file_user_completed'=>null,
-            'expiration_date'=>$this->faker->date('Y-m-d','+10 days'),
+            'file_user_completed'=>0,
+            'expiration_date'=>Carbon::now()->addDays(10)->format('Y-m-d'),
             'status'=>rand(0,2)+1,
         ];
     }

@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -57,7 +58,7 @@ use Illuminate\Database\Query\Builder;
  */
 class SaleContestation extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     public const STATUS_IN_PROGRESS = 1;
     public const STATUS_LOST = 2;
