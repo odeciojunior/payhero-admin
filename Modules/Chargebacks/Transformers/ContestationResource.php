@@ -59,6 +59,9 @@ class ContestationResource extends JsonResource
 
         $reason = '';
         switch($this->gateway_id){
+            case Gateway::SAFE2PAY_PRODUCTION_ID:
+                $reason = $this->reason;
+            break;
             case Gateway::ASAAS_PRODUCTION_ID:
                 $reason = $this->reason;
                 $dataWebhook = json_decode($this->data);
