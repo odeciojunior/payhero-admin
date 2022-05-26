@@ -58,5 +58,12 @@
     "AstronMembers": true,
     "CheckoutApiPostback": true,
     "CheckoutEditor": true,
+<<<<<<< HEAD
     "DemoAccount": true
 }
+=======
+    "UserInformations": true,
+    "Users": true,
+    "NotificacoesInteligentes": true
+}
+>>>>>>> 4bdaf02b01f3a8c66279392cecde4c9ca027cd78
