@@ -1035,21 +1035,21 @@ function changeNewRegisterLayoutOnWindowResize() {
     let userNameText = $('.new-register-overlay-title strong').text();
 
     if (window.innerWidth <= 370) {
-        $('.new-register-overlay-title strong').css('display', 'block');
+        $('.new-register-overlay-title strong').css({ 'display': 'block', 'padding-top': '8px'});
     } else if (window.innerWidth > 370 && window.innerWidth <= 470) {
-        $('.new-register-overlay-title strong').css('display', 'unset');
+        $('.new-register-overlay-title strong').css({ 'display': 'unset', 'padding-top': '0px'});
 
         if (userNameText.length > 10) {
             $('.new-register-overlay-title strong').text(userNameText.substring(0, 9) + '...');
         }
     } else if (window.innerWidth > 470 && window.innerWidth <= 665) {
-        $('.new-register-overlay-title strong').css('display', 'unset');
+        $('.new-register-overlay-title strong').css({ 'display': 'unset', 'padding-top': '0px'});
 
         if (userNameText.length > 14) {
             $('.new-register-overlay-title strong').text(userNameText.substring(0, 13) + '...');
         }
     } else if (window.innerWidth > 665) {
-        $('.new-register-overlay-title strong').css('display', 'unset');
+        $('.new-register-overlay-title strong').css({ 'display': 'unset', 'padding-top': '0px'});
 
         if (userNameText.length > 20) {
             $('.new-register-overlay-title strong').text(userNameText.substring(0, 19) + '...');
