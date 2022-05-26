@@ -152,37 +152,57 @@
                                 <div class="step-2-checkbox-container">
                                     <div class="d-flex">
                                         <div class="step-2-checkbox-option">
-                                            <div>
-                                                <input type="checkbox" id="integrated-store" />
-                                                <span>Loja integrada</span>
+                                            <div class="d-flex flex-row">
+                                                <div>
+                                                    <input type="checkbox" id="integrated-store" />
+                                                </div>
+                                                <div>
+                                                    <span>Loja integrada</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="step-2-checkbox-option">
-                                            <div>
-                                                <input type="checkbox" id="wix" />
-                                                <span>Wix</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="step-2-checkbox-option">
-                                            <div>
-                                                <input type="checkbox" id="woo-commerce" />
-                                                <span>WooComerce</span>
-                                            </div>
-                                        </div>
-                                        <div class="step-2-checkbox-option">
-                                            <div>
-                                                <input type="checkbox" id="shopify" />
-                                                <span>Shopify</span>
+                                            <div class="d-flex flex-row">
+                                                <div>
+                                                    <input type="checkbox" id="wix" />
+                                                </div>
+                                                <div>
+                                                    <span>Wix</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="d-flex">
                                         <div class="step-2-checkbox-option">
-                                            <div>
-                                                <input type="checkbox" id="other-ecommerce" name="step-2-other-ecommerce-check" />
-                                                <span>Outros</span>
+                                            <div class="d-flex flex-row">
+                                                <div>
+                                                    <input type="checkbox" id="woo-commerce" />
+                                                </div>
+                                                <div>
+                                                    <span>WooComerce</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="step-2-checkbox-option">
+                                            <div class="d-flex flex-row">
+                                                <div>
+                                                    <input type="checkbox" id="shopify" />
+                                                </div>
+                                                <div>
+                                                    <span>Shopify</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="step-2-checkbox-option">
+                                            <div class="d-flex flex-row">
+                                                <div>
+                                                    <input type="checkbox" id="other-ecommerce" name="step-2-other-ecommerce-check" />
+                                                </div>
+                                                <div>
+                                                    <span>Outros</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="step-2-checkbox-option">
@@ -196,37 +216,57 @@
                                 <div class="step-2-checkbox-container">
                                     <div class="d-flex">
                                         <div class="step-2-checkbox-option">
-                                            <div>
-                                                <input type="checkbox" id="cloudfox-referer-facebook" />
-                                                <span>Facebook</span>
+                                            <div class="d-flex flex-row">
+                                                <div>
+                                                    <input type="checkbox" id="cloudfox-referer-facebook" />
+                                                </div>
+                                                <div>
+                                                    <span>Facebook</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="step-2-checkbox-option">
-                                            <div>
-                                                <input type="checkbox" id="cloudfox-referer-ad" />
-                                                <span>Anúncios</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="step-2-checkbox-option">
-                                            <div>
-                                                <input type="checkbox" id="cloudfox-referer-linkedin" />
-                                                <span>Linkedin</span>
-                                            </div>
-                                        </div>
-                                        <div class="step-2-checkbox-option">
-                                            <div>
-                                                <input type="checkbox" id="cloudfox-referer-youtube" />
-                                                <span>Youtube</span>
+                                            <div class="d-flex flex-row">
+                                                <div>
+                                                    <input type="checkbox" id="cloudfox-referer-ad" />
+                                                </div>
+                                                <div>
+                                                    <span>Anúncios</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="d-flex">
                                         <div class="step-2-checkbox-option">
-                                            <div>
-                                                <input type="checkbox" id="cloudfox-referer-other" name="step-2-know-cloudfox-check" />
-                                                <span>Outros</span>
+                                            <div class="d-flex flex-row">
+                                                <div>
+                                                    <input type="checkbox" id="cloudfox-referer-linkedin" />
+                                                </div>
+                                                <div>
+                                                    <span>Linkedin</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="step-2-checkbox-option">
+                                            <div class="d-flex flex-row">
+                                                <div>
+                                                    <input type="checkbox" id="cloudfox-referer-youtube" />
+                                                </div>
+                                                <div>
+                                                    <span>Youtube</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="step-2-checkbox-option">
+                                            <div class="d-flex flex-row">
+                                                <div>
+                                                    <input type="checkbox" id="cloudfox-referer-other" name="step-2-know-cloudfox-check" />
+                                                </div>
+                                                <div>
+                                                    <span>Outros</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="step-2-checkbox-option">
