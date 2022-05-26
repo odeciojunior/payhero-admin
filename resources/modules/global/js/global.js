@@ -19,7 +19,9 @@ $(document).ready(function () {
         redirectToAccounts(url_data);
     });
 
-    localStorage.setItem('new-register-step', '1');
+    setNewRegisterStep('1');
+
+    var newRegisterStepAux;
 
     changeNewRegisterLayoutOnWindowResize();
 
@@ -28,17 +30,7 @@ $(document).ready(function () {
     $('.new-register-open-modal-btn').on('click', function () {
         $('.new-register-navbar-open-modal-container').fadeOut('slow');
 
-        if (!localStorage.getItem('new-register-step')) {
-            localStorage.setItem('new-register-step', '1');
-        }
-
-        let step = localStorage.getItem('new-register-step');
-
-        changeProgressBar(step);
-
-        setStepButton(step);
-
-        $('#new-register-step-' + step + '-container').addClass('d-flex flex-column');
+        setStepContainer();
 
         $('.new-register-overlay').fadeIn();
     });
@@ -50,7 +42,7 @@ $(document).ready(function () {
     });
 
     $('#new-register-steps-actions').on('click', '.close-modal', function () {
-        if (localStorage.getItem('new-register-step') == '4') {
+        if (getNewRegisterStep() == '4') {
             $('#new-register-steps-container').fadeOut();
             $('#new-register-firt-page').fadeIn();
         } else {
@@ -65,17 +57,17 @@ $(document).ready(function () {
 
         $('.modal-top-btn').hide();
 
-        setStepButton(localStorage.getItem('new-register-step'));
+        setStepButton(getNewRegisterStep());
 
         $('#new-register-steps-container').show();
     });
 
     $('#new-register-step-container input[type=text]').on('input', function() {
-        setStepButton(localStorage.getItem('new-register-step'));
+        setStepButton(getNewRegisterStep());
     });
 
     $('#new-register-step-container input[type=checkbox]').change(function() {
-        setStepButton(localStorage.getItem('new-register-step'));
+        setStepButton(getNewRegisterStep());
     });
 
     $('.step-1-option').on('click', function () {
@@ -87,7 +79,7 @@ $(document).ready(function () {
             $(this).attr('data-step-1-selected', '1');
         }
 
-        setStepButton(localStorage.getItem('new-register-step'));
+        setStepButton(getNewRegisterStep());
     });
 
     $("input[name='step-2-other-ecommerce-check']").change(function () {
@@ -135,7 +127,7 @@ $(document).ready(function () {
     });
 
     $('#new-register-previous-step').on('click', function () {
-        let step = parseInt(localStorage.getItem('new-register-step'));
+        let step = parseInt(getNewRegisterStep());
 
         if (step === 1) {
             $('#new-register-firt-page').show();
@@ -151,7 +143,7 @@ $(document).ready(function () {
 
         step--;
 
-        localStorage.setItem('new-register-step', step.toString());
+        setNewRegisterStep(step.toString());
 
         changeProgressBar(step);
 
@@ -161,7 +153,7 @@ $(document).ready(function () {
     });
 
     $('#new-register-next-step').on('click', function () {
-        let lastStep = parseInt(localStorage.getItem('new-register-step'));
+        let lastStep = parseInt(getNewRegisterStep());
 
         let step = lastStep + 1;
 
@@ -171,7 +163,7 @@ $(document).ready(function () {
             return;
         }
 
-        localStorage.setItem('new-register-step', step.toString());
+        setNewRegisterStep(step.toString());
 
         $('#new-register-step-' + lastStep + '-container').removeClass('d-flex flex-column');
 
@@ -873,6 +865,8 @@ function ajaxVerifyAccount() {
                     $('.new-register-page-open-modal-container').hide();
                     $('.new-register-navbar-open-modal-container').hide();
 
+                    setStepContainer();
+
                     $('.new-register-overlay').fadeIn();
                 }
 
@@ -1005,6 +999,26 @@ function verifyDocumentPending() {
     ajaxVerifyAccount();
 }
 
+function setNewRegisterStep(step) {
+    try {
+        localStorage.setItem('new-register-step', step);
+    } catch (e) {
+        newRegisterStepAux = step;
+    }
+}
+
+function getNewRegisterStep() {
+    let value;
+
+    try {
+        value = localStorage.getItem('new-register-step');
+    } catch (e) {
+        value = newRegisterStepAux;
+    }
+
+    return value;
+}
+
 function changeProgressBar(step) {
     switch (parseInt(step)) {
         case 1:
@@ -1087,6 +1101,20 @@ function validateStep(step) {
     return isValid;
 }
 
+function setStepContainer() {
+    if (!getNewRegisterStep()) {
+        setNewRegisterStep('1');
+    }
+
+    let step = getNewRegisterStep();
+
+    changeProgressBar(step);
+
+    setStepButton(step);
+
+    $('#new-register-step-' + step + '-container').addClass('d-flex flex-column');
+}
+
 function setStepButton(step) {
     let btn = $('#new-register-next-step');
 
@@ -1152,7 +1180,7 @@ function saveNewRegisterData() {
             alertCustom('error', response.responseJSON.message);
         },
         success: function success(response) {
-            localStorage.setItem('new-register-step', '4');
+            setNewRegisterStep('4');
 
             $('#new-register-step-3-container').removeClass('d-flex flex-column');
 
