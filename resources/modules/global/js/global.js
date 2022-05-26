@@ -1037,7 +1037,7 @@ function changeNewRegisterLayoutOnWindowResize() {
     if (window.innerWidth <= 370) {
         $('.new-register-overlay-title strong').css({ 'display': 'block', 'padding-top': '8px'});
     } else if (window.innerWidth > 370 && window.innerWidth <= 470) {
-        $('.new-register-overlay-title strong').css({ 'display': 'unset', 'padding-top': '0px'});
+        $('.new-register-overlay-title strong').css({ 'display': 'block', 'padding-top': '0px'});
 
         if (userNameText.length > 10) {
             $('.new-register-overlay-title strong').text(userNameText.substring(0, 9) + '...');
