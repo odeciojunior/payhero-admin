@@ -2598,7 +2598,7 @@ tbody td{
     color: #0B1D3D;
 }
 .step-2-checkbox-option input[type="checkbox"] {
-    margin: 3px 0 0 0!important;
+    margin: 0 !important;
 }
 .step-2-checkbox-option span {
     margin-left: 12px;

@@ -30,7 +30,9 @@
     @if (!auth()->user()->account_is_approved)
         <div class="new-register-navbar-open-modal-container">
             <div class="row no-gutters new-register-open-modal">
+                <!--
                 <span style="color: #5B5B5B;">Você está logado em uma conta demonstrativa.</span>
+                -->
                 <span class="new-register-open-modal-btn">Clique para começar</span>
             </div>
         </div>
