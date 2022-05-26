@@ -13,7 +13,7 @@
 
 Route::group(
     [
-        'middleware' => ['web', 'auth','permission:attendance'],
+        'middleware' => ['web', 'auth','permission:customer-service'],
     ],
     function() {
 
