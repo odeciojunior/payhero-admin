@@ -281,7 +281,7 @@ class WithdrawalsApiController
                 return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
             }
 
-            if (!$userService->haveAnyDocumentPending_()) {
+            if ($userService->haveAnyDocumentPending()) {
                 return response()->json([
                     'data' => [
                         'user_pending' => true,
