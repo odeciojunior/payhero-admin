@@ -589,26 +589,21 @@
                                                     <i class="o-arrow-right-1 redirect"></i>
                                                 </a>
                                             </header>
-                                            
-                                            <div class="onPreLoad block-cupons" id="block-coupons">
-
-                                            </div>
+                                            <div class="onPreLoad block-cupons" id="block-coupons"></div>
 
                                             <div class="container d-flex justify-content-between box-donut">
                                                 <div class="new-graph-pie-mkt graph"></div>
                                                 <div class="data-pie"><ul></ul></div>
                                             </div>
                                         </div>
-                                        <div class="card inner pad-bottom-0 ">
+                                        <div class="card inner pad-bottom-0 card-system" id="card-system">
                                             <header class="d-flex title-graph">
                                                 <h5 class="grey font-size-16">
                                                     <strong>Sistemas</strong>
                                                 </h5>
                                             </header>
                                             <div class="custom-table pb-0 pt-0">
-                                                <div id="container-operational-systems" class="row container-devices">
-
-                                                </div>
+                                                <div id="container-operational-systems" class="container-devices card-systems"></div>
                                             </div>
                                         </div>
                                     </div>

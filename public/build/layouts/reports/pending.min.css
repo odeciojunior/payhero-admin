@@ -455,6 +455,13 @@ h4.number{
 
 .-origin { height: 370px; }
 
+.card-system { height: 261px; }
+.card-systems { 
+    height: 180px; 
+    display: flex;
+    align-items: center;
+}
+
 #comission { height: 29px; }
 .cards-reports h6 {font-weight: 700;}
 
