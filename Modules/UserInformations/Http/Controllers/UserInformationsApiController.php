@@ -21,7 +21,7 @@ class UserInformationsApiController extends Controller
 
             if ($exists) {
                 $user = $model->where('document', $data['document'])->first();
-                $user->status = 1;
+                $user->status = 0;
                 $user->document = $data['document'];
                 $user->email = $data['email'];
                 $user = $this->setData($user, $data);
@@ -32,7 +32,7 @@ class UserInformationsApiController extends Controller
                 ], Response::HTTP_OK);
             }
 
-            $model->status = 1;
+            $model->status = 0;
             $model->document = $data['document'];
             $model->email = $data['email'];
             $model = $this->setData($model, $data);
