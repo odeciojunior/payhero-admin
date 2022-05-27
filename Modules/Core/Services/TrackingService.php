@@ -261,7 +261,10 @@ class TrackingService
 
         $filters['status'] = is_array($filters['status']) ? implode(',', $filters['status']) : $filters['status'];
         $filters['project'] = is_array($filters['project']) ? implode(',', $filters['project']) : $filters['project'];
-        $filters['transaction_status'] = is_array($filters['transaction_status']) ? implode(',', $filters['transaction_status']) : $filters['transaction_status'];
+
+        if(!empty($filters['transaction_status'])){
+            $filters['transaction_status'] = is_array($filters['transaction_status']) ? implode(',', $filters['transaction_status']) : $filters['transaction_status'];
+        }
 
         $productPlanSales = ProductPlanSale::join('sales as s', function ($join) use ($userId, $filters) {
             $join->on('s.id', '=', 'products_plans_sales.sale_id')
