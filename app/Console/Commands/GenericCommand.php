@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Services\Gateways\Safe2PayService;
 
 class GenericCommand extends Command
 {
@@ -13,8 +12,6 @@ class GenericCommand extends Command
 
     public function handle()
     {
-        $service = app()->make(Safe2PayService::class);
-
-        $service->updateAvailableBalance(1686190);
+        
     }
 }
