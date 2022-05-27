@@ -1,4 +1,7 @@
 $(document).ready( function () {
+    $('#checkout_editor #companies').on("change", function () {
+        $('#company-navbar').val( $('#checkout_editor #companies').val() ).change();
+    });
     // ----------------------- Funções de Botão ----------------------------
     $("#default_finish_color").on("change", function () {
         if ($(this).is(":checked")) {
@@ -71,7 +74,7 @@ $(document).ready( function () {
                 $($(this).attr("data-preview")).hide("slow", "swing");
                 $("." + $(this).attr("data-target")).slideUp("slow", "swing");
             }
-        }   
+        }
     });
 
     $("input[name=checkout_banner_type]").on("click", function () {
@@ -296,7 +299,7 @@ $(document).ready( function () {
             $('.purchase-menu-mobile').fadeOut('slow');
         }
     });
-    
+
     $('#installments_limit').on('change', function() {
         var installmentsLimit = parseInt($("#installments_limit option:selected").val());
         var interestFreeInstallments = parseInt($("#interest_free_installments option:selected").val());
@@ -311,9 +314,9 @@ $(document).ready( function () {
 
         for(var installments = 1; installments < installmentsLimit+1; installments++) {
             $("#interest_free_installments").append(
-                `<option 
+                `<option
                     value="${installments}" ${installments == interestFreeInstallments ? 'selected' : ''}>
-                    ${installments}x 
+                    ${installments}x
                 </option>`);
         }
 
@@ -323,9 +326,9 @@ $(document).ready( function () {
 
         for(var installments = 1; installments < installmentsLimit+1; installments++) {
             $("#preselected_installment").append(
-                `<option 
+                `<option
                     value="${installments}" ${installments == preselectedInstallment ? 'selected' : ''}>
-                    ${installments}x 
+                    ${installments}x
                 </option>`);
         }
     });
@@ -362,12 +365,12 @@ $(document).ready( function () {
             $('#selectable-all-notification').prop('checked', false);
             $('#selectable-all-notification').removeClass('dash-check');
         }
-        
+
         if (selectableCheckboxes.length == 4){
             $('#selectable-all-notification').removeClass('dash-check');
         }
     });
-    
+
     $('#selectable-all-notification').on('click', function(){
         if($(this).is(':checked')){
             $('.selectable-notification').prop('checked', true);
@@ -376,8 +379,8 @@ $(document).ready( function () {
             $('#selectable-all-notification').removeClass('dash-check');
         }
     });
-    // ---------------- Functions Table - END ---------------------   
-    
+    // ---------------- Functions Table - END ---------------------
+
 });
 
 function replacePreview(name, src, fname = "") {

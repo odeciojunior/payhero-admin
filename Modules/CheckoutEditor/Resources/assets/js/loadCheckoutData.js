@@ -200,6 +200,12 @@ $(() => {
                                 $('#save_load').fadeOut('slow', 'linear');
                                 $('#save_success').fadeIn('slow', 'linear');
 
+                                // update session storage of company_default
+                                sessionStorage.removeItem('company_default')
+                                sessionStorage.removeItem('company_default_name')
+                                sessionStorage.setItem('company_default', $("#checkout_editor #companies").val());
+                                sessionStorage.setItem('company_default_name', $("#checkout_editor #companies").find('option:selected').text().trim());
+
                                 setTimeout(function() {
                                     $('#save_success').fadeOut('slow', 'linear');
                                 }, 4000)

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Modules\ActiveCampaign\Transformers\ActivecampaignResource;
 use Modules\Core\Entities\ActivecampaignIntegration;
+use Modules\Core\Entities\Project;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ActiveCampaignService;
 use Modules\Core\Services\ProjectService;
@@ -28,29 +29,37 @@ class ActiveCampaignApiController extends Controller
     {
         try {
             $user = auth()->user();
-            $activecampaignIntegration = new ActivecampaignIntegration();
-            $userProjectModel          = new UserProject();
 
-            activity()->on($activecampaignIntegration)->tap(function(Activity $activity) {
+            activity()->on((new ActivecampaignIntegration()))->tap(function(Activity $activity) {
                 $activity->log_name = 'visualization';
             })->log('Visualizou tela todas as integrações do ActiveCampaign');
 
-            $activecampaignIntegrations = $activecampaignIntegration->where('user_id', $user->account_owner_id)->with('project')
-                                                                    ->get();
-
-            $projects     = collect();
-            $userProjects = $userProjectModel->where([[
+            $activecampaignIntegrations = ActivecampaignIntegration::where('user_id', $user->account_owner_id)->with('project')->get();
+            $projects = collect();
+            $userProjects = UserProject::where([[
                 'user_id', $user->account_owner_id],[
-                'company_id', auth()->user()->company_default
-            ]])->with('project')->get();
+                'company_id', $user->company_default
+            ]])->get();//->with('project')
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    if (!empty($userProject->project)) {
+                    $project = $userProject
+                        ->project()
+                        ->join('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
+                        ->first();
+                    if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-            return response()->json(['integrations' => ActivecampaignResource::collection($activecampaignIntegrations),
+            return response()->json([
+                'integrations' => ActivecampaignResource::collection($activecampaignIntegrations),
                 'projects' => ProjectsSelectResource::collection($projects)
             ]);
         }

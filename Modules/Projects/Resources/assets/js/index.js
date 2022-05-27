@@ -4,8 +4,9 @@ $(function () {
     function index() {
         loadingOnScreen();
         $.ajax({
-            url: "/api/projects?company="+ $("#company-navbar").val(),
+            url: "/api/projects",
             data: {
+                company: sessionStorage.getItem('company_default'),
                 status: "active",
             },
             dataType: "json",

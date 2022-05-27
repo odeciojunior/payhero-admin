@@ -25,7 +25,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/projects?affiliate=true&status=active&company="+ $("#company-navbar").val(),
+            url: "/api/projects?affiliate=true&status=active&company="+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),

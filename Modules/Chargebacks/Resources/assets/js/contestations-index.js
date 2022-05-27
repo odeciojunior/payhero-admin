@@ -435,7 +435,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&company="+ $("#company-navbar").val(),
+            url: "/api/projects?select=true&company="+ sessionStorage.getItem('company_default'),
             dataType: "json",
             headers: {
                 Authorization: $('meta[name="access-token"]').attr("content"),

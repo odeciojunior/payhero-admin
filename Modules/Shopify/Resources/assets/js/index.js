@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
-    $("#company-navbar-value").val( $("#company-navbar").val() )
-    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
+    $("#company-navbar-value").val( sessionStorage.getItem('company_default') )
+    $('.company_name').val( sessionStorage.getItem('company_default_name') );
 
     getCompanies();
 
@@ -521,7 +521,7 @@ $(document).ready(function () {
         });
     });
 
-    $("#company-navbar-value").val( $("#company-navbar").val() )
-    $('.company_name').val( $("#company-navbar").find('option:selected').text() );
+    $("#company-navbar-value").val( sessionStorage.getItem('company_default') )
+    $('.company_name').val( sessionStorage.getItem('company_default_name') );
 
 });

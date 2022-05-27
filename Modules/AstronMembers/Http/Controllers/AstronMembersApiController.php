@@ -27,28 +27,31 @@ class AstronMembersApiController extends Controller
     public function index()
     {
         try {
-            $astronMembersIntegration = new AstronMembersIntegration();
-            $userProjectModel   = new UserProject();
-            $projectModel       = new Project();
-
-            $astronMembersIntegrations = $astronMembersIntegration->where('user_id', auth()->user()->account_owner_id)
-                                                      ->with('project')->get();
-
-            $projects     = collect();
-            $userProjects = $userProjectModel->where([[
-                'user_id', auth()->user()->account_owner_id],[
-                'company_id', auth()->user()->company_default
+            $user = auth()->user();
+            $astronMembersIntegrations = AstronMembersIntegration::where('user_id', $user->account_owner_id)->with('project')->get();
+            $projects = collect();
+            $userProjects = UserProject::where([[
+                'user_id', $user->account_owner_id],[
+                'company_id', $user->company_default
             ]])->orderBy('id', 'desc')->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    $project = $userProject->project()->where('status', $projectModel->present()->getStatus('active'))
-                                           ->first();
+                    $project = $userProject
+                        ->project()
+                        ->join('domains',
+                            function ($join) {
+                                $join->on('domains.project_id', '=', 'projects.id')
+                                    ->where('domains.status', 3)
+                                    ->whereNull('domains.deleted_at');
+                            }
+                        )
+                        ->where('projects.status', Project::STATUS_ACTIVE)
+                        ->first();
                     if (!empty($project)) {
                         $projects->add($userProject->project);
                     }
                 }
             }
-
             return response()->json([
                                         'integrations' => AstronMembersResource::collection($astronMembersIntegrations),
                                         'projects'     => ProjectsSelectResource::collection($projects),

@@ -324,7 +324,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "GET",
-            url: "/api/projects?select=true&company="+ $("#company-navbar").val(),
+            url: "/api/projects?select=true&company="+ sessionStorage.getItem('company_default'),
             data: {
                 status: "active",
             },
@@ -347,13 +347,15 @@ $(document).ready(function () {
 
                 $("#select_projects").html("");
                 $(response.data).each(function (index, data) {
-                    $("#select_projects").append(
-                        "<option value='" +
-                            data.id +
-                            "'>" +
-                            data.name +
-                            "</option>"
-                    );
+                    if(data.status===1){
+                        $("#select_projects").append(
+                            "<option value='" +
+                                data.id +
+                                "'>" +
+                                data.name +
+                                "</option>"
+                        );
+                    }
                 });
                 $(".modal-title").html(
                     "Adicionar nova Integração com ConvertaX"

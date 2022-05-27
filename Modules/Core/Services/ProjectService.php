@@ -393,10 +393,18 @@ class ProjectService
         if ($affiliate) {
             $projects = Project::leftJoin(
                 'users_projects',
-                function ($join) use ($userId) {
-                    $join->on('projects.id', '=', 'users_projects.project_id')
-                        ->where('users_projects.user_id', $userId)
-                        ->whereNull('users_projects.deleted_at');
+                function ($join) use ($userId, $companyId) {
+                    if(!empty($companyId)){
+                        $join->on('projects.id', '=', 'users_projects.project_id')
+                            ->where('users_projects.company_id', $companyId)
+                            ->where('users_projects.user_id', $userId)
+                            ->whereNull('users_projects.deleted_at');
+                    }
+                    else{
+                        $join->on('projects.id', '=', 'users_projects.project_id')
+                            ->where('users_projects.user_id', $userId)
+                            ->whereNull('users_projects.deleted_at');
+                    }
                 }
             )
                 ->leftJoin(
@@ -419,35 +427,34 @@ class ProjectService
                 )
                 ->whereIn('projects.status', $status)
                 ->where('users_projects.user_id', $userId)
-                ->orWhere('affiliates.user_id', $userId)
-                ->orderBy('projects.status')
-                ->orderBy('order_p')
-                ->orderBy('projects.id', 'DESC');
+                ->orWhere('affiliates.user_id', $userId);
         } else {
-            $projects = Project::leftJoin('users_projects', 'projects.id', '=', 'users_projects.project_id')
+            $projects = Project::leftJoin('users_projects',
+                function ($join) use ($userId, $companyId) {
+                    if(!empty($companyId)){
+                        $join->on('projects.id', '=', 'users_projects.project_id')
+                            ->where('users_projects.company_id', $companyId)
+                            ->where('users_projects.user_id', $userId)
+                            ->whereNull('users_projects.deleted_at');
+                    }
+                    else{
+                        $join->on('projects.id', '=', 'users_projects.project_id')
+                            ->where('users_projects.user_id', $userId)
+                            ->whereNull('users_projects.deleted_at');
+                    }
+                }
+            )
                 ->select('projects.*', 'users_projects.order_priority as order_p')
                 ->whereIn('projects.status', $status)
                 ->where('users_projects.user_id', $userId)
-                ->whereNull('users_projects.deleted_at')
-                ->orderBy('projects.status')
-                ->orderBy('order_p')
-                ->orderBy('projects.id', 'DESC');
+                ->whereNull('users_projects.deleted_at');
         }
 
-        if(!empty($companyId)){
-            $projects = $projects->rightJoin(
-                'checkout_configs',
-                function ($join) use ($companyId) {
-                    $join->on('projects.id', '=', 'checkout_configs.project_id')
-                        ->where('checkout_configs.company_id', $companyId)
-                        ->whereNull('checkout_configs.deleted_at');
-                }
-            );
-        }
+        $projects = $projects->orderBy('projects.status')
+            ->orderBy('order_p')
+            ->orderBy('projects.id', 'DESC');
 
         if ($pagination) {
-            // $projects = $projects->toSql();
-            // Log::debug($projects);
             $projects = $projects->get();
             if(count($projects) == 0) {
                 $apiSale = Sale::where('owner_id', auth()->user()->account_owner_id)->exists();
@@ -457,7 +464,8 @@ class ProjectService
             }
             return ProjectsSelectResource::collection($projects);
         } else {
-            return ProjectsResource::collection($projects->with('domains')->get());
+            $projects = $projects->with('domains')->get();
+            return ProjectsResource::collection($projects);
         }
     }
 
